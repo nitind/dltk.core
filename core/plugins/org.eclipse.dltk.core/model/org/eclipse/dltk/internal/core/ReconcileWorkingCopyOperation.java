@@ -10,7 +10,6 @@
 package org.eclipse.dltk.internal.core;
 
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IModelElement;
@@ -81,8 +80,8 @@ public class ReconcileWorkingCopyOperation extends ModelOperation {
 		} else if (forceProblemDetection && problemRequestor.isActive()) {
 			AccumulatingProblemReporter reporter = new AccumulatingProblemReporter(
 					workingCopy, problemRequestor);
-			final IModuleDeclaration moduleDeclaration = SourceParserUtil
-					.parse(workingCopy, reporter);
+			// Done to get parser problems
+			SourceParserUtil.parse(workingCopy, reporter);
 			// TODO put it to the context
 			final IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 					.getLanguageToolkit(workingCopy);
