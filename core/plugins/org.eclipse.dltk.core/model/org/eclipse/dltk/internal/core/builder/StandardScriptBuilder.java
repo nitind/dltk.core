@@ -9,18 +9,23 @@
 package org.eclipse.dltk.internal.core.builder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.compiler.problem.DefaultProblemFactory;
 import org.eclipse.dltk.compiler.problem.IProblemFactory;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
@@ -50,6 +55,36 @@ public class StandardScriptBuilder implements IScriptBuilder {
 	private static final boolean DEBUG = false;
 
 	private static final int WORK_BUILD = 100;
+	private static final int PARALLEL_THRESHOLD = 10;
+
+	private class BuildModulesJob extends Job {
+
+		private Queue<ISourceModule> modules;
+		private int buildType;
+		private IBuildState state;
+
+		public BuildModulesJob(Queue<ISourceModule> modules, int buildType,
+				IBuildState state) {
+			super("Build Modules"); //$NON-NLS-1$
+			this.setSystem(true);
+			this.modules = modules;
+			this.buildType = buildType;
+			this.state = state;
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			for (ISourceModule module; (module = modules.poll()) != null;) {
+				if (monitor.isCanceled()) {
+					return Status.CANCEL_STATUS;
+				}
+				processModule(module, buildType, state);
+			}
+			return Status.OK_STATUS;
+		}
+	}
+
+	private List<IProblemReporter> fReporters = null;
 
 	@Override
 	public void prepare(IBuildChange change, IBuildState state,
@@ -71,15 +106,15 @@ public class StandardScriptBuilder implements IScriptBuilder {
 		// TODO progress reporting
 		buildExternalElements(change, monitor);
 		if (toolkit != null) {
-			buildNatureModules(change.getScriptProject(),
-					change.getBuildType(),
+			buildNatureModules(change.getScriptProject(), change.getBuildType(),
 					change.getSourceModules(IProjectChange.DEFAULT), state,
 					SubMonitor.convert(monitor, WORK_BUILD));
 		}
 		final List<IFile> resourceChanges = change
 				.getResources(IProjectChange.DEFAULT);
 		if (!resourceChanges.isEmpty()) {
-			buildResources(resourceChanges, new SubProgressMonitor(monitor, 10));
+			buildResources(resourceChanges,
+					new SubProgressMonitor(monitor, 10));
 		}
 	}
 
@@ -87,7 +122,8 @@ public class StandardScriptBuilder implements IScriptBuilder {
 			IProgressMonitor monitor) throws CoreException {
 		final int buildType = change.getBuildType();
 		beginBuild(buildType, monitor);
-		final List<IBuildParticipantExtension2> extensions = selectExtension(IBuildParticipantExtension2.class);
+		final List<IBuildParticipantExtension2> extensions = selectExtension(
+				IBuildParticipantExtension2.class);
 
 		if (extensions != null) {
 			final List<ISourceModule> externalElements = change
@@ -98,7 +134,8 @@ public class StandardScriptBuilder implements IScriptBuilder {
 					return;
 				monitor.subTask(NLS.bind(
 						Messages.ValidatorBuilder_buildExternalModuleSubTask,
-						String.valueOf(remainingWork), module.getElementName()));
+						String.valueOf(remainingWork),
+						module.getElementName()));
 				final ExternalModuleBuildContext context = new ExternalModuleBuildContext(
 						module, buildType);
 				try {
@@ -109,10 +146,9 @@ public class StandardScriptBuilder implements IScriptBuilder {
 						extensions.get(i).buildExternalModule(context);
 					}
 				} catch (CoreException e) {
-					DLTKCore.error(
-							NLS.bind(
-									Messages.StandardScriptBuilder_errorBuildingExternalModule,
-									module.getElementName()), e);
+					DLTKCore.error(NLS.bind(
+							Messages.StandardScriptBuilder_errorBuildingExternalModule,
+							module.getElementName()), e);
 				}
 				--remainingWork;
 			}
@@ -147,44 +183,109 @@ public class StandardScriptBuilder implements IScriptBuilder {
 		return null;
 	}
 
-	private List<IProblemReporter> reporters = null;
-
-	private void buildNatureModules(IScriptProject project, int buildType,
+	private void buildNatureModules(final IScriptProject project, int buildType,
 			final List<ISourceModule> modules, IBuildState state,
-			IProgressMonitor monitor) {
+			final IProgressMonitor monitor) {
 		final long startTime = DEBUG ? System.currentTimeMillis() : 0;
 		beginBuild(buildType, monitor);
 		monitor.beginTask(Messages.ValidatorBuilder_buildingModules,
 				modules.size());
-		if (participants.length == 0) {
-			return;
-		}
-		int counter = 0;
-		if (reporters == null) {
-			reporters = new ArrayList<IProblemReporter>(modules.size());
-		}
-		for (Iterator<ISourceModule> j = modules.iterator(); j.hasNext();) {
-			if (monitor.isCanceled())
+		try {
+			if (participants.length == 0 || modules.isEmpty()) {
 				return;
+			}
+
+			if (fReporters == null) {
+				fReporters = Collections.synchronizedList(
+						new ArrayList<IProblemReporter>(modules.size()));
+			}
+
+			int availableProcessors = Runtime.getRuntime()
+					.availableProcessors();
+			if (modules.size() >= PARALLEL_THRESHOLD
+					&& availableProcessors > 2) {
+				processInParallel(modules, buildType, state, project, monitor);
+			} else {
+				processInSingleThread(modules, buildType, state, monitor);
+			}
+		} finally {
+			monitor.done();
+			if (DEBUG) {
+				System.out.println("Build " + project.getElementName() + "(" //$NON-NLS-1$ //$NON-NLS-2$
+						+ modules.size() + ") in " //$NON-NLS-1$
+						+ (System.currentTimeMillis() - startTime) + " ms"); //$NON-NLS-1$
+			}
+		}
+	}
+
+	private void processInSingleThread(List<ISourceModule> modules,
+			int buildType, IBuildState state, IProgressMonitor monitor) {
+		int numberOfScannedFiles = 0;
+		for (Iterator<ISourceModule> j = modules.iterator(); j.hasNext();) {
+			if (monitor.isCanceled()) {
+				return;
+			}
 			final ISourceModule module = j.next();
 			monitor.subTask(NLS.bind(
 					Messages.ValidatorBuilder_buildModuleSubTask,
-					String.valueOf(modules.size() - counter),
+					(int) ((numberOfScannedFiles * 100f) / modules.size()),
 					module.getElementName()));
-			final SourceModuleBuildContext context = new SourceModuleBuildContext(
-					problemFactory, module, buildType, state);
-			if (context.reporter != null) {
-				buildModule(context);
-				reporters.add(context.reporter);
-			}
+			processModule(module, buildType, state);
 			monitor.worked(1);
-			++counter;
+			++numberOfScannedFiles;
 		}
-		monitor.done();
-		if (DEBUG) {
-			System.out.println("Build " + project.getElementName() + "(" //$NON-NLS-1$ //$NON-NLS-2$
-					+ modules.size() + ") in " //$NON-NLS-1$
-					+ (System.currentTimeMillis() - startTime) + "ms"); //$NON-NLS-1$
+	}
+
+	private void processInParallel(final List<ISourceModule> modules,
+			int buildType, IBuildState state, final IScriptProject project,
+			final IProgressMonitor monitor) {
+		final Queue<ISourceModule> queue = new ArrayBlockingQueue<ISourceModule>(
+				modules.size(), true, modules);
+
+		int maxThreads = Math.min(modules.size() / 2,
+				Runtime.getRuntime().availableProcessors());
+
+		List<Job> jobs = new ArrayList<Job>(maxThreads);
+		try {
+			for (int i = 0; i < maxThreads; i++) {
+				Job job = new BuildModulesJob(queue, buildType, state);
+				job.schedule();
+				jobs.add(job);
+			}
+			int lastNumberOfScannedFiles = 0;
+			for (Job job : jobs) {
+				while (!job.join(100, null)) {
+					if (monitor.isCanceled()) {
+						for (Job tmpJob : jobs) {
+							tmpJob.cancel();
+						}
+						continue;
+					}
+					int numberOfScannedFiles = modules.size() - queue.size();
+					monitor.subTask(NLS.bind(
+							Messages.ValidatorBuilder_buildModuleSubTask,
+							(int) ((numberOfScannedFiles * 100f)
+									/ modules.size()),
+							project.getElementName()));
+					int steps = numberOfScannedFiles - lastNumberOfScannedFiles;
+					monitor.worked(steps);
+					lastNumberOfScannedFiles += steps;
+				}
+			}
+		} catch (OperationCanceledException e) {
+			DLTKCore.error(e);
+		} catch (InterruptedException e) {
+			DLTKCore.error(e);
+		}
+	}
+
+	private void processModule(ISourceModule module, int buildType,
+			IBuildState state) {
+		final SourceModuleBuildContext context = new SourceModuleBuildContext(
+				problemFactory, module, buildType, state);
+		if (context.reporter != null) {
+			buildModule(context);
+			fReporters.add(context.reporter);
 		}
 	}
 
@@ -279,7 +380,8 @@ public class StandardScriptBuilder implements IScriptBuilder {
 
 	@Override
 	public void clean(IScriptProject project, IProgressMonitor monitor) {
-		final List<IBuildParticipantExtension3> extensions = selectExtension(IBuildParticipantExtension3.class);
+		final List<IBuildParticipantExtension3> extensions = selectExtension(
+				IBuildParticipantExtension3.class);
 		if (extensions != null) {
 			for (IBuildParticipantExtension3 extension : extensions) {
 				extension.clean();
@@ -291,7 +393,8 @@ public class StandardScriptBuilder implements IScriptBuilder {
 		} catch (CoreException e) {
 			DLTKCore.error(
 					NLS.bind(Messages.StandardScriptBuilder_errorCleaning,
-							p.getName()), e);
+							p.getName()),
+					e);
 		}
 	}
 
@@ -351,18 +454,18 @@ public class StandardScriptBuilder implements IScriptBuilder {
 			}
 			endBuildNeeded = false;
 		}
-		if (reporters != null) {
+		if (fReporters != null) {
 			final IProblemSeverityTranslator severityTranslator = problemFactory
 					.createSeverityTranslator(project);
-			for (IProblemReporter reporter : reporters) {
+			for (IProblemReporter reporter : fReporters) {
 				final BuildProblemReporter buildReporter = (BuildProblemReporter) reporter;
 				if (buildReporter.hasCategory(ProblemCategory.IMPORT)) {
-					state.recordImportProblem(buildReporter.resource
-							.getFullPath());
+					state.recordImportProblem(
+							buildReporter.resource.getFullPath());
 				}
 				buildReporter.flush(severityTranslator);
 			}
-			reporters = null;
+			fReporters = null;
 		}
 		participants = null;
 		participantDependencies = null;
