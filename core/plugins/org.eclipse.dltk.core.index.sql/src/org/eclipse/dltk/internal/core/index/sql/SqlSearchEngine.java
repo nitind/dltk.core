@@ -172,9 +172,29 @@ public class SqlSearchEngine implements ISearchEngineExtension {
 		}
 	}
 
+	private static class FilePathHandler {
+
+		final IPath folderPath;
+		final String fileName;
+
+		public FilePathHandler(String filePath) {
+			int i = filePath.lastIndexOf('/');
+			if (i == -1) {
+				i = filePath.lastIndexOf('\\');
+			}
+			if (i != -1) {
+				this.folderPath = new Path(filePath.substring(0, i));
+				this.fileName = filePath.substring(i + 1);
+			} else {
+				this.folderPath = Path.EMPTY;
+				this.fileName = filePath;
+			}
+		}
+
+	}
+
 	class ElementHandler implements IElementHandler, ISearchRequestor {
 
-		private static final String EMPTY = ""; //$NON-NLS-1$
 		private Map<Integer, File> fileCache = new HashMap<Integer, File>();
 		private Map<Integer, Container> containerCache = new HashMap<Integer, Container>();
 		private Map<String, IProjectFragment> projectFragmentCache = new HashMap<String, IProjectFragment>();
@@ -250,44 +270,42 @@ public class SqlSearchEngine implements ISearchEngineExtension {
 					return;
 				}
 
-				String folderPath = EMPTY;
-				String fileName = filePath;
-				int i = filePath.lastIndexOf('/');
-				if (i == -1) {
-					i = filePath.lastIndexOf('\\');
-				}
-				if (i != -1) {
-					folderPath = filePath.substring(0, i);
-					fileName = filePath.substring(i + 1);
-				}
-
 				if (!scope.encloses(resourcePath)) {
 					return;
 				}
+
 				ISourceModule sourceModule = sourceModuleCache
 						.get(resourcePath);
 				if (sourceModule == null) {
 					if (projectFragment.isArchive()) {
+						FilePathHandler filePathHandler = new FilePathHandler(
+								filePath);
 						IScriptFolder scriptFolder = new ArchiveFolder(
 								(ProjectFragment) projectFragment,
-								new Path(folderPath));
-						sourceModule = scriptFolder.getSourceModule(fileName);
+								filePathHandler.folderPath);
+						sourceModule = scriptFolder
+								.getSourceModule(filePathHandler.fileName);
 					} else if (projectFragment.isExternal()) {
+						FilePathHandler filePathHandler = new FilePathHandler(
+								filePath);
 						IScriptFolder scriptFolder = new ExternalScriptFolder(
 								(ProjectFragment) projectFragment,
-								new Path(folderPath));
-						sourceModule = scriptFolder.getSourceModule(fileName);
-
+								filePathHandler.folderPath);
+						sourceModule = scriptFolder
+								.getSourceModule(filePathHandler.fileName);
 					} else if (projectFragment.isBuiltin()) {
+						FilePathHandler filePathHandler = new FilePathHandler(
+								filePath);
 						IScriptFolder scriptFolder = new BuiltinScriptFolder(
-								(ProjectFragment) projectFragment, new Path(
-										folderPath));
-						sourceModule = scriptFolder.getSourceModule(fileName);
+								(ProjectFragment) projectFragment,
+								filePathHandler.folderPath);
+						sourceModule = scriptFolder
+								.getSourceModule(filePathHandler.fileName);
 					} else {
 						IProject project = projectFragment.getScriptProject()
 								.getProject();
-						sourceModule = DLTKCore.createSourceModuleFrom(project
-								.getFile(filePath));
+						sourceModule = DLTKCore.createSourceModuleFrom(
+								project.getFile(filePath));
 					}
 					sourceModuleCache.put(resourcePath, sourceModule);
 				}
