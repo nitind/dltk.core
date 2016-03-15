@@ -4,7 +4,7 @@ Bundle-Name: DLTK Abstract SQL-based Indexer
 Bundle-SymbolicName: org.eclipse.dltk.core.index.sql;singleton:=true
 Bundle-Version: 5.5.0.qualifier
 Bundle-Activator: org.eclipse.dltk.core.index.sql.SqlIndex
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: Eclipse DLTK
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.dltk.core;bundle-version="0.0.0"
