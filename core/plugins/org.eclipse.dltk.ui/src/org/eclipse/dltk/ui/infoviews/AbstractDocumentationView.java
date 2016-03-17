@@ -313,9 +313,6 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 		}
 	}
 
-	/*
-	 * @see AbstractInfoView#createActions()
-	 */
 	@Override
 	protected void createActions() {
 		super.createActions();
@@ -339,17 +336,11 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 		return super.getCopyToClipboardAction();
 	}
 
-	/*
-	 * @see AbstractInfoView#setForeground(Color)
-	 */
 	@Override
 	protected void setForeground(Color color) {
 		getControl().setForeground(color);
 	}
 
-	/*
-	 * @see AbstractInfoView#setBackground(Color)
-	 */
 	@Override
 	protected void setBackground(Color color) {
 		getControl().setBackground(color);
@@ -370,26 +361,17 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 		return "org.eclipse.dltk.ui.ScriptdocView.backgroundColor"; //$NON-NLS-1$
 	}
 
-	/*
-	 * @see AbstractInfoView#internalDispose()
-	 */
 	@Override
 	protected void internalDispose() {
 		fText = null;
 		fBrowser = null;
 	}
 
-	/*
-	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-	 */
 	@Override
 	public void setFocus() {
 		getControl().setFocus();
 	}
 
-	/*
-	 * @see AbstractInfoView#computeInput(Object)
-	 */
 	@Override
 	protected Object computeInput(Object input) {
 		if (getControl() != null) {
@@ -416,9 +398,6 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 		return null;
 	}
 
-	/*
-	 * @see AbstractInfoView#setInput(Object)
-	 */
 	@Override
 	protected void setInput(Object input) {
 		String javadocHtml = (String) input;
@@ -619,9 +598,6 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 		}
 	}
 
-	/*
-	 * @see AbstractInfoView#getControl()
-	 */
 	@Override
 	protected Control getControl() {
 		if (fIsUsingBrowserWidget)
