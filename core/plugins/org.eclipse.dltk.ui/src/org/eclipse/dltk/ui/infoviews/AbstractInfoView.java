@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -119,6 +119,7 @@ public abstract class AbstractInfoView extends ViewPart implements
 	 * @see IPartListener2
 	 */
 	private IPartListener2 fPartListener = new IPartListener2() {
+		@Override
 		public void partVisible(IWorkbenchPartReference ref) {
 			if (ref.getId().equals(getSite().getId())) {
 				IWorkbenchPart activePart = ref.getPage().getActivePart();
@@ -128,28 +129,35 @@ public abstract class AbstractInfoView extends ViewPart implements
 			}
 		}
 
+		@Override
 		public void partHidden(IWorkbenchPartReference ref) {
 			if (ref.getId().equals(getSite().getId()))
 				stopListeningForSelectionChanges();
 		}
 
+		@Override
 		public void partInputChanged(IWorkbenchPartReference ref) {
 			if (!ref.getId().equals(getSite().getId()))
 				computeAndSetInput(ref.getPart(false));
 		}
 
+		@Override
 		public void partActivated(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partBroughtToTop(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partClosed(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partDeactivated(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partOpened(IWorkbenchPartReference ref) {
 		}
 	};
@@ -274,9 +282,7 @@ public abstract class AbstractInfoView extends ViewPart implements
 		getSite().registerContextMenu(menuManager, getSelectionProvider());
 	}
 
-	/*
-	 * @see IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
-	 */
+	@Override
 	public void menuAboutToShow(IMenuManager menu) {
 		menu.add(new Separator(IContextMenuConstants.GROUP_OPEN));
 		menu.add(new Separator(ITextEditorActionConstants.GROUP_EDIT));
@@ -377,6 +383,7 @@ public abstract class AbstractInfoView extends ViewPart implements
 	 */
 	abstract protected String getBackgroundColorKey();
 
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (getBackgroundColorKey().equals(event.getProperty()))
 			inititalizeColors();
@@ -396,10 +403,7 @@ public abstract class AbstractInfoView extends ViewPart implements
 		getSite().getPage().removePostSelectionListener(this);
 	}
 
-	/*
-	 * @see ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
-	 * org.eclipse.jface.viewers.ISelection)
-	 */
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (part.equals(this))
 			return;
@@ -576,9 +580,7 @@ public abstract class AbstractInfoView extends ViewPart implements
 				if (display.isDisposed())
 					return;
 				display.asyncExec(new Runnable() {
-					/*
-					 * @see java.lang.Runnable#run()
-					 */
+					@Override
 					public void run() {
 						if (fComputeCount != currentCount
 								|| getViewSite().getShell().isDisposed())

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -210,14 +210,13 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 						.selectionChanged(event);
 		}
 
+		@Override
 		public void addSelectionChangedListener(
 				ISelectionChangedListener listener) {
 			fListeners.add(listener);
 		}
 
-		/*
-		 * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-		 */
+		@Override
 		public ISelection getSelection() {
 			if (fControl instanceof StyledText) {
 				IDocument document = new Document(((StyledText) fControl)
@@ -230,19 +229,18 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 			}
 		}
 
+		@Override
 		public void removeSelectionChangedListener(
 				ISelectionChangedListener listener) {
 			fListeners.remove(listener);
 		}
 
+		@Override
 		public void setSelection(ISelection selection) {
 			// not supported
 		}
 	}
 
-	/*
-	 * @see AbstractInfoView#internalCreatePartControl(Composite)
-	 */
 	@Override
 	protected void internalCreatePartControl(Composite parent) {
 		try {
