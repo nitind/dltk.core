@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.text.hover;
 
@@ -61,6 +60,7 @@ public abstract class AbstractScriptEditorTextHover implements
 	private IEditorPart fEditor;
 	private IPreferenceStore fStore;
 
+	@Override
 	public void setPreferenceStore(IPreferenceStore store) {
 		fStore = store;
 	}
@@ -72,6 +72,7 @@ public abstract class AbstractScriptEditorTextHover implements
 		return fStore;
 	}
 
+	@Override
 	public void setEditor(IEditorPart editor) {
 		fEditor = editor;
 	}
@@ -92,6 +93,7 @@ public abstract class AbstractScriptEditorTextHover implements
 		return null;
 	}
 
+	@Override
 	public IRegion getHoverRegion(final ITextViewer textViewer, int offset) {
 
 		// final IRegion[] result = new IRegion[] { ScriptWordFinder.findWord(
@@ -113,6 +115,7 @@ public abstract class AbstractScriptEditorTextHover implements
 		return ScriptWordFinder.findWord(textViewer.getDocument(), offset);
 	}
 
+	@Override
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 
 		String nature = null;
@@ -208,8 +211,10 @@ public abstract class AbstractScriptEditorTextHover implements
 		return null;
 	}
 
+	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		return new IInformationControlCreator() {
+			@Override
 			public IInformationControl createInformationControl(Shell parent) {
 				return new DefaultInformationControl(parent,
 						EditorsUI.getTooltipAffordanceString());

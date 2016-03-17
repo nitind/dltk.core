@@ -59,6 +59,7 @@ public final class CompletionHoverControlCreator extends
 	 * AbstractReusableInformationControlCreator
 	 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 	 */
+	@Override
 	public IInformationControl doCreateInformationControl(Shell parent) {
 		String tooltipAffordanceString = fAdditionalInfoAffordance ? DLTKUIPlugin
 				.getAdditionalInfoAffordanceString()
@@ -67,10 +68,7 @@ public final class CompletionHoverControlCreator extends
 			BrowserInformationControl2 iControl = new BrowserInformationControl2(
 					parent, SWT.TOOL | SWT.NO_TRIM, SWT.NONE,
 					tooltipAffordanceString) {
-				/*
-				 * @see org.eclipse.jface.text.IInformationControlExtension5#
-				 * getInformationPresenterControlCreator()
-				 */
+				@Override
 				public IInformationControlCreator getInformationPresenterControlCreator() {
 					return fInformationPresenterControlCreator;
 				}
@@ -87,6 +85,7 @@ public final class CompletionHoverControlCreator extends
 	 * AbstractReusableInformationControlCreator
 	 * #canReuse(org.eclipse.jface.text.IInformationControl)
 	 */
+	@Override
 	public boolean canReuse(IInformationControl control) {
 		if (!super.canReuse(control))
 			return false;

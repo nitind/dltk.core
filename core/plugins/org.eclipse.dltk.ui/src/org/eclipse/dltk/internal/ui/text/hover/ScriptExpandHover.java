@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.text.hover;
 
@@ -57,18 +56,14 @@ public class ScriptExpandHover extends AnnotationExpandHover {
 			super(NO_BREAKPOINT_ANNOTATION, false, ScriptHoverMessages.NoBreakpointAnnotation_addBreakpoint);
 		}
 
-		/*
-		 * @see org.eclipse.jface.text.source.IAnnotationPresentation#paint(org.eclipse.swt.graphics.GC, org.eclipse.swt.widgets.Canvas, org.eclipse.swt.graphics.Rectangle)
-		 */
+		@Override
 		public void paint(GC gc, Canvas canvas, Rectangle bounds) {
 			// draw affordance so the user know she can click here to get a breakpoint
 			Image fImage= DLTKPluginImages.get(DLTKPluginImages.IMG_FIELD_DEFAULT);
 			ImageUtilities.drawImage(fImage, gc, canvas, bounds, SWT.CENTER);
 		}
 
-		/*
-		 * @see org.eclipse.jface.text.source.IAnnotationPresentation#getLayer()
-		 */
+		@Override
 		public int getLayer() {
 			return IAnnotationPresentation.DEFAULT_LAYER;
 		}
@@ -81,9 +76,7 @@ public class ScriptExpandHover extends AnnotationExpandHover {
 		super(ruler, access, doubleClickListener);
 	}
 
-	/*
-	 * @see org.eclipse.ui.internal.texteditor.AnnotationExpandHover#getHoverInfoForLine(org.eclipse.jface.text.source.ISourceViewer, int)
-	 */
+	@Override
 	protected Object getHoverInfoForLine(final ISourceViewer viewer, final int line) {
 		final boolean showTemporaryProblems= DLTKUIPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_CORRECTION_INDICATION);
 		IAnnotationModel model= viewer.getAnnotationModel();
@@ -148,6 +141,7 @@ public class ScriptExpandHover extends AnnotationExpandHover {
 		input.fDoubleClickListener= fDblClickListener;
 		input.redoAction= new AnnotationExpansionControl.ICallback() {
 
+			@Override
 			public void run(IInformationControlExtension2 control) {
 				control.setInput(getHoverInfoForLine(viewer, line));
 			}
@@ -180,9 +174,7 @@ public class ScriptExpandHover extends AnnotationExpandHover {
 		return showTemporaryProblems /*&& JavaCorrectionProcessor.hasCorrections((Annotation)annotation)*/;
 	}
 
-	/*
-	 * @see org.eclipse.ui.internal.texteditor.AnnotationExpandHover#getOrder(org.eclipse.jface.text.source.Annotation)
-	 */
+	@Override
 	protected int getOrder(Annotation annotation) {
 		if (isBreakpointAnnotation(annotation)) 
 			return 1000;

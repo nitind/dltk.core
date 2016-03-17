@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.text.hover;
 
@@ -97,9 +96,6 @@ public class BestMatchHover extends AbstractScriptEditorTextHover implements
 			fInstantiatedTextHovers.add(hover);
 	}
 
-	/*
-	 * @see ITextHover#getHoverInfo(ITextViewer, IRegion)
-	 */
 	@Override
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 
@@ -120,9 +116,6 @@ public class BestMatchHover extends AbstractScriptEditorTextHover implements
 		return null;
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.ITextHoverExtension#getHoverControlCreator()
-	 */
 	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		if (fBestHover instanceof ITextHoverExtension)
@@ -131,10 +124,7 @@ public class BestMatchHover extends AbstractScriptEditorTextHover implements
 		return null;
 	}
 
-	/*
-	 * @see
-	 * IInformationProviderExtension2#getInformationPresenterControlCreator()
-	 */
+	@Override
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		if (fBestHover instanceof IInformationProviderExtension2)
 			return ((IInformationProviderExtension2) fBestHover)

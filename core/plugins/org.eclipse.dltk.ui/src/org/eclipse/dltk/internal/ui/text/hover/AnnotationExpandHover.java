@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.text.hover;
 
@@ -56,23 +55,17 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 
 	private class InformationControlCreator implements IInformationControlCreator, IInformationControlCreatorExtension {
 
-		/*
-		 * @see org.eclipse.jface.text.IInformationControlCreator#createInformationControl(org.eclipse.swt.widgets.Shell)
-		 */
+		@Override
 		public IInformationControl createInformationControl(Shell parent) {
 			return new AnnotationExpansionControl(parent, SWT.NONE, fAnnotationAccess);
 		}
 
-		/*
-		 * @see org.eclipse.jface.text.IInformationControlCreatorExtension#canReuse(org.eclipse.jface.text.IInformationControl)
-		 */
+		@Override
 		public boolean canReuse(IInformationControl control) {
 			return control instanceof AnnotationExpansionControl;
 		}
 
-		/*
-		 * @see org.eclipse.jface.text.IInformationControlCreatorExtension#canReplace(org.eclipse.jface.text.IInformationControlCreator)
-		 */
+		@Override
 		public boolean canReplace(IInformationControlCreator creator) {
 			return creator == this;
 		}
@@ -80,23 +73,17 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 
 	private class VerticalRulerListener implements IVerticalRulerListener {
 
-		/*
-		 * @see org.eclipse.jface.text.source.IVerticalRulerListener#annotationSelected(org.eclipse.jface.text.source.VerticalRulerEvent)
-		 */
+		@Override
 		public void annotationSelected(VerticalRulerEvent event) {
 			fCompositeRuler.fireAnnotationSelected(event);
 		}
 
-		/*
-		 * @see org.eclipse.jface.text.source.IVerticalRulerListener#annotationDefaultSelected(org.eclipse.jface.text.source.VerticalRulerEvent)
-		 */
+		@Override
 		public void annotationDefaultSelected(VerticalRulerEvent event) {
 			fCompositeRuler.fireAnnotationDefaultSelected(event);
 		}
 
-		/*
-		 * @see org.eclipse.jface.text.source.IVerticalRulerListener#annotationContextMenuAboutToShow(org.eclipse.jface.text.source.VerticalRulerEvent, org.eclipse.swt.widgets.Menu)
-		 */
+		@Override
 		public void annotationContextMenuAboutToShow(VerticalRulerEvent event, Menu menu) {
 			fCompositeRuler.fireAnnotationContextMenuAboutToShow(event, menu);
 		}
@@ -125,6 +112,7 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 	/*
 	 * @see org.eclipse.jface.text.source.IAnnotationHover#getHoverInfo(org.eclipse.jface.text.source.ISourceViewer, int)
 	 */
+	@Override
 	public String getHoverInfo(ISourceViewer sourceViewer, int line) {
 		// we don't have any sensible return value as text
 		return null;
@@ -177,9 +165,7 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 	protected void sort(List exact, final IAnnotationModel model) {
 		class AnnotationComparator implements Comparator {
 
-			/*
-			 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-			 */
+			@Override
 			public int compare(Object o1, Object o2) {
 				Annotation a1= (Annotation) o1;
 				Annotation a2= (Annotation) o2;
@@ -276,30 +262,22 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 		return 0;
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#getHoverControlCreator()
-	 */
+	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		return fgCreator;
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#getHoverInfo(org.eclipse.jface.text.source.ISourceViewer, org.eclipse.jface.text.source.ILineRange, int)
-	 */
+	@Override
 	public Object getHoverInfo(ISourceViewer sourceViewer, ILineRange lineRange, int visibleLines) {
 		return getHoverInfoForLine(sourceViewer, lineRange.getStartLine());
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#getHoverLineRange(org.eclipse.jface.text.source.ISourceViewer, int)
-	 */
+	@Override
 	public ILineRange getHoverLineRange(ISourceViewer viewer, int lineNumber) {
 		return new LineRange(lineNumber, 1);
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#canHandleMouseCursor()
-	 */
+	@Override
 	public boolean canHandleMouseCursor() {
 		return true;
 	}

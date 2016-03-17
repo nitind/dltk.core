@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.text.hover;
 
@@ -280,6 +279,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover implements
 				// }
 
 				IInputChangedListener inputChangeListener = new IInputChangedListener() {
+					@Override
 					public void inputChanged(Object newInput) {
 						backAction.update();
 						forwardAction.update();
@@ -313,6 +313,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover implements
 		}
 	}
 
+	@Override
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		if (fPresenterControlCreator == null) {
 			fPresenterControlCreator = new PresenterControlCreator(getSite());
@@ -591,6 +592,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover implements
 
 		private ScriptElementImageProvider fImageProvider;
 
+		@Override
 		public String getTitle(Object element) {
 			if (element instanceof IModelElement) {
 				IModelElement member = (IModelElement) element;
@@ -604,6 +606,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover implements
 			}
 		}
 
+		@Override
 		public ImageDescriptor getImage(Object element) {
 			if (element instanceof IModelElement) {
 				final IModelElement modelElement = (IModelElement) element;

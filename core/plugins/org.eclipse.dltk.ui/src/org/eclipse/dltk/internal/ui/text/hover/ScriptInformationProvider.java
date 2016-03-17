@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.text.hover;
 
@@ -35,12 +34,15 @@ public class ScriptInformationProvider implements IInformationProvider,
 
 	class EditorWatcher implements IPartListener {
 
+		@Override
 		public void partOpened(IWorkbenchPart part) {
 		}
 
+		@Override
 		public void partDeactivated(IWorkbenchPart part) {
 		}
 
+		@Override
 		public void partClosed(IWorkbenchPart part) {
 			if (part == fEditor) {
 				fEditor.getSite().getWorkbenchWindow().getPartService()
@@ -49,10 +51,12 @@ public class ScriptInformationProvider implements IInformationProvider,
 			}
 		}
 
+		@Override
 		public void partActivated(IWorkbenchPart part) {
 			update();
 		}
 
+		@Override
 		public void partBroughtToTop(IWorkbenchPart part) {
 			update();
 		}
@@ -104,6 +108,7 @@ public class ScriptInformationProvider implements IInformationProvider,
 		}
 	}
 
+	@Override
 	public IRegion getSubject(ITextViewer textViewer, int offset) {
 
 		if (textViewer != null)
@@ -112,6 +117,7 @@ public class ScriptInformationProvider implements IInformationProvider,
 		return null;
 	}
 
+	@Override
 	public String getInformation(ITextViewer textViewer, IRegion subject) {
 		if (fImplementation != null) {
 			String s = fImplementation.getHoverInfo(textViewer, subject);
@@ -123,10 +129,12 @@ public class ScriptInformationProvider implements IInformationProvider,
 		return null;
 	}
 
+	@Override
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		if (fPresenterControlCreator == null) {
 			fPresenterControlCreator = new AbstractReusableInformationControlCreator() {
 
+				@Override
 				public IInformationControl doCreateInformationControl(
 						Shell parent) {
 					if (BrowserInformationControl.isAvailable(parent))

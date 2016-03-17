@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,7 @@ public class ScriptSourceHover extends AbstractScriptEditorTextHover implements
 	/*
 	 * @see JavaElementHover
 	 */
+	@Override
 	protected String getHoverInfo(String nature, IModelElement[] result) {
 		int nResults = result.length;
 
@@ -71,8 +72,10 @@ public class ScriptSourceHover extends AbstractScriptEditorTextHover implements
 		return null;
 	}
 
+	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		return new IInformationControlCreator() {
+			@Override
 			public IInformationControl createInformationControl(Shell parent) {
 				IEditorPart editor = getEditor();
 				if (editor instanceof ScriptEditor) {
@@ -90,14 +93,10 @@ public class ScriptSourceHover extends AbstractScriptEditorTextHover implements
 		};
 	}
 
-	/*
-	 * @see
-	 * IInformationProviderExtension2#getInformationPresenterControlCreator()
-	 * 
-	 * @since 3.0
-	 */
+	@Override
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		return new IInformationControlCreator() {
+			@Override
 			public IInformationControl createInformationControl(Shell parent) {
 				int style = SWT.V_SCROLL | SWT.H_SCROLL;
 				int shellStyle = SWT.RESIZE | SWT.TOOL;
