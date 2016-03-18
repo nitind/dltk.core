@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -40,6 +40,7 @@ public interface IFormatterControlManager extends IPreferenceDelegate<String> {
 	 * @return
 	 * @deprecated
 	 */
+	@Deprecated
 	Combo createCombo(Composite parent, String key, String label, String[] items);
 
 	Combo createCombo(Composite parent, String key, String label,

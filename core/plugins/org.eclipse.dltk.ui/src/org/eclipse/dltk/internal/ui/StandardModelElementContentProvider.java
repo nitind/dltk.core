@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -144,6 +144,7 @@ public class StandardModelElementContentProvider implements
 	 *             working copies. The Java model does not support the
 	 *             'original' mode anymore.
 	 */
+	@Deprecated
 	public boolean getProvideWorkingCopy() {
 		return fProvideWorkingCopy;
 	}
@@ -153,6 +154,7 @@ public class StandardModelElementContentProvider implements
 	 *             the working copy. The Java model offers a unified world and
 	 *             does not support the 'original' mode anymore.
 	 */
+	@Deprecated
 	public void setProvideWorkingCopy(boolean b) {
 		fProvideWorkingCopy = b;
 	}

@@ -80,6 +80,7 @@ public abstract class AbstractDLTKUILanguageToolkit implements
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	protected final Object getUIPLugin() {
 		return null;
 	}

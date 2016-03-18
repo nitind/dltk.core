@@ -108,6 +108,7 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 	 * @deprecated
 	 * @see #getPreferenceChangeRebuildPrompt(boolean, Collection)
 	 */
+	@Deprecated
 	protected final String getBuildDialogTitle() {
 		return null;
 	}
@@ -127,6 +128,7 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 	 * @deprecated
 	 * @see #getPreferenceChangeRebuildPrompt(boolean, Collection)
 	 */
+	@Deprecated
 	protected final String getFullBuildDialogMessage() {
 		return null;
 	}
@@ -146,6 +148,7 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 	 * @deprecated
 	 * @see #getPreferenceChangeRebuildPrompt(boolean, Collection)
 	 */
+	@Deprecated
 	protected final String getProjectBuildDialogMessage() {
 		return null;
 	}

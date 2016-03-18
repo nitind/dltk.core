@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -352,7 +352,8 @@ public abstract class DLTKViewerDropAdapter extends DropTargetAdapter {
      * @param exception the exception
      * @param event the event
      */
-    protected void handleException(Throwable exception, DropTargetEvent event) {
+    @Deprecated
+	protected void handleException(Throwable exception, DropTargetEvent event) {
         // Currently we never rethrow because VA/Java crashes if an SWT
         // callback throws anything. Generally catching Throwable is bad, but in
         // this cases it's better than hanging the image.

@@ -286,6 +286,7 @@ public class BrowserInformationControl extends AbstractInformationControl
 	 * 
 	 * @deprecated use {@link #setInput(Object)}
 	 */
+	@Deprecated
 	public void setInformation(final String content) {
 		setInput(new BrowserInformationControlInput(null) {
 			public String getHtml() {

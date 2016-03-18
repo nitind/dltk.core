@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ui.actions;
 
@@ -260,12 +259,14 @@ public interface IScriptEditorActionDefinitionIds extends ITextEditorActionDefin
 	 * Note: this id is for internal use only.
 	 * @deprecated as of 3.0 replaced by {@link org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds#GOTO_NEXT_ANNOTATION}
 	 */
+	@Deprecated
 	public static final String SHOW_NEXT_PROBLEM= "org.eclipse.dltk.ui.edit.text.script.show.next.problem"; //$NON-NLS-1$
 	
 	/**
 	 * Note: this id is for internal use only.
 	 * @deprecated as of 3.0 replaced by {@link org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds#GOTO_PREVIOUS_ANNOTATION}
 	 */
+	@Deprecated
 	public static final String SHOW_PREVIOUS_PROBLEM= "org.eclipse.dltk.ui.edit.text.script.show.previous.problem"; //$NON-NLS-1$
 
 	// refactor
@@ -337,6 +338,7 @@ public interface IScriptEditorActionDefinitionIds extends ITextEditorActionDefin
 	 * (value <code>"org.eclipse.dltk.ui.edit.text.script.inline.local.variable"</code>).
 	 * @deprecated Use INLINE
 	 */
+	@Deprecated
 	public static final String INLINE_LOCAL_VARIABLE= "org.eclipse.dltk.ui.edit.text.script.inline.local.variable"; //$NON-NLS-1$
 	
 	/**
@@ -623,6 +625,7 @@ public interface IScriptEditorActionDefinitionIds extends ITextEditorActionDefin
 	 * (value <code>"org.eclipse.dltk.ui.edit.text.script.toggle.presentation"</code>).
 	 * @deprecated as of 3.0 replaced by {@link org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds#TOGGLE_SHOW_SELECTED_ELEMENT_ONLY}
 	 */
+	@Deprecated
 	public static final String TOGGLE_PRESENTATION= "org.eclipse.dltk.ui.edit.text.script.toggle.presentation"; //$NON-NLS-1$
 	
 	/**

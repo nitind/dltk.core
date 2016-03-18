@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Widget;
  *
  * @deprecated needs to be replaced by a manager who handles transfer of listeners and filters
  */
+@Deprecated
 class PackageViewerWrapper extends StructuredViewer {
 
 	private StructuredViewer fViewer;

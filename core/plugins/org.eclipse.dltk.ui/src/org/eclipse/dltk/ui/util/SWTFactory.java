@@ -384,6 +384,7 @@ public class SWTFactory {
 	 * @return
 	 * @deprecated
 	 */
+	@Deprecated
 	public static Group createGroup(Composite parent, String text, int columns,
 			int hspan, GridData data) {
 		return createGroup(parent, text, columns, data);

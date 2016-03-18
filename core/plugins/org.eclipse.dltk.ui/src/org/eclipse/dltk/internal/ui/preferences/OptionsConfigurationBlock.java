@@ -392,6 +392,7 @@ public abstract class OptionsConfigurationBlock {
 	 * @deprecated
 	 * @see #getPreferenceChangeRebuildPrompt(boolean, Collection)
 	 */
+	@Deprecated
 	protected final String[] getFullBuildDialogStrings(boolean workspaceSettings) {
 		return null;
 	}
