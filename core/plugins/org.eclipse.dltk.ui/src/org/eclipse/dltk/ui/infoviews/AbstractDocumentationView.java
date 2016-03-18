@@ -109,7 +109,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 	private static String fgStyleSheet;
 	/** The Browser widget */
 	private boolean fIsUsingBrowserWidget;
-	private RGB fBackgroundColorRGB;
+	private RGB fBackgroundColorRGB, fForegroundColorRGB;
 
 	/**
 	 * The Javadoc view's select all action.
@@ -339,6 +339,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 	@Override
 	protected void setForeground(Color color) {
 		getControl().setForeground(color);
+		fForegroundColorRGB = color.getRGB();
 	}
 
 	@Override
@@ -347,8 +348,9 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 		// Apply style sheet
 		fBackgroundColorRGB = color.getRGB();
 		if (getInput() == null) {
-			StringBuffer buffer = new StringBuffer(""); //$NON-NLS-1$
+			StringBuffer buffer = new StringBuffer();
 			HTMLPrinter.insertPageProlog(buffer, 0, fBackgroundColorRGB,
+					fForegroundColorRGB,
 					fgStyleSheet);
 			setInput(buffer.toString());
 		} else {
@@ -548,6 +550,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 	private String addPrologeEpilog(StringBuffer buffer) {
 		if (buffer.length() > 0) {
 			HTMLPrinter.insertPageProlog(buffer, 0, fBackgroundColorRGB,
+					fForegroundColorRGB,
 					fgStyleSheet);
 			HTMLPrinter.addPageEpilog(buffer);
 			return buffer.toString();

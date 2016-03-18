@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.text;
 
@@ -92,6 +91,28 @@ public class HTMLPrinter {
 		}
 	}
 
+	public static void insertPageProlog(StringBuffer buffer, int position,
+			RGB bgRGB, RGB fgRGB, String styleSheet) {
+
+		if (bgRGB == null)
+			insertPageProlog(buffer, position, styleSheet);
+		else {
+			StringBuffer pageProlog = new StringBuffer(300);
+
+			pageProlog.append("<html>"); //$NON-NLS-1$
+
+			appendStyleSheetURL(pageProlog, styleSheet);
+
+			pageProlog.append("<body text=\""); //$NON-NLS-1$
+			appendColor(pageProlog, fgRGB);
+			pageProlog.append("\" bgcolor=\""); //$NON-NLS-1$
+			appendColor(pageProlog, bgRGB);
+			pageProlog.append("\">"); //$NON-NLS-1$
+
+			buffer.insert(position, pageProlog.toString());
+		}
+	}
+
 	public static void insertStyles(StringBuffer buffer, String[] styles) {
 		if (styles == null || styles.length == 0)
 			return;
@@ -167,7 +188,8 @@ public class HTMLPrinter {
 
 	public static void insertPageProlog(StringBuffer buffer, int position,
 			String styleSheet) {
-		insertPageProlog(buffer, position, HTMLUtils.getBgColor(), styleSheet);
+		insertPageProlog(buffer, position, HTMLUtils.getBgColor(),
+				HTMLUtils.getFgColor(), styleSheet);
 	}
 
 	public static void addPageProlog(StringBuffer buffer) {
