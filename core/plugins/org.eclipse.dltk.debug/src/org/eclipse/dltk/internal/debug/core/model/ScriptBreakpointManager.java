@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,8 +50,8 @@ import org.eclipse.dltk.debug.core.model.IScriptSpawnpoint;
 import org.eclipse.dltk.debug.core.model.IScriptWatchpoint;
 import org.eclipse.osgi.util.NLS;
 
-public class ScriptBreakpointManager implements IBreakpointListener,
-		IBreakpointManagerListener {
+public class ScriptBreakpointManager
+		implements IBreakpointListener, IBreakpointManagerListener {
 
 	final IScriptBreakpointPathMapper bpPathMapper;
 	final IScriptBreakpointLineMapper bpLineMapper;
@@ -134,11 +134,10 @@ public class ScriptBreakpointManager implements IBreakpointListener,
 			config.setExpression(makeWatchpointExpression(watchpoint));
 			config.setLineNo(watchpoint.getLineNumber());
 			if (bpLineMapper != null) {
-				bpLineMapper.toDebuggerBreakpoint(bpUri,
-						config.getLineNo(), config);
+				bpLineMapper.toDebuggerBreakpoint(bpUri, config.getLineNo(),
+						config);
 			}
-			id = commands.setWatchBreakpoint(bpUri, config.getLineNo(),
-					config);
+			id = commands.setWatchBreakpoint(bpUri, config.getLineNo(), config);
 		} else if (breakpoint instanceof IScriptMethodEntryBreakpoint) {
 			IScriptMethodEntryBreakpoint entryBreakpoint = (IScriptMethodEntryBreakpoint) breakpoint;
 
@@ -161,8 +160,8 @@ public class ScriptBreakpointManager implements IBreakpointListener,
 			config.setLineNo(lineBreakpoint.getLineNumber());
 
 			if (bpLineMapper != null) {
-				bpLineMapper.toDebuggerBreakpoint(bpUri,
-						config.getLineNo(), config);
+				bpLineMapper.toDebuggerBreakpoint(bpUri, config.getLineNo(),
+						config);
 			}
 
 			if (ScriptBreakpointUtils.isConditional(lineBreakpoint)) {
@@ -333,8 +332,7 @@ public class ScriptBreakpointManager implements IBreakpointListener,
 					if (oldValue == null) {
 						if (newValue != null) {
 							return IMarker.LINE_NUMBER.equals(attr)
-									? MAJOR_CHANGE
-									: MINOR_CHANGE;
+									? MAJOR_CHANGE : MINOR_CHANGE;
 						}
 						continue;
 					}
@@ -361,17 +359,16 @@ public class ScriptBreakpointManager implements IBreakpointListener,
 		if (conditional && AbstractScriptBreakpoint.EXPRESSION.equals(attr)) {
 			return MAJOR_CHANGE;
 		}
-		final boolean oldExprState = delta.getAttribute(
-				AbstractScriptBreakpoint.EXPRESSION_STATE, false);
-		final String oldExpr = delta.getAttribute(
-				AbstractScriptBreakpoint.EXPRESSION, null);
+		final boolean oldExprState = delta
+				.getAttribute(AbstractScriptBreakpoint.EXPRESSION_STATE, false);
+		final String oldExpr = delta
+				.getAttribute(AbstractScriptBreakpoint.EXPRESSION, null);
 		if (ScriptBreakpointUtils.isConditional(oldExprState,
 				oldExpr) != conditional) {
 			return MAJOR_CHANGE;
 		}
-		if (IMarker.LINE_NUMBER.equals(attr)
-				&& !target.getOptions().get(
-						DebugOption.DBGP_BREAKPOINT_UPDATE_LINE_NUMBER)) {
+		if (IMarker.LINE_NUMBER.equals(attr) && !target.getOptions()
+				.get(DebugOption.DBGP_BREAKPOINT_UPDATE_LINE_NUMBER)) {
 			return MAJOR_CHANGE;
 		}
 		return MINOR_CHANGE;
@@ -487,8 +484,8 @@ public class ScriptBreakpointManager implements IBreakpointListener,
 		if (!addSession(session)) {
 			return;
 		}
-		IBreakpoint[] breakpoints = getBreakpointManager().getBreakpoints(
-				target.getModelIdentifier());
+		IBreakpoint[] breakpoints = getBreakpointManager()
+				.getBreakpoints(target.getModelIdentifier());
 		monitor.beginTask(Util.EMPTY_STRING, breakpoints.length);
 
 		for (int i = 0; i < breakpoints.length; i++) {
@@ -558,7 +555,7 @@ public class ScriptBreakpointManager implements IBreakpointListener,
 				final IDbgpSession[] sessions = manager.getSessions();
 				for (int i = 0; i < sessions.length; ++i) {
 					final IDbgpSession session = sessions[i];
-					final String id = (String) ids.remove(session);
+					final String id = ids.remove(session);
 					if (id != null) {
 						session.getCoreCommands().removeBreakpoint(id);
 					}
@@ -704,8 +701,8 @@ public class ScriptBreakpointManager implements IBreakpointListener,
 
 	// IBreakpointManagerListener
 	public void breakpointManagerEnablementChanged(boolean enabled) {
-		IBreakpoint[] breakpoints = getBreakpointManager().getBreakpoints(
-				target.getModelIdentifier());
+		IBreakpoint[] breakpoints = getBreakpointManager()
+				.getBreakpoints(target.getModelIdentifier());
 		final IDbgpSession[] sessions = getSessions();
 		for (int i = 0; i < breakpoints.length; ++i) {
 			final IBreakpoint breakpoint = breakpoints[i];

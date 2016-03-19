@@ -101,15 +101,15 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 			DebugException exception) {
 		Object[] listeners = fHotCodeReplaceListeners.getListeners();
 		for (int i = 0; i < listeners.length; i++) {
-			((IHotCodeReplaceListener) listeners[i]).hotCodeReplaceFailed(
-					target, exception);
+			((IHotCodeReplaceListener) listeners[i])
+					.hotCodeReplaceFailed(target, exception);
 		}
 	}
 
 	public void launchAdded(ILaunch launch) {
 		IDebugTarget[] debugTargets = launch.getDebugTargets();
 		for (int i = 0; i < debugTargets.length; i++) {
-			IScriptDebugTarget target = (IScriptDebugTarget) debugTargets[i]
+			IScriptDebugTarget target = debugTargets[i]
 					.getAdapter(IScriptDebugTarget.class);
 			if (target != null) {
 				if (supportsHotCodeReplace(target)) {
@@ -134,7 +134,7 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 	public void launchRemoved(ILaunch launch) {
 		IDebugTarget[] debugTargets = launch.getDebugTargets();
 		for (int i = 0; i < debugTargets.length; i++) {
-			IScriptDebugTarget target = (IScriptDebugTarget) debugTargets[i]
+			IScriptDebugTarget target = debugTargets[i]
 					.getAdapter(IScriptDebugTarget.class);
 			if (target != null) {
 				deregisterTarget(target);
@@ -149,7 +149,7 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 				Object source = event.getSource();
 				if (source instanceof IAdaptable
 						&& source instanceof IDebugTarget) {
-					IScriptDebugTarget target = (IScriptDebugTarget) ((IAdaptable) source)
+					IScriptDebugTarget target = ((IAdaptable) source)
 							.getAdapter(IScriptDebugTarget.class);
 					if (target != null) {
 						deregisterTarget(target);
@@ -241,16 +241,16 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 		for (int i = 0; i < hotSwapTargets.length; i++) {
 			IScriptDebugTarget target = hotSwapTargets[i];
 			String natureId = target.getLanguageToolkit().getNatureId();
-			IHotCodeReplaceProvider provider = getHotCodeReplaceProvider(natureId);
+			IHotCodeReplaceProvider provider = getHotCodeReplaceProvider(
+					natureId);
 			try {
 				if (provider != null) {
 					provider.performCodeReplace(target, resources);
 					fireHCRSucceeded(target);
 				} else {
-					fail(NLS
-							.bind(
-									Messages.HotCodeReplaceManager_hotCodeReplaceProviderForNotFound,
-									natureId));
+					fail(NLS.bind(
+							Messages.HotCodeReplaceManager_hotCodeReplaceProviderForNotFound,
+							natureId));
 				}
 			} catch (DebugException e) {
 				fireHCRFailed(target, e);
@@ -263,9 +263,9 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 	}
 
 	private void fail(String message, Throwable e) throws DebugException {
-		throw new DebugException(new Status(IStatus.ERROR,
-				DLTKDebugPlugin.PLUGIN_ID, DebugPlugin.INTERNAL_ERROR, message,
-				e));
+		throw new DebugException(
+				new Status(IStatus.ERROR, DLTKDebugPlugin.PLUGIN_ID,
+						DebugPlugin.INTERNAL_ERROR, message, e));
 	}
 
 	private IHotCodeReplaceProvider getHotCodeReplaceProvider(String natureId) {
@@ -278,7 +278,8 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 	 */
 	private IResource[] getChangedFiles(IResourceChangeEvent event) {
 		IResourceDelta delta = event.getDelta();
-		if (event.getType() != IResourceChangeEvent.POST_BUILD || delta == null) {
+		if (event.getType() != IResourceChangeEvent.POST_BUILD
+				|| delta == null) {
 			return null;
 		}
 

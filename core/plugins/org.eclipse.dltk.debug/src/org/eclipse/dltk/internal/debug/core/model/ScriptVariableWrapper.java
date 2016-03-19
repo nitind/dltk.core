@@ -11,8 +11,8 @@ import org.eclipse.dltk.debug.core.model.IScriptType;
 import org.eclipse.dltk.debug.core.model.IScriptValue;
 import org.eclipse.dltk.debug.core.model.IScriptVariable;
 
-public class ScriptVariableWrapper extends ScriptDebugElement implements
-		IScriptVariable, IScriptVariableContainer {
+public class ScriptVariableWrapper extends ScriptDebugElement
+		implements IScriptVariable, IScriptVariableContainer {
 
 	final IDebugTarget target;
 	private final String name;
@@ -38,7 +38,7 @@ public class ScriptVariableWrapper extends ScriptDebugElement implements
 		if (children == null) {
 			return new IScriptVariable[0];
 		}
-		return (IScriptVariable[]) children.clone();
+		return children.clone();
 	}
 
 	public String getEvalName() {
