@@ -33,7 +33,7 @@ public class InterpreterSearcher {
 		}
 
 		// Path variable
-		IExecutionEnvironment exeEnv = (IExecutionEnvironment) environment
+		IExecutionEnvironment exeEnv = environment
 				.getAdapter(IExecutionEnvironment.class);
 		if (exeEnv == null)
 			return;
@@ -115,8 +115,8 @@ public class InterpreterSearcher {
 			final IFileHandle file = files[i];
 
 			monitor.subTask(NLS.bind(
-					Messages.InterpreterSearcher_foundSearching, Integer
-							.valueOf(found.size()), file.getCanonicalPath()));
+					Messages.InterpreterSearcher_foundSearching,
+					Integer.valueOf(found.size()), file.getCanonicalPath()));
 
 			// Check if file is a symlink
 			if (file.isDirectory() && file.isSymlink()) {

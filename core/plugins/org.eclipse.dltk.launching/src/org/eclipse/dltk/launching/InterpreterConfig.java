@@ -114,8 +114,7 @@ public class InterpreterConfig implements Cloneable {
 	public IExecutionEnvironment getExecutionEnvironment() {
 		IEnvironment environment = getEnvironment();
 		if (environment != null) {
-			return (IExecutionEnvironment) environment
-					.getAdapter(IExecutionEnvironment.class);
+			return environment.getAdapter(IExecutionEnvironment.class);
 		}
 		return null;
 	}
@@ -283,10 +282,11 @@ public class InterpreterConfig implements Cloneable {
 		return list.toArray(new String[list.size()]);
 	}
 
-	public String[] getEnvironmentAsStringsIncluding(EnvironmentVariable[] vars) {
+	public String[] getEnvironmentAsStringsIncluding(
+			EnvironmentVariable[] vars) {
 
-		EnvironmentVariable[] variables = EnvironmentResolver.resolve(
-				getEnvVars(), vars, true);
+		EnvironmentVariable[] variables = EnvironmentResolver
+				.resolve(getEnvVars(), vars, true);
 		Set<String> pressentVars = new HashSet<String>();
 		ArrayList<String> list = new ArrayList<String>();
 		if (variables != null) {
@@ -374,8 +374,8 @@ public class InterpreterConfig implements Cloneable {
 	public String[] renderCommandLine(IEnvironment environment,
 			String interpreter) {
 		IFileHandle interpreterPath = PlatformFileUtils
-				.findAbsoluteOrEclipseRelativeFile(environment, new Path(
-						interpreter));
+				.findAbsoluteOrEclipseRelativeFile(environment,
+						new Path(interpreter));
 		return renderCommandLine(environment, interpreterPath.getPath());
 	}
 

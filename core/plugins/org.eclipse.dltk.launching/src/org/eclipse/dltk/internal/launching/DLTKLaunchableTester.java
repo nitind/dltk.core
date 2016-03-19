@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.launching;
 
@@ -29,32 +28,33 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 
-
 /**
  * Generalized property tester class to determine enablement of context
  * launching menu artifacts
  * 
-	 *
+ *
  */
 public class DLTKLaunchableTester extends PropertyTester {
 	/**
 	 * "is container" property
 	 */
 	private static final String PROPERTY_IS_CONTAINER = "isContainer"; //$NON-NLS-1$
-	
+
 	/**
 	 * name for the PROPERTY_PROJECT_NATURE property
 	 */
-	private static final String PROPERTY_PROJECT_NATURE = "hasProjectNature"; //$NON-NLS-1$	
+	private static final String PROPERTY_PROJECT_NATURE = "hasProjectNature"; //$NON-NLS-1$
 	/**
 	 * name for the PROPERTY_HAS_SWT_ON_PATH property
 	 */
 	private static final String PROPERTY_BUILDPATH_REFERENCE = "buildpathReference"; //$NON-NLS-1$
+
 	public DLTKLaunchableTester() {
-		if( DLTKCore.VERBOSE ) {
+		if (DLTKCore.VERBOSE) {
 			System.out.println("DLTKLaunchableTester:initialized..."); //$NON-NLS-1$
 		}
 	}
+
 	/**
 	 * determines if the project selected has the specified nature
 	 * 
@@ -101,7 +101,8 @@ public class DLTKLaunchableTester extends PropertyTester {
 		return false;
 	}
 
-	private boolean hasItemsOnBuildPath(IScriptProject project, Set searched, Object[] args) {
+	private boolean hasItemsOnBuildPath(IScriptProject project, Set searched,
+			Object[] args) {
 		try {
 			List projects = new ArrayList();
 			if (project != null && project.exists()) {
@@ -117,7 +118,8 @@ public class DLTKLaunchableTester extends PropertyTester {
 					}
 					if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
 						String name = entry.getPath().lastSegment();
-						IProject dep = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+						IProject dep = ResourcesPlugin.getWorkspace().getRoot()
+								.getProject(name);
 						IScriptProject scriptProject = DLTKCore.create(dep);
 						if (!searched.contains(scriptProject)) {
 							projects.add(scriptProject);
@@ -153,7 +155,8 @@ public class DLTKLaunchableTester extends PropertyTester {
 	 * search all of the children of the container to determine what it contains
 	 * and what can be launched by what.</li>
 	 * <li>If inspection of children of containers were done, a user might want
-	 * to choose a different launch type, even though our tests filter it out.</li>
+	 * to choose a different launch type, even though our tests filter it out.
+	 * </li>
 	 * </ul>
 	 * 
 	 * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object,
@@ -162,23 +165,26 @@ public class DLTKLaunchableTester extends PropertyTester {
 	 * @return true if the specified tests pass, or the context is a container,
 	 *         false otherwise
 	 */
-	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
+	public boolean test(Object receiver, String property, Object[] args,
+			Object expectedValue) {
 		if (PROPERTY_IS_CONTAINER.equals(property)) {
 			if (receiver instanceof IAdaptable) {
-				IResource resource = (IResource) ((IAdaptable) receiver).getAdapter(IResource.class);
+				IResource resource = ((IAdaptable) receiver)
+						.getAdapter(IResource.class);
 				if (resource != null) {
 					return resource instanceof IContainer;
 				}
 			}
 			return false;
 		}
-		
+
 		IModelElement element = null;
 		if (receiver instanceof IAdaptable) {
-			element = (IModelElement) ((IAdaptable) receiver).getAdapter(IModelElement.class);
-			if( element == null ) {
-				IResource res = (IResource) ((IAdaptable) receiver).getAdapter(IResource.class);
-				if( res != null ) {
+			element = ((IAdaptable) receiver).getAdapter(IModelElement.class);
+			if (element == null) {
+				IResource res = ((IAdaptable) receiver)
+						.getAdapter(IResource.class);
+				if (res != null) {
 					element = DLTKCore.create(res);
 				}
 			}
@@ -191,7 +197,8 @@ public class DLTKLaunchableTester extends PropertyTester {
 		if (PROPERTY_BUILDPATH_REFERENCE.equals(property)) {
 			return hasItemOnBuildPath(element, args);
 		}
-		if (PROPERTY_PROJECT_NATURE.equals(property) && args.length > 0 && args[0]!=null) {
+		if (PROPERTY_PROJECT_NATURE.equals(property) && args.length > 0
+				&& args[0] != null) {
 			return hasProjectNature(element, (String) args[0]);
 		}
 		return false;

@@ -58,8 +58,7 @@ public class ScriptSourceLookupUtil {
 				containers.add(container);
 			}
 		}
-		return (ISourceContainer[]) containers
-				.toArray(new ISourceContainer[containers.size()]);
+		return containers.toArray(new ISourceContainer[containers.size()]);
 	}
 
 	private static ISourceContainer createArchivePathContainer(

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.launching;
 
@@ -246,8 +245,7 @@ public class DLTKLaunchingPlugin extends Plugin
 		if (fBuildpathEntryExtensions == null) {
 			initializeRuntimeBuildpathExtensions();
 		}
-		IConfigurationElement config = (IConfigurationElement) fBuildpathEntryExtensions
-				.get(id);
+		IConfigurationElement config = fBuildpathEntryExtensions.get(id);
 		if (config == null) {
 			abort(MessageFormat.format(LaunchingMessages.LaunchingPlugin_32,
 					id), null);
@@ -284,7 +282,7 @@ public class DLTKLaunchingPlugin extends Plugin
 		String launchFilter = "*." //$NON-NLS-1$
 				+ ILaunchConfiguration.LAUNCH_CONFIGURATION_FILE_EXTENSION;
 		Hashtable<String, String> optionsMap = DLTKCore.getOptions();
-		String filters = (String) optionsMap.get(
+		String filters = optionsMap.get(
 				"org.eclipse.dltk.core.builder.resourceCopyExclusionFilter"); //$NON-NLS-1$
 		boolean modified = false;
 		if (filters == null || filters.length() == 0) {

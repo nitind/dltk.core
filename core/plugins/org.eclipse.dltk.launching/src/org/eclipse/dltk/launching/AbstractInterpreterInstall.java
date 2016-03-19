@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.launching;
 
@@ -47,8 +46,8 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
  * 
  * @since 2.0
  */
-public abstract class AbstractInterpreterInstall implements
-		IInterpreterInstall, IInterpreterInstallExtensionContainer {
+public abstract class AbstractInterpreterInstall
+		implements IInterpreterInstall, IInterpreterInstallExtensionContainer {
 	private IInterpreterInstallType fType;
 	private String fId;
 	private String fName;
@@ -138,16 +137,14 @@ public abstract class AbstractInterpreterInstall implements
 	public IExecutionEnvironment getExecEnvironment() {
 		IEnvironment environment = getEnvironment();
 		if (environment != null) {
-			return (IExecutionEnvironment) environment
-					.getAdapter(IExecutionEnvironment.class);
+			return environment.getAdapter(IExecutionEnvironment.class);
 		}
 		return null;
 	}
 
 	public void setInstallLocation(IFileHandle installLocation) {
 		if (!installLocation.equals(fInstallLocation)) {
-			PropertyChangeEvent event = new PropertyChangeEvent(
-					this,
+			PropertyChangeEvent event = new PropertyChangeEvent(this,
 					IInterpreterInstallChangedListener.PROPERTY_INSTALL_LOCATION,
 					fInstallLocation, installLocation);
 			fInstallLocation = installLocation;
@@ -213,8 +210,8 @@ public abstract class AbstractInterpreterInstall implements
 	public boolean equals(Object object) {
 		if (object instanceof IInterpreterInstall) {
 			IInterpreterInstall interpreter = (IInterpreterInstall) object;
-			return getInterpreterInstallType().equals(
-					interpreter.getInterpreterInstallType())
+			return getInterpreterInstallType()
+					.equals(interpreter.getInterpreterInstallType())
 					&& getId().equals(interpreter.getId());
 		}
 		return false;
@@ -260,8 +257,7 @@ public abstract class AbstractInterpreterInstall implements
 		} else if (fInterpreterArgs.equals(args)) {
 			return;
 		}
-		PropertyChangeEvent event = new PropertyChangeEvent(
-				this,
+		PropertyChangeEvent event = new PropertyChangeEvent(this,
 				IInterpreterInstallChangedListener.PROPERTY_Interpreter_ARGUMENTS,
 				fInterpreterArgs, args);
 		fInterpreterArgs = args;
@@ -321,8 +317,7 @@ public abstract class AbstractInterpreterInstall implements
 	}
 
 	public void setEnvironmentVariables(EnvironmentVariable[] variables) {
-		PropertyChangeEvent event = new PropertyChangeEvent(
-				this,
+		PropertyChangeEvent event = new PropertyChangeEvent(this,
 				IInterpreterInstallChangedListener.PROPERTY_ENVIRONMENT_VARIABLES,
 				this.fEnvironmentVariables, variables);
 		this.fEnvironmentVariables = variables;
@@ -377,8 +372,8 @@ public abstract class AbstractInterpreterInstall implements
 				}
 				firePropertyChangeEvent(new PropertyChangeEvent(this,
 						IInterpreterInstallChangedListener.PROPERTY_EXTENSIONS,
-						Collections.singletonList(object),
-						value != null ? Collections.singletonList(value) : null));
+						Collections.singletonList(object), value != null
+								? Collections.singletonList(value) : null));
 				return object;
 			}
 		}
@@ -469,8 +464,9 @@ public abstract class AbstractInterpreterInstall implements
 				resource = createResource();
 			}
 			try {
-				resource.load(new URIConverter.ReadableInputStream(value,
-						ENCODING), null);
+				resource.load(
+						new URIConverter.ReadableInputStream(value, ENCODING),
+						null);
 			} catch (IOException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();

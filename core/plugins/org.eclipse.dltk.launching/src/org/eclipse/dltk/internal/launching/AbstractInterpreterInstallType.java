@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.launching;
 
@@ -54,7 +53,8 @@ import org.eclipse.osgi.util.NLS;
  * Abstract implementation of a interpreter install type. Subclasses should
  * implement
  * <ul>
- * <li><code>IInterpreterInstall doCreateInterpreterInstall(String id)</code></li>
+ * <li><code>IInterpreterInstall doCreateInterpreterInstall(String id)</code>
+ * </li>
  * <li><code>String getName()</code></li>
  * <li><code>IStatus validateInstallLocation(File installLocation)</code></li>
  * <li><code>String getLanguageId()</code></li>
@@ -63,8 +63,8 @@ import org.eclipse.osgi.util.NLS;
  * Clients implementing Interpreter install types should subclass this class.
  * </p>
  */
-public abstract class AbstractInterpreterInstallType implements
-		IInterpreterInstallType, IExecutableExtension {
+public abstract class AbstractInterpreterInstallType
+		implements IInterpreterInstallType, IExecutableExtension {
 	public interface ILookupRunnable {
 		public void run(IProgressMonitor monitor)
 				throws InvocationTargetException, InterruptedException;
@@ -89,8 +89,8 @@ public abstract class AbstractInterpreterInstallType implements
 	}
 
 	public IInterpreterInstall[] getInterpreterInstalls() {
-		return fInterpreters.toArray(new IInterpreterInstall[fInterpreters
-				.size()]);
+		return fInterpreters
+				.toArray(new IInterpreterInstall[fInterpreters.size()]);
 	}
 
 	public void disposeInterpreterInstall(String id) {
@@ -138,7 +138,8 @@ public abstract class AbstractInterpreterInstallType implements
 	 * @return the newly created IInterpreterInstall instance. Must not return
 	 *         <code>null</code>.
 	 */
-	protected abstract IInterpreterInstall doCreateInterpreterInstall(String id);
+	protected abstract IInterpreterInstall doCreateInterpreterInstall(
+			String id);
 
 	/**
 	 * Initializes the id parameter from the "id" attribute in the configuration
@@ -253,8 +254,8 @@ public abstract class AbstractInterpreterInstallType implements
 		// DLTKLaunchingPlugin.log(new Status(IStatus.INFO,
 		// DLTKLaunchingPlugin.PLUGIN_ID, IStatus.INFO,
 		// "Start reading discovery script library paths", null));
-		final BufferedReader dataIn = new BufferedReader(new InputStreamReader(
-				process.getInputStream()));
+		final BufferedReader dataIn = new BufferedReader(
+				new InputStreamReader(process.getInputStream()));
 
 		final List<String> result = new ArrayList<String>();
 
@@ -274,10 +275,9 @@ public abstract class AbstractInterpreterInstallType implements
 						if (line != null && monitor != null && !workReceived) {
 							int work = extractWorkFromLine(line);
 							if (work != NOT_WORK_COUNT) {
-								monitor
-										.beginTask(
-												LaunchingMessages.AbstractInterpreterInstallType_fetchingInterpreterLibraryLocations,
-												work);
+								monitor.beginTask(
+										LaunchingMessages.AbstractInterpreterInstallType_fetchingInterpreterLibraryLocations,
+										work);
 								// monitor.subTask("Featching interpeter library
 								// locations");
 								workReceived = true;
@@ -295,22 +295,18 @@ public abstract class AbstractInterpreterInstallType implements
 					}
 
 				} catch (IOException e) {
-					DLTKLaunchingPlugin
-							.log(new Status(
-									IStatus.INFO,
-									DLTKLaunchingPlugin.PLUGIN_ID,
-									IStatus.INFO,
-									NLS
-											.bind(
-													LaunchingMessages.AbstractInterpreterInstallType_failedToReadFromDiscoverScriptOutputStream,
-													e.getMessage()), e));
+					DLTKLaunchingPlugin.log(new Status(IStatus.INFO,
+							DLTKLaunchingPlugin.PLUGIN_ID, IStatus.INFO,
+							NLS.bind(
+									LaunchingMessages.AbstractInterpreterInstallType_failedToReadFromDiscoverScriptOutputStream,
+									e.getMessage()),
+							e));
 				} finally {
 					if (monitor != null) {
 						if (!workReceived) {
-							monitor
-									.beginTask(
-											LaunchingMessages.AbstractInterpreterInstallType_fetchingInterpreterLibraryLocations,
-											1);
+							monitor.beginTask(
+									LaunchingMessages.AbstractInterpreterInstallType_fetchingInterpreterLibraryLocations,
+									1);
 						}
 						monitor.done();
 					}
@@ -341,8 +337,8 @@ public abstract class AbstractInterpreterInstallType implements
 		int pos1 = line.indexOf(DLTK_TOTAL_WORK_START);
 		int pos2 = line.indexOf(DLTK_TOTAL_WORK_END);
 		if (pos1 != -1 && pos2 != -1) {
-			String totalWork = line.substring(pos1
-					+ DLTK_TOTAL_WORK_START.length(), pos2);
+			String totalWork = line
+					.substring(pos1 + DLTK_TOTAL_WORK_START.length(), pos2);
 			int intValue = Integer.parseInt(totalWork);
 			if (intValue == -1) {
 				return IProgressMonitor.UNKNOWN;
@@ -361,10 +357,9 @@ public abstract class AbstractInterpreterInstallType implements
 			final List<LibraryLocation> locs, IProgressMonitor monitor) {
 		List<LibraryLocation> resolvedLocs = new ArrayList<LibraryLocation>();
 		if (monitor != null) {
-			monitor
-					.beginTask(
-							LaunchingMessages.AbstractInterpreterInstallType_correctingLocations,
-							locs.size());
+			monitor.beginTask(
+					LaunchingMessages.AbstractInterpreterInstallType_correctingLocations,
+					locs.size());
 		}
 		for (LibraryLocation n : locs) {
 			// String res;
@@ -415,8 +410,8 @@ public abstract class AbstractInterpreterInstallType implements
 	 * <code>ProgressMonitorDialog</code>
 	 */
 	protected void runLibraryLookup(final ILookupRunnable runnable,
-			IProgressMonitor monitor) throws InvocationTargetException,
-			InterruptedException {
+			IProgressMonitor monitor)
+			throws InvocationTargetException, InterruptedException {
 
 		/*
 		 * ProgressMonitorDialog progress = new ProgressMonitorDialog(null);
@@ -512,8 +507,8 @@ public abstract class AbstractInterpreterInstallType implements
 	 * @since 2.0
 	 */
 	public IStatus validateInstallLocation(IFileHandle installLocation,
-			EnvironmentVariable[] variables,
-			LibraryLocation[] libraryLocations, IProgressMonitor monitor) {
+			EnvironmentVariable[] variables, LibraryLocation[] libraryLocations,
+			IProgressMonitor monitor) {
 		return validateInstallLocation(installLocation);
 	}
 
@@ -543,8 +538,8 @@ public abstract class AbstractInterpreterInstallType implements
 		final String name = installLocation.getName();
 		IPath nPath = new Path(name);
 
-		IExecutionEnvironment execEnv = (IExecutionEnvironment) installLocation
-				.getEnvironment().getAdapter(IExecutionEnvironment.class);
+		IExecutionEnvironment execEnv = installLocation.getEnvironment()
+				.getAdapter(IExecutionEnvironment.class);
 
 		if (execEnv != null) {
 			for (int i = 0; i < possibleNames.length; ++i) {
@@ -622,12 +617,9 @@ public abstract class AbstractInterpreterInstallType implements
 
 		} catch (IOException e) {
 			if (DLTKCore.VERBOSE) {
-				getLog()
-						.log(
-								createStatus(
-										IStatus.ERROR,
-										LaunchingMessages.AbstractInterpreterInstallType_unableToLookupLibraryPaths,
-										e));
+				getLog().log(createStatus(IStatus.ERROR,
+						LaunchingMessages.AbstractInterpreterInstallType_unableToLookupLibraryPaths,
+						e));
 			}
 		} finally {
 			if (process != null) {
@@ -685,7 +677,7 @@ public abstract class AbstractInterpreterInstallType implements
 			public void run(IProgressMonitor monitor) {
 				try {
 					IEnvironment env = installLocation.getEnvironment();
-					IExecutionEnvironment exeEnv = (IExecutionEnvironment) env
+					IExecutionEnvironment exeEnv = env
 							.getAdapter(IExecutionEnvironment.class);
 					if (exeEnv == null)
 						return;
@@ -693,8 +685,8 @@ public abstract class AbstractInterpreterInstallType implements
 
 					// handle case where rse is missing required plugins
 					if (deployment == null) {
-						DLTKLaunchingPlugin
-								.logWarning(LaunchingMessages.AbstractInterpreterInstallType_failedToDeployLibraryLocationsScript);
+						DLTKLaunchingPlugin.logWarning(
+								LaunchingMessages.AbstractInterpreterInstallType_failedToDeployLibraryLocationsScript);
 						return;
 					}
 
@@ -704,23 +696,18 @@ public abstract class AbstractInterpreterInstallType implements
 								.getFile(deploymentPath);
 						String result = retrivePaths(exeEnv, installLocation,
 								locations, monitor, locator, variables);
-						String message = NLS
-								.bind(
-										LaunchingMessages.AbstractInterpreterInstallType_failedToResolveLibraryLocationsForWith,
-										installLocation.getName(), locator
-												.toOSString());
+						String message = NLS.bind(
+								LaunchingMessages.AbstractInterpreterInstallType_failedToResolveLibraryLocationsForWith,
+								installLocation.getName(),
+								locator.toOSString());
 						if (locations.size() == 0) {
 							if (result == null) {
 								DLTKLaunchingPlugin.log(message);
 							} else {
-								DLTKLaunchingPlugin
-										.logWarning(
-												message,
-												new Exception(
-														NLS
-																.bind(
-																		LaunchingMessages.AbstractInterpreterInstallType_output,
-																		result)));
+								DLTKLaunchingPlugin.logWarning(message,
+										new Exception(NLS.bind(
+												LaunchingMessages.AbstractInterpreterInstallType_output,
+												result)));
 							}
 						}
 					} finally {
@@ -729,10 +716,9 @@ public abstract class AbstractInterpreterInstallType implements
 						// }
 					}
 				} catch (IOException e) {
-					DLTKLaunchingPlugin
-							.log(
-									LaunchingMessages.AbstractInterpreterInstallType_problemWhileResolvingInterpreterLibraries,
-									e);
+					DLTKLaunchingPlugin.log(
+							LaunchingMessages.AbstractInterpreterInstallType_problemWhileResolvingInterpreterLibraries,
+							e);
 					if (DLTKCore.DEBUG) {
 						e.printStackTrace();
 					}
@@ -747,7 +733,8 @@ public abstract class AbstractInterpreterInstallType implements
 	}
 
 	public synchronized LibraryLocation[] getDefaultLibraryLocations(
-			final IFileHandle installLocation, EnvironmentVariable[] variables) {
+			final IFileHandle installLocation,
+			EnvironmentVariable[] variables) {
 		return getDefaultLibraryLocations(installLocation, variables, null);
 	}
 
@@ -755,12 +742,9 @@ public abstract class AbstractInterpreterInstallType implements
 			final IFileHandle installLocation, EnvironmentVariable[] variables,
 			IProgressMonitor monitor) {
 		if (monitor != null) {
-			monitor
-					.beginTask(
-							NLS
-									.bind(
-											LaunchingMessages.AbstractInterpreterInstallType_resolvingLibraryPaths,
-											this.getName()), 100);
+			monitor.beginTask(NLS.bind(
+					LaunchingMessages.AbstractInterpreterInstallType_resolvingLibraryPaths,
+					this.getName()), 100);
 		}
 		Object cacheKey = makeKey(installLocation, variables);
 		if (fCachedLocations.containsKey(cacheKey)) {
@@ -773,23 +757,16 @@ public abstract class AbstractInterpreterInstallType implements
 				locations, variables);
 
 		try {
-			runLibraryLookup(runnable,
-					monitor != null ? new SubProgressMonitor(monitor, 95)
-							: null);
+			runLibraryLookup(runnable, monitor != null
+					? new SubProgressMonitor(monitor, 95) : null);
 		} catch (InvocationTargetException e) {
-			getLog()
-					.log(
-							createStatus(
-									IStatus.ERROR,
-									LaunchingMessages.AbstractInterpreterInstallType_errorResolvingDefaultLibraries,
-									e));
+			getLog().log(createStatus(IStatus.ERROR,
+					LaunchingMessages.AbstractInterpreterInstallType_errorResolvingDefaultLibraries,
+					e));
 		} catch (InterruptedException e) {
-			getLog()
-					.log(
-							createStatus(
-									IStatus.ERROR,
-									LaunchingMessages.AbstractInterpreterInstallType_errorResolvingDefaultLibraries,
-									e));
+			getLog().log(createStatus(IStatus.ERROR,
+					LaunchingMessages.AbstractInterpreterInstallType_errorResolvingDefaultLibraries,
+					e));
 		}
 
 		LibraryLocation[] libs = correctLocations(locations,
