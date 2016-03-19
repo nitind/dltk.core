@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.ui.interpreters;
 
@@ -61,8 +60,8 @@ import org.eclipse.ui.dialogs.ListSelectionDialog;
  * install
  */
 @SuppressWarnings("restriction")
-public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
-		SelectionListener, ISelectionChangedListener {
+public abstract class AbstractInterpreterEnvironmentVariablesBlock
+		implements SelectionListener, ISelectionChangedListener {
 
 	private static final String VALUE_LABEL = InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_value;
 
@@ -132,17 +131,14 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 				| GridData.HORIZONTAL_ALIGN_FILL);
 		pathButtonComp.setLayoutData(gd);
 
-		fAddButton = createPushButton(
-				pathButtonComp,
+		fAddButton = createPushButton(pathButtonComp,
 				InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_add);
 		fAddButton.addSelectionListener(this);
 
-		fAddExistedButton = createPushButton(
-				pathButtonComp,
+		fAddExistedButton = createPushButton(pathButtonComp,
 				InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_addFromEnvironment);
 		fAddExistedButton.addSelectionListener(this);
-		fEditButton = createPushButton(
-				pathButtonComp,
+		fEditButton = createPushButton(pathButtonComp,
 				InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_edit);
 		fEditButton.addSelectionListener(this);
 
@@ -150,13 +146,11 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 				InterpretersMessages.InterpreterLibraryBlock_6);
 		fRemoveButton.addSelectionListener(this);
 
-		fImportButton = createPushButton(
-				pathButtonComp,
+		fImportButton = createPushButton(pathButtonComp,
 				InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_import);
 		fImportButton.addSelectionListener(this);
 
-		fExportButton = createPushButton(
-				pathButtonComp,
+		fExportButton = createPushButton(pathButtonComp,
 				InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_export);
 		fExportButton.addSelectionListener(this);
 	}
@@ -310,11 +304,11 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 		 */if (source == fRemoveButton) {
 			EnvironmentVariable[] old = this.fEnvironmentVariablesContentProvider
 					.getVariables();
-			fEnvironmentVariablesContentProvider
-					.remove((IStructuredSelection) fVariablesViewer
-							.getSelection());
-			fDialog.updateLibraries(this.fEnvironmentVariablesContentProvider
-					.getVariables(), old);
+			fEnvironmentVariablesContentProvider.remove(
+					(IStructuredSelection) fVariablesViewer.getSelection());
+			fDialog.updateLibraries(
+					this.fEnvironmentVariablesContentProvider.getVariables(),
+					old);
 			fDialog.updateValidateInterpreterLocation();
 		} else if (source == fAddExistedButton) {
 			addExisted((IStructuredSelection) fVariablesViewer.getSelection());
@@ -326,7 +320,8 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 			if (edit((IStructuredSelection) fVariablesViewer.getSelection())) {
 				fDialog.updateLibraries(
 						this.fEnvironmentVariablesContentProvider
-								.getVariables(), old);
+								.getVariables(),
+						old);
 				fDialog.updateValidateInterpreterLocation();
 			}
 		} else if (source == fImportButton) {
@@ -342,8 +337,8 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 	private void performExport() {
 		FileDialog dialog = new FileDialog(this.fDialog.getShell(), SWT.SAVE);
 		dialog.setOverwrite(true);
-		dialog
-				.setText(InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_exportEnvironmentVariablesToFile);
+		dialog.setText(
+				InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_exportEnvironmentVariablesToFile);
 		String file = dialog.open();
 		if (file != null) {
 			EnvironmentVariable[] variables = this.fEnvironmentVariablesContentProvider
@@ -369,8 +364,8 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 
 	private boolean performImport() {
 		FileDialog dialog = new FileDialog(this.fDialog.getShell(), SWT.OPEN);
-		dialog
-				.setText(InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_importEnvironmentVariablesFromFile);
+		dialog.setText(
+				InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_importEnvironmentVariablesFromFile);
 		String file = dialog.open();
 		if (file != null) {
 			File handle = new File(file);
@@ -396,8 +391,8 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 				Set<EnvironmentVariable> nvars = new HashSet<EnvironmentVariable>();
 				nvars.addAll(Arrays.asList(vars));
 				nvars.addAll(Arrays.asList(variables));
-				this.fEnvironmentVariablesContentProvider.setVariables(nvars
-						.toArray(new EnvironmentVariable[nvars.size()]));
+				this.fEnvironmentVariablesContentProvider.setVariables(
+						nvars.toArray(new EnvironmentVariable[nvars.size()]));
 			}
 			return true;
 		}
@@ -412,8 +407,7 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 		}
 		String originalName = var.getName();
 		String value = var.getValue();
-		MultipleInputDialog dialog = new MultipleInputDialog(
-				fDialog.getShell(),
+		MultipleInputDialog dialog = new MultipleInputDialog(fDialog.getShell(),
 				InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_editVariable);
 		dialog.addTextField(NAME_LABEL, originalName, false);
 		dialog.addVariablesField(VALUE_LABEL, value, true);
@@ -442,9 +436,8 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse
-	 * .swt.events.SelectionEvent)
+	 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.
+	 * eclipse .swt.events.SelectionEvent)
 	 */
 	public void widgetDefaultSelected(SelectionEvent e) {
 	}
@@ -458,15 +451,14 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 		fEnvironmentVariablesContentProvider.addVariable(newVar);
 		fVariablesViewer.setSelection(new StructuredSelection(newVar), true);
 		fVariablesViewer.refresh();
-		fDialog.updateLibraries(this.fEnvironmentVariablesContentProvider
-				.getVariables(), old);
+		fDialog.updateLibraries(
+				this.fEnvironmentVariablesContentProvider.getVariables(), old);
 		update();
 		fDialog.updateValidateInterpreterLocation();
 	}
 
 	private EnvironmentVariable add() {
-		MultipleInputDialog dialog = new MultipleInputDialog(
-				fDialog.getShell(),
+		MultipleInputDialog dialog = new MultipleInputDialog(fDialog.getShell(),
 				InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_addVariable);
 		dialog.addTextField(NAME_LABEL, null, false);
 		dialog.addVariablesField(VALUE_LABEL, null, true);
@@ -492,8 +484,8 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 		EnvironmentVariable[] old = this.fEnvironmentVariablesContentProvider
 				.getVariables();
 		fEnvironmentVariablesContentProvider.add(libs, selection);
-		fDialog.updateLibraries(this.fEnvironmentVariablesContentProvider
-				.getVariables(), old);
+		fDialog.updateLibraries(
+				this.fEnvironmentVariablesContentProvider.getVariables(), old);
 		update();
 		fDialog.updateValidateInterpreterLocation();
 	}
@@ -557,9 +549,8 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 		fInterpreterInstall = interpreter;
 		fInterpreterInstallType = type;
 		if (interpreter != null) {
-			fEnvironmentVariablesContentProvider
-					.setVariables(getInterpreterInstall()
-							.getEnvironmentVariables());
+			fEnvironmentVariablesContentProvider.setVariables(
+					getInterpreterInstall().getEnvironmentVariables());
 		}
 		update();
 	}
@@ -591,13 +582,11 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 		Map<String, EnvironmentVariable> envVariables = getNativeEnvironment();
 		if (envVariables.size() == 0) {
 			MessageBox box = new MessageBox(fDialog.getShell(), SWT.ICON_ERROR);
-			box
-					.setMessage(NLS
-							.bind(
-									InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_couldNotRetrieveEnvironmentVariablesFrom,
-									fDialog.getEnvironment().getName()));
-			box
-					.setText(InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_failedToRetrieveEnvironment);
+			box.setMessage(NLS.bind(
+					InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_couldNotRetrieveEnvironmentVariablesFrom,
+					fDialog.getEnvironment().getName()));
+			box.setText(
+					InterpretersMessages.AbstractInterpreterEnvironmentVariablesBlock_failedToRetrieveEnvironment);
 			box.open();
 			return null;
 		}
@@ -608,9 +597,8 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 			envVariables.remove(var.getName());
 		}
 
-		ListSelectionDialog dialog = new ListSelectionDialog(
-				fDialog.getShell(), envVariables,
-				createSelectionDialogContentProvider(),
+		ListSelectionDialog dialog = new ListSelectionDialog(fDialog.getShell(),
+				envVariables, createSelectionDialogContentProvider(),
 				createSelectionDialogLabelProvider(),
 				LaunchConfigurationsMessages.EnvironmentTab_19);
 		dialog.setTitle(LaunchConfigurationsMessages.EnvironmentTab_20);
@@ -676,15 +664,15 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock implements
 
 	private Map<String, EnvironmentVariable> getNativeEnvironment() {
 		IEnvironment environment = fDialog.getEnvironment();
-		IExecutionEnvironment execEnvironment = (IExecutionEnvironment) environment
+		IExecutionEnvironment execEnvironment = environment
 				.getAdapter(IExecutionEnvironment.class);
 		Map<String, String> stringVars = execEnvironment
 				.getEnvironmentVariables(true);
 		HashMap<String, EnvironmentVariable> vars = new HashMap<String, EnvironmentVariable>();
 		if (stringVars != null) {
 			for (Map.Entry<String, String> entry : stringVars.entrySet()) {
-				vars.put(entry.getKey(), new EnvironmentVariable(
-						entry.getKey(), entry.getValue()));
+				vars.put(entry.getKey(), new EnvironmentVariable(entry.getKey(),
+						entry.getValue()));
 			}
 		}
 		return vars;

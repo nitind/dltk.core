@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 
 package org.eclipse.dltk.internal.debug.ui.actions;
@@ -101,8 +100,8 @@ public class ScriptEvaluationAction implements IWorkbenchWindowActionDelegate,
 		protected Object resolveTextSelection(ITextSelection selection) {
 			String text = selection.getText();
 			if (textHasContent(text)) {
-				region = new Region(selection.getOffset(), selection
-						.getLength());
+				region = new Region(selection.getOffset(),
+						selection.getLength());
 				return text;
 			} else if (part instanceof IEditorPart) {
 				IEditorPart editor = (IEditorPart) part;
@@ -110,12 +109,12 @@ public class ScriptEvaluationAction implements IWorkbenchWindowActionDelegate,
 					ITextEditor textEditor = (ITextEditor) editor;
 					IDocument doc = textEditor.getDocumentProvider()
 							.getDocument(editor.getEditorInput());
-					region = ScriptWordFinder.findWord(doc, selection
-							.getOffset());
+					region = ScriptWordFinder.findWord(doc,
+							selection.getOffset());
 					if (region != null) {
 						try {
-							return doc.get(region.getOffset(), region
-									.getLength());
+							return doc.get(region.getOffset(),
+									region.getLength());
 						} catch (BadLocationException e) {
 						}
 					}
@@ -128,14 +127,15 @@ public class ScriptEvaluationAction implements IWorkbenchWindowActionDelegate,
 		protected Object resolveStructuredSelection(
 				IStructuredSelection selection) {
 			if (!selection.isEmpty()) {
-				if (part.getSite().getId().equals(
-						IDebugUIConstants.ID_DEBUG_VIEW)) {
+				if (part.getSite().getId()
+						.equals(IDebugUIConstants.ID_DEBUG_VIEW)) {
 					IEditorPart editor = part.getSite().getPage()
 							.getActiveEditor();
 
 					ISelection newSelection = getSelection(editor);
 					if (newSelection instanceof ITextSelection) {
-						return resolveTextSelection((ITextSelection) newSelection);
+						return resolveTextSelection(
+								(ITextSelection) newSelection);
 					}
 				} else {
 					Iterator elements = selection.iterator();
@@ -163,7 +163,8 @@ public class ScriptEvaluationAction implements IWorkbenchWindowActionDelegate,
 			if (selection instanceof ITextSelection) {
 				return resolveTextSelection((ITextSelection) selection);
 			} else if (selection instanceof IStructuredSelection) {
-				return resolveStructuredSelection((IStructuredSelection) selection);
+				return resolveStructuredSelection(
+						(IStructuredSelection) selection);
 			}
 
 			return null;
@@ -312,8 +313,8 @@ public class ScriptEvaluationAction implements IWorkbenchWindowActionDelegate,
 	}
 
 	protected void showExpressionView() {
-		if (getPart().getSite().getId().equals(
-				IDebugUIConstants.ID_EXPRESSION_VIEW)) {
+		if (getPart().getSite().getId()
+				.equals(IDebugUIConstants.ID_EXPRESSION_VIEW)) {
 			return;
 		}
 
@@ -334,10 +335,10 @@ public class ScriptEvaluationAction implements IWorkbenchWindowActionDelegate,
 	}
 
 	public static StyledText getStyledText(IWorkbenchPart part) {
-		ITextViewer viewer = (ITextViewer) part.getAdapter(ITextViewer.class);
+		ITextViewer viewer = part.getAdapter(ITextViewer.class);
 		StyledText textWidget = null;
 		if (viewer == null) {
-			Control control = (Control) part.getAdapter(Control.class);
+			Control control = part.getAdapter(Control.class);
 			if (control instanceof StyledText) {
 				textWidget = (StyledText) control;
 			}
@@ -411,8 +412,7 @@ public class ScriptEvaluationAction implements IWorkbenchWindowActionDelegate,
 					engine.asyncEvaluate(expression, stackFrame,
 							ScriptEvaluationAction.this);
 				} else {
-					throw new InvocationTargetException(
-							null,
+					throw new InvocationTargetException(null,
 							Messages.ScriptEvaluationAction_threadIsNotSuspended);
 				}
 			}
@@ -452,8 +452,8 @@ public class ScriptEvaluationAction implements IWorkbenchWindowActionDelegate,
 			return ce.getStatus().getMessage();
 		}
 		String message = NLS.bind(
-				Messages.ScriptEvaluationAction_anExceptionOccurred, exception
-						.getClass());
+				Messages.ScriptEvaluationAction_anExceptionOccurred,
+				exception.getClass());
 		if (exception.getMessage() != null) {
 			message = NLS.bind(
 					Messages.ScriptEvaluationAction_anExceptionOccurred2,
@@ -477,9 +477,8 @@ public class ScriptEvaluationAction implements IWorkbenchWindowActionDelegate,
 			if (i == 0) {
 				message = msg;
 			} else {
-				message = NLS.bind(
-						Messages.ScriptEvaluationAction_errorMessage, message,
-						msg);
+				message = NLS.bind(Messages.ScriptEvaluationAction_errorMessage,
+						message, msg);
 			}
 		}
 		return message;
@@ -491,8 +490,9 @@ public class ScriptEvaluationAction implements IWorkbenchWindowActionDelegate,
 	}
 
 	protected void reportError(String message) {
-		Status status = new Status(IStatus.ERROR, DLTKDebugUIPlugin
-				.getUniqueIdentifier(), IStatus.ERROR, message, null);
+		Status status = new Status(IStatus.ERROR,
+				DLTKDebugUIPlugin.getUniqueIdentifier(), IStatus.ERROR, message,
+				null);
 		ErrorDialog.openError(getShell(),
 				Messages.ScriptEvaluationAction_errorEvaluating, null, status);
 	}

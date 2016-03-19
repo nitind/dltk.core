@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2009 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -201,8 +201,7 @@ public class ScriptDebugConsolePageParticipant
 		if (process == null) {
 			return null;
 		}
-		IDebugTarget target = (IDebugTarget) process
-				.getAdapter(IDebugTarget.class);
+		IDebugTarget target = process.getAdapter(IDebugTarget.class);
 		ISelection selection = null;
 		if (target == null) {
 			selection = new TreeSelection(new TreePath(
@@ -254,10 +253,8 @@ public class ScriptDebugConsolePageParticipant
 	public void activated() {
 		// add EOF submissions
 		IPageSite site = fPage.getSite();
-		IHandlerService handlerService = (IHandlerService) site
-				.getService(IHandlerService.class);
-		IContextService contextService = (IContextService) site
-				.getService(IContextService.class);
+		IHandlerService handlerService = site.getService(IHandlerService.class);
+		IContextService contextService = site.getService(IContextService.class);
 		fActivatedContext = contextService.activateContext(fContextId);
 		fActivatedHandler = handlerService.activateHandler(
 				"org.eclipse.debug.ui.commands.eof", fEOFHandler); //$NON-NLS-1$
@@ -271,10 +268,8 @@ public class ScriptDebugConsolePageParticipant
 	public void deactivated() {
 		// remove EOF submissions
 		IPageSite site = fPage.getSite();
-		IHandlerService handlerService = (IHandlerService) site
-				.getService(IHandlerService.class);
-		IContextService contextService = (IContextService) site
-				.getService(IContextService.class);
+		IHandlerService handlerService = site.getService(IHandlerService.class);
+		IContextService contextService = site.getService(IContextService.class);
 		handlerService.deactivateHandler(fActivatedHandler);
 		contextService.deactivateContext(fActivatedContext);
 	}

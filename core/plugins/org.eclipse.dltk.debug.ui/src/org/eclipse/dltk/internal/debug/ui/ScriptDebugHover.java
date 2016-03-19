@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.ui;
 
@@ -40,8 +39,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.editors.text.EditorsUI;
 
-public abstract class ScriptDebugHover implements IScriptEditorTextHover,
-		ITextHoverExtension {
+public abstract class ScriptDebugHover
+		implements IScriptEditorTextHover, ITextHoverExtension {
 
 	private IEditorPart editor;
 
@@ -63,8 +62,7 @@ public abstract class ScriptDebugHover implements IScriptEditorTextHover,
 	protected IScriptStackFrame getFrame() {
 		IAdaptable adaptable = DebugUITools.getDebugContext();
 		if (adaptable != null) {
-			return (IScriptStackFrame) adaptable
-					.getAdapter(IScriptStackFrame.class);
+			return adaptable.getAdapter(IScriptStackFrame.class);
 		}
 		return null;
 	}
@@ -97,8 +95,8 @@ public abstract class ScriptDebugHover implements IScriptEditorTextHover,
 					String snippet = getFieldProperty(field);
 					try {
 						IDbgpProperty property = propCmds.getProperty(snippet);
-						return getResultText(snippet, ScriptValue.createValue(
-								frame, property));
+						return getResultText(snippet,
+								ScriptValue.createValue(frame, property));
 					} catch (DebugException e) {
 					}
 				}
@@ -171,7 +169,8 @@ public abstract class ScriptDebugHover implements IScriptEditorTextHover,
 	 * @param part
 	 * @return boolean
 	 */
-	public static boolean getBooleanPreferenceValue(String id, String preference) {
+	public static boolean getBooleanPreferenceValue(String id,
+			String preference) {
 		String compositeKey = id + "." + preference; //$NON-NLS-1$
 		IPreferenceStore store = DLTKDebugUIPlugin.getDefault()
 				.getPreferenceStore();
@@ -188,8 +187,8 @@ public abstract class ScriptDebugHover implements IScriptEditorTextHover,
 		return new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell parent) {
 				return new DefaultInformationControl(parent, SWT.NONE,
-						new HTMLTextPresenter(true), EditorsUI
-								.getTooltipAffordanceString());
+						new HTMLTextPresenter(true),
+						EditorsUI.getTooltipAffordanceString());
 			}
 		};
 	}

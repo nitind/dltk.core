@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 
 package org.eclipse.dltk.internal.debug.ui.log;
@@ -97,8 +96,8 @@ public class ScriptDebugLogView extends ViewPart {
 					final Object first = ((IStructuredSelection) event
 							.getSelection()).getFirstElement();
 					if (first instanceof ScriptDebugLogItem) {
-						textDocument.set(((ScriptDebugLogItem) first)
-								.getMessage());
+						textDocument
+								.set(((ScriptDebugLogItem) first).getMessage());
 						return;
 					}
 				}
@@ -110,8 +109,8 @@ public class ScriptDebugLogView extends ViewPart {
 		viewer.setLabelProvider(new ScriptDebugLogLabelProvider());
 		viewer.setInput(items);
 		textDocument = new Document();
-		textViewer = new TextViewer(sashForm, SWT.V_SCROLL | SWT.H_SCROLL
-				| SWT.WRAP | SWT.READ_ONLY);
+		textViewer = new TextViewer(sashForm,
+				SWT.V_SCROLL | SWT.H_SCROLL | SWT.WRAP | SWT.READ_ONLY);
 		textViewer.setDocument(textDocument);
 		fontRegistryChangeListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
@@ -127,8 +126,8 @@ public class ScriptDebugLogView extends ViewPart {
 		createMenu();
 		createToolbar();
 		createContextMenu();
-		IContextService ctxService = (IContextService) getSite().getService(
-				IContextService.class);
+		IContextService ctxService = getSite()
+				.getService(IContextService.class);
 		if (ctxService != null) {
 			fContextActivation = ctxService
 					.activateContext(DLTKUIPlugin.CONTEXT_VIEWS);
@@ -137,15 +136,15 @@ public class ScriptDebugLogView extends ViewPart {
 
 	public void dispose() {
 		if (fContextActivation != null) {
-			IContextService ctxService = (IContextService) getSite()
+			IContextService ctxService = getSite()
 					.getService(IContextService.class);
 			if (ctxService != null) {
 				ctxService.deactivateContext(fContextActivation);
 			}
 		}
 		if (fontRegistryChangeListener != null) {
-			JFaceResources.getFontRegistry().removeListener(
-					fontRegistryChangeListener);
+			JFaceResources.getFontRegistry()
+					.removeListener(fontRegistryChangeListener);
 			fontRegistryChangeListener = null;
 		}
 		super.dispose();

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 
 package org.eclipse.dltk.internal.debug.ui;
@@ -36,8 +35,8 @@ import org.eclipse.ui.PlatformUI;
  * stack frame selection exists, the "debuggerActive" System property is set to
  * true.
  */
-public class ScriptEvaluationContextManager implements IWindowListener,
-		IDebugContextListener {
+public class ScriptEvaluationContextManager
+		implements IWindowListener, IDebugContextListener {
 
 	/**
 	 * System property indicating a stack frame is selected in the debug view
@@ -105,8 +104,8 @@ public class ScriptEvaluationContextManager implements IWindowListener,
 		 * if (frame.canForceReturn()) {
 		 * System.setProperty(SUPPORTS_FORCE_RETURN, "true"); //$NON-NLS-1$ }
 		 * else { System.setProperty(SUPPORTS_FORCE_RETURN, "false");
-		 * //$NON-NLS-1$ } if
-		 * (((IScriptStackFrame)frame.getDebugTarget()).supportsInstanceRetrieval()){
+		 * //$NON-NLS-1$ } if (((IScriptStackFrame)frame.getDebugTarget()).
+		 * supportsInstanceRetrieval()){
 		 * System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "true");
 		 * //$NON-NLS-1$ } else {
 		 * System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false");
@@ -188,7 +187,8 @@ public class ScriptEvaluationContextManager implements IWindowListener,
 	 *         <code>null</code> if none
 	 * @return IJavaStackFrame
 	 */
-	public static IScriptStackFrame getEvaluationContext(IWorkbenchWindow window) {
+	public static IScriptStackFrame getEvaluationContext(
+			IWorkbenchWindow window) {
 		List<IWorkbenchWindow> alreadyVisited = new ArrayList<IWorkbenchWindow>();
 		if (window == null) {
 			window = manager.activeWindow;
@@ -242,7 +242,7 @@ public class ScriptEvaluationContextManager implements IWindowListener,
 					if (ss.size() == 1) {
 						Object element = ss.getFirstElement();
 						if (element instanceof IAdaptable) {
-							IScriptStackFrame frame = (IScriptStackFrame) ((IAdaptable) element)
+							IScriptStackFrame frame = ((IAdaptable) element)
 									.getAdapter(IScriptStackFrame.class);
 							if (frame != null) {
 								setContext(page, frame);

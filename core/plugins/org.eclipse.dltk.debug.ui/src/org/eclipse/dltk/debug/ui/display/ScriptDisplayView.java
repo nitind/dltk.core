@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -691,8 +691,8 @@ public class ScriptDisplayView extends PageBookView
 	public void warnOfContentChange(IConsole console) {
 		IWorkbenchPart part = fConsoleToPart.get(console);
 		if (part != null) {
-			IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService) part
-					.getSite().getAdapter(IWorkbenchSiteProgressService.class);
+			IWorkbenchSiteProgressService service = part.getSite()
+					.getAdapter(IWorkbenchSiteProgressService.class);
 			if (service != null) {
 				service.warnOfContentChange();
 			}
@@ -732,7 +732,7 @@ public class ScriptDisplayView extends PageBookView
 	public void partActivated(IWorkbenchPartReference partRef) {
 		if (isThisPart(partRef)) {
 			fActive = true;
-			IContextService contextService = (IContextService) getSite()
+			IContextService contextService = getSite()
 					.getService(IContextService.class);
 			if (contextService != null) {
 				fActivatedContext = contextService
@@ -769,7 +769,7 @@ public class ScriptDisplayView extends PageBookView
 	public void partDeactivated(IWorkbenchPartReference partRef) {
 		if (isThisPart(partRef)) {
 			fActive = false;
-			IContextService contextService = (IContextService) getSite()
+			IContextService contextService = getSite()
 					.getService(IContextService.class);
 			if (contextService != null) {
 				contextService.deactivateContext(fActivatedContext);

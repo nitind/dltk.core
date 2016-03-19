@@ -88,8 +88,8 @@ public class ScriptDetailFormattersManager implements IPropertyChangeListener {
 	private String getValueText(IValue value) {
 		if (value instanceof IScriptValue) {
 			ScriptDebugModelPresentation presentation = DLTKDebugUIPlugin
-					.getDefault().getModelPresentation(
-							value.getModelIdentifier());
+					.getDefault()
+					.getModelPresentation(value.getModelIdentifier());
 			return presentation.getDetailPaneText((IScriptValue) value);
 		}
 		return null;
@@ -111,8 +111,8 @@ public class ScriptDetailFormattersManager implements IPropertyChangeListener {
 			listener.detailComputed(value, getValueText(value));
 			return;
 		}
-		final IScriptEvaluationCommand command = value.createEvaluationCommand(
-				formatter.getSnippet(), thread);
+		final IScriptEvaluationCommand command = value
+				.createEvaluationCommand(formatter.getSnippet(), thread);
 		if (command == null) {
 			listener.detailComputed(value, getValueText(value));
 			return;
@@ -127,8 +127,8 @@ public class ScriptDetailFormattersManager implements IPropertyChangeListener {
 					listener.detailComputed(value, getValueText(resultValue));
 				} else {
 					try {
-						listener
-								.detailComputed(value, value.getValueString()/* CANNOT_EVALUATE */);
+						listener.detailComputed(value,
+								value.getValueString()/* CANNOT_EVALUATE */);
 					} catch (DebugException e) {
 						if (DLTKCore.DEBUG) {
 							e.printStackTrace();
@@ -141,8 +141,8 @@ public class ScriptDetailFormattersManager implements IPropertyChangeListener {
 	}
 
 	public DetailFormatter getDetailFormatter(IScriptValue value) {
-		DetailFormatter formatter = (DetailFormatter) formatters.get(value
-				.getType().getName());
+		DetailFormatter formatter = (DetailFormatter) formatters
+				.get(value.getType().getName());
 		if (formatter == null)
 			formatter = getDefaultFormatter();
 		return formatter;
@@ -177,12 +177,12 @@ public class ScriptDetailFormattersManager implements IPropertyChangeListener {
 			 */
 			IAdaptable selected = DebugUITools.getDebugContext();
 			if (selected != null) {
-				IScriptStackFrame frame = (IScriptStackFrame) selected
+				IScriptStackFrame frame = selected
 						.getAdapter(IScriptStackFrame.class);
 				if (frame != null) {
-					DebugPlugin.getDefault().fireDebugEventSet(
-							new DebugEvent[] { new DebugEvent(frame,
-									DebugEvent.CHANGE) });
+					DebugPlugin.getDefault()
+							.fireDebugEventSet(new DebugEvent[] {
+									new DebugEvent(frame, DebugEvent.CHANGE) });
 				}
 			}
 		}
@@ -196,7 +196,8 @@ public class ScriptDetailFormattersManager implements IPropertyChangeListener {
 		// return true;
 		// }
 
-		if (IDLTKDebugUIPreferenceConstants.PREF_SHOW_DETAILS.equals(property)) {
+		if (IDLTKDebugUIPreferenceConstants.PREF_SHOW_DETAILS
+				.equals(property)) {
 			return true;
 		}
 

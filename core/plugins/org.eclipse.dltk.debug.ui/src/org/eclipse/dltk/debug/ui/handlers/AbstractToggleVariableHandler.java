@@ -23,25 +23,27 @@ abstract class AbstractToggleVariableHandler extends AbstractHandler
 		implements IElementUpdater {
 
 	/*
-	 * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	 * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.
+	 * commands.ExecutionEvent)
 	 */
-	public final Object execute(ExecutionEvent event) throws ExecutionException {
+	public final Object execute(ExecutionEvent event)
+			throws ExecutionException {
 		toggleVariableDisplay();
 		updateDebugTargets();
-		
+
 		// refresh the ui elements
 		IWorkbenchWindow window = HandlerUtil
 				.getActiveWorkbenchWindowChecked(event);
-		ICommandService service = (ICommandService) window
-				.getService(ICommandService.class);
+		ICommandService service = window.getService(ICommandService.class);
 		service.refreshElements(event.getCommand().getId(), null);
 
 		return null;
 	}
 
 	/*
-	 * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement,
-	 *      java.util.Map)
+	 * @see
+	 * org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.
+	 * menus.UIElement, java.util.Map)
 	 */
 	public void updateElement(UIElement element, Map parameters) {
 		element.setChecked(isVariableDisplayEnabled());
@@ -77,14 +79,14 @@ abstract class AbstractToggleVariableHandler extends AbstractHandler
 			boolean enabled);
 
 	private boolean isVariableDisplayEnabled() {
-		return getPreferenceStore().getBoolean(
-				getVariableDisplayPreferenceKey());
+		return getPreferenceStore()
+				.getBoolean(getVariableDisplayPreferenceKey());
 	}
 
 	private boolean matchesModelId(IScriptDebugTarget target) {
 		return getModelId().equals(target.getModelIdentifier());
 	}
-	
+
 	private void toggleVariableDisplay() {
 		IPreferenceStore store = getPreferenceStore();
 		String key = getVariableDisplayPreferenceKey();

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.ui;
 
@@ -38,7 +37,7 @@ public class ScriptRunToLineAdapter implements IRunToLineTarget {
 	protected IResource getPartResource(IWorkbenchPart part) {
 		ITextEditor textEditor = getPartEditor(part);
 		if (textEditor != null) {
-			IResource resource = (IResource) textEditor.getEditorInput()
+			IResource resource = textEditor.getEditorInput()
 					.getAdapter(IResource.class);
 			return resource;
 		}
@@ -51,7 +50,7 @@ public class ScriptRunToLineAdapter implements IRunToLineTarget {
 	}
 
 	public boolean canRunToLine(IWorkbenchPart part, ISelection selection,
-			ISuspendResume target) {				
+			ISuspendResume target) {
 		return true;
 	}
 
@@ -61,16 +60,17 @@ public class ScriptRunToLineAdapter implements IRunToLineTarget {
 		if (selection instanceof ITextSelection) {
 			final ITextSelection textSelection = (ITextSelection) selection;
 			final IResource resource = getPartResource(part);
-			final URI uri = ScriptLineBreakpoint.makeUri(new Path(resource.getLocationURI().getPath()));
+			final URI uri = ScriptLineBreakpoint
+					.makeUri(new Path(resource.getLocationURI().getPath()));
 			int humanLineNumber = textSelection.getStartLine() + 1; // one based
 
 			if (target instanceof IDebugElement) {
 				IDebugTarget debugTarget = ((IDebugElement) target)
 						.getDebugTarget();
-				
+
 				if (debugTarget instanceof IScriptDebugTarget) {
 					((IScriptDebugTarget) debugTarget).runToLine(uri,
-							humanLineNumber);					
+							humanLineNumber);
 				}
 			}
 		}

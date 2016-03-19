@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.debug.ui.breakpoints;
 
@@ -65,10 +64,10 @@ public class BreakpointUtils {
 	/**
 	 * @since 2.0
 	 */
-	public static void addLineBreakpoint(ITextEditor textEditor,
-			int lineNumber, String debugModelId) throws CoreException {
-		IDocument document = textEditor.getDocumentProvider().getDocument(
-				textEditor.getEditorInput());
+	public static void addLineBreakpoint(ITextEditor textEditor, int lineNumber,
+			String debugModelId) throws CoreException {
+		IDocument document = textEditor.getDocumentProvider()
+				.getDocument(textEditor.getEditorInput());
 
 		IResource resource = getBreakpointResource(textEditor);
 		try {
@@ -93,8 +92,8 @@ public class BreakpointUtils {
 
 	public static void addSpawnpoint(ITextEditor textEditor, int lineNumber)
 			throws CoreException {
-		IDocument document = textEditor.getDocumentProvider().getDocument(
-				textEditor.getEditorInput());
+		IDocument document = textEditor.getDocumentProvider()
+				.getDocument(textEditor.getEditorInput());
 
 		IResource resource = getBreakpointResource(textEditor);
 		try {
@@ -118,9 +117,9 @@ public class BreakpointUtils {
 		return getBreakpointResource(textEditor.getEditorInput());
 	}
 
-	public static IResource getBreakpointResource(final IEditorInput editorInput) {
-		IResource resource = (IResource) editorInput
-				.getAdapter(IResource.class);
+	public static IResource getBreakpointResource(
+			final IEditorInput editorInput) {
+		IResource resource = editorInput.getAdapter(IResource.class);
 		if (resource == null)
 			resource = getWorkspaceRoot();
 		return resource;
@@ -143,8 +142,8 @@ public class BreakpointUtils {
 		boolean evaluate(IBreakpoint breakpoint) throws CoreException;
 	}
 
-	private static class ResourceBreakpointLocationTester implements
-			IBreakpointLocationTester {
+	private static class ResourceBreakpointLocationTester
+			implements IBreakpointLocationTester {
 
 		private final IResource resource;
 
@@ -160,8 +159,8 @@ public class BreakpointUtils {
 		}
 	}
 
-	private static class SimpleBreakpointLocationTester implements
-			IBreakpointLocationTester {
+	private static class SimpleBreakpointLocationTester
+			implements IBreakpointLocationTester {
 
 		private final String path;
 
@@ -188,15 +187,13 @@ public class BreakpointUtils {
 	 */
 	public static IBreakpointLocationTester getBreakpointLocationTester(
 			IEditorInput editorInput) throws CoreException {
-		IResource resource = (IResource) editorInput
-				.getAdapter(IResource.class);
+		IResource resource = editorInput.getAdapter(IResource.class);
 		if (resource != null && !resource.equals(getWorkspaceRoot())) {
 			return new ResourceBreakpointLocationTester(resource);
 		}
 
 		// else
-		IModelElement element = (IModelElement) editorInput
-				.getAdapter(IModelElement.class);
+		IModelElement element = editorInput.getAdapter(IModelElement.class);
 		if (element != null) {
 			return new SimpleBreakpointLocationTester(element.getPath());
 		}
@@ -205,14 +202,14 @@ public class BreakpointUtils {
 
 	public static IPath getBreakpointResourceLocation(ITextEditor textEditor)
 			throws CoreException {
-		IResource resource = (IResource) textEditor.getEditorInput()
+		IResource resource = textEditor.getEditorInput()
 				.getAdapter(IResource.class);
 		if (resource != null) {
 			return resource.getFullPath();
 		}
 
 		// else
-		IModelElement element = (IModelElement) textEditor.getEditorInput()
+		IModelElement element = textEditor.getEditorInput()
 				.getAdapter(IModelElement.class);
 		if (element != null) {
 			return element.getPath();
@@ -228,14 +225,14 @@ public class BreakpointUtils {
 		}
 
 		// else
-		IModelElement element = (IModelElement) textEditor.getEditorInput()
+		IModelElement element = textEditor.getEditorInput()
 				.getAdapter(IModelElement.class);
 		if (element != null) {
 			IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 					.getLanguageToolkit(element);
 			if (toolkit != null) {
-				return ScriptDebugManager.getInstance().getDebugModelByNature(
-						toolkit.getNatureId());
+				return ScriptDebugManager.getInstance()
+						.getDebugModelByNature(toolkit.getNatureId());
 			}
 		}
 
@@ -265,8 +262,8 @@ public class BreakpointUtils {
 		final IBreakpoint[] breakpoints = DebugPlugin.getDefault()
 				.getBreakpointManager().getBreakpoints(debugModelId);
 
-		final IBreakpointLocationTester tester = getBreakpointLocationTester(editor
-				.getEditorInput());
+		final IBreakpointLocationTester tester = getBreakpointLocationTester(
+				editor.getEditorInput());
 		if (tester == null) {
 			return null;
 		}
@@ -289,10 +286,10 @@ public class BreakpointUtils {
 
 	public static void addMethodEntryBreakpoint(ITextEditor textEditor,
 			int lineNumber, String methodName) throws CoreException {
-		IDocument document = textEditor.getDocumentProvider().getDocument(
-				textEditor.getEditorInput());
+		IDocument document = textEditor.getDocumentProvider()
+				.getDocument(textEditor.getEditorInput());
 
-		IResource resource = (IResource) textEditor.getEditorInput()
+		IResource resource = textEditor.getEditorInput()
 				.getAdapter(IResource.class);
 		if (resource != null) {
 			try {
@@ -302,8 +299,8 @@ public class BreakpointUtils {
 				// TODO
 				IPath path = resource.getLocation();
 				IScriptMethodEntryBreakpoint methodEntryBreakpoint = ScriptDebugModel
-						.createMethodEntryBreakpoint(resource, path,
-								lineNumber, start, end, false, null, methodName);
+						.createMethodEntryBreakpoint(resource, path, lineNumber,
+								start, end, false, null, methodName);
 				methodEntryBreakpoint.setBreakOnEntry(true);
 				((AbstractScriptBreakpoint) methodEntryBreakpoint)
 						.register(true);
@@ -315,10 +312,10 @@ public class BreakpointUtils {
 
 	public static void addWatchPoint(ITextEditor textEditor, int lineNumber,
 			String fieldName) throws CoreException {
-		IDocument document = textEditor.getDocumentProvider().getDocument(
-				textEditor.getEditorInput());
+		IDocument document = textEditor.getDocumentProvider()
+				.getDocument(textEditor.getEditorInput());
 
-		IResource resource = (IResource) textEditor.getEditorInput()
+		IResource resource = textEditor.getEditorInput()
 				.getAdapter(IResource.class);
 		if (resource != null) {
 			try {

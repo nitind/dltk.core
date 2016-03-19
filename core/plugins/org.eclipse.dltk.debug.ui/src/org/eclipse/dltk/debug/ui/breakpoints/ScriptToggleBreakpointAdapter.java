@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.debug.ui.breakpoints;
 
@@ -97,7 +96,7 @@ public abstract class ScriptToggleBreakpointAdapter
 	protected void report(final String message, final IWorkbenchPart part) {
 		DLTKDebugUIPlugin.getStandardDisplay().asyncExec(new Runnable() {
 			public void run() {
-				IEditorStatusLine statusLine = (IEditorStatusLine) part
+				IEditorStatusLine statusLine = part
 						.getAdapter(IEditorStatusLine.class);
 				if (statusLine != null) {
 					if (message != null) {
@@ -119,7 +118,7 @@ public abstract class ScriptToggleBreakpointAdapter
 		if (part instanceof ITextEditor) {
 			return (ITextEditor) part;
 		}
-		return (ITextEditor) part.getAdapter(ITextEditor.class);
+		return part.getAdapter(ITextEditor.class);
 	}
 
 	protected static final int BREAKPOINT_LINE_NOT_FOUND = -1;

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.ui.interpreters;
 
@@ -50,8 +49,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public abstract class AddScriptInterpreterDialog extends StatusDialog implements
-		IScriptInterpreterDialog {
+public abstract class AddScriptInterpreterDialog extends StatusDialog
+		implements IScriptInterpreterDialog {
 
 	/**
 	 * @since 2.0
@@ -108,8 +107,8 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog implements
 		}
 
 		fInterpreterTypes = interpreterInstallTypes;
-		fSelectedInterpreterType = editedInterpreter != null ? editedInterpreter
-				.getInterpreterInstallType()
+		fSelectedInterpreterType = editedInterpreter != null
+				? editedInterpreter.getInterpreterInstallType()
 				: interpreterInstallTypes[0];
 
 		fEditedInterpreter = editedInterpreter;
@@ -126,13 +125,13 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog implements
 
 	protected void createDialogFields() {
 		fInterpreterTypeCombo = new ComboDialogField(SWT.READ_ONLY);
-		fInterpreterTypeCombo
-				.setLabelText(InterpretersMessages.addInterpreterDialog_InterpreterEnvironmentType);
+		fInterpreterTypeCombo.setLabelText(
+				InterpretersMessages.addInterpreterDialog_InterpreterEnvironmentType);
 		fInterpreterTypeCombo.setItems(getInterpreterTypeNames());
 
 		fInterpreterName = new StringDialogField();
-		fInterpreterName
-				.setLabelText(InterpretersMessages.addInterpreterDialog_InterpreterEnvironmentName);
+		fInterpreterName.setLabelText(
+				InterpretersMessages.addInterpreterDialog_InterpreterEnvironmentName);
 
 		fInterpreterPath = new StringButtonDialogField(
 				new IStringButtonAdapter() {
@@ -140,15 +139,15 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog implements
 						browseForInstallation();
 					}
 				});
-		fInterpreterPath
-				.setLabelText(InterpretersMessages.addInterpreterDialog_InterpreterExecutableName);
-		fInterpreterPath
-				.setButtonLabel(InterpretersMessages.addInterpreterDialog_browse1);
+		fInterpreterPath.setLabelText(
+				InterpretersMessages.addInterpreterDialog_InterpreterExecutableName);
+		fInterpreterPath.setButtonLabel(
+				InterpretersMessages.addInterpreterDialog_browse1);
 
 		if (this.useInterpreterArgs()) {
 			fInterpreterArgs = new StringDialogField();
-			fInterpreterArgs
-					.setLabelText(InterpretersMessages.AddInterpreterDialog_iArgs);
+			fInterpreterArgs.setLabelText(
+					InterpretersMessages.AddInterpreterDialog_iArgs);
 		}
 	}
 
@@ -245,7 +244,8 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog implements
 		createDialogFields();
 
 		fInterpreterTypeCombo.doFillIntoGrid(parent, numColumns);
-		((GridData) fInterpreterTypeCombo.getComboControl(null).getLayoutData()).widthHint = convertWidthInCharsToPixels(50);
+		((GridData) fInterpreterTypeCombo.getComboControl(null)
+				.getLayoutData()).widthHint = convertWidthInCharsToPixels(50);
 
 		fInterpreterPath.doFillIntoGrid(parent, numColumns);
 		final GridData interpreterPathGridData = (GridData) fInterpreterPath
@@ -257,7 +257,9 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog implements
 
 		if (this.useInterpreterArgs()) {
 			fInterpreterArgs.doFillIntoGrid(parent, numColumns);
-			((GridData) fInterpreterArgs.getTextControl(null).getLayoutData()).widthHint = convertWidthInCharsToPixels(50);
+			((GridData) fInterpreterArgs.getTextControl(null)
+					.getLayoutData()).widthHint = convertWidthInCharsToPixels(
+							50);
 		}
 	}
 
@@ -286,8 +288,8 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog implements
 	protected Composite createEnvironmentVariablesBlockParent(Composite parent,
 			int numColumns) {
 		Label l = new Label(parent, SWT.NONE);
-		l
-				.setText(InterpretersMessages.AddScriptInterpreterDialog_interpreterEnvironmentVariables);
+		l.setText(
+				InterpretersMessages.AddScriptInterpreterDialog_interpreterEnvironmentVariables);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = numColumns;
 		l.setLayoutData(gd);
@@ -300,8 +302,8 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog implements
 	protected Composite createLibraryBlockParent(Composite parent,
 			int numColumns) {
 		Label l = new Label(parent, SWT.NONE);
-		l
-				.setText(InterpretersMessages.AddInterpreterDialog_Interpreter_system_libraries__1);
+		l.setText(
+				InterpretersMessages.AddInterpreterDialog_Interpreter_system_libraries__1);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = numColumns;
 		l.setLayoutData(gd);
@@ -353,8 +355,8 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog implements
 	 */
 	private void selectInterpreterType() {
 		for (int i = 0; i < fInterpreterTypes.length; i++) {
-			if (fSelectedInterpreterType.getId().equals(
-					fInterpreterTypes[i].getId())) {
+			if (fSelectedInterpreterType.getId()
+					.equals(fInterpreterTypes[i].getId())) {
 				fInterpreterTypeCombo.selectItem(i);
 				return;
 			}
@@ -380,8 +382,8 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog implements
 		} else {
 			fInterpreterTypeCombo.setEnabled(false);
 			fInterpreterName.setText(install.getName());
-			fInterpreterPath.setText(install.getRawInstallLocation()
-					.toOSString());
+			fInterpreterPath
+					.setText(install.getRawInstallLocation().toOSString());
 			if (fEnvironmentVariablesBlock != null) {
 				fEnvironmentVariablesBlock.initializeFrom(install,
 						fSelectedInterpreterType);
@@ -412,8 +414,7 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog implements
 			file = PlatformFileUtils.findAbsoluteOrEclipseRelativeFile(
 					getEnvironment(), location);
 			if (!file.exists()) {
-				s = new StatusInfo(
-						IStatus.ERROR,
+				s = new StatusInfo(IStatus.ERROR,
 						InterpretersMessages.addInterpreterDialog_locationNotExists);
 			} else {
 				s = validateInterpreter(file);
@@ -455,8 +456,8 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog implements
 					}
 					LibraryLocation[] locations = fLibraryBlock
 							.getLibraryLocations();
-					temp[0] = getInterpreterType().validateInstallLocation(
-							file, environmentVariables, locations, monitor);
+					temp[0] = getInterpreterType().validateInstallLocation(file,
+							environmentVariables, locations, monitor);
 				}
 			});
 		} catch (InvocationTargetException e) {
@@ -529,10 +530,10 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog implements
 			status.setInfo(InterpretersMessages.addInterpreterDialog_enterName);
 		} else {
 			if (fRequestor.isDuplicateName(name, fEditedInterpreter)
-					&& (fEditedInterpreter == null || !name
-							.equals(fEditedInterpreter.getName()))) {
-				status
-						.setError(InterpretersMessages.addInterpreterDialog_duplicateName);
+					&& (fEditedInterpreter == null
+							|| !name.equals(fEditedInterpreter.getName()))) {
+				status.setError(
+						InterpretersMessages.addInterpreterDialog_duplicateName);
 			}
 		}
 		return status;
@@ -555,12 +556,12 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog implements
 
 	private void browseForInstallation() {
 		IEnvironment environment = getEnvironment();
-		IEnvironmentUI environmentUI = (IEnvironmentUI) environment
+		IEnvironmentUI environmentUI = environment
 				.getAdapter(IEnvironmentUI.class);
 		if (environmentUI != null) {
 			String newPath = environmentUI.selectFile(getShell(),
-					IEnvironmentUI.EXECUTABLE, fInterpreterPath.getText()
-							.trim());
+					IEnvironmentUI.EXECUTABLE,
+					fInterpreterPath.getText().trim());
 			if (newPath != null) {
 				fInterpreterPath.setText(newPath);
 			}

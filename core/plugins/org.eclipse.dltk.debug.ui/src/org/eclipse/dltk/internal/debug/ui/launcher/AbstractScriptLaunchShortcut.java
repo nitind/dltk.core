@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.ui.launcher;
 
@@ -71,8 +70,8 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 			String selectMessage, String emptyMessage) {
 		IResource[] scripts = null;
 		try {
-			scripts = findScripts(search, PlatformUI.getWorkbench()
-					.getProgressService());
+			scripts = findScripts(search,
+					PlatformUI.getWorkbench().getProgressService());
 		} catch (InterruptedException e) {
 			return;
 		} catch (CoreException e) {
@@ -108,8 +107,8 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
 				getShell(), new WorkbenchLabelProvider());
 		dialog.setElements(scripts);
-		dialog
-				.setMessage(LaunchingMessages.ScriptLaunchShortcut_Choose_a_main_script_to_launch);
+		dialog.setMessage(
+				LaunchingMessages.ScriptLaunchShortcut_Choose_a_main_script_to_launch);
 		dialog.setTitle(title);
 		if (dialog.open() == Window.OK) {
 			return (IResource) dialog.getResult()[0];
@@ -124,8 +123,8 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 	 */
 	protected void reportErorr(CoreException exception) {
 		MessageDialog.openError(getShell(),
-				LaunchingMessages.ScriptLaunchShortcut_3, exception.getStatus()
-						.getMessage());
+				LaunchingMessages.ScriptLaunchShortcut_3,
+				exception.getStatus().getMessage());
 	}
 
 	public void launch(IEditorPart editor, String mode) {
@@ -175,13 +174,13 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 				if (config
 						.getAttribute(
 								ScriptLaunchConfigurationConstants.ATTR_MAIN_SCRIPT_NAME,
-								Util.EMPTY_STRING).equals(
-								script.getProjectRelativePath().toString())
+								Util.EMPTY_STRING)
+						.equals(script.getProjectRelativePath().toString())
 						&& config
 								.getAttribute(
 										ScriptLaunchConfigurationConstants.ATTR_PROJECT_NAME,
-										Util.EMPTY_STRING).equals(
-										script.getProject().getName())) {
+										Util.EMPTY_STRING)
+								.equals(script.getProject().getName())) {
 					candidateConfigs.add(config);
 				}
 			}
@@ -199,7 +198,7 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 		if (candidateCount < 1) {
 			return createConfiguration(script);
 		} else if (candidateCount == 1) {
-			return (ILaunchConfiguration) candidateConfigs.get(0);
+			return candidateConfigs.get(0);
 		} else {
 			// Prompt the user to choose a config. A null result means the user
 			// cancelled the dialog, in which case this method returns null,
@@ -290,7 +289,8 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 	 *            selected objects
 	 * @return corresponding Script elements
 	 */
-	private IResource[] getScriptResources(Object[] objects, IProgressMonitor pm) {
+	private IResource[] getScriptResources(Object[] objects,
+			IProgressMonitor pm) {
 		List<IResource> list = new ArrayList<IResource>(objects.length);
 		for (int i = 0; i < objects.length; i++) {
 			Object object = objects[i];
@@ -324,8 +324,8 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 							list.add(res);
 					} else if (elem instanceof IParent) {
 						IParent proj = (IParent) elem;
-						IResource[] res = getScriptResources(
-								proj.getChildren(), pm);
+						IResource[] res = getScriptResources(proj.getChildren(),
+								pm);
 						for (int j = 0; j < res.length; j++) {
 							list.add(res[j]);
 						}
@@ -334,7 +334,7 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 			} catch (CoreException e) {
 			}
 		}
-		return (IResource[]) list.toArray(new IResource[list.size()]);
+		return list.toArray(new IResource[list.size()]);
 	}
 
 	/**
@@ -352,18 +352,17 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 	 *                if the search fails
 	 */
 	protected IResource[] findScripts(final Object[] elements,
-			IRunnableContext context) throws InterruptedException,
-			CoreException {
+			IRunnableContext context)
+			throws InterruptedException, CoreException {
 		try {
 			final IResource[][] res = new IResource[1][];
 
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor pm)
 						throws InvocationTargetException {
-					pm
-							.beginTask(
-									LaunchingMessages.LaunchShortcut_searchingForScripts,
-									1);
+					pm.beginTask(
+							LaunchingMessages.LaunchShortcut_searchingForScripts,
+							1);
 					res[0] = getScriptResources(elements, pm);
 					pm.done();
 				}

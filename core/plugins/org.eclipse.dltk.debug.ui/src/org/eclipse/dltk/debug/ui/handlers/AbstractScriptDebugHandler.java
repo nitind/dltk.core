@@ -21,7 +21,8 @@ public abstract class AbstractScriptDebugHandler extends AbstractHandler
 
 	private String natureId;
 
-	public final Object execute(ExecutionEvent event) throws ExecutionException {
+	public final Object execute(ExecutionEvent event)
+			throws ExecutionException {
 		Object result = handleEvent(event);
 
 		if (requiresRefresh()) {
@@ -55,8 +56,7 @@ public abstract class AbstractScriptDebugHandler extends AbstractHandler
 	private void refresh(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow window = HandlerUtil
 				.getActiveWorkbenchWindowChecked(event);
-		ICommandService service = (ICommandService) window
-				.getService(ICommandService.class);
+		ICommandService service = window.getService(ICommandService.class);
 		service.refreshElements(event.getCommand().getId(), null);
 	}
 

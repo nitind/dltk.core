@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,13 +77,13 @@ public class ToggleWatchPointAction extends Action implements IUpdate {
 		if (document == null) {
 			return;
 		}
-		IToggleBreakpointsTarget adapter = (IToggleBreakpointsTarget) fPart
+		IToggleBreakpointsTarget adapter = fPart
 				.getAdapter(IToggleBreakpointsTarget.class);
 		if (adapter == null) {
 			// attempt to force load adapter
 			IAdapterManager manager = Platform.getAdapterManager();
-			if (manager.hasAdapter(fPart, IToggleBreakpointsTarget.class
-					.getName())) {
+			if (manager.hasAdapter(fPart,
+					IToggleBreakpointsTarget.class.getName())) {
 				adapter = (IToggleBreakpointsTarget) manager.loadAdapter(fPart,
 						IToggleBreakpointsTarget.class.getName());
 			}
@@ -106,8 +106,8 @@ public class ToggleWatchPointAction extends Action implements IUpdate {
 
 		try {
 			IRegion region = document.getLineInformation(line);
-			ITextSelection selection = new TextSelection(document, region
-					.getOffset(), 0);
+			ITextSelection selection = new TextSelection(document,
+					region.getOffset(), 0);
 			if (adapter.canToggleLineBreakpoints(fPart, selection)) {
 				if (adapter.canToggleWatchpoints(fPart, selection)) {
 					adapter.toggleWatchpoints(fPart, selection);
@@ -127,8 +127,9 @@ public class ToggleWatchPointAction extends Action implements IUpdate {
 	 *            underlying exception
 	 */
 	private void reportException(Exception e) {
-		DebugUIPlugin.errorDialog(fPart.getSite().getShell(), Messages.ToggleWatchPointAction_error, Messages.ToggleWatchPointAction_error,
-				e); // 
+		DebugUIPlugin.errorDialog(fPart.getSite().getShell(),
+				Messages.ToggleWatchPointAction_error,
+				Messages.ToggleWatchPointAction_error, e); //
 	}
 
 	/**
@@ -157,7 +158,7 @@ public class ToggleWatchPointAction extends Action implements IUpdate {
 				return provider.getDocument(editor.getEditorInput());
 		}
 
-		IDocument doc = (IDocument) fPart.getAdapter(IDocument.class);
+		IDocument doc = fPart.getAdapter(IDocument.class);
 		if (doc != null) {
 			return doc;
 		}
@@ -173,13 +174,13 @@ public class ToggleWatchPointAction extends Action implements IUpdate {
 	public void update() {
 		IDocument document = getDocument();
 		if (document != null) {
-			IToggleBreakpointsTarget adapter = (IToggleBreakpointsTarget) fPart
+			IToggleBreakpointsTarget adapter = fPart
 					.getAdapter(IToggleBreakpointsTarget.class);
 			if (adapter == null) {
 				// attempt to force load adapter
 				IAdapterManager manager = Platform.getAdapterManager();
-				if (manager.hasAdapter(fPart, IToggleBreakpointsTarget.class
-						.getName())) {
+				if (manager.hasAdapter(fPart,
+						IToggleBreakpointsTarget.class.getName())) {
 					adapter = (IToggleBreakpointsTarget) manager.loadAdapter(
 							fPart, IToggleBreakpointsTarget.class.getName());
 				}

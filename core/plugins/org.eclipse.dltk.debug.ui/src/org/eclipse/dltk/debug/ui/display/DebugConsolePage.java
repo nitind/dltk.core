@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -117,8 +117,9 @@ public class DebugConsolePage extends ScriptConsolePage {
 				inputField.setEditable(value);
 			getViewer().setEditable(value);
 			final Control control = getViewer().getControl();
-			control.setBackground(value ? null : control.getDisplay()
-					.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+			control.setBackground(value ? null
+					: control.getDisplay()
+							.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		}
 	}
 
@@ -137,7 +138,7 @@ public class DebugConsolePage extends ScriptConsolePage {
 
 			public void focusLost(FocusEvent e) {
 				if (pasteHandler != null) {
-					IHandlerService service = (IHandlerService) getSite()
+					IHandlerService service = getSite()
 							.getService(IHandlerService.class);
 					service.deactivateHandler(pasteHandler);
 					service.deactivateHandler(copyHandler);
@@ -151,7 +152,7 @@ public class DebugConsolePage extends ScriptConsolePage {
 			}
 
 			public void focusGained(FocusEvent e) {
-				IHandlerService service = (IHandlerService) getSite()
+				IHandlerService service = getSite()
 						.getService(IHandlerService.class);
 				Expression expression = new Expression() {
 					public final EvaluationResult evaluate(
@@ -162,7 +163,8 @@ public class DebugConsolePage extends ScriptConsolePage {
 					public final void collectExpressionInfo(
 							final ExpressionInfo info) {
 						info.addVariableNameAccess(ISources.ACTIVE_EDITOR_NAME);
-						info.addVariableNameAccess(ISources.ACTIVE_CURRENT_SELECTION_NAME);
+						info.addVariableNameAccess(
+								ISources.ACTIVE_CURRENT_SELECTION_NAME);
 					}
 				};
 				pasteHandler = service.activateHandler(
@@ -174,8 +176,9 @@ public class DebugConsolePage extends ScriptConsolePage {
 						new ActionHandler(new CopyAction(inputField)),
 						expression);
 				cutHandler = service.activateHandler(
-						IWorkbenchCommandConstants.EDIT_CUT, new ActionHandler(
-								new CutAction(inputField)), expression);
+						IWorkbenchCommandConstants.EDIT_CUT,
+						new ActionHandler(new CutAction(inputField)),
+						expression);
 				selectAllHandler = service.activateHandler(
 						IWorkbenchCommandConstants.EDIT_SELECT_ALL,
 						new ActionHandler(new SelectAllAction(inputField)),
@@ -254,13 +257,13 @@ public class DebugConsolePage extends ScriptConsolePage {
 	 */
 	public void dispose() {
 		if (debugEventListener != null) {
-			DebugPlugin.getDefault().removeDebugEventListener(
-					debugEventListener);
+			DebugPlugin.getDefault()
+					.removeDebugEventListener(debugEventListener);
 			debugEventListener = null;
 		}
 		if (pasteHandler != null) {
-			IHandlerService service = (IHandlerService) getSite().getService(
-					IHandlerService.class);
+			IHandlerService service = getSite()
+					.getService(IHandlerService.class);
 			service.deactivateHandler(pasteHandler);
 			service.deactivateHandler(copyHandler);
 			service.deactivateHandler(cutHandler);
@@ -322,8 +325,8 @@ public class DebugConsolePage extends ScriptConsolePage {
 		public void handleDebugEvents(DebugEvent[] events) {
 			enableUpdateJob.schedule(500);
 			if (resetOnLaunch && isTargetCreate(events)) {
-				DLTKDebugUIPlugin.getStandardDisplay().asyncExec(
-						new Runnable() {
+				DLTKDebugUIPlugin.getStandardDisplay()
+						.asyncExec(new Runnable() {
 							public void run() {
 								((DebugConsole) getConsole()).clearConsole();
 							}

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.ui.interpreters;
 
@@ -55,8 +54,8 @@ import org.eclipse.swt.widgets.Label;
 /**
  * Control used to edit the libraries associated with a Interpreter install
  */
-public abstract class AbstractInterpreterLibraryBlock implements
-		SelectionListener, ISelectionChangedListener {
+public abstract class AbstractInterpreterLibraryBlock
+		implements SelectionListener, ISelectionChangedListener {
 
 	/**
 	 * Attribute name for the last path used to open a file/directory chooser
@@ -87,7 +86,8 @@ public abstract class AbstractInterpreterLibraryBlock implements
 
 	protected AddScriptInterpreterDialog fDialog;
 
-	protected AbstractInterpreterLibraryBlock(AddScriptInterpreterDialog dialog) {
+	protected AbstractInterpreterLibraryBlock(
+			AddScriptInterpreterDialog dialog) {
 		this.fDialog = dialog;
 	}
 
@@ -134,14 +134,14 @@ public abstract class AbstractInterpreterLibraryBlock implements
 
 		if (isEnableButtonSupported()) {
 			fEnabledButton = new Button(comp2, SWT.CHECK);
-			fEnabledButton
-					.setText(InterpretersMessages.AbstractInterpreterLibraryBlock_setPathVisibleToDltk);
+			fEnabledButton.setText(
+					InterpretersMessages.AbstractInterpreterLibraryBlock_setPathVisibleToDltk);
 			fEnabledButton.addSelectionListener(this);
 			this.fLibraryViewer
 					.addDoubleClickListener(new IDoubleClickListener() {
 						public void doubleClick(DoubleClickEvent event) {
-							if (fLibraryContentProvider
-									.canEnable((IStructuredSelection) fLibraryViewer
+							if (fLibraryContentProvider.canEnable(
+									(IStructuredSelection) fLibraryViewer
 											.getSelection())) {
 								fLibraryContentProvider.changeEnabled();
 								updateButtons();
@@ -179,8 +179,7 @@ public abstract class AbstractInterpreterLibraryBlock implements
 				InterpretersMessages.InterpreterLibraryBlock_9);
 		fDefaultButton.addSelectionListener(this);
 		if (this.fDialog.isRediscoverSupported()) {
-			fRediscoverButton = createPushButton(
-					pathButtonComp,
+			fRediscoverButton = createPushButton(pathButtonComp,
 					InterpretersMessages.AbstractInterpreterLibraryBlock_rediscover);
 			fRediscoverButton.addSelectionListener(this);
 		}
@@ -202,12 +201,12 @@ public abstract class AbstractInterpreterLibraryBlock implements
 	 * The "default" button has been toggled
 	 */
 	public void restoreDefaultLibraries() {
-		LibraryLocation[] libs = getLibrariesWithEnvironment(fDialog
-				.getEnvironmentVariables());
+		LibraryLocation[] libs = getLibrariesWithEnvironment(
+				fDialog.getEnvironmentVariables());
 		if (libs != null) {
 			fLibraryContentProvider.setLibraries(libs);
-			fLibraryContentProvider.initialize(getHomeDirectory(), fDialog
-					.getEnvironmentVariables(), true);
+			fLibraryContentProvider.initialize(getHomeDirectory(),
+					fDialog.getEnvironmentVariables(), true);
 		}
 		update();
 	}
@@ -395,15 +394,14 @@ public abstract class AbstractInterpreterLibraryBlock implements
 	public void widgetSelected(SelectionEvent e) {
 		Object source = e.getSource();
 		if (source == fUpButton) {
-			fLibraryContentProvider.up((IStructuredSelection) fLibraryViewer
-					.getSelection());
-		} else if (source == fDownButton) {
-			fLibraryContentProvider.down((IStructuredSelection) fLibraryViewer
-					.getSelection());
-		} else if (source == fRemoveButton) {
 			fLibraryContentProvider
-					.remove((IStructuredSelection) fLibraryViewer
-							.getSelection());
+					.up((IStructuredSelection) fLibraryViewer.getSelection());
+		} else if (source == fDownButton) {
+			fLibraryContentProvider
+					.down((IStructuredSelection) fLibraryViewer.getSelection());
+		} else if (source == fRemoveButton) {
+			fLibraryContentProvider.remove(
+					(IStructuredSelection) fLibraryViewer.getSelection());
 			this.fDialog.updateValidateInterpreterLocation();
 		} else if (source == fAddButton) {
 			add((IStructuredSelection) fLibraryViewer.getSelection());
@@ -421,9 +419,8 @@ public abstract class AbstractInterpreterLibraryBlock implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse
-	 * .swt.events.SelectionEvent)
+	 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.
+	 * eclipse .swt.events.SelectionEvent)
 	 */
 	public void widgetDefaultSelected(SelectionEvent e) {
 	}
@@ -434,8 +431,8 @@ public abstract class AbstractInterpreterLibraryBlock implements
 			return;
 		fLibraryContentProvider.add(new LibraryLocation[] { libs }, selection);
 		// We need to reinitialize.
-		fLibraryContentProvider.initialize(this.getHomeDirectory(), fDialog
-				.getEnvironmentVariables(), false);
+		fLibraryContentProvider.initialize(this.getHomeDirectory(),
+				fDialog.getEnvironmentVariables(), false);
 		update();
 		this.fDialog.updateValidateInterpreterLocation();
 	}
@@ -471,16 +468,16 @@ public abstract class AbstractInterpreterLibraryBlock implements
 			Object first = libraries[0];
 			Object last = libraries[libraries.length - 1];
 			if (isEnableButtonSupported()) {
-				fEnabledButton.setEnabled(fLibraryContentProvider
-						.canEnable(selection));
+				fEnabledButton.setEnabled(
+						fLibraryContentProvider.canEnable(selection));
 			}
 			for (Iterator iter = selection.iterator(); iter.hasNext();) {
 				Object element = iter.next();
 				Object lib;
 				lib = element;
 				if (isEnableButtonSupported() && selection.size() == 1) {
-					fEnabledButton.setSelection(fLibraryContentProvider
-							.isEnabled(lib));
+					fEnabledButton.setSelection(
+							fLibraryContentProvider.isEnabled(lib));
 				}
 				if (lib == first) {
 					enableUp = false;
@@ -490,10 +487,10 @@ public abstract class AbstractInterpreterLibraryBlock implements
 				}
 			}
 		}
-		fUpButton.setEnabled(enableUp
-				&& fLibraryContentProvider.canUp(selection));
-		fDownButton.setEnabled(enableDown
-				&& fLibraryContentProvider.canUp(selection));
+		fUpButton.setEnabled(
+				enableUp && fLibraryContentProvider.canUp(selection));
+		fDownButton.setEnabled(
+				enableDown && fLibraryContentProvider.canUp(selection));
 	}
 
 	/**
@@ -540,8 +537,8 @@ public abstract class AbstractInterpreterLibraryBlock implements
 			fLibraryContentProvider.setLibraries(libs[0]);
 
 			// Set All possibly libraries here
-			fLibraryContentProvider.initialize(getHomeDirectory(), fDialog
-					.getEnvironmentVariables(), false);
+			fLibraryContentProvider.initialize(getHomeDirectory(),
+					fDialog.getEnvironmentVariables(), false);
 		}
 		update();
 	}
@@ -566,8 +563,7 @@ public abstract class AbstractInterpreterLibraryBlock implements
 
 	protected LibraryLocation add() {
 		IEnvironment environment = fDialog.getEnvironment();
-		IEnvironmentUI ui = (IEnvironmentUI) environment
-				.getAdapter(IEnvironmentUI.class);
+		IEnvironmentUI ui = environment.getAdapter(IEnvironmentUI.class);
 		String res = ui.selectFolder(fLibraryViewer.getControl().getShell());
 		if (res == null) {
 			return null;
@@ -642,8 +638,8 @@ public abstract class AbstractInterpreterLibraryBlock implements
 		// .toArray(new LibraryLocation[delta.size()]);
 		// fLibraryContentProvider.setLibraries(aNew);
 		// }
-		fLibraryContentProvider.initialize(getHomeDirectory(), fDialog
-				.getEnvironmentVariables(), false);
+		fLibraryContentProvider.initialize(getHomeDirectory(),
+				fDialog.getEnvironmentVariables(), false);
 		update();
 	}
 
@@ -656,8 +652,8 @@ public abstract class AbstractInterpreterLibraryBlock implements
 			vars.put(a[i].getName(), a[i]);
 		}
 		for (int i = 0; i < b.length; i++) {
-			EnvironmentVariable v = (EnvironmentVariable) vars.get(b[i]
-					.getName());
+			EnvironmentVariable v = (EnvironmentVariable) vars
+					.get(b[i].getName());
 			if (v == null) {
 				return false;
 			}
