@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 
 package org.eclipse.dltk.ui.preferences;
@@ -558,7 +557,7 @@ public abstract class AbstractConfigurationBlock implements
 		Iterator iter = fCheckBoxes.keySet().iterator();
 		while (iter.hasNext()) {
 			Button b = (Button) iter.next();
-			String key = (String) fCheckBoxes.get(b);
+			String key = fCheckBoxes.get(b);
 			b.setSelection(fStore.getBoolean(key));
 		}
 
@@ -588,7 +587,7 @@ public abstract class AbstractConfigurationBlock implements
 		iter = fTextFields.keySet().iterator();
 		while (iter.hasNext()) {
 			Text t = (Text) iter.next();
-			String key = (String) fTextFields.get(t);
+			String key = fTextFields.get(t);
 			t.setText(fStore.getString(key));
 		}
 
@@ -624,7 +623,7 @@ public abstract class AbstractConfigurationBlock implements
 		if (validator == null) {
 			IStatus status = validatePositiveNumber(number);
 			if (!status.matches(IStatus.ERROR))
-				fStore.setValue((String) fTextFields.get(textControl), number);
+				fStore.setValue(fTextFields.get(textControl), number);
 			updateStatus(status);
 		} else {
 			StatusInfo status = new StatusInfo();
@@ -632,7 +631,7 @@ public abstract class AbstractConfigurationBlock implements
 			if (res != null) {
 				status.setError(res);
 			} else
-				fStore.setValue((String) fTextFields.get(textControl), number);
+				fStore.setValue(fTextFields.get(textControl), number);
 			updateStatus(status);
 		}
 	}

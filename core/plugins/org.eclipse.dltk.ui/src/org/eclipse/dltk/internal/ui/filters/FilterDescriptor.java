@@ -93,7 +93,7 @@ public class FilterDescriptor implements Comparable, IPluginContribution {
 			if (tid == null || tid.equals(targetId))
 				result.add(filterDescs[i]);
 		}
-		return (FilterDescriptor[])result.toArray(new FilterDescriptor[result.size()]);
+		return result.toArray(new FilterDescriptor[result.size()]);
 	}
 	
 	/**
@@ -266,7 +266,7 @@ public class FilterDescriptor implements Comparable, IPluginContribution {
 				}
 			}
 		}
-		return (FilterDescriptor[])result.toArray(new FilterDescriptor[result.size()]);
+		return result.toArray(new FilterDescriptor[result.size()]);
 	}
 	
 	public String getLocalId() {

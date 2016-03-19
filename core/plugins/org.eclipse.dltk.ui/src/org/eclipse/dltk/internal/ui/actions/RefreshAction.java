@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2015 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.actions;
 
@@ -92,7 +91,7 @@ public class RefreshAction extends SelectionDispatchAction {
 				if (curr instanceof IWorkingSet) {
 					IAdaptable[] members = ((IWorkingSet) curr).getElements();
 					for (int k = 0; k < members.length; k++) {
-						IResource adapted = (IResource) members[k]
+						IResource adapted = members[k]
 								.getAdapter(IResource.class);
 						if (adapted != null) {
 							selectedResources.add(adapted);
@@ -162,7 +161,7 @@ public class RefreshAction extends SelectionDispatchAction {
 			if (element instanceof IWorkingSet) {
 				// don't inspect working sets any deeper.
 			} else if (element instanceof IAdaptable) {
-				IResource resource = (IResource) ((IAdaptable) element)
+				IResource resource = ((IAdaptable) element)
 						.getAdapter(IResource.class);
 				if (resource == null)
 					return false;
@@ -203,7 +202,7 @@ public class RefreshAction extends SelectionDispatchAction {
 			} else if (curr instanceof IWorkingSet) {
 				IAdaptable[] members = ((IWorkingSet) curr).getElements();
 				for (int k = 0; k < members.length; k++) {
-					IModelElement adapted = (IModelElement) members[k]
+					IModelElement adapted = members[k]
 							.getAdapter(IModelElement.class);
 					if (adapted instanceof ProjectFragmentContainer) {
 						modelElements.add(adapted);

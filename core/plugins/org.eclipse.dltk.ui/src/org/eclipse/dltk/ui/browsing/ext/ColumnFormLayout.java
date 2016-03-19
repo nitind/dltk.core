@@ -1,7 +1,5 @@
-package org.eclipse.dltk.ui.browsing.ext;
-
 /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +8,7 @@ package org.eclipse.dltk.ui.browsing.ext;
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+package org.eclipse.dltk.ui.browsing.ext;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -138,14 +137,14 @@ class ColumnFormLayout extends Layout {
 
 		// composite.setSize(total, composite.getSize().y);
 
-		int width = (int) (widths[0]);
+		int width = (widths[0]);
 		int x = area.x;
 		controls[0].setBounds(x, area.y, width, area.height);
 		x += width;
 		for (int i = 1; i < controls.length; i++) {
 			sashes[i - 1].setBounds(x, area.y, sashwidth, area.height);
 			x += sashwidth;
-			width = (int) (widths[i]);
+			width = (widths[i]);
 			controls[i].setBounds(x, area.y, width, area.height);
 			x += width;
 		}

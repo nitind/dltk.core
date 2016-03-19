@@ -248,7 +248,7 @@ public abstract class AbstractInfoView extends ViewPart implements
 		createActions();
 		createContextMenu();
 		fillActionBars(getViewSite().getActionBars());
-		IContextService ctxService = (IContextService) getSite().getService(
+		IContextService ctxService = getSite().getService(
 				IContextService.class);
 		if (ctxService != null) {
 			fContextActivation = ctxService
@@ -479,7 +479,7 @@ public abstract class AbstractInfoView extends ViewPart implements
 	 */
 	private IModelElement findModelElement(Object element) {
 		if (element != null && element instanceof IAdaptable) {
-			return (IModelElement) ((IAdaptable) element)
+			return ((IAdaptable) element)
 					.getAdapter(IModelElement.class);
 		}
 		return null;
@@ -493,7 +493,7 @@ public abstract class AbstractInfoView extends ViewPart implements
 		// cancel possible running computation
 		fComputeCount++;
 		if (fContextActivation != null) {
-			IContextService ctxService = (IContextService) getSite()
+			IContextService ctxService = getSite()
 					.getService(IContextService.class);
 			if (ctxService != null) {
 				ctxService.deactivateContext(fContextActivation);

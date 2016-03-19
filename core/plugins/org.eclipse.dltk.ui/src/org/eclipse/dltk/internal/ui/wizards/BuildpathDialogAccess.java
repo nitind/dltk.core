@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards;
 
@@ -323,7 +322,7 @@ public final class BuildpathDialogAccess {
 		// BuildPathDialogAccess_ExtZIPArchiveDialog_new_title);
 		// dialog.setFilterExtensions(ArchiveFileFilter.FILTER_EXTENSIONS);
 		// dialog.setFilterPath(lastUsedPath);
-		IEnvironmentUI ui = (IEnvironmentUI) environment
+		IEnvironmentUI ui = environment
 				.getAdapter(IEnvironmentUI.class);
 		String res = ui.selectFile(shell, IEnvironmentUI.ARCHIVE);
 		if (res == null) {
@@ -436,7 +435,7 @@ public final class BuildpathDialogAccess {
 		// dialog.setText(NewWizardMessages.
 		// BuildPathDialogAccess_ExistingClassFolderDialog_new_title);
 		// dialog.setFilterPath(lastUsedPath);
-		IEnvironmentUI ui = (IEnvironmentUI) environment
+		IEnvironmentUI ui = environment
 				.getAdapter(IEnvironmentUI.class);
 		String res = ui.selectFolder(shell);
 		if (res == null) {

@@ -1110,7 +1110,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	}
 
 	private ProjectionAnnotationModel getModel() {
-		return (ProjectionAnnotationModel) fEditor
+		return fEditor
 				.getAdapter(ProjectionAnnotationModel.class);
 	}
 

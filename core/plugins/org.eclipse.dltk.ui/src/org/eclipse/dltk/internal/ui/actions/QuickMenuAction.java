@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -108,7 +108,7 @@ public abstract class QuickMenuAction extends Action {
 	 * @return the shortcut as a human readable string or <code>null</code>
 	 */
 	private String getShortcutString() {
-		IBindingService bindingService = (IBindingService) PlatformUI
+		IBindingService bindingService = PlatformUI
 				.getWorkbench().getAdapter(IBindingService.class);
 		if (bindingService == null)
 			return null;

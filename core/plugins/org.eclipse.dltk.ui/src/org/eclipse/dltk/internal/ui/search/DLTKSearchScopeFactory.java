@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.search;
 
@@ -298,12 +297,12 @@ public class DLTKSearchScopeFactory {
 				IWorkingSet ws = (IWorkingSet) selectedElement;
 				addModelElements(result, ws);
 			} else if (selectedElement instanceof IAdaptable) {
-				IResource resource = (IResource) ((IAdaptable) selectedElement)
+				IResource resource = ((IAdaptable) selectedElement)
 						.getAdapter(IResource.class);
 				if (resource != null)
 					addModelElements(result, resource);
 
-				IModelElement modelElement = (IModelElement) ((IAdaptable) selectedElement)
+				IModelElement modelElement = ((IAdaptable) selectedElement)
 						.getAdapter(IModelElement.class);
 				if (modelElement != null)
 					addModelElements(result, modelElement);
@@ -346,7 +345,7 @@ public class DLTKSearchScopeFactory {
 	}
 
 	private void addModelElements(Set modelElements, IResource resource) {
-		IModelElement modelElement = (IModelElement) resource
+		IModelElement modelElement = resource
 				.getAdapter(IModelElement.class);
 		if (modelElement == null)
 			// not a Script resource
@@ -386,13 +385,13 @@ public class DLTKSearchScopeFactory {
 
 		IAdaptable[] elements = workingSet.getElements();
 		for (int i = 0; i < elements.length; i++) {
-			IModelElement modelElement = (IModelElement) elements[i]
+			IModelElement modelElement = elements[i]
 					.getAdapter(IModelElement.class);
 			if (modelElement != null) {
 				addModelElements(modelElements, modelElement);
 				continue;
 			}
-			IResource resource = (IResource) elements[i]
+			IResource resource = elements[i]
 					.getAdapter(IResource.class);
 			if (resource != null) {
 				addModelElements(modelElements, resource);

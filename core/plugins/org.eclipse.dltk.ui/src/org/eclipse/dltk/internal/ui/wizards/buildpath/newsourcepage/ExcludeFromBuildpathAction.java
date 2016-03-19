@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath.newsourcepage;
 
@@ -20,10 +19,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptFolder;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.corext.buildpath.BuildpathModifier;
@@ -199,7 +198,7 @@ public class ExcludeFromBuildpathAction extends Action implements ISelectionChan
 			if (part instanceof ISetSelectionTarget)
 				target = (ISetSelectionTarget) part;
 			else
-				target = (ISetSelectionTarget) part.getAdapter(ISetSelectionTarget.class);
+				target = part.getAdapter(ISetSelectionTarget.class);
 			if (target != null) {
 				// select and reveal resource
 				final ISetSelectionTarget finalTarget = target;

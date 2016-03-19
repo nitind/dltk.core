@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.dnd;
 
@@ -93,7 +92,7 @@ public class ResourceTransferDragAdapter extends DragSourceAdapter implements Tr
 				// don't use IAdaptable as for members only the top level type adapts
 				resource= ((IModelElement) element).getResource();
 			} else if (element instanceof IAdaptable) {
-				resource= (IResource) ((IAdaptable) element).getAdapter(IResource.class);
+				resource = ((IAdaptable) element).getAdapter(IResource.class);
 			}
 			if (resource != null)
 				result.add(resource);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 Wind River Systems, Inc. and others.
+ * Copyright (c) 2007, 2016 Wind River Systems, Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -127,7 +127,8 @@ public class ContextActivator implements IWindowListener, IPartListener2 {
 		if (page instanceof ScriptOutlinePage) {
 			if (!fActivationPerOutline.containsKey(outline)){
 				// dltk outline activated for the first time
-				IContextService ctxtService = (IContextService)outline.getViewSite().getService(IContextService.class);
+				IContextService ctxtService = outline.getViewSite()
+						.getService(IContextService.class);
 				IContextActivation activateContext = ctxtService
 						.activateContext(DLTKUIPlugin.CONTEXT_VIEWS);
 				fActivationPerOutline.put(outline,activateContext);
@@ -137,7 +138,8 @@ public class ContextActivator implements IWindowListener, IPartListener2 {
 			IContextActivation activation = fActivationPerOutline.remove(outline); 
 			if (activation != null) {
 				// other outline page brought to front
-				IContextService ctxtService = (IContextService)outline.getViewSite().getService(IContextService.class);
+				IContextService ctxtService = outline.getViewSite()
+						.getService(IContextService.class);
 				ctxtService.deactivateContext(activation);
 			}
 		}
@@ -150,7 +152,7 @@ public class ContextActivator implements IWindowListener, IPartListener2 {
 
 		public SelectionListener(IWorkbenchPartSite site) {
 			fSite= site;
-			fCtxService= (IContextService)fSite.getService(IContextService.class);
+			fCtxService = fSite.getService(IContextService.class);
 			ISelectionProvider sp= site.getSelectionProvider();
 			
 			if (sp != null && fCtxService != null) {

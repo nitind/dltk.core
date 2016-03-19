@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.
+ * Copyright (c) 2009, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -505,7 +505,7 @@ public class EditTemplateDialog extends StatusDialog {
 	private void initializeActions() {
 		final List<IHandlerActivation> handlerActivations = new ArrayList<IHandlerActivation>(
 				3);
-		final IHandlerService handlerService = (IHandlerService) PlatformUI
+		final IHandlerService handlerService = PlatformUI
 				.getWorkbench().getAdapter(IHandlerService.class);
 		final Expression expression = new ActiveShellExpression(fPatternEditor
 				.getControl().getShell());

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,7 +80,8 @@ public final class ToggleCommentAction extends TextEditorAction {
 		if (!validateEditorInputState())
 			return;
 
-        ITextOperationTarget target = (ITextOperationTarget)editor.getAdapter(ITextOperationTarget.class);
+		ITextOperationTarget target = editor
+				.getAdapter(ITextOperationTarget.class);
         if (target.canDoOperation(ProjectionViewer.EXPAND)) {
           target.doOperation(ProjectionViewer.EXPAND);
         }
@@ -275,7 +276,7 @@ public final class ToggleCommentAction extends TextEditorAction {
 
 		ITextEditor editor= getTextEditor();
 		if (fOperationTarget == null && editor != null)
-			fOperationTarget= (ITextOperationTarget) editor.getAdapter(ITextOperationTarget.class);
+			fOperationTarget = editor.getAdapter(ITextOperationTarget.class);
 
 		boolean isEnabled= (fOperationTarget != null && fOperationTarget.canDoOperation(ITextOperationTarget.PREFIX) && fOperationTarget.canDoOperation(ITextOperationTarget.STRIP_PREFIX));
 		setEnabled(isEnabled);

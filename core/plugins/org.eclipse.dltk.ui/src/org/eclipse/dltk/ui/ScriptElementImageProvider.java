@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ui;
 
@@ -176,7 +175,7 @@ public class ScriptElementImageProvider {
 
 	public ImageDescriptor getWorkbenchImageDescriptor(IAdaptable adaptable,
 			int flags) {
-		IWorkbenchAdapter wbAdapter = (IWorkbenchAdapter) adaptable
+		IWorkbenchAdapter wbAdapter = adaptable
 				.getAdapter(IWorkbenchAdapter.class);
 		if (wbAdapter == null) {
 			return null;
@@ -276,7 +275,7 @@ public class ScriptElementImageProvider {
 				IScriptProject jp = (IScriptProject) element;
 				if (jp.getProject().isOpen()) {
 					IProject project = jp.getProject();
-					IWorkbenchAdapter adapter = (IWorkbenchAdapter) project
+					IWorkbenchAdapter adapter = project
 							.getAdapter(IWorkbenchAdapter.class);
 					if (adapter != null) {
 						ImageDescriptor result = adapter

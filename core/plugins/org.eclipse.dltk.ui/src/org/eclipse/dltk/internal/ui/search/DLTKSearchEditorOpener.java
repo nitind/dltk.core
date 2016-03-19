@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.search;
 
@@ -121,11 +120,11 @@ public class DLTKSearchEditorOpener {
 			IModelElement module = ((IModelElement) element)
 					.getAncestor(IModelElement.SOURCE_MODULE);
 			if (module instanceof IExternalSourceModule) {
-				String editorID = getEditorID((IExternalSourceModule) module);
+				String editorID = getEditorID(module);
 				return showInEditor(wbPage, new ExternalStorageEditorInput(
 						(IExternalSourceModule) module), editorID);
 			} else if (module instanceof SourceModule) {
-				String editorID = getEditorID((SourceModule) module);
+				String editorID = getEditorID(module);
 				IFile file = getFile(element);
 				return showInEditor(wbPage, new FileEditorInput(file), editorID);
 			}

@@ -25,7 +25,7 @@ class IdBasedExtensionManager extends PriorityDLTKExtensionManager {
 				return ext.object;
 			}
 
-			IConfigurationElement cfg = (IConfigurationElement) ext.getConfig();
+			IConfigurationElement cfg = ext.getConfig();
 			Object object = createObject(cfg);
 			ext.object = object;
 			return object;

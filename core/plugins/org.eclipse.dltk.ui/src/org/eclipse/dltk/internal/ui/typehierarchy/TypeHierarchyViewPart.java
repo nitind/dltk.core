@@ -597,7 +597,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 	 */
 	public void dispose() {
 		if (fContextActivation != null) {
-			IContextService ctxService = (IContextService) getSite()
+			IContextService ctxService = getSite()
 					.getService(IContextService.class);
 			if (ctxService != null) {
 				ctxService.deactivateContext(fContextActivation);
@@ -957,7 +957,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 
 		actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(),
 				fSelectAllAction);
-		IContextService ctxService = (IContextService) getSite().getService(
+		IContextService ctxService = getSite().getService(
 				IContextService.class);
 		if (ctxService != null) {
 			fContextActivation = ctxService
@@ -1752,7 +1752,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 			return;
 		}
 
-		IModelElement elem = (IModelElement) editor.getEditorInput()
+		IModelElement elem = editor.getEditorInput()
 				.getAdapter(IModelElement.class);
 		try {
 			IType type = null;

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.actions.refactoring;
 
@@ -191,7 +190,7 @@ public class RefactorActionGroup extends ActionGroup {
 	public RefactorActionGroup(IViewPart part, IDLTKLanguageToolkit toolkit) {
 		this(part.getSite(), toolkit);
 
-		IUndoContext workspaceContext = (IUndoContext) ResourcesPlugin
+		IUndoContext workspaceContext = ResourcesPlugin
 				.getWorkspace().getAdapter(IUndoContext.class);
 		fUndoRedoActionGroup = new UndoRedoActionGroup(part.getViewSite(),
 				workspaceContext, true);
@@ -495,7 +494,7 @@ public class RefactorActionGroup extends ActionGroup {
 	}
 
 	private void installQuickAccessAction() {
-		fHandlerService = (IHandlerService) fSite
+		fHandlerService = fSite
 				.getService(IHandlerService.class);
 		if (fHandlerService != null) {
 			final QuickMenuCreator creator = new QuickMenuCreator() {

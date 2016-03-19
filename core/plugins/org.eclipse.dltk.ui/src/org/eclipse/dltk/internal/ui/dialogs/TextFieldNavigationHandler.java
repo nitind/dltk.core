@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.dialogs;
 
@@ -346,10 +345,18 @@ public class TextFieldNavigationHandler {
 						
 						fSubmissions= new ArrayList();
 						
-						IContextService contextService= (IContextService) PlatformUI.getWorkbench().getAdapter(IContextService.class);
-						ICommandService commandService= (ICommandService) PlatformUI.getWorkbench().getAdapter(ICommandService.class);
-						IHandlerService handlerService= (IHandlerService) PlatformUI.getWorkbench().getAdapter(IHandlerService.class);
-						IBindingService bindingService= (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
+						IContextService contextService = PlatformUI
+								.getWorkbench()
+								.getAdapter(IContextService.class);
+						ICommandService commandService = PlatformUI
+								.getWorkbench()
+								.getAdapter(ICommandService.class);
+						IHandlerService handlerService = PlatformUI
+								.getWorkbench()
+								.getAdapter(IHandlerService.class);
+						IBindingService bindingService = PlatformUI
+								.getWorkbench()
+								.getAdapter(IBindingService.class);
 						if (contextService == null || commandService == null || handlerService == null || bindingService == null)
 							return fSubmissions;
 						

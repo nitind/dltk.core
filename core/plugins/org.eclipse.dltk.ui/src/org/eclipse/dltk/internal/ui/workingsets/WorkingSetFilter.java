@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.workingsets;
 
@@ -14,9 +13,9 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.jface.viewers.Viewer;
@@ -69,11 +68,11 @@ public class WorkingSetFilter extends ViewerFilter {
 			
 		if (element instanceof IAdaptable) {
 			IAdaptable adaptable= (IAdaptable)element;
-			IModelElement je= (IModelElement)adaptable.getAdapter(IModelElement.class);
+			IModelElement je = adaptable.getAdapter(IModelElement.class);
 			if (je != null)
 				return isEnclosing(je);
 
-			IResource resource= (IResource)adaptable.getAdapter(IResource.class);
+			IResource resource = adaptable.getAdapter(IResource.class);
 			if (resource != null)
 				return isEnclosing(resource.getFullPath());
 		}
@@ -132,7 +131,8 @@ public class WorkingSetFilter extends ViewerFilter {
 		
 		int length= cachedWorkingSet.length;
 		for (int i= 0; i < length; i++) {
-			IModelElement scopeElement= (IModelElement)cachedWorkingSet[i].getAdapter(IModelElement.class);
+			IModelElement scopeElement = cachedWorkingSet[i]
+					.getAdapter(IModelElement.class);
 			if (scopeElement != null) {
 				// compare Script elements
 				IModelElement searchedElement= element;
@@ -163,7 +163,8 @@ public class WorkingSetFilter extends ViewerFilter {
 			} else {
 				// compare resource paths
 				if (!isElementPathComputed) {
-					IResource elementResource= (IResource)element.getAdapter(IResource.class);
+					IResource elementResource = element
+							.getAdapter(IResource.class);
 					if (elementResource != null)
 						elementPath= elementResource.getFullPath();
 				}
@@ -180,12 +181,13 @@ public class WorkingSetFilter extends ViewerFilter {
 		
 		IPath elementPath= null;
 		
-		IResource elementResource= (IResource)element.getAdapter(IResource.class);
+		IResource elementResource = element.getAdapter(IResource.class);
 		if (elementResource != null)
 			elementPath= elementResource.getFullPath();
 
 		if (elementPath == null) {
-			IModelElement ScriptElement= (IModelElement)element.getAdapter(IModelElement.class);
+			IModelElement ScriptElement = element
+					.getAdapter(IModelElement.class);
 			if (ScriptElement != null)
 				elementPath= ScriptElement.getPath();
 		}

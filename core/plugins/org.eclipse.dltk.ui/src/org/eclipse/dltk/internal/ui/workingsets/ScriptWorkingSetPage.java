@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.workingsets;
 
@@ -255,7 +254,7 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 				if (oldItems[i] instanceof IResource) {
 					oldResource= (IResource)oldItems[i];
 				} else {
-					oldResource= (IResource)oldItems[i].getAdapter(IResource.class);
+					oldResource = oldItems[i].getAdapter(IResource.class);
 				}
 				if (oldResource != null && oldResource.isAccessible() == false) {
 					IProject project= oldResource.getProject();
@@ -344,7 +343,8 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 	private void setSubtreeChecked(Object parent, boolean state, boolean checkExpandedState) {
 		if (!(parent instanceof IAdaptable))
 			return;
-		IContainer container= (IContainer)((IAdaptable)parent).getAdapter(IContainer.class);
+		IContainer container = ((IAdaptable) parent)
+				.getAdapter(IContainer.class);
 		if ((!fTree.getExpandedState(parent) && checkExpandedState) || (container != null && !container.isAccessible()))
 			return;
 		
@@ -366,7 +366,8 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 		if (child == null)
 			return;
 		if (child instanceof IAdaptable) {
-			IResource resource= (IResource)((IAdaptable)child).getAdapter(IResource.class);
+			IResource resource = ((IAdaptable) child)
+					.getAdapter(IResource.class);
 			if (resource != null && !resource.isAccessible())
 				return;
 		}
@@ -410,7 +411,8 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 						elements= SelectionConverter.getStructuredSelection(part).toArray();
 						for (int i= 0; i < elements.length; i++) {
 							if (elements[i] instanceof IResource) {
-								IModelElement je= (IModelElement)((IResource)elements[i]).getAdapter(IModelElement.class);
+								IModelElement je = ((IResource) elements[i])
+										.getAdapter(IModelElement.class);
 								if (je != null && je.exists() &&  je.getScriptProject().isOnBuildpath((IResource)elements[i]))
 									elements[i]= je;
 							}

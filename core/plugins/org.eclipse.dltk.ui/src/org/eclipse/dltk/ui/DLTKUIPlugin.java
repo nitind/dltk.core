@@ -436,7 +436,7 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 				return module;
 			}
 		}
-		IModelElement me = (IModelElement) editorInput
+		IModelElement me = editorInput
 				.getAdapter(IModelElement.class);
 		if (me instanceof ISourceModule) {
 			return (ISourceModule) me;

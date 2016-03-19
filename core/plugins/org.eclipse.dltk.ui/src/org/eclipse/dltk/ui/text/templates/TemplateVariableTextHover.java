@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.
+ * Copyright (c) 2009, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -49,7 +49,7 @@ public class TemplateVariableTextHover implements ITextHover {
 					Iterator<TemplateVariableResolver> iter = contextType
 							.resolvers();
 					while (iter.hasNext()) {
-						TemplateVariableResolver var = (TemplateVariableResolver) iter
+						TemplateVariableResolver var = iter
 								.next();
 						if (varName.equals(var.getType())) {
 							return var.getDescription();

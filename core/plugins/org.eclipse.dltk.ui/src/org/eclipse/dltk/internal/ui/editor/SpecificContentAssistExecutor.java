@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.editor;
 
@@ -60,7 +59,8 @@ public final class SpecificContentAssistExecutor {
 		}
 		
 		try {
-			ITextOperationTarget target= (ITextOperationTarget) editor.getAdapter(ITextOperationTarget.class);
+			ITextOperationTarget target = editor
+					.getAdapter(ITextOperationTarget.class);
 			if (target != null && target.canDoOperation(ISourceViewer.CONTENTASSIST_PROPOSALS))
 				target.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
 		} finally {

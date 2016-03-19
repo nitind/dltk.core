@@ -572,7 +572,7 @@ public class ScriptExplorerPart extends ViewPart implements
 
 	public void dispose() {
 		if (fContextActivation != null) {
-			IContextService ctxService = (IContextService) getSite()
+			IContextService ctxService = getSite()
 					.getService(IContextService.class);
 			if (ctxService != null) {
 				ctxService.deactivateContext(fContextActivation);
@@ -699,7 +699,7 @@ public class ScriptExplorerPart extends ViewPart implements
 		// set yet.
 		setLinkingEnabled(isLinkingEnabled());
 
-		IContextService ctxService = (IContextService) getSite().getService(
+		IContextService ctxService = getSite().getService(
 				IContextService.class);
 		if (ctxService != null) {
 			fContextActivation = ctxService
@@ -1109,13 +1109,13 @@ public class ScriptExplorerPart extends ViewPart implements
 
 		} else if (original instanceof IAdaptable) {
 			IAdaptable adaptable = (IAdaptable) original;
-			IModelElement je2 = (IModelElement) adaptable
+			IModelElement je2 = adaptable
 					.getAdapter(IModelElement.class);
 			if (je2 != null && je2.exists()) {
 				return je2;
 			}
 
-			IResource r = (IResource) adaptable.getAdapter(IResource.class);
+			IResource r = adaptable.getAdapter(IResource.class);
 			if (r != null) {
 				je2 = DLTKCore.create(r);
 				if (je2 != null && je2.exists()) {

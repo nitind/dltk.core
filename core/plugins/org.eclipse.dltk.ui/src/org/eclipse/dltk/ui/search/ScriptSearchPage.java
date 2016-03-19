@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -808,14 +808,14 @@ public abstract class ScriptSearchPage extends DialogPage implements
 		// lp.getElementName(), null, false);
 		// }
 		else if (o instanceof IAdaptable) {
-			IModelElement element = (IModelElement) ((IAdaptable) o)
+			IModelElement element = ((IAdaptable) o)
 					.getAdapter(IModelElement.class);
 			if (element != null) {
 				res = determineInitValuesFrom(element);
 			}
 		}
 		if (res == null && o instanceof IAdaptable) {
-			IWorkbenchAdapter adapter = (IWorkbenchAdapter) ((IAdaptable) o)
+			IWorkbenchAdapter adapter = ((IAdaptable) o)
 					.getAdapter(IWorkbenchAdapter.class);
 			if (adapter != null) {
 				return new SearchPatternData(TYPE, REFERENCES,

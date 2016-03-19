@@ -381,7 +381,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 		getViewSite().getPage().addPartListener(fPartListener);
 
 		fillActionBars(getViewSite().getActionBars());
-		IContextService ctxService = (IContextService) getSite().getService(
+		IContextService ctxService = getSite().getService(
 				IContextService.class);
 		if (ctxService != null) {
 			fContextActivation = ctxService
@@ -513,7 +513,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 
 	public void dispose() {
 		if (fContextActivation != null) {
-			IContextService ctxService = (IContextService) getSite()
+			IContextService ctxService = getSite()
 					.getService(IContextService.class);
 			if (ctxService != null) {
 				ctxService.deactivateContext(fContextActivation);
@@ -1199,7 +1199,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 			if (firstElement instanceof IMarker)
 				firstElement = ((IMarker) firstElement).getResource();
 			if (firstElement instanceof IAdaptable) {
-				IModelElement je = (IModelElement) ((IAdaptable) firstElement)
+				IModelElement je = ((IAdaptable) firstElement)
 						.getAdapter(IModelElement.class);
 				if (je == null && firstElement instanceof IFile) {
 					IContainer parent = ((IFile) firstElement).getParent();
@@ -1299,13 +1299,13 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 			}
 			if (ei instanceof IFileEditorInput) {
 				IFile file = ((IFileEditorInput) ei).getFile();
-				IModelElement je = (IModelElement) file
+				IModelElement je = file
 						.getAdapter(IModelElement.class);
 				if (je == null) {
 					IContainer container = ((IFileEditorInput) ei).getFile()
 							.getParent();
 					if (container != null)
-						je = (IModelElement) container
+						je = container
 								.getAdapter(IModelElement.class);
 				}
 				if (je == null) {

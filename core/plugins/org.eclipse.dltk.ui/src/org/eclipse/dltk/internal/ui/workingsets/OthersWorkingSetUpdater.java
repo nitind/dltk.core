@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.workingsets;
 
@@ -24,11 +23,11 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ElementChangedEvent;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IElementChangedListener;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IModelElementDelta;
 import org.eclipse.dltk.core.IScriptModel;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -176,7 +175,7 @@ public class OthersWorkingSetUpdater implements IWorkingSetUpdater {
 			IAdaptable[] elements= activeWorkingSets[i].getElements();
 			for (int j= 0; j < elements.length; j++) {
 				IAdaptable element= elements[j];
-				IResource resource= (IResource)element.getAdapter(IResource.class);
+				IResource resource = element.getAdapter(IResource.class);
 				if (resource != null && resource.getType() == IResource.PROJECT) {
 					projects.add(resource);
 				}

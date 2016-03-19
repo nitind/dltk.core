@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -228,7 +228,7 @@ public class FileTransferDragAdapter extends DragSourceAdapter implements
 			if (o instanceof IResource) {
 				r = (IResource) o;
 			} else if (o instanceof IAdaptable) {
-				r = (IResource) ((IAdaptable) o).getAdapter(IResource.class);
+				r = ((IAdaptable) o).getAdapter(IResource.class);
 			}
 			// Only add resource for which we have a location
 			// in the local file system.

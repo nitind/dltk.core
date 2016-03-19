@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.filters;
 
@@ -55,14 +54,16 @@ public class NamePatternFilter extends ViewerFilter {
 		String matchName= null;
 		if (element instanceof IModelElement) {
 			if( viewer instanceof IFilterElementNameProvider ) {
-				matchName= ((IFilterElementNameProvider)viewer).getElementName((IModelElement)element);
+				matchName = ((IFilterElementNameProvider) viewer)
+						.getElementName(element);
 			}
 			else {
 				matchName= ((IModelElement) element).getElementName();
 			}
 		} else if (element instanceof IAdaptable) {
 			IAdaptable adaptable= (IAdaptable) element;
-			IModelElement modelElement= (IModelElement)adaptable.getAdapter(IModelElement.class);
+			IModelElement modelElement = adaptable
+					.getAdapter(IModelElement.class);
 			if (modelElement != null)
 				if( viewer instanceof IFilterElementNameProvider ) {
 					matchName= ((IFilterElementNameProvider)viewer).getElementName(modelElement);
@@ -71,7 +72,7 @@ public class NamePatternFilter extends ViewerFilter {
 					matchName= modelElement.getElementName();
 				}
 			else {
-				IResource resource= (IResource)adaptable.getAdapter(IResource.class);
+				IResource resource = adaptable.getAdapter(IResource.class);
 				if (resource != null)
 					matchName= resource.getName();
 			}

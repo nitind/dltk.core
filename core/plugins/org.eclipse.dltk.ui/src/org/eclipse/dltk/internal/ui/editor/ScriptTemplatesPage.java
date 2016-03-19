@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2009 Dakshinamurthy Karra, IBM Corporation and others.
+ * Copyright (c) 2007, 2016 Dakshinamurthy Karra, IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -329,7 +329,7 @@ public class ScriptTemplatesPage extends AbstractTemplatesPage {
 			Template template, final int offset, int length) {
 		final ScriptTemplateContextType contextType = (ScriptTemplateContextType) getContextTypeRegistry()
 				.getContextType(template.getContextTypeId());
-		final ISourceModule module = (ISourceModule) EditorUtility
+		final ISourceModule module = EditorUtility
 				.getEditorInputModelElement(fScriptEditor, true);
 		return contextType.createContext(document, offset, length, module);
 	}

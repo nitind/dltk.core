@@ -203,7 +203,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
             return;
         Object input= selection.getFirstElement();
         if (!(input instanceof IModelElement))
-          input = (IModelElement)((IAdaptable)input).getAdapter(IModelElement.class);
+			input = ((IAdaptable) input).getAdapter(IModelElement.class);
         if (!(input instanceof IModelElement)) {
             IStatus status= createStatus(CallHierarchyMessages.OpenCallHierarchyAction_messages_no_java_element); 
             openErrorDialog(status);

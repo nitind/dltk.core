@@ -50,7 +50,7 @@ public class MultiSelectionListViewer extends ScrolledComposite {
 		}
 		// we need to update all elements with bigger indexes.
 		for (int i = controlIndex + 1; i < viewers.size(); i++) {
-			TreeViewer viewer = (TreeViewer) viewers.get(i);
+			TreeViewer viewer = viewers.get(i);
 			if (!viewer.getControl().isDisposed()) {
 				viewer.refresh(true);
 			}
@@ -80,7 +80,7 @@ public class MultiSelectionListViewer extends ScrolledComposite {
 		}
 
 		// lets scroll for corrent position
-		TreeViewer viewer = (TreeViewer) viewers.get(controlIndex);
+		TreeViewer viewer = viewers.get(controlIndex);
 		Tree tree = viewer.getTree();
 		if (!tree.isDisposed()) {
 			Rectangle bounds = tree.getBounds();
@@ -177,7 +177,7 @@ public class MultiSelectionListViewer extends ScrolledComposite {
 	private void removePane() {
 		if (elements > 0 && !isDisposed()) {
 			elements -= 1;
-			TreeViewer last = (TreeViewer) viewers.get(viewers.size() - 1);
+			TreeViewer last = viewers.get(viewers.size() - 1);
 			if (!last.getControl().isDisposed()) {
 				last.getControl().dispose();
 			}
@@ -211,7 +211,7 @@ public class MultiSelectionListViewer extends ScrolledComposite {
 
 	private Object[] getElementsFrom(int controlIndex) {
 		if (controlIndex < this.viewers.size()) {
-			TreeViewer prevViewer = (TreeViewer) viewers.get(controlIndex);
+			TreeViewer prevViewer = viewers.get(controlIndex);
 			ISelection selection = prevViewer.getSelection();
 			if (selection != null && selection instanceof IStructuredSelection) {
 				IStructuredSelection sel = (IStructuredSelection) selection;
@@ -228,7 +228,7 @@ public class MultiSelectionListViewer extends ScrolledComposite {
 
 	public ISelection getSelection() {
 		if (this.viewers.size() > selectedView) {
-			TreeViewer viewer = (TreeViewer) this.viewers.get(selectedView);
+			TreeViewer viewer = this.viewers.get(selectedView);
 			return viewer.getSelection();
 		}
 		return null;
@@ -243,7 +243,7 @@ public class MultiSelectionListViewer extends ScrolledComposite {
 
 	public void refresh() {
 		for (int i = 0; i < viewers.size(); i++) {
-			TreeViewer viewer = (TreeViewer) viewers.get(i);
+			TreeViewer viewer = viewers.get(i);
 			if (!viewer.getControl().isDisposed()) {
 				viewer.refresh(true);
 			}

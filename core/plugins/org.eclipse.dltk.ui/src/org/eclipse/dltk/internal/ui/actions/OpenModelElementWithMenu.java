@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.actions;
 
@@ -265,7 +264,7 @@ public class OpenModelElementWithMenu extends ContributionItem {
 		}
 
 		for (int i = 0; i < editors.length; i++) {
-			IEditorDescriptor editor = (IEditorDescriptor) editors[i];
+			IEditorDescriptor editor = editors[i];
 			if (!alreadyMapped.contains(editor)) {
 				createMenuItem(menu, editor, preferredEditor);
 				if (defaultEditor != null
@@ -352,7 +351,7 @@ public class OpenModelElementWithMenu extends ContributionItem {
 	 * Converts the IAdaptable file to IFile or null.
 	 */
 	private IFile getFileResource() {
-		IResource resource = (IResource) this.element
+		IResource resource = this.element
 				.getAdapter(IResource.class);
 		if (resource instanceof IFile) {
 			return (IFile) resource;
@@ -389,7 +388,7 @@ public class OpenModelElementWithMenu extends ContributionItem {
 
 				String editorId = editorDescriptor == null ? IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID
 						: editorDescriptor.getId();
-				((IWorkbenchPage) page).openEditor(new FileEditorInput(file),
+				page.openEditor(new FileEditorInput(file),
 						editorId, true, MATCH_BOTH);
 				// only remember the default editor if the open succeeds
 				IDE.setDefaultEditor(file, editorId);

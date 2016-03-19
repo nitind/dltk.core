@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -420,7 +420,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 		}
 		restoreSplitterRatio();
 		addPartListener();
-		IContextService ctxService = (IContextService) getSite().getService(
+		IContextService ctxService = getSite().getService(
 				IContextService.class);
 		if (ctxService != null) {
 			fContextActivation = ctxService
@@ -604,7 +604,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 	 */
 	public void dispose() {
 		if (fContextActivation != null) {
-			IContextService ctxService = (IContextService) getSite()
+			IContextService ctxService = getSite()
 					.getService(IContextService.class);
 			if (ctxService != null) {
 				ctxService.deactivateContext(fContextActivation);

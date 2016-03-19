@@ -131,7 +131,7 @@ public class ExtendedClassesView extends ViewPart implements
 
 	public void dispose() {
 		if (fContextActivation != null) {
-			IContextService ctxService = (IContextService) getSite()
+			IContextService ctxService = getSite()
 					.getService(IContextService.class);
 			if (ctxService != null) {
 				ctxService.deactivateContext(fContextActivation);
@@ -227,7 +227,7 @@ public class ExtendedClassesView extends ViewPart implements
 		getViewSite().getPage().addPartListener(fPartListener);
 
 		createActions();
-		IContextService ctxService = (IContextService) getSite().getService(
+		IContextService ctxService = getSite().getService(
 				IContextService.class);
 		if (ctxService != null) {
 			fContextActivation = ctxService
@@ -271,7 +271,7 @@ public class ExtendedClassesView extends ViewPart implements
 			StructuredSelection sel = (StructuredSelection) selection;
 			List list = sel.toList();
 			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-				Object o = (Object) iterator.next();
+				Object o = iterator.next();
 				if (o instanceof MixedClass) {
 					List mixedElements = ((MixedClass) o).getElements();
 					result.addAll(mixedElements);
@@ -322,7 +322,7 @@ public class ExtendedClassesView extends ViewPart implements
 			if (firstElement instanceof IMarker)
 				firstElement = ((IMarker) firstElement).getResource();
 			if (firstElement instanceof IAdaptable) {
-				IModelElement je = (IModelElement) ((IAdaptable) firstElement)
+				IModelElement je = ((IAdaptable) firstElement)
 						.getAdapter(IModelElement.class);
 				if (je == null && firstElement instanceof IFile) {
 					IContainer parent = ((IFile) firstElement).getParent();
@@ -339,7 +339,7 @@ public class ExtendedClassesView extends ViewPart implements
 		Object currentInput = browsingPane.getInput();
 		List elements = new ArrayList();
 		if (currentInput == null
-				|| !currentInput.equals((IModelElement) firstElement))
+				|| !currentInput.equals(firstElement))
 			if (iter.hasNext() && selection instanceof StructuredSelection) {
 				// multi-selection and view is empty
 				return ((StructuredSelection) selection).toList();
@@ -352,7 +352,7 @@ public class ExtendedClassesView extends ViewPart implements
 			Object element = iter.next();
 			if (!(element instanceof IModelElement))
 				return null;
-			if (!currentInput.equals((IModelElement) element))
+			if (!currentInput.equals(element))
 				return null;
 		}
 		return firstElement;

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.editor;
 
@@ -53,7 +52,7 @@ public class ScriptEditorErrorTickUpdater implements IProblemChangedListener {
 
 		IEditorInput input= fScriptEditor.getEditorInput();
 		if (input != null) { // might run async, tests needed
-			IModelElement jelement= (IModelElement) input.getAdapter(IModelElement.class);
+			IModelElement jelement = input.getAdapter(IModelElement.class);
 			if (jelement != null) {
 				IResource resource= jelement.getResource();
 				for (int i = 0; i < changedResources.length; i++) {

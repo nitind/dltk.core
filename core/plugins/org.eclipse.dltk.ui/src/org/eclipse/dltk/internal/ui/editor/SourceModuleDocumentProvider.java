@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.editor;
 
@@ -1272,7 +1271,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 			original = createSourceModule(input.getFile());
 		}
 		if (original == null && element instanceof IAdaptable) {
-			IModelElement modelE = (IModelElement) ((IAdaptable) element)
+			IModelElement modelE = ((IAdaptable) element)
 					.getAdapter(IModelElement.class);
 			if (modelE != null && modelE instanceof ISourceModule) {
 				original = (ISourceModule) modelE;
@@ -1564,7 +1563,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 		if (info == null) {
 			ISourceModule cu = null;
 			if (element instanceof IAdaptable) {
-				IModelElement e = (IModelElement) ((IAdaptable) element)
+				IModelElement e = ((IAdaptable) element)
 						.getAdapter(IModelElement.class);
 				if (e != null && e instanceof ISourceModule) {
 					cu = (ISourceModule) e;

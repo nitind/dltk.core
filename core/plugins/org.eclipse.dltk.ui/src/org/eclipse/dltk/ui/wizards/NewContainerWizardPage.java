@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ui.wizards;
 
@@ -224,20 +223,20 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 			// Check for adapters
 			if (selectedElement instanceof IAdaptable) {
 				IAdaptable adaptable = (IAdaptable) selectedElement;
-				scriptElement = (IModelElement) adaptable
+				scriptElement = adaptable
 						.getAdapter(IModelElement.class);
 				if (scriptElement != null && scriptElement.isReadOnly()) {
 					scriptElement = scriptElement.getScriptProject();
 				}
 				if (scriptElement == null) {
-					IResource resource = (IResource) adaptable
+					IResource resource = adaptable
 							.getAdapter(IResource.class);
 					if (resource != null
 							&& resource.getType() != IResource.ROOT) {
 						while (scriptElement == null
 								&& resource.getType() != IResource.PROJECT) {
 							resource = resource.getParent();
-							scriptElement = (IModelElement) resource
+							scriptElement = resource
 									.getAdapter(IModelElement.class);
 						}
 

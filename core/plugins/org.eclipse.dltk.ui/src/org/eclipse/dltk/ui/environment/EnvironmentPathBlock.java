@@ -266,7 +266,7 @@ public class EnvironmentPathBlock {
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			IEnvironment environment = (IEnvironment) sel.getFirstElement();
-			IEnvironmentUI ui = (IEnvironmentUI) environment
+			IEnvironmentUI ui = environment
 					.getAdapter(IEnvironmentUI.class);
 			String file = null;
 			if (!useFolders) {
