@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.evaluation.types;
 
@@ -28,7 +27,7 @@ public class MultiTypeType implements IEvaluatedType {
 	public void addType(IEvaluatedType type) {
 		Iterator<IEvaluatedType> i = fTypes.iterator();
 		while (i.hasNext()) {
-			IEvaluatedType ltype = (IEvaluatedType) i.next();
+			IEvaluatedType ltype = i.next();
 			if (ltype.equals(type)) {
 				return;
 			}
@@ -40,7 +39,7 @@ public class MultiTypeType implements IEvaluatedType {
 		String names = ""; //$NON-NLS-1$
 		Iterator<IEvaluatedType> i = fTypes.iterator();
 		while (i.hasNext()) {
-			IEvaluatedType type = (IEvaluatedType) i.next();
+			IEvaluatedType type = i.next();
 			names += type.getTypeName() + " "; //$NON-NLS-1$
 		}
 		return "multitype:" + names; //$NON-NLS-1$
@@ -59,7 +58,7 @@ public class MultiTypeType implements IEvaluatedType {
 
 	public IEvaluatedType get(int i) {
 		if (this.fTypes != null) {
-			return (IEvaluatedType) this.fTypes.get(i);
+			return this.fTypes.get(i);
 		}
 		return null;
 	}

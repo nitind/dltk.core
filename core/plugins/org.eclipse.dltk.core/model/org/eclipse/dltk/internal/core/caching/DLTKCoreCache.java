@@ -55,7 +55,7 @@ public class DLTKCoreCache extends AbstractContentCache {
 		};
 
 		protected void remove(org.eclipse.dltk.core.IProjectFragment element) {
-			IProjectFragment fragment = (IProjectFragment) element;
+			IProjectFragment fragment = element;
 			try {
 				fragment.accept(new IModelElementVisitor() {
 					public boolean visit(IModelElement element) {
