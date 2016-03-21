@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -168,9 +168,11 @@ public class MethodStubsSelectionButtonGroup {
 			fButtonComposite.setLayout(layout);
 			
 			SelectionListener listener= new SelectionListener() {
+				@Override
 				public void widgetDefaultSelected(SelectionEvent e) {
 					doWidgetSelected(e);
 				}
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					doWidgetSelected(e);
 				}
@@ -187,6 +189,7 @@ public class MethodStubsSelectionButtonGroup {
 				createEmptySpace(fButtonComposite);
 			}
 			setSelectionGroupListener(new SelectionButtonGroupListener() {
+				@Override
 				public void groupChanged(MethodStubsSelectionButtonGroup field) {
 					field.setEnabled(1, isEnabled() && field.isSelected(0));
 				}
@@ -331,6 +334,7 @@ public class MethodStubsSelectionButtonGroup {
 		if (display != null) {
 			display.asyncExec(
 				new Runnable() {
+					@Override
 					public void run() {
 						setFocus();
 					}

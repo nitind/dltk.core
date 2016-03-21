@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -21,6 +21,7 @@ public class TestTreeComparator extends ViewerComparator {
 
 	private int sortDirection = TestRunnerViewPart.SORT_DIRECTION_NO_SORT;
 
+	@Override
 	public int category(Object element) {
 		if (element instanceof TestCategoryElement) {
 			return 0;

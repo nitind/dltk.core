@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -83,16 +83,12 @@ public final class DLTKTestingModel implements ITestingModel {
 			}
 		}
 
-		/*
-		 * @see ILaunchListener#launchAdded(ILaunch)
-		 */
+		@Override
 		public void launchAdded(ILaunch launch) {
 			fTrackedLaunches.add(launch);
 		}
 
-		/*
-		 * @see ILaunchListener#launchRemoved(ILaunch)
-		 */
+		@Override
 		public void launchRemoved(final ILaunch launch) {
 			fTrackedLaunches.remove(launch);
 			// TODO: story for removing old test runs?
@@ -107,9 +103,7 @@ public final class DLTKTestingModel implements ITestingModel {
 			// });
 		}
 
-		/*
-		 * @see ILaunchListener#launchChanged(ILaunch)
-		 */
+		@Override
 		public void launchChanged(final ILaunch launch) {
 			if (!fTrackedLaunches.contains(launch))
 				return;
@@ -131,6 +125,7 @@ public final class DLTKTestingModel implements ITestingModel {
 					final int port = Integer.parseInt(portStr);
 					fTrackedLaunches.remove(launch);
 					getDisplay().asyncExec(new Runnable() {
+						@Override
 						public void run() {
 							connectTestRunner(launch, javaProject, port);
 						}
@@ -144,6 +139,7 @@ public final class DLTKTestingModel implements ITestingModel {
 				if (atr != null) {
 					fTrackedLaunches.remove(launch);
 					getDisplay().asyncExec(new Runnable() {
+						@Override
 						public void run() {
 							connectTestRunner(launch, javaProject);
 						}
@@ -260,6 +256,7 @@ public final class DLTKTestingModel implements ITestingModel {
 	/**
 	 * Starts the model (called by the {@link DLTKTestingPlugin} on startup).
 	 */
+	@Override
 	public synchronized void start() {
 		if (started) {
 			return;
@@ -328,10 +325,12 @@ public final class DLTKTestingModel implements ITestingModel {
 		started = false;
 	}
 
+	@Override
 	public void addTestRunSessionListener(ITestRunSessionListener listener) {
 		fTestRunSessionListeners.add(listener);
 	}
 
+	@Override
 	public void removeTestRunSessionListener(ITestRunSessionListener listener) {
 		fTestRunSessionListeners.remove(listener);
 	}
@@ -342,12 +341,14 @@ public final class DLTKTestingModel implements ITestingModel {
 	 *         global list of active sessions. The list is sorted by age,
 	 *         youngest first.
 	 */
+	@Override
 	public List<TestRunSession> getTestRunSessions() {
 		synchronized (fTestRunSessions) {
 			return new ArrayList<TestRunSession>(fTestRunSessions);
 		}
 	}
 
+	@Override
 	public ITestRunSession getTestRunSession(ILaunch launch) {
 		Assert.isNotNull(launch);
 		synchronized (fTestRunSessions) {
@@ -370,6 +371,7 @@ public final class DLTKTestingModel implements ITestingModel {
 	 * @param testRunSession
 	 *            the session to add
 	 */
+	@Override
 	public void addTestRunSession(TestRunSession testRunSession) {
 		Assert.isNotNull(testRunSession);
 		synchronized (fTestRunSessions) {
@@ -516,6 +518,7 @@ public final class DLTKTestingModel implements ITestingModel {
 	 * @param testRunSession
 	 *            the session to remove
 	 */
+	@Override
 	public void removeTestRunSession(TestRunSession testRunSession) {
 		final boolean existed;
 		synchronized (fTestRunSessions) {

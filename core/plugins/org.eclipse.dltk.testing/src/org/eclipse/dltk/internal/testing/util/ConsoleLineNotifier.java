@@ -16,11 +16,13 @@ public abstract class ConsoleLineNotifier implements IPatternMatchListener,
 
 	private TextConsole fConsole = null;
 
+	@Override
 	public void connect(TextConsole console) {
 		fConsole = console;
 		fConsole.addPropertyChangeListener(this);
 	}
 
+	@Override
 	public synchronized void disconnect() {
 		try {
 			IDocument document = fConsole.getDocument();
@@ -41,6 +43,7 @@ public abstract class ConsoleLineNotifier implements IPatternMatchListener,
 		fConsole = null;
 	}
 
+	@Override
 	public void matchFound(PatternMatchEvent event) {
 		try {
 			IDocument document = fConsole.getDocument();
@@ -57,6 +60,7 @@ public abstract class ConsoleLineNotifier implements IPatternMatchListener,
 
 	public abstract void lineAppended(IRegion region, String content);
 
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(
 				IConsoleConstants.P_CONSOLE_OUTPUT_COMPLETE)) {
@@ -65,14 +69,17 @@ public abstract class ConsoleLineNotifier implements IPatternMatchListener,
 		}
 	}
 
+	@Override
 	public String getPattern() {
 		return ".*\\r(\\n?)|.*\\n"; //$NON-NLS-1$
 	}
 
+	@Override
 	public int getCompilerFlags() {
 		return 0;
 	}
 
+	@Override
 	public String getLineQualifier() {
 		return "\\n|\\r"; //$NON-NLS-1$
 	}

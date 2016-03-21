@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,6 +56,7 @@ public abstract class DLTKTestingWizard extends Wizard implements INewWizard {
 	/*
 	 * @see IWizard#performFinish()
 	 */
+	@Override
 	public abstract boolean performFinish();
 
 	/*
@@ -85,6 +86,7 @@ public abstract class DLTKTestingWizard extends Wizard implements INewWizard {
 				final Display display= Display.getDefault();
 				if (display != null) {
 					display.asyncExec(new Runnable() {
+						@Override
 						public void run() {
 							try {
 								IDE.openEditor(activePage, (IFile)resource, true);
@@ -98,9 +100,7 @@ public abstract class DLTKTestingWizard extends Wizard implements INewWizard {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
-	 */
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
 		fWorkbench= workbench;
 		fSelection= currentSelection;

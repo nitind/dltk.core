@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -29,16 +29,12 @@ public class NullTestingEngine extends AbstractTestingEngine {
 		return instance;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.testing.ITestingEngine#getId()
-	 */
+	@Override
 	public String getId() {
 		return getClass().getName();
 	}
 
-	/*
-	 * @see org.eclipse.dltk.testing.ITestingEngine#getName()
-	 */
+	@Override
 	public String getName() {
 		final String fullName = getClass().getName();
 		final int pos = fullName.lastIndexOf('.');

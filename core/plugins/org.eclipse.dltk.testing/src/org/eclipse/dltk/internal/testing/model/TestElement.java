@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,6 +66,7 @@ public abstract class TestElement implements ITestElement {
 			return fOldCode;
 		}
 
+		@Override
 		public String toString() {
 			return fName;
 		}
@@ -254,6 +255,7 @@ public abstract class TestElement implements ITestElement {
 	 * 
 	 * @see org.eclipse.jdt.junit.ITestElement#getProgressState()
 	 */
+	@Override
 	public ProgressState getProgressState() {
 		return getStatus().convertToProgressState();
 	}
@@ -263,6 +265,7 @@ public abstract class TestElement implements ITestElement {
 	 * 
 	 * @see org.eclipse.jdt.junit.ITestElement#getTestResult()
 	 */
+	@Override
 	public Result getTestResult(boolean includeChildren) {
 		return getStatus().convertToResult();
 	}
@@ -272,6 +275,7 @@ public abstract class TestElement implements ITestElement {
 	 * 
 	 * @see org.eclipse.jdt.junit.ITestElement#getTestRunSession()
 	 */
+	@Override
 	public ITestRunSession getTestRunSession() {
 		return getRoot().getTestRunSession();
 	}
@@ -281,6 +285,7 @@ public abstract class TestElement implements ITestElement {
 	 * 
 	 * @see org.eclipse.jdt.junit.ITestElement#getParentContainer()
 	 */
+	@Override
 	public ITestElementContainer getParentContainer() {
 		if (fParent instanceof TestRoot) {
 			return getTestRunSession();
@@ -293,6 +298,7 @@ public abstract class TestElement implements ITestElement {
 	 * 
 	 * @see org.eclipse.jdt.junit.model.ITestElement#getFailureTrace()
 	 */
+	@Override
 	public FailureTrace getFailureTrace() {
 		Result testResult = getTestResult(false);
 		if (testResult == Result.ERROR || testResult == Result.FAILURE) {
@@ -308,6 +314,7 @@ public abstract class TestElement implements ITestElement {
 		return fParent;
 	}
 
+	@Override
 	public String getId() {
 		return fId;
 	}
@@ -349,6 +356,7 @@ public abstract class TestElement implements ITestElement {
 		fTime= time;
 	}
 	
+	@Override
 	public double getElapsedTimeInSeconds() {
 		if (Double.isNaN(fTime) || fTime < 0.0d) {
 			return Double.NaN;
@@ -381,6 +389,7 @@ public abstract class TestElement implements ITestElement {
 		return getParent().getRoot();
 	}
 
+	@Override
 	public String toString() {
 		return getProgressState() + " - " + getTestResult(true); //$NON-NLS-1$
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,13 +55,16 @@ public class TestRunHandler extends DefaultHandler {
 		fTestRunSession= testRunSession;
 	}
 
+	@Override
 	public void setDocumentLocator(Locator locator) {
 		fLocator= locator;
 	}
 	
+	@Override
 	public void startDocument() throws SAXException {
 	}
 	
+	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		if (qName.equals(IXMLTags.NODE_TESTRUN)) {
 			if (fTestRunSession == null) {
@@ -149,6 +152,7 @@ public class TestRunHandler extends DefaultHandler {
 				}
 			}
 	}
+	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		if (fInExpected) {
 			fExpectedBuffer.append(ch, start, length);
@@ -161,6 +165,7 @@ public class TestRunHandler extends DefaultHandler {
 		}
 	}
 	
+	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		if (qName.equals(IXMLTags.NODE_TESTRUN)) { 
 			// OK
@@ -231,10 +236,12 @@ public class TestRunHandler extends DefaultHandler {
 		throw new SAXException(msg);
 	}
 	
+	@Override
 	public void error(SAXParseException e) throws SAXException {
 		throw e;
 	}
 
+	@Override
 	public void warning(SAXParseException e) throws SAXException {
 		throw e;
 	}

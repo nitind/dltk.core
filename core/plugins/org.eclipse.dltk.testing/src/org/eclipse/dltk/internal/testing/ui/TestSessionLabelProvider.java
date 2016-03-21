@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -79,6 +79,7 @@ public class TestSessionLabelProvider extends LabelProvider  implements IStyledL
 	}
 	
 	
+	@Override
 	public StyledString getStyledText(Object element) {
 		
 		String label= getSimpleLabel(element);
@@ -109,6 +110,7 @@ public class TestSessionLabelProvider extends LabelProvider  implements IStyledL
 		return addElapsedTime(text, testElement.getElapsedTimeInSeconds());
 	}
 
+	@Override
 	public String getText(Object element) {
 		if (fLayoutMode == TestRunnerViewPart.LAYOUT_FLAT
 				&& element instanceof ITestCaseElement) {
@@ -140,6 +142,7 @@ public class TestSessionLabelProvider extends LabelProvider  implements IStyledL
 		return fTestRunnerPart.getTestRunnerUI();
 	}
 
+	@Override
 	public Image getImage(Object element) {
 		if (element instanceof TestCaseElement) {
 			TestCaseElement testCaseElement = ((TestCaseElement) element);

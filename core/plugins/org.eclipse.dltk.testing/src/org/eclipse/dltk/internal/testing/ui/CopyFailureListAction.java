@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,6 +44,7 @@ public class CopyFailureListAction extends Action {
 	/*
 	 * @see IAction#run()
 	 */
+	@Override
 	public void run() {
 		TextTransfer plainTextTransfer = TextTransfer.getInstance();
 
@@ -65,6 +66,7 @@ public class CopyFailureListAction extends Action {
 		StringBuffer buf = new StringBuffer();
 		ITestElement[] failures = fRunner.getCurrentSession()
 				.getFailedTestElements(new ITestElementPredicate() {
+					@Override
 					public boolean matches(ITestElement testElement) {
 						return true;
 					}

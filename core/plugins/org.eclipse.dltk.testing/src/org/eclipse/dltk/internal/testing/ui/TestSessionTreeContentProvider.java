@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,9 +23,11 @@ public class TestSessionTreeContentProvider implements ITreeContentProvider {
 
 	private final Object[] NO_CHILDREN= new Object[0];
 	
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof TestContainerElement)
 			return ((TestContainerElement) parentElement).getChildren();
@@ -33,14 +35,17 @@ public class TestSessionTreeContentProvider implements ITreeContentProvider {
 			return NO_CHILDREN;
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return ((TestRoot) inputElement).getChildren();
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		return ((TestElement) element).getParent();
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof TestContainerElement)
 			return ((TestContainerElement) element).getChildren().length != 0;
@@ -48,6 +53,7 @@ public class TestSessionTreeContentProvider implements ITreeContentProvider {
 			return false;
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -201,6 +201,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 		
 		final ILaunchManager launchManager= DebugPlugin.getDefault().getLaunchManager();
 		launchManager.addLaunchListener(new ILaunchesListener2() {
+			@Override
 			public void launchesTerminated(ILaunch[] launches) {
 				if (Arrays.asList(launches).contains(fLaunch)) {
 					if (fTestRunnerClient != null) {
@@ -210,6 +211,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 					scheduleTestRunTerminated();
 				}
 			}
+			@Override
 			public void launchesRemoved(ILaunch[] launches) {
 				if (Arrays.asList(launches).contains(fLaunch)) {
 					if (fTestRunnerClient != null) {
@@ -219,8 +221,10 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 					scheduleTestRunTerminated();
 				}
 			}
+			@Override
 			public void launchesChanged(ILaunch[] launches) {
 			}
+			@Override
 			public void launchesAdded(ILaunch[] launches) {
 			}
 
@@ -263,6 +267,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/*
 	 * @see org.eclipse.dltk.testing.model.ITestElement#getId()
 	 */
+	@Override
 	public String getId() {
 		return fTestRunName;
 	}
@@ -270,6 +275,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.junit.ITestRunSession#getProgressState()
 	 */
+	@Override
 	public ProgressState getProgressState() {
 		if (isRunning()) {
 			return ProgressState.RUNNING;
@@ -283,6 +289,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.junit.model.ITestElement#getTestResult(boolean)
 	 */
+	@Override
 	public Result getTestResult(boolean includeChildren) {
 		if (fTestRoot != null) {
 			return fTestRoot.getTestResult(true);
@@ -294,6 +301,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.junit.model.ITestElementContainer#getChildren()
 	 */
+	@Override
 	public ITestElement[] getChildren() {
 		return getTestRoot().getChildren();
 	}
@@ -304,6 +312,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getFailureTrace()
 	 */
+	@Override
 	public FailureTrace getFailureTrace() {
 		return null;
 	}
@@ -311,6 +320,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.junit.model.ITestElement#getParentContainer()
 	 */
+	@Override
 	public ITestElementContainer getParentContainer() {
 		return null;
 	}
@@ -318,6 +328,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.junit.model.ITestElement#getTestRunSession()
 	 */
+	@Override
 	public ITestRunSession getTestRunSession() {
 		return this;
 	}
@@ -342,10 +353,12 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getLaunch()
 	 */
+	@Override
 	public ILaunch getLaunch() {
 		return fLaunch;
 	}
 	
+	@Override
 	public String getTestRunName() {
 		return fTestRunName;
 	}
@@ -353,6 +366,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getErrorCount()
 	 */
+	@Override
 	public int getErrorCount() {
 		return fErrorCount;
 	}
@@ -360,6 +374,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getFailureCount()
 	 */
+	@Override
 	public int getFailureCount() {
 		return fFailureCount;
 	}
@@ -367,6 +382,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getStartedCount()
 	 */
+	@Override
 	public int getStartedCount() {
 		return fStartedCount;
 	}
@@ -374,6 +390,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getIgnoredCount()
 	 */
+	@Override
 	public int getIgnoredCount() {
 		return fIgnoredCount;
 	}
@@ -384,6 +401,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#setTotalCount(int)
 	 */
+	@Override
 	public void setTotalCount(int count) {
 		this.fTotalCount = count;
 //		System.out.println("COUNT:" + count);
@@ -401,6 +419,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getStartTime()
 	 */
+	@Override
 	public long getStartTime() {
 		return fStartTime;
 	}
@@ -408,6 +427,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#isStopped()
 	 */
+	@Override
 	public boolean isStopped() {
 		return fIsStopped;
 	}
@@ -456,6 +476,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#isStarting()
 	 */
+	@Override
 	public boolean isStarting() {
 		return getStartTime() == 0 && fLaunch != null && ! fLaunch.isTerminated();
 	}
@@ -523,6 +544,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#isRunning()
 	 */
+	@Override
 	public boolean isRunning() {
 		return fIsRunning;
 	}
@@ -688,6 +710,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	 */
 	private class TestSessionNotifier implements ITestRunListener2 {
 		
+		@Override
 		public void testRunStarted(int testCount) {
 			fIncompleteTestSuites= new ArrayList<IncompleteTestSuite>();
 			
@@ -707,6 +730,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			}
 		}
 	
+		@Override
 		public void testRunEnded(long elapsedTime) {
 			fIsRunning= false;
 			
@@ -716,6 +740,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			}
 		}
 	
+		@Override
 		public void testRunStopped(long elapsedTime) {
 			fIsRunning= false;
 			fIsStopped= true;
@@ -726,6 +751,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			}
 		}
 	
+		@Override
 		public void testRunTerminated() {
 			TestRunSession.this.testRunTerminated();
 		}
@@ -733,6 +759,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 		/* (non-Javadoc)
 		 * @see org.eclipse.jdt.internal.junit.model.ITestRunListener2#testTreeEntry(java.lang.String)
 		 */
+		@Override
 		public void testTreeEntry(String description) {
 			TestElement testElement= addTreeEntry(description);
 			
@@ -742,6 +769,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			}
 		}
 
+		@Override
 		public void testTreeEntry(String testId, String testName,
 				boolean isSuite, int testCount) {
 			TestElement testElement = addTreeEntry(testId, testName, isSuite,
@@ -772,6 +800,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			return fUnrootedSuite;
 		}
 
+		@Override
 		public void testStarted(String testId, String testName) {
 			if (fStartedCount == 0) {
 				Object[] listeners= fSessionListeners.getListeners();
@@ -797,6 +826,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			}
 		}
 	
+		@Override
 		public void testEnded(String testId, String testName) {
 			TestElement testElement= getTestElement(testId);
 			if (testElement == null) {
@@ -831,6 +861,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 		/* (non-Javadoc)
 		 * @see org.eclipse.jdt.internal.junit.model.ITestRunListener2#testFailed(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 		 */
+		@Override
 		public void testFailed(int statusCode, String testId, String testName, String trace, String expected, String actual, int code) {
 			TestElement testElement= getTestElement(testId);
 			if (testElement == null) {
@@ -865,6 +896,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 		/* (non-Javadoc)
 		 * @see org.eclipse.jdt.internal.junit.model.ITestRunListener2#testReran(java.lang.String, java.lang.String, java.lang.String, int, java.lang.String, java.lang.String, java.lang.String)
 		 */
+		@Override
 		public void testReran(String testId, String className, String testName, int statusCode, String trace, String expectedResult, String actualResult) {
 			TestElement testElement= getTestElement(testId);
 			if (testElement == null) {
@@ -939,6 +971,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 		testElement.setStatus(status);
 	}
 	
+	@Override
 	public ITestElement[] getFailedTestElements(ITestElementPredicate predicate) {
 		List<ITestElement> failures = new ArrayList<ITestElement>();
 		addFailures(failures, getTestRoot(), predicate);
@@ -961,6 +994,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 		}
 	}
 
+	@Override
 	public ITestingClient getTestRunnerClient() {
 		if (fTestRunnerClient instanceof ITestingClient) {
 			return (ITestingClient) fTestRunnerClient;
@@ -979,6 +1013,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.junit.model.ITestElement#getElapsedTimeInSeconds()
 	 */
+	@Override
 	public double getElapsedTimeInSeconds() {
 		if (fTestRoot == null)
 			return Double.NaN;

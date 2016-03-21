@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -31,6 +31,7 @@ public class TestCategoryEngineManager extends
 	private static final String EXTENSION_POINT = DLTKTestingPlugin.PLUGIN_ID
 			+ ".categoryEngine"; //$NON-NLS-1$
 
+	@Override
 	protected String getCategoryAttributeName() {
 		return "testingEngineId"; //$NON-NLS-1$
 	}
@@ -57,6 +58,7 @@ public class TestCategoryEngineManager extends
 
 	private static final String PRIORITY_ATTR = "priority"; //$NON-NLS-1$
 
+	@Override
 	protected Object createDescriptor(IConfigurationElement confElement) {
 		final String strPriority = confElement.getAttribute(PRIORITY_ATTR);
 		int priority = NumberUtils.toInt(strPriority);
@@ -65,6 +67,7 @@ public class TestCategoryEngineManager extends
 
 	private final Comparator<Object> descriptorComparator = new Comparator<Object>() {
 
+		@Override
 		public int compare(Object o1, Object o2) {
 			Descriptor descriptor1 = (Descriptor) o1;
 			Descriptor descriptor2 = (Descriptor) o2;
@@ -73,15 +76,18 @@ public class TestCategoryEngineManager extends
 
 	};
 
+	@Override
 	protected void initializeDescriptors(List<Object> descriptors) {
 		Collections.sort(descriptors, descriptorComparator);
 	}
 
+	@Override
 	protected Object createInstanceByDescriptor(Object descriptor)
 			throws CoreException {
 		return descriptor;
 	}
 
+	@Override
 	protected Descriptor[] createEmptyResult() {
 		return new Descriptor[0];
 	}

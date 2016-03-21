@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,7 @@ public class TestCaseElement extends TestElement implements ITestCaseElement {
 		return fIgnored;
 	}
 
+	@Override
 	public String toString() {
 		return "TestCase: " + getTestName() + " : " + super.toString(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -39,6 +40,7 @@ public class TestCaseElement extends TestElement implements ITestCaseElement {
 	/**
 	 * @param value
 	 */
+	@Override
 	public void setTestName(String value) {
 		super.setTestName(value);
 	}

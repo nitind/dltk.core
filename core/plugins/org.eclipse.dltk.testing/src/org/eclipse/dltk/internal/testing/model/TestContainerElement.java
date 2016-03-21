@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,7 @@ public abstract class TestContainerElement extends TestElement implements
 	/*
 	 * @see org.eclipse.jdt.junit.ITestElement#getTestResult()
 	 */
+	@Override
 	public Result getTestResult(boolean includeChildren) {
 		if (includeChildren) {
 			return getStatus().convertToResult();
@@ -54,6 +55,7 @@ public abstract class TestContainerElement extends TestElement implements
 	/*
 	 * @see org.eclipse.jdt.junit.model.ITestSuiteElement#getChildren()
 	 */
+	@Override
 	public ITestElement[] getChildren() {
 		return fChildren.toArray(new ITestElement[fChildren.size()]);
 	}
@@ -62,6 +64,7 @@ public abstract class TestContainerElement extends TestElement implements
 		fChildren.add(child);
 	}
 
+	@Override
 	public Status getStatus() {
 		Status suiteStatus = getSuiteStatus();
 		if (fChildrenStatus != null) {
@@ -159,6 +162,7 @@ public abstract class TestContainerElement extends TestElement implements
 			parent.childChangedStatus(this, getStatus());
 	}
 
+	@Override
 	public String toString() {
 		String className = getClass().getName();
 		final int index = className.lastIndexOf('.');

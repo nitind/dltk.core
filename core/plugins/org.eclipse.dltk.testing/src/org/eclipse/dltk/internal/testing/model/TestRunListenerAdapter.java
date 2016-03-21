@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,6 +65,7 @@ public class TestRunListenerAdapter implements ITestSessionListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.internal.junit.model.ITestSessionListener#sessionStarted()
 	 */
+	@Override
 	public void sessionStarted() {
 		// wait until all test are added
 	}
@@ -72,6 +73,7 @@ public class TestRunListenerAdapter implements ITestSessionListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.internal.junit.model.ITestSessionListener#sessionEnded(long)
 	 */
+	@Override
 	public void sessionEnded(long elapsedTime) {
 		fireSessionFinished();
 		fSession.swapOut();
@@ -80,6 +82,7 @@ public class TestRunListenerAdapter implements ITestSessionListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.internal.junit.model.ITestSessionListener#sessionStopped(long)
 	 */
+	@Override
 	public void sessionStopped(long elapsedTime) {
 		fireSessionFinished();
 		fSession.swapOut();
@@ -88,6 +91,7 @@ public class TestRunListenerAdapter implements ITestSessionListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.internal.junit.model.ITestSessionListener#sessionTerminated()
 	 */
+	@Override
 	public void sessionTerminated() {
 		fSession.swapOut();
 	}
@@ -95,6 +99,7 @@ public class TestRunListenerAdapter implements ITestSessionListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.internal.junit.model.ITestSessionListener#testAdded(org.eclipse.jdt.internal.junit.model.TestElement)
 	 */
+	@Override
 	public void testAdded(TestElement testElement) {
 		// do nothing
 	}
@@ -102,6 +107,7 @@ public class TestRunListenerAdapter implements ITestSessionListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.internal.junit.model.ITestSessionListener#runningBegins()
 	 */
+	@Override
 	public void runningBegins() {
 		fireSessionStarted();
 	}
@@ -109,6 +115,7 @@ public class TestRunListenerAdapter implements ITestSessionListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.internal.junit.model.ITestSessionListener#testStarted(org.eclipse.jdt.internal.junit.model.TestCaseElement)
 	 */
+	@Override
 	public void testStarted(TestCaseElement testCaseElement) {
 		fireTestCaseStarted(testCaseElement);
 	}
@@ -116,6 +123,7 @@ public class TestRunListenerAdapter implements ITestSessionListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.internal.junit.model.ITestSessionListener#testEnded(org.eclipse.jdt.internal.junit.model.TestCaseElement)
 	 */
+	@Override
 	public void testEnded(TestCaseElement testCaseElement) {
 		fireTestCaseFinished(testCaseElement);
 	}
@@ -123,6 +131,7 @@ public class TestRunListenerAdapter implements ITestSessionListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.internal.junit.model.ITestSessionListener#testFailed(org.eclipse.jdt.internal.junit.model.TestElement, org.eclipse.jdt.internal.junit.model.TestElement.Status, java.lang.String, java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void testFailed(TestElement testElement, Status status, String trace, String expected, String actual, int code) {
 		// ignore
 	}
@@ -130,10 +139,12 @@ public class TestRunListenerAdapter implements ITestSessionListener {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.internal.junit.model.ITestSessionListener#testReran(org.eclipse.jdt.internal.junit.model.TestCaseElement, org.eclipse.jdt.internal.junit.model.TestElement.Status, java.lang.String, java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void testReran(TestCaseElement testCaseElement, Status status, String trace, String expectedResult, String actualResult) {
 		// ignore
 	}
 	
+	@Override
 	public boolean acceptsSwapToDisk() {
 		return true;
 	}

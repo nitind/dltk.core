@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 	private static boolean DEBUG = false;
 
 	public abstract class ListenerSafeRunnable implements ISafeRunnable {
+		@Override
 		public void handleException(Throwable exception) {
 			DLTKTestingPlugin.log(exception);
 		}
@@ -50,6 +51,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 	}
 
 	class DefaultProcessingState extends ProcessingState {
+		@Override
 		ProcessingState readMessage(String message) {
 			if (message.startsWith(MessageIds.TRACE_START)) {
 				fFailedTrace.setLength(0);
@@ -139,6 +141,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 			this.fEndString = endString;
 		}
 
+		@Override
 		ProcessingState readMessage(String message) {
 			if (message.startsWith(fEndString)) {
 				entireStringRead();
@@ -161,12 +164,14 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 			super(fFailedTrace, MessageIds.TRACE_END);
 		}
 
+		@Override
 		void entireStringRead() {
 			notifyTestFailed();
 			fExpectedResult.setLength(0);
 			fActualResult.setLength(0);
 		}
 
+		@Override
 		ProcessingState readMessage(String message) {
 			if (message.startsWith(MessageIds.TRACE_END)) {
 				notifyTestFailed();
@@ -250,6 +255,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 			fServerPort = port;
 		}
 
+		@Override
 		public void run() {
 			try {
 				if (fDebug)
@@ -299,6 +305,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 	 * 
 	 * @param listeners
 	 */
+	@Override
 	public synchronized void startListening(ITestRunListener2 listener) {
 		fListeners = new ITestRunListener2[] { listener };
 		ServerConnection connection = new ServerConnection(fPort);
@@ -308,6 +315,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 	/**
 	 * Requests to stop the remote test run.
 	 */
+	@Override
 	public synchronized void stopTest() {
 		if (isRunning()) {
 			fWriter.println(MessageIds.TEST_STOP);
@@ -315,6 +323,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 		}
 	}
 
+	@Override
 	public synchronized void stopWaiting() {
 		if (fServerSocket != null && !fServerSocket.isClosed()
 				&& fSocket == null) {
@@ -354,6 +363,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 		}
 	}
 
+	@Override
 	public boolean isRunning() {
 		return fSocket != null;
 	}
@@ -453,6 +463,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 		for (int i = 0; i < fListeners.length; i++) {
 			final ITestRunListener2 listener = fListeners[i];
 			SafeRunner.run(new ListenerSafeRunnable() {
+				@Override
 				public void run() {
 					listener.testReran(testId, className, testName, statusCode,
 							trace, fExpectedResult.toString(), fActualResult
@@ -485,6 +496,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 		for (int i = 0; i < fListeners.length; i++) {
 			final ITestRunListener2 listener = fListeners[i];
 			SafeRunner.run(new ListenerSafeRunnable() {
+				@Override
 				public void run() {
 					listener.testRunStopped(elapsedTime);
 				}
@@ -498,6 +510,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 		for (int i = 0; i < fListeners.length; i++) {
 			final ITestRunListener2 listener = fListeners[i];
 			SafeRunner.run(new ListenerSafeRunnable() {
+				@Override
 				public void run() {
 					listener.testRunEnded(elapsedTime);
 				}
@@ -511,6 +524,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 		for (int i = 0; i < fListeners.length; i++) {
 			final ITestRunListener2 listener = fListeners[i];
 			SafeRunner.run(new ListenerSafeRunnable() {
+				@Override
 				public void run() {
 					String s[] = extractTestId(test);
 					listener.testEnded(s[0], s[1]);
@@ -525,6 +539,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 		for (int i = 0; i < fListeners.length; i++) {
 			final ITestRunListener2 listener = fListeners[i];
 			SafeRunner.run(new ListenerSafeRunnable() {
+				@Override
 				public void run() {
 					String s[] = extractTestId(test);
 					listener.testStarted(s[0], s[1]);
@@ -539,6 +554,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 		for (int i = 0; i < fListeners.length; i++) {
 			final ITestRunListener2 listener = fListeners[i];
 			SafeRunner.run(new ListenerSafeRunnable() {
+				@Override
 				public void run() {
 					listener.testRunStarted(count);
 				}
@@ -552,6 +568,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 		for (int i = 0; i < fListeners.length; i++) {
 			final ITestRunListener2 listener = fListeners[i];
 			SafeRunner.run(new ListenerSafeRunnable() {
+				@Override
 				public void run() {
 					listener.testFailed(fFailureKind, fFailedTestId,
 							fFailedTest, fFailedTrace.toString(),
@@ -570,6 +587,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 		for (int i = 0; i < fListeners.length; i++) {
 			final ITestRunListener2 listener = fListeners[i];
 			SafeRunner.run(new ListenerSafeRunnable() {
+				@Override
 				public void run() {
 					listener.testRunTerminated();
 				}
@@ -577,6 +595,7 @@ public class SocketTestRunnerClient implements ITestRunnerClient {
 		}
 	}
 
+	@Override
 	public void rerunTest(String testId, String className, String testName) {
 		if (isRunning()) {
 			fActualResult.setLength(0);

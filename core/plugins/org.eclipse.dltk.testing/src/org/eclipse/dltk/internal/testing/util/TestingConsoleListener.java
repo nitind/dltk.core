@@ -26,6 +26,7 @@ public class TestingConsoleListener implements IConsoleListener {
 		this.processor = processor;
 	}
 
+	@Override
 	public synchronized void consolesAdded(IConsole[] consoles) {
 		// System.out.println("consolesAdded:" + consoles.length);
 		checkConsoles(consoles);
@@ -75,11 +76,13 @@ public class TestingConsoleListener implements IConsoleListener {
 		pc.addPatternMatchListener(new ConsoleLineNotifier() {
 			private boolean first = true;
 
+			@Override
 			public void connect(TextConsole console) {
 				super.connect(console);
 				// System.out.println("%");
 			}
 
+			@Override
 			public synchronized void lineAppended(IRegion region, String content) {
 				if (first) {
 					first = false;
@@ -88,11 +91,13 @@ public class TestingConsoleListener implements IConsoleListener {
 				processor.processLine(content);
 			}
 
+			@Override
 			public synchronized void disconnect() {
 				super.disconnect();
 				done();
 			}
 
+			@Override
 			public synchronized void consoleClosed() {
 				super.consoleClosed();
 				done();
@@ -100,14 +105,17 @@ public class TestingConsoleListener implements IConsoleListener {
 		});
 	}
 
+	@Override
 	public void consolesRemoved(IConsole[] consoles) {
 		// empty
 	}
 
+	@Override
 	public int hashCode() {
 		return launchKey.hashCode();
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,6 +48,7 @@ public class TestMethodSelectionDialog extends ElementListSelectionDialog {
 	public static class TestReferenceCollector extends SearchRequestor {
 		Set fResult = new HashSet(200);
 
+		@Override
 		public void acceptSearchMatch(SearchMatch match) throws CoreException {
 			IModelElement enclosingElement = (IModelElement) match.getElement();
 			if (enclosingElement.getElementName().startsWith("test")) //$NON-NLS-1$
@@ -66,18 +67,14 @@ public class TestMethodSelectionDialog extends ElementListSelectionDialog {
 		fElement = element;
 	}
 
-	/*
-	 * @see Windows#configureShell
-	 */
+	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell,
 				IDLTKTestingHelpContextIds.TEST_SELECTION_DIALOG);
 	}
 
-	/*
-	 * @see Window#open()
-	 */
+	@Override
 	public int open() {
 		Object[] elements;
 		IType testType = null;
@@ -145,6 +142,7 @@ public class TestMethodSelectionDialog extends ElementListSelectionDialog {
 		final TestReferenceCollector[] col = new TestReferenceCollector[1];
 
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+			@Override
 			public void run(IProgressMonitor pm)
 					throws InvocationTargetException {
 				try {

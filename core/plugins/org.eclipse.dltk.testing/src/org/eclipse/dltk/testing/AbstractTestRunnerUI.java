@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -24,25 +24,27 @@ public abstract class AbstractTestRunnerUI implements ITestRunnerUI {
 	/*
 	 * @see org.eclipse.dltk.testing.ITestRunnerUI#canFilterStack()
 	 */
+	@Override
 	public boolean canFilterStack() {
 		return false;
 	}
 
+	@Override
 	public String filterStackTrace(String trace) {
 		return trace;
 	}
 
+	@Override
 	public boolean isStackFrame(String line) {
 		return false;
 	}
 
+	@Override
 	public IAction createOpenEditorAction(String traceLine) {
 		return null;
 	}
 
-	/*
-	 * @see ITestRunnerUI#getTestCaseLabel(ITestCaseElement)
-	 */
+	@Override
 	public String getTestCaseLabel(ITestCaseElement caseElement, boolean full) {
 		String testName = caseElement.getTestName();
 		int index = testName.indexOf('(');
@@ -72,16 +74,12 @@ public abstract class AbstractTestRunnerUI implements ITestRunnerUI {
 		return testName;
 	}
 
-	/*
-	 * @see ITestRunnerUI#getTestStartedMessage(ITestCaseElement)
-	 */
+	@Override
 	public String getTestStartedMessage(ITestCaseElement caseElement) {
 		return caseElement.getTestName();
 	}
 
-	/*
-	 * @see ITestRunnerUI#canRerun(ITestElement)
-	 */
+	@Override
 	public boolean canRerun(ITestElement testElement) {
 		// IScriptProject project = fTestRunnerPart.getLaunchedProject();
 		// if (project == null)
@@ -95,28 +93,23 @@ public abstract class AbstractTestRunnerUI implements ITestRunnerUI {
 		return false;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.testing.ITestRunnerUI#canRerunFailedTests()
-	 */
+	@Override
 	public boolean canRerunFailures() {
 		return false;
 	}
 
-	/*
-	 * @see ITestRunnerUI#collectFailures(ITestRunSession)
-	 */
+	@Override
 	public String collectFailures(ITestRunSession testRunSession)
 			throws CoreException {
 		return null;
 	}
 
-	/*
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
+	@Override
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		return null;
 	}
 
+	@Override
 	public boolean isFilterStack() {
 		final IPreferenceStore store = getPreferenceStore();
 		if (store != null) {
@@ -127,6 +120,7 @@ public abstract class AbstractTestRunnerUI implements ITestRunnerUI {
 		}
 	}
 
+	@Override
 	public void setFilterStack(boolean value) {
 		final IPreferenceStore store = getPreferenceStore();
 		if (store != null) {

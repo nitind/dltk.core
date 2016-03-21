@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,9 +8,6 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-/**
- * 
- */
 package org.eclipse.dltk.internal.testing.ui;
 
 import org.eclipse.swt.SWT;
@@ -32,12 +29,14 @@ public class FailureTableDisplay implements ITraceDisplay {
 	public FailureTableDisplay(Table table) {
 		fTable = table;
 		fTable.getParent().addDisposeListener(new DisposeListener() {
+			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				disposeIcons();
 			}
 		});
 	}
 
+	@Override
 	public void addTraceLine(int lineType, String label) {
 		TableItem tableItem = newTableItem();
 		switch (lineType) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -152,12 +152,11 @@ public class CheckedTableSelectionDialog extends SelectionStatusDialog {
 		updateStatus(fCurrStatus);
 	}
 	
-	/*
-	 * @see Window#open()
-	 */	 
+	@Override
 	public int open() {
 		fIsEmpty= evaluateIfTableEmpty(fInput);
 		BusyIndicator.showWhile(null, new Runnable() {
+			@Override
 			public void run() {
 				access$superOpen();
 			}
@@ -172,21 +171,18 @@ public class CheckedTableSelectionDialog extends SelectionStatusDialog {
 	/**
 	 * Handles cancel button pressed event.
 	 */	 
+	@Override
 	protected void cancelPressed() {
 		setResult(null);
 		super.cancelPressed();
 	} 
 
-	/*
-	 * @see SelectionStatusDialog#computeResult()
-	 */	 
+	@Override
 	protected void computeResult() {
 		setResult(Arrays.asList(fViewer.getCheckedElements()));
 	} 
 	 
-	/*
-	 * @see Window#create()
-	 */	 
+	@Override
 	public void create() {
 		super.create();
 
@@ -198,9 +194,7 @@ public class CheckedTableSelectionDialog extends SelectionStatusDialog {
 		updateOKStatus();
 	}		
 	
-	/*
-	 * @see Dialog#createDialogArea(Composite)
-	 */	 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite= (Composite) super.createDialogArea(parent);
 		
@@ -228,6 +222,7 @@ public class CheckedTableSelectionDialog extends SelectionStatusDialog {
 		fViewer.setContentProvider(fContentProvider);
 		fViewer.setLabelProvider(fLabelProvider);
 		fViewer.addCheckStateListener(new ICheckStateListener() {
+			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				updateOKStatus();
 			}	
@@ -258,6 +253,7 @@ public class CheckedTableSelectionDialog extends SelectionStatusDialog {
 		Button selectButton= createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID, WizardMessages.CheckedTableSelectionDialog_selectAll, false); 
 
 		SelectionListener listener= new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fViewer.setCheckedElements(fContentProvider.getElements(fInput));
 				updateOKStatus();
@@ -268,6 +264,7 @@ public class CheckedTableSelectionDialog extends SelectionStatusDialog {
 		Button deselectButton= createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID, WizardMessages.CheckedTableSelectionDialog_deselectAll, false); 
 
 		listener= new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fViewer.setCheckedElements(new Object[0]);
 				updateOKStatus();

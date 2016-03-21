@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -140,6 +140,7 @@ public class GotoReferencedTestAction implements IWorkbenchWindowActionDelegate 
 		return (IModelElement[])result.toArray(new IModelElement[result.size()]);
 	}
 		
+	@Override
 	public void run(IAction action) {
 		if (fSelection instanceof IStructuredSelection)
 			run((IStructuredSelection)fSelection);
@@ -147,6 +148,7 @@ public class GotoReferencedTestAction implements IWorkbenchWindowActionDelegate 
 			run((ITextSelection)fSelection);
 	}
 	
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		fSelection= selection;
 		action.setEnabled(getActiveEditor() != null);
@@ -158,9 +160,11 @@ public class GotoReferencedTestAction implements IWorkbenchWindowActionDelegate 
 		return DLTKTestingPlugin.getActiveWorkbenchShell();
 	}
 	
+	@Override
 	public void dispose() {
 	}
 	
+	@Override
 	public void init(IWorkbenchWindow window) {
 		fWorkbench= window;
 	}

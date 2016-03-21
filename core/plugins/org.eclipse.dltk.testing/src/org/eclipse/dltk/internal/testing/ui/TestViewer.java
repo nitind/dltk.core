@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,18 +67,21 @@ import org.eclipse.ui.part.PageBook;
 public class TestViewer {
 	private final class TestSelectionListener implements
 			ISelectionChangedListener {
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			handleSelected();
 		}
 	}
 
 	private final class TestOpenListener extends SelectionAdapter {
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			handleDefaultSelected();
 		}
 	}
 
 	private final class FailuresOnlyFilter extends ViewerFilter {
+		@Override
 		public boolean select(Viewer viewer, Object parentElement,
 				Object element) {
 			return select(((TestElement) element));
@@ -100,10 +103,12 @@ public class TestViewer {
 			fList = list;
 		}
 
+		@Override
 		public Object get(int index) {
 			return fList.get(fList.size() - index - 1);
 		}
 
+		@Override
 		public int size() {
 			return fList.size();
 		}
@@ -115,6 +120,7 @@ public class TestViewer {
 			setToolTipText(DLTKTestingMessages.ExpandAllAction_tooltip);
 		}
 
+		@Override
 		public void run() {
 			fTreeViewer.expandAll();
 		}
@@ -157,6 +163,7 @@ public class TestViewer {
 
 		fHierarchyIcon = TestRunnerViewPart.createImage("obj16/testhier.gif"); //$NON-NLS-1$
 		parent.addDisposeListener(new DisposeListener() {
+			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				disposeIcons();
 			}
@@ -210,6 +217,7 @@ public class TestViewer {
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				handleMenuAboutToShow(manager);
 			}

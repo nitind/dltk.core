@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,17 +46,20 @@ public class DLTKTestingProgressBar extends Canvas {
 		super(parent, SWT.NONE);
 		
 		addControlListener(new ControlAdapter() {
+			@Override
 			public void controlResized(ControlEvent e) {
 				fColorBarWidth= scale(fCurrentTickCount);
 				redraw();
 			}
 		});	
 		addPaintListener(new PaintListener() {
+			@Override
 			public void paintControl(PaintEvent e) {
 				paint(e);
 			}
 		});
 		addDisposeListener(new DisposeListener() {
+			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				fFailureColor.dispose();
 				fOKColor.dispose();
@@ -150,6 +153,7 @@ public class DLTKTestingProgressBar extends Canvas {
 		gc.fillRectangle(1, 1, fColorBarWidth, rect.height-2);
 	}	
 	
+	@Override
 	public Point computeSize(int wHint, int hHint, boolean changed) {
 		checkWidget();
 		Point size= new Point(DEFAULT_WIDTH, DEFAULT_HEIGHT);

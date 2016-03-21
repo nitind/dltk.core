@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,11 +34,7 @@ public class DLTKTestingMigrationDelegate implements ILaunchConfigurationMigrati
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.ILaunchConfigurationMigrationDelegate#isCandidate()
-	 */
+	@Override
 	public boolean isCandidate(ILaunchConfiguration candidate) throws CoreException {
 		IResource[] mapped= candidate.getMappedResources();
 		IResource target= getResource(candidate);
@@ -57,11 +53,7 @@ public class DLTKTestingMigrationDelegate implements ILaunchConfigurationMigrati
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.ILaunchConfigurationMigrationDelegate#migrate(org.eclipse.debug.core.ILaunchConfiguration)
-	 */
+	@Override
 	public void migrate(ILaunchConfiguration candidate) throws CoreException {
 		ILaunchConfigurationWorkingCopy wc= candidate.getWorkingCopy();
 		mapResources(wc);

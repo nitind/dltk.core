@@ -39,6 +39,7 @@ public final class TestingEngineManager extends
 
 	private static final String PRIORITY_ATTR = "priority"; //$NON-NLS-1$
 
+	@Override
 	protected Object createDescriptor(IConfigurationElement confElement) {
 		final String strPriority = confElement.getAttribute(PRIORITY_ATTR);
 		int priority = NumberUtils.toInt(strPriority);
@@ -47,6 +48,7 @@ public final class TestingEngineManager extends
 
 	private final Comparator<Object> descriptorComparator = new Comparator<Object>() {
 
+		@Override
 		public int compare(Object o1, Object o2) {
 			Descriptor descriptor1 = (Descriptor) o1;
 			Descriptor descriptor2 = (Descriptor) o2;
@@ -55,16 +57,19 @@ public final class TestingEngineManager extends
 
 	};
 
+	@Override
 	protected void initializeDescriptors(List<Object> descriptors) {
 		Collections.sort(descriptors, descriptorComparator);
 	}
 
+	@Override
 	protected Object createInstanceByDescriptor(Object descriptor)
 			throws CoreException {
 		Descriptor engineDescriptor = (Descriptor) descriptor;
 		return super.createInstanceByDescriptor(engineDescriptor.element);
 	}
 
+	@Override
 	protected ITestingEngine[] createEmptyResult() {
 		return new ITestingEngine[0];
 	}

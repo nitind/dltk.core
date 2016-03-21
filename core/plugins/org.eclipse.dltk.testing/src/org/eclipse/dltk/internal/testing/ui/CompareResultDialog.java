@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,7 +70,8 @@ public class CompareResultDialog extends TrayDialog {
              super(parent, style, configuration);
          }
          
-     	protected void createControls(Composite composite) {
+     	@Override
+		protected void createControls(Composite composite) {
      		super.createControls(composite);
     		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IDLTKTestingHelpContextIds.RESULT_COMPARE_DIALOG);
      	}
@@ -81,7 +82,8 @@ public class CompareResultDialog extends TrayDialog {
 //    		super.createToolItems(tbm);
 //        }
         
-        protected void configureTextViewer(TextViewer textViewer) {
+        @Override
+		protected void configureTextViewer(TextViewer textViewer) {
             if (textViewer instanceof SourceViewer) {
                 int[] prefixSuffixOffsets= (int[]) getCompareConfiguration().getProperty(PREFIX_SUFFIX_PROPERTY);
 				((SourceViewer)textViewer).configure(new CompareResultViewerConfiguration(prefixSuffixOffsets));   
@@ -98,15 +100,18 @@ public class CompareResultDialog extends TrayDialog {
 				fPrefixSuffixOffsets2= prefixSuffixOffsets;
 			}
 
+			@Override
 			public void setDocument(IDocument document) {
                 fDocument= document;
             }
 
-            public IRegion getDamageRegion(ITypedRegion partition, DocumentEvent event, boolean changed) {
+            @Override
+			public IRegion getDamageRegion(ITypedRegion partition, DocumentEvent event, boolean changed) {
                 return new Region(0, fDocument.getLength());
             }
 
-            public void createPresentation(TextPresentation presentation, ITypedRegion damage) {
+            @Override
+			public void createPresentation(TextPresentation presentation, ITypedRegion damage) {
             	int prefix= fPrefixSuffixOffsets2[0];
                 int suffix= fPrefixSuffixOffsets2[1];
                 TextAttribute attr= new TextAttribute(Display.getDefault().getSystemColor(SWT.COLOR_RED), null, SWT.BOLD);
@@ -120,6 +125,7 @@ public class CompareResultDialog extends TrayDialog {
 			fPrefixSuffixOffsets= prefixSuffixOffsets;
 		}
 
+		@Override
 		public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
             PresentationReconciler reconciler= new PresentationReconciler();
             SimpleDamagerRepairer dr= new SimpleDamagerRepairer(fPrefixSuffixOffsets);
@@ -135,23 +141,28 @@ public class CompareResultDialog extends TrayDialog {
 	    public CompareElement(String content) {
 	        fContent= content;
 	    }
-	    public String getName() {
+	    @Override
+		public String getName() {
 	        return "<no name>"; //$NON-NLS-1$
 	    }
-	    public Image getImage() {
+	    @Override
+		public Image getImage() {
 	        return null;
 	    }
-	    public String getType() {
+	    @Override
+		public String getType() {
 	        return "txt"; //$NON-NLS-1$
 	    }
-	    public InputStream getContents() {
+	    @Override
+		public InputStream getContents() {
 		    try {
 		        return new ByteArrayInputStream(fContent.getBytes("UTF-8")); //$NON-NLS-1$
 		    } catch (UnsupportedEncodingException e) {
 		        return new ByteArrayInputStream(fContent.getBytes());
 		    }
 	    }
-        public String getCharset() throws CoreException {
+        @Override
+		public String getCharset() throws CoreException {
             return "UTF-8"; //$NON-NLS-1$
         }
 	}
@@ -181,9 +192,7 @@ public class CompareResultDialog extends TrayDialog {
 		computePrefixSuffix();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.Dialog#getDialogBoundsSettings()
-	 */
+	@Override
 	protected IDialogSettings getDialogBoundsSettings() {
 		return DLTKTestingPlugin.getDefault().getDialogSettingsSection(getClass().getName());
 	}
@@ -207,16 +216,19 @@ public class CompareResultDialog extends TrayDialog {
 		fPrefixSuffix[1]= l;
 	}
 
-    protected void configureShell(Shell newShell) {
+    @Override
+	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(DLTKTestingMessages.CompareResultDialog_title);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IDLTKTestingHelpContextIds.RESULT_COMPARE_DIALOG);
 	}
 
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, DLTKTestingMessages.CompareResultDialog_labelOK, true); 
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite)super.createDialogArea(parent);
 		GridLayout layout= new GridLayout();
@@ -252,7 +264,8 @@ public class CompareResultDialog extends TrayDialog {
 
 	    Control control= fViewer.getControl();
 	    control.addDisposeListener(new DisposeListener() {
-	        public void widgetDisposed(DisposeEvent e) {
+	        @Override
+			public void widgetDisposed(DisposeEvent e) {
                 compareConfiguration.dispose();
 	        }
 	    });

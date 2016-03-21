@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -330,30 +330,38 @@ public class TestRunnerViewPart extends ViewPart {
 	public static final Object FAMILY_JUNIT_RUN = new Object();
 
 	private IPartListener2 fPartListener = new IPartListener2() {
+		@Override
 		public void partActivated(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partBroughtToTop(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partInputChanged(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partClosed(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partDeactivated(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partOpened(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partVisible(IWorkbenchPartReference ref) {
 			if (getSite().getId().equals(ref.getId())) {
 				fPartIsVisible = true;
 			}
 		}
 
+		@Override
 		public void partHidden(IWorkbenchPartReference ref) {
 			if (getSite().getId().equals(ref.getId())) {
 				fPartIsVisible = false;
@@ -365,10 +373,12 @@ public class TestRunnerViewPart extends ViewPart {
 
 	private class RunnerViewHistory extends ViewHistory<TestRunSession> {
 
+		@Override
 		public void configureHistoryListAction(IAction action) {
 			action.setText(DLTKTestingMessages.TestRunnerViewPart_history);
 		}
 
+		@Override
 		public void configureHistoryDropDownAction(IAction action) {
 			action
 					.setToolTipText(DLTKTestingMessages.TestRunnerViewPart_test_run_history);
@@ -376,36 +386,44 @@ public class TestRunnerViewPart extends ViewPart {
 					"history_list.gif"); //$NON-NLS-1$
 		}
 
+		@Override
 		public Action getClearAction() {
 			return new ClearAction();
 		}
 
+		@Override
 		public String getHistoryListDialogTitle() {
 			return DLTKTestingMessages.TestRunnerViewPart_test_runs;
 		}
 
+		@Override
 		public String getHistoryListDialogMessage() {
 			return DLTKTestingMessages.TestRunnerViewPart_select_test_run;
 		}
 
+		@Override
 		public Shell getShell() {
 			return fParent.getShell();
 		}
 
+		@Override
 		public List<TestRunSession> getHistoryEntries() {
 			return DLTKTestingPlugin.getModel().getTestRunSessions();
 		}
 
+		@Override
 		public TestRunSession getCurrentEntry() {
 			return fTestRunSession;
 		}
 
+		@Override
 		public void setActiveEntry(TestRunSession entry) {
 			TestRunSession deactivatedSession = setActiveTestRunSession(entry);
 			if (deactivatedSession != null)
 				deactivatedSession.swapOut();
 		}
 
+		@Override
 		public void setHistoryEntries(List<TestRunSession> remainingEntries, TestRunSession activeEntry) {
 			setActiveTestRunSession(activeEntry);
 
@@ -422,6 +440,7 @@ public class TestRunnerViewPart extends ViewPart {
 			}
 		}
 
+		@Override
 		public ImageDescriptor getImageDescriptor(TestRunSession session) {
 			if (session.isStopped())
 				return fSuiteIconDescriptor;
@@ -440,6 +459,7 @@ public class TestRunnerViewPart extends ViewPart {
 				return fSuiteIconDescriptor;
 		}
 
+		@Override
 		public String getText(TestRunSession session) {
 			if (session.getStartTime() == 0) {
 				return session.getTestRunName();
@@ -454,6 +474,7 @@ public class TestRunnerViewPart extends ViewPart {
 			}
 		}
 
+		@Override
 		public void addMenuEntries(MenuManager manager) {
 			manager.appendToGroup(IWorkbenchActionConstants.MB_ADDITIONS,
 					new ImportTestRunSessionAction(fParent.getShell()));
@@ -463,16 +484,19 @@ public class TestRunnerViewPart extends ViewPart {
 								fTestRunSession));
 		}
 
+		@Override
 		public String getMaxEntriesMessage() {
 			return DLTKTestingMessages.TestRunnerViewPart_max_remembered;
 		}
 
+		@Override
 		public int getMaxEntries() {
 			IPreferenceStore store = DLTKTestingPlugin.getDefault()
 					.getPreferenceStore();
 			return store.getInt(DLTKTestingPreferencesConstants.MAX_TEST_RUNS);
 		}
 
+		@Override
 		public void setMaxEntries(int maxEntries) {
 			IPreferenceStore store = DLTKTestingPlugin.getDefault()
 					.getPreferenceStore();
@@ -490,6 +514,7 @@ public class TestRunnerViewPart extends ViewPart {
 			fShell = shell;
 		}
 
+		@Override
 		public void run() {
 			FileDialog importDialog = new FileDialog(fShell, SWT.OPEN);
 			importDialog
@@ -527,6 +552,7 @@ public class TestRunnerViewPart extends ViewPart {
 			fTestRunSession = testRunSession;
 		}
 
+		@Override
 		public void run() {
 			FileDialog exportDialog = new FileDialog(fShell, SWT.SAVE);
 			exportDialog
@@ -564,6 +590,7 @@ public class TestRunnerViewPart extends ViewPart {
 	}
 
 	private class TestRunSessionListener implements ITestRunSessionListener {
+		@Override
 		public void sessionAdded(TestRunSession testRunSession) {
 			if (getSite().getWorkbenchWindow() == DLTKTestingPlugin
 					.getActiveWorkbenchWindow()) {
@@ -583,6 +610,7 @@ public class TestRunnerViewPart extends ViewPart {
 			}
 		}
 
+		@Override
 		public void sessionRemoved(TestRunSession testRunSession) {
 			if (testRunSession.equals(fTestRunSession)) {
 				List testRunSessions = DLTKTestingPlugin.getModel()
@@ -601,6 +629,7 @@ public class TestRunnerViewPart extends ViewPart {
 	}
 
 	private class TestSessionListener implements ITestSessionListener {
+		@Override
 		public void sessionStarted() {
 			fTestViewer.registerViewersRefresh();
 			fShowOnErrorOnly = getShowOnErrorOnly();
@@ -611,6 +640,7 @@ public class TestRunnerViewPart extends ViewPart {
 			fRerunLastTestAction.setEnabled(true);
 		}
 
+		@Override
 		public void sessionEnded(long elapsedTime) {
 			fTestViewer.registerAutoScrollTarget(null);
 
@@ -622,6 +652,7 @@ public class TestRunnerViewPart extends ViewPart {
 			registerInfoMessage(msg);
 
 			postSyncRunnable(new Runnable() {
+				@Override
 				public void run() {
 					if (isDisposed())
 						return;
@@ -641,6 +672,7 @@ public class TestRunnerViewPart extends ViewPart {
 			stopUpdateJobs();
 		}
 
+		@Override
 		public void sessionStopped(final long elapsedTime) {
 			fTestViewer.registerAutoScrollTarget(null);
 
@@ -648,6 +680,7 @@ public class TestRunnerViewPart extends ViewPart {
 			handleStopped();
 		}
 
+		@Override
 		public void sessionTerminated() {
 			fTestViewer.registerAutoScrollTarget(null);
 
@@ -655,11 +688,13 @@ public class TestRunnerViewPart extends ViewPart {
 			handleStopped();
 		}
 
+		@Override
 		public void runningBegins() {
 			if (!fShowOnErrorOnly)
 				postShowTestResultsView();
 		}
 
+		@Override
 		public void testStarted(TestCaseElement testCaseElement) {
 			fTestViewer.registerAutoScrollTarget(testCaseElement);
 			fTestViewer.registerViewerUpdate(testCaseElement);
@@ -667,6 +702,7 @@ public class TestRunnerViewPart extends ViewPart {
 					testCaseElement));
 		}
 
+		@Override
 		public void testFailed(TestElement testElement,
 				TestElement.Status status, String trace, String expected,
 				String actual, int code) {
@@ -690,10 +726,12 @@ public class TestRunnerViewPart extends ViewPart {
 			// }
 		}
 
+		@Override
 		public void testEnded(TestCaseElement testCaseElement) {
 			fTestViewer.registerViewerUpdate(testCaseElement);
 		}
 
+		@Override
 		public void testReran(TestCaseElement testCaseElement,
 				TestElement.Status status, String trace, String expectedResult,
 				String actualResult) {
@@ -703,10 +741,12 @@ public class TestRunnerViewPart extends ViewPart {
 			showFailure(testCaseElement);
 		}
 
+		@Override
 		public void testAdded(TestElement testElement) {
 			fTestViewer.registerTestAdded(testElement);
 		}
 
+		@Override
 		public boolean acceptsSwapToDisk() {
 			return false;
 		}
@@ -720,6 +760,7 @@ public class TestRunnerViewPart extends ViewPart {
 			setSystem(true);
 		}
 
+		@Override
 		public IStatus runInUIThread(IProgressMonitor monitor) {
 			if (!isDisposed()) {
 				processChangesInUI();
@@ -732,6 +773,7 @@ public class TestRunnerViewPart extends ViewPart {
 			fRunning = false;
 		}
 
+		@Override
 		public boolean shouldSchedule() {
 			return fRunning;
 		}
@@ -743,12 +785,14 @@ public class TestRunnerViewPart extends ViewPart {
 			setSystem(true);
 		}
 
+		@Override
 		public IStatus run(IProgressMonitor monitor) {
 			// wait until the test run terminates
 			fJUnitIsRunningLock.acquire();
 			return Status.OK_STATUS;
 		}
 
+		@Override
 		public boolean belongsTo(Object family) {
 			return family == TestRunnerViewPart.FAMILY_JUNIT_RUN;
 		}
@@ -771,6 +815,7 @@ public class TestRunnerViewPart extends ViewPart {
 			setEnabled(enabled);
 		}
 
+		@Override
 		public void run() {
 			List<TestRunSession> testRunSessions = getRunningSessions();
 			TestRunSession first = testRunSessions.isEmpty() ? null
@@ -798,6 +843,7 @@ public class TestRunnerViewPart extends ViewPart {
 			DLTKTestingPlugin.setLocalImageDescriptors(this, "stop.gif"); //$NON-NLS-1$
 		}
 
+		@Override
 		public void run() {
 			stopTest();
 			setEnabled(false);
@@ -813,6 +859,7 @@ public class TestRunnerViewPart extends ViewPart {
 			setActionDefinitionId(RERUN_LAST_COMMAND);
 		}
 
+		@Override
 		public void run() {
 			rerunTestRun();
 		}
@@ -827,6 +874,7 @@ public class TestRunnerViewPart extends ViewPart {
 			setActionDefinitionId(RERUN_FAILED_FIRST_COMMAND);
 		}
 
+		@Override
 		public void run() {
 			rerunTestFailedFirst();
 		}
@@ -840,11 +888,13 @@ public class TestRunnerViewPart extends ViewPart {
 
 		private final Action action;
 
+		@Override
 		public Object execute(ExecutionEvent event) throws ExecutionException {
 			action.run();
 			return null;
 		}
 
+		@Override
 		public boolean isEnabled() {
 			return action.isEnabled();
 		}
@@ -882,6 +932,7 @@ public class TestRunnerViewPart extends ViewPart {
 			return fActionOrientation;
 		}
 
+		@Override
 		public void run() {
 			if (isChecked()) {
 				fOrientation = fActionOrientation;
@@ -914,6 +965,7 @@ public class TestRunnerViewPart extends ViewPart {
 			return fActionSortDirection;
 		}
 
+		@Override
 		public void run() {
 			fSortDirection =fActionSortDirection;
 			fTestViewer.setSortDirection(fActionSortDirection);
@@ -924,6 +976,7 @@ public class TestRunnerViewPart extends ViewPart {
 	 * Listen for for modifications to Java elements
 	 */
 	private class DirtyListener implements IElementChangedListener {
+		@Override
 		public void elementChanged(ElementChangedEvent event) {
 			processDelta(event.getDelta());
 		}
@@ -981,6 +1034,7 @@ public class TestRunnerViewPart extends ViewPart {
 					.getImageDescriptor("obj16/failures.gif")); //$NON-NLS-1$
 		}
 
+		@Override
 		public void run() {
 			setShowFailuresOnly(isChecked());
 		}
@@ -991,6 +1045,7 @@ public class TestRunnerViewPart extends ViewPart {
 			super(DLTKTestingMessages.TestRunnerViewPart_show_execution_time, IAction.AS_CHECK_BOX);
 		}
 		
+		@Override
 		public void run() {
 			setShowExecutionTime(isChecked());
 		}
@@ -1005,6 +1060,7 @@ public class TestRunnerViewPart extends ViewPart {
 					.getImageDescriptor("elcl16/hierarchicalLayout.gif")); //$NON-NLS-1$
 		}
 
+		@Override
 		public void run() {
 			int mode = isChecked() ? LAYOUT_HIERARCHICAL : LAYOUT_FLAT;
 			setLayoutMode(mode);
@@ -1024,6 +1080,7 @@ public class TestRunnerViewPart extends ViewPart {
 			setChecked(getShowOnErrorOnly());
 		}
 
+		@Override
 		public void run() {
 			boolean checked = isChecked();
 			fShowOnErrorOnly = checked;
@@ -1034,6 +1091,7 @@ public class TestRunnerViewPart extends ViewPart {
 		}
 	}
 
+	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		fMemento = memento;
@@ -1051,6 +1109,7 @@ public class TestRunnerViewPart extends ViewPart {
 		return null;
 	}
 
+	@Override
 	public void saveState(IMemento memento) {
 		if (fSashForm == null) {
 			// part has not been created
@@ -1346,6 +1405,7 @@ public class TestRunnerViewPart extends ViewPart {
 
 	private void handleStopped() {
 		postSyncRunnable(new Runnable() {
+			@Override
 			public void run() {
 				if (isDisposed())
 					return;
@@ -1487,6 +1547,7 @@ public class TestRunnerViewPart extends ViewPart {
 			setTitleToolTip(fTestRunSession.getTestRunName());
 	}
 
+	@Override
 	public synchronized void dispose() {
 		fIsDisposed = true;
 		if (fContextActivation != null) {
@@ -1607,6 +1668,7 @@ public class TestRunnerViewPart extends ViewPart {
 
 	protected void postShowTestResultsView() {
 		postSyncRunnable(new Runnable() {
+			@Override
 			public void run() {
 				if (isDisposed())
 					return;
@@ -1657,12 +1719,14 @@ public class TestRunnerViewPart extends ViewPart {
 
 		Composite empty = new Composite(top, SWT.NONE);
 		empty.setLayout(new Layout() {
+			@Override
 			protected Point computeSize(Composite composite, int wHint,
 					int hHint, boolean flushCache) {
 				return new Point(1, 1); // (0, 0) does not work with
 				// super-intelligent ViewForm
 			}
 
+			@Override
 			protected void layout(Composite composite, boolean flushCache) {
 			}
 		});
@@ -1692,11 +1756,13 @@ public class TestRunnerViewPart extends ViewPart {
 		getStatusLine().setErrorMessage(null);
 	}
 
+	@Override
 	public void setFocus() {
 		if (fTestViewer != null)
 			fTestViewer.getTestViewerControl().setFocus();
 	}
 
+	@Override
 	public void createPartControl(Composite parent) {
 		fParent = parent;
 		addResizeListener(parent);
@@ -1748,9 +1814,11 @@ public class TestRunnerViewPart extends ViewPart {
 
 	private void addResizeListener(Composite parent) {
 		parent.addControlListener(new ControlListener() {
+			@Override
 			public void controlMoved(ControlEvent e) {
 			}
 
+			@Override
 			public void controlResized(ControlEvent e) {
 				computeOrientation();
 			}
@@ -1854,6 +1922,7 @@ public class TestRunnerViewPart extends ViewPart {
 		fActivateOnErrorAction = new ActivateOnErrorAction();
 		viewMenu.add(fActivateOnErrorAction);
 		fViewMenuListener = new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				fActivateOnErrorAction.update();
 			}
@@ -1911,6 +1980,7 @@ public class TestRunnerViewPart extends ViewPart {
 
 	private void showFailure(final TestElement test) {
 		postSyncRunnable(new Runnable() {
+			@Override
 			public void run() {
 				if (!isDisposed())
 					fFailureTrace.showFailure(test);
@@ -1950,6 +2020,7 @@ public class TestRunnerViewPart extends ViewPart {
 	/*
 	 * @see IWorkbenchPart#getTitleImage()
 	 */
+	@Override
 	public Image getTitleImage() {
 		if (fOriginalViewImage == null)
 			fOriginalViewImage = super.getTitleImage();
@@ -1970,6 +2041,7 @@ public class TestRunnerViewPart extends ViewPart {
 			fViewImage = fTestRunFailDirtyIcon;
 
 		Runnable r = new Runnable() {
+			@Override
 			public void run() {
 				if (isDisposed())
 					return;
@@ -2013,6 +2085,7 @@ public class TestRunnerViewPart extends ViewPart {
 
 	private void postSyncProcessChanges() {
 		postSyncRunnable(new Runnable() {
+			@Override
 			public void run() {
 				processChangesInUI();
 			}

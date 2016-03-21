@@ -19,6 +19,7 @@ public abstract class AbstractTestingElementResolver implements ITestingElementR
 		super();
 	}
 
+	@Override
 	public ISourceRange resolveRange(IScriptProject project,
 			ILaunchConfiguration config, String name, ISourceModule module,
 			IModelElement element, String method) {
@@ -40,6 +41,7 @@ public abstract class AbstractTestingElementResolver implements ITestingElementR
 		if (node != null) {
 			return new ISourceRange() {
 
+				@Override
 				public int getLength() {
 					if (node instanceof Declaration) {
 						Declaration decl = (Declaration) node;
@@ -48,6 +50,7 @@ public abstract class AbstractTestingElementResolver implements ITestingElementR
 					return node.sourceEnd() - node.sourceStart();
 				}
 
+				@Override
 				public int getOffset() {
 					if (node instanceof Declaration) {
 						return ((Declaration) node).getNameStart();
@@ -61,6 +64,7 @@ public abstract class AbstractTestingElementResolver implements ITestingElementR
 
 	protected abstract ASTNode findNode(String name, ModuleDeclaration decl, String method);
 
+	@Override
 	public IModelElement resolveElement(IScriptProject project,
 			ILaunchConfiguration config, ISourceModule module, String name) {
 		return module;
