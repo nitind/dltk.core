@@ -1551,7 +1551,7 @@ public class TestRunnerViewPart extends ViewPart {
 	public synchronized void dispose() {
 		fIsDisposed = true;
 		if (fContextActivation != null) {
-			IContextService ctxService = (IContextService) getSite()
+			IContextService ctxService = getSite()
 					.getService(IContextService.class);
 			if (ctxService != null) {
 				ctxService.deactivateContext(fContextActivation);
@@ -1561,7 +1561,7 @@ public class TestRunnerViewPart extends ViewPart {
 			DLTKTestingPlugin.getModel().removeTestRunSessionListener(
 					fTestRunSessionListener);
 
-		IHandlerService handlerService = (IHandlerService) getSite()
+		IHandlerService handlerService = getSite()
 				.getWorkbenchWindow().getService(IHandlerService.class);
 		handlerService.deactivateHandler(fRerunLastActivation);
 		handlerService.deactivateHandler(fRerunFailedFirstActivation);
@@ -1804,7 +1804,7 @@ public class TestRunnerViewPart extends ViewPart {
 		fTestRunSessionListener = new TestRunSessionListener();
 		DLTKTestingPlugin.getModel().addTestRunSessionListener(
 				fTestRunSessionListener);
-		IContextService ctxService = (IContextService) getSite().getService(
+		IContextService ctxService = getSite().getService(
 				IContextService.class);
 		if (ctxService != null) {
 			fContextActivation = ctxService
@@ -1859,7 +1859,7 @@ public class TestRunnerViewPart extends ViewPart {
 		fStopAction.setEnabled(false);
 
 		fRerunLastTestAction = new RerunLastAction();
-		IHandlerService handlerService = (IHandlerService) getSite()
+		IHandlerService handlerService = getSite()
 				.getWorkbenchWindow().getService(IHandlerService.class);
 		fRerunLastActivation = handlerService.activateHandler(
 				RERUN_LAST_COMMAND, new ActionHandlerWrapper(

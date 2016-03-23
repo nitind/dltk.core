@@ -52,9 +52,9 @@ public class DLTKTestingPropertyTester extends PropertyTester {
 				return false;
 			}
 		} else { // is IAdaptable
-			element= (IModelElement) ((IAdaptable) receiver).getAdapter(IModelElement.class);
+			element= ((IAdaptable) receiver).getAdapter(IModelElement.class);
 			if (element == null) {
-				IResource resource= (IResource) ((IAdaptable) receiver).getAdapter(IResource.class);
+				IResource resource= ((IAdaptable) receiver).getAdapter(IResource.class);
 				element= DLTKCore.create(resource);
 				if (element == null) {
 					return false;

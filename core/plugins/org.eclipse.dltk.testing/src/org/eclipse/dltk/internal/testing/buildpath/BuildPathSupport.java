@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,7 +46,7 @@ public class BuildPathSupport {
 			if (bundles != null) {
 				for (int i= 0; i < bundles.length; i++) {
 					Bundle curr= bundles[i];
-					String version= (String) curr.getHeaders().get(Constants.BUNDLE_VERSION);
+					String version= curr.getHeaders().get(Constants.BUNDLE_VERSION);
 					try {
 						if (fVersionRange.isIncluded(Version.parseVersion(version))) {
 							return curr;
@@ -88,7 +88,7 @@ public class BuildPathSupport {
 		if (bundle == null)
 			return null;
 
-		String version= (String) bundle.getHeaders().get(Constants.BUNDLE_VERSION);
+		String version= bundle.getHeaders().get(Constants.BUNDLE_VERSION);
 		if (version == null) {
 			return null;
 		}
