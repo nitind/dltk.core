@@ -237,8 +237,8 @@ public class DLTKTestingPlugin extends AbstractUIPlugin {
 			return bundles;
 
 		// Accessing unresolved bundle
-		ServiceReference serviceRef= fBundleContext.getServiceReference(PackageAdmin.class.getName());
-		PackageAdmin admin= (PackageAdmin) fBundleContext.getService(serviceRef);
+		ServiceReference<PackageAdmin> serviceRef= fBundleContext.getServiceReference(PackageAdmin.class);
+		PackageAdmin admin= fBundleContext.getService(serviceRef);
 		bundles= admin.getBundles(bundleName, version);
 		if (bundles != null && bundles.length > 0)
 			return bundles;

@@ -32,6 +32,7 @@ import org.eclipse.dltk.internal.testing.model.TestSuiteElement;
 import org.eclipse.dltk.testing.DLTKTestingMessages;
 import org.eclipse.dltk.testing.ITestRunnerUI;
 import org.eclipse.dltk.testing.ITestRunnerUIExtension;
+import org.eclipse.dltk.testing.model.ITestElement;
 import org.eclipse.dltk.ui.viewsupport.SelectionProviderMediator;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -96,15 +97,15 @@ public class TestViewer {
 		}
 	}
 
-	private static class ReverseList extends AbstractList {
-		private final List fList;
+	private static class ReverseList<T> extends AbstractList<T> {
+		private final List<T> fList;
 
-		public ReverseList(List list) {
+		public ReverseList(List<T> list) {
 			fList = list;
 		}
 
 		@Override
-		public Object get(int index) {
+		public T get(int index) {
 			return fList.get(fList.size() - index - 1);
 		}
 
@@ -150,10 +151,10 @@ public class TestViewer {
 
 	private boolean fTreeNeedsRefresh;
 	private boolean fTableNeedsRefresh;
-	private HashSet/* <TestElement> */fNeedUpdate;
+	private HashSet<TestElement> fNeedUpdate;
 	private TestCaseElement fAutoScrollTarget;
 
-	private LinkedList/* <TestSuiteElement> */fAutoClose;
+	private LinkedList<TestSuiteElement> fAutoClose;
 	private HashSet/* <TestSuite> */fAutoExpand;
 
 	public TestViewer(Composite parent, Clipboard clipboard,
@@ -579,8 +580,8 @@ public class TestViewer {
 		}
 
 		synchronized (this) {
-			for (Iterator iter = fAutoExpand.iterator(); iter.hasNext();) {
-				TestSuiteElement suite = (TestSuiteElement) iter.next();
+			for (Iterator<TestSuiteElement> iter = fAutoExpand.iterator(); iter.hasNext();) {
+				TestSuiteElement suite = iter.next();
 				fTreeViewer.setExpandedState(suite, true);
 			}
 			clearAutoExpand();
@@ -593,10 +594,9 @@ public class TestViewer {
 				: (TestSuiteElement) fTreeContentProvider.getParent(current);
 		if (fAutoClose.isEmpty() || !fAutoClose.getLast().equals(parent)) {
 			// we're in a new branch, so let's close old OK branches:
-			for (ListIterator iter = fAutoClose.listIterator(fAutoClose.size()); iter
+			for (ListIterator<TestSuiteElement> iter = fAutoClose.listIterator(fAutoClose.size()); iter
 					.hasPrevious();) {
-				TestSuiteElement previousAutoOpened = (TestSuiteElement) iter
-						.previous();
+				TestSuiteElement previousAutoOpened = iter.previous();
 				if (previousAutoOpened.equals(parent))
 					break;
 
@@ -662,9 +662,9 @@ public class TestViewer {
 		if (parent == null)
 			return null;
 
-		List siblings = Arrays.asList(parent.getChildren());
+		List<ITestElement> siblings = Arrays.asList(parent.getChildren());
 		if (!showNext)
-			siblings = new ReverseList(siblings);
+			siblings = new ReverseList<ITestElement>(siblings);
 
 		int nextIndex = siblings.indexOf(current) + 1;
 		for (int i = nextIndex; i < siblings.size(); i++) {
@@ -683,9 +683,9 @@ public class TestViewer {
 
 	private TestCaseElement getNextChildFailure(TestContainerElement root,
 			boolean showNext) {
-		List children = Arrays.asList(root.getChildren());
+		List<ITestElement> children = Arrays.asList(root.getChildren());
 		if (!showNext)
-			children = new ReverseList(children);
+			children = new ReverseList<ITestElement>(children);
 		for (int i = 0; i < children.size(); i++) {
 			TestElement child = (TestElement) children.get(i);
 			if (child.getStatus().isErrorOrFailure()) {
@@ -707,8 +707,8 @@ public class TestViewer {
 	}
 
 	private void clearUpdateAndExpansion() {
-		fNeedUpdate = new LinkedHashSet();
-		fAutoClose = new LinkedList();
+		fNeedUpdate = new LinkedHashSet<TestElement>();
+		fAutoClose = new LinkedList<TestSuiteElement>();
 		fAutoExpand = new HashSet();
 	}
 

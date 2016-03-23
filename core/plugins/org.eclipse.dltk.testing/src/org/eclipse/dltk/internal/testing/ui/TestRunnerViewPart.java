@@ -427,15 +427,14 @@ public class TestRunnerViewPart extends ViewPart {
 		public void setHistoryEntries(List<TestRunSession> remainingEntries, TestRunSession activeEntry) {
 			setActiveTestRunSession(activeEntry);
 
-			List testRunSessions = DLTKTestingPlugin.getModel()
+			List<TestRunSession> testRunSessions = DLTKTestingPlugin.getModel()
 					.getTestRunSessions();
 			testRunSessions.removeAll(remainingEntries);
-			for (Iterator iter = testRunSessions.iterator(); iter.hasNext();) {
-				DLTKTestingPlugin.getModel().removeTestRunSession(
-						(TestRunSession) iter.next());
+			for (Iterator<TestRunSession> iter = testRunSessions.iterator(); iter.hasNext();) {
+				DLTKTestingPlugin.getModel().removeTestRunSession(iter.next());
 			}
-			for (Iterator iter = remainingEntries.iterator(); iter.hasNext();) {
-				TestRunSession remaining = (TestRunSession) iter.next();
+			for (Iterator<TestRunSession> iter = remainingEntries.iterator(); iter.hasNext();) {
+				TestRunSession remaining = iter.next();
 				remaining.swapOut();
 			}
 		}
@@ -613,12 +612,11 @@ public class TestRunnerViewPart extends ViewPart {
 		@Override
 		public void sessionRemoved(TestRunSession testRunSession) {
 			if (testRunSession.equals(fTestRunSession)) {
-				List testRunSessions = DLTKTestingPlugin.getModel()
+				List<TestRunSession> testRunSessions = DLTKTestingPlugin.getModel()
 						.getTestRunSessions();
 				TestRunSession deactivatedSession;
 				if (!testRunSessions.isEmpty()) {
-					deactivatedSession = setActiveTestRunSession((TestRunSession) testRunSessions
-							.get(0));
+					deactivatedSession = setActiveTestRunSession(testRunSessions.get(0));
 				} else {
 					deactivatedSession = setActiveTestRunSession(null);
 				}
@@ -803,10 +801,10 @@ public class TestRunnerViewPart extends ViewPart {
 			setText(DLTKTestingMessages.TestRunnerViewPart_clear_history_label);
 
 			boolean enabled = false;
-			List testRunSessions = DLTKTestingPlugin.getModel()
+			List<TestRunSession> testRunSessions = DLTKTestingPlugin.getModel()
 					.getTestRunSessions();
-			for (Iterator iter = testRunSessions.iterator(); iter.hasNext();) {
-				ITestSession testRunSession = (ITestSession) iter.next();
+			for (Iterator<TestRunSession> iter = testRunSessions.iterator(); iter.hasNext();) {
+				ITestSession testRunSession = iter.next();
 				if (!testRunSession.isRunning() && !testRunSession.isStarting()) {
 					enabled = true;
 					break;
@@ -823,11 +821,11 @@ public class TestRunnerViewPart extends ViewPart {
 			fViewHistory.setHistoryEntries(testRunSessions, first);
 		}
 
-		private List getRunningSessions() {
-			List testRunSessions = DLTKTestingPlugin.getModel()
+		private List<TestRunSession> getRunningSessions() {
+			List<TestRunSession> testRunSessions = DLTKTestingPlugin.getModel()
 					.getTestRunSessions();
-			for (Iterator iter = testRunSessions.iterator(); iter.hasNext();) {
-				ITestSession testRunSession = (ITestSession) iter.next();
+			for (Iterator<TestRunSession> iter = testRunSessions.iterator(); iter.hasNext();) {
+				ITestSession testRunSession = iter.next();
 				if (!testRunSession.isRunning() && !testRunSession.isStarting()) {
 					iter.remove();
 				}

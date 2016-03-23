@@ -12,12 +12,10 @@ package org.eclipse.dltk.internal.testing.launcher;
 
 import java.util.Comparator;
 
-public class ContainerComparator implements Comparator {
+public class ContainerComparator implements Comparator<String> {
 
     @Override
-	public int compare(Object o1, Object o2) {
-		String container1= (String)o1;
-		String container2= (String)o2;
+	public int compare(String container1, String container2) {
 		if (container1 == null)
 			container1= ""; //$NON-NLS-1$
 		if (container2 == null)

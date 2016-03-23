@@ -691,7 +691,7 @@ public class RemoteTestRunnerClient implements ITestingClient, ITestRunnerClient
 		}
 	}
 
-	private List operations= new ArrayList();
+	private List<Runnable> operations= new ArrayList<Runnable>();
 	private Thread operationsThread;
 	private boolean isTerminated = false;
 	private Runnable runner= new Runnable() {
@@ -701,7 +701,7 @@ public class RemoteTestRunnerClient implements ITestingClient, ITestRunnerClient
 				Runnable operation= null;
 				synchronized (operations) {
 					if (operations.size() > 0) {
-						operation= (Runnable) operations.get(0);
+						operation= operations.get(0);
 						operations.remove(0);
 					} else {
 						try {

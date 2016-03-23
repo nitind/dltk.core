@@ -31,8 +31,8 @@ public class DLTKTestingPreferenceInitializer extends AbstractPreferenceInitiali
 		prefs.setDefault(DLTKTestingPreferencesConstants.SHOW_ON_ERROR_ONLY, false);
 		prefs.setDefault(DLTKTestingPreferencesConstants.ENABLE_ASSERTIONS, false);
 
-		List defaults= DLTKTestingPreferencesConstants.createDefaultStackFiltersList();
-		String[] filters= (String[]) defaults.toArray(new String[defaults.size()]);
+		List<String> defaults= DLTKTestingPreferencesConstants.createDefaultStackFiltersList();
+		String[] filters= defaults.toArray(new String[defaults.size()]);
 		String active= DLTKTestingPreferencesConstants.serializeList(filters);
 		prefs.setDefault(DLTKTestingPreferencesConstants.PREF_ACTIVE_FILTERS_LIST, active);
 		prefs.setDefault(DLTKTestingPreferencesConstants.PREF_INACTIVE_FILTERS_LIST, ""); //$NON-NLS-1$

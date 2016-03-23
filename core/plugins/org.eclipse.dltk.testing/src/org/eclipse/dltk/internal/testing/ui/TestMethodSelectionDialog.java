@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -32,8 +31,6 @@ import org.eclipse.dltk.testing.DLTKTestingMessages;
 import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
@@ -107,33 +104,6 @@ public class TestMethodSelectionDialog extends ElementListSelectionDialog {
 		}
 		setElements(elements);
 		return super.open();
-	}
-
-	private IType selectTestType(Set result) {
-		ILabelProvider labelProvider = new ModelElementLabelProvider(
-				ModelElementLabelProvider.SHOW_PARAMETERS
-						| ModelElementLabelProvider.SHOW_ROOT);
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
-				getParentShell(), labelProvider);
-		dialog
-				.setTitle(DLTKTestingMessages.TestMethodSelectionDialog_dialog_title);
-		String msg = Messages.format(
-				DLTKTestingMessages.TestMethodSelectionDialog_testproject,
-				"junit.framework.Test"); //$NON-NLS-1$
-		dialog.setMessage(msg);
-		IScriptProject[] projects = new IScriptProject[result.size()];
-		IType[] testTypes = (IType[]) result.toArray(new IType[result.size()]);
-		for (int i = 0; i < projects.length; i++)
-			projects[i] = testTypes[i].getScriptProject();
-		dialog.setElements(projects);
-		if (dialog.open() == Window.CANCEL)
-			return null;
-		IScriptProject project = (IScriptProject) dialog.getFirstResult();
-		for (int i = 0; i < testTypes.length; i++) {
-			if (testTypes[i].getScriptProject().equals(project))
-				return testTypes[i];
-		}
-		return null;
 	}
 
 	public Object[] searchTestMethods(final IModelElement element,

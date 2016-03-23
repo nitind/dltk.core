@@ -60,7 +60,7 @@ public class CheckedTableSelectionDialog extends SelectionStatusDialog {
 	private String fEmptyListMessage= WizardMessages.CheckedTableSelectionDialog_emptyListMessage; 
 	
 	private IStatus fCurrStatus= Status.OK_STATUS;
-	private List fFilters;
+	private List<ViewerFilter> fFilters;
 	private Object fInput;		
 	private boolean fIsEmpty;
 	
@@ -106,7 +106,7 @@ public class CheckedTableSelectionDialog extends SelectionStatusDialog {
 	 */
 	public void addFilter(ViewerFilter filter) {
 		if (fFilters == null)
-			fFilters= new ArrayList(4);
+			fFilters= new ArrayList<ViewerFilter>(4);
 			
 		fFilters.add(filter);
 	}
@@ -230,7 +230,7 @@ public class CheckedTableSelectionDialog extends SelectionStatusDialog {
 		
 		if (fFilters != null) {
 			for (int i= 0; i != fFilters.size(); i++)
-				fViewer.addFilter((ViewerFilter) fFilters.get(i));
+				fViewer.addFilter(fFilters.get(i));
 		}
 				
 		fViewer.setInput(fInput);
@@ -279,7 +279,7 @@ public class CheckedTableSelectionDialog extends SelectionStatusDialog {
 		if (elements.length > 0) {
 			if (fFilters != null) {
 				for (int i= 0; i < fFilters.size(); i++) {
-					ViewerFilter curr= (ViewerFilter)fFilters.get(i);
+					ViewerFilter curr= fFilters.get(i);
 					elements= curr.filter(fViewer, input, elements);
 				}
 			}

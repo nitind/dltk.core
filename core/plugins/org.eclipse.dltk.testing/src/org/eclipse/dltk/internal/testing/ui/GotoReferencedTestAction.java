@@ -116,7 +116,7 @@ public class GotoReferencedTestAction implements IWorkbenchWindowActionDelegate 
 		if (size == 0)
 			return new IModelElement[0];
 			
-		ArrayList result= new ArrayList(size);
+		ArrayList<IModelElement> result= new ArrayList<IModelElement>(size);
 			
 		for (int i= 0; i < size; i++) {
 			Object e= elements.get(i);
@@ -132,12 +132,12 @@ public class GotoReferencedTestAction implements IWorkbenchWindowActionDelegate 
 				} 
 			}
 			else if (e instanceof IMethod || e instanceof IType || e instanceof IField) {
-				result.add(e);
+				result.add((IModelElement)e);
 			} else {
 				return new IModelElement[0];
 			}
 		}
-		return (IModelElement[])result.toArray(new IModelElement[result.size()]);
+		return result.toArray(new IModelElement[result.size()]);
 	}
 		
 	@Override

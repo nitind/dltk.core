@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -100,24 +100,24 @@ public class Resources {
 	 * @see org.eclipse.core.resources.IWorkspace#validateEdit(org.eclipse.core.resources.IFile[], java.lang.Object)
 	 */
 	public static IStatus makeCommittable(IResource[] resources, Object context) {
-		List readOnlyFiles= new ArrayList();
+		List<IFile> readOnlyFiles= new ArrayList<IFile>();
 		for (int i= 0; i < resources.length; i++) {
 			IResource resource= resources[i];
 			if (resource.getType() == IResource.FILE && resource.getResourceAttributes().isReadOnly())
-				readOnlyFiles.add(resource);
+				readOnlyFiles.add((IFile)resource);
 		}
 		if (readOnlyFiles.size() == 0)
 			return new Status(IStatus.OK, DLTKTestingPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 
-		Map oldTimeStamps= createModificationStampMap(readOnlyFiles);
-		IStatus status= ResourcesPlugin.getWorkspace().validateEdit((IFile[]) readOnlyFiles.toArray(new IFile[readOnlyFiles.size()]), context);
+		Map<IFile, Long> oldTimeStamps= createModificationStampMap(readOnlyFiles);
+		IStatus status= ResourcesPlugin.getWorkspace().validateEdit(readOnlyFiles.toArray(new IFile[readOnlyFiles.size()]), context);
 		if (!status.isOK())
 			return status;
 
 		IStatus modified= null;
-		Map newTimeStamps= createModificationStampMap(readOnlyFiles);
-		for (Iterator iter= oldTimeStamps.keySet().iterator(); iter.hasNext();) {
-			IFile file= (IFile) iter.next();
+		Map<IFile, Long> newTimeStamps= createModificationStampMap(readOnlyFiles);
+		for (Iterator<IFile> iter= oldTimeStamps.keySet().iterator(); iter.hasNext();) {
+			IFile file= iter.next();
 			if (!oldTimeStamps.get(file).equals(newTimeStamps.get(file)))
 				modified= addModified(modified, file);
 		}
@@ -126,10 +126,10 @@ public class Resources {
 		return new Status(IStatus.OK, DLTKTestingPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 	}
 
-	private static Map createModificationStampMap(List files) {
-		Map map= new HashMap();
-		for (Iterator iter= files.iterator(); iter.hasNext();) {
-			IFile file= (IFile) iter.next();
+	private static Map<IFile, Long> createModificationStampMap(List<IFile> files) {
+		Map<IFile, Long> map= new HashMap<IFile, Long>();
+		for (Iterator<IFile> iter= files.iterator(); iter.hasNext();) {
+			IFile file= iter.next();
 			map.put(file, Long.valueOf(file.getModificationStamp()));
 		}
 		return map;
