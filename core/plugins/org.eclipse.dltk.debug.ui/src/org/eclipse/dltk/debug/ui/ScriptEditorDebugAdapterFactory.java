@@ -6,26 +6,23 @@ import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
 import org.eclipse.dltk.debug.ui.breakpoints.ScriptToggleBreakpointAdapter;
 import org.eclipse.dltk.internal.debug.ui.ScriptRunToLineAdapter;
 
-public abstract class ScriptEditorDebugAdapterFactory implements
-		IAdapterFactory {
+public abstract class ScriptEditorDebugAdapterFactory
+		implements IAdapterFactory {
 
-	/*
-	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
-	 */
-	public Object getAdapter(Object adaptableObject, Class adapterType) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
 		if (adapterType == IRunToLineTarget.class) {
-			return new ScriptRunToLineAdapter();
+			return (T) new ScriptRunToLineAdapter();
 		} else if (adapterType == IToggleBreakpointsTarget.class) {
-			return getBreakpointAdapter();
+			return (T) getBreakpointAdapter();
 		}
 
 		return null;
 	}
 
-	/*
-	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
-	 */
-	public Class[] getAdapterList() {
+	@Override
+	public Class<?>[] getAdapterList() {
 		return new Class[] { IRunToLineTarget.class,
 				IToggleBreakpointsTarget.class };
 	}

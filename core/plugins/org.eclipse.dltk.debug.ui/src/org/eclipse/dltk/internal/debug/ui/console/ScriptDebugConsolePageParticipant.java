@@ -77,6 +77,7 @@ public class ScriptDebugConsolePageParticipant
 	 * Handler to send EOF
 	 */
 	private class EOFHandler extends AbstractHandler {
+		@Override
 		public Object execute(ExecutionEvent event)
 				throws org.eclipse.core.commands.ExecutionException {
 			IStreamsProxy proxy = getProcess().getStreamsProxy();
@@ -92,13 +93,7 @@ public class ScriptDebugConsolePageParticipant
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.console.IConsolePageParticipant#init(IPageBookViewPage,
-	 * IConsole)
-	 */
+	@Override
 	public void init(IPageBookViewPage page, IConsole console) {
 		fPage = page;
 		fConsole = (ScriptDebugConsole) console;
@@ -126,11 +121,7 @@ public class ScriptDebugConsolePageParticipant
 		fEOFHandler = new EOFHandler();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.console.IConsolePageParticipant#dispose()
-	 */
+	@Override
 	public void dispose() {
 		DebugUITools.getDebugContextManager()
 				.getContextService(fPage.getSite().getWorkbenchWindow())
@@ -170,32 +161,27 @@ public class ScriptDebugConsolePageParticipant
 		// mgr.appendToGroup(IConsoleConstants.OUTPUT_GROUP, fStdErr);
 	}
 
-	/*
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class required) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> required) {
 		if (IShowInSource.class.equals(required)) {
-			return this;
+			return (T) this;
 		}
 		if (IShowInTargetList.class.equals(required)) {
-			return this;
+			return (T) this;
 		}
 		// CONTEXTLAUNCHING
 		if (ILaunchConfiguration.class.equals(required)) {
 			ILaunch launch = fConsole.getLaunch();
 			if (launch != null) {
-				return launch.getLaunchConfiguration();
+				return (T) launch.getLaunchConfiguration();
 			}
 			return null;
 		}
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.IShowInSource#getShowInContext()
-	 */
+	@Override
 	public ShowInContext getShowInContext() {
 		IProcess process = getProcess();
 		if (process == null) {
@@ -215,21 +201,18 @@ public class ScriptDebugConsolePageParticipant
 		return new ShowInContext(null, selection);
 	}
 
-	/*
-	 * @see org.eclipse.ui.part.IShowInTargetList#getShowInTargetIds()
-	 */
+	@Override
 	public String[] getShowInTargetIds() {
 		return new String[] { IDebugUIConstants.ID_DEBUG_VIEW };
 	}
 
-	/*
-	 * @see IDebugEventSetListener#handleDebugEvents(DebugEvent[])
-	 */
+	@Override
 	public void handleDebugEvents(DebugEvent[] events) {
 		for (int i = 0; i < events.length; i++) {
 			DebugEvent event = events[i];
 			if (event.getSource().equals(getProcess())) {
 				Runnable r = new Runnable() {
+					@Override
 					public void run() {
 						if (fTerminate != null) {
 							fTerminate.update();
@@ -245,11 +228,7 @@ public class ScriptDebugConsolePageParticipant
 		return fConsole != null ? fConsole.getProcess() : null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.console.IConsolePageParticipant#activated()
-	 */
+	@Override
 	public void activated() {
 		// add EOF submissions
 		IPageSite site = fPage.getSite();
@@ -260,11 +239,7 @@ public class ScriptDebugConsolePageParticipant
 				"org.eclipse.debug.ui.commands.eof", fEOFHandler); //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.console.IConsolePageParticipant#deactivated()
-	 */
+	@Override
 	public void deactivated() {
 		// remove EOF submissions
 		IPageSite site = fPage.getSite();
@@ -274,9 +249,7 @@ public class ScriptDebugConsolePageParticipant
 		contextService.deactivateContext(fActivatedContext);
 	}
 
-	/*
-	 * @see IDebugContextListener#contextEvent(DebugContextEvent)
-	 */
+	@Override
 	public void debugContextChanged(DebugContextEvent event) {
 		if ((event.getFlags() & DebugContextEvent.ACTIVATED) > 0) {
 			final IProcess process = getProcess();

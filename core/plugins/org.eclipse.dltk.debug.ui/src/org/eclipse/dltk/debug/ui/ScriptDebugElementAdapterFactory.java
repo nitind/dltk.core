@@ -42,10 +42,13 @@ public class ScriptDebugElementAdapterFactory implements IAdapterFactory {
 		// private constructor
 	}
 
-	public Object getAdapter(Object adaptableObject, Class adapterType) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
 		if (IElementLabelProvider.class.equals(adapterType)) {
 			if (adaptableObject instanceof IScriptVariable) {
-				return getVariableLabelProvider((IDebugElement) adaptableObject);
+				return (T) getVariableLabelProvider(
+						(IDebugElement) adaptableObject);
 			}
 		}
 		/*
@@ -62,7 +65,7 @@ public class ScriptDebugElementAdapterFactory implements IAdapterFactory {
 
 		if (IWatchExpressionFactoryAdapter.class.equals(adapterType)) {
 			if (adaptableObject instanceof IScriptVariable) {
-				return watchExpressionFactory;
+				return (T) watchExpressionFactory;
 			}
 			/*
 			 * if (adaptableObject instanceof JavaInspectExpression) { return
@@ -72,9 +75,10 @@ public class ScriptDebugElementAdapterFactory implements IAdapterFactory {
 		return null;
 	}
 
-	public Class[] getAdapterList() {
+	@Override
+	public Class<?>[] getAdapterList() {
 		return new Class[] { IElementLabelProvider.class,
-		// IElementContentProvider.class,
+				// IElementContentProvider.class,
 				IWatchExpressionFactoryAdapter.class };
 	}
 

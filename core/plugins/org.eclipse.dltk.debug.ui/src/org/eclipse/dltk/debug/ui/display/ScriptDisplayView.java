@@ -119,20 +119,16 @@ public class ScriptDisplayView extends PageBookView
 		return getPageBook() != null && !getPageBook().isDisposed();
 	}
 
+	@Override
 	public boolean getWordWrap() {
 		return false;
 	}
 
+	@Override
 	public void setWordWrap(boolean wordWrap) {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse
-	 * .jface.util.PropertyChangeEvent)
-	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		Object source = event.getSource();
 		if (source instanceof IConsole
@@ -144,32 +140,18 @@ public class ScriptDisplayView extends PageBookView
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
-	 */
+	@Override
 	public void partClosed(IWorkbenchPart part) {
 		super.partClosed(part);
 		fPinAction.update();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.internal.ui.console.IConsoleView#getConsole()
-	 */
+	@Override
 	public IConsole getConsole() {
 		return fActiveConsole;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.PageBookView#showPageRec(org.eclipse.ui.part.
-	 * PageBookView .PageRec)
-	 */
+	@Override
 	protected void showPageRec(PageRec pageRec) {
 		// don't show the page when pinned, unless this is the first console to
 		// be added
@@ -228,10 +210,12 @@ public class ScriptDisplayView extends PageBookView
 				for (int i = 0; i < participants.length; i++) {
 					final IConsolePageParticipant participant = (IConsolePageParticipant) participants[i];
 					SafeRunner.run(new ISafeRunnable() {
+						@Override
 						public void run() throws Exception {
 							participant.activated();
 						}
 
+						@Override
 						public void handleException(Throwable exception) {
 							DLTKDebugUIPlugin.log(exception);
 							listeners.remove(participant);
@@ -281,12 +265,7 @@ public class ScriptDisplayView extends PageBookView
 		// .setHelp(getPageBook().getParent(), helpContextId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.PageBookView#doDestroyPage(org.eclipse.ui.
-	 * IWorkbenchPart , org.eclipse.ui.part.PageBookView.PageRec)
-	 */
+	@Override
 	protected void doDestroyPage(IWorkbenchPart part, PageRec pageRecord) {
 		IConsole console = fPartToConsole.get(part);
 
@@ -297,10 +276,12 @@ public class ScriptDisplayView extends PageBookView
 			for (int i = 0; i < participants.length; i++) {
 				final IConsolePageParticipant participant = (IConsolePageParticipant) participants[i];
 				SafeRunner.run(new ISafeRunnable() {
+					@Override
 					public void run() throws Exception {
 						participant.dispose();
 					}
 
+					@Override
 					public void handleException(Throwable exception) {
 						DLTKDebugUIPlugin.log(exception);
 					}
@@ -338,12 +319,7 @@ public class ScriptDisplayView extends PageBookView
 		return fConsoleToPageParticipants.get(console);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.PageBookView#doCreatePage(org.eclipse.ui.
-	 * IWorkbenchPart )
-	 */
+	@Override
 	protected PageRec doCreatePage(IWorkbenchPart dummyPart) {
 		ConsoleWorkbenchPart part = (ConsoleWorkbenchPart) dummyPart;
 		final IConsole console = part.getConsole();
@@ -364,10 +340,12 @@ public class ScriptDisplayView extends PageBookView
 		for (int i = 0; i < listeners.length; i++) {
 			final IConsolePageParticipant participant = (IConsolePageParticipant) listeners[i];
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void run() throws Exception {
 					participant.init(page, console);
 				}
 
+				@Override
 				public void handleException(Throwable exception) {
 					DLTKDebugUIPlugin.log(exception);
 					participants.remove(participant);
@@ -384,21 +362,12 @@ public class ScriptDisplayView extends PageBookView
 		return new IConsolePageParticipant[0];
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.PageBookView#isImportant(org.eclipse.ui.
-	 * IWorkbenchPart )
-	 */
+	@Override
 	protected boolean isImportant(IWorkbenchPart part) {
 		return part instanceof ConsoleWorkbenchPart;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
-	 */
+	@Override
 	public void dispose() {
 		IViewSite site = getViewSite();
 		if (site != null) {
@@ -407,13 +376,7 @@ public class ScriptDisplayView extends PageBookView
 		super.dispose();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.part.PageBookView#createDefaultPage(org.eclipse.ui.part
-	 * .PageBook)
-	 */
+	@Override
 	protected IPage createDefaultPage(PageBook book) {
 		MessagePage page = new MessagePage();
 		page.createControl(getPageBook());
@@ -451,6 +414,7 @@ public class ScriptDisplayView extends PageBookView
 	public void consolesRemoved(final IConsole[] consoles) {
 		if (isAvailable()) {
 			Runnable r = new Runnable() {
+				@Override
 				public void run() {
 					for (int i = 0; i < consoles.length; i++) {
 						if (isAvailable()) {
@@ -509,6 +473,7 @@ public class ScriptDisplayView extends PageBookView
 				ToolBarManager tbm = (ToolBarManager) mgr;
 				final ToolBar tb = tbm.getControl();
 				tb.addMouseListener(new MouseAdapter() {
+					@Override
 					public void mouseDown(MouseEvent e) {
 						ToolItem ti = tb.getItem(new Point(e.x, e.y));
 						if (ti != null) {
@@ -532,12 +497,7 @@ public class ScriptDisplayView extends PageBookView
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.console.IConsoleView#display(org.eclipse.ui.console.
-	 * IConsole )
-	 */
+	@Override
 	public void display(IConsole console) {
 		if (fPinned && fActiveConsole != null) {
 			return;
@@ -551,12 +511,7 @@ public class ScriptDisplayView extends PageBookView
 		}
 	}
 
-	/*
-	 * /* (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.console.IConsoleView#pin(org.eclipse.ui.console.IConsole)
-	 */
+	@Override
 	public void setPinned(boolean pin) {
 		fPinned = pin;
 		if (fPinAction != null) {
@@ -564,20 +519,12 @@ public class ScriptDisplayView extends PageBookView
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.console.IConsoleView#isPinned()
-	 */
+	@Override
 	public boolean isPinned() {
 		return fPinned;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.PageBookView#getBootstrapPart()
-	 */
+	@Override
 	protected IWorkbenchPart getBootstrapPart() {
 		return null;
 	}
@@ -610,6 +557,7 @@ public class ScriptDisplayView extends PageBookView
 	 * 
 	 * @see IWorkbenchPart#createPartControl(Composite)
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
 		createActions();
@@ -635,23 +583,28 @@ public class ScriptDisplayView extends PageBookView
 	 */
 	private void initPageSwitcher() {
 		new PageSwitcher(this) {
+			@Override
 			public void activatePage(Object page) {
 				ShowConsoleAction.showConsole((IConsole) page,
 						ScriptDisplayView.this);
 			}
 
+			@Override
 			public ImageDescriptor getImageDescriptor(Object page) {
 				return ((IConsole) page).getImageDescriptor();
 			}
 
+			@Override
 			public String getName(Object page) {
 				return ((IConsole) page).getName();
 			}
 
+			@Override
 			public Object[] getPages() {
 				return getConsoles();
 			}
 
+			@Override
 			public int getCurrentPageIndex() {
 				IConsole currentConsole = getConsole();
 				IConsole[] consoles = getConsoles();
@@ -681,13 +634,7 @@ public class ScriptDisplayView extends PageBookView
 		// manager.addConsoleListener(this);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.console.IConsoleView#warnOfContentChange(org.eclipse.ui
-	 * .console.IConsole)
-	 */
+	@Override
 	public void warnOfContentChange(IConsole console) {
 		IWorkbenchPart part = fConsoleToPart.get(console);
 		if (part != null) {
@@ -699,8 +646,9 @@ public class ScriptDisplayView extends PageBookView
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
+	public <T> T getAdapter(Class<T> key) {
 		Object adpater = super.getAdapter(key);
 		if (adpater == null) {
 			IConsole console = getConsole();
@@ -714,21 +662,16 @@ public class ScriptDisplayView extends PageBookView
 						IConsolePageParticipant participant = (IConsolePageParticipant) participants[i];
 						adpater = participant.getAdapter(key);
 						if (adpater != null) {
-							return adpater;
+							return (T) adpater;
 						}
 					}
 				}
 			}
 		}
-		return adpater;
+		return (T) adpater;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IPartListener2#partActivated(org.eclipse.ui.
-	 * IWorkbenchPartReference)
-	 */
+	@Override
 	public void partActivated(IWorkbenchPartReference partRef) {
 		if (isThisPart(partRef)) {
 			fActive = true;
@@ -742,30 +685,15 @@ public class ScriptDisplayView extends PageBookView
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IPartListener2#partBroughtToTop(org.eclipse.ui.
-	 * IWorkbenchPartReference)
-	 */
+	@Override
 	public void partBroughtToTop(IWorkbenchPartReference partRef) {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.
-	 * IWorkbenchPartReference)
-	 */
+	@Override
 	public void partClosed(IWorkbenchPartReference partRef) {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IPartListener2#partDeactivated(org.eclipse.ui.
-	 * IWorkbenchPartReference)
-	 */
+	@Override
 	public void partDeactivated(IWorkbenchPartReference partRef) {
 		if (isThisPart(partRef)) {
 			fActive = false;
@@ -819,10 +747,12 @@ public class ScriptDisplayView extends PageBookView
 				for (int i = 0; i < participants.length; i++) {
 					final IConsolePageParticipant participant = (IConsolePageParticipant) participants[i];
 					SafeRunner.run(new ISafeRunnable() {
+						@Override
 						public void run() throws Exception {
 							participant.deactivated();
 						}
 
+						@Override
 						public void handleException(Throwable exception) {
 							DLTKDebugUIPlugin.log(exception);
 							listeners.remove(participant);
@@ -833,47 +763,23 @@ public class ScriptDisplayView extends PageBookView
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IPartListener2#partOpened(org.eclipse.ui.
-	 * IWorkbenchPartReference)
-	 */
+	@Override
 	public void partOpened(IWorkbenchPartReference partRef) {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IPartListener2#partHidden(org.eclipse.ui.
-	 * IWorkbenchPartReference)
-	 */
+	@Override
 	public void partHidden(IWorkbenchPartReference partRef) {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IPartListener2#partVisible(org.eclipse.ui.
-	 * IWorkbenchPartReference)
-	 */
+	@Override
 	public void partVisible(IWorkbenchPartReference partRef) {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IPartListener2#partInputChanged(org.eclipse.ui.
-	 * IWorkbenchPartReference)
-	 */
+	@Override
 	public void partInputChanged(IWorkbenchPartReference partRef) {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.console.IConsoleView#setScrollLock(boolean)
-	 */
+	@Override
 	public void setScrollLock(boolean scrollLock) {
 		fScrollLock = scrollLock;
 
@@ -883,21 +789,12 @@ public class ScriptDisplayView extends PageBookView
 		// }
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.console.IConsoleView#getScrollLock()
-	 */
+	@Override
 	public boolean getScrollLock() {
 		return fScrollLock;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.console.IConsoleView#pin(org.eclipse.ui.console.IConsole)
-	 */
+	@Override
 	public void pin(IConsole console) {
 		if (console == null) {
 			setPinned(false);
@@ -920,10 +817,12 @@ public class ScriptDisplayView extends PageBookView
 		consoleListeners.remove(listener);
 	}
 
+	@Override
 	public void setAutoScrollLock(boolean scrollLock) {
 		// Ignore as not implemented
 	}
 
+	@Override
 	public boolean getAutoScrollLock() {
 		return false;
 	}
