@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,30 +59,22 @@ public class SourceParserManager extends DLTKContributionExtensionManager {
 		return PARSER_CONTRIBUTION_TAG.equals(main.getName()); //$NON-NLS-1$
 	}
 	
-	/*
-	 * @see org.eclipse.dltk.core.DLTKContributionExtensionManager#getContributionElementName()
-	 */
+	@Override
 	protected String getContributionElementName() {
 		return PARSER_TAG;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.DLTKContributionExtensionManager#getExtensionPoint()
-	 */
+	@Override
 	protected String getExtensionPoint() {
 		return SOURCE_PARSER_EXT_POINT;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.DLTKContributionExtensionManager#isValidContribution(java.lang.Object)
-	 */
+	@Override
 	protected boolean isValidContribution(Object object) {
 		return (object instanceof ISourceParserFactory);
 	}
 	
-	/*
-	 * @see org.eclipse.dltk.core.DLTKContributionExtensionManager#configureContribution(java.lang.Object, org.eclipse.core.runtime.IConfigurationElement)
-	 */
+	@Override
 	protected Object configureContribution(Object object,
 			IConfigurationElement config) {
 		/*

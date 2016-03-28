@@ -5,7 +5,6 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ast;
 
@@ -65,6 +64,7 @@ public class DLTKToken {
 		type = t;
 	}
 
+	@Override
 	public String toString() {
 		return "[\"" + getText() + "\",<" + getType() + ">]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}

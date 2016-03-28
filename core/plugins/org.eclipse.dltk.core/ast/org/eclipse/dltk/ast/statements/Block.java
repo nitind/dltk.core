@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ast.statements;
 
@@ -35,6 +34,7 @@ public class Block extends Expression {
 				: new ArrayList<ASTNode>();
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			Iterator<ASTNode> it = statements.iterator();
@@ -46,6 +46,7 @@ public class Block extends Expression {
 		}
 	}
 
+	@Override
 	public int getKind() {
 		return S_BLOCK;
 	}
@@ -70,6 +71,7 @@ public class Block extends Expression {
 		statements.add(statem);
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		output.indent();
 		Iterator<ASTNode> it = statements.iterator();

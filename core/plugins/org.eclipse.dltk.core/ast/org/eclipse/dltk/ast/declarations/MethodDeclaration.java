@@ -1,16 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
+ * Contributors:
+ *     xored software, Inc. - initial API and Implementation
  *******************************************************************************/
-/*
- * (c) 2002, 2005 xored software and others all rights reserved. http://www.xored.com
- */
-
 package org.eclipse.dltk.ast.declarations;
 
 import java.util.ArrayList;
@@ -61,10 +58,12 @@ public class MethodDeclaration extends Declaration {
 		return this.decorators;
 	}
 
+	@Override
 	public int getKind() {
 		return D_METHOD;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 
 		if (visitor.visit(this)) {
@@ -141,6 +140,7 @@ public class MethodDeclaration extends Declaration {
 		return this.body;
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		if (this.decorators != null) {
 			Iterator i = this.decorators.iterator();
@@ -181,16 +181,12 @@ public class MethodDeclaration extends Declaration {
 		return this.declaringTypeName;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ast.ASTNode#matchStart()
-	 */
+	@Override
 	public int matchStart() {
 		return getNameStart();
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ast.ASTNode#matchLength()
-	 */
+	@Override
 	public int matchLength() {
 		return getNameEnd() - getNameStart();
 	}

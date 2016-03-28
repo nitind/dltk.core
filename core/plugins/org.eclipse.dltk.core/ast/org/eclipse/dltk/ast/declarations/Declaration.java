@@ -1,16 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
+ * Contributors:
+ *     xored software, Inc. - initial API and Implementation
  *******************************************************************************/
-/*
- * (c) 2002, 2005 xored software and others all rights reserved. http://www.xored.com
- */
-
 package org.eclipse.dltk.ast.declarations;
 
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -136,6 +133,7 @@ public abstract class Declaration extends Statement implements Modifiers {
 		return (this.modifiers & AccInterface) != 0;
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		if (this.isStatic()) {
@@ -153,16 +151,19 @@ public abstract class Declaration extends Statement implements Modifiers {
 		return sb.toString();
 	}
 
+	@Override
 	public int getKind() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (pVisitor.visit(this)) {
 			this.ref.traverse(pVisitor);
@@ -170,6 +171,7 @@ public abstract class Declaration extends Statement implements Modifiers {
 		}
 	}
 
+	@Override
 	public String debugString() {
 		return super.debugString() + this.getNameSourceRange().toString();
 	}

@@ -1,16 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
+ * Contributors:
+ *     xored software, Inc. - initial API and Implementation
  *******************************************************************************/
-/*
- * (c) 2002, 2005 xored software and others all rights reserved. http://www.xored.com
- */
-
 package org.eclipse.dltk.ast.declarations;
 
 import java.util.ArrayList;
@@ -66,6 +63,7 @@ public class ModuleDeclaration extends ASTNode implements IModuleDeclaration {
 		this.rebuildEnabled = rebuildEnabled;
 	}
 
+	@Override
 	public final void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			this.body.traverse(visitor);
@@ -85,6 +83,7 @@ public class ModuleDeclaration extends ASTNode implements IModuleDeclaration {
 		return this.body.getStatements();
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		output.formatPrintLn("Module" + this.getSourceRange().toString() + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		this.body.printNode(output);
@@ -149,11 +148,13 @@ public class ModuleDeclaration extends ASTNode implements IModuleDeclaration {
 		return (ASTNode[]) results.toArray(new ASTNode[results.size()]);
 	}
 
+	@Override
 	public void setEnd(int end) {
 		super.setEnd(end);
 		this.body.setEnd(end);
 	}
 
+	@Override
 	public void setStart(int start) {
 		super.setStart(start);
 		this.body.setStart(start);

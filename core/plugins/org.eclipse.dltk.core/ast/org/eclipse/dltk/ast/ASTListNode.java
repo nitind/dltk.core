@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ast;
 
@@ -39,6 +38,7 @@ public class ASTListNode extends ASTNode {
 		}
 	}
 
+	@Override
 	public List<ASTNode> getChilds() {
 		return nodes;
 	}
@@ -53,6 +53,7 @@ public class ASTListNode extends ASTNode {
 		return 0;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			if (nodes != null) {
@@ -64,6 +65,7 @@ public class ASTListNode extends ASTNode {
 		}
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		if (this.nodes != null) {
 			output.print('[');

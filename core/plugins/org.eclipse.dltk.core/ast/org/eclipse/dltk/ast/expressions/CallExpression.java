@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ast.expressions;
 
@@ -54,10 +53,12 @@ public class CallExpression extends Expression {
 		this(0, 0, receiver, name, args );
 	}
 
+	@Override
 	public int getKind() {		
 		return 0;
 	}
 
+	@Override
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if( pVisitor.visit( this ) ) {
 			if( receiver != null ) {
@@ -86,6 +87,7 @@ public class CallExpression extends Expression {
 		return args;
 	}
 	
+	@Override
 	public void printNode(CorePrinter output) {
 		output.formatPrint("CallExpression" + this.getSourceRange().toString() + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (this.receiver != null) {

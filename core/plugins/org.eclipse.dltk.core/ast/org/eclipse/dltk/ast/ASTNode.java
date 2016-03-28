@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -172,6 +172,7 @@ public abstract class ASTNode implements ISourceNode {
 		return this.sourceStart;
 	}
 
+	@Override
 	public int start() {
 		return sourceStart();
 	}
@@ -180,6 +181,7 @@ public abstract class ASTNode implements ISourceNode {
 		return this.sourceEnd;
 	}
 
+	@Override
 	public int end() {
 		return sourceEnd();
 	}
@@ -234,6 +236,7 @@ public abstract class ASTNode implements ISourceNode {
 				+ this.getSourceRange().toString();
 	}
 
+	@Override
 	public String toString() {
 		StringWriter writer = new StringWriter();
 		CorePrinter printer = new CorePrinter(writer);
@@ -253,6 +256,7 @@ public abstract class ASTNode implements ISourceNode {
 		final List<ASTNode> result = new ArrayList<ASTNode>();
 		ASTVisitor visitor = new ASTVisitor() {
 
+			@Override
 			public boolean visitGeneral(ASTNode node) throws Exception {
 				if (node == ASTNode.this) {
 					return true;

@@ -1,15 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
+ * Contributors:
+ *     xored software, Inc. - initial API and Implementation 
  *******************************************************************************/
-/*
- * (c) 2002, 2005 xored software and others all rights reserved. http://www.xored.com
- */
 package org.eclipse.dltk.ast.expressions;
 
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -53,6 +51,7 @@ public abstract class Literal extends Expression {
 	/**
 	 * Traverse to this node.
 	 */
+	@Override
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (pVisitor.visit(this)) {
 			pVisitor.endvisit(this);
@@ -62,6 +61,7 @@ public abstract class Literal extends Expression {
 	/**
 	 * Return value of this literal.
 	 */
+	@Override
 	public String toString() {
 		return getValue();
 	}
@@ -76,6 +76,7 @@ public abstract class Literal extends Expression {
 	/**
 	 * Testing purposes only. Print literal.
 	 */
+	@Override
 	public void printNode(CorePrinter output) {
 		output.formatPrintLn("Literal" + this.getSourceRange().toString() + ":" + this.getValue()); //$NON-NLS-1$ //$NON-NLS-2$
 	}

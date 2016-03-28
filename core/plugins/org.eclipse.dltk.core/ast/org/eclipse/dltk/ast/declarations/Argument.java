@@ -1,16 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
+ * Contributors:
+ *     xored software, Inc. - initial API and Implementation
  *******************************************************************************/
-/*
- * (c) 2002, 2005 xored software and others all rights reserved. http://www.xored.com
- */
-
 package org.eclipse.dltk.ast.declarations;
 
 import org.eclipse.dltk.ast.ASTNode;
@@ -62,6 +59,7 @@ public class Argument extends Declaration {
 		this.setEnd(-1);
 	}
 
+	@Override
 	public int getKind() {
 		return D_ARGUMENT;
 	}
@@ -86,6 +84,7 @@ public class Argument extends Declaration {
 		this.initialization = initialization;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			if (initialization != null) {
@@ -95,6 +94,7 @@ public class Argument extends Declaration {
 		}
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 
@@ -106,6 +106,7 @@ public class Argument extends Declaration {
 		return sb.toString();
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		output.formatPrint("Argument" + this.getSourceRange().toString() + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		output.formatPrintLn(super.toString());

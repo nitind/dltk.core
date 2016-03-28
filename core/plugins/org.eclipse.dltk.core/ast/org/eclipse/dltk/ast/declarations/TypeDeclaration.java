@@ -145,6 +145,7 @@ public class TypeDeclaration extends Declaration {
 	/**
 	 * Used to walk on tree. traverse order: superclasses, body.
 	 */
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 
 		if (visitor.visit(this)) {
@@ -197,7 +198,7 @@ public class TypeDeclaration extends Declaration {
 	/**
 	 * Return TypeDeclaration kind.
 	 */
-
+	@Override
 	public int getKind() {
 
 		return D_CLASS;
@@ -405,6 +406,7 @@ public class TypeDeclaration extends Declaration {
 	/**
 	 * Testing purpose only. Prints type and all inner statements to printer.
 	 */
+	@Override
 	public void printNode(CorePrinter output) {
 
 		output.formatPrintLn("Type" + this.getSourceRange().toString() //$NON-NLS-1$
@@ -474,6 +476,7 @@ public class TypeDeclaration extends Declaration {
 		return ASTUtil.getVariables(this.getStatements(), this.fVariables);
 	}
 
+	@Override
 	public String debugString() {
 		String prev = super.debugString();
 		if ((this.getModifiers() & Modifiers.AccModule) != 0)
@@ -481,10 +484,12 @@ public class TypeDeclaration extends Declaration {
 		return prev;
 	}
 
+	@Override
 	public int matchStart() {
 		return getNameStart();
 	}
 
+	@Override
 	public int matchLength() {
 		return getNameEnd() - getNameStart();
 	}

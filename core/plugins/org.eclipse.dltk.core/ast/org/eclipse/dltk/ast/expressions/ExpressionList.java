@@ -8,9 +8,6 @@
  * Contributors:
  *		xored software, Inc. - initial API and Implementation
  *******************************************************************************/
-/*
- * (c) 2002, 2005 xored software and others all rights reserved. http://www.xored.com
- */
 package org.eclipse.dltk.ast.expressions;
 
 import java.util.ArrayList;
@@ -45,6 +42,7 @@ public class ExpressionList extends Expression {
 
 	}
 
+	@Override
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (pVisitor.visit(this)) {
 			if (fExpressions != null) {
@@ -58,6 +56,7 @@ public class ExpressionList extends Expression {
 		}
 	}
 
+	@Override
 	public int getKind() {
 		return E_EXPRESSION_LIST;
 	}
@@ -99,6 +98,7 @@ public class ExpressionList extends Expression {
 	/**
 	 * Testing purposes only. Prints all expressions.
 	 */
+	@Override
 	public void printNode(CorePrinter output) {
 		if (this.fExpressions != null) {
 			int index = 0;

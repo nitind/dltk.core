@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ast.expressions;
 
@@ -32,6 +31,7 @@ public class FloatNumericLiteral extends Literal {
 	}
 
 	
+	@Override
 	public String getValue() {
 		return String.valueOf(doubleValue);
 	}
@@ -39,7 +39,7 @@ public class FloatNumericLiteral extends Literal {
 	/**
 	 * Return kind.
 	 */
-
+	@Override
 	public int getKind() {
 		return NUMBER_LITERAL;
 	}
@@ -47,7 +47,7 @@ public class FloatNumericLiteral extends Literal {
 	/**
 	 * Testing purposes only. Used to print number.
 	 */
-
+	@Override
 	public void printNode(CorePrinter output) {
 		output.formatPrintLn(this.getValue());
 	}
