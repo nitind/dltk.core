@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,6 @@
  *     xored software, Inc. - Search All occurences bugfix, 
  *     						  hilight only class name when class is in search results ( Alex Panchenko <alex@xored.com>)
  *******************************************************************************/
-/*
- * (c) 2002, 2005 xored software and others all rights reserved. http://www.xored.com
- */
 package org.eclipse.dltk.ast.declarations;
 
 import java.util.ArrayList;
@@ -255,6 +252,7 @@ public class TypeDeclaration extends Declaration {
 	 * @deprecated
 	 */
 
+	@Deprecated
 	public int getDeclarationSourceEnd() {
 
 		return this.sourceEnd();
@@ -267,6 +265,7 @@ public class TypeDeclaration extends Declaration {
 	 * @deprecated
 	 */
 
+	@Deprecated
 	protected void setDeclarationSourceEnd(int declarationSourceEnd) {
 		this.setEnd(declarationSourceEnd);
 	}
@@ -278,6 +277,7 @@ public class TypeDeclaration extends Declaration {
 	 * @deprecated
 	 */
 
+	@Deprecated
 	public int getDeclarationSourceStart() {
 
 		return this.sourceStart();
@@ -290,6 +290,7 @@ public class TypeDeclaration extends Declaration {
 	 * @deprecated
 	 */
 
+	@Deprecated
 	protected void setDeclarationSourceStart(int declarationSourceStart) {
 
 		this.setStart(declarationSourceStart);

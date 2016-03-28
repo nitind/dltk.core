@@ -1,11 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- 
+ * 
+ * Contributors:
+ *		xored software, Inc. - initial API and Implementation
  *******************************************************************************/
 /*
  * (c) 2002, 2005 xored software and others all rights reserved. http://www.xored.com
@@ -24,6 +25,7 @@ import org.eclipse.dltk.utils.CorePrinter;
  * Holds list of expressions.
  * @deprecated
  */
+@Deprecated
 public class ExpressionList extends Expression {
 	private List fExpressions = new ArrayList();
 

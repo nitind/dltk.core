@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,9 +9,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.ast;
 
-/**
- * @deprecated
- */
+@Deprecated
 public class DLTKToken {
 	public static final int INVALID_TYPE = 0;
 	public static final int EOF_TYPE = 1;
