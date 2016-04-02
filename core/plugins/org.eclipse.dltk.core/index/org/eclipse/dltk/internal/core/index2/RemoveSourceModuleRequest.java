@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,10 +37,12 @@ public class RemoveSourceModuleRequest extends AbstractIndexRequest {
 		this.relativePath = relativePath;
 	}
 
+	@Override
 	protected String getName() {
 		return containerPath.append(relativePath).toString();
 	}
 
+	@Override
 	protected void run() throws CoreException, IOException {
 		IIndexer indexer = IndexerManager.getIndexer();
 		if (indexer == null) {
@@ -49,6 +51,7 @@ public class RemoveSourceModuleRequest extends AbstractIndexRequest {
 		indexer.removeDocument(containerPath, relativePath);
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -59,6 +62,7 @@ public class RemoveSourceModuleRequest extends AbstractIndexRequest {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

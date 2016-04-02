@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,10 +40,12 @@ public class ProjectRequest extends AbstractIndexRequest {
 		this.project = project;
 	}
 
+	@Override
 	protected String getName() {
 		return project.getElementName();
 	}
 
+	@Override
 	protected void run() throws CoreException {
 		final IProjectFragment[] fragments = project.getAllProjectFragments();
 
@@ -70,6 +72,7 @@ public class ProjectRequest extends AbstractIndexRequest {
 	private void getSourceModules(IProjectFragment fragment,
 			final Set<ISourceModule> sourceModules) throws ModelException {
 		IModelElementVisitor visitor = new IModelElementVisitor() {
+			@Override
 			public boolean visit(IModelElement element) {
 				if (element.getElementType() == IModelElement.SOURCE_MODULE) {
 					sourceModules.add((ISourceModule) element);
@@ -81,10 +84,12 @@ public class ProjectRequest extends AbstractIndexRequest {
 		fragment.accept(visitor);
 	}
 
+	@Override
 	public boolean belongsTo(String jobFamily) {
 		return jobFamily.equals(project.getProject().getName());
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -92,6 +97,7 @@ public class ProjectRequest extends AbstractIndexRequest {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

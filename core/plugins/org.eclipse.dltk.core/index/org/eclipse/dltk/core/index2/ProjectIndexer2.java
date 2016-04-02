@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,6 +41,7 @@ public class ProjectIndexer2 implements IProjectIndexer {
 
 	private final ProgressJob progressJob = new ProgressJob(jobManager);
 
+	@Override
 	public void indexLibrary(IScriptProject project, IPath path) {
 		try {
 			IProjectFragment fragment = project.findProjectFragment(path);
@@ -58,11 +59,13 @@ public class ProjectIndexer2 implements IProjectIndexer {
 		}
 	}
 
+	@Override
 	public void indexProject(IScriptProject project) {
 		ProjectRequest request = new ProjectRequest(this, project, progressJob);
 		jobManager.requestIfNotWaiting(request);
 	}
 
+	@Override
 	public void indexProjectFragment(IScriptProject project, IPath path) {
 		IProjectFragment fragmentToIndex = null;
 		try {
@@ -89,30 +92,35 @@ public class ProjectIndexer2 implements IProjectIndexer {
 		jobManager.requestIfNotWaiting(request);
 	}
 
+	@Override
 	public void indexSourceModule(ISourceModule module,
 			IDLTKLanguageToolkit toolkit) {
 		jobManager
 				.request(new AddSourceModuleRequest(this, module, progressJob));
 	}
 
+	@Override
 	public void reconciled(ISourceModule workingCopy,
 			IDLTKLanguageToolkit toolkit) {
 		jobManager.request(new ReconcileSourceModuleRequest(this, workingCopy,
 				progressJob));
 	}
 
+	@Override
 	public void removeLibrary(IScriptProject project, IPath path) {
 		RemoveContainerRequest request = new RemoveContainerRequest(this, path,
 				progressJob);
 		jobManager.requestIfNotWaiting(request);
 	}
 
+	@Override
 	public void removeProject(IPath projectPath) {
 		RemoveContainerRequest request = new RemoveContainerRequest(this,
 				projectPath, progressJob);
 		jobManager.requestIfNotWaiting(request);
 	}
 
+	@Override
 	public void removeProjectFragment(IScriptProject project, IPath path) {
 		if (path.equals(project.getPath())) {
 			// Project is removed through removeProject(...)
@@ -123,15 +131,18 @@ public class ProjectIndexer2 implements IProjectIndexer {
 		jobManager.requestIfNotWaiting(request);
 	}
 
+	@Override
 	public void removeSourceModule(IScriptProject project, String path) {
 		jobManager.request(new RemoveSourceModuleRequest(this, project
 				.getPath(), path, progressJob));
 	}
 
+	@Override
 	public void startIndexing() {
 		//
 	}
 
+	@Override
 	public boolean wantRefreshOnStart() {
 		return true;
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,10 +45,12 @@ public class SourceModulesRequest extends AbstractIndexRequest {
 		this.sourceModules = sourceModules;
 	}
 
+	@Override
 	protected String getName() {
 		return containerPath.toString();
 	}
 
+	@Override
 	protected void run() throws CoreException, IOException {
 
 		IIndexer indexer = IndexerManager.getIndexer();
@@ -67,6 +69,7 @@ public class SourceModulesRequest extends AbstractIndexRequest {
 		}
 
 		Collections.sort(toReindex, new Comparator<ISourceModule>() {
+			@Override
 			public int compare(ISourceModule m1, ISourceModule m2) {
 				return m1.getPath().toString().compareTo(
 						m2.getPath().toString());
@@ -79,10 +82,12 @@ public class SourceModulesRequest extends AbstractIndexRequest {
 		}
 	}
 
+	@Override
 	public boolean belongsTo(String jobFamily) {
 		return jobFamily.equals(containerPath.toString());
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -93,6 +98,7 @@ public class SourceModulesRequest extends AbstractIndexRequest {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

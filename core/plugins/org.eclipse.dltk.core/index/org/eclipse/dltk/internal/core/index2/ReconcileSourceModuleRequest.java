@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,7 @@ public class ReconcileSourceModuleRequest extends AddSourceModuleRequest {
 		super(indexer, sourceModule, progressJob);
 	}
 
+	@Override
 	protected void run() throws CoreException, IOException {
 		IIndexer indexer = IndexerManager.getIndexer();
 		if (indexer == null) {
@@ -58,6 +59,7 @@ public class ReconcileSourceModuleRequest extends AddSourceModuleRequest {
 		super.run();
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof ReconcileSourceModuleRequest) {
 			return super.equals(obj);
