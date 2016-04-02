@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -33,23 +33,28 @@ public abstract class AbstractProjectIndexer implements IProjectIndexer,
 	private final IndexManager manager = ModelManager.getModelManager()
 			.getIndexManager();
 
+	@Override
 	public void request(IJob job) {
 		manager.request(job);
 	}
 
+	@Override
 	public void requestIfNotWaiting(IJob job) {
 		manager.requestIfNotWaiting(job);
 	}
 
+	@Override
 	public IndexManager getIndexManager() {
 		return manager;
 	}
 
+	@Override
 	public void indexProject(IScriptProject project) {
 		final ProjectRequest request = new ProjectRequest(this, project);
 		requestIfNotWaiting(request);
 	}
 
+	@Override
 	public void indexLibrary(IScriptProject project, IPath path) {
 		try {
 			final IProjectFragment fragment = project.findProjectFragment(path);
@@ -79,6 +84,7 @@ public abstract class AbstractProjectIndexer implements IProjectIndexer,
 		}
 	}
 
+	@Override
 	public void indexProjectFragment(IScriptProject project, IPath path) {
 		IProjectFragment fragmentToIndex = null;
 		try {
@@ -110,32 +116,39 @@ public abstract class AbstractProjectIndexer implements IProjectIndexer,
 		requestIfNotWaiting(indexRequest);
 	}
 
+	@Override
 	public void indexSourceModule(ISourceModule module,
 			IDLTKLanguageToolkit toolkit) {
 		request(new SourceModuleRequest(this, module, toolkit));
 	}
 
+	@Override
 	public void reconciled(ISourceModule workingCopy,
 			IDLTKLanguageToolkit toolkit) {
 	}
 
+	@Override
 	public void removeProjectFragment(IScriptProject project, IPath sourceFolder) {
 		// TODO optimize
 		requestIfNotWaiting(new ProjectRequest(this, project));
 	}
 
+	@Override
 	public void removeSourceModule(IScriptProject project, String path) {
 		request(new SourceModuleRemoveRequest(this, project, path));
 	}
 
+	@Override
 	public void removeProject(IPath projectPath) {
 		requestIfNotWaiting(new RemoveIndexRequest(this, projectPath));
 	}
 
+	@Override
 	public void removeLibrary(IScriptProject project, IPath path) {
 		requestIfNotWaiting(new RemoveIndexRequest(this, path));
 	}
 
+	@Override
 	public void startIndexing() {
 		//
 	}
@@ -143,10 +156,12 @@ public abstract class AbstractProjectIndexer implements IProjectIndexer,
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public boolean wantRefreshOnStart() {
 		return true;
 	}
 
+	@Override
 	public void indexSourceModule(Index index, IDLTKLanguageToolkit toolkit,
 			ISourceModule module, IPath containerPath) {
 		final IndexDocument document = new IndexDocument(toolkit, module,
@@ -157,11 +172,13 @@ public abstract class AbstractProjectIndexer implements IProjectIndexer,
 
 	public abstract void doIndexing(IndexDocument document);
 
+	@Override
 	public Index getProjectIndex(IScriptProject project) {
 		return getIndexManager().getIndex(project.getProject().getFullPath(),
 				true, true);
 	}
 
+	@Override
 	public Index getProjectFragmentIndex(IProjectFragment fragment) {
 		return getIndexManager().getIndex(fragment.getPath(), true, true);
 	}

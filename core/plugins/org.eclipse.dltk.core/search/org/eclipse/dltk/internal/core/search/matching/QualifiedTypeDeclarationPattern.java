@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.matching;
 
@@ -45,17 +44,20 @@ public class QualifiedTypeDeclarationPattern extends TypeDeclarationPattern
 		super(matchRule, toolkit);
 	}
 
+	@Override
 	public void decodeIndexKey(char[] key) {
 		super.decodeIndexKey(key);
 		this.qualification = CharOperation.concatWith(pkg, enclosingTypeNames,
 				TYPE_SEPARATOR);
 	}
 
+	@Override
 	public SearchPattern getBlankPattern() {
 		return new QualifiedTypeDeclarationPattern(R_EXACT_MATCH
 				| R_CASE_SENSITIVE, getToolkit());
 	}
 
+	@Override
 	public boolean matchesDecodedKey(SearchPattern decodedPattern) {
 		QualifiedTypeDeclarationPattern pattern = (QualifiedTypeDeclarationPattern) decodedPattern;
 		switch (this.typeSuffix) {
@@ -88,6 +90,7 @@ public class QualifiedTypeDeclarationPattern extends TypeDeclarationPattern
 		return false;
 	}
 
+	@Override
 	protected StringBuffer print(StringBuffer output) {
 		switch (this.typeSuffix) {
 		case TYPE_SUFFIX:

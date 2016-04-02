@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.matching;
 
@@ -110,6 +109,7 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 	 * secondary types as: simlpleMethodName / packageName / enclosingTypeName /
 	 * modifiers / S
 	 */
+	@Override
 	public void decodeIndexKey(char[] key) {
 		int slash = CharOperation.indexOf(SEPARATOR, key, 0);
 		this.simpleName = CharOperation.subarray(key, 0, slash);
@@ -166,15 +166,18 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 		this.typeSuffix = TYPE_SUFFIX;
 	}
 
+	@Override
 	public SearchPattern getBlankPattern() {
 		return new MethodDeclarationPattern(R_EXACT_MATCH | R_CASE_SENSITIVE,
 				getToolkit());
 	}
 
+	@Override
 	public char[][] getIndexCategories() {
 		return CATEGORIES;
 	}
 
+	@Override
 	public boolean matchesDecodedKey(SearchPattern decodedPattern) {
 		MethodDeclarationPattern pattern = (MethodDeclarationPattern) decodedPattern;
 		if (!matchesName(this.simpleName, pattern.simpleName))
@@ -192,6 +195,7 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 		return true;
 	}
 
+	@Override
 	public EntryResult[] queryIn(Index index) throws IOException {
 		char[] key = this.simpleName; // can be null
 		int matchRule = getMatchRule();
@@ -220,6 +224,7 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 		// match rule is irrelevant when the key is null
 	}
 
+	@Override
 	protected StringBuffer print(StringBuffer output) {
 		output.append("MethodDeclarationPattern: "); //$NON-NLS-1$
 		output.append("name<"); //$NON-NLS-1$

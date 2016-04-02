@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.matching;
 
@@ -59,19 +58,23 @@ public class FieldPattern extends VariablePattern implements IIndexConstants {
 				typeSimpleName, matchRule, toolkit);
 	}
 
+	@Override
 	public void decodeIndexKey(char[] key) {
 		this.name = key;
 	}
 
+	@Override
 	public SearchPattern getBlankPattern() {
 		return new FieldPattern(false, false, false, null, null, null, null,
 				null, R_EXACT_MATCH | R_CASE_SENSITIVE, getToolkit());
 	}
 
+	@Override
 	public char[] getIndexKey() {
 		return this.name;
 	}
 
+	@Override
 	public char[][] getIndexCategories() {
 		if (this.findReferences)
 			return this.findDeclarations || this.writeAccess ? REF_AND_DECL_CATEGORIES
@@ -81,10 +84,12 @@ public class FieldPattern extends VariablePattern implements IIndexConstants {
 		return CharOperation.NO_CHAR_CHAR;
 	}
 
+	@Override
 	public boolean matchesDecodedKey(SearchPattern decodedPattern) {
 		return true; // index key is not encoded so query results all match
 	}
 
+	@Override
 	protected boolean mustResolve() {
 		if (this.declaringSimpleName != null
 				|| this.declaringQualification != null)
@@ -94,6 +99,7 @@ public class FieldPattern extends VariablePattern implements IIndexConstants {
 		return super.mustResolve();
 	}
 
+	@Override
 	protected StringBuffer print(StringBuffer output) {
 		if (this.findDeclarations) {
 			output.append(this.findReferences ? "FieldCombinedPattern: " //$NON-NLS-1$

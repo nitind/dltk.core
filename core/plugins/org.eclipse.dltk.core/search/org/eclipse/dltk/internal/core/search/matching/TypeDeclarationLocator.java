@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ public class TypeDeclarationLocator extends PatternLocator {
 		this.pattern = pattern;
 	}
 
+	@Override
 	public int match(TypeDeclaration node, MatchingNodeSet nodeSet) {
 		if (this.pattern.simpleName == null || matchesName(this.pattern.simpleName, node.getName().toCharArray())) {
 			//	fully qualified name
@@ -47,6 +48,7 @@ public class TypeDeclarationLocator extends PatternLocator {
 		return IMPOSSIBLE_MATCH;
 	}
 
+	@Override
 	public String toString() {
 		return "Locator for " + this.pattern.toString(); //$NON-NLS-1$
 	}

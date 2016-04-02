@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search;
 
@@ -41,14 +40,17 @@ public class DLTKSearchDocument extends SearchDocument {
 		this.charContents = charContents;
 	}
 
+	@Override
 	public String getContents() {
 		return new String(charContents);
 	}
 
+	@Override
 	public char[] getCharContents() {
 		return charContents;
 	}
 
+	@Override
 	public String getEncoding() {
 		try {
 			return ResourcesPlugin.getWorkspace().getRoot().getDefaultCharset();
@@ -58,10 +60,12 @@ public class DLTKSearchDocument extends SearchDocument {
 		return null;
 	}
 
+	@Override
 	public String toString() {
 		return "SearchDocument(" + getPath() + ')'; //$NON-NLS-1$
 	}
 
+	@Override
 	public boolean isExternal() {
 		return external;
 	}

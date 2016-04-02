@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.search.index;
 
@@ -55,6 +54,7 @@ public class MixinIndex extends Index {
 		}
 	}
 
+	@Override
 	public void addIndexEntry(char[] category, char[] key,
 			String containerRelativePath) {
 		this.dirty = true;
@@ -91,10 +91,12 @@ public class MixinIndex extends Index {
 		docs.add(containerRelativePath);
 	}
 
+	@Override
 	public File getIndexFile() {
 		return new File(fileName);
 	}
 
+	@Override
 	public boolean hasChanged() {
 		return this.dirty;
 	}
@@ -108,6 +110,7 @@ public class MixinIndex extends Index {
 		return false;
 	}
 
+	@Override
 	public EntryResult[] query(char[][] categories, char[] key, int matchRule)
 			throws IOException {
 		if (!isMixinCategory(categories))
@@ -163,10 +166,12 @@ public class MixinIndex extends Index {
 	 * Returns the document names that contain the given substring, if null then
 	 * returns all of them.
 	 */
+	@Override
 	public String[] queryDocumentNames(String substring) throws IOException {
 		return extractKeysFromTable(documentNames, substring);
 	}
 
+	@Override
 	public void remove(String containerRelativePath) {
 		this.dirty = true;
 		if (documentNames.remove(containerRelativePath) != null) {
@@ -180,6 +185,7 @@ public class MixinIndex extends Index {
 		}
 	}
 
+	@Override
 	public void save() throws IOException {
 		long start = DLTKCore.VERBOSE_MIXIN ? System.currentTimeMillis() : 0;
 		if (!hasChanged()) {
@@ -318,20 +324,25 @@ public class MixinIndex extends Index {
 		return (String) documentNames.addIntern(docName);
 	}
 
+	@Override
 	public void startQuery() {
 	}
 
+	@Override
 	public void stopQuery() {
 	}
 
+	@Override
 	public String toString() {
 		return "Mixin Index for " + this.containerPath; //$NON-NLS-1$
 	}
 
+	@Override
 	public boolean isRebuildable() {
 		return false;
 	}
 
+	@Override
 	public String getContainerPath() {
 		if (containerPath.startsWith(IndexManager.SPECIAL_MIXIN)) {
 			return containerPath.substring(IndexManager.SPECIAL_MIXIN.length());

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,7 @@ public abstract class MatchingNodeSet<E> implements IMatchingNodeSet<E>,
 	// sourceRange -> node
 	private HashtableOfLong<E> possibleMatchingNodesKeys = new HashtableOfLong<E>();
 
+	@Override
 	public MatchLevel addMatch(E node, MatchLevel matchLevel) {
 		switch (matchLevel) {
 		case POSSIBLE_MATCH:

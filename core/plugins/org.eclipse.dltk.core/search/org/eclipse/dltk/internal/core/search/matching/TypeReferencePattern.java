@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.matching;
 
@@ -67,15 +66,18 @@ public class TypeReferencePattern extends AndPattern implements IIndexConstants 
 		super(TYPE_REF_PATTERN, matchRule, toolkit);
 	}
 
+	@Override
 	public void decodeIndexKey(char[] key) {
 		this.simpleName = key;
 	}
 
+	@Override
 	public SearchPattern getBlankPattern() {
 		return new TypeReferencePattern(R_EXACT_MATCH | R_CASE_SENSITIVE,
 				getToolkit());
 	}
 
+	@Override
 	public char[] getIndexKey() {
 		if (this.simpleName != null)
 			return this.simpleName;
@@ -85,10 +87,12 @@ public class TypeReferencePattern extends AndPattern implements IIndexConstants 
 		return null;
 	}
 
+	@Override
 	public char[][] getIndexCategories() {
 		return CATEGORIES;
 	}
 
+	@Override
 	public boolean hasNextQuery() {
 		if (this.segments == null)
 			return false;
@@ -101,10 +105,12 @@ public class TypeReferencePattern extends AndPattern implements IIndexConstants 
 		return --this.currentSegment >= (this.segments.length >= 4 ? 2 : 0);
 	}
 
+	@Override
 	public boolean matchesDecodedKey(SearchPattern decodedPattern) {
 		return true; // index key is not encoded so query results all match
 	}
 
+	@Override
 	public void resetQuery() {
 		/*
 		 * walk the segments from end to start as it will find less potential
@@ -114,6 +120,7 @@ public class TypeReferencePattern extends AndPattern implements IIndexConstants 
 			this.currentSegment = this.segments.length - 1;
 	}
 
+	@Override
 	protected StringBuffer print(StringBuffer output) {
 		output.append("TypeReferencePattern: qualification<"); //$NON-NLS-1$
 		if (qualification != null)

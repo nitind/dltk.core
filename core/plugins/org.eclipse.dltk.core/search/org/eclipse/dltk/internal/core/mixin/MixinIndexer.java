@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.mixin;
 
@@ -96,6 +95,7 @@ public class MixinIndexer extends AbstractIndexer {
 	private class MixinIndexRequestor implements IMixinRequestor {
 		int count = 0;
 
+		@Override
 		public void reportElement(ElementInfo info) {
 			if (info.key.length() > 0) {
 				addIndexEntry(MIXIN, info.key.toCharArray());

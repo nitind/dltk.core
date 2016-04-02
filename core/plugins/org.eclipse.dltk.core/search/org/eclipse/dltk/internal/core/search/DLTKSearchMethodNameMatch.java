@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search;
 
@@ -28,12 +27,7 @@ public class DLTKSearchMethodNameMatch extends MethodNameMatch {
 		this.modifiers = modifiers;
 	}
 
-	/*
-	 * (non-Javadoc) Returns whether the matched type is equals to the given
-	 * object or not.
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true; // avoid unnecessary calls for identical objects
@@ -49,11 +43,7 @@ public class DLTKSearchMethodNameMatch extends MethodNameMatch {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jdt.core.search.TypeNameMatch#getModifiers()
-	 */
+	@Override
 	public int getModifiers() {
 		return this.modifiers;
 	}
@@ -64,26 +54,19 @@ public class DLTKSearchMethodNameMatch extends MethodNameMatch {
 	 * 
 	 * @see org.eclipse.jdt.core.search.TypeNameMatch#getType()
 	 */
+	@Override
 	public IMethod getMethod() {
 		return this.method;
 	}
 
-	/*
-	 * (non-Javadoc) Returns the hash code of the matched type.
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
+	@Override
 	public int hashCode() {
 		if (this.method == null)
 			return this.modifiers;
 		return this.method.hashCode();
 	}
 
-	/*
-	 * (non-Javadoc) Returns the string of the matched type.
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
+	@Override
 	public String toString() {
 		if (this.method == null)
 			return super.toString();

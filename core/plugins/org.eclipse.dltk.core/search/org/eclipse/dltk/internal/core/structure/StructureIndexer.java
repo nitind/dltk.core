@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.structure;
 
@@ -43,6 +42,7 @@ public class StructureIndexer extends AbstractIndexer {
 			this.module = module;
 		}
 
+		@Override
 		public char[] getContentsAsCharArray() {
 			try {
 				return module.getSourceAsCharArray();
@@ -54,10 +54,12 @@ public class StructureIndexer extends AbstractIndexer {
 			return CharOperation.NO_CHAR;
 		}
 
+		@Override
 		public IModelElement getModelElement() {
 			return module;
 		}
 
+		@Override
 		public String getSourceContents() {
 			if (module != null) {
 				try {
@@ -71,6 +73,7 @@ public class StructureIndexer extends AbstractIndexer {
 			return Util.EMPTY_STRING;
 		}
 
+		@Override
 		public String getFileName() {
 			return module.getElementName();
 		}

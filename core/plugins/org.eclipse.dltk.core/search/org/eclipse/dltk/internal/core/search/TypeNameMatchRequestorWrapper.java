@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search;
 
@@ -75,6 +74,7 @@ public class TypeNameMatchRequestorWrapper implements
 	 * acceptType(int, char[], char[], char[][], java.lang.String,
 	 * org.eclipse.jdt.internal.compiler.env.AccessRestriction)
 	 */
+	@Override
 	public void acceptType(int modifiers, char[] packageName,
 			char[] simpleTypeName, char[][] enclosingTypeNames,
 			char[][] superTypes, String path, AccessRestriction access) {
@@ -278,6 +278,7 @@ public class TypeNameMatchRequestorWrapper implements
 			this.simpleTypeName = simpleTypeName;
 		}
 
+		@Override
 		public boolean visit(IModelElement element) {
 			if (type == null) {
 				if (element.getElementType() == IModelElement.TYPE

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.matching;
 
@@ -40,11 +39,13 @@ public class OrLocator extends PatternLocator {
 					.patternLocator(patterns[i], null);
 	}
 
+	@Override
 	public void initializePolymorphicSearch(MatchLocator locator) {
 		for (int i = 0, length = this.patternLocators.length; i < length; i++)
 			this.patternLocators[i].initializePolymorphicSearch(locator);
 	}
 
+	@Override
 	public int match(ASTNode node, MatchingNodeSet nodeSet) {
 		int level = IMPOSSIBLE_MATCH;
 		for (int i = 0, length = this.patternLocators.length; i < length; i++) {
@@ -58,6 +59,7 @@ public class OrLocator extends PatternLocator {
 		return level;
 	}
 
+	@Override
 	public int match(Expression node, MatchingNodeSet nodeSet) {
 		int level = IMPOSSIBLE_MATCH;
 		for (int i = 0, length = this.patternLocators.length; i < length; i++) {
@@ -71,6 +73,7 @@ public class OrLocator extends PatternLocator {
 		return level;
 	}
 
+	@Override
 	public int match(FieldDeclaration node, MatchingNodeSet nodeSet) {
 		int level = IMPOSSIBLE_MATCH;
 		for (int i = 0, length = this.patternLocators.length; i < length; i++) {
@@ -84,6 +87,7 @@ public class OrLocator extends PatternLocator {
 		return level;
 	}
 
+	@Override
 	public int match(MethodDeclaration node, MatchingNodeSet nodeSet) {
 		int level = IMPOSSIBLE_MATCH;
 		for (int i = 0, length = this.patternLocators.length; i < length; i++) {
@@ -97,6 +101,7 @@ public class OrLocator extends PatternLocator {
 		return level;
 	}
 
+	@Override
 	public int match(Reference node, MatchingNodeSet nodeSet) {
 		int level = IMPOSSIBLE_MATCH;
 		for (int i = 0, length = this.patternLocators.length; i < length; i++) {
@@ -110,6 +115,7 @@ public class OrLocator extends PatternLocator {
 		return level;
 	}
 
+	@Override
 	public int match(TypeDeclaration node, MatchingNodeSet nodeSet) {
 		int level = IMPOSSIBLE_MATCH;
 		for (int i = 0, length = this.patternLocators.length; i < length; i++) {
@@ -123,6 +129,7 @@ public class OrLocator extends PatternLocator {
 		return level;
 	}
 
+	@Override
 	public int match(TypeReference node, MatchingNodeSet nodeSet) {
 		int level = IMPOSSIBLE_MATCH;
 		for (int i = 0, length = this.patternLocators.length; i < length; i++) {
@@ -136,6 +143,7 @@ public class OrLocator extends PatternLocator {
 		return level;
 	}
 	
+	@Override
 	public int match(CallExpression node, MatchingNodeSet nodeSet) {
 		int level = IMPOSSIBLE_MATCH;
 		for (int i = 0, length = this.patternLocators.length; i < length; i++) {
@@ -149,6 +157,7 @@ public class OrLocator extends PatternLocator {
 		return level;
 	}
 
+	@Override
 	public void matchReportReference(ASTNode reference, IModelElement element,
 			Scope scope, int accuracy, MatchLocator locator)
 			throws CoreException {
@@ -158,6 +167,7 @@ public class OrLocator extends PatternLocator {
 		}
 	}
 
+	@Override
 	public int matchContainer() {
 		int result = 0;
 		for (int i = 0, length = this.patternLocators.length; i < length; i++)
@@ -166,6 +176,7 @@ public class OrLocator extends PatternLocator {
 	}
 
 
+	@Override
 	public SearchMatch newDeclarationMatch(ASTNode reference,
 			IModelElement element, int accuracy,
 			MatchLocator locator) {
@@ -190,6 +201,7 @@ public class OrLocator extends PatternLocator {
 				reference.matchStart(), reference.matchLength());
 	}
 
+	@Override
 	public int resolveLevel(ASTNode node) {
 		int level = IMPOSSIBLE_MATCH;
 		for (int i = 0, length = this.patternLocators.length; i < length; i++) {

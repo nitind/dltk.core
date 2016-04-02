@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.mixin;
 
@@ -90,12 +89,14 @@ public class MixinSourceElementRequestor implements ISourceElementRequestor {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void acceptFieldReference(String fieldName, int sourcePosition) {
 	}
 
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void acceptMethodReference(String methodName, int argCount,
 			int sourcePosition, int sourceEndPosition) {
 	}
@@ -103,16 +104,19 @@ public class MixinSourceElementRequestor implements ISourceElementRequestor {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void acceptPackage(int declarationStart, int declarationEnd,
 			String name) {
 	}
 
+	@Override
 	public void acceptTypeReference(String typeName, int sourcePosition) {
 	}
 
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public boolean enterFieldCheckDuplicates(FieldInfo info) {
 		return false;
 	}
@@ -120,33 +124,42 @@ public class MixinSourceElementRequestor implements ISourceElementRequestor {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void enterMethodRemoveSame(MethodInfo info) {
 	}
 
+	@Override
 	public void enterModule() {
 	}
 
+	@Override
 	public void enterModuleRoot() {
 	}
 
+	@Override
 	public boolean enterTypeAppend(String fullName, String delimiter) {
 		return false;
 	}
 
+	@Override
 	public void exitModule(int declarationEnd) {
 	}
 
+	@Override
 	public void exitModuleRoot() {
 	}
 
+	@Override
 	public void exitField(int declarationEnd) {
 		exitElement();
 	}
 
+	@Override
 	public void exitMethod(int declarationEnd) {
 		exitElement();
 	}
 
+	@Override
 	public void exitType(int declarationEnd) {
 		exitElement();
 	}
@@ -154,6 +167,7 @@ public class MixinSourceElementRequestor implements ISourceElementRequestor {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void enterField(FieldInfo info) {
 		enterElement(info.name);
 		IMixinRequestor.ElementInfo elInfo = new IMixinRequestor.ElementInfo();
@@ -170,6 +184,7 @@ public class MixinSourceElementRequestor implements ISourceElementRequestor {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void enterMethod(MethodInfo info) {
 		enterElement(info.name);
 		IMixinRequestor.ElementInfo elInfo = new IMixinRequestor.ElementInfo();
@@ -183,6 +198,7 @@ public class MixinSourceElementRequestor implements ISourceElementRequestor {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void enterType(TypeInfo info) {
 		enterElement(info.name);
 		IMixinRequestor.ElementInfo elInfo = new IMixinRequestor.ElementInfo();
@@ -196,13 +212,16 @@ public class MixinSourceElementRequestor implements ISourceElementRequestor {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void acceptImport(ImportInfo importInfo) {
 	}
 
+	@Override
 	public void enterNamespace(String[] namespace) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void exitNamespace() {
 		// TODO Auto-generated method stub
 	}

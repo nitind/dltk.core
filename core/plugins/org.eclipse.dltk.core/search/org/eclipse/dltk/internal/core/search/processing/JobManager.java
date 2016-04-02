@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.processing;
 
@@ -312,16 +311,20 @@ public abstract class JobManager implements Runnable {
 	public abstract String processName();
 
 	private static final class WaitJob implements IJob {
+		@Override
 		public boolean belongsTo(String jobFamily) {
 			return false;
 		}
 
+		@Override
 		public void cancel() {
 		}
 
+		@Override
 		public void ensureReadyToRun() {
 		}
 
+		@Override
 		public boolean execute(IProgressMonitor progress) {
 			return false;
 		}
@@ -421,6 +424,7 @@ public abstract class JobManager implements Runnable {
 	/**
 	 * Infinite loop performing resource indexing
 	 */
+	@Override
 	public void run() {
 		long idlingStart = -1;
 		activateProcessing();

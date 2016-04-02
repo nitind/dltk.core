@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.search.indexing;
 
@@ -63,6 +62,7 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 	 * @see ISourceElementRequestor#acceptFieldReference(char[], int)
 	 * @since 2.0
 	 */
+	@Override
 	public void acceptFieldReference(String fieldName, int sourcePosition) {
 		this.indexer.addFieldReference(fieldName);
 	}
@@ -78,6 +78,7 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 	 * @see ISourceElementRequestor#acceptMethodReference(char[], int, int, int)
 	 * @since 2.0
 	 */
+	@Override
 	public void acceptMethodReference(String methodName, int argCount,
 			int sourcePosition, int sourceEndPosition) {
 		this.indexer.addMethodReference(methodName, argCount);
@@ -94,6 +95,7 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 	/**
 	 * @see ISourceElementRequestor#acceptTypeReference(char[], int)
 	 */
+	@Override
 	public void acceptTypeReference(String simpleTypeName, int sourcePosition) {
 		this.indexer.addTypeReference(simpleTypeName);
 	}
@@ -128,6 +130,7 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void enterType(TypeInfo typeInfo) {
 		// eliminate possible qualifications, given they need to be fully
 		// resolved again
@@ -166,6 +169,7 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 	 * @see ISourceElementRequestor#enterField(FieldInfo)
 	 * @since 2.0
 	 */
+	@Override
 	public void enterField(FieldInfo fieldInfo) {
 		this.indexer.addFieldDeclaration(fieldInfo.name, fieldInfo.type);
 		this.methodDepth++;
@@ -175,6 +179,7 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 	 * @see ISourceElementRequestor#enterMethod(MethodInfo)
 	 * @since 2.0
 	 */
+	@Override
 	public void enterMethod(MethodInfo methodInfo) {
 		this.indexer.addMethodDeclaration(methodInfo.modifiers, namespace(),
 				this.enclosingTypeNames(), methodInfo.name,
@@ -195,6 +200,7 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 	/**
 	 * @see ISourceElementRequestor#exitType(int)
 	 */
+	@Override
 	public void exitType(int declarationEnd) {
 		popTypeName();
 	}
@@ -236,23 +242,28 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void enterMethodRemoveSame(MethodInfo info) {
 		if (DLTKCore.DEBUG) {
 			System.out.println("TODO: Add replace method code."); //$NON-NLS-1$
 		}
 	}
 
+	@Override
 	public void enterModule() {
 	}
 
+	@Override
 	public void exitField(int declarationEnd) {
 		this.methodDepth--;
 	}
 
+	@Override
 	public void exitMethod(int declarationEnd) {
 		this.methodDepth--;
 	}
 
+	@Override
 	public void exitModule(int declarationEnd) {
 		indexer.ensureDocumentAdded();
 	}
@@ -260,6 +271,7 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void acceptPackage(int declarationStart, int declarationEnd,
 			String name) {
 		// this.pkgName = name;
@@ -268,6 +280,7 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public boolean enterFieldCheckDuplicates(FieldInfo info) {
 		this.indexer.addFieldDeclaration(info.name, info.type);
 		this.methodDepth++;
@@ -283,32 +296,39 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 		return true;
 	}
 
+	@Override
 	public void enterModuleRoot() {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public boolean enterTypeAppend(String fullName, String delimiter) {
 		return false;
 	}
 
+	@Override
 	public void exitModuleRoot() {
 	}
 
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void acceptImport(ImportInfo importInfo) {
 	}
 
+	@Override
 	public void enterNamespace(String[] namespace) {
 		namespaces.push(namespace);
 	}
 
+	@Override
 	public void exitNamespace() {
 		namespaces.pop();
 	}
 
+	@Override
 	public SourceElementRequestorMode getMode() {
 		return SourceElementRequestorMode.INDEX;
 	}

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.matching;
 
@@ -126,6 +125,7 @@ public class MethodPattern extends DLTKSearchPattern implements IIndexConstants 
 		methodArguments = arguments;
 	}
 
+	@Override
 	public void decodeIndexKey(char[] key) {
 		int last = key.length - 1;
 		this.parameterCount = 0;
@@ -145,10 +145,12 @@ public class MethodPattern extends DLTKSearchPattern implements IIndexConstants 
 		}
 	}
 
+	@Override
 	public SearchPattern getBlankPattern() {
 		return new MethodPattern(R_EXACT_MATCH | R_CASE_SENSITIVE, getToolkit());
 	}
 
+	@Override
 	public char[][] getIndexCategories() {
 		if (this.findReferences)
 			return this.findDeclarations ? REF_AND_DECL_CATEGORIES
@@ -166,16 +168,19 @@ public class MethodPattern extends DLTKSearchPattern implements IIndexConstants 
 		return methodParameters;
 	}
 
+	@Override
 	public boolean isPolymorphicSearch() {
 		return this.findReferences;
 	}
 
+	@Override
 	public boolean matchesDecodedKey(SearchPattern decodedPattern) {
 		MethodPattern pattern = (MethodPattern) decodedPattern;
 		return (this.parameterCount == pattern.parameterCount || this.parameterCount == -1)
 				&& matchesName(this.selector, pattern.selector);
 	}
 
+	@Override
 	public EntryResult[] queryIn(Index index) throws IOException {
 		char[] key = this.selector; // can be null
 		int matchRule = getMatchRule();
@@ -214,6 +219,7 @@ public class MethodPattern extends DLTKSearchPattern implements IIndexConstants 
 		// null
 	}
 
+	@Override
 	protected StringBuffer print(StringBuffer output) {
 		if (this.findDeclarations) {
 			output.append(this.findReferences ? "MethodCombinedPattern: " //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -26,14 +26,17 @@ public class RemoveIndexRequest extends IndexRequest {
 		this.path = path;
 	}
 
+	@Override
 	protected String getName() {
 		return path.toString();
 	}
 
+	@Override
 	protected void run() throws CoreException, IOException {
 		getIndexer().getIndexManager().removeIndex(path);
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -52,6 +55,7 @@ public class RemoveIndexRequest extends IndexRequest {
 		return true;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

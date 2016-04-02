@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search;
 
@@ -35,6 +34,7 @@ public class DLTKWorkspaceScope extends DLTKSearchScope {
 
 	protected boolean needsInitialize;
 
+	@Override
 	public boolean encloses(IModelElement element) {
 		/*
 		 * if (this.needsInitialize) { this.initialize(); } return
@@ -49,6 +49,7 @@ public class DLTKWorkspaceScope extends DLTKSearchScope {
 		return true;
 	}
 
+	@Override
 	public boolean encloses(String resourcePathString) {
 		/*
 		 * if (this.needsInitialize) { this.initialize(); } return
@@ -63,6 +64,7 @@ public class DLTKWorkspaceScope extends DLTKSearchScope {
 		return true;
 	}
 
+	@Override
 	public IPath[] enclosingProjectsAndZips() {
 		if (this.needsInitialize) {
 			this.initialize(5);
@@ -70,10 +72,12 @@ public class DLTKWorkspaceScope extends DLTKSearchScope {
 		return super.enclosingProjectsAndZips();
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		return o instanceof DLTKWorkspaceScope;
 	}
 
+	@Override
 	public AccessRuleSet getAccessRuleSet(String relativePath,
 			String containerPath) {
 		if (this.pathRestrictions == null)
@@ -81,10 +85,12 @@ public class DLTKWorkspaceScope extends DLTKSearchScope {
 		return super.getAccessRuleSet(relativePath, containerPath);
 	}
 
+	@Override
 	public int hashCode() {
 		return DLTKWorkspaceScope.class.hashCode();
 	}
 
+	@Override
 	public void initialize(int size) {
 		super.initialize(size);
 		try {
@@ -104,6 +110,7 @@ public class DLTKWorkspaceScope extends DLTKSearchScope {
 		this.needsInitialize = false;
 	}
 
+	@Override
 	public void processDelta(IModelElementDelta delta) {
 		if (this.needsInitialize)
 			return;
@@ -157,6 +164,7 @@ public class DLTKWorkspaceScope extends DLTKSearchScope {
 		}
 	}
 
+	@Override
 	public String toString() {
 		return "DLTKWorkspaceScope(" + toolkit.getLanguageName() + ')'; //$NON-NLS-1$
 	}

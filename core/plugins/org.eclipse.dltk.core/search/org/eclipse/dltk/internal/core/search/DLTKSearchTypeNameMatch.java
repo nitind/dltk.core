@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search;
 
@@ -36,6 +35,7 @@ public class DLTKSearchTypeNameMatch extends TypeNameMatch {
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true; // avoid unnecessary calls for identical objects
@@ -51,11 +51,7 @@ public class DLTKSearchTypeNameMatch extends TypeNameMatch {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jdt.core.search.TypeNameMatch#getModifiers()
-	 */
+	@Override
 	public int getModifiers() {
 		return this.modifiers;
 	}
@@ -66,15 +62,12 @@ public class DLTKSearchTypeNameMatch extends TypeNameMatch {
 	 * 
 	 * @see org.eclipse.jdt.core.search.TypeNameMatch#getType()
 	 */
+	@Override
 	public IType getType() {
 		return this.type;
 	}
 
-	/*
-	 * (non-Javadoc) Returns the hash code of the matched type.
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
+	@Override
 	public int hashCode() {
 		if (this.type == null)
 			return this.modifiers;
@@ -101,11 +94,7 @@ public class DLTKSearchTypeNameMatch extends TypeNameMatch {
 		this.type = type;
 	}
 
-	/*
-	 * (non-Javadoc) Returns the string of the matched type.
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
+	@Override
 	public String toString() {
 		if (this.type == null)
 			return super.toString();

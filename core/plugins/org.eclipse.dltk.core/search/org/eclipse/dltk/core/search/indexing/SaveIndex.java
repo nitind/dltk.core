@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.search.indexing;
 
@@ -25,6 +24,7 @@ public class SaveIndex extends IndexRequest {
 	public SaveIndex(IPath containerPath, IndexManager manager) {
 		super(containerPath, manager);
 	}
+	@Override
 	public boolean execute(IProgressMonitor progressMonitor) {
 
 		if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) return true;
@@ -49,6 +49,7 @@ public class SaveIndex extends IndexRequest {
 		}
 		return true;
 	}
+	@Override
 	public String toString() {
 		return "saving index for " + this.containerPath; //$NON-NLS-1$
 	}

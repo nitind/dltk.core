@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.search.indexing;
 
@@ -22,16 +21,19 @@ public abstract class IndexRequest implements IJob {
 		this.containerPath = containerPath;
 		this.manager = manager;
 	}
+	@Override
 	public boolean belongsTo(String projectNameOrArchivePath) {
 		// used to remove pending jobs because the project was deleted... not to delete index files
 		// can be found either by project name or  path name
 		return projectNameOrArchivePath.equals(this.containerPath.segment(0))
 			|| projectNameOrArchivePath.equals(this.containerPath.toString());
 	}
+	@Override
 	public void cancel() {
 		this.manager.jobWasCancelled(this.containerPath);
 		this.isCancelled = true;
 	}
+	@Override
 	public void ensureReadyToRun() {
 		// tag the index as inconsistent
 		this.manager.aboutToUpdateIndex(this.containerPath, updatedIndexState());

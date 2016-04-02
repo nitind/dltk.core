@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search;
 
@@ -264,11 +263,7 @@ public class HierarchyScope extends DLTKSearchScope {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see IJavaSearchScope#encloses(String)
-	 */
+	@Override
 	public boolean encloses(String resourcePath) {
 		if (this.hierarchy == null) {
 			if (resourcePath.equals(this.focusPath)) {
@@ -311,11 +306,7 @@ public class HierarchyScope extends DLTKSearchScope {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see IJavaSearchScope#encloses(IModelElement)
-	 */
+	@Override
 	public boolean encloses(IModelElement element) {
 		if (this.hierarchy == null) {
 			if (this.focusType.equals(element.getAncestor(IModelElement.TYPE))) {
@@ -374,6 +365,7 @@ public class HierarchyScope extends DLTKSearchScope {
 	 * 
 	 * @deprecated
 	 */
+	@Override
 	public IPath[] enclosingProjectsAndZips() {
 		if (this.needsRefresh) {
 			try {
@@ -437,6 +429,7 @@ public class HierarchyScope extends DLTKSearchScope {
 		// }
 	}
 
+	@Override
 	public String toString() {
 		return "HierarchyScope on " + ((ModelElement) this.focusType).toStringWithAncestors(); //$NON-NLS-1$
 	}

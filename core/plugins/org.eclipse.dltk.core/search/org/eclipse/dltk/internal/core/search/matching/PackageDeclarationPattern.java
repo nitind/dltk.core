@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2009 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,11 +26,13 @@ public class PackageDeclarationPattern extends DLTKSearchPattern implements
 		this.pkgName = pkgName;
 	}
 
+	@Override
 	public EntryResult[] queryIn(Index index) {
 		// package declarations are not indexed
 		return null;
 	}
 
+	@Override
 	protected StringBuffer print(StringBuffer output) {
 		output.append("PackageDeclarationPattern: <"); //$NON-NLS-1$
 		if (this.pkgName != null)

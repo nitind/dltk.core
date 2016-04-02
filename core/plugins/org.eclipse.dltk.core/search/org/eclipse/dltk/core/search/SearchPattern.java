@@ -1525,9 +1525,7 @@ public abstract class SearchPattern extends InternalSearchPattern {
 		return matchRule;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
+	@Override
 	public String toString() {
 		return "SearchPattern"; //$NON-NLS-1$
 	}

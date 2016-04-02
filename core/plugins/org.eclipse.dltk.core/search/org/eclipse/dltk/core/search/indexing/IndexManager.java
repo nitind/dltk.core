@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.core.search.indexing;
 
@@ -497,6 +496,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
 	 * completed. Note: clients awaiting until the job count is zero are still
 	 * waiting at this point.
 	 */
+	@Override
 	protected synchronized void moveToNextJob() {
 		// remember that one job was executed, and we will need to save indexes
 		// at some point
@@ -507,6 +507,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
 	/**
 	 * No more job awaiting.
 	 */
+	@Override
 	protected void notifyIdle(long idlingTime) {
 		if (idlingTime > 1000 && this.needToSave) {
 			this.saveIndexes();
@@ -516,6 +517,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
 	/**
 	 * Name of the background process
 	 */
+	@Override
 	public String processName() {
 		return Messages.process_name;
 	}
@@ -749,6 +751,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
 	/**
 	 * Flush current state
 	 */
+	@Override
 	public synchronized void reset() {
 		super.reset();
 		if (this.indexes != null) {
@@ -850,6 +853,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
 		this.needToSave = !allSaved;
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer(10);
 		buffer.append(super.toString());

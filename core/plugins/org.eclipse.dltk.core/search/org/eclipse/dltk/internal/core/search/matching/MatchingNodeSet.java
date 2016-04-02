@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.matching;
 
@@ -136,6 +135,7 @@ public class MatchingNodeSet {
 		nodes.toArray(result);
 		// sort nodes by source starts
 		Util.Comparer comparer = new Util.Comparer() {
+			@Override
 			public int compare(Object o1, Object o2) {
 				return ((ASTNode) o1).sourceStart()
 						- ((ASTNode) o2).sourceStart();
@@ -167,6 +167,7 @@ public class MatchingNodeSet {
 		return this.matchingNodes.removeKey(node);
 	}
 
+	@Override
 	public String toString() {
 		// TODO (jerome) should show both tables
 		StringBuffer result = new StringBuffer();

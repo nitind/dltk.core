@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.matching;
 
@@ -168,6 +167,7 @@ public class DLTKSearchPattern extends SearchPattern {
 		this.matchMode = rule & MATCH_MODE_MASK;
 	}
 
+	@Override
 	public SearchPattern getBlankPattern() {
 		return null;
 	}
@@ -301,6 +301,7 @@ public class DLTKSearchPattern extends SearchPattern {
 	// }
 	// //setTypeArguments(Util.getAllTypeArguments(this.typeSignatures));
 	// }
+	@Override
 	public final String toString() {
 		return print(new StringBuffer(30)).toString();
 	}

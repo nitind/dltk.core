@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search;
 
@@ -49,19 +48,23 @@ public class PatternSearchJob implements IJob {
 		this.requestor = requestor;
 	}
 
+	@Override
 	public boolean belongsTo(String jobFamily) {
 		return true;
 	}
 
+	@Override
 	public void cancel() {
 		// search job is cancelled through progress
 	}
 
+	@Override
 	public void ensureReadyToRun() {
 		if (!this.areIndexesReady)
 			getIndexes(null/* progress */); // may trigger some index recreation
 	}
 
+	@Override
 	public boolean execute(IProgressMonitor progressMonitor) {
 		if (progressMonitor != null && progressMonitor.isCanceled())
 			throw new OperationCanceledException();
@@ -158,6 +161,7 @@ public class PatternSearchJob implements IJob {
 		}
 	}
 
+	@Override
 	public String toString() {
 		return "searching " + pattern.toString(); //$NON-NLS-1$
 	}

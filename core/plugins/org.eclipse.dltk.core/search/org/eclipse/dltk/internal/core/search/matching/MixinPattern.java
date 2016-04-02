@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.matching;
 
@@ -25,26 +24,32 @@ public class MixinPattern extends DLTKSearchPattern implements IIndexConstants {
 		this.mixinKey = key;
 	}
 
+	@Override
 	public void decodeIndexKey(char[] key) {
 		this.mixinKey = key;
 	}
 
+	@Override
 	public SearchPattern getBlankPattern() {
 		return new MixinPattern(null, R_EXACT_MATCH | R_CASE_SENSITIVE, getToolkit());
 	}
 
+	@Override
 	public char[] getIndexKey() {
 		return this.mixinKey;
 	}
 
+	@Override
 	public char[][] getIndexCategories() {
 		return new char[][] {MIXIN};
 	}
 
+	@Override
 	public boolean matchesDecodedKey(SearchPattern decodedPattern) {
 		return true; // index key is not encoded so query results all match
 	}
 
+	@Override
 	protected StringBuffer print(StringBuffer output) {
 		
 		if (mixinKey == null) {

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.matching;
 
@@ -191,6 +190,7 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 	 * typeParameters / pkgName / superClassOrInterface classOrInterface
 	 * modifiers
 	 */
+	@Override
 	public void decodeIndexKey(char[] key) {
 		int slash = CharOperation.indexOf(IIndexConstants.SEPARATOR, key, 0);
 		this.superSimpleName = CharOperation.subarray(key, 0, slash);
@@ -248,15 +248,18 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 		this.modifiers = key[slash + 3]; // implicit cast to int type
 	}
 
+	@Override
 	public SearchPattern getBlankPattern() {
 		return new SuperTypeReferencePattern(R_EXACT_MATCH | R_CASE_SENSITIVE,
 				getToolkit());
 	}
 
+	@Override
 	public char[][] getIndexCategories() {
 		return CATEGORIES;
 	}
 
+	@Override
 	public boolean matchesDecodedKey(SearchPattern decodedPattern) {
 		SuperTypeReferencePattern pattern = (SuperTypeReferencePattern) decodedPattern;
 		if (this.superRefKind == ONLY_SUPER_CLASSES
@@ -278,6 +281,7 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 		return matchesName(this.superSimpleName, pattern.superSimpleName);
 	}
 
+	@Override
 	public EntryResult[] queryIn(Index index) throws IOException {
 		char[] key = this.superSimpleName; // can be null
 		int matchRule = getMatchRule();
@@ -314,6 +318,7 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 		// null
 	}
 
+	@Override
 	protected StringBuffer print(StringBuffer output) {
 		switch (this.superRefKind) {
 		case ALL_SUPER_TYPES:

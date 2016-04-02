@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -21,6 +21,7 @@ public class MatchingCollector<E> implements IMatchingCollector<E> {
 		this.nodeSet = nodeSet;
 	}
 
+	@Override
 	public void report(E node) {
 		MatchLevel level = predicate.match(node);
 		if (level != null) {

@@ -67,6 +67,7 @@ public class MethodNameMatchRequestorWrapper implements
 		}
 	}
 
+	@Override
 	public void acceptMethod(int modifiers, char[] packageName,
 			char[] simpleMethodName, char[][] enclosingTypeNames,
 			char[][] parameterNames, String path) {

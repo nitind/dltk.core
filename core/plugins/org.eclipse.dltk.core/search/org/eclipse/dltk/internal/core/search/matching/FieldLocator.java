@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.matching;
 
@@ -21,6 +20,7 @@ import org.eclipse.dltk.core.search.matching.PatternLocator;
 //TODO REVIEW IT
 public class FieldLocator extends PatternLocator {
 	
+	@Override
 	public int match(FieldDeclaration node, MatchingNodeSet nodeSet) {		
 		if (!this.pattern.findDeclarations)
 			return IMPOSSIBLE_MATCH;
@@ -40,12 +40,15 @@ public class FieldLocator extends PatternLocator {
 	/*
 	 * Clear caches
 	 */
+	@Override
 	protected void clear() {
 	}
 
+	@Override
 	public void initializePolymorphicSearch(MatchLocator locator) {
 	}
 
+	@Override
 	public int match(ASTNode node, MatchingNodeSet nodeSet) {
 //		int declarationsLevel = IMPOSSIBLE_MATCH;
 		if (this.pattern.findReferences) {
@@ -71,6 +74,7 @@ public class FieldLocator extends PatternLocator {
 	
 	// public int match(TypeDeclaration node, MatchingNodeSet nodeSet) - SKIP IT
 	// public int match(TypeReference node, MatchingNodeSet nodeSet) - SKIP IT
+	@Override
 	public int matchContainer() {
 		if (this.pattern.findReferences) {
 			// need to look almost everywhere to find in javadocs and static
@@ -80,18 +84,22 @@ public class FieldLocator extends PatternLocator {
 		return COMPILATION_UNIT_CONTAINER | CLASS_CONTAINER | METHOD_CONTAINER;
 	}
 
+	@Override
 	public SearchMatch newDeclarationMatch(ASTNode reference, IModelElement element, int accuracy, 
 			MatchLocator locator) {		
 		return super.newDeclarationMatch(reference, element, accuracy, locator);
 	}
 
+	@Override
 	protected int referenceType() {
 		return IModelElement.FIELD;
 	}
 
+	@Override
 	public String toString() {
 		return "Locator for " + this.pattern.toString(); //$NON-NLS-1$
 	}
+	@Override
 	public int match(Reference node, MatchingNodeSet nodeSet) { // interested in NameReference & its subtypes
 		if (!this.pattern.findReferences) return IMPOSSIBLE_MATCH;
 		if (!(node instanceof SimpleReference)) return IMPOSSIBLE_MATCH;	

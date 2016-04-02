@@ -83,6 +83,7 @@ public class DLTKSearchScope extends AbstractSearchScope {
 		// ModelManager.getModelManager().rememberScope(this);
 	}
 
+	@Override
 	public IDLTKLanguageToolkit getLanguageToolkit() {
 		return toolkit;
 	}
@@ -438,6 +439,7 @@ public class DLTKSearchScope extends AbstractSearchScope {
 			rehash();
 	}
 
+	@Override
 	public boolean encloses(String resourcePathString) {
 		int separatorIndex = resourcePathString.indexOf(FILE_ENTRY_SEPARATOR);
 		if (separatorIndex != -1) {
@@ -541,11 +543,7 @@ public class DLTKSearchScope extends AbstractSearchScope {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see IJavaSearchScope#encloses(IModelElement)
-	 */
+	@Override
 	public boolean encloses(IModelElement element) {
 		IDLTKLanguageToolkit elementToolkit = DLTKLanguageManager
 				.getLanguageToolkit(element);
@@ -580,6 +578,7 @@ public class DLTKSearchScope extends AbstractSearchScope {
 		return indexOf(fullResourcePathString) >= 0;
 	}
 
+	@Override
 	public IPath[] enclosingProjectsAndZips() {
 		return this.enclosingProjectsAndArchives;
 	}
@@ -663,6 +662,7 @@ public class DLTKSearchScope extends AbstractSearchScope {
 		return path;
 	}
 
+	@Override
 	public void processDelta(IModelElementDelta delta) {
 		switch (delta.getKind()) {
 		case IModelElementDelta.CHANGED:
@@ -807,6 +807,7 @@ public class DLTKSearchScope extends AbstractSearchScope {
 		this.threshold = newScope.threshold;
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer result = new StringBuffer("DLTKSearchScope on "); //$NON-NLS-1$
 		if (this.elements != null) {

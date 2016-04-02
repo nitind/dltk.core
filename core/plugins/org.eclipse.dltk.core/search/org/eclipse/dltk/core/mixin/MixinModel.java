@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.mixin;
 
@@ -194,10 +193,12 @@ public class MixinModel {
 			super(size, overflow);
 		}
 
+		@Override
 		protected boolean close(LRUCacheEntry entry) {
 			return true;
 		}
 
+		@Override
 		protected LRUCache newInstance(int size, int overflow) {
 			return new RequestCache(size, overflow);
 		}
@@ -206,6 +207,7 @@ public class MixinModel {
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	public IMixinElement[] find(String pattern, long delta) {
 		return find(pattern, new NullProgressMonitor());
 	}
@@ -307,6 +309,7 @@ public class MixinModel {
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	public IMixinElement[] find(String pattern) {
 		return find(pattern, new NullProgressMonitor());
 	}
@@ -314,6 +317,7 @@ public class MixinModel {
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	public String[] findKeys(String pattern) {
 		return findKeys(pattern, new NullProgressMonitor());
 	}
@@ -453,6 +457,7 @@ public class MixinModel {
 	}
 
 	private IMixinChangedListener changedListener = new IMixinChangedListener() {
+		@Override
 		public void elementChanged(ElementChangedEvent event) {
 			IModelElementDelta delta = event.getDelta();
 			synchronized (MixinModel.this) {
@@ -493,6 +498,7 @@ public class MixinModel {
 				if (delta.getAffectedChildren().length == 0) {
 					try {
 						element.accept(new IModelElementVisitor() {
+							@Override
 							public boolean visit(IModelElement element) {
 								if (element.getElementType() == ISourceModule.SOURCE_MODULE) {
 									remove((ISourceModule) element);
@@ -529,6 +535,7 @@ public class MixinModel {
 			}
 		}
 
+		@Override
 		public void resourceChanged(IResourceChangeEvent event) {
 			int eventType = event.getType();
 			IResource resource = event.getResource();
@@ -695,6 +702,7 @@ public class MixinModel {
 
 		private Set<MixinElement> children = new HashSet<MixinElement>();
 
+		@Override
 		public boolean equals(Object obj) {
 			if (this == obj)
 				return true;
@@ -704,6 +712,7 @@ public class MixinModel {
 			return false;
 		}
 
+		@Override
 		public int hashCode() {
 			return this.key.hashCode();
 		}
@@ -712,6 +721,7 @@ public class MixinModel {
 		 * public MixinElement(String key) { this.key = key; }
 		 */
 
+		@Override
 		public String toString() {
 			return this.getLastKeySegment() + " final[" + this.bFinal + "]" //$NON-NLS-1$ //$NON-NLS-2$
 					+ this.children + " "; //$NON-NLS-1$
@@ -748,6 +758,7 @@ public class MixinModel {
 			}
 		}
 
+		@Override
 		public IMixinElement[] getChildren() {
 			this.validate();
 			synchronized (MixinModel.this) {
@@ -755,12 +766,14 @@ public class MixinModel {
 			}
 		}
 
+		@Override
 		public IMixinElement getChildren(String key) {
 			this.validate();
 			return MixinModel.this.get(this.key
 					+ IMixinRequestor.MIXIN_NAME_SEPARATOR + key);
 		}
 
+		@Override
 		public String getKey() {
 			return this.key;
 		}
@@ -773,6 +786,7 @@ public class MixinModel {
 			return key.substring(0, pos);
 		}
 
+		@Override
 		public String getLastKeySegment() {
 			int pos = key.lastIndexOf(IMixinRequestor.MIXIN_NAME_SEPARATOR);
 			if (pos == -1) {
@@ -781,6 +795,7 @@ public class MixinModel {
 			return key.substring(pos + 1);
 		}
 
+		@Override
 		public IMixinElement getParent() {
 			String parentKey = this.getParentKey();
 			if (parentKey == null) {
@@ -790,6 +805,7 @@ public class MixinModel {
 
 		}
 
+		@Override
 		public ISourceModule[] getSourceModules() {
 			this.validate();
 			// TODO understand why we need this
@@ -802,6 +818,7 @@ public class MixinModel {
 			}
 		}
 
+		@Override
 		public Object[] getObjects(ISourceModule module) {
 			this.validate();
 			synchronized (MixinModel.this) {
@@ -816,6 +833,7 @@ public class MixinModel {
 			}
 		}
 
+		@Override
 		public Object[] getAllObjects() {
 			this.validate();
 			synchronized (MixinModel.this) {
@@ -833,6 +851,7 @@ public class MixinModel {
 			return bFinal;
 		}
 
+		@Override
 		public void close() {
 			synchronized (MixinModel.this) {
 				knownKeysCache.remove(key);
@@ -883,6 +902,7 @@ public class MixinModel {
 	};
 
 	private final class MixinRequestor implements IMixinRequestor {
+		@Override
 		public void reportElement(ElementInfo info) {
 			// if( DLTKCore.VERBOSE_MIXIN ) {
 			// System.out.println("Append mixin:" + info.key);

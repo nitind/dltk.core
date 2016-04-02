@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -25,6 +25,7 @@ public class OrMatchingPredicate<E> implements IMatchingPredicate<E> {
 		predicates.add(predicate);
 	}
 
+	@Override
 	public MatchLevel match(E node) {
 		for (IMatchingPredicate<E> predicate : predicates) {
 			final MatchLevel level = predicate.match(node);
@@ -35,6 +36,7 @@ public class OrMatchingPredicate<E> implements IMatchingPredicate<E> {
 		return null;
 	}
 
+	@Override
 	public MatchLevel resolvePotentialMatch(E node) {
 		for (IMatchingPredicate<E> predicate : predicates) {
 			final MatchLevel level = predicate.resolvePotentialMatch(node);
@@ -67,6 +69,7 @@ public class OrMatchingPredicate<E> implements IMatchingPredicate<E> {
 		}
 	}
 
+	@Override
 	public boolean contains(IMatchingPredicate<E> predicate) {
 		// TODO Auto-generated method stub
 		return false;

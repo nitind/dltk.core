@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -25,16 +25,19 @@ public abstract class AbstractJob implements IJob {
 
 	protected boolean isCancelled = false;
 
+	@Override
 	public boolean belongsTo(String jobFamily) {
 		return false;
 	}
 
+	@Override
 	public void cancel() {
 		isCancelled = true;
 	}
 
 	// private Exception constructedAt;
 
+	@Override
 	public void ensureReadyToRun() {
 		if (DEBUG) {
 			// constructedAt = new Exception();
@@ -67,6 +70,7 @@ public abstract class AbstractJob implements IJob {
 		return shortClassName + '|' + savedName;
 	}
 
+	@Override
 	public final boolean execute(IProgressMonitor monitor) {
 		try {
 			final long startTime = DEBUG ? System.currentTimeMillis() : 0;

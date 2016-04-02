@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -53,10 +53,12 @@ public class ArchiveProjectFragmentRequest extends IndexRequest {
 		this.toolkit = toolkit;
 	}
 
+	@Override
 	protected String getName() {
 		return fragment.getElementName();
 	}
 
+	@Override
 	protected void run() throws CoreException, IOException {
 		IEnvironment environment = EnvironmentManager.getEnvironment(fragment
 				.getScriptProject());
@@ -165,6 +167,7 @@ public class ArchiveProjectFragmentRequest extends IndexRequest {
 	static class ExternalModuleVisitor implements IModelElementVisitor {
 		final Set<ISourceModule> modules = new HashSet<ISourceModule>();
 
+		@Override
 		public boolean visit(IModelElement element) {
 			if (element.getElementType() == IModelElement.SOURCE_MODULE) {
 				if (element instanceof IExternalSourceModule
@@ -184,6 +187,7 @@ public class ArchiveProjectFragmentRequest extends IndexRequest {
 		return visitor.modules;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -192,6 +196,7 @@ public class ArchiveProjectFragmentRequest extends IndexRequest {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

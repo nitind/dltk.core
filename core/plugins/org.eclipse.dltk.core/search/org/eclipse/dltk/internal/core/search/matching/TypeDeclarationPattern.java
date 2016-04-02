@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.matching;
 
@@ -112,6 +111,7 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 	 * secondary types as: simpleTypeName / packageName / enclosingTypeName /
 	 * modifiers / S
 	 */
+	@Override
 	public void decodeIndexKey(char[] key) {
 		int slash = CharOperation.indexOf(SEPARATOR, key, 0);
 		this.simpleName = CharOperation.subarray(key, 0, slash);
@@ -170,15 +170,18 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 		this.typeSuffix = TYPE_SUFFIX;
 	}
 
+	@Override
 	public SearchPattern getBlankPattern() {
 		return new TypeDeclarationPattern(R_EXACT_MATCH | R_CASE_SENSITIVE,
 				getToolkit());
 	}
 
+	@Override
 	public char[][] getIndexCategories() {
 		return CATEGORIES;
 	}
 
+	@Override
 	public boolean matchesDecodedKey(SearchPattern decodedPattern) {
 		TypeDeclarationPattern pattern = (TypeDeclarationPattern) decodedPattern;
 		switch (this.typeSuffix) {
@@ -218,6 +221,7 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 		return true;
 	}
 
+	@Override
 	public EntryResult[] queryIn(Index index) throws IOException {
 		char[] key = this.simpleName; // can be null
 		int matchRule = getMatchRule();
@@ -272,6 +276,7 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 		// null
 	}
 
+	@Override
 	protected StringBuffer print(StringBuffer output) {
 		switch (this.typeSuffix) {
 		case TYPE_SUFFIX:

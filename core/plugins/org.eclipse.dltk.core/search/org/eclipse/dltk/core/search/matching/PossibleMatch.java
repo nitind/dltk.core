@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.search.matching;
 
@@ -56,6 +55,7 @@ public class PossibleMatch implements ISourceModule {
 		this.nodeSet = null;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this.compoundName == null)
 			return super.equals(obj);
@@ -68,15 +68,14 @@ public class PossibleMatch implements ISourceModule {
 				((PossibleMatch) obj).compoundName);
 	}
 
+	@Override
 	public String getSourceContents() {
 		if (this.source != null)
 			return this.source;
 		return this.source = this.document.getContents();
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.ISourceModule#getContentsAsCharArray()
-	 */
+	@Override
 	public char[] getContentsAsCharArray() {
 		return getSourceContents().toCharArray();
 	}
@@ -86,6 +85,7 @@ public class PossibleMatch implements ISourceModule {
 	 * .class file for binary openable with attached source.
 	 * 
 	 */
+	@Override
 	public String getFileName() {
 		return this.openable.getElementName();
 	}
@@ -132,6 +132,7 @@ public class PossibleMatch implements ISourceModule {
 		return null;
 	}
 
+	@Override
 	public int hashCode() {
 		if (this.compoundName == null)
 			return super.hashCode();
@@ -141,10 +142,12 @@ public class PossibleMatch implements ISourceModule {
 		return hashCode;
 	}
 
+	@Override
 	public String toString() {
 		return this.openable == null ? "Fake PossibleMatch" : this.openable.toString(); //$NON-NLS-1$
 	}
 
+	@Override
 	public IModelElement getModelElement() {
 		return openable;
 	}

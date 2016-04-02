@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,6 +58,7 @@ public class LocalVariablePattern extends VariablePattern implements
 		this.localVariable = localVariable;
 	}
 
+	@Override
 	public void findIndexMatches(Index index, IndexQueryRequestor requestor,
 			SearchParticipant participant, IDLTKSearchScope scope,
 			IProgressMonitor progressMonitor) {
@@ -103,6 +104,7 @@ public class LocalVariablePattern extends VariablePattern implements
 		}
 	}
 
+	@Override
 	protected StringBuffer print(StringBuffer output) {
 		if (this.findDeclarations) {
 			output.append(this.findReferences ? "LocalVarCombinedPattern: " //$NON-NLS-1$
