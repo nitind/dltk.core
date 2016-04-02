@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -26,26 +26,32 @@ public class AssistParser implements IAssistParser {
 		this.parser = parser;
 	}
 
+	@Override
 	public ASTNode getAssistNodeParent() {
 		return parser.getAssistNodeParent();
 	}
 
+	@Override
 	public ModuleDeclaration getModule() {
 		return parser.getModule();
 	}
 
+	@Override
 	public void handleNotInElement(ASTNode unit, int position) {
 		parser.handleNotInElement(unit, position);
 	}
 
+	@Override
 	public ModuleDeclaration parse(IModuleSource sourceModule) {
 		return parser.parse(sourceModule);
 	}
 
+	@Override
 	public void parseBlockStatements(ASTNode node, ASTNode unit, int position) {
 		parser.parseBlockStatements(node, unit, position);
 	}
 
+	@Override
 	public void setSource(ModuleDeclaration unit) {
 		parser.setSource(unit);
 	}

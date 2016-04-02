@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -18,10 +18,12 @@ public class CompletionNameProviders {
 	private static class MemberCompletionNameProvider implements
 			ICompletionNameProvider<IMember> {
 
+		@Override
 		public String getCompletion(IMember t) {
 			return t.getElementName();
 		}
 
+		@Override
 		public String getName(IMember t) {
 			return t.getElementName();
 		}
@@ -44,10 +46,12 @@ public class CompletionNameProviders {
 			this.prefix = prefix;
 		}
 
+		@Override
 		public String getCompletion(IMember t) {
 			return t.getElementName();
 		}
 
+		@Override
 		public String getName(IMember t) {
 			return prefix + t.getElementName();
 		}
