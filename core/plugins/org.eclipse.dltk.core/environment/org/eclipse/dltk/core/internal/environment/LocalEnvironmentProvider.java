@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,10 +28,12 @@ public class LocalEnvironmentProvider implements IEnvironmentProvider {
 	public LocalEnvironmentProvider() {
 	}
 
+	@Override
 	public String getProviderName() {
 		return LocalEnvironment.getInstance().getName();
 	}
 
+	@Override
 	public IEnvironment getEnvironment(String envId) {
 		if (LocalEnvironment.ENVIRONMENT_ID.equals(envId)) {
 			return LocalEnvironment.getInstance();
@@ -39,17 +41,21 @@ public class LocalEnvironmentProvider implements IEnvironmentProvider {
 		return null;
 	}
 
+	@Override
 	public IEnvironment[] getEnvironments() {
 		return new IEnvironment[] { LocalEnvironment.getInstance() };
 	}
 
+	@Override
 	public boolean isInitialized() {
 		return true;
 	}
 
+	@Override
 	public void waitInitialized() {
 	}
 
+	@Override
 	public IEnvironment getProjectEnvironment(IProject project) {
 		if (project.isAccessible()) {
 			IPath location = project.getLocation();
@@ -63,9 +69,7 @@ public class LocalEnvironmentProvider implements IEnvironmentProvider {
 		return null;
 	}
 
-	/*
-	 * @see IEnvironmentProvider#getEnvironment(java.net.URI)
-	 */
+	@Override
 	public IEnvironment getEnvironment(URI locationURI) {
 		if (FILE_SCHEME.equals(locationURI.getScheme())) {
 			return LocalEnvironment.getInstance();

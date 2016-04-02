@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,10 +40,12 @@ public class LocalEnvironment implements IEnvironment, IAdaptable {
 	/*
 	 * @see org.eclipse.dltk.core.environment.IEnvironment#isLocal()
 	 */
+	@Override
 	public boolean isLocal() {
 		return true;
 	}
 
+	@Override
 	public IFileHandle getFile(IPath path) {
 		if (path == null) {
 			throw new NullPointerException();
@@ -62,6 +64,7 @@ public class LocalEnvironment implements IEnvironment, IAdaptable {
 		return fileHandle;
 	}
 
+	@Override
 	public String getId() {
 		return ENVIRONMENT_ID;
 	}
@@ -70,31 +73,38 @@ public class LocalEnvironment implements IEnvironment, IAdaptable {
 		return instance;
 	}
 
+	@Override
 	public String getSeparator() {
 		return File.separator;
 	}
 
+	@Override
 	public char getSeparatorChar() {
 		return File.separatorChar;
 	}
 
+	@Override
 	public String getName() {
 		return "Localhost"; //$NON-NLS-1$
 	}
 
+	@Override
 	public String convertPathToString(IPath path) {
 		return EnvironmentPathUtils.getLocalPath(path).toOSString();
 	}
 
+	@Override
 	public Object getAdapter(Class adapter) {
 		return Platform.getAdapterManager()
 				.loadAdapter(this, adapter.getName());
 	}
 
+	@Override
 	public URI getURI(IPath location) {
 		return URIUtil.toURI(location);
 	}
 
+	@Override
 	public IFileHandle getFile(URI locationURI) {
 		if (locationURI != null
 				&& LocalEnvironmentProvider.FILE_SCHEME.equals(locationURI
@@ -105,14 +115,17 @@ public class LocalEnvironment implements IEnvironment, IAdaptable {
 		}
 	}
 
+	@Override
 	public String getPathsSeparator() {
 		return Character.toString(getPathsSeparatorChar());
 	}
 
+	@Override
 	public char getPathsSeparatorChar() {
 		return Platform.getOS().equals(Platform.OS_WIN32) ? ';' : ':';
 	}
 
+	@Override
 	public String getCanonicalPath(IPath path) {
 		try {
 			return path.toFile().getCanonicalFile().toString();
@@ -127,6 +140,7 @@ public class LocalEnvironment implements IEnvironment, IAdaptable {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public boolean isConnected() {
 		return true;
 	}
@@ -134,6 +148,7 @@ public class LocalEnvironment implements IEnvironment, IAdaptable {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public boolean connect() {
 		return true;
 	}

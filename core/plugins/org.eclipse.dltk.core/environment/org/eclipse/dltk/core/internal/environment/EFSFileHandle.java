@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,6 +47,7 @@ public class EFSFileHandle implements IFileHandle, IFileStoreProvider {
 		this.file = file;
 	}
 
+	@Override
 	public boolean exists() {
 		try {
 			return file.fetchInfo().exists();
@@ -55,19 +56,23 @@ public class EFSFileHandle implements IFileHandle, IFileStoreProvider {
 		}
 	}
 
+	@Override
 	public String toOSString() {
 		return this.environment.convertPathToString(getPath());
 	}
 
+	@Override
 	public String getCanonicalPath() {
 		return this.environment.getCanonicalPath(getPath());
 	}
 
+	@Override
 	public IFileHandle getChild(final String childname) {
 		return new EFSFileHandle(environment, file
 				.getChild(new Path(childname)));
 	}
 
+	@Override
 	public IFileHandle[] getChildren() {
 		try {
 			IFileStore[] files = file.childStores(EFS.NONE, null);
@@ -82,18 +87,22 @@ public class EFSFileHandle implements IFileHandle, IFileStoreProvider {
 		}
 	}
 
+	@Override
 	public IEnvironment getEnvironment() {
 		return environment;
 	}
 
+	@Override
 	public URI toURI() {
 		return file.toURI();
 	}
 
+	@Override
 	public String getName() {
 		return file.getName();
 	}
 
+	@Override
 	public IFileHandle getParent() {
 		IFileStore parent = file.getParent();
 		if (parent == null)
@@ -101,6 +110,7 @@ public class EFSFileHandle implements IFileHandle, IFileStoreProvider {
 		return new EFSFileHandle(environment, parent);
 	}
 
+	@Override
 	public IPath getPath() {
 		// Try to get the path from the existing java.io.File object, which is
 		// twice faster than the file.toURI()
@@ -114,19 +124,23 @@ public class EFSFileHandle implements IFileHandle, IFileStoreProvider {
 		return new Path(file.toURI().getPath());
 	}
 
+	@Override
 	public boolean isDirectory() {
 		return file.fetchInfo().isDirectory();
 	}
 
+	@Override
 	public boolean isFile() {
 		final IFileInfo info = file.fetchInfo();
 		return info.exists() && !info.isDirectory();
 	}
 
+	@Override
 	public boolean isSymlink() {
 		return file.fetchInfo().getAttribute(EFS.ATTRIBUTE_SYMLINK);
 	}
 
+	@Override
 	public InputStream openInputStream(IProgressMonitor monitor)
 			throws IOException {
 		try {
@@ -138,6 +152,7 @@ public class EFSFileHandle implements IFileHandle, IFileStoreProvider {
 		}
 	}
 
+	@Override
 	public OutputStream openOutputStream(IProgressMonitor monitor)
 			throws IOException {
 		try {
@@ -149,6 +164,7 @@ public class EFSFileHandle implements IFileHandle, IFileStoreProvider {
 		}
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof EFSFileHandle) {
 			EFSFileHandle anotherFile = (EFSFileHandle) obj;
@@ -157,14 +173,17 @@ public class EFSFileHandle implements IFileHandle, IFileStoreProvider {
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		return file.hashCode();
 	}
 
+	@Override
 	public String toString() {
 		return toOSString();
 	}
 
+	@Override
 	public long lastModified() {
 		String n = toString();
 		long c = 0;
@@ -215,14 +234,17 @@ public class EFSFileHandle implements IFileHandle, IFileStoreProvider {
 	// return lastModified;
 	// }
 
+	@Override
 	public long length() {
 		return file.fetchInfo().getLength();
 	}
 
+	@Override
 	public IPath getFullPath() {
 		return EnvironmentPathUtils.getFullPath(environment, getPath());
 	}
 
+	@Override
 	public String getEnvironmentId() {
 		return environment.getId();
 	}
@@ -230,10 +252,12 @@ public class EFSFileHandle implements IFileHandle, IFileStoreProvider {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public IFileStore getFileStore() {
 		return this.file;
 	}
 
+	@Override
 	public void move(IFileHandle destination) throws CoreException {
 		final IFileStore destStore = FileHandles.asFileStore(destination);
 		file.move(destStore, EFS.OVERWRITE, null);

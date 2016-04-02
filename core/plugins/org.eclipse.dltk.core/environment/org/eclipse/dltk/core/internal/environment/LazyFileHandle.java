@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.  
+ * Copyright (c) 2008, 2016 xored software, Inc.  
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -65,6 +65,7 @@ public class LazyFileHandle implements IFileHandle {
 	/**
 	 * Support containers on load are always exists.
 	 */
+	@Override
 	public boolean exists() {
 		if (handle != null) {
 			return this.handle.exists();
@@ -81,6 +82,7 @@ public class LazyFileHandle implements IFileHandle {
 		return true;
 	}
 
+	@Override
 	public String getCanonicalPath() {
 		initialize();
 		if (handle != null) {
@@ -89,6 +91,7 @@ public class LazyFileHandle implements IFileHandle {
 		return null;
 	}
 
+	@Override
 	public IFileHandle getChild(String bundlePath) {
 		initialize();
 		if (handle != null) {
@@ -97,6 +100,7 @@ public class LazyFileHandle implements IFileHandle {
 		return null;
 	}
 
+	@Override
 	public IFileHandle[] getChildren() {
 		initialize();
 		if (handle != null) {
@@ -105,6 +109,7 @@ public class LazyFileHandle implements IFileHandle {
 		return null;
 	}
 
+	@Override
 	public IEnvironment getEnvironment() {
 		initialize();
 		if (handle != null) {
@@ -113,11 +118,13 @@ public class LazyFileHandle implements IFileHandle {
 		return EnvironmentManager.getEnvironmentById(environment);
 	}
 
+	@Override
 	public IPath getFullPath() {
 		// it is always possible to reconstruct full path back.
 		return EnvironmentPathUtils.getFullPath(environment, path);
 	}
 
+	@Override
 	public String getName() {
 		initialize();
 		if (handle != null) {
@@ -126,6 +133,7 @@ public class LazyFileHandle implements IFileHandle {
 		return path.lastSegment();
 	}
 
+	@Override
 	public IFileHandle getParent() {
 		initialize();
 		if (handle != null) {
@@ -137,10 +145,12 @@ public class LazyFileHandle implements IFileHandle {
 		return null;
 	}
 
+	@Override
 	public IPath getPath() {
 		return this.path;
 	}
 
+	@Override
 	public boolean isDirectory() {
 		initialize();
 		if (handle != null) {
@@ -149,6 +159,7 @@ public class LazyFileHandle implements IFileHandle {
 		return false;
 	}
 
+	@Override
 	public boolean isFile() {
 		initialize();
 		if (handle != null) {
@@ -157,6 +168,7 @@ public class LazyFileHandle implements IFileHandle {
 		return false;
 	}
 
+	@Override
 	public boolean isSymlink() {
 		initialize();
 		if (handle != null) {
@@ -165,6 +177,7 @@ public class LazyFileHandle implements IFileHandle {
 		return false;
 	}
 
+	@Override
 	public long lastModified() {
 		initialize();
 		if (handle != null) {
@@ -173,6 +186,7 @@ public class LazyFileHandle implements IFileHandle {
 		return 0;
 	}
 
+	@Override
 	public long length() {
 		initialize();
 		if (handle != null) {
@@ -181,6 +195,7 @@ public class LazyFileHandle implements IFileHandle {
 		return 0;
 	}
 
+	@Override
 	public InputStream openInputStream(IProgressMonitor monitor)
 			throws IOException {
 		initialize();
@@ -190,6 +205,7 @@ public class LazyFileHandle implements IFileHandle {
 		return null;
 	}
 
+	@Override
 	public OutputStream openOutputStream(IProgressMonitor monitor)
 			throws IOException {
 		initialize();
@@ -199,6 +215,7 @@ public class LazyFileHandle implements IFileHandle {
 		throw new IOException("Error opening " + getFullPath()); //$NON-NLS-1$
 	}
 
+	@Override
 	public String toOSString() {
 		IEnvironment environment = resolveEnvironment();
 		if (environment != null) {
@@ -214,6 +231,7 @@ public class LazyFileHandle implements IFileHandle {
 		return Util.EMPTY_STRING;
 	}
 
+	@Override
 	public URI toURI() {
 		initialize();
 		if (handle != null) {
@@ -222,6 +240,7 @@ public class LazyFileHandle implements IFileHandle {
 		return null;
 	}
 
+	@Override
 	public String getEnvironmentId() {
 		return this.environment;
 	}
@@ -269,6 +288,7 @@ public class LazyFileHandle implements IFileHandle {
 		return "[UNRESOLVED]" + getFullPath(); //$NON-NLS-1$
 	}
 
+	@Override
 	public void move(IFileHandle destination) throws CoreException {
 		initialize();
 		if (handle != null) {

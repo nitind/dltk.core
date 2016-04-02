@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -47,10 +47,12 @@ public class FileAsFileHandle implements IFileHandle {
 		this.file = file;
 	}
 
+	@Override
 	public boolean exists() {
 		return file.exists();
 	}
 
+	@Override
 	public String getCanonicalPath() {
 		try {
 			return file.getCanonicalPath();
@@ -62,10 +64,12 @@ public class FileAsFileHandle implements IFileHandle {
 		}
 	}
 
+	@Override
 	public IFileHandle getChild(String path) {
 		return new FileAsFileHandle(environment, new File(file, path));
 	}
 
+	@Override
 	public IFileHandle[] getChildren() {
 		final File[] children = file.listFiles();
 		if (children != null) {
@@ -79,22 +83,27 @@ public class FileAsFileHandle implements IFileHandle {
 		}
 	}
 
+	@Override
 	public IEnvironment getEnvironment() {
 		return environment;
 	}
 
+	@Override
 	public String getEnvironmentId() {
 		return environment.getId();
 	}
 
+	@Override
 	public IPath getFullPath() {
 		return EnvironmentPathUtils.getFullPath(environment, getPath());
 	}
 
+	@Override
 	public String getName() {
 		return file.getName();
 	}
 
+	@Override
 	public IFileHandle getParent() {
 		final File parentFile = file.getParentFile();
 		if (parentFile != null) {
@@ -104,49 +113,60 @@ public class FileAsFileHandle implements IFileHandle {
 		}
 	}
 
+	@Override
 	public IPath getPath() {
 		return new Path(file.getPath());
 	}
 
+	@Override
 	public boolean isDirectory() {
 		return file.isDirectory();
 	}
 
+	@Override
 	public boolean isFile() {
 		return file.isFile();
 	}
 
+	@Override
 	public boolean isSymlink() {
 		return EFS.getLocalFileSystem().getStore(file.toURI()).fetchInfo()
 				.getAttribute(EFS.ATTRIBUTE_SYMLINK);
 	}
 
+	@Override
 	public long lastModified() {
 		return file.lastModified();
 	}
 
+	@Override
 	public long length() {
 		return file.length();
 	}
 
+	@Override
 	public InputStream openInputStream(IProgressMonitor monitor)
 			throws IOException {
 		return new FileInputStream(file);
 	}
 
+	@Override
 	public OutputStream openOutputStream(IProgressMonitor monitor)
 			throws IOException {
 		return new FileOutputStream(file);
 	}
 
+	@Override
 	public String toOSString() {
 		return file.getPath();
 	}
 
+	@Override
 	public URI toURI() {
 		return file.toURI();
 	}
 
+	@Override
 	public void move(IFileHandle destination) throws CoreException {
 		final File destFile = FileHandles.asFile(destination);
 		if (!file.renameTo(destFile)) {

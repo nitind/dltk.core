@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.  
+ * Copyright (c) 2009, 2016 xored software, Inc.  
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -47,36 +47,43 @@ public abstract class LazyEnvironment implements IEnvironment {
 
 	protected abstract IEnvironment resolveEnvironment(String envId);
 
+	@Override
 	public boolean connect() {
 		initialize();
 		return environment != null && environment.connect();
 	}
 
+	@Override
 	public String convertPathToString(IPath path) {
 		initialize();
 		return environment != null ? environment.convertPathToString(path)
 				: path.toString();
 	}
 
+	@Override
 	public String getCanonicalPath(IPath path) {
 		initialize();
 		return environment != null ? environment.getCanonicalPath(path) : path
 				.toString();
 	}
 
+	@Override
 	public IFileHandle getFile(IPath path) {
 		return new LazyFileHandle(environmentId, path);
 	}
 
+	@Override
 	public IFileHandle getFile(URI locationURI) {
 		initialize();
 		return environment != null ? environment.getFile(locationURI) : null;
 	}
 
+	@Override
 	public String getId() {
 		return environmentId;
 	}
 
+	@Override
 	public String getName() {
 		initialize();
 		return environment != null ? environment.getName() : generateName();
@@ -86,41 +93,49 @@ public abstract class LazyEnvironment implements IEnvironment {
 		return getClass().getSimpleName() + '[' + environmentId + ']';
 	}
 
+	@Override
 	public String getPathsSeparator() {
 		initialize();
 		return environment != null ? environment.getPathsSeparator() : ":"; //$NON-NLS-1$
 	}
 
+	@Override
 	public char getPathsSeparatorChar() {
 		initialize();
 		return environment != null ? environment.getPathsSeparatorChar() : ':';
 	}
 
+	@Override
 	public String getSeparator() {
 		initialize();
 		return environment != null ? environment.getSeparator() : "/"; //$NON-NLS-1$
 	}
 
+	@Override
 	public char getSeparatorChar() {
 		initialize();
 		return environment != null ? environment.getSeparatorChar() : '/';
 	}
 
+	@Override
 	public URI getURI(IPath location) {
 		initialize();
 		return environment != null ? environment.getURI(location) : null;
 	}
 
+	@Override
 	public boolean isConnected() {
 		initialize();
 		return environment != null ? environment.isConnected() : false;
 	}
 
+	@Override
 	public boolean isLocal() {
 		initialize();
 		return environment != null ? environment.isLocal() : false;
 	}
 
+	@Override
 	public Object getAdapter(Class adapter) {
 		initialize();
 		return environment != null ? environment.getAdapter(adapter) : null;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -90,6 +90,7 @@ public final class EnvironmentManager {
 				List<Descriptor<IEnvironmentProvider>> descriptors) {
 			Collections.sort(descriptors,
 					new Comparator<Descriptor<IEnvironmentProvider>>() {
+						@Override
 						public int compare(
 								Descriptor<IEnvironmentProvider> arg0,
 								Descriptor<IEnvironmentProvider> arg1) {
@@ -110,6 +111,7 @@ public final class EnvironmentManager {
 
 	private static IResourceChangeListener resourceListener = new IResourceChangeListener() {
 
+		@Override
 		public void resourceChanged(IResourceChangeEvent event) {
 			int eventType = event.getType();
 			IResource resource = event.getResource();
@@ -454,6 +456,7 @@ public final class EnvironmentManager {
 		ExecutionContexts.getManager().executeInBackground(
 				new ExecutableOperation(
 						Messages.EnvironmentManager_initializingOperationName) {
+					@Override
 					public void execute(IProgressMonitor monitor) {
 						monitor.beginTask(Util.EMPTY_STRING, 1);
 						monitor.setTaskName(NLS
@@ -528,6 +531,7 @@ public final class EnvironmentManager {
 				List<Descriptor<IEnvironmentLocationResolver>> descriptors) {
 			Collections.sort(descriptors,
 					new Comparator<Descriptor<IEnvironmentLocationResolver>>() {
+						@Override
 						public int compare(
 								Descriptor<IEnvironmentLocationResolver> arg0,
 								Descriptor<IEnvironmentLocationResolver> arg1) {
