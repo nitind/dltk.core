@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.ti;
 
@@ -29,14 +28,17 @@ public class BasicContext implements IContext, ISourceModuleContext {
 		rootNode = parent.getRootNode();
 	}
 
+	@Override
 	public ModuleDeclaration getRootNode() {
 		return rootNode;
 	}
 
+	@Override
 	public ISourceModule getSourceModule() {
 		return sourceModule;
 	}
 
+	@Override
 	public String getLangNature() {
 		if (sourceModule != null) {
 			IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager
@@ -48,10 +50,12 @@ public class BasicContext implements IContext, ISourceModuleContext {
 		return null;
 	}
 
+	@Override
 	public String toString() {
 		return "BasicContext, module " + sourceModule.getElementName(); //$NON-NLS-1$
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -60,6 +64,7 @@ public class BasicContext implements IContext, ISourceModuleContext {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

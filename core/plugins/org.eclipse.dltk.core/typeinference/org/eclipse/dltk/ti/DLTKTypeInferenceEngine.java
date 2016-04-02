@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.ti;
 
@@ -112,6 +111,7 @@ public class DLTKTypeInferenceEngine implements ITypeInferencer {
 			} else {
 				// Fallback to old indexing engine:
 				TypeNameMatchRequestor requestor = new TypeNameMatchRequestor() {
+					@Override
 					public void acceptTypeNameMatch(TypeNameMatch match) {
 						typeSet.add(match.getType());
 					}
@@ -185,6 +185,7 @@ public class DLTKTypeInferenceEngine implements ITypeInferencer {
 		}
 	};
 
+	@Override
 	public IEvaluatedType evaluateType(AbstractTypeGoal goal, int time) {
 		String nature = goal.getContext().getLangNature();
 		List list = (List) evaluatorsByNatures.get(nature);

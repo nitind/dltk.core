@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.ti.statistics;
 
 import java.util.HashMap;
@@ -28,6 +38,7 @@ public class GoalEvalutationRecorder implements IEvaluationStatisticsRequestor {
 		return n;
 	}
 
+	@Override
 	public void evaluationStarted(IGoal rootGoal) {
 		reset();
 		this.rootRoal = rootGoal;
@@ -56,11 +67,13 @@ public class GoalEvalutationRecorder implements IEvaluationStatisticsRequestor {
 		return r;
 	}
 
+	@Override
 	public void evaluatorInitialized(GoalEvaluator evaluator, IGoal[] subgoals,
 			long time) {
 		appendStep(evaluator, subgoals, null, time, GoalEvaluationStep.INIT);
 	}
 
+	@Override
 	public void evaluatorProducedResult(GoalEvaluator evaluator, Object result,
 			long time) {
 		GoalEvaluationStatistics s = appendStep(evaluator, null, result, time,
@@ -70,6 +83,7 @@ public class GoalEvalutationRecorder implements IEvaluationStatisticsRequestor {
 		}
 	}
 
+	@Override
 	public void evaluatorReceivedResult(GoalEvaluator evaluator,
 			IGoal finishedGoal, IGoal[] subgoals, long time) {
 		appendStep(evaluator, subgoals, null, time, GoalEvaluationStep.DEFAULT);
@@ -97,6 +111,7 @@ public class GoalEvalutationRecorder implements IEvaluationStatisticsRequestor {
 		return null;
 	}
 
+	@Override
 	public void goalEvaluatorAssigned(IGoal goal, GoalEvaluator evaluator) {
 		GoalEvaluationStatistics stat = (GoalEvaluationStatistics) this.goalStats
 				.get(goal);
@@ -107,6 +122,7 @@ public class GoalEvalutationRecorder implements IEvaluationStatisticsRequestor {
 		}
 	}
 
+	@Override
 	public void goalStateChanged(IGoal goal, GoalState state, GoalState oldState) {
 		GoalEvaluationStatistics stat = (GoalEvaluationStatistics) this.goalStats
 				.get(goal);

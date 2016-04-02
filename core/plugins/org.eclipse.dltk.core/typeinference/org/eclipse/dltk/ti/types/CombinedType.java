@@ -18,6 +18,7 @@ public class CombinedType implements IEvaluatedType {
 
 	private Collection<IEvaluatedType> types = new HashSet<IEvaluatedType>();
 
+	@Override
 	public String getTypeName() {
 		return null;
 	}
@@ -54,6 +55,7 @@ public class CombinedType implements IEvaluatedType {
 		return MostSpecificType.getInstance();
 	}
 
+	@Override
 	public boolean subtypeOf(IEvaluatedType type) {
 		IEvaluatedType combinedType = getCombinedType();
 		if (combinedType == null) {
@@ -62,6 +64,7 @@ public class CombinedType implements IEvaluatedType {
 		return combinedType.subtypeOf(type);
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -69,6 +72,7 @@ public class CombinedType implements IEvaluatedType {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

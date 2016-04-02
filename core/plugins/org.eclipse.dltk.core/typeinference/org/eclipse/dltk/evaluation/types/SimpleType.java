@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.evaluation.types;
 
@@ -31,6 +30,7 @@ public class SimpleType extends ClassType implements IClassType {
 		this.fType = type;
 	}
 
+	@Override
 	public String getTypeName() {
 
 		return getTypeString(this.fType);
@@ -70,10 +70,12 @@ public class SimpleType extends ClassType implements IClassType {
 		return "unknown"; //$NON-NLS-1$
 	}
 
+	@Override
 	public int hashCode() {
 		return fType ^ 0xDEADBEEF;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof SimpleType) {
 			SimpleType o2 = (SimpleType) obj;
@@ -82,10 +84,12 @@ public class SimpleType extends ClassType implements IClassType {
 		return false;
 	}
 
+	@Override
 	public boolean subtypeOf(IEvaluatedType type) {
 		return false;
 	}
 
+	@Override
 	public String getModelKey() {
 		return null;
 	}

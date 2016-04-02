@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.ti;
 
@@ -158,25 +157,31 @@ public class GoalEngine {
 
 		if (statisticsRequestor == null) {
 			statisticsRequestor = new IEvaluationStatisticsRequestor() {
+				@Override
 				public void evaluationStarted(IGoal rootGoal) {
 				}
 
+				@Override
 				public void evaluatorInitialized(GoalEvaluator evaluator,
 						IGoal[] subgoals, long time) {
 				}
 
+				@Override
 				public void evaluatorProducedResult(GoalEvaluator evaluator,
 						Object result, long time) {
 				}
 
+				@Override
 				public void evaluatorReceivedResult(GoalEvaluator evaluator,
 						IGoal finishedGoal, IGoal[] newSubgoals, long time) {
 				}
 
+				@Override
 				public void goalEvaluatorAssigned(IGoal goal,
 						GoalEvaluator evaluator) {
 				}
 
+				@Override
 				public void goalStateChanged(IGoal goal, GoalState state,
 						GoalState oldState) {
 				}

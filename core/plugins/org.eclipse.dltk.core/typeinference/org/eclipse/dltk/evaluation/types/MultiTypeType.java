@@ -35,6 +35,7 @@ public class MultiTypeType implements IEvaluatedType {
 		fTypes.add(type);
 	}
 
+	@Override
 	public String getTypeName() {
 		String names = ""; //$NON-NLS-1$
 		Iterator<IEvaluatedType> i = fTypes.iterator();
@@ -63,11 +64,13 @@ public class MultiTypeType implements IEvaluatedType {
 		return null;
 	}
 
+	@Override
 	public boolean subtypeOf(IEvaluatedType type) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -75,6 +78,7 @@ public class MultiTypeType implements IEvaluatedType {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

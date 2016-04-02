@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.ti;
 
@@ -51,6 +50,7 @@ public class DefaultTypeInferencer implements ITypeInferencer {
 	private static class ProxyStatisticsRequestor implements
 			IEvaluationStatisticsRequestor {
 
+		@Override
 		public void evaluationStarted(IGoal rootGoal) {
 			for (Iterator iterator = statRequestors.iterator(); iterator
 					.hasNext();) {
@@ -62,6 +62,7 @@ public class DefaultTypeInferencer implements ITypeInferencer {
 			}
 		}
 
+		@Override
 		public void evaluatorInitialized(GoalEvaluator evaluator,
 				IGoal[] subgoals, long time) {
 			for (Iterator iterator = statRequestors.iterator(); iterator
@@ -74,6 +75,7 @@ public class DefaultTypeInferencer implements ITypeInferencer {
 			}
 		}
 
+		@Override
 		public void evaluatorProducedResult(GoalEvaluator evaluator,
 				Object result, long time) {
 			for (Iterator iterator = statRequestors.iterator(); iterator
@@ -87,6 +89,7 @@ public class DefaultTypeInferencer implements ITypeInferencer {
 
 		}
 
+		@Override
 		public void evaluatorReceivedResult(GoalEvaluator evaluator,
 				IGoal finishedGoal, IGoal[] newSubgoals, long time) {
 			for (Iterator iterator = statRequestors.iterator(); iterator
@@ -100,6 +103,7 @@ public class DefaultTypeInferencer implements ITypeInferencer {
 			}
 		}
 
+		@Override
 		public void goalEvaluatorAssigned(IGoal goal, GoalEvaluator evaluator) {
 			for (Iterator iterator = statRequestors.iterator(); iterator
 					.hasNext();) {
@@ -111,6 +115,7 @@ public class DefaultTypeInferencer implements ITypeInferencer {
 			}
 		}
 
+		@Override
 		public void goalStateChanged(IGoal goal, GoalState state,
 				GoalState oldState) {
 			for (Iterator iterator = statRequestors.iterator(); iterator
@@ -127,6 +132,7 @@ public class DefaultTypeInferencer implements ITypeInferencer {
 
 	private class MapBasedEvaluatorFactory implements IGoalEvaluatorFactory {
 
+		@Override
 		public GoalEvaluator createEvaluator(IGoal goal) {
 			Object evaluator = null;
 			if (userFactory != null) {
@@ -203,22 +209,12 @@ public class DefaultTypeInferencer implements ITypeInferencer {
 		evaluators.put(goalClass, evaluatorClass);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dltk.ti.ITypeInferencer#evaluateType(org.eclipse.dltk.ti.AbstractTypeGoal,
-	 *      long)
-	 */
+	@Override
 	public IEvaluatedType evaluateType(AbstractTypeGoal goal, int timeLimit) {
 		Object result = this.evaluateType(goal, new TimelimitPruner(timeLimit));
 		return (IEvaluatedType) result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.dltk.ti.ITypeInferencer#evaluateType(org.eclipse.dltk.ti.AbstractTypeGoal)
-	 */
 	public IEvaluatedType evaluateType(AbstractTypeGoal goal, IPruner pruner) {
 		return (IEvaluatedType) engine.evaluateGoal(goal, pruner, stat);
 	}

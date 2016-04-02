@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.evaluation.types;
 
@@ -26,6 +25,7 @@ public class ModelModuleType implements IEvaluatedType {
 		this.fStepCount = stepCount;
 	}
 
+	@Override
 	public String getTypeName() {
 		if (this.fModule != null) {
 			return "model module:" + this.fModule.getElementName(); //$NON-NLS-1$
@@ -42,11 +42,13 @@ public class ModelModuleType implements IEvaluatedType {
 		return this.fStepCount;
 	}
 
+	@Override
 	public boolean subtypeOf(IEvaluatedType type) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -55,6 +57,7 @@ public class ModelModuleType implements IEvaluatedType {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
