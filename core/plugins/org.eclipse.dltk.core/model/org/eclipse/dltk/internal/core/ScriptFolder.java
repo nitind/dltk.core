@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -101,10 +100,12 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 	/**
 	 * @see ModelElement
 	 */
+	@Override
 	protected Object createElementInfo() {
 		return new ScriptFolderInfo();
 	}
 
+	@Override
 	public int getElementType() {
 		return SCRIPT_FOLDER;
 	}
@@ -112,6 +113,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 	/**
 	 * @see IModelElement#getPath()
 	 */
+	@Override
 	public IPath getPath() {
 		IProjectFragment root = this.getProjectFragment();
 		if (root.isArchive()) {
@@ -124,6 +126,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 	/**
 	 * @see IModelElement#getResource()
 	 */
+	@Override
 	public IResource getResource() {
 		IProjectFragment root = this.getProjectFragment();
 		if (root.isArchive()) {
@@ -139,6 +142,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		}
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
@@ -149,6 +153,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		return this.path.equals(other.path) && this.parent.equals(other.parent);
 	}
 
+	@Override
 	public int hashCode() {
 		return Util.combineHashCodes(parent.hashCode(), path.hashCode());
 	}
@@ -167,6 +172,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		return getProjectFragment().getKind();
 	}
 
+	@Override
 	protected boolean buildStructure(OpenableElementInfo info,
 			IProgressMonitor pm, Map newElements, IResource underlyingResource)
 			throws ModelException {
@@ -257,6 +263,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		return result;
 	}
 
+	@Override
 	public ISourceModule getSourceModule(String name) {
 		// We need to check for element providers and if provider are declared
 		// we need to build structure to return correct handle here.
@@ -299,6 +306,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 	/**
 	 * @see IScriptFolder
 	 */
+	@Override
 	public ISourceModule createSourceModule(String cuName, String contents,
 			boolean force, IProgressMonitor monitor) throws ModelException {
 		CreateSourceModuleOperation op = new CreateSourceModuleOperation(this,
@@ -307,6 +315,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		return new SourceModule(this, cuName, DefaultWorkingCopyOwner.PRIMARY);
 	}
 
+	@Override
 	public final IProjectFragment getProjectFragment() {
 		return (IProjectFragment) getParent();
 	}
@@ -314,6 +323,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 	/**
 	 * Debugging purposes
 	 */
+	@Override
 	protected void toStringName(StringBuffer buffer) {
 		String elementName = getElementName();
 		if (elementName.length() == 0) {
@@ -323,14 +333,17 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		}
 	}
 
+	@Override
 	public String getElementName() {
 		return elementName;
 	}
 
+	@Override
 	public boolean isRootFolder() {
 		return path.segmentCount() == 0;
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		output.formatPrint("DLTK Script folder:" + getElementName()); //$NON-NLS-1$
 		output.indent();
@@ -350,11 +363,13 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		output.dedent();
 	}
 
+	@Override
 	public ISourceModule[] getSourceModules() throws ModelException {
 		List<IModelElement> list = getChildrenOfType(SOURCE_MODULE);
 		return list.toArray(new ISourceModule[list.size()]);
 	}
 
+	@Override
 	public Object[] getForeignResources() throws ModelException {
 		if (this.isRootFolder()) {
 			return ModelElementInfo.NO_NON_SCRIPT_RESOURCES;
@@ -364,6 +379,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		}
 	}
 
+	@Override
 	public boolean hasSubfolders() throws ModelException {
 		IModelElement[] packages = ((IProjectFragment) getParent())
 				.getChildren();
@@ -383,6 +399,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		return false;
 	}
 
+	@Override
 	public IModelElement getHandleFromMemento(String token,
 			MementoTokenizer memento, WorkingCopyOwner owner) {
 		switch (token.charAt(0)) {
@@ -399,10 +416,12 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		return null;
 	}
 
+	@Override
 	protected char getHandleMementoDelimiter() {
 		return JEM_SCRIPTFOLDER;
 	}
 
+	@Override
 	public boolean containsScriptResources() throws ModelException {
 		Object elementInfo = getElementInfo();
 		if (!(elementInfo instanceof ScriptFolderInfo))
@@ -411,10 +430,12 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		return scriptElementInfo.containsScriptResources();
 	}
 
+	@Override
 	public boolean hasChildren() throws ModelException {
 		return getChildren().length > 0;
 	}
 
+	@Override
 	public void copy(IModelElement container, IModelElement sibling,
 			String rename, boolean replace, IProgressMonitor monitor)
 			throws ModelException {
@@ -435,12 +456,14 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 				monitor);
 	}
 
+	@Override
 	public void delete(boolean force, IProgressMonitor monitor)
 			throws ModelException {
 		IModelElement[] elements = new IModelElement[] { this };
 		getModel().delete(elements, force, monitor);
 	}
 
+	@Override
 	public void move(IModelElement container, IModelElement sibling,
 			String rename, boolean replace, IProgressMonitor monitor)
 			throws ModelException {
@@ -461,6 +484,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 				monitor);
 	}
 
+	@Override
 	public void rename(String newName, boolean force, IProgressMonitor monitor)
 			throws ModelException {
 		if (newName == null) {

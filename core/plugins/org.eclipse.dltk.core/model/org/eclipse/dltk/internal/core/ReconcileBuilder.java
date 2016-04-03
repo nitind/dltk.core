@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -49,18 +49,22 @@ class ReconcileBuilder implements ISafeRunnable {
 		/*
 		 * @see org.eclipse.dltk.core.builder.IBuildContext#getFileHandle()
 		 */
+		@Override
 		public IFileHandle getFileHandle() {
 			return null;
 		}
 
+		@Override
 		public IProblemReporter getProblemReporter() {
 			return reporter;
 		}
 
+		@Override
 		public ITaskReporter getTaskReporter() {
 			return reporter;
 		}
 
+		@Override
 		public void recordDependency(IPath dependency, int flags) {
 			// NOP
 		}
@@ -81,6 +85,7 @@ class ReconcileBuilder implements ISafeRunnable {
 		SafeRunner.run(this);
 	}
 
+	@Override
 	public void run() {
 		final NullProgressMonitor monitor = new NullProgressMonitor();
 		final IScriptProject project = module.getScriptProject();
@@ -148,6 +153,7 @@ class ReconcileBuilder implements ISafeRunnable {
 		return participants;
 	}
 
+	@Override
 	public void handleException(Throwable exception) {
 		// Logged by SafeRunner
 	}

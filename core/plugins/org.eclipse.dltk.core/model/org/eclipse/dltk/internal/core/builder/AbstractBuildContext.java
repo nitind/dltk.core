@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -31,10 +31,12 @@ public abstract class AbstractBuildContext implements IBuildContext,
 
 	private final Map<String, Object> attributes = new HashMap<String, Object>();
 
+	@Override
 	public Object get(String attribute) {
 		return attributes.get(attribute);
 	}
 
+	@Override
 	public void set(String attribute, Object value) {
 		if (value == null) {
 			attributes.remove(attribute);
@@ -54,12 +56,14 @@ public abstract class AbstractBuildContext implements IBuildContext,
 		this.buildType = buildType;
 	}
 
+	@Override
 	public int getBuildType() {
 		return buildType;
 	}
 
 	private char[] contents;
 
+	@Override
 	public final char[] getContents() {
 		if (contents == null) {
 			try {
@@ -77,6 +81,7 @@ public abstract class AbstractBuildContext implements IBuildContext,
 
 	private ISourceLineTracker lineTracker = null;
 
+	@Override
 	public ISourceLineTracker getLineTracker() {
 		if (lineTracker == null) {
 			lineTracker = TextUtils.createLineTracker(getContents());
@@ -84,33 +89,29 @@ public abstract class AbstractBuildContext implements IBuildContext,
 		return lineTracker;
 	}
 
+	@Override
 	public void setLineTracker(ISourceLineTracker tracker) {
 		this.lineTracker = tracker;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.builder.IBuildContext#isLineTrackerCreated()
-	 */
+	@Override
 	public boolean isLineTrackerCreated() {
 		return lineTracker != null;
 	}
 
+	@Override
 	public final ISourceModule getSourceModule() {
 		return module;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.builder.IBuildContext#getFile()
-	 */
+	@Override
 	public final IFile getFile() {
 		return (IFile) module.getResource();
 	}
 
 	private String sourceContents;
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.IModuleSource#getSourceContents()
-	 */
+	@Override
 	public String getSourceContents() {
 		if (sourceContents == null) {
 			sourceContents = new String(getContents());
@@ -118,23 +119,17 @@ public abstract class AbstractBuildContext implements IBuildContext,
 		return sourceContents;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.IModuleSource#getContentsAsCharArray()
-	 */
+	@Override
 	public char[] getContentsAsCharArray() {
 		return getContents();
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.IModuleSource#getModelElement()
-	 */
+	@Override
 	public IModelElement getModelElement() {
 		return getSourceModule();
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.IDependent#getFileName()
-	 */
+	@Override
 	public String getFileName() {
 		return getSourceModule().getElementName();
 	}

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -43,6 +42,7 @@ public class ArchiveEntryFile extends PlatformObject implements IStorage {
 		this.archiveProjectFragment = archiveProjectFragment;
 	}
 
+	@Override
 	public InputStream getContents() throws CoreException {
 		try {
 			if (ModelManager.ZIP_ACCESS_VERBOSE) {
@@ -98,30 +98,22 @@ public class ArchiveEntryFile extends PlatformObject implements IStorage {
 		}
 	}
 
-	/**
-	 * @see IStorage#getFullPath
-	 */
+	@Override
 	public IPath getFullPath() {
 		return path.append(this.entryName);
 	}
 
-	/**
-	 * @see IStorage#getName
-	 */
+	@Override
 	public String getName() {
 		return new Path(this.entryName).lastSegment();
 	}
 
-	/**
-	 * @see IStorage#isReadOnly()
-	 */
+	@Override
 	public boolean isReadOnly() {
 		return true;
 	}
 
-	/**
-	 * @see IStorage#isReadOnly()
-	 */
+	@Override
 	public String toString() {
 		return "JarEntryFile[" + this.zipName + "::" + this.entryName + "]"; //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-1$
 	}

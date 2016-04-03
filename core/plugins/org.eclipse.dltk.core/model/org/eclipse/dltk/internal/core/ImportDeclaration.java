@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2009 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -75,6 +75,7 @@ public class ImportDeclaration extends SourceRefElement implements
 		return this.name;
 	}
 
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -82,6 +83,7 @@ public class ImportDeclaration extends SourceRefElement implements
 	/**
 	 * @see IJavaElement
 	 */
+	@Override
 	public int getElementType() {
 		return IMPORT_DECLARATION;
 	}
@@ -157,6 +159,7 @@ public class ImportDeclaration extends SourceRefElement implements
 		output.formatPrint(getElementName());
 	}
 
+	@Override
 	public ISourceRange getNameRange() throws ModelException {
 		return getSourceRange();
 	}

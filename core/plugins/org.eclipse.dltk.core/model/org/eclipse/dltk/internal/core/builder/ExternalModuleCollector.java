@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -35,6 +35,7 @@ class ExternalModuleCollector implements IModelElementVisitor {
 	/**
 	 * Visit only external source modules, witch we aren't builded yet.
 	 */
+	@Override
 	public boolean visit(IModelElement element) {
 		// monitor.worked(1);
 		if (monitor.isCanceled()) {

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -19,10 +18,12 @@ public class SourceField extends NamedMember implements IField {
 		super(parent, name);
 	}
 
+	@Override
 	public int getElementType() {
 		return FIELD;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof SourceField)) {
 			return false;
@@ -30,14 +31,17 @@ public class SourceField extends NamedMember implements IField {
 		return super.equals(o);
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		output.formatPrint("DLTK Source field:" + getElementName()); //$NON-NLS-1$
 	}
 
+	@Override
 	protected char getHandleMementoDelimiter() {
 		return JEM_FIELD;
 	}
 
+	@Override
 	public String getFullyQualifiedName(String enclosingTypeSeparator) {
 		try {
 			return getFullyQualifiedName(enclosingTypeSeparator, false/*
@@ -51,10 +55,12 @@ public class SourceField extends NamedMember implements IField {
 		}
 	}
 
+	@Override
 	public String getFullyQualifiedName() {
 		return getFullyQualifiedName("$"); //$NON-NLS-1$
 	}
 
+	@Override
 	public String getType() throws ModelException {
 		SourceFieldElementInfo info = (SourceFieldElementInfo) getElementInfo();
 		if (info != null) {

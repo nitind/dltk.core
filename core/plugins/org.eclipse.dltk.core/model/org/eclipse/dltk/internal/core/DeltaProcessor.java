@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -115,6 +114,7 @@ public class DeltaProcessor {
 					&& this.project.getProject().getFullPath().isPrefixOf(path);
 		}
 
+		@Override
 		public String toString() {
 			StringBuffer buffer = new StringBuffer("project="); //$NON-NLS-1$
 			if (this.project == null) {
@@ -341,6 +341,7 @@ public class DeltaProcessor {
 				// so that there is no concurrency with the builder
 				// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=96575
 				IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+					@Override
 					public void run(IProgressMonitor progressMonitor)
 							throws CoreException {
 						for (int i = 0; i < length; i++) {
@@ -1507,6 +1508,7 @@ public class DeltaProcessor {
 			}
 			try {
 				rootDelta.accept(new IResourceDeltaVisitor() {
+					@Override
 					public boolean visit(IResourceDelta delta) /*
 																 * throws
 																 * CoreException
@@ -1621,11 +1623,13 @@ public class DeltaProcessor {
 				// wrap callbacks with Safe runnable for subsequent listeners to
 				// be called when some are causing grief
 				SafeRunner.run(new ISafeRunnable() {
+					@Override
 					public void handleException(Throwable exception) {
 						Util.log(exception,
 								"Exception occurred in listener of script element change notification"); //$NON-NLS-1$
 					}
 
+					@Override
 					public void run() throws Exception {
 						PerformanceStats stats = null;
 						if (PERF) {
@@ -2703,6 +2707,7 @@ public class DeltaProcessor {
 							this.rootsToRefresh.add(project);
 							this.projectCachesToReset.add(project);
 							this.postActions.add(new Runnable() {
+								@Override
 								public void run() {
 									ProjectIndexerManager.indexProject(res);
 								}
@@ -2783,6 +2788,7 @@ public class DeltaProcessor {
 			case IResourceDelta.ADDED:
 				final IScriptProject scriptProject = element.getScriptProject();
 				this.postActions.add(new Runnable() {
+					@Override
 					public void run() {
 						ProjectIndexerManager.indexProject(scriptProject);
 					}

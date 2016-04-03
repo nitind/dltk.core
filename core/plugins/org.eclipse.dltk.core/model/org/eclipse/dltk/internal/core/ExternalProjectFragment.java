@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -65,6 +64,7 @@ public class ExternalProjectFragment extends ProjectFragment implements
 	/**
 	 * Compute the package fragment children of this package fragment root.
 	 */
+	@Override
 	protected boolean computeChildren(OpenableElementInfo info, Map newElements)
 			throws ModelException {
 		ArrayList vChildren = new ArrayList(5);
@@ -163,12 +163,14 @@ public class ExternalProjectFragment extends ProjectFragment implements
 		}
 	}
 
+	@Override
 	public void getHandleMemento(StringBuffer buff) {
 		((ModelElement) getParent()).getHandleMemento(buff);
 		buff.append(getHandleMementoDelimiter());
 		escapeMementoName(buff, getElementName());
 	}
 
+	@Override
 	public IScriptFolder getScriptFolder(IPath path) {
 		try {
 			String portablePath = path.toPortableString();
@@ -189,38 +191,47 @@ public class ExternalProjectFragment extends ProjectFragment implements
 		return new ExternalScriptFolder(this, path);
 	}
 
+	@Override
 	public IScriptFolder getScriptFolder(String path) {
 		return this.getScriptFolder(new Path(path));
 	}
 
+	@Override
 	public boolean isReadOnly() {
 		return this.fReadOnly;
 	}
 
+	@Override
 	protected Object createElementInfo() {
 		return new ExternalProjectFragmentInfo();
 	}
 
+	@Override
 	public boolean isArchive() {
 		return false;
 	}
 
+	@Override
 	public boolean isExternal() {
 		return true;
 	}
 
+	@Override
 	public IResource getUnderlyingResource() throws ModelException {
 		return null;
 	}
 
+	@Override
 	public int hashCode() {
 		return this.fPath.hashCode();
 	}
 
+	@Override
 	public IPath getPath() {
 		return this.fPath;
 	}
 
+	@Override
 	public IResource getResource() {
 		return null;
 	}
@@ -228,6 +239,7 @@ public class ExternalProjectFragment extends ProjectFragment implements
 	/**
 	 * Returns whether the corresponding resource or associated file exists
 	 */
+	@Override
 	protected boolean resourceExists() {
 		if (fPath.toString().startsWith(
 				IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
@@ -237,13 +249,16 @@ public class ExternalProjectFragment extends ProjectFragment implements
 		return file.exists() && file.isDirectory();
 	}
 
+	@Override
 	protected void toStringAncestors(StringBuffer buffer) {
 	}
 
+	@Override
 	public int getKind() {
 		return IProjectFragment.K_SOURCE;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
@@ -266,6 +281,7 @@ public class ExternalProjectFragment extends ProjectFragment implements
 		return false;
 	}
 
+	@Override
 	public String getElementName() {
 		IEnvironment env = EnvironmentManager.getEnvironment(this);
 		if (env == null) {
@@ -279,6 +295,7 @@ public class ExternalProjectFragment extends ProjectFragment implements
 		return fPath.lastSegment();
 	}
 
+	@Override
 	public IModelElement getHandleFromMemento(String token,
 			MementoTokenizer memento, WorkingCopyOwner owner) {
 		switch (token.charAt(0)) {
@@ -307,10 +324,12 @@ public class ExternalProjectFragment extends ProjectFragment implements
 		return null;
 	}
 
+	@Override
 	protected char getHandleMementoDelimiter() {
 		return JEM_PROJECTFRAGMENT;
 	}
 
+	@Override
 	public IBuildpathEntry getBuildpathEntry() throws ModelException {
 		IBuildpathEntry rawEntry = super.getRawBuildpathEntry();
 		// try to guest map from internal element.
@@ -329,6 +348,7 @@ public class ExternalProjectFragment extends ProjectFragment implements
 		return rawEntry;
 	}
 
+	@Override
 	public long getTimeStamp() {
 		// All files inside timestamps hash.
 		IEnvironment environment = EnvironmentManager.getEnvironment(this);

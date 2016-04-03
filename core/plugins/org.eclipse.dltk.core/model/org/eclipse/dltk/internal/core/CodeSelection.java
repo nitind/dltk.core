@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 NumberFour AG
+ * Copyright (c) 2012, 2016 NumberFour AG and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -54,11 +54,13 @@ class CodeSelection implements ICodeSelection {
 		this.ranges = ranges;
 	}
 
+	@Override
 	public int size() {
 		return (modelElements != null ? modelElements.length : 0)
 				+ (foreignElements != null ? foreignElements.length : 0);
 	}
 
+	@Override
 	public Object[] toArray() {
 		if (modelElements != null && foreignElements == null) {
 			return modelElements;
@@ -74,6 +76,7 @@ class CodeSelection implements ICodeSelection {
 		}
 	}
 
+	@Override
 	public List<Object> toList() {
 		if (modelElements != null && foreignElements == null) {
 			return Arrays.asList((Object[]) modelElements);
@@ -88,6 +91,7 @@ class CodeSelection implements ICodeSelection {
 		}
 	}
 
+	@Override
 	public Iterator<Object> iterator() {
 		if (modelElements != null && foreignElements == null) {
 			return new ArrayIterator<Object>(modelElements);
@@ -99,11 +103,13 @@ class CodeSelection implements ICodeSelection {
 		}
 	}
 
+	@Override
 	public List<IModelElement> getModelElements() {
 		return modelElements != null ? Arrays.asList(modelElements)
 				: Collections.<IModelElement> emptyList();
 	}
 
+	@Override
 	public ISourceRange rangeOf(Object element) {
 		return ranges != null ? ranges.get(element) : null;
 	}

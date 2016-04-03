@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 NumberFour AG
+ * Copyright (c) 2011, 2016 NumberFour AG
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -30,6 +30,7 @@ abstract class AbstractBuildState implements IBuildState {
 
 	private final Set<IPath> structuralChanges = new HashSet<IPath>();
 
+	@Override
 	public void recordStructuralChange(IPath path) {
 		Assert.isLegal(projectName.equals(path.segment(0)));
 		structuralChanges.add(path);
@@ -41,6 +42,7 @@ abstract class AbstractBuildState implements IBuildState {
 		}
 	}
 
+	@Override
 	public Set<IPath> getStructuralChanges() {
 		return Collections.unmodifiableSet(structuralChanges);
 	}
@@ -49,6 +51,7 @@ abstract class AbstractBuildState implements IBuildState {
 		structuralChanges.clear();
 	}
 
+	@Override
 	public final void recordDependency(IPath path, IPath dependency) {
 		recordDependency(path, dependency, STRUCTURAL);
 	}

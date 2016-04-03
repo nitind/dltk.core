@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.hierarchy;
 
@@ -100,6 +99,7 @@ public class IndexBasedHierarchyBuilder extends HierarchyBuilder {
 			return name;
 		}
 
+		@Override
 		public String toString() {
 			StringBuffer buffer = new StringBuffer("Queue:\n"); //$NON-NLS-1$
 			for (int i = this.start; i <= this.end; i++) {
@@ -118,6 +118,7 @@ public class IndexBasedHierarchyBuilder extends HierarchyBuilder {
 		this.scope = scope;
 	}
 
+	@Override
 	public void build(boolean computeSubtypes) {
 		ModelManager manager = ModelManager.getModelManager();
 		try {
@@ -204,6 +205,7 @@ public class IndexBasedHierarchyBuilder extends HierarchyBuilder {
 				indexes.put(openables[i], index);
 			}
 			Arrays.sort(openables, new Comparator() {
+				@Override
 				public int compare(Object a, Object b) {
 					int aIndex = indexes.get(a);
 					int bIndex = indexes.get(b);
@@ -425,6 +427,7 @@ public class IndexBasedHierarchyBuilder extends HierarchyBuilder {
 		}
 	}
 
+	@Override
 	protected ISourceModule createCompilationUnitFromPath(Openable handle,
 			IFile file) {
 		ISourceModule unit = super.createCompilationUnitFromPath(handle,
@@ -443,6 +446,7 @@ public class IndexBasedHierarchyBuilder extends HierarchyBuilder {
 		class PathCollector implements IPathRequestor {
 			HashSet paths = new HashSet(10);
 
+			@Override
 			public void acceptPath(String path, boolean containsLocalTypes) {
 				this.paths.add(path);
 				if (containsLocalTypes) {
@@ -512,6 +516,7 @@ public class IndexBasedHierarchyBuilder extends HierarchyBuilder {
 
 		/* use a special collector to collect paths and queue new subtype names */
 		IndexQueryRequestor searchRequestor = new IndexQueryRequestor() {
+			@Override
 			public boolean acceptIndexMatch(String documentPath,
 					SearchPattern indexRecord, SearchParticipant participant,
 					AccessRuleSet access) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,31 +27,18 @@ public class UserLibraryBuildpathContainerInitializer extends
 
 	private IDLTKLanguageToolkit toolkit;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.dltk.core.ClasspathContainerInitializer#canUpdateClasspathContainer(org.eclipse.core.runtime.IPath,
-	 * org.eclipse.dltk.core.IJavaProject)
-	 */
+	@Override
 	public boolean canUpdateBuildpathContainer(IPath containerPath,
 			IScriptProject project) {
 		return isUserLibraryContainer(containerPath);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.dltk.core.ClasspathContainerInitializer#getComparisonID(org.eclipse.core.runtime.IPath,
-	 *      org.eclipse.dltk.core.IJavaProject)
-	 */
+	@Override
 	public Object getComparisonID(IPath containerPath, IScriptProject project) {
 		return containerPath;
 	}
 
-	/**
-	 * @see org.eclipse.dltk.core.ClasspathContainerInitializer#getDescription(org.eclipse.core.runtime.IPath,
-	 *      org.eclipse.dltk.core.IJavaProject)
-	 */
+	@Override
 	public String getDescription(IPath containerPath, IScriptProject project) {
 		if (isUserLibraryContainer(containerPath)) {
 			return containerPath.segment(1);
@@ -59,6 +46,7 @@ public class UserLibraryBuildpathContainerInitializer extends
 		return super.getDescription(containerPath, project);
 	}
 
+	@Override
 	public void initialize(IPath containerPath, IScriptProject project)
 			throws CoreException {
 		if (isUserLibraryContainer(containerPath)) {
@@ -102,11 +90,7 @@ public class UserLibraryBuildpathContainerInitializer extends
 				&& DLTKCore.USER_LIBRARY_CONTAINER_ID.equals(path.segment(0));
 	}
 
-	/**
-	 * @see org.eclipse.dltk.core.ClasspathContainerInitializer#requestClasspathContainerUpdate(org.eclipse.core.runtime.IPath,
-	 *      org.eclipse.dltk.core.IJavaProject,
-	 *      org.eclipse.dltk.core.IClasspathContainer)
-	 */
+	@Override
 	public void requestBuildpathContainerUpdate(IPath containerPath,
 			IScriptProject project, IBuildpathContainer containerSuggestion)
 			throws CoreException {

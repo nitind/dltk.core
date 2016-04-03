@@ -44,6 +44,7 @@ public RegionBasedTypeHierarchy(IRegion region, ISourceModule[] workingCopies, I
 	super(type, workingCopies, (IDLTKSearchScope)null, computeSubtypes);
 
 	Region newRegion = new Region() {
+		@Override
 		public void add(IModelElement element) {
 			if (!contains(element)) {
 				//"new" element added to region
@@ -77,9 +78,8 @@ public RegionBasedTypeHierarchy(IRegion region, ISourceModule[] workingCopies, I
 		this.project = elements[0].getScriptProject();
 	}
 }
-/*
- * @see TypeHierarchy#initializeRegions
- */
+
+@Override
 protected void initializeRegions() {
 	super.initializeRegions();
 	IModelElement[] roots = this.region.getElements();
@@ -98,10 +98,12 @@ protected void initializeRegions() {
 /**
  * Compute this type hierarchy.
  */
+@Override
 protected void compute() throws ModelException, CoreException {
 	HierarchyBuilder builder = new RegionBasedHierarchyBuilder(this);
 	builder.build(this.computeSubtypes);
 }
+@Override
 protected boolean isAffectedByOpenable(IModelElementDelta delta, IModelElement element) {
 	// change to working copy
 	if (element instanceof SourceModule && ((SourceModule)element).isWorkingCopy()) {
@@ -118,6 +120,7 @@ protected boolean isAffectedByOpenable(IModelElementDelta delta, IModelElement e
 /**
  * Returns the java project this hierarchy was created in.
  */
+@Override
 public IScriptProject javaProject() {
 	return this.project;
 }

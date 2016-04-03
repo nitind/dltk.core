@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -100,6 +99,7 @@ public class BuiltinProjectFragment extends ProjectFragment {
 	/**
 	 * Compute the package fragment children of this package fragment root.
 	 */
+	@Override
 	protected boolean computeChildren(OpenableElementInfo info, Map newElements)
 			throws ModelException {
 		ArrayList vChildren = new ArrayList(5);
@@ -149,6 +149,7 @@ public class BuiltinProjectFragment extends ProjectFragment {
 		}
 	}
 
+	@Override
 	public IScriptFolder getScriptFolder(IPath path) {
 		try {
 			String portablePath = path.toPortableString();
@@ -169,41 +170,47 @@ public class BuiltinProjectFragment extends ProjectFragment {
 		return new BuiltinScriptFolder(this, path);
 	}
 
+	@Override
 	public IScriptFolder getScriptFolder(String path) {
 		return getScriptFolder(new Path(path));
 	}
 
+	@Override
 	public boolean isReadOnly() {
 		return true;
 	}
 
+	@Override
 	protected Object createElementInfo() {
 		return new BuiltinProjectFragmentInfo();
 	}
 
+	@Override
 	public boolean isArchive() {
 		return false;
 	}
 
+	@Override
 	public boolean isExternal() {
 		return true;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.internal.core.ProjectFragment#isBuiltin()
-	 */
+	@Override
 	public boolean isBuiltin() {
 		return true;
 	}
 
+	@Override
 	public IResource getUnderlyingResource() throws ModelException {
 		return null;
 	}
 
+	@Override
 	public int hashCode() {
 		return this.fPath.hashCode();
 	}
 
+	@Override
 	public IPath getPath() {
 		if (isExternal()) {
 			return this.fPath;
@@ -212,6 +219,7 @@ public class BuiltinProjectFragment extends ProjectFragment {
 		}
 	}
 
+	@Override
 	public IResource getResource() {
 		return null;
 	}
@@ -219,20 +227,24 @@ public class BuiltinProjectFragment extends ProjectFragment {
 	/**
 	 * Returns whether the corresponding resource or associated file exists
 	 */
+	@Override
 	protected boolean resourceExists() {
 		return true;
 	}
 
+	@Override
 	protected void toStringAncestors(StringBuffer buffer) {
 		if (isExternal())
 			return;
 		super.toStringAncestors(buffer);
 	}
 
+	@Override
 	public int getKind() {
 		return IProjectFragment.K_SOURCE;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
@@ -243,17 +255,20 @@ public class BuiltinProjectFragment extends ProjectFragment {
 		return false;
 	}
 
+	@Override
 	public String getElementName() {
 		return fPath.toOSString().replace(File.separatorChar,
 				JEM_SKIP_DELIMETER);
 	}
 
+	@Override
 	public void getHandleMemento(StringBuffer buff) {
 		((ModelElement) getParent()).getHandleMemento(buff);
 		buff.append(getHandleMementoDelimiter());
 		escapeMementoName(buff, getElementName());
 	}
 
+	@Override
 	public IModelElement getHandleFromMemento(String token,
 			MementoTokenizer memento, WorkingCopyOwner owner) {
 		switch (token.charAt(0)) {
@@ -282,13 +297,11 @@ public class BuiltinProjectFragment extends ProjectFragment {
 		return null;
 	}
 
+	@Override
 	protected char getHandleMementoDelimiter() {
 		return JEM_PROJECTFRAGMENT;
 	}
 
-	/*
-	 * @see IProjectFragment
-	 */
 	@Override
 	public IBuildpathEntry getRawBuildpathEntry() throws ModelException {
 		IBuildpathEntry rawEntry = null;
@@ -331,10 +344,12 @@ public class BuiltinProjectFragment extends ProjectFragment {
 	 * Validate whether this project fragment is on the buildpath of its
 	 * project.
 	 */
+	@Override
 	protected IStatus validateOnBuildpath() {
 		return Status.OK_STATUS;
 	}
 
+	@Override
 	public boolean exists() {
 		return true;
 	}

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -33,6 +32,7 @@ public class ExternalEntryFile extends PlatformObject implements IStorage {
 		this.file = file;
 	}
 
+	@Override
 	public InputStream getContents() throws CoreException {
 		try {
 			return new BufferedInputStream(file.openInputStream(null));
@@ -41,30 +41,22 @@ public class ExternalEntryFile extends PlatformObject implements IStorage {
 		}
 	}
 
-	/**
-	 * @see IStorage#getFullPath
-	 */
+	@Override
 	public IPath getFullPath() {
 		return this.file.getPath();
 	}
 
-	/**
-	 * @see IStorage#getName
-	 */
+	@Override
 	public String getName() {
 		return this.file.getName();
 	}
 
-	/**
-	 * @see IStorage#isReadOnly()
-	 */
+	@Override
 	public boolean isReadOnly() {
 		return true;
 	}
 
-	/**
-	 * @see IStorage#isReadOnly()
-	 */
+	@Override
 	public String toString() {
 		return "ExternalEntryFile[" + this.file.toOSString() + "]"; //$NON-NLS-2$ //$NON-NLS-1$
 	}

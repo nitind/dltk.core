@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -43,6 +42,7 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 	@SuppressWarnings("serial")
 	private final Map<ISourceModule, CacheReference> map = new LinkedHashMap<ISourceModule, CacheReference>(
 			16, 0.9f, true) {
+		@Override
 		protected boolean removeEldestEntry(
 				Map.Entry<ISourceModule, CacheReference> eldest) {
 			return size() > capacity;
@@ -94,6 +94,7 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 		}
 	}
 
+	@Override
 	public synchronized ISourceModuleInfo get(ISourceModule module) {
 		expungeStaleEntries();
 		final CacheReference ref = map.get(module);
@@ -108,6 +109,7 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 		return info;
 	}
 
+	@Override
 	public synchronized void resourceChanged(IResourceChangeEvent event) {
 		expungeStaleEntries();
 		final IResourceDelta delta = event.getDelta();
@@ -118,6 +120,7 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 		}
 	}
 
+	@Override
 	public boolean visit(IResourceDelta delta) throws CoreException {
 		final int kind = delta.getKind();
 		if (kind == IResourceDelta.ADDED) {
@@ -164,6 +167,7 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 	static class SourceModuleInfo implements ISourceModuleInfo {
 		private Map<Object, Object> map;
 
+		@Override
 		public synchronized Object get(String key) {
 			if (map == null) {
 				return null;
@@ -171,6 +175,7 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 			return map.get(key);
 		}
 
+		@Override
 		public synchronized void put(String key, Object value) {
 			if (map == null) {
 				map = new HashMap<Object, Object>();
@@ -178,12 +183,14 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 			map.put(key, value);
 		}
 
+		@Override
 		public synchronized void remove(String key) {
 			if (map != null) {
 				map.remove(key);
 			}
 		}
 
+		@Override
 		public synchronized boolean isEmpty() {
 			return this.map == null || this.map.isEmpty();
 		}
@@ -207,6 +214,7 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 		remove(DLTKCore.createSourceModuleFrom(file));
 	}
 
+	@Override
 	public synchronized void remove(ISourceModule module) {
 		if (DEBUG) {
 			System.out.println("[Cache] remove " + module.getElementName()); //$NON-NLS-1$
@@ -216,6 +224,7 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 
 	private static final boolean DEBUG = false;
 
+	@Override
 	public synchronized void clear() {
 		// clear out reference queue.
 		while (queue.poll() != null)
@@ -223,10 +232,12 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 		map.clear();
 	}
 
+	@Override
 	public synchronized int size() {
 		return map.size();
 	}
 
+	@Override
 	public int capacity() {
 		return capacity;
 	}

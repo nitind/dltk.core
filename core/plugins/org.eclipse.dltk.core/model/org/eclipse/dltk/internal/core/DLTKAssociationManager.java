@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -33,6 +33,7 @@ public class DLTKAssociationManager implements IDLTKAssociationManager {
 
 	private char[][] cachedPatterns = null;
 
+	@Override
 	public boolean isAssociatedWith(String name) {
 		char[][] patterns;
 		synchronized (this) {
@@ -153,10 +154,12 @@ public class DLTKAssociationManager implements IDLTKAssociationManager {
 		// Listen to node removal from parent in order to reset cache (see bug
 		// 68993)
 		IEclipsePreferences.INodeChangeListener nodeListener = new IEclipsePreferences.INodeChangeListener() {
+			@Override
 			public void added(IEclipsePreferences.NodeChangeEvent event) {
 				// do nothing
 			}
 
+			@Override
 			public void removed(IEclipsePreferences.NodeChangeEvent event) {
 				if (event.getChild() == eclipsePreferences) {
 					synchronized (preferencesLock) {
@@ -169,6 +172,7 @@ public class DLTKAssociationManager implements IDLTKAssociationManager {
 				.addNodeChangeListener(nodeListener);
 		// Listen to preference changes
 		IEclipsePreferences.IPreferenceChangeListener preferenceListener = new IEclipsePreferences.IPreferenceChangeListener() {
+			@Override
 			public void preferenceChange(
 					IEclipsePreferences.PreferenceChangeEvent event) {
 				synchronized (this) {

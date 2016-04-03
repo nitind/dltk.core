@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,11 +45,7 @@ public class ExternalSourceModule extends AbstractExternalSourceModule {
 		return storage;
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.internal.core.AbstractSourceModule#equals(java.lang.
-	 * Object)
-	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof ExternalSourceModule)) {
 			return false;
@@ -58,23 +54,17 @@ public class ExternalSourceModule extends AbstractExternalSourceModule {
 		return super.equals(obj);
 	}
 
-	/*
-	 * @see org.eclipse.core.resources.IStorage#getContents()
-	 */
+	@Override
 	public InputStream getContents() throws CoreException {
 		return storage.getContents();
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.IDependent#getFileName()
-	 */
+	@Override
 	public String getFileName() {
 		return getPath().toOSString();
 	}
 
-	/*
-	 * @see org.eclipse.core.resources.IStorage#getFullPath()
-	 */
+	@Override
 	public IPath getFullPath() {
 		if (this.storage != null) {
 			return storage.getFullPath();
@@ -83,21 +73,17 @@ public class ExternalSourceModule extends AbstractExternalSourceModule {
 		}
 	}
 
-	/*
-	 * @see org.eclipse.core.resources.IStorage#getName()
-	 */
+	@Override
 	public String getName() {
 		return storage.getName();
 	}
 
+	@Override
 	public IResource getResource() {
 		return null;
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.internal.core.AbstractSourceModule#getBufferContent()
-	 */
+	@Override
 	protected char[] getBufferContent() throws ModelException {
 		IPath path = getBufferPath();
 		IFileHandle file = EnvironmentPathUtils.getFile(path);
@@ -144,18 +130,12 @@ public class ExternalSourceModule extends AbstractExternalSourceModule {
 		return getPath();
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.internal.core.AbstractExternalSourceModule#getModuleType
-	 * ()
-	 */
+	@Override
 	protected String getModuleType() {
 		return "DLTK External Source Module"; //$NON-NLS-1$
 	}
 
-	/*
-	 * @see org.eclipse.dltk.internal.core.AbstractSourceModule#getNatureId()
-	 */
+	@Override
 	protected String getNatureId() {
 		IPath path = getFullPath();
 		IDLTKLanguageToolkit toolkit = lookupLanguageToolkit(path);
@@ -166,11 +146,7 @@ public class ExternalSourceModule extends AbstractExternalSourceModule {
 		return (toolkit != null) ? toolkit.getNatureId() : null;
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.internal.core.AbstractSourceModule#getOriginalSourceModule
-	 * ()
-	 */
+	@Override
 	protected ISourceModule getOriginalSourceModule() {
 		return new ExternalSourceModule((ModelElement) getParent(),
 				getElementName(), DefaultWorkingCopyOwner.PRIMARY, storage);

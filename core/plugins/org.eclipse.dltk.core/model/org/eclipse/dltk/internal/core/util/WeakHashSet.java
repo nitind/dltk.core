@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.util;
 import java.lang.ref.ReferenceQueue;
@@ -22,6 +21,7 @@ public class WeakHashSet {
 			super(referent, queue);
 			this.hashCode = referent.hashCode();
 		}
+		@Override
 		public boolean equals(Object obj) {
 			if (!(obj instanceof HashableWeakReference)) return false;
 			Object referent = get();
@@ -29,9 +29,11 @@ public class WeakHashSet {
 			if (referent == null) return other == null;
 			return referent.equals(other);
 		}
+		@Override
 		public int hashCode() {
 			return this.hashCode;
 		}
+		@Override
 		public String toString() {
 			Object referent = get();
 			if (referent == null) return "[hashCode=" + this.hashCode + "] <referent was garbage collected>"; //$NON-NLS-1$  //$NON-NLS-2$
@@ -198,6 +200,7 @@ public class WeakHashSet {
 		return this.elementSize;
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer("{"); //$NON-NLS-1$
 		for (int i = 0, length = this.values.length; i < length; i++) {

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -44,10 +43,12 @@ public class SourceType extends NamedMember implements IType {
 		super(parent, name);
 	}
 
+	@Override
 	public int getElementType() {
 		return TYPE;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof SourceType)) {
 			return false;
@@ -55,6 +56,7 @@ public class SourceType extends NamedMember implements IType {
 		return super.equals(o);
 	}
 
+	@Override
 	public String[] getSuperClasses() throws ModelException {
 		SourceTypeElementInfo info = (SourceTypeElementInfo) this
 				.getElementInfo();
@@ -64,6 +66,7 @@ public class SourceType extends NamedMember implements IType {
 		return info.superclassNames;
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		output.formatPrint("DLTK Source Type:" + getElementName()); //$NON-NLS-1$
 		output.indent();
@@ -83,10 +86,12 @@ public class SourceType extends NamedMember implements IType {
 		output.dedent();
 	}
 
+	@Override
 	public IField getField(String fieldName) {
 		return new SourceField(this, fieldName);
 	}
 
+	@Override
 	public IField[] getFields() throws ModelException {
 		List<IModelElement> list = getChildrenOfType(FIELD);
 		IField[] array = new IField[list.size()];
@@ -94,10 +99,12 @@ public class SourceType extends NamedMember implements IType {
 		return array;
 	}
 
+	@Override
 	public IType getType(String typeName) {
 		return new SourceType(this, typeName);
 	}
 
+	@Override
 	public IType[] getTypes() throws ModelException {
 		List<IModelElement> list = getChildrenOfType(TYPE);
 		IType[] array = new IType[list.size()];
@@ -105,10 +112,12 @@ public class SourceType extends NamedMember implements IType {
 		return array;
 	}
 
+	@Override
 	public IMethod getMethod(String selector) {
 		return new SourceMethod(this, selector);
 	}
 
+	@Override
 	public IMethod[] getMethods() throws ModelException {
 		List<IModelElement> list = getChildrenOfType(METHOD);
 		IMethod[] array = new IMethod[list.size()];
@@ -116,6 +125,7 @@ public class SourceType extends NamedMember implements IType {
 		return array;
 	}
 
+	@Override
 	public IModelElement getHandleFromMemento(String token,
 			MementoTokenizer memento, WorkingCopyOwner workingCopyOwner) {
 		switch (token.charAt(0)) {
@@ -218,11 +228,13 @@ public class SourceType extends NamedMember implements IType {
 		return null;
 	}
 
+	@Override
 	protected char getHandleMementoDelimiter() {
 
 		return JEM_TYPE;
 	}
 
+	@Override
 	public String getFullyQualifiedName(String enclosingTypeSeparator) {
 		try {
 			return getFullyQualifiedName(enclosingTypeSeparator, false/*
@@ -236,10 +248,12 @@ public class SourceType extends NamedMember implements IType {
 		}
 	}
 
+	@Override
 	public String getFullyQualifiedName() {
 		return getFullyQualifiedName("$"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void codeComplete(char[] snippet, int insertion, int position,
 			char[][] localVariableTypeNames, char[][] localVariableNames,
 			int[] localVariableModifiers, boolean isStatic,
@@ -248,6 +262,7 @@ public class SourceType extends NamedMember implements IType {
 
 	}
 
+	@Override
 	public void codeComplete(char[] snippet, int insertion, int position,
 			char[][] localVariableTypeNames, char[][] localVariableNames,
 			int[] localVariableModifiers, boolean isStatic,
@@ -257,6 +272,7 @@ public class SourceType extends NamedMember implements IType {
 
 	}
 
+	@Override
 	public IScriptFolder getScriptFolder() {
 		IModelElement parentElement = this.parent;
 		while (parentElement != null) {
@@ -273,6 +289,7 @@ public class SourceType extends NamedMember implements IType {
 	/**
 	 * @see IType#getTypeQualifiedName()
 	 */
+	@Override
 	public String getTypeQualifiedName() {
 		return this.getTypeQualifiedName("$"); //$NON-NLS-1$
 	}
@@ -280,6 +297,7 @@ public class SourceType extends NamedMember implements IType {
 	/**
 	 * @see IType#getTypeQualifiedName(char)
 	 */
+	@Override
 	public String getTypeQualifiedName(String enclosingTypeSeparator) {
 		try {
 			return getTypeQualifiedName(enclosingTypeSeparator, false/*
@@ -296,6 +314,7 @@ public class SourceType extends NamedMember implements IType {
 	/*
 	 * @see IType
 	 */
+	@Override
 	public IMethod[] findMethods(IMethod method) {
 		try {
 			return findMethods(method, getMethods());
@@ -312,6 +331,7 @@ public class SourceType extends NamedMember implements IType {
 	/**
 	 * @see IType
 	 */
+	@Override
 	public ITypeHierarchy loadTypeHierachy(InputStream input,
 			IProgressMonitor monitor) throws ModelException {
 		return loadTypeHierachy(input, DefaultWorkingCopyOwner.PRIMARY, monitor);
@@ -364,6 +384,7 @@ public class SourceType extends NamedMember implements IType {
 	/**
 	 * @see IType
 	 */
+	@Override
 	public ITypeHierarchy newSupertypeHierarchy(IProgressMonitor monitor)
 			throws ModelException {
 		return this.newSupertypeHierarchy(DefaultWorkingCopyOwner.PRIMARY,
@@ -373,6 +394,7 @@ public class SourceType extends NamedMember implements IType {
 	/*
 	 * @see IType#newSupertypeHierarchy(ICompilationUnit[], IProgressMonitor)
 	 */
+	@Override
 	public ITypeHierarchy newSupertypeHierarchy(ISourceModule[] workingCopies,
 			IProgressMonitor monitor) throws ModelException {
 
@@ -387,6 +409,7 @@ public class SourceType extends NamedMember implements IType {
 	/**
 	 * @see IType#newSupertypeHierarchy(WorkingCopyOwner, IProgressMonitor)
 	 */
+	@Override
 	public ITypeHierarchy newSupertypeHierarchy(WorkingCopyOwner owner,
 			IProgressMonitor monitor) throws ModelException {
 		final ITypeHierarchy hierarchy = TypeHierarchyBuilders
@@ -408,6 +431,7 @@ public class SourceType extends NamedMember implements IType {
 	/**
 	 * @see IType
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(IScriptProject project,
 			IProgressMonitor monitor) throws ModelException {
 		return newTypeHierarchy(project, DefaultWorkingCopyOwner.PRIMARY,
@@ -418,6 +442,7 @@ public class SourceType extends NamedMember implements IType {
 	 * @see IType#newTypeHierarchy(IJavaProject, WorkingCopyOwner,
 	 *      IProgressMonitor)
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(IScriptProject project,
 			WorkingCopyOwner owner, IProgressMonitor monitor)
 			throws ModelException {
@@ -472,6 +497,7 @@ public class SourceType extends NamedMember implements IType {
 	/**
 	 * @see IType
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(IProgressMonitor monitor)
 			throws ModelException {
 		final ITypeHierarchy hierarchy = TypeHierarchyBuilders
@@ -489,6 +515,7 @@ public class SourceType extends NamedMember implements IType {
 	/*
 	 * @see IType#newTypeHierarchy(ICompilationUnit[], IProgressMonitor)
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(ISourceModule[] workingCopies,
 			IProgressMonitor monitor) throws ModelException {
 
@@ -502,6 +529,7 @@ public class SourceType extends NamedMember implements IType {
 	/**
 	 * @see IType#newTypeHierarchy(WorkingCopyOwner, IProgressMonitor)
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(WorkingCopyOwner owner,
 			IProgressMonitor monitor) throws ModelException {
 

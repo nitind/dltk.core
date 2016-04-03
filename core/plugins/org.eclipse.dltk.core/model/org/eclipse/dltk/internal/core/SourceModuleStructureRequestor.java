@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -86,17 +85,20 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 		Assert.isTrue(!this.newElements.containsKey(handle));
 	}
 
+	@Override
 	public void enterModule() {
 		this.infoStack = new Stack<ModelElementInfo>();
 		this.handleStack = new Stack<ModelElement>();
 		this.enterModuleRoot();
 	}
 
+	@Override
 	public void enterModuleRoot() {
 		this.infoStack.push(this.moduleInfo);
 		this.handleStack.push((ModelElement) this.module);
 	}
 
+	@Override
 	public void enterField(FieldInfo fieldInfo) {
 
 		ModelElementInfo parentInfo = this.infoStack.peek();
@@ -155,6 +157,7 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 		return true;
 	}
 
+	@Override
 	public boolean enterFieldCheckDuplicates(FieldInfo fieldInfo) {
 		ModelElementInfo parentInfo = this.infoStack.peek();
 		ModelElement parentHandle = this.handleStack.peek();
@@ -162,6 +165,7 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 				parentHandle);
 	}
 
+	@Override
 	public void enterMethodRemoveSame(MethodInfo methodInfo) {
 		ModelElementInfo parentInfo = this.infoStack.peek();
 		IModelElement[] childrens = parentInfo.getChildren();
@@ -173,6 +177,7 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 		this.enterMethod(methodInfo);
 	}
 
+	@Override
 	public void enterMethod(MethodInfo methodInfo) {
 		ModelElementInfo parentInfo = this.infoStack.peek();
 		ModelElement parentHandle = this.handleStack.peek();
@@ -309,12 +314,14 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 		return null;
 	}
 
+	@Override
 	public void enterType(TypeInfo typeInfo) {
 		ModelElementInfo parentInfo = this.infoStack.peek();
 		ModelElement parentHandle = this.handleStack.peek();
 		this.processType(typeInfo, parentInfo, parentHandle);
 	}
 
+	@Override
 	public boolean enterTypeAppend(String fullName, String delimiter) {
 		try {
 			ModelElement element = this.getExistentType(fullName, delimiter);
@@ -333,10 +340,12 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 		return false;
 	}
 
+	@Override
 	public void enterNamespace(String[] namespace) {
 		namespaces.push(new SourceNamespace(namespace));
 	}
 
+	@Override
 	public void exitNamespace() {
 		namespaces.pop();
 	}
@@ -371,6 +380,7 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 		this.handleStack.push(handle);
 	}
 
+	@Override
 	public void exitModule(int declarationEnd) {
 		this.moduleInfo.setSourceLength(declarationEnd + 1);
 
@@ -378,19 +388,23 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 		this.moduleInfo.setIsStructureKnown(!this.hasSyntaxErrors);
 	}
 
+	@Override
 	public void exitModuleRoot() {
 		this.infoStack.pop();
 		this.handleStack.pop();
 	}
 
+	@Override
 	public void exitField(int declarationEnd) {
 		this.exitMember(declarationEnd);
 	}
 
+	@Override
 	public void exitMethod(int declarationEnd) {
 		this.exitMember(declarationEnd);
 	}
 
+	@Override
 	public void exitType(int declarationEnd) {
 		this.exitMember(declarationEnd);
 	}
@@ -402,6 +416,7 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 		this.handleStack.pop();
 	}
 
+	@Override
 	public void acceptPackage(int declarationStart, int declarationEnd,
 			String name) {
 		ModelElementInfo parentInfo = this.infoStack.peek();
@@ -421,16 +436,20 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 		this.newElements.put(handle, info);
 	}
 
+	@Override
 	public void acceptFieldReference(String fieldName, int sourcePosition) {
 	}
 
+	@Override
 	public void acceptMethodReference(String methodName, int argCount,
 			int sourcePosition, int sourceEndPosition) {
 	}
 
+	@Override
 	public void acceptTypeReference(String typeName, int sourcePosition) {
 	}
 
+	@Override
 	public void acceptImport(ImportInfo importInfo) {
 		final ModelElement parentHandle = this.handleStack.peek();
 		final ISourceModule parentCU = parentHandle.getSourceModule();
@@ -489,6 +508,7 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 		return new ImportDeclaration(parent, name, version, alias, type, flags);
 	}
 
+	@Override
 	public SourceElementRequestorMode getMode() {
 		return SourceElementRequestorMode.STRUCTURE;
 	}

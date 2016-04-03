@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -85,6 +84,7 @@ public CreateTypeHierarchyOperation(IType element, ISourceModule[] workingCopies
  * Performs the operation - creates the type hierarchy
  * @exception JavaModelException The operation has failed.
  */
+@Override
 protected void executeOperation() throws ModelException {
 	this.typeHierarchy.refresh(this);
 }
@@ -97,6 +97,7 @@ public ITypeHierarchy getResult() {
 /**
  * @see JavaModelOperation
  */
+@Override
 public boolean isReadOnly() {
 	return true;
 }
@@ -107,6 +108,7 @@ public boolean isReadOnly() {
  *	<li>ELEMENT_NOT_PRESENT - the provided type or type's project does not exist
  * </ul>
  */
+@Override
 public IModelStatus verify() {
 	IModelElement elementToProcess= getElementToProcess();
 	if (elementToProcess == null && !(this.typeHierarchy instanceof RegionBasedTypeHierarchy)) {

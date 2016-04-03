@@ -188,6 +188,7 @@ public abstract class ModelOperation implements IWorkspaceRunnable, IProgressMon
 		}
 	}
 
+	@Override
 	public void beginTask(String name, int totalWork) {
 		if (progressMonitor != null) {
 			progressMonitor.beginTask(name, totalWork);
@@ -321,6 +322,7 @@ public abstract class ModelOperation implements IWorkspaceRunnable, IProgressMon
 		}
 	}
 
+	@Override
 	public void done() {
 		if (progressMonitor != null) {
 			progressMonitor.done();
@@ -506,12 +508,14 @@ public abstract class ModelOperation implements IWorkspaceRunnable, IProgressMon
 		return !this.isReadOnly() && this.getAttribute(HAS_MODIFIED_RESOURCE_ATTR) == TRUE;
 	}
 
+	@Override
 	public void internalWorked(double work) {
 		if (progressMonitor != null) {
 			progressMonitor.internalWorked(work);
 		}
 	}
 
+	@Override
 	public boolean isCanceled() {
 		if (progressMonitor != null) {
 			return progressMonitor.isCanceled();
@@ -682,6 +686,7 @@ public abstract class ModelOperation implements IWorkspaceRunnable, IProgressMon
 	 * @exception CoreException
 	 *                if the operation fails
 	 */
+	@Override
 	public void run(IProgressMonitor monitor) throws CoreException {
 		ModelManager manager = ModelManager.getModelManager();
 		DeltaProcessor deltaProcessor = manager.getDeltaProcessor();
@@ -809,6 +814,7 @@ public abstract class ModelOperation implements IWorkspaceRunnable, IProgressMon
 		topLevelOp.attributes.put(key, attribute);
 	}
 
+	@Override
 	public void setCanceled(boolean value) {
 		if (progressMonitor != null) {
 			progressMonitor.setCanceled(value);
@@ -824,12 +830,14 @@ public abstract class ModelOperation implements IWorkspaceRunnable, IProgressMon
 		isNested = nested;
 	}
 
+	@Override
 	public void setTaskName(String name) {
 		if (progressMonitor != null) {
 			progressMonitor.setTaskName(name);
 		}
 	}
 
+	@Override
 	public void subTask(String name) {
 		if (progressMonitor != null) {
 			progressMonitor.subTask(name);
@@ -849,6 +857,7 @@ public abstract class ModelOperation implements IWorkspaceRunnable, IProgressMon
 		return commonVerify();
 	}
 
+	@Override
 	public void worked(int work) {
 		if (progressMonitor != null) {
 			progressMonitor.worked(work);

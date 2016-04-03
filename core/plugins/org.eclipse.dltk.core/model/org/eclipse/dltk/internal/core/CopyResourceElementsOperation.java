@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -215,6 +214,7 @@ public class CopyResourceElementsOperation extends MultiOperation {
 	/**
 	 * @see MultiOperation
 	 */
+	@Override
 	protected String getMainTaskName() {
 		return Messages.operation_copyResourceProgress;
 	}
@@ -411,6 +411,7 @@ public class CopyResourceElementsOperation extends MultiOperation {
 	 *      <code>processScriptFolderResource</code>, depending on the type of
 	 *      <code>element</code>.
 	 */
+	@Override
 	protected void processElement(IModelElement element) throws ModelException {
 		IModelElement dest = getDestinationParent(element);
 		switch (element.getElementType()) {
@@ -434,6 +435,7 @@ public class CopyResourceElementsOperation extends MultiOperation {
 	 * @see MultiOperation Overridden to allow special processing of
 	 *      <code>ScriptElementDelta</code>s and <code>fResultElements</code>.
 	 */
+	@Override
 	protected void processElements() throws ModelException {
 		createdElements = new ArrayList(elementsToProcess.length);
 		try {
@@ -716,6 +718,7 @@ public class CopyResourceElementsOperation extends MultiOperation {
 	 * does not match the number of elements that were supplied.
 	 * </ul>
 	 */
+	@Override
 	protected IModelStatus verify() {
 		IModelStatus status = super.verify();
 		if (!status.isOK()) {
@@ -731,6 +734,7 @@ public class CopyResourceElementsOperation extends MultiOperation {
 	/**
 	 * @see MultiOperation
 	 */
+	@Override
 	protected void verify(IModelElement element) throws ModelException {
 		if (element == null || !element.exists())
 			error(IModelStatusConstants.ELEMENT_DOES_NOT_EXIST, element);

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.builder;
 
@@ -280,10 +279,12 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 			this.state = state;
 		}
 
+		@Override
 		public void recordImportProblem(IPath path) {
 			this.state.recordImportProblem(path);
 		}
 
+		@Override
 		public void recordDependency(IPath path, IPath dependency, int flags) {
 			Assert.isTrue(flags != 0);
 			this.state.recordDependency(path, dependency, flags);

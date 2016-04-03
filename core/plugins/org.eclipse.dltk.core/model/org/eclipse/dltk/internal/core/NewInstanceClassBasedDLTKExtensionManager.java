@@ -28,6 +28,7 @@ public class NewInstanceClassBasedDLTKExtensionManager extends
 		}
 	}
 
+	@Override
 	public Object getInitObject(ElementInfo ext) {
 		try {
 			if (ext != null) {

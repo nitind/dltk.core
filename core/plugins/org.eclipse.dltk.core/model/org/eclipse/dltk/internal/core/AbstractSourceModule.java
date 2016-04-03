@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
+ *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
 import java.util.ArrayList;
@@ -68,34 +79,32 @@ public abstract class AbstractSourceModule extends Openable implements
 
 	// ~ Methods
 
-	/*
-	 * @see org.eclipse.dltk.core.ICodeAssist#codeSelect(int, int)
-	 */
+	@Override
 	public IModelElement[] codeSelect(int offset, int length)
 			throws ModelException {
 		return codeSelect(offset, length, DefaultWorkingCopyOwner.PRIMARY);
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ICodeAssist#codeSelect(int, int,
-	 * org.eclipse.dltk.core.WorkingCopyOwner)
-	 */
+	@Override
 	public IModelElement[] codeSelect(int offset, int length,
 			WorkingCopyOwner owner) throws ModelException {
 		return super.codeSelect(this, offset, length, owner);
 	}
 
+	@Override
 	public CodeSelection codeSelectAll(int offset, int length)
 			throws ModelException {
 		return codeSelectAll(offset, length, DefaultWorkingCopyOwner.PRIMARY);
 	}
 
+	@Override
 	public CodeSelection codeSelectAll(int offset, int length,
 			WorkingCopyOwner owner)
 			throws ModelException {
 		return super.codeSelectAll(this, offset, length, owner);
 	}
 
+	@Override
 	public void copy(IModelElement container, IModelElement sibling,
 			String rename, boolean replace, IProgressMonitor monitor)
 			throws ModelException {
@@ -117,9 +126,7 @@ public abstract class AbstractSourceModule extends Openable implements
 
 	// ~ Methods
 
-	/*
-	 * @see org.eclipse.dltk.internal.core.ModelElement#equals(java.lang.Object)
-	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof AbstractSourceModule) {
 			AbstractSourceModule other = (AbstractSourceModule) obj;
@@ -128,12 +135,14 @@ public abstract class AbstractSourceModule extends Openable implements
 		return false;
 	}
 
+	@Override
 	public boolean exists() {
 		// if not a working copy, it exists only if it is a primary compilation
 		// unit
 		return isPrimary() && validateSourceModule(getResource()).isOK();
 	}
 
+	@Override
 	public IType[] getAllTypes() throws ModelException {
 		IType[] types = getTypes();
 		int i;
@@ -157,6 +166,7 @@ public abstract class AbstractSourceModule extends Openable implements
 		return arrayOfAllTypes;
 	}
 
+	@Override
 	public IModelElement getElementAt(int position) throws ModelException {
 		IModelElement e = getSourceElementAt(position);
 		if (e == this) {
@@ -166,21 +176,22 @@ public abstract class AbstractSourceModule extends Openable implements
 		return e;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.internal.core.ModelElement#getElementName()
-	 */
+	@Override
 	public String getElementName() {
 		return name;
 	}
 
+	@Override
 	public int getElementType() {
 		return SOURCE_MODULE;
 	}
 
+	@Override
 	public IField getField(String fieldName) {
 		return new SourceField(this, fieldName);
 	}
 
+	@Override
 	public IField[] getFields() throws ModelException {
 		List<IModelElement> list = getChildrenOfType(FIELD);
 		IField[] array = new IField[list.size()];
@@ -188,6 +199,7 @@ public abstract class AbstractSourceModule extends Openable implements
 		return array;
 	}
 
+	@Override
 	public IModelElement getHandleFromMemento(String token,
 			MementoTokenizer memento, WorkingCopyOwner workingCopyOwner) {
 		switch (token.charAt(0)) {
@@ -245,6 +257,7 @@ public abstract class AbstractSourceModule extends Openable implements
 		return null;
 	}
 
+	@Override
 	public IMethod getMethod(String selector) {
 		return new SourceMethod(this, selector);
 	}
@@ -256,21 +269,22 @@ public abstract class AbstractSourceModule extends Openable implements
 		return array;
 	}
 
+	@Override
 	public IModelElement getModelElement() {
 		return this;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceModule#getOwner()
-	 */
+	@Override
 	public WorkingCopyOwner getOwner() {
 		return (isPrimary() || !isWorkingCopy()) ? null : this.owner;
 	}
 
+	@Override
 	public IPackageDeclaration getPackageDeclaration(String pkg) {
 		return new PackageDeclaration(this, pkg);
 	}
 
+	@Override
 	public IPackageDeclaration[] getPackageDeclarations() throws ModelException {
 		List<IModelElement> list = getChildrenOfType(PACKAGE_DECLARATION);
 		IPackageDeclaration[] array = new IPackageDeclaration[list.size()];
@@ -278,6 +292,7 @@ public abstract class AbstractSourceModule extends Openable implements
 		return array;
 	}
 
+	@Override
 	public IPath getPath() {
 		IProjectFragment root = this.getProjectFragment();
 		// allow the root to be null for remote source
@@ -288,10 +303,12 @@ public abstract class AbstractSourceModule extends Openable implements
 		return this.getParent().getPath().append(this.getElementName());
 	}
 
+	@Override
 	public ISourceModule getPrimary() {
 		return (ISourceModule) getPrimaryElement(true);
 	}
 
+	@Override
 	public IModelElement getPrimaryElement(boolean checkOwner) {
 
 		if (checkOwner && isPrimary()) {
@@ -301,6 +318,7 @@ public abstract class AbstractSourceModule extends Openable implements
 		return getOriginalSourceModule();
 	}
 
+	@Override
 	public String getSource() throws ModelException {
 		IBuffer buffer = getBufferNotOpen();
 		if (buffer == null)
@@ -308,6 +326,7 @@ public abstract class AbstractSourceModule extends Openable implements
 		return buffer.getContents();
 	}
 
+	@Override
 	public char[] getSourceAsCharArray() throws ModelException {
 		IBuffer buffer = getBufferNotOpen();
 		if (buffer == null)
@@ -316,6 +335,7 @@ public abstract class AbstractSourceModule extends Openable implements
 		// return getSource().toCharArray();
 	}
 
+	@Override
 	public String getSourceContents() {
 		try {
 			return getSource();
@@ -327,9 +347,7 @@ public abstract class AbstractSourceModule extends Openable implements
 		}
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.ISourceModule#getContentsAsCharArray()
-	 */
+	@Override
 	public char[] getContentsAsCharArray() {
 		try {
 			return getSourceAsCharArray();
@@ -341,18 +359,22 @@ public abstract class AbstractSourceModule extends Openable implements
 		}
 	}
 
+	@Override
 	public ISourceModule getSourceModule() {
 		return this;
 	}
 
+	@Override
 	public ISourceRange getSourceRange() throws ModelException {
 		return ((SourceModuleElementInfo) getElementInfo()).getSourceRange();
 	}
 
+	@Override
 	public IType getType(String typeName) {
 		return new SourceType(this, typeName);
 	}
 
+	@Override
 	public IType[] getTypes() throws ModelException {
 		List<IModelElement> list = getChildrenOfType(TYPE);
 		IType[] array = new IType[list.size()];
@@ -360,6 +382,7 @@ public abstract class AbstractSourceModule extends Openable implements
 		return array;
 	}
 
+	@Override
 	public IResource getUnderlyingResource() throws ModelException {
 		if (isWorkingCopy() && !isPrimary()) {
 			return null;
@@ -368,6 +391,7 @@ public abstract class AbstractSourceModule extends Openable implements
 		return super.getUnderlyingResource();
 	}
 
+	@Override
 	public ISourceModule getWorkingCopy(IProgressMonitor monitor)
 			throws ModelException {
 
@@ -378,10 +402,12 @@ public abstract class AbstractSourceModule extends Openable implements
 		}, null /* no problem requestor */, monitor);
 	}
 
+	@Override
 	public boolean isBuiltin() {
 		return false;
 	}
 
+	@Override
 	public boolean isConsistent() {
 
 		return !ModelManager.getModelManager()
@@ -397,14 +423,13 @@ public abstract class AbstractSourceModule extends Openable implements
 		}
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceModule#isPrimary()
-	 */
+	@Override
 	public boolean isPrimary() {
 
 		return this.owner == DefaultWorkingCopyOwner.PRIMARY;
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		output.formatPrint(getModuleType() + ": " + getElementName());
 		output.indent();
@@ -548,10 +573,12 @@ public abstract class AbstractSourceModule extends Openable implements
 		return moduleInfo.isStructureKnown();
 	}
 
+	@Override
 	protected Object createElementInfo() {
 		return new SourceModuleElementInfo();
 	}
 
+	@Override
 	protected char getHandleMementoDelimiter() {
 		return JEM_SOURCEMODULE;
 	}
@@ -560,6 +587,7 @@ public abstract class AbstractSourceModule extends Openable implements
 		return DLTKLanguageManager.getSourceElementParser(natureId);
 	}
 
+	@Override
 	protected boolean hasBuffer() {
 		return true;
 	}
@@ -587,6 +615,7 @@ public abstract class AbstractSourceModule extends Openable implements
 	 * org.eclipse.dltk.internal.core.Openable#openBuffer(org.eclipse.core.runtime
 	 * .IProgressMonitor, java.lang.Object)
 	 */
+	@Override
 	protected IBuffer openBuffer(IProgressMonitor pm, Object info)
 			throws ModelException {
 		// create buffer
@@ -657,6 +686,7 @@ public abstract class AbstractSourceModule extends Openable implements
 		return buffer;
 	}
 
+	@Override
 	protected void openParent(Object childInfo, HashMap newElements,
 			IProgressMonitor pm) throws ModelException {
 		if (!isWorkingCopy()) {
@@ -720,32 +750,38 @@ public abstract class AbstractSourceModule extends Openable implements
 		return null;
 	}
 
+	@Override
 	public void codeComplete(int offset, CompletionRequestor requestor)
 			throws ModelException {
 		codeComplete(offset, requestor, DefaultWorkingCopyOwner.PRIMARY,
 				DEFAULT_COMPLETION_TIMEOUT);
 	}
 
+	@Override
 	public void codeComplete(int offset, CompletionRequestor requestor,
 			long timeout) throws ModelException {
 		codeComplete(offset, requestor, DefaultWorkingCopyOwner.PRIMARY,
 				timeout);
 	}
 
+	@Override
 	public void codeComplete(int offset, CompletionRequestor requestor,
 			WorkingCopyOwner owner, long timeout) throws ModelException {
 		codeComplete(this, offset, requestor, owner, timeout);
 	}
 
+	@Override
 	public void codeComplete(int offset, CompletionRequestor requestor,
 			WorkingCopyOwner owner) throws ModelException {
 		codeComplete(this, offset, requestor, owner, DEFAULT_COMPLETION_TIMEOUT);
 	}
 
+	@Override
 	public boolean isBinary() {
 		return false;
 	}
 
+	@Override
 	public ISourceRange getNameRange() throws ModelException {
 		return null;
 	}

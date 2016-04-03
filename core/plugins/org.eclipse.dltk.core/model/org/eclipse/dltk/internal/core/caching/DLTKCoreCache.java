@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
+ *******************************************************************************/
 package org.eclipse.dltk.internal.core.caching;
 
 import java.io.File;
@@ -27,6 +38,7 @@ public class DLTKCoreCache extends AbstractContentCache {
 			DLTKCore.PLUGIN_ID + ".contentCacheProvider");
 
 	private ModelCacheListener listener = new ModelCacheListener() {
+		@Override
 		protected void remove(IProject element) {
 			// TODO: Maybe here visit element and also remove all children?
 			IFileHandle handle = EnvironmentPathUtils.getFile(element);
@@ -35,6 +47,7 @@ public class DLTKCoreCache extends AbstractContentCache {
 			}
 		};
 
+		@Override
 		protected void remove(IScriptProject element) {
 			removeElement(element);
 		}
@@ -46,18 +59,22 @@ public class DLTKCoreCache extends AbstractContentCache {
 			}
 		};
 
+		@Override
 		protected void remove(IScriptFolder element) {
 			removeElement(element);
 		};
 
+		@Override
 		protected void remove(ISourceModule element) {
 			removeElement(element);
 		};
 
+		@Override
 		protected void remove(org.eclipse.dltk.core.IProjectFragment element) {
 			IProjectFragment fragment = element;
 			try {
 				fragment.accept(new IModelElementVisitor() {
+					@Override
 					public boolean visit(IModelElement element) {
 						if (element.getElementType() == ISourceModule.SOURCE_MODULE) {
 							remove((ISourceModule) element);
@@ -96,15 +113,18 @@ public class DLTKCoreCache extends AbstractContentCache {
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(listener);
 	}
 
+	@Override
 	public void clearCacheEntryAttributes(IFileHandle handle) {
 		metadataCache.clearCacheEntryAttributes(handle);
 	}
 
+	@Override
 	public InputStream getCacheEntryAttribute(IFileHandle handle,
 			String attribute) {
 		return getCacheEntryAttribute(handle, attribute, false);
 	}
 
+	@Override
 	public InputStream getCacheEntryAttribute(IFileHandle handle,
 			String attribute, boolean localonly) {
 		if (handle == null) {
@@ -130,24 +150,29 @@ public class DLTKCoreCache extends AbstractContentCache {
 		return result;
 	}
 
+	@Override
 	public OutputStream getCacheEntryAttributeOutputStream(IFileHandle handle,
 			String attribute) {
 		return metadataCache.getCacheEntryAttributeOutputStream(handle,
 				attribute);
 	}
 
+	@Override
 	public void removeCacheEntryAttributes(IFileHandle handle, String attribute) {
 		metadataCache.removeCacheEntryAttributes(handle, attribute);
 	}
 
+	@Override
 	public void clear() {
 		metadataCache.clear();
 	}
 
+	@Override
 	public File getEntryAsFile(IFileHandle handle, String attribute) {
 		return metadataCache.getEntryAsFile(handle, attribute);
 	}
 
+	@Override
 	public void updateFolderTimestamps(IFileHandle parent) {
 		metadataCache.updateFolderTimestamps(parent);
 	}

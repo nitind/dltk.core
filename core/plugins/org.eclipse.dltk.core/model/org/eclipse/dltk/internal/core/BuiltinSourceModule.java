@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,9 +28,7 @@ public class BuiltinSourceModule extends AbstractExternalSourceModule implements
 		super(parent, name, owner);
 	}
 
-	/*
-	 * @see org.eclipse.dltk.internal.core.AbstractSourceModule#equals(java.lang.Object)
-	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof BuiltinSourceModule)) {
 			return false;
@@ -39,9 +37,7 @@ public class BuiltinSourceModule extends AbstractExternalSourceModule implements
 		return super.equals(obj);
 	}
 
-	/*
-	 * @see org.eclipse.core.resources.IStorage#getContents()
-	 */
+	@Override
 	public InputStream getContents() {
 		String builtinModuleContent = getSourceModuleContent();
 		if (builtinModuleContent == null) {
@@ -53,37 +49,27 @@ public class BuiltinSourceModule extends AbstractExternalSourceModule implements
 		return input;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.IDependent#getFileName()
-	 */
+	@Override
 	public String getFileName() {
 		return this.getPath().toOSString();
 	}
 
-	/*
-	 * @see org.eclipse.core.resources.IStorage#getFullPath()
-	 */
+	@Override
 	public IPath getFullPath() {
 		return new Path(getName());
 	}
 
-	/*
-	 * @see org.eclipse.core.resources.IStorage#getName()
-	 */
+	@Override
 	public String getName() {
 		return getElementName();
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceModule#isBuiltin()
-	 */
+	@Override
 	public boolean isBuiltin() {
 		return true;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.internal.core.AbstractSourceModule#getBufferContent()
-	 */
+	@Override
 	protected char[] getBufferContent() {
 		String content = getSourceModuleContent();
 		if (content != null) {
@@ -93,25 +79,19 @@ public class BuiltinSourceModule extends AbstractExternalSourceModule implements
 		return new char[0];
 	}
 
-	/*
-	 * @see org.eclipse.dltk.internal.core.AbstractExternalSourceModule#getModuleType()
-	 */
+	@Override
 	protected String getModuleType() {
 		return "DLTK Builtin Source Module"; //$NON-NLS-1$
 	}
 
-	/*
-	 * @see org.eclipse.dltk.internal.core.AbstractSourceModule#getNatureId()
-	 */
+	@Override
 	protected String getNatureId() {
 		IScriptProject project = getScriptProject();
 		IDLTKLanguageToolkit toolkit = lookupLanguageToolkit(project);
 		return toolkit != null ? toolkit.getNatureId() : null;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.internal.core.AbstractSourceModule#getOriginalSourceModule()
-	 */
+	@Override
 	protected ISourceModule getOriginalSourceModule() {
 		return new BuiltinSourceModule((BuiltinScriptFolder) getParent(),
 				getElementName(), DefaultWorkingCopyOwner.PRIMARY);

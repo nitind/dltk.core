@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Zend Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Zend Technologies - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
 import java.io.File;
@@ -22,25 +32,30 @@ public class ZipArchiveFile implements IArchive {
 		zipFile = new ZipFile(zipName);
 	}
 
+	@Override
 	public InputStream getInputStream(IArchiveEntry entry) throws IOException {
 		ZipArchiveEntry zipArchiveEntry = (ZipArchiveEntry) entry;
 		return zipFile.getInputStream(zipArchiveEntry.getZipEntry());
 	}
 
+	@Override
 	public IArchiveEntry getArchiveEntry(String name) {
 		return new ZipArchiveEntry(zipFile.getEntry(name));
 	}
 
+	@Override
 	public Enumeration<? extends IArchiveEntry> getArchiveEntries() {
 		final Enumeration<? extends ZipEntry> zipEnumeration = zipFile
 				.entries();
 
 		return new Enumeration<IArchiveEntry>() {
 
+			@Override
 			public boolean hasMoreElements() {
 				return zipEnumeration.hasMoreElements();
 			}
 
+			@Override
 			public IArchiveEntry nextElement() {
 				return new ZipArchiveEntry(zipEnumeration.nextElement());
 			}
@@ -48,10 +63,12 @@ public class ZipArchiveFile implements IArchive {
 		};
 	}
 
+	@Override
 	public void close() throws IOException {
 		zipFile.close();
 	}
 
+	@Override
 	public String getName() {
 		return zipFile.getName();
 	}

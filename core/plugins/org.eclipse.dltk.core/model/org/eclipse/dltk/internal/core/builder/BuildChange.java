@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 NumberFour AG
+ * Copyright (c) 2011, 2016 NumberFour AG and others
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -42,18 +42,22 @@ public class BuildChange extends AbstractBuildChange implements IBuildChange {
 		this.files = files;
 	}
 
+	@Override
 	public IResourceDelta getResourceDelta() {
 		return resourceDelta;
 	}
 
+	@Override
 	public List<IPath> getDeletes(int options) throws CoreException {
 		return Collections.emptyList();
 	}
 
+	@Override
 	public List<IRenameChange> getRenames() throws CoreException {
 		return Collections.emptyList();
 	}
 
+	@Override
 	public List<IFile> getResources(int options) throws CoreException {
 		options = validateFlags(options, ALL | NO_RENAMES | ADDED | CHANGED);
 		if ((options & (ADDED | CHANGED | NO_RENAMES)) == (CHANGED | NO_RENAMES)) {
@@ -67,6 +71,7 @@ public class BuildChange extends AbstractBuildChange implements IBuildChange {
 		}
 	}
 
+	@Override
 	public List<ISourceModule> getSourceModules(int options)
 			throws CoreException {
 		validateFlags(options, ADDED | CHANGED);
@@ -84,36 +89,44 @@ public class BuildChange extends AbstractBuildChange implements IBuildChange {
 
 	private int buildType = IScriptBuilder.INCREMENTAL_BUILD;
 
+	@Override
 	public int getBuildType() {
 		return buildType;
 	}
 
+	@Override
 	public void setBuildType(int buildType) {
 		this.buildType = buildType;
 	}
 
+	@Override
 	public boolean isDependencyBuild() {
 		return false;
 	}
 
+	@Override
 	public boolean addChangedResource(IFile file) throws CoreException {
 		return false;
 	}
 
+	@Override
 	public boolean addChangedResources(Collection<IFile> files)
 			throws CoreException {
 		return false;
 	}
 
+	@Override
 	public List<IPath> getExternalPaths(int options) throws CoreException {
 		return Collections.emptyList();
 	}
 
+	@Override
 	public List<ISourceModule> getExternalModules(int options)
 			throws CoreException {
 		return Collections.emptyList();
 	}
 
+	@Override
 	public IProjectChange[] getRequiredProjectChanges() {
 		return NO_PROJECT_CHANGES;
 	}

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -132,6 +131,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		toolkit = DLTKLanguageManager.findToolkit(project);
 	}
 
+	@Override
 	public IDLTKLanguageToolkit getLanguageToolkit() {
 		if (toolkit == null) {
 			toolkit = DLTKLanguageManager.findToolkit(project);
@@ -154,10 +154,12 @@ public class ScriptProject extends Openable implements IScriptProject,
 				.getFolder(path));
 	}
 
+	@Override
 	public IProject getProject() {
 		return this.project;
 	}
 
+	@Override
 	public IProjectFragment getProjectFragment(IResource resource) {
 		switch (resource.getType()) {
 		case IResource.FILE:
@@ -188,6 +190,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return null;
 	}
 
+	@Override
 	public IProjectFragment getProjectFragment(String path) {
 		return getProjectFragment(canonicalizedPath(Path.fromPortableString(path)));
 	}
@@ -215,6 +218,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 *         from the path (for example, an absolute path that has less than 1
 	 *         segment. The path may be relative or absolute.
 	 */
+	@Override
 	public IProjectFragment getProjectFragment(IPath path) {
 		boolean isSpecial = !path.isEmpty()
 				&& path.segment(0)
@@ -321,6 +325,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * a special buildpath (RESOLUTION_IN_PROGRESS) if the buildpath is being
 	 * resolved.
 	 */
+	@Override
 	public IBuildpathEntry[] getResolvedBuildpath(boolean ignoreUnresolvedEntry)
 			throws ModelException {
 		if (ModelManager.getModelManager().isBuildpathBeingResolved(this)) {
@@ -493,10 +498,12 @@ public class ScriptProject extends Openable implements IScriptProject,
 		}
 	}
 
+	@Override
 	public int getElementType() {
 		return SCRIPT_PROJECT;
 	}
 
+	@Override
 	protected boolean buildStructure(OpenableElementInfo info,
 			IProgressMonitor pm, Map newElements, IResource underlyingResource)
 			throws ModelException {
@@ -850,14 +857,17 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return "[PRJ]" + this.project.getFullPath(); //$NON-NLS-1$
 	}
 
+	@Override
 	protected Object createElementInfo() {
 		return new ProjectElementInfo();
 	}
 
+	@Override
 	public IResource getResource() {
 		return project;
 	}
 
+	@Override
 	public IPath getPath() {
 		return project.getFullPath();
 	}
@@ -1268,6 +1278,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		setProjectInfoChildren(info, fragments);
 	}
 
+	@Override
 	public IBuildpathEntry[] getRawBuildpath() throws ModelException {
 		PerProjectInfo perProjectInfo = getPerProjectInfo();
 		IBuildpathEntry[] classpath = perProjectInfo.rawBuildpath;
@@ -1424,6 +1435,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return entries;
 	}
 
+	@Override
 	public IBuildpathEntry decodeBuildpathEntry(String encodedEntry) {
 		try {
 			if (encodedEntry == null)
@@ -1528,6 +1540,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return property;
 	}
 
+	@Override
 	public IProjectFragment[] getProjectFragments() throws ModelException {
 		Object[] children;
 		int length;
@@ -1651,6 +1664,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		}
 	}
 
+	@Override
 	public String encodeBuildpathEntry(IBuildpathEntry buildpathEntry) {
 		try {
 			ByteArrayOutputStream s = new ByteArrayOutputStream();
@@ -1694,6 +1708,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return this.getCycleMarker() != null;
 	}
 
+	@Override
 	public int hashCode() {
 		return this.project.hashCode();
 	}
@@ -1733,6 +1748,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return null;
 	}
 
+	@Override
 	public String getOption(String optionName, boolean inheritCoreOptions) {
 		String propertyName = optionName;
 		if (ModelManager.getModelManager().optionNames.contains(propertyName)) {
@@ -1748,6 +1764,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return null;
 	}
 
+	@Override
 	public Map<String, String> getOptions(boolean inheritCoreOptions) {
 		// initialize to the defaults from DLTKCore options pool
 		Map<String, String> options = inheritCoreOptions ? DLTKCore
@@ -1796,6 +1813,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return projectOptions;
 	}
 
+	@Override
 	public void setOption(String optionName, String optionValue) {
 		if (!ModelManager.getModelManager().optionNames.contains(optionName))
 			return; // unrecognized option
@@ -1817,6 +1835,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		}
 	}
 
+	@Override
 	public void setOptions(Map newOptions) {
 		IEclipsePreferences projectPreferences = getEclipsePreferences();
 		try {
@@ -1864,6 +1883,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IScriptProject#setRawClasspath(IBuildpathEntry[],IPath,IProgressMonitor)
 	 */
+	@Override
 	public void setRawBuildpath(IBuildpathEntry[] entries,
 			IProgressMonitor monitor) throws ModelException {
 
@@ -1909,10 +1929,12 @@ public class ScriptProject extends Openable implements IScriptProject,
 		// Listen to node removal from parent in order to reset cache (see bug
 		// 68993)
 		IEclipsePreferences.INodeChangeListener nodeListener = new IEclipsePreferences.INodeChangeListener() {
+			@Override
 			public void added(IEclipsePreferences.NodeChangeEvent event) {
 				// do nothing
 			}
 
+			@Override
 			public void removed(IEclipsePreferences.NodeChangeEvent event) {
 				if (event.getChild() == eclipsePreferences) {
 					ModelManager.getModelManager().resetProjectPreferences(
@@ -1924,6 +1946,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 				.addNodeChangeListener(nodeListener);
 		// Listen to preference changes
 		IEclipsePreferences.IPreferenceChangeListener preferenceListener = new IEclipsePreferences.IPreferenceChangeListener() {
+			@Override
 			public void preferenceChange(
 					IEclipsePreferences.PreferenceChangeEvent event) {
 				ModelManager.getModelManager().resetProjectOptions(
@@ -2004,6 +2027,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * 
 	 * @see ModelElement#equals(Object)
 	 */
+	@Override
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
@@ -2013,10 +2037,12 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return this.project.equals(other.getProject());
 	}
 
+	@Override
 	public boolean exists() {
 		return project.exists() && DLTKLanguageManager.hasScriptNature(project);
 	}
 
+	@Override
 	public String getElementName() {
 		return project.getName();
 	}
@@ -2050,12 +2076,14 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return false;
 	}
 
+	@Override
 	public boolean isValid() {
 		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 				.getLanguageToolkit(this);
 		return toolkit != null;
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		output.formatPrint("ScriptProject:" + getElementName()); //$NON-NLS-1$
 		output.indent();
@@ -2221,6 +2249,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IScriptProject
 	 */
+	@Override
 	public IModelElement findElement(IPath path) throws ModelException {
 		return findElement(path, DefaultWorkingCopyOwner.PRIMARY);
 	}
@@ -2228,6 +2257,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IScriptProject
 	 */
+	@Override
 	public IModelElement findElement(IPath path, WorkingCopyOwner owner)
 			throws ModelException {
 		if (path == null) {
@@ -2324,6 +2354,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IScriptProject
 	 */
+	@Override
 	public IScriptFolder findScriptFolder(IPath path) throws ModelException {
 		return findScriptFolder0(ScriptProject.canonicalizedPath(path));
 	}
@@ -2340,6 +2371,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IScriptProject
 	 */
+	@Override
 	public IProjectFragment findProjectFragment(IPath path)
 			throws ModelException {
 		return findProjectFragment0(ScriptProject.canonicalizedPath(path));
@@ -2370,6 +2402,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IScriptProject
 	 */
+	@Override
 	public IProjectFragment[] findProjectFragments(IBuildpathEntry entry) {
 		try {
 			IBuildpathEntry[] buildpath = this.getRawBuildpath();
@@ -2391,6 +2424,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IScriptProject#findType(String)
 	 */
+	@Override
 	public IType findType(String fullyQualifiedName) throws ModelException {
 		return findType(fullyQualifiedName, DefaultWorkingCopyOwner.PRIMARY);
 	}
@@ -2398,6 +2432,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IScriptProject#findType(String, IProgressMonitor)
 	 */
+	@Override
 	public IType findType(String fullyQualifiedName,
 			IProgressMonitor progressMonitor) throws ModelException {
 		return findType(fullyQualifiedName, DefaultWorkingCopyOwner.PRIMARY,
@@ -2419,6 +2454,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IScriptProject#findType(String, String)
 	 */
+	@Override
 	public IType findType(String packageName, String typeQualifiedName)
 			throws ModelException {
 		return findType(packageName, typeQualifiedName,
@@ -2428,6 +2464,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IScriptProject#findType(String, String, IProgressMonitor)
 	 */
+	@Override
 	public IType findType(String packageName, String typeQualifiedName,
 			IProgressMonitor progressMonitor) throws ModelException {
 		return findType(packageName, typeQualifiedName,
@@ -2449,6 +2486,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IScriptProject#findType(String, String, WorkingCopyOwner)
 	 */
+	@Override
 	public IType findType(String packageName, String typeQualifiedName,
 			WorkingCopyOwner owner) throws ModelException {
 		if (DLTKCore.DEBUG) {
@@ -2461,6 +2499,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * @see IScriptProject#findType(String, String, WorkingCopyOwner,
 	 *      IProgressMonitor)
 	 */
+	@Override
 	public IType findType(String packageName, String typeQualifiedName,
 			WorkingCopyOwner owner, IProgressMonitor progressMonitor)
 			throws ModelException {
@@ -2470,6 +2509,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return null;
 	}
 
+	@Override
 	public IType findType(String fullyQualifiedName, WorkingCopyOwner owner)
 			throws ModelException {
 		if (DLTKCore.DEBUG) {
@@ -2478,6 +2518,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return null;
 	}
 
+	@Override
 	public IType findType(String fullyQualifiedName, WorkingCopyOwner owner,
 			IProgressMonitor progressMonitor) throws ModelException {
 		if (DLTKCore.DEBUG) {
@@ -2486,6 +2527,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return null;
 	}
 
+	@Override
 	public IBuildpathEntry[] readRawBuildpath() {
 		// Read buildpath file without creating markers nor logging problems
 		IBuildpathEntry[] buildpath = readFileEntries(null/*
@@ -2526,11 +2568,13 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * Returns an array of non-java resources contained in the receiver.
 	 */
+	@Override
 	public Object[] getForeignResources() throws ModelException {
 		return ((ProjectElementInfo) getElementInfo())
 				.getForeignResources(this);
 	}
 
+	@Override
 	public boolean isOnBuildpath(IModelElement element) {
 		IBuildpathEntry[] rawBuildpath;
 		try {
@@ -2632,6 +2676,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/*
 	 * @see IScriptProject
 	 */
+	@Override
 	public boolean isOnBuildpath(IResource resource) {
 		IPath exactPath = resource.getFullPath();
 		IPath path = exactPath;
@@ -2684,6 +2729,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return false;
 	}
 
+	@Override
 	public IModelElement getHandleFromMemento(String token,
 			MementoTokenizer memento, WorkingCopyOwner owner) {
 		switch (token.charAt(0)) {
@@ -2768,10 +2814,12 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return null;
 	}
 
+	@Override
 	protected char getHandleMementoDelimiter() {
 		return JEM_SCRIPTPROJECT;
 	}
 
+	@Override
 	public IResource getUnderlyingResource() throws ModelException {
 		if (!exists())
 			throw newNotPresentException();
@@ -2812,6 +2860,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IJavaProject
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(IRegion region,
 			IProgressMonitor monitor) throws ModelException {
 
@@ -2822,6 +2871,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IJavaProject
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(IRegion region,
 			WorkingCopyOwner owner, IProgressMonitor monitor)
 			throws ModelException {
@@ -2840,6 +2890,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IJavaProject
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(IType type, IRegion region,
 			IProgressMonitor monitor) throws ModelException {
 
@@ -2850,6 +2901,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * @see IJavaProject
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(IType type, IRegion region,
 			WorkingCopyOwner owner, IProgressMonitor monitor)
 			throws ModelException {
@@ -2918,6 +2970,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return newNameLookup(workingCopies);
 	}
 
+	@Override
 	public IProjectFragment[] getAllProjectFragments() throws ModelException {
 		return getAllProjectFragments(null /* no reverse map */);
 	}
@@ -2950,6 +3003,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return DLTKLanguageManager.hasScriptNature(p);
 	}
 
+	@Override
 	public IScriptFolder[] getScriptFolders() throws ModelException {
 
 		IProjectFragment[] roots = getProjectFragments();

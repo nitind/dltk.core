@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -83,6 +83,7 @@ public class CreateSourceModuleOperation extends ModelOperation {
 	 * @exception ModelException
 	 *                if unable to create the compilation unit.
 	 */
+	@Override
 	protected void executeOperation() throws ModelException {
 		try {
 			// beginTask(Messages.operation_createUnitProgress, 2);
@@ -155,6 +156,7 @@ public class CreateSourceModuleOperation extends ModelOperation {
 		return ((IScriptFolder) getParentElement()).getSourceModule(fName);
 	}
 
+	@Override
 	protected ISchedulingRule getSchedulingRule() {
 		IResource resource = getSourceModule().getResource();
 		IWorkspace workspace = resource.getWorkspace();
@@ -176,6 +178,7 @@ public class CreateSourceModuleOperation extends ModelOperation {
 	 * null
 	 * </ul>
 	 */
+	@Override
 	public IModelStatus verify() {
 		if (getParentElement() == null) {
 			return new ModelStatus(IModelStatusConstants.NO_ELEMENTS_TO_PROCESS);

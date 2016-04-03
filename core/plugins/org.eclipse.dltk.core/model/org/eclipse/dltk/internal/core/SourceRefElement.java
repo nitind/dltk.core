@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -42,11 +41,13 @@ public abstract class SourceRefElement extends ModelElement implements
 		super(parent);
 	}
 
+	@Override
 	protected Object createElementInfo() {
 		// do not used for source elements
 		return null;
 	}
 
+	@Override
 	protected void generateInfos(Object info, HashMap newElements,
 			IProgressMonitor pm) throws ModelException {
 		Openable openableParent = (Openable) getOpenableParent();
@@ -65,6 +66,7 @@ public abstract class SourceRefElement extends ModelElement implements
 	 * Return the first instance of IOpenable in the hierarchy of this type
 	 * (going up the hierarchy from this type);
 	 */
+	@Override
 	public IOpenable getOpenableParent() {
 		IModelElement current = getParent();
 		while (current != null) {
@@ -76,6 +78,7 @@ public abstract class SourceRefElement extends ModelElement implements
 		return null;
 	}
 
+	@Override
 	public IResource getResource() {
 		return getParent().getResource();
 	}
@@ -83,6 +86,7 @@ public abstract class SourceRefElement extends ModelElement implements
 	/**
 	 * @see ISourceReference
 	 */
+	@Override
 	public ISourceRange getSourceRange() throws ModelException {
 		SourceRefElementInfo info = (SourceRefElementInfo) getElementInfo();
 		if (info != null)
@@ -90,10 +94,12 @@ public abstract class SourceRefElement extends ModelElement implements
 		return null;
 	}
 
+	@Override
 	public IPath getPath() {
 		return getParent().getPath();
 	}
 
+	@Override
 	public IResource getUnderlyingResource() throws ModelException {
 		if (!exists())
 			throw newNotPresentException();
@@ -103,6 +109,7 @@ public abstract class SourceRefElement extends ModelElement implements
 	/**
 	 * @see IParent
 	 */
+	@Override
 	public boolean hasChildren() throws ModelException {
 		return getChildren().length > 0;
 	}
@@ -110,11 +117,13 @@ public abstract class SourceRefElement extends ModelElement implements
 	/**
 	 * @see IModelElement
 	 */
+	@Override
 	public boolean isStructureKnown() throws ModelException {
 		// structure is always known inside an openable
 		return true;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof SourceRefElement))
 			return false;
@@ -122,6 +131,7 @@ public abstract class SourceRefElement extends ModelElement implements
 				&& super.equals(o);
 	}
 
+	@Override
 	protected void toStringName(StringBuffer buffer) {
 		super.toStringName(buffer);
 		if (this.occurrenceCount > 1) {
@@ -136,6 +146,7 @@ public abstract class SourceRefElement extends ModelElement implements
 	 * 
 	 * @see IModelElement
 	 */
+	@Override
 	public IResource getCorrespondingResource() throws ModelException {
 		if (!exists())
 			throw newNotPresentException();
@@ -153,6 +164,7 @@ public abstract class SourceRefElement extends ModelElement implements
 		return getHandleFromMemento(token, memento, owner);
 	}
 
+	@Override
 	public IModelElement getHandleFromMemento(String token,
 			MementoTokenizer memento, WorkingCopyOwner workingCopyOwner) {
 		switch (token.charAt(0)) {
@@ -162,6 +174,7 @@ public abstract class SourceRefElement extends ModelElement implements
 		return this;
 	}
 
+	@Override
 	public void getHandleMemento(StringBuffer buff) {
 		super.getHandleMemento(buff);
 		if (this.occurrenceCount > 1) {
@@ -170,6 +183,7 @@ public abstract class SourceRefElement extends ModelElement implements
 		}
 	}
 
+	@Override
 	public ISourceModule getSourceModule() {
 		return ((ModelElement) getParent()).getSourceModule();
 	}
@@ -177,6 +191,7 @@ public abstract class SourceRefElement extends ModelElement implements
 	/**
 	 * @see ISourceReference
 	 */
+	@Override
 	public String getSource() throws ModelException {
 		IOpenable openable = getOpenableParent();
 		IBuffer buffer = openable.getBuffer();

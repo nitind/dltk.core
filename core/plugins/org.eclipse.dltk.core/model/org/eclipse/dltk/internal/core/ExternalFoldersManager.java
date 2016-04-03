@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -275,10 +275,12 @@ public class ExternalFoldersManager {
 				return;
 			final Iterator iterator = externalFolders.iterator();
 			Job refreshJob = new Job(Messages.refreshing_external_folders) {
+				@Override
 				public boolean belongsTo(Object family) {
 					return family == ResourcesPlugin.FAMILY_MANUAL_REFRESH;
 				}
 
+				@Override
 				protected IStatus run(IProgressMonitor pm) {
 					try {
 						while (iterator.hasNext()) {

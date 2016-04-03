@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,6 +64,7 @@ public class ArchiveProjectFragment extends ProjectFragment {
 	 * fragment root. Has the side effect of opening the package fragment
 	 * children.
 	 */
+	@Override
 	protected boolean computeChildren(OpenableElementInfo info, Map newElements)
 			throws ModelException {
 		ArrayList vChildren = new ArrayList();
@@ -147,6 +148,7 @@ public class ArchiveProjectFragment extends ProjectFragment {
 		return true;
 	}
 
+	@Override
 	public IScriptFolder getScriptFolder(IPath path) {
 		return new ArchiveFolder(this, path);
 	}
@@ -209,22 +211,27 @@ public class ArchiveProjectFragment extends ProjectFragment {
 		}
 	}
 
+	@Override
 	public boolean isReadOnly() {
 		return true;
 	}
 
+	@Override
 	protected Object createElementInfo() {
 		return new ArchiveProjectFragmentInfo();
 	}
 
+	@Override
 	public boolean isArchive() {
 		return true;
 	}
 
+	@Override
 	public boolean isExternal() {
 		return getResource() == null;
 	}
 
+	@Override
 	public IResource getUnderlyingResource() throws ModelException {
 		if (isExternal()) {
 			if (!exists()) {
@@ -236,14 +243,17 @@ public class ArchiveProjectFragment extends ProjectFragment {
 		}
 	}
 
+	@Override
 	public int hashCode() {
 		return this.zipPath.hashCode();
 	}
 
+	@Override
 	public IPath getPath() {
 		return zipPath;
 	}
 
+	@Override
 	public IResource getResource() {
 		if (this.resource == null) {
 			this.resource = Model.getTarget(ResourcesPlugin.getWorkspace()
@@ -260,6 +270,7 @@ public class ArchiveProjectFragment extends ProjectFragment {
 	/**
 	 * Returns whether the corresponding resource or associated file exists
 	 */
+	@Override
 	protected boolean resourceExists() {
 		if (this.isExternal()) {
 			/*
@@ -272,16 +283,19 @@ public class ArchiveProjectFragment extends ProjectFragment {
 		}
 	}
 
+	@Override
 	protected void toStringAncestors(StringBuffer buffer) {
 		if (isExternal())
 			return;
 		super.toStringAncestors(buffer);
 	}
 
+	@Override
 	public int getKind() {
 		return IProjectFragment.K_SOURCE;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
@@ -296,6 +310,7 @@ public class ArchiveProjectFragment extends ProjectFragment {
 		return archive;
 	}
 
+	@Override
 	public String getElementName() {
 		if (isExternal()) {
 			IEnvironment env = EnvironmentManager.getEnvironment(this);
@@ -312,6 +327,7 @@ public class ArchiveProjectFragment extends ProjectFragment {
 		return this.zipPath.lastSegment();
 	}
 
+	@Override
 	public void getHandleMemento(StringBuffer buff) {
 		((ModelElement) getParent()).getHandleMemento(buff);
 		buff.append(getHandleMementoDelimiter());

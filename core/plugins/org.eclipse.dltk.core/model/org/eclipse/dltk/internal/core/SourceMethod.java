@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -23,6 +22,7 @@ public class SourceMethod extends NamedMember implements IMethod {
 		super(parent, name);
 	}
 
+	@Override
 	public int getElementType() {
 		return METHOD;
 	}
@@ -35,14 +35,17 @@ public class SourceMethod extends NamedMember implements IMethod {
 		return super.equals(o);
 	}
 
+	@Override
 	public String[] getParameterNames() throws ModelException {
 		return ((SourceMethodElementInfo) getElementInfo()).getArgumentNames();
 	}
 
+	@Override
 	public IParameter[] getParameters() throws ModelException {
 		return ((SourceMethodElementInfo) getElementInfo()).getArguments();
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		output.formatPrint("DLTK Source Method:" + getElementName()); //$NON-NLS-1$
 		output.indent();
@@ -65,6 +68,7 @@ public class SourceMethod extends NamedMember implements IMethod {
 	/**
 	 * @see IMethod
 	 */
+	@Override
 	public boolean isConstructor() throws ModelException {
 		return ((SourceMethodElementInfo) getElementInfo()).isConstructor();
 	}
@@ -74,6 +78,7 @@ public class SourceMethod extends NamedMember implements IMethod {
 		return JEM_METHOD;
 	}
 
+	@Override
 	public String getFullyQualifiedName(String enclosingTypeSeparator) {
 		try {
 			return getFullyQualifiedName(enclosingTypeSeparator, false);
@@ -83,6 +88,7 @@ public class SourceMethod extends NamedMember implements IMethod {
 		}
 	}
 
+	@Override
 	public String getFullyQualifiedName() {
 		return getFullyQualifiedName("$"); //$NON-NLS-1$
 	}
@@ -101,6 +107,7 @@ public class SourceMethod extends NamedMember implements IMethod {
 		return null;
 	}
 
+	@Override
 	public String getType() throws ModelException {
 		return ((SourceMethodElementInfo) getElementInfo()).getReturnTypeName();
 	}

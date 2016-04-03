@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *     Tim Hanson (thanson@bea.com) - patch for https://bugs.eclipse.org/bugs/show_bug.cgi?id=126673
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
@@ -55,6 +54,7 @@ public class Buffer implements IBuffer {
 		}
 	}
 
+	@Override
 	public synchronized void addBufferChangedListener(
 			IBufferChangedListener listener) {
 		if (this.changeListeners == null) {
@@ -69,6 +69,7 @@ public class Buffer implements IBuffer {
 	 * Append the <code>text</code> to the actual content, the gap is moved to
 	 * the end of the <code>text</code>.
 	 */
+	@Override
 	public void append(char[] text) {
 		if (!isReadOnly()) {
 			if (text == null || text.length == 0) {
@@ -92,6 +93,7 @@ public class Buffer implements IBuffer {
 	 * Append the <code>text</code> to the actual content, the gap is moved to
 	 * the end of the <code>text</code>.
 	 */
+	@Override
 	public void append(String text) {
 		if (text == null) {
 			return;
@@ -99,6 +101,7 @@ public class Buffer implements IBuffer {
 		this.append(text.toCharArray());
 	}
 
+	@Override
 	public void close() {
 		BufferChangedEvent event = null;
 		synchronized (this.lock) {
@@ -116,6 +119,7 @@ public class Buffer implements IBuffer {
 		}
 	}
 
+	@Override
 	public char getChar(int position) {
 		synchronized (this.lock) {
 			if (this.contents == null)
@@ -128,6 +132,7 @@ public class Buffer implements IBuffer {
 		}
 	}
 
+	@Override
 	public char[] getCharacters() {
 		synchronized (this.lock) {
 			if (this.contents == null)
@@ -144,6 +149,7 @@ public class Buffer implements IBuffer {
 		}
 	}
 
+	@Override
 	public String getContents() {
 		char[] chars = this.getCharacters();
 		if (chars == null)
@@ -151,6 +157,7 @@ public class Buffer implements IBuffer {
 		return new String(chars);
 	}
 
+	@Override
 	public int getLength() {
 		synchronized (this.lock) {
 			if (this.contents == null)
@@ -160,10 +167,12 @@ public class Buffer implements IBuffer {
 		}
 	}
 
+	@Override
 	public IOpenable getOwner() {
 		return this.owner;
 	}
 
+	@Override
 	public String getText(int offset, int length) {
 		synchronized (this.lock) {
 			if (this.contents == null)
@@ -182,18 +191,22 @@ public class Buffer implements IBuffer {
 		}
 	}
 
+	@Override
 	public IResource getUnderlyingResource() {
 		return this.file;
 	}
 
+	@Override
 	public boolean hasUnsavedChanges() {
 		return (this.flags & F_HAS_UNSAVED_CHANGES) != 0;
 	}
 
+	@Override
 	public boolean isClosed() {
 		return (this.flags & F_IS_CLOSED) != 0;
 	}
 
+	@Override
 	public boolean isReadOnly() {
 		return (this.flags & F_IS_READ_ONLY) != 0;
 	}
@@ -255,12 +268,14 @@ public class Buffer implements IBuffer {
 			for (int i = 0, size = listeners.size(); i < size; ++i) {
 				final IBufferChangedListener listener = listeners.get(i);
 				SafeRunner.run(new ISafeRunnable() {
+					@Override
 					public void handleException(Throwable exception) {
 						Util
 								.log(exception,
 										"Exception occurred in listener of buffer change notification"); //$NON-NLS-1$
 					}
 
+					@Override
 					public void run() throws Exception {
 						listener.bufferChanged(event);
 					}
@@ -270,6 +285,7 @@ public class Buffer implements IBuffer {
 		}
 	}
 
+	@Override
 	public synchronized void removeBufferChangedListener(
 			IBufferChangedListener listener) {
 		if (this.changeListeners != null) {
@@ -286,6 +302,7 @@ public class Buffer implements IBuffer {
 	 * After that operation, the gap is placed at the end of the 
 	 * inserted <code>text</code>.
 	 */
+	@Override
 	public void replace(int position, int length, char[] text) {
 		if (!isReadOnly()) {
 			int textLength = text == null ? 0 : text.length;
@@ -326,12 +343,14 @@ public class Buffer implements IBuffer {
 	 * After that operation, the gap is placed at the end of the 
 	 * inserted <code>text</code>.
 	 */
+	@Override
 	public void replace(int position, int length, String text) {
 		this
 				.replace(position, length, text == null ? null : text
 						.toCharArray());
 	}
 
+	@Override
 	public void save(IProgressMonitor progress, boolean force)
 			throws ModelException {
 
@@ -400,6 +419,7 @@ public class Buffer implements IBuffer {
 		this.flags &= ~(F_HAS_UNSAVED_CHANGES);
 	}
 
+	@Override
 	public void setContents(char[] newContents) {
 
 		// allow special case for first initialization
@@ -431,6 +451,7 @@ public class Buffer implements IBuffer {
 		}
 	}
 
+	@Override
 	public void setContents(String newContents) {
 		this.setContents(newContents.toCharArray());
 	}
@@ -446,6 +467,7 @@ public class Buffer implements IBuffer {
 		}
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer

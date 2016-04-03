@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -236,6 +235,7 @@ public class ModelElementDelta extends SimpleDelta implements IModelElementDelta
 	}
 	
 	
+	@Override
 	public IModelElement getElement() {
 		return this.changedElement;
 	}
@@ -300,11 +300,13 @@ public class ModelElementDelta extends SimpleDelta implements IModelElementDelta
 		return e1.equals(e2) && ((parent1 = e1.getParent()) != null) && parent1.equals(e2.getParent());
 	}
 	
+	@Override
 	public IModelElementDelta[] getAddedChildren()
 	{
 		return getChildrenOfType(ADDED);
 	}
 
+	@Override
 	public IModelElementDelta[] getAffectedChildren() {
 		return this.affectedChildren;
 	}
@@ -368,6 +370,7 @@ public class ModelElementDelta extends SimpleDelta implements IModelElementDelta
 	/**
 	 * Return the collection of resource deltas. Return null if none.
 	 */
+	@Override
 	public IResourceDelta[] getResourceDeltas() {
 		if (resourceDeltas == null) return null;
 		if (resourceDeltas.length != resourceDeltasCounter) {
@@ -519,9 +522,11 @@ public class ModelElementDelta extends SimpleDelta implements IModelElementDelta
 		return childrenOfType;
 	}
 	
+	@Override
 	public IModelElement getMovedFromElement() {
 		return this.movedFromHandle;
 	}
+	@Override
 	public IModelElement getMovedToElement() {
 		return movedToHandle;
 	}

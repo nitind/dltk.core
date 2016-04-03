@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -45,6 +45,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 		this.delta = delta;
 	}
 
+	@Override
 	public IResourceDelta getResourceDelta() {
 		return delta;
 	}
@@ -52,6 +53,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 	@SuppressWarnings("unchecked")
 	private final List<IPath>[] deletes = new List[9];
 
+	@Override
 	public List<IPath> getDeletes(int options) throws CoreException {
 		validateFlags(options, NO_RENAMES);
 		loadData();
@@ -68,6 +70,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 		return deletes[options];
 	}
 
+	@Override
 	public List<IRenameChange> getRenames() throws CoreException {
 		loadData();
 		if (projectRenames != null) {
@@ -80,6 +83,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 	@SuppressWarnings("unchecked")
 	private final List<IFile>[] resources = new List[16];
 
+	@Override
 	public List<IFile> getResources(int options) throws CoreException {
 		options = validateFlags(options, ALL | NO_RENAMES | ADDED | CHANGED);
 		if ((options & (ADDED | CHANGED | NO_RENAMES)) == (CHANGED | NO_RENAMES)) {
@@ -112,6 +116,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 	@SuppressWarnings("unchecked")
 	private final List<ISourceModule>[] modules = new List[4];
 
+	@Override
 	public List<ISourceModule> getSourceModules(int options)
 			throws CoreException {
 		options = validateFlags(options, ADDED | CHANGED);
@@ -261,6 +266,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 		return false;
 	}
 
+	@Override
 	public boolean visit(IResourceDelta delta) throws CoreException {
 		checkCanceled();
 		final IResource resource = delta.getResource();

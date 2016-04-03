@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,9 +30,7 @@ public class UserLibraryBuildpathContainer implements IBuildpathContainer {
 		this.toolkit = languageToolkit;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.IClasspathContainer#getClasspathEntries()
-	 */
+	@Override
 	public IBuildpathEntry[] getBuildpathEntries() {
 		UserLibrary library= getUserLibrary();
 		if (library != null) {
@@ -41,16 +39,12 @@ public class UserLibraryBuildpathContainer implements IBuildpathContainer {
 		return new IBuildpathEntry[0];
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.IClasspathContainer#getDescription()
-	 */
+	@Override
 	public String getDescription() {
 		return this.name;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.IClasspathContainer#getKind()
-	 */
+	@Override
 	public int getKind() {
 		UserLibrary library= getUserLibrary();
 		if (library != null && library.isSystemLibrary()) {
@@ -59,9 +53,7 @@ public class UserLibraryBuildpathContainer implements IBuildpathContainer {
 		return K_APPLICATION;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.IClasspathContainer#getPath()
-	 */
+	@Override
 	public IPath getPath() {
 		return new Path(DLTKCore.USER_LIBRARY_CONTAINER_ID).append(this.name);
 	}

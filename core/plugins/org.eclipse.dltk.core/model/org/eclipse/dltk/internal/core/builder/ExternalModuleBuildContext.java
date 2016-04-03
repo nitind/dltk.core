@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -33,35 +33,39 @@ public class ExternalModuleBuildContext extends AbstractBuildContext implements
 	/*
 	 * @see org.eclipse.dltk.core.builder.IBuildContext#getFileHandle()
 	 */
+	@Override
 	public IFileHandle getFileHandle() {
 		// TODO test!!
 		return EnvironmentPathUtils.getFile(module.getPath());
 	}
 
+	@Override
 	public IProblemReporter getProblemReporter() {
 		return this;
 	}
 
+	@Override
 	public ITaskReporter getTaskReporter() {
 		return this;
 	}
 
+	@Override
 	public void reportTask(String message, int lineNumber, int priority,
 			int charStart, int charEnd) {
 		// NOP
 	}
 
+	@Override
 	public void reportProblem(IProblem problem) {
 		// NOP
 	}
 
-	/*
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
+	@Override
 	public Object getAdapter(Class adapter) {
 		return null;
 	}
 
+	@Override
 	public void recordDependency(IPath dependency, int flags) {
 		// NOP
 	}

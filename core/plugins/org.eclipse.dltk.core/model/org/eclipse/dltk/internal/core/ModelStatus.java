@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -134,18 +133,14 @@ public class ModelStatus extends Status implements IModelStatus,
 		this.string = string;
 	}
 
-	/**
-	 * @see IModelStatus#isDoesNotExist()
-	 */
+	@Override
 	public boolean isDoesNotExist() {
 		int code = getCode();
 		return code == ELEMENT_DOES_NOT_EXIST
 				|| code == ELEMENT_NOT_ON_BUILDPATH;
 	}
 
-	/**
-	 * @see IModelStatus#getPath()
-	 */
+	@Override
 	public IPath getPath() {
 		return path;
 	}
@@ -154,6 +149,7 @@ public class ModelStatus extends Status implements IModelStatus,
 	 * Returns a printable representation of this exception for debugging
 	 * purposes.
 	 */
+	@Override
 	public String toString() {
 		if (this == VERIFIED_OK) {
 			return "ModelStatus[OK]"; //$NON-NLS-1$
@@ -168,6 +164,7 @@ public class ModelStatus extends Status implements IModelStatus,
 	/**
 	 * Returns the message that is relevant to the code of this status.
 	 */
+	@Override
 	public String getMessage() {
 		Throwable exception = getException();
 		if (exception == null) {

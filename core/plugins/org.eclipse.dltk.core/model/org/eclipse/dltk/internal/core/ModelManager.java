@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -142,21 +141,26 @@ public class ModelManager implements ISaveParticipant {
 			"Variable Initialization In Progress"); //$NON-NLS-1$
 
 	public final static IBuildpathContainer CONTAINER_INITIALIZATION_IN_PROGRESS = new IBuildpathContainer() {
+		@Override
 		public IBuildpathEntry[] getBuildpathEntries() {
 			return null;
 		}
 
+		@Override
 		public String getDescription() {
 			return "Container Initialization In Progress";} //$NON-NLS-1$
 
+		@Override
 		public int getKind() {
 			return 0;
 		}
 
+		@Override
 		public IPath getPath() {
 			return null;
 		}
 
+		@Override
 		public String toString() {
 			return getDescription();
 		}
@@ -416,18 +420,21 @@ public class ModelManager implements ISaveParticipant {
 			this.problemRequestor = problemRequestor;
 		}
 
+		@Override
 		public void acceptProblem(IProblem problem) {
 			if (this.problemRequestor == null)
 				return;
 			this.problemRequestor.acceptProblem(problem);
 		}
 
+		@Override
 		public void beginReporting() {
 			if (this.problemRequestor == null)
 				return;
 			this.problemRequestor.beginReporting();
 		}
 
+		@Override
 		public void endReporting() {
 			if (this.problemRequestor == null)
 				return;
@@ -438,11 +445,13 @@ public class ModelManager implements ISaveParticipant {
 			return this.workingCopy;
 		}
 
+		@Override
 		public boolean isActive() {
 			return this.problemRequestor != null
 					&& this.problemRequestor.isActive();
 		}
 
+		@Override
 		public String toString() {
 			StringBuffer buffer = new StringBuffer();
 			buffer.append("Info for "); //$NON-NLS-1$
@@ -1271,6 +1280,7 @@ public class ModelManager implements ISaveParticipant {
 			initializePreferences();
 			// Listen to preference changes
 			this.propertyListener = new IEclipsePreferences.IPreferenceChangeListener() {
+				@Override
 				public void preferenceChange(PreferenceChangeEvent event) {
 					ModelManager.this.optionsCache = null;
 				}
@@ -1280,6 +1290,7 @@ public class ModelManager implements ISaveParticipant {
 			// listen for encoding changes (see
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=255501 )
 			this.resourcesPropertyListener = new IEclipsePreferences.IPreferenceChangeListener() {
+				@Override
 				public void preferenceChange(PreferenceChangeEvent event) {
 					if (ResourcesPlugin.PREF_ENCODING.equals(event.getKey())) {
 						ModelManager.this.optionsCache = null;
@@ -1310,12 +1321,14 @@ public class ModelManager implements ISaveParticipant {
 			// indexes are up-to-date.
 			// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=38658
 			Job processSavedState = new Job(Messages.savedState_jobName) {
+				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
 						// add save participant and process delta atomically
 						// see
 						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=59937
 						workspace.run(new IWorkspaceRunnable() {
+							@Override
 							public void run(IProgressMonitor progress)
 									throws CoreException {
 								ISavedState savedState = workspace
@@ -1364,6 +1377,7 @@ public class ModelManager implements ISaveParticipant {
 			// create contributed indexers in a job, so
 			// dltk.core initialization completes earlier.
 			final Job startIndexing = new Job("DLTK indexing initialization") {
+				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					ProjectIndexerManager.startIndexing();
 					return Status.OK_STATUS;
@@ -1383,6 +1397,7 @@ public class ModelManager implements ISaveParticipant {
 		/**
 		 * @see org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener#preferenceChange(org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent)
 		 */
+		@Override
 		public void preferenceChange(
 				IEclipsePreferences.PreferenceChangeEvent event) {
 			String propertyName = event.getKey();
@@ -1485,22 +1500,27 @@ public class ModelManager implements ISaveParticipant {
 			if (entries != ScriptProject.INVALID_BUILDPATH) {
 				final IBuildpathEntry[] containerEntries = entries;
 				IBuildpathContainer container = new IBuildpathContainer() {
+					@Override
 					public IBuildpathEntry[] getBuildpathEntries() {
 						return containerEntries;
 					}
 
+					@Override
 					public String getDescription() {
 						return "Persisted container [" + containerPath + " for project [" + project.getElementName() + "]"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 					}
 
+					@Override
 					public int getKind() {
 						return 0;
 					}
 
+					@Override
 					public IPath getPath() {
 						return containerPath;
 					}
 
+					@Override
 					public String toString() {
 						return getDescription();
 					}
@@ -1534,10 +1554,12 @@ public class ModelManager implements ISaveParticipant {
 		// Listen to instance preferences node removal from parent in order to
 		// refresh stored one
 		IEclipsePreferences.INodeChangeListener listener = new IEclipsePreferences.INodeChangeListener() {
+			@Override
 			public void added(IEclipsePreferences.NodeChangeEvent event) {
 				// do nothing
 			}
 
+			@Override
 			public void removed(IEclipsePreferences.NodeChangeEvent event) {
 				if (event.getChild() == preferencesLookup[PREF_INSTANCE]) {
 					preferencesLookup[PREF_INSTANCE] = InstanceScope.INSTANCE
@@ -1554,10 +1576,12 @@ public class ModelManager implements ISaveParticipant {
 		// Listen to default preferences node removal from parent in order to
 		// refresh stored one
 		listener = new IEclipsePreferences.INodeChangeListener() {
+			@Override
 			public void added(IEclipsePreferences.NodeChangeEvent event) {
 				// do nothing
 			}
 
+			@Override
 			public void removed(IEclipsePreferences.NodeChangeEvent event) {
 				if (event.getChild() == preferencesLookup[PREF_DEFAULT]) {
 					preferencesLookup[PREF_DEFAULT] = DefaultScope.INSTANCE

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -75,6 +74,7 @@ public class CopyElementsOperation extends MultiOperation {
 	 * Returns the <code>String</code> to use as the main task name for
 	 * progress monitoring.
 	 */
+	@Override
 	protected String getMainTaskName() {
 		return Messages.operation_copyElementProgress;
 	}
@@ -110,6 +110,7 @@ public class CopyElementsOperation extends MultiOperation {
 	 * @exception ScriptModelException
 	 *                if the operation is unable to be completed
 	 */
+	@Override
 	protected void processElement(IModelElement element) throws ModelException {
 		ModelOperation op = getNestedOperation(element);
 //		boolean createElementInCUOperation = op instanceof CreateElementInCUOperation;
@@ -184,6 +185,7 @@ public class CopyElementsOperation extends MultiOperation {
 	 * operation does not match the number of elements that were supplied.
 	 * </ul>
 	 */
+	@Override
 	protected IModelStatus verify() {
 		IModelStatus status = super.verify();
 		if (!status.isOK()) {
@@ -222,6 +224,7 @@ public class CopyElementsOperation extends MultiOperation {
 	 * 
 	 * </ul>
 	 */
+	@Override
 	protected void verify(IModelElement element) throws ModelException {
 		if (element == null || !element.exists())
 			error(IModelStatusConstants.ELEMENT_DOES_NOT_EXIST, element);

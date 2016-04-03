@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -99,6 +98,7 @@ public abstract class OverflowingLRUCache extends LRUCache {
 	 * 
 	 * @return New copy of this object.
 	 */
+	@Override
 	public Object clone() {
 
 		OverflowingLRUCache newCache = (OverflowingLRUCache) newInstance(
@@ -146,6 +146,7 @@ public abstract class OverflowingLRUCache extends LRUCache {
 		return new LRUCacheEnumerator(head);
 	}
 
+	@Override
 	public double fillingRatio() {
 		return (fCurrentSpace + fOverflow) * 100.0 / fSpaceLimit;
 	}
@@ -185,6 +186,7 @@ public abstract class OverflowingLRUCache extends LRUCache {
 	 * @param space
 	 *            Amount of space to free up
 	 */
+	@Override
 	protected boolean makeSpace(int space) {
 
 		int limit = fSpaceLimit;
@@ -263,6 +265,7 @@ public abstract class OverflowingLRUCache extends LRUCache {
 				fCount = 1;
 			}
 
+			@Override
 			public String toString() {
 				return "Class: " + fClass + " has " + fCount + " entries."; //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-1$
 			}
@@ -295,6 +298,7 @@ public abstract class OverflowingLRUCache extends LRUCache {
 	 *            indicates whether we are just shuffling the queue (in which
 	 *            case, the entry table is not modified).
 	 */
+	@Override
 	protected void privateRemoveEntry(LRUCacheEntry entry, boolean shuffle) {
 		privateRemoveEntry(entry, shuffle, true);
 	}
@@ -362,6 +366,7 @@ public abstract class OverflowingLRUCache extends LRUCache {
 	 *            Value of object to add.
 	 * @return added value.
 	 */
+	@Override
 	public Object put(Object key, Object value) {
 		/* attempt to rid ourselves of the overflow, if there is any */
 		if (fOverflow > 0)
@@ -437,6 +442,7 @@ public abstract class OverflowingLRUCache extends LRUCache {
 	 * @param limit
 	 *            Number of units of cache space
 	 */
+	@Override
 	public void setSpaceLimit(int limit) {
 		if (limit < fSpaceLimit) {
 			makeSpace(fSpaceLimit - limit);
@@ -458,6 +464,7 @@ public abstract class OverflowingLRUCache extends LRUCache {
 	 * Returns a String that represents the value of this object. This method is
 	 * for debugging purposes only.
 	 */
+	@Override
 	public String toString() {
 		return toStringFillingRation("OverflowingLRUCache ") + //$NON-NLS-1$
 				toStringContents();
@@ -470,6 +477,7 @@ public abstract class OverflowingLRUCache extends LRUCache {
 	 * <p>
 	 * This method will do nothing if timestamps have been disabled.
 	 */
+	@Override
 	protected void updateTimestamp(LRUCacheEntry entry) {
 		if (fTimestampsOn) {
 			entry._fTimestamp = fTimestampCounter++;

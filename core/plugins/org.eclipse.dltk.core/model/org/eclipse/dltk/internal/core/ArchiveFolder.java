@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -56,6 +55,7 @@ public class ArchiveFolder extends ScriptFolder {
 		}
 	}
 
+	@Override
 	public ISourceModule getSourceModule(String name) {
 		ArchiveProjectFragment fragment = (ArchiveProjectFragment) getProjectFragment();
 		// Path zipPath = new Path(fragment.getZipName());
@@ -87,6 +87,7 @@ public class ArchiveFolder extends ScriptFolder {
 		return true;
 	}
 
+	@Override
 	public ISourceModule[] getSourceModules() throws ModelException {
 		List<IModelElement> list = getChildrenOfType(SOURCE_MODULE);
 		ISourceModule[] array = new ISourceModule[list.size()];
@@ -94,11 +95,13 @@ public class ArchiveFolder extends ScriptFolder {
 		return array;
 	}
 
+	@Override
 	public boolean isReadOnly() {
 		return true;
 	}
 
 	// Open my archive: this creates all the pkg infos
+	@Override
 	protected void generateInfos(Object info, HashMap newElements,
 			IProgressMonitor pm) throws ModelException {
 		// Open my archive: this creates all the pkg infos
@@ -109,11 +112,13 @@ public class ArchiveFolder extends ScriptFolder {
 		}
 	}
 
+	@Override
 	protected Object createElementInfo() {
 		return null; // not used for ArchiveFolders: info is created when
 		// archive is opened
 	}
 
+	@Override
 	public Object[] getForeignResources() throws ModelException {
 		return ((ArchiveFolderInfo) getElementInfo()).getForeignResources();
 	}

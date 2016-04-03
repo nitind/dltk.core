@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -27,6 +26,7 @@ import org.eclipse.dltk.core.IType;
 	/**
 	 * @see IModelElementRequestor
 	 */
+	@Override
 	public void acceptField(IField field) {
 		// implements interface method
 	}
@@ -34,6 +34,7 @@ import org.eclipse.dltk.core.IType;
 	/**
 	 * @see IModelElementRequestor
 	 */
+	@Override
 	public void acceptMemberType(IType type) {
 		fElement = type;
 	}
@@ -41,6 +42,7 @@ import org.eclipse.dltk.core.IType;
 	/**
 	 * @see IModelElementRequestor
 	 */
+	@Override
 	public void acceptMethod(IMethod method) {
 		// implements interface method
 	}
@@ -48,6 +50,7 @@ import org.eclipse.dltk.core.IType;
 	/**
 	 * @see IModelElementRequestor
 	 */
+	@Override
 	public void acceptScriptFolder(IScriptFolder ScriptFolder) {
 		// implements interface method
 	}
@@ -55,6 +58,7 @@ import org.eclipse.dltk.core.IType;
 	/**
 	 * @see IModelElementRequestor
 	 */
+	@Override
 	public void acceptType(IType type) {
 		fElement = type;
 	}
@@ -70,6 +74,7 @@ import org.eclipse.dltk.core.IType;
 	/**
 	 * @see IModelElementRequestor
 	 */
+	@Override
 	public boolean isCanceled() {
 		return fElement != null;
 	}

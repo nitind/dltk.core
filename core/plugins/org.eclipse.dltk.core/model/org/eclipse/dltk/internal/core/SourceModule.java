@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,11 +38,7 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 
 	// ~ Methods
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.core.ISourceModule#becomeWorkingCopy(org.eclipse.dltk
-	 * .core.IProblemRequestor, org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public void becomeWorkingCopy(IProblemRequestor problemRequestor,
 			IProgressMonitor monitor) throws ModelException {
 		ModelManager manager = ModelManager.getModelManager();
@@ -89,10 +85,7 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 		super.close();
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceModule#commitWorkingCopy(boolean,
-	 * org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public void commitWorkingCopy(boolean force, IProgressMonitor monitor)
 			throws ModelException {
 		CommitWorkingCopyOperation op = new CommitWorkingCopyOperation(this,
@@ -100,19 +93,14 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 		op.runOperation(monitor);
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceManipulation#delete(boolean,
-	 * org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public void delete(boolean force, IProgressMonitor monitor)
 			throws ModelException {
 		IModelElement[] elements = new IModelElement[] { this };
 		getModel().delete(elements, force, monitor);
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceModule#discardWorkingCopy()
-	 */
+	@Override
 	public void discardWorkingCopy() throws ModelException {
 		// discard working copy and its children
 		DiscardWorkingCopyOperation op = new DiscardWorkingCopyOperation(this);
@@ -139,9 +127,7 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 		return super.exists();
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.IDependent#getFileName()
-	 */
+	@Override
 	public String getFileName() {
 		return this.getPath().toString();
 	}
@@ -159,9 +145,7 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 				false, false, null);
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.IModelElement#getResource()
-	 */
+	@Override
 	public IResource getResource() {
 		IProjectFragment root = this.getProjectFragment();
 		if (root.isArchive()) {
@@ -172,12 +156,7 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 				this.getElementName()));
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.core.ISourceModule#getWorkingCopy(org.eclipse.dltk.core
-	 * .WorkingCopyOwner, org.eclipse.dltk.core.IProblemRequestor,
-	 * org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public ISourceModule getWorkingCopy(WorkingCopyOwner workingCopyOwner,
 			IProblemRequestor problemRequestor, IProgressMonitor monitor)
 			throws ModelException {
@@ -226,9 +205,7 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 				.getModificationStamp();
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceModule#isWorkingCopy()
-	 */
+	@Override
 	public boolean isWorkingCopy() {
 		// For backward compatibility, non primary working copies are always
 		// returning true; in removal
@@ -278,12 +255,7 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 		}
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.core.ISourceManipulation#move(org.eclipse.dltk.core.
-	 * IModelElement, org.eclipse.dltk.core.IModelElement, java.lang.String,
-	 * boolean, org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public void move(IModelElement container, IModelElement sibling,
 			String rename, boolean replace, IProgressMonitor monitor)
 			throws ModelException {
@@ -303,11 +275,7 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 				.move(elements, containers, null, renamings, replace, monitor);
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceModule#reconcile(boolean,
-	 * org.eclipse.dltk.core.WorkingCopyOwner,
-	 * org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public void reconcile(boolean forceProblemDetection,
 			WorkingCopyOwner workingCopyOwner, IProgressMonitor monitor)
 			throws ModelException {
@@ -333,10 +301,7 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 		}
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceManipulation#rename(java.lang.String,
-	 * boolean, org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public void rename(String newName, boolean replace, IProgressMonitor monitor)
 			throws ModelException {
 		if (newName == null) {

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -78,6 +77,7 @@ public class ModelElementRequestor implements IModelElementRequestor {
 	/**
 	 * @see IModelElementRequestor
 	 */
+	@Override
 	public void acceptField(IField field) {
 		if (fFields == null) {
 			fFields = new ArrayList();
@@ -88,6 +88,7 @@ public class ModelElementRequestor implements IModelElementRequestor {
 	/**
 	 * @see IModelElementRequestor
 	 */
+	@Override
 	public void acceptMemberType(IType type) {
 		if (fMemberTypes == null) {
 			fMemberTypes = new ArrayList();
@@ -98,6 +99,7 @@ public class ModelElementRequestor implements IModelElementRequestor {
 	/**
 	 * @see IModelElementRequestor
 	 */
+	@Override
 	public void acceptMethod(IMethod method) {
 		if (fMethods == null) {
 			fMethods = new ArrayList();
@@ -108,6 +110,7 @@ public class ModelElementRequestor implements IModelElementRequestor {
 	/**
 	 * @see IModelElementRequestor
 	 */
+	@Override
 	public void acceptScriptFolder(IScriptFolder ScriptFolder) {
 		if (fScriptFolders == null) {
 			fScriptFolders = new ArrayList();
@@ -118,6 +121,7 @@ public class ModelElementRequestor implements IModelElementRequestor {
 	/**
 	 * @see IModelElementRequestor
 	 */
+	@Override
 	public void acceptType(IType type) {
 		if (fTypes == null) {
 			fTypes = new ArrayList();
@@ -194,6 +198,7 @@ public class ModelElementRequestor implements IModelElementRequestor {
 	/**
 	 * @see IModelElementRequestor
 	 */
+	@Override
 	public boolean isCanceled() {
 		return fCanceled;
 	}

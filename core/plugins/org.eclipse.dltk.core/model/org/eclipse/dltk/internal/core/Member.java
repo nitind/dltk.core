@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -29,12 +28,14 @@ public abstract class Member extends SourceRefElement implements IMember {
 		super(parent);
 	}
 
+	@Override
 	protected void closing(Object info) throws ModelException {
 	}
 
 	/**
 	 * @see IMember
 	 */
+	@Override
 	public ISourceRange getNameRange() throws ModelException {
 		Object elementInfo = getElementInfo();
 		if (elementInfo instanceof MemberElementInfo) {
@@ -46,6 +47,7 @@ public abstract class Member extends SourceRefElement implements IMember {
 		}
 	}
 
+	@Override
 	public int getFlags() throws ModelException {
 		Object o = getElementInfo();
 		if (o instanceof MemberElementInfo) {
@@ -56,10 +58,12 @@ public abstract class Member extends SourceRefElement implements IMember {
 		}
 	}
 
+	@Override
 	public INamespace getNamespace() throws ModelException {
 		return ((MemberElementInfo) getElementInfo()).getNamespace();
 	}
 
+	@Override
 	public IModelElement getHandleFromMemento(String token,
 			MementoTokenizer memento, WorkingCopyOwner workingCopyOwner) {
 		switch (token.charAt(0)) {
@@ -124,6 +128,7 @@ public abstract class Member extends SourceRefElement implements IMember {
 		return null;
 	}
 
+	@Override
 	public IType getType(String typeName, int count) {
 		if (false) {// isBinary()) {
 			throw new IllegalArgumentException(
@@ -138,6 +143,7 @@ public abstract class Member extends SourceRefElement implements IMember {
 	/**
 	 * @see IMember
 	 */
+	@Override
 	public IType getDeclaringType() {
 		ModelElement parentElement = (ModelElement) getParent();
 		if (parentElement.getElementType() == TYPE) {

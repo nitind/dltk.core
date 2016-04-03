@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -38,6 +37,7 @@ public class Region implements IRegion {
 	/**
 	 * @see IRegion#add(IJavaElement)
 	 */
+	@Override
 	public void add(IModelElement element) {
 		if (!contains(element)) {
 			// "new" element added to region
@@ -50,6 +50,7 @@ public class Region implements IRegion {
 	/**
 	 * @see IRegion
 	 */
+	@Override
 	public boolean contains(IModelElement element) {
 
 		int size = fRootElements.size();
@@ -89,6 +90,7 @@ public class Region implements IRegion {
 	/**
 	 * @see IRegion
 	 */
+	@Override
 	public IModelElement[] getElements() {
 		int size = fRootElements.size();
 		IModelElement[] roots = new IModelElement[size];
@@ -102,6 +104,7 @@ public class Region implements IRegion {
 	/**
 	 * @see IRegion#close(IJavaElement)
 	 */
+	@Override
 	public boolean remove(IModelElement element) {
 
 		removeAllChildren(element);
@@ -142,6 +145,7 @@ public class Region implements IRegion {
 	/**
 	 * Returns a printable representation of this region.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		IModelElement[] roots = getElements();

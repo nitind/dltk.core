@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -101,6 +100,7 @@ public abstract class ModelElement extends PlatformObject implements
 	/**
 	 * @see IModelElement
 	 */
+	@Override
 	public boolean exists() {
 
 		try {
@@ -118,6 +118,7 @@ public abstract class ModelElement extends PlatformObject implements
 	/**
 	 * @see IModelElement
 	 */
+	@Override
 	public IModelElement getAncestor(int ancestorType) {
 
 		IModelElement element = this;
@@ -129,6 +130,7 @@ public abstract class ModelElement extends PlatformObject implements
 		return null;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <E extends IModelElement> E getAncestor(Class<E> elementClass) {
 		IModelElement element = this;
@@ -221,6 +223,7 @@ public abstract class ModelElement extends PlatformObject implements
 	/*
 	 * @see IModelElement
 	 */
+	@Override
 	public IOpenable getOpenable() {
 		return this.getOpenableParent();
 	}
@@ -239,6 +242,7 @@ public abstract class ModelElement extends PlatformObject implements
 	/**
 	 * @see IModelElement
 	 */
+	@Override
 	public IModelElement getParent() {
 		return this.parent;
 	}
@@ -259,6 +263,7 @@ public abstract class ModelElement extends PlatformObject implements
 	/**
 	 * @see IAdaptable
 	 */
+	@Override
 	public String getElementName() {
 		return ""; //$NON-NLS-1$
 	}
@@ -283,6 +288,7 @@ public abstract class ModelElement extends PlatformObject implements
 	 * 
 	 * @see Object#equals
 	 */
+	@Override
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
@@ -304,6 +310,7 @@ public abstract class ModelElement extends PlatformObject implements
 	 * for an element is a combination of its name and parent's hash code.
 	 * Elements with other requirements must override this method.
 	 */
+	@Override
 	public int hashCode() {
 		if (this.parent == null)
 			return super.hashCode();
@@ -326,6 +333,7 @@ public abstract class ModelElement extends PlatformObject implements
 	/**
 	 * @see IModelElement
 	 */
+	@Override
 	public boolean isReadOnly() {
 		return false;
 	}
@@ -376,6 +384,7 @@ public abstract class ModelElement extends PlatformObject implements
 	/**
 	 * @see IModelElement
 	 */
+	@Override
 	public IScriptModel getModel() {
 		IModelElement current = this;
 		do {
@@ -400,6 +409,7 @@ public abstract class ModelElement extends PlatformObject implements
 	/**
 	 * @see IModelElement
 	 */
+	@Override
 	public IScriptProject getScriptProject() {
 		IModelElement current = this;
 		do {
@@ -442,6 +452,7 @@ public abstract class ModelElement extends PlatformObject implements
 	/**
 	 * Debugging purposes
 	 */
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		toString(0, buffer);
@@ -663,9 +674,7 @@ public abstract class ModelElement extends PlatformObject implements
 		output.dedent();
 	}
 
-	/*
-	 * @see IModelElement#getPrimaryElement()
-	 */
+	@Override
 	public IModelElement getPrimaryElement() {
 		return getPrimaryElement(true);
 	}
@@ -678,6 +687,7 @@ public abstract class ModelElement extends PlatformObject implements
 		return this;
 	}
 
+	@Override
 	public IModelElement getHandleFromMemento(MementoTokenizer memento,
 			WorkingCopyOwner owner) {
 		if (!memento.hasMoreTokens())
@@ -686,9 +696,11 @@ public abstract class ModelElement extends PlatformObject implements
 		return getHandleFromMemento(token, memento, owner);
 	}
 
+	@Override
 	public abstract IModelElement getHandleFromMemento(String token,
 			MementoTokenizer memento, WorkingCopyOwner owner);
 
+	@Override
 	public String getHandleIdentifier() {
 		return getHandleMemento();
 	}
@@ -734,6 +746,7 @@ public abstract class ModelElement extends PlatformObject implements
 		return null;
 	}
 
+	@Override
 	public void accept(IModelElementVisitor visitor) throws ModelException {
 		if (visitor.visit(this)) {
 			IModelElement[] elements = getChildren();

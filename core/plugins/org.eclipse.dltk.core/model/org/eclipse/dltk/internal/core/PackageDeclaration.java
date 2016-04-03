@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -29,12 +28,14 @@ import org.eclipse.dltk.utils.CorePrinter;
 		this.name = name;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof PackageDeclaration))
 			return false;
 		return super.equals(o);
 	}
 
+	@Override
 	public String getElementName() {
 		return this.name;
 	}
@@ -42,6 +43,7 @@ import org.eclipse.dltk.utils.CorePrinter;
 	/**
 	 * @see IModelElement
 	 */
+	@Override
 	public int getElementType() {
 		return PACKAGE_DECLARATION;
 	}
@@ -49,13 +51,12 @@ import org.eclipse.dltk.utils.CorePrinter;
 	/**
 	 * @see ModelElement#getHandleMemento()
 	 */
+	@Override
 	protected char getHandleMementoDelimiter() {
 		return ModelElement.JEM_PACKAGEDECLARATION;
 	}
 
-	/*
-	 * @see ModelElement#getPrimaryElement(boolean)
-	 */
+	@Override
 	public IModelElement getPrimaryElement(boolean checkOwner) {
 		ISourceModule cu = (ISourceModule) getAncestor(SOURCE_MODULE);
 		if (checkOwner && cu.isPrimary())
@@ -66,6 +67,7 @@ import org.eclipse.dltk.utils.CorePrinter;
 	/**
 	 * @private Debugging purposes
 	 */
+	@Override
 	protected void toStringInfo(int tab, StringBuffer buffer, Object info, boolean showResolvedInfo) {
 		buffer.append(this.tabString(tab));
 		buffer.append("package "); //$NON-NLS-1$
@@ -75,12 +77,15 @@ import org.eclipse.dltk.utils.CorePrinter;
 		}
 	}
 
+	@Override
 	protected void closing(Object info) throws ModelException {
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public ISourceRange getNameRange() throws ModelException {
 		return getSourceRange();
 	}

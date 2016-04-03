@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -69,6 +68,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	 * 
 	 * @see IBufferChangedListener
 	 */
+	@Override
 	public void bufferChanged(BufferChangedEvent event) {
 		if (event.getBuffer().isClosed()) {
 			ModelManager.getModelManager().getElementsOutOfSynchWithBuffers()
@@ -129,6 +129,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	/**
 	 * This element is being closed. Do any necessary cleanup.
 	 */
+	@Override
 	protected void closing(Object info) {
 		closeBuffer();
 	}
@@ -136,6 +137,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	/**
 	 * @see IModelElement
 	 */
+	@Override
 	public boolean exists() {
 		ModelManager manager = ModelManager.getModelManager();
 		if (manager.getInfo(this) != null)
@@ -149,6 +151,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 		return super.exists();
 	}
 
+	@Override
 	protected void generateInfos(Object info, HashMap newElements,
 			IProgressMonitor monitor) throws ModelException {
 
@@ -219,6 +222,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	 * 
 	 * @see IOpenable
 	 */
+	@Override
 	public IBuffer getBuffer() throws ModelException {
 		if (hasBuffer()) {
 			// ensure element is open
@@ -258,6 +262,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	 * 
 	 * @see IScriptElement
 	 */
+	@Override
 	public IResource getCorrespondingResource() throws ModelException {
 		return getUnderlyingResource();
 	}
@@ -265,10 +270,12 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	/*
 	 * @see IModelElement
 	 */
+	@Override
 	public IOpenable getOpenable() {
 		return this;
 	}
 
+	@Override
 	public IResource getUnderlyingResource() throws ModelException {
 		IResource parentResource = this.parent.getUnderlyingResource();
 		if (parentResource == null) {
@@ -299,6 +306,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	/**
 	 * @see IOpenable
 	 */
+	@Override
 	public boolean hasUnsavedChanges() throws ModelException {
 
 		if (isReadOnly() || !isOpen()) {
@@ -338,6 +346,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	 * 
 	 * @see IOpenable
 	 */
+	@Override
 	public boolean isConsistent() {
 		return true;
 	}
@@ -346,6 +355,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	 * 
 	 * @see IOpenable
 	 */
+	@Override
 	public boolean isOpen() {
 		return ModelManager.getModelManager().getInfo(this) != null;
 	}
@@ -361,6 +371,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	/**
 	 * @see IModelElement
 	 */
+	@Override
 	public boolean isStructureKnown() throws ModelException {
 		return ((OpenableElementInfo) getElementInfo()).isStructureKnown();
 	}
@@ -368,6 +379,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	/**
 	 * @see IOpenable
 	 */
+	@Override
 	public void makeConsistent(IProgressMonitor monitor) throws ModelException {
 		// only source modules can be inconsistent
 		// other openables cannot be inconsistent so default is to do nothing
@@ -376,6 +388,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	/**
 	 * @see IOpenable
 	 */
+	@Override
 	public void open(IProgressMonitor pm) throws ModelException {
 		getElementInfo(pm);
 	}
@@ -431,6 +444,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	/**
 	 * @see IOpenable
 	 */
+	@Override
 	public void save(IProgressMonitor pm, boolean force) throws ModelException {
 		if (isReadOnly()) {
 			throw new ModelException(new ModelStatus(
@@ -568,6 +582,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 		private List<Object> foreignElements;
 		private Map<Object, ISourceRange> ranges;
 
+		@Override
 		public void acceptForeignElement(Object element) {
 			if (element instanceof IModelElement) {
 				acceptModelElement((IModelElement) element);
@@ -579,10 +594,12 @@ public abstract class Openable extends ModelElement implements IOpenable,
 			}
 		}
 
+		@Override
 		public void acceptModelElement(IModelElement element) {
 			elements.add(element);
 		}
 
+		@Override
 		public void acceptElement(Object element, ISourceRange range) {
 			acceptForeignElement(element);
 			if (range != null) {

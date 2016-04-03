@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.builder;
 
@@ -90,6 +89,7 @@ public class ScriptBuilderManager extends
 	protected void initializeDescriptors(List<Object> descriptors) {
 		Collections.sort(descriptors, new Comparator<Object>() {
 
+			@Override
 			public int compare(Object o1, Object o2) {
 				final IConfigurationElement e1 = (IConfigurationElement) o1;
 				final IConfigurationElement e2 = (IConfigurationElement) o2;
@@ -140,6 +140,7 @@ public class ScriptBuilderManager extends
 				return value != null ? value.intValue() : 0;
 			}
 
+			@Override
 			public int compare(IScriptBuilder o1, IScriptBuilder o2) {
 				return priority(o2) - priority(o1);
 			}

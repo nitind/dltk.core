@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -88,6 +88,7 @@ public class BuildParticipantManager extends
 	private static final String ATTR_ID = "id"; //$NON-NLS-1$
 	private static final String ATTR_NAME = "name"; //$NON-NLS-1$
 
+	@Override
 	protected Object createInstanceByDescriptor(Object input)
 			throws CoreException {
 		final IConfigurationElement element = (IConfigurationElement) input;

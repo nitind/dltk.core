@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.hierarchy;
 
@@ -37,6 +36,7 @@ public class HierarchyType implements IGenericType {
 	/**
 	 * @see org.eclipse.jdt.internal.compiler.env.IDependent#getFileName()
 	 */
+	@Override
 	public String getFileName() {
 		return this.typeHandle.getSourceModule().getElementName();
 	}
@@ -45,6 +45,7 @@ public class HierarchyType implements IGenericType {
 	 * Answer an int whose bits are set according the access constants defined
 	 * by the VM spec.
 	 */
+	@Override
 	public int getModifiers() {
 		return this.modifiers;
 	}
@@ -53,6 +54,7 @@ public class HierarchyType implements IGenericType {
 	 * Answer whether the receiver contains the resolved binary form or the
 	 * unresolved source form of the type.
 	 */
+	@Override
 	public boolean isBinaryType() {
 		return false;
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -38,19 +38,23 @@ public class FullBuildChange extends AbstractBuildChange implements
 		super(project, monitor);
 	}
 
+	@Override
 	public IResourceDelta getResourceDelta() {
 		return null;
 	}
 
+	@Override
 	public List<IPath> getDeletes(int options) {
 		validateFlags(options, NO_RENAMES);
 		return Collections.emptyList();
 	}
 
+	@Override
 	public List<IRenameChange> getRenames() {
 		return Collections.emptyList();
 	}
 
+	@Override
 	public List<IFile> getResources(int options) throws CoreException {
 		validateFlags(options, ALL | NO_RENAMES | ADDED | CHANGED);
 		if (checkFlag(options, ALL)) {
@@ -72,6 +76,7 @@ public class FullBuildChange extends AbstractBuildChange implements
 	private List<ISourceModule> projectModules = null;
 	private List<IFile> realResources = null;
 
+	@Override
 	public List<ISourceModule> getSourceModules(int options)
 			throws CoreException {
 		validateFlags(options, ADDED | CHANGED);
@@ -88,26 +93,31 @@ public class FullBuildChange extends AbstractBuildChange implements
 		}
 	}
 
+	@Override
 	public int getBuildType() {
 		return IScriptBuilder.FULL_BUILD;
 	}
 
+	@Override
 	public void setBuildType(int buildType) {
 		if (buildType != IScriptBuilder.FULL_BUILD) {
 			throw new IllegalArgumentException();
 		}
 	}
 
+	@Override
 	public boolean isDependencyBuild() {
 		return false;
 	}
 
+	@Override
 	public IProjectChange[] getRequiredProjectChanges() {
 		return NO_PROJECT_CHANGES;
 	}
 
 	private List<IFile> projectResources = null;
 
+	@Override
 	public boolean visit(IResource resource) throws CoreException {
 		checkCanceled();
 		if (resource.getType() == IResource.FOLDER) {
@@ -121,10 +131,12 @@ public class FullBuildChange extends AbstractBuildChange implements
 		return true;
 	}
 
+	@Override
 	public boolean addChangedResource(IFile file) {
 		return false;
 	}
 
+	@Override
 	public boolean addChangedResources(Collection<IFile> files)
 			throws CoreException {
 		return false;
@@ -150,6 +162,7 @@ public class FullBuildChange extends AbstractBuildChange implements
 		}
 	}
 
+	@Override
 	public List<IPath> getExternalPaths(int options) throws CoreException {
 		validateFlags(options, BEFORE);
 		if (options == BEFORE) {
@@ -162,6 +175,7 @@ public class FullBuildChange extends AbstractBuildChange implements
 
 	private List<ISourceModule> externalModules = null;
 
+	@Override
 	public List<ISourceModule> getExternalModules(int options)
 			throws CoreException {
 		validateFlags(options, DEFAULT);

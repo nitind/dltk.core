@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and Implementation
+ *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
 import org.eclipse.core.resources.IResource;
@@ -34,62 +45,41 @@ public abstract class AbstractExternalSourceModule extends AbstractSourceModule
 		return true;
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.core.ISourceModule#becomeWorkingCopy(org.eclipse.dltk
-	 * .core.IProblemRequestor, org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public void becomeWorkingCopy(IProblemRequestor problemRequestor,
 			IProgressMonitor monitor) {
 		// external, do nothing
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ICodeAssist#codeComplete(int,
-	 * org.eclipse.dltk.core.CompletionRequestor)
-	 */
+	@Override
 	public void codeComplete(int offset, CompletionRequestor requestor) {
 		// external, do nothing
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ICodeAssist#codeComplete(int,
-	 * org.eclipse.dltk.core.CompletionRequestor,
-	 * org.eclipse.dltk.core.WorkingCopyOwner)
-	 */
+	@Override
 	public void codeComplete(int offset, CompletionRequestor requestor,
 			WorkingCopyOwner owner) {
 		// external, do nothing
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceModule#commitWorkingCopy(boolean,
-	 * org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public void commitWorkingCopy(boolean force, IProgressMonitor monitor)
 			throws ModelException {
 		throw new ModelException(new ModelStatus(
 				IModelStatusConstants.INVALID_ELEMENT_TYPES, this));
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceManipulation#delete(boolean,
-	 * org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public void delete(boolean force, IProgressMonitor monitor) {
 		// external, do nothing
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceModule#discardWorkingCopy()
-	 */
+	@Override
 	public void discardWorkingCopy() {
 		// external, do nothing
 	}
 
-	/*
-	 * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
-	 */
+	@Override
 	public Object getAdapter(Class adapter) {
 		if (adapter == IStorage.class) {
 			return this;
@@ -98,56 +88,34 @@ public abstract class AbstractExternalSourceModule extends AbstractSourceModule
 		return super.getAdapter(adapter);
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.IModelElement#getResource()
-	 */
+	@Override
 	public IResource getResource() {
 		return null;
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.core.ISourceModule#getWorkingCopy(org.eclipse.dltk.core
-	 * .WorkingCopyOwner, org.eclipse.dltk.core.IProblemRequestor,
-	 * org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public ISourceModule getWorkingCopy(WorkingCopyOwner workingCopyOwner,
 			IProblemRequestor problemRequestor, IProgressMonitor monitor) {
 		return this;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceModule#isWorkingCopy()
-	 */
+	@Override
 	public boolean isWorkingCopy() {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.dltk.internal.core.AbstractSourceModule#hasBuffer()
-	 */
+	@Override
 	protected boolean hasBuffer() {
 		return false;
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.internal.core.Openable#makeConsistent(org.eclipse.core
-	 * .runtime.IProgressMonitor)
-	 */
+	@Override
 	public void makeConsistent(IProgressMonitor monitor) throws ModelException {
 		// makeConsistent(false/*don't create AST*/, 0, monitor);
 		openWhenClosed(createElementInfo(), monitor);
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.core.ISourceManipulation#move(org.eclipse.dltk.core.
-	 * IModelElement, org.eclipse.dltk.core.IModelElement, java.lang.String,
-	 * boolean, org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public void move(IModelElement container, IModelElement sibling,
 			String rename, boolean replace, IProgressMonitor monitor)
 			throws ModelException {
@@ -155,27 +123,18 @@ public abstract class AbstractExternalSourceModule extends AbstractSourceModule
 		copy(container, sibling, rename, replace, monitor);
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceModule#reconcile(boolean,
-	 * org.eclipse.dltk.core.WorkingCopyOwner,
-	 * org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public void reconcile(boolean forceProblemDetection,
 			WorkingCopyOwner workingCopyOwner, IProgressMonitor monitor) {
 		// external, do nothing
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.ISourceManipulation#rename(java.lang.String,
-	 * boolean, org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public void rename(String name, boolean replace, IProgressMonitor monitor) {
 		// external, do nothing
 	}
 
-	/*
-	 * @see org.eclipse.dltk.internal.core.Openable#closing(java.lang.Object)
-	 */
+	@Override
 	protected void closing(Object info) {
 		// lifetime of the working copy
 	}

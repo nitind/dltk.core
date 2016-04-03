@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -58,26 +57,32 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	/**
 	 * @see IProjectFragment
 	 */
+	@Override
 	public boolean isArchive() {
 		return false;
 	}
 
+	@Override
 	protected Object createElementInfo() {
 		return new ProjectFragmentInfo();
 	}
 
+	@Override
 	public int getElementType() {
 		return PROJECT_FRAGMENT;
 	}
 
+	@Override
 	public IResource getResource() {
 		return (IResource) this.resource;
 	}
 
+	@Override
 	public IPath getPath() {
 		return this.getResource().getFullPath();
 	}
 
+	@Override
 	public int getKind() throws ModelException {
 		Object elementInfo = this.getElementInfo();
 		return ((ProjectFragmentInfo) elementInfo).getRootKind();
@@ -88,6 +93,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	 * equality is having the same parent, same resources, and occurrence count.
 	 * 
 	 */
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
@@ -110,10 +116,12 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		return this.parent.equals(other.parent);
 	}
 
+	@Override
 	public int hashCode() {
 		return this.resource.hashCode();
 	}
 
+	@Override
 	protected boolean buildStructure(OpenableElementInfo info,
 			IProgressMonitor pm, Map newElements, IResource underlyingResource)
 			throws ModelException {
@@ -275,6 +283,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		}
 	}
 
+	@Override
 	public IScriptFolder getScriptFolder(IPath path) {
 		// We need to check for element providers and if provider are declared
 		// we need to build structure to return correct handle here.
@@ -315,6 +324,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		return new ScriptFolder(this, path);
 	}
 
+	@Override
 	public String getElementName() {
 		if (this.resource instanceof IFolder) {
 			return ((IFolder) this.resource).getName();
@@ -322,21 +332,22 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		return super.getElementName();
 	}
 
+	@Override
 	public boolean exists() {
 		return super.exists() && this.validateOnBuildpath().isOK();
 	}
 
+	@Override
 	public boolean isExternal() {
 		return false;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.IProjectFragment#isBuiltin()
-	 */
+	@Override
 	public boolean isBuiltin() {
 		return false;
 	}
 
+	@Override
 	public IResource getUnderlyingResource() throws ModelException {
 		if (!this.exists()) {
 			throw this.newNotPresentException();
@@ -347,6 +358,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	/**
 	 * @private Debugging purposes
 	 */
+	@Override
 	protected void toStringInfo(int tab, StringBuffer buffer, Object info,
 			boolean showResolvedInfo) {
 		buffer.append(this.tabString(tab));
@@ -369,6 +381,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		}
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		output
 				.formatPrint("ScriptProject fragment:" + this.getPath().toOSString()); //$NON-NLS-1$
@@ -389,12 +402,14 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		output.dedent();
 	}
 
+	@Override
 	public IScriptFolder getScriptFolder(String path) {
 		// tolerate package names with spaces (e.g. 'x . y')
 		// (http://bugs.eclipse.org/bugs/show_bug.cgi?id=21957)
 		return this.getScriptFolder(new Path(path));
 	}
 
+	@Override
 	public Object[] getForeignResources() throws ModelException {
 		return ((ProjectFragmentInfo) this.getElementInfo())
 				.getForeignResources(this.getScriptProject(), this
@@ -445,6 +460,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	/*
 	 * @see IProjectFragment
 	 */
+	@Override
 	public IBuildpathEntry getRawBuildpathEntry() throws ModelException {
 		IBuildpathEntry rawEntry = null;
 		ScriptProject project = (ScriptProject) this.getScriptProject();
@@ -466,6 +482,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		return this.getRawBuildpathEntry();
 	}
 
+	@Override
 	public void getHandleMemento(StringBuffer buff) {
 		((ModelElement) getParent()).getHandleMemento(buff);
 		buff.append(getHandleMementoDelimiter());
@@ -473,6 +490,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		escapeMementoName(buff, path.toString());
 	}
 
+	@Override
 	public IModelElement getHandleFromMemento(String token,
 			MementoTokenizer memento, WorkingCopyOwner owner) {
 		switch (token.charAt(0)) {
@@ -504,6 +522,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		return null;
 	}
 
+	@Override
 	protected char getHandleMementoDelimiter() {
 		return JEM_PROJECTFRAGMENT;
 	}
@@ -511,6 +530,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	/**
 	 * @see IProjectFragment
 	 */
+	@Override
 	public IScriptFolder createScriptFolder(String pkgName, boolean force,
 			IProgressMonitor monitor) throws ModelException {
 		CreateScriptFolderOperation op = new CreateScriptFolderOperation(this,
@@ -519,6 +539,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		return this.getScriptFolder(op.pkgName);
 	}
 
+	@Override
 	public void delete(int updateResourceFlags, int updateModelFlags,
 			IProgressMonitor monitor) throws ModelException {
 		DeleteProjectFragmentOperation op = new DeleteProjectFragmentOperation(
@@ -526,6 +547,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		op.runOperation(monitor);
 	}
 
+	@Override
 	public void copy(IPath destination, int updateResourceFlags,
 			int updateModelFlags, IBuildpathEntry sibling,
 			IProgressMonitor monitor) throws ModelException {
@@ -535,6 +557,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		op.runOperation(monitor);
 	}
 
+	@Override
 	public void move(IPath destination, int updateResourceFlags,
 			int updateModelFlags, IBuildpathEntry sibling,
 			IProgressMonitor monitor) throws ModelException {
@@ -548,6 +571,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		return this.getScriptFolder(ScriptModelUtil.toPath(pkgName));
 	}
 
+	@Override
 	public boolean isBinary() {
 		return false;
 	}

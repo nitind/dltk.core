@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.hierarchy;
 
@@ -261,6 +260,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public synchronized void addTypeHierarchyChangedListener(
 			ITypeHierarchyChangedListener listener) {
 		ArrayList<ITypeHierarchyChangedListener> listeners = this.changeListeners;
@@ -342,6 +342,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public boolean contains(IType type) {
 
 		// classes
@@ -361,6 +362,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	 * Determines if the change effects this hierarchy, and fires change
 	 * notification if required.
 	 */
+	@Override
 	public void elementChanged(ElementChangedEvent event) {
 		// type hierarchy change has already been fired
 		if (this.needsRefresh) {
@@ -376,6 +378,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public boolean exists() {
 		if (!this.needsRefresh) {
 			return true;
@@ -409,11 +412,13 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 		for (int i = 0; i < listeners.size(); i++) {
 			final ITypeHierarchyChangedListener listener = listeners.get(i);
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable exception) {
 					Util.log(exception,
 							"Exception occurred in listener of Type hierarchy change notification"); //$NON-NLS-1$
 				}
 
+				@Override
 				public void run() throws Exception {
 					listener.typeHierarchyChanged(TypeHierarchy.this);
 				}
@@ -432,6 +437,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public IType[] getAllClasses() {
 		TypeVector classes = this.rootClasses.copy();
 		for (Iterator<IType> iter = this.classToSuperclass.keySet().iterator(); iter
@@ -444,6 +450,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public IType[] getAllSubtypes(IType type) {
 		return getAllSubtypesForType(type);
 	}
@@ -479,6 +486,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public IType[] getAllSuperclasses(IType type) {
 		IType[] superclass = getSuperclass(type);
 		TypeVector supers = new TypeVector();
@@ -501,6 +509,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public IType[] getAllSupertypes(IType type) {
 		ArrayList<IType> supers = new ArrayList<IType>();
 		getAllSupertypes0(type, supers);
@@ -525,6 +534,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public IType[] getAllTypes() {
 		// IType[] classes = getAllClasses();
 		// int classesLength = classes.length;
@@ -536,6 +546,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy#getCachedFlags(IType)
 	 */
+	@Override
 	public int getCachedFlags(IType type) {
 		Integer flagObject = this.typeFlags.get(type);
 		if (flagObject != null) {
@@ -547,6 +558,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public IType[] getRootClasses() {
 		return this.rootClasses.elements();
 	}
@@ -554,6 +566,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public IType[] getSubclasses(IType type) {
 		TypeVector vector = this.typeToSubtypes.get(type);
 		if (vector == null) {
@@ -566,6 +579,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public IType[] getSubtypes(IType type) {
 		return getSubtypesForType(type);
 	}
@@ -585,6 +599,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public IType[] getSuperclass(IType type) {
 		TypeVector superTypes = this.classToSuperclass.get(type);
 		if (superTypes != null) {
@@ -596,6 +611,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public IType[] getSupertypes(IType type) {
 		return getSuperclass(type);
 	}
@@ -603,6 +619,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public IType getType() {
 		return this.focusType;
 	}
@@ -1175,6 +1192,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	 *      the hierarchy instead of synchronizing (see also
 	 *      isAffected(IJavaElementDelta))
 	 */
+	@Override
 	public synchronized void refresh(IProgressMonitor monitor)
 			throws ModelException {
 		try {
@@ -1234,6 +1252,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public synchronized void removeTypeHierarchyChangedListener(
 			ITypeHierarchyChangedListener listener) {
 		ArrayList<ITypeHierarchyChangedListener> listeners = this.changeListeners;
@@ -1251,6 +1270,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public void store(OutputStream output, IProgressMonitor monitor)
 			throws ModelException {
 		try {
@@ -1405,6 +1425,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	/**
 	 * @see ITypeHierarchy
 	 */
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("Focus: "); //$NON-NLS-1$

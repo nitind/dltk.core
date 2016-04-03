@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -68,6 +67,7 @@ public class CommitWorkingCopyOperation extends ModelOperation {
 	 *                if setting the source of the original compilation unit
 	 *                fails
 	 */
+	@Override
 	protected void executeOperation() throws ModelException {
 		try {
 			beginTask(Messages.workingCopy_commit, 2);
@@ -203,6 +203,7 @@ public class CommitWorkingCopyOperation extends ModelOperation {
 		return (SourceModule) getElementToProcess();
 	}
 
+	@Override
 	protected ISchedulingRule getSchedulingRule() {
 		IResource resource = getElementToProcess().getResource();
 		if (resource == null)
@@ -227,6 +228,7 @@ public class CommitWorkingCopyOperation extends ModelOperation {
 	 * <li>READ_ONLY - the original compilation unit is in read-only mode
 	 * </ul>
 	 */
+	@Override
 	public IModelStatus verify() {
 		SourceModule cu = getSourceModule();
 		if (!cu.isWorkingCopy()) {

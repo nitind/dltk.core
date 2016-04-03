@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,6 +74,7 @@ public class CreateScriptFolderOperation extends ModelOperation {
 	 * @exception ModelException
 	 *                if the operation is unable to complete
 	 */
+	@Override
 	protected void executeOperation() throws ModelException {
 		ModelElementDelta delta = null;
 		IProjectFragment root = (IProjectFragment) getParentElement();
@@ -129,6 +130,7 @@ public class CreateScriptFolderOperation extends ModelOperation {
 	 * @see IScriptModelStatus
 	 * @see ScriptConventions
 	 */
+	@Override
 	public IModelStatus verify() {
 		if (getParentElement() == null) {
 			return new ModelStatus(IModelStatusConstants.NO_ELEMENTS_TO_PROCESS);

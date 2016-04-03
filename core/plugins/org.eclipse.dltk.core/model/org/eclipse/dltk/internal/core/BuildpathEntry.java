@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -204,34 +203,42 @@ public class BuildpathEntry implements IBuildpathEntry {
 		}
 	}
 
+	@Override
 	public IPath getSourceAttachmentPath() {
 		return sourceAttachmentPath;
 	}
 
+	@Override
 	public IPath getSourceAttachmentRootPath() {
 		return sourceAttachmentRootPath;
 	}
 
+	@Override
 	public void setSourceAttachmentPath(IPath sourceAttachmentPath) {
 		this.sourceAttachmentPath = sourceAttachmentPath;
 	}
 
+	@Override
 	public void setSourceAttachmentRootPath(IPath sourceAttachmentRootPath) {
 		this.sourceAttachmentRootPath = sourceAttachmentRootPath;
 	}
 
+	@Override
 	public int getEntryKind() {
 		return entryKind;
 	}
 
+	@Override
 	public IPath[] getExclusionPatterns() {
 		return this.exclusionPatterns;
 	}
 
+	@Override
 	public IBuildpathAttribute[] getExtraAttributes() {
 		return this.extraAttributes;
 	}
 
+	@Override
 	public String getExtraAttribute(String name) {
 		if (name != null) {
 			for (IBuildpathAttribute attribute : extraAttributes) {
@@ -302,10 +309,12 @@ public class BuildpathEntry implements IBuildpathEntry {
 	/**
 	 * @see IBuildpathEntry#getExclusionPatterns()
 	 */
+	@Override
 	public IPath[] getInclusionPatterns() {
 		return this.inclusionPatterns;
 	}
 
+	@Override
 	public IPath getPath() {
 		return path;
 	}
@@ -313,6 +322,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 	/**
 	 * @see IBuildpathEntry#isExported()
 	 */
+	@Override
 	public boolean isExported() {
 		return this.isExported;
 	}
@@ -364,6 +374,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		return this.rootID;
 	}
 
+	@Override
 	public boolean combineAccessRules() {
 		return this.combineAccessRules;
 	}
@@ -419,6 +430,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 	/**
 	 * @see IBuildpathEntry#getAccessRules()
 	 */
+	@Override
 	public IAccessRule[] getAccessRules() {
 		if (this.accessRuleSet == null)
 			return NO_ACCESS_RULES;
@@ -455,6 +467,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 	/**
 	 * Returns a printable representation of this buildpath entry.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(getPath().toString());
@@ -540,6 +553,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		return this.accessRuleSet;
 	}
 
+	@Override
 	public int getContentKind() {
 		return contentKind;
 	}
@@ -1612,6 +1626,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 	/**
 	 * Returns true if the given object is a equivalent buildpath entry.
 	 */
+	@Override
 	public boolean equals(Object object) {
 		if (this == object)
 			return true;
@@ -1687,6 +1702,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		return true;
 	}
 
+	@Override
 	public boolean isExternal() {
 		return isExternal;
 	}
@@ -1694,6 +1710,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 	/**
 	 * Returns the hash code for this buildpath entry
 	 */
+	@Override
 	public int hashCode() {
 		return this.path.hashCode();
 	}

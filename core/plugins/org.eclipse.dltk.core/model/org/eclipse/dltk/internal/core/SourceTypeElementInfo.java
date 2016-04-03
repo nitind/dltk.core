@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -51,6 +50,7 @@ public class SourceTypeElementInfo extends MemberElementInfo implements
 		return superclassNames;
 	}
 
+	@Override
 	public ISourceType getEnclosingType() {
 		IModelElement parent = this.handle.getParent();
 		if (parent != null && parent.getElementType() == IModelElement.TYPE) {
@@ -64,6 +64,7 @@ public class SourceTypeElementInfo extends MemberElementInfo implements
 		}
 	}
 
+	@Override
 	public ISourceField[] getFields() {
 		SourceField[] fieldHandles = getFieldHandles();
 		int length = fieldHandles.length;
@@ -80,41 +81,49 @@ public class SourceTypeElementInfo extends MemberElementInfo implements
 		return fields;
 	}
 
+	@Override
 	public ISourceType[] getMemberTypes() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public ISourceMethod[] getMethods() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public char[] getName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public char[] getSuperclassName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public char[][][] getTypeParameterBounds() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public char[][] getTypeParameterNames() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public boolean isBinaryType() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public String getFileName() {
 		// TODO Auto-generated method stub
 		return null;

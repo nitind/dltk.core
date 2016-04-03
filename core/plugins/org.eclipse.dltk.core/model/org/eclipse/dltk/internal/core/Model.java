@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -57,6 +56,7 @@ public class Model extends Openable implements IScriptModel {
 		super(null);
 	}
 
+	@Override
 	protected boolean buildStructure(OpenableElementInfo info,
 			IProgressMonitor pm, Map newElements, IResource underlyingResource) /*
 																				 * throws
@@ -155,6 +155,7 @@ public class Model extends Openable implements IScriptModel {
 	/**
 	 * @see IScriptModel
 	 */
+	@Override
 	public IScriptProject getScriptProject(String projectName) {
 		return new ScriptProject(ResourcesPlugin.getWorkspace().getRoot()
 				.getProject(projectName), this);
@@ -163,11 +164,13 @@ public class Model extends Openable implements IScriptModel {
 	/**
 	 * @see IScriptModel
 	 */
+	@Override
 	public IScriptProject[] getScriptProjects() throws ModelException {
 		final List<IModelElement> list = getChildrenOfType(SCRIPT_PROJECT);
 		return list.toArray(new IScriptProject[list.size()]);
 	}
 
+	@Override
 	public IScriptProject[] getScriptProjects(String nature)
 			throws ModelException {
 		final List<IModelElement> list = getChildrenOfType(SCRIPT_PROJECT);
@@ -184,6 +187,7 @@ public class Model extends Openable implements IScriptModel {
 		return result.toArray(new IScriptProject[result.size()]);
 	}
 
+	@Override
 	public void copy(IModelElement[] elements, IModelElement[] containers,
 			IModelElement[] siblings, String[] renamings, boolean force,
 			IProgressMonitor monitor) throws ModelException {
@@ -198,22 +202,27 @@ public class Model extends Openable implements IScriptModel {
 		}
 	}
 
+	@Override
 	protected Object createElementInfo() {
 		return new ModelInfo();
 	}
 
+	@Override
 	public int getElementType() {
 		return SCRIPT_MODEL;
 	}
 
+	@Override
 	public IResource getResource() {
 		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 
+	@Override
 	public IPath getPath() {
 		return Path.ROOT;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof Model))
 			return false;
@@ -246,6 +255,7 @@ public class Model extends Openable implements IScriptModel {
 	/**
 	 * @private Debugging purposes
 	 */
+	@Override
 	protected void toStringInfo(int tab, StringBuffer buffer, Object info,
 			boolean showResolvedInfo) {
 		buffer.append(this.tabString(tab));
@@ -255,6 +265,7 @@ public class Model extends Openable implements IScriptModel {
 		}
 	}
 
+	@Override
 	public void printNode(CorePrinter output) {
 		output.formatPrint("DLTK Model:" + getElementName()); //$NON-NLS-1$
 		output.indent();
@@ -274,6 +285,7 @@ public class Model extends Openable implements IScriptModel {
 		output.dedent();
 	}
 
+	@Override
 	public void delete(IModelElement[] elements, boolean force,
 			IProgressMonitor monitor) throws ModelException {
 		if (elements != null && elements.length > 0 && elements[0] != null
@@ -317,6 +329,7 @@ public class Model extends Openable implements IScriptModel {
 	/*
 	 * @see IScriptModel
 	 */
+	@Override
 	public boolean contains(IResource resource) {
 		switch (resource.getType()) {
 		case IResource.ROOT:
@@ -339,6 +352,7 @@ public class Model extends Openable implements IScriptModel {
 		return true;
 	}
 
+	@Override
 	public IModelElement getHandleFromMemento(String token,
 			MementoTokenizer memento, WorkingCopyOwner owner) {
 		switch (token.charAt(0)) {
@@ -355,19 +369,23 @@ public class Model extends Openable implements IScriptModel {
 		return null;
 	}
 
+	@Override
 	protected char getHandleMementoDelimiter() {
 		Assert.isTrue(false, "Should not be called"); //$NON-NLS-1$
 		return 0;
 	}
 
+	@Override
 	public Object[] getForeignResources() throws ModelException {
 		return ((ModelInfo) getElementInfo()).getForeignResources();
 	}
 
+	@Override
 	public IWorkspace getWorkspace() {
 		return ResourcesPlugin.getWorkspace();
 	}
 
+	@Override
 	public void move(IModelElement[] elements, IModelElement[] containers,
 			IModelElement[] siblings, String[] renamings, boolean force,
 			IProgressMonitor monitor) throws ModelException {
@@ -384,14 +402,17 @@ public class Model extends Openable implements IScriptModel {
 		}
 	}
 
+	@Override
 	public IResource getUnderlyingResource() {
 		return null;
 	}
 
+	@Override
 	public void getHandleMemento(StringBuffer buff) {
 		buff.append(getElementName());
 	}
 
+	@Override
 	public void rename(IModelElement[] elements, IModelElement[] destinations,
 			String[] renamings, boolean force, IProgressMonitor monitor)
 			throws ModelException {

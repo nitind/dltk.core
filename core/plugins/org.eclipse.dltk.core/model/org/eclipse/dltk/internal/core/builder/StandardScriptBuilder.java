@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.builder;
 
@@ -52,6 +51,7 @@ public class StandardScriptBuilder implements IScriptBuilder {
 
 	private static final int WORK_BUILD = 100;
 
+	@Override
 	public void prepare(IBuildChange change, IBuildState state,
 			IProgressMonitor monitor) throws CoreException {
 		if (participants != null) {
@@ -65,6 +65,7 @@ public class StandardScriptBuilder implements IScriptBuilder {
 		}
 	}
 
+	@Override
 	public void build(IBuildChange change, IBuildState state,
 			IProgressMonitor monitor) throws CoreException {
 		// TODO progress reporting
@@ -276,6 +277,7 @@ public class StandardScriptBuilder implements IScriptBuilder {
 		return Status.OK_STATUS;
 	}
 
+	@Override
 	public void clean(IScriptProject project, IProgressMonitor monitor) {
 		final List<IBuildParticipantExtension3> extensions = selectExtension(IBuildParticipantExtension3.class);
 		if (extensions != null) {
@@ -305,6 +307,7 @@ public class StandardScriptBuilder implements IScriptBuilder {
 		return toolkit;
 	}
 
+	@Override
 	public boolean initialize(IScriptProject project) {
 		toolkit = project.getLanguageToolkit();
 		if (toolkit != null) {
@@ -332,6 +335,7 @@ public class StandardScriptBuilder implements IScriptBuilder {
 		}
 	}
 
+	@Override
 	public void endBuild(IScriptProject project, IBuildState state,
 			IProgressMonitor monitor) {
 		if (endBuildNeeded) {

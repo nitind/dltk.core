@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -46,6 +45,7 @@ public class CopyProjectFragmentOperation extends ModelOperation {
 		this.sibling = sibling;
 	}
 
+	@Override
 	protected void executeOperation() throws ModelException {
 
 		IProjectFragment root = (IProjectFragment) this.getElementToProcess();
@@ -93,6 +93,7 @@ public class CopyProjectFragmentOperation extends ModelOperation {
 					.getFolder(this.destination);
 			final IPath[] nestedFolders = getNestedFolders(root);
 			IResourceProxyVisitor visitor = new IResourceProxyVisitor() {
+				@Override
 				public boolean visit(IResourceProxy proxy) throws CoreException {
 					if (proxy.getType() == IResource.FOLDER) {
 						IPath path = proxy.requestFullPath();
@@ -247,6 +248,7 @@ public class CopyProjectFragmentOperation extends ModelOperation {
 		}
 	}
 
+	@Override
 	public IModelStatus verify() {
 		IModelStatus status = super.verify();
 		if (!status.isOK()) {

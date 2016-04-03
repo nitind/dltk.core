@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -44,10 +44,12 @@ public class IncrementalBuildChange extends IncrementalProjectChange implements
 
 	private int buildType = IScriptBuilder.INCREMENTAL_BUILD;
 
+	@Override
 	public int getBuildType() {
 		return buildType;
 	}
 
+	@Override
 	public void setBuildType(int buildType) {
 		if (buildType != IScriptBuilder.FULL_BUILD
 				&& buildType != IScriptBuilder.INCREMENTAL_BUILD) {
@@ -56,18 +58,22 @@ public class IncrementalBuildChange extends IncrementalProjectChange implements
 		this.buildType = buildType;
 	}
 
+	@Override
 	public boolean isDependencyBuild() {
 		return false;
 	}
 
+	@Override
 	public IProjectChange[] getRequiredProjectChanges() {
 		return projectChanges;
 	}
 
+	@Override
 	public boolean addChangedResource(IFile file) throws CoreException {
 		return super.addChangedResource(file);
 	}
 
+	@Override
 	public boolean addChangedResources(Collection<IFile> files)
 			throws CoreException {
 		boolean result = false;
@@ -99,6 +105,7 @@ public class IncrementalBuildChange extends IncrementalProjectChange implements
 		}
 	}
 
+	@Override
 	public List<IPath> getExternalPaths(int options) throws CoreException {
 		validateFlags(options, BEFORE);
 		if (options == BEFORE) {
@@ -111,6 +118,7 @@ public class IncrementalBuildChange extends IncrementalProjectChange implements
 
 	private List<ISourceModule> externalModules = null;
 
+	@Override
 	public List<ISourceModule> getExternalModules(int options)
 			throws CoreException {
 		validateFlags(options, DEFAULT);
