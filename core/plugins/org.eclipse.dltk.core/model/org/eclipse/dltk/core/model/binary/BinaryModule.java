@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.core.model.binary;
 
 import java.io.ByteArrayInputStream;
@@ -104,10 +114,12 @@ public class BinaryModule extends AbstractSourceModule implements
 		return moduleInfo.isStructureKnown();
 	}
 
+	@Override
 	public IResource getResource() {
 		return null;
 	}
 
+	@Override
 	public SourceMapper getSourceMapper() {
 		IModelElement parent = getParent();
 		if (parent instanceof ISourceMapperProvider) {
@@ -116,6 +128,7 @@ public class BinaryModule extends AbstractSourceModule implements
 		return null;
 	}
 
+	@Override
 	public boolean isBinary() {
 		return true;
 	}
@@ -134,12 +147,14 @@ public class BinaryModule extends AbstractSourceModule implements
 	public void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public int getElementType() {
 		// TODO: Replace with BINARY_MODULE then full support of binary modules
 		// will be implemented.
 		return SOURCE_MODULE;
 	}
 
+	@Override
 	public String getSource() throws ModelException {
 		SourceMapper mapper = getSourceMapper();
 		if (mapper != null) {
@@ -151,6 +166,7 @@ public class BinaryModule extends AbstractSourceModule implements
 		return "//Binary source are not available";
 	}
 
+	@Override
 	public ISourceRange getSourceRange() throws ModelException {
 		SourceMapper mapper = getSourceMapper();
 		if (mapper != null) {
@@ -159,10 +175,12 @@ public class BinaryModule extends AbstractSourceModule implements
 		return null;
 	}
 
+	@Override
 	public char[] getSourceAsCharArray() throws ModelException {
 		return getSource().toCharArray();
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof BinaryModule)) {
 			return false;
@@ -170,63 +188,77 @@ public class BinaryModule extends AbstractSourceModule implements
 		return super.equals(obj);
 	}
 
+	@Override
 	public void becomeWorkingCopy(IProblemRequestor problemRequestor,
 			IProgressMonitor monitor) throws ModelException {
 	}
 
+	@Override
 	public void commitWorkingCopy(boolean force, IProgressMonitor monitor)
 			throws ModelException {
 	}
 
+	@Override
 	public void discardWorkingCopy() throws ModelException {
 	}
 
+	@Override
 	public ISourceModule getPrimary() {
 		return this;
 	}
 
+	@Override
 	public ISourceModule getWorkingCopy(IProgressMonitor monitor)
 			throws ModelException {
 		return this;
 	}
 
+	@Override
 	public ISourceModule getWorkingCopy(WorkingCopyOwner owner,
 			IProblemRequestor problemRequestor, IProgressMonitor monitor)
 			throws ModelException {
 		return this;
 	}
 
+	@Override
 	public boolean isBuiltin() {
 		return false;
 	}
 
+	@Override
 	public boolean isPrimary() {
 		return true;
 	}
 
+	@Override
 	public boolean isWorkingCopy() {
 		return true;
 	}
 
+	@Override
 	public void reconcile(boolean forceProblemDetection,
 			WorkingCopyOwner owner, IProgressMonitor monitor)
 			throws ModelException {
 	}
 
+	@Override
 	public void copy(IModelElement container, IModelElement sibling,
 			String rename, boolean replace, IProgressMonitor monitor)
 			throws ModelException {
 	}
 
+	@Override
 	public void delete(boolean force, IProgressMonitor monitor)
 			throws ModelException {
 	}
 
+	@Override
 	public void move(IModelElement container, IModelElement sibling,
 			String rename, boolean replace, IProgressMonitor monitor)
 			throws ModelException {
 	}
 
+	@Override
 	public void rename(String name, boolean replace, IProgressMonitor monitor)
 			throws ModelException {
 	}
@@ -255,6 +287,7 @@ public class BinaryModule extends AbstractSourceModule implements
 		return lookupLanguageToolkit.getNatureId();
 	}
 
+	@Override
 	public String getFileName() {
 		return this.getPath().toOSString();
 	}
@@ -264,18 +297,22 @@ public class BinaryModule extends AbstractSourceModule implements
 		return this.getParent().getPath().append(this.getElementName());
 	}
 
+	@Override
 	public InputStream getContents() throws CoreException {
 		return new ByteArrayInputStream(getSource().getBytes());
 	}
 
+	@Override
 	public IPath getFullPath() {
 		return getPath();
 	}
 
+	@Override
 	public String getName() {
 		return getPath().lastSegment();
 	}
 
+	@Override
 	public IModelElement getHandleFromMemento(String token,
 			MementoTokenizer memento, WorkingCopyOwner workingCopyOwner) {
 		switch (token.charAt(0)) {

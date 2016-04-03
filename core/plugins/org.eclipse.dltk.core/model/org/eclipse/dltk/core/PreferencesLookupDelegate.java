@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Jae Gangemi and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Jae Gangemi - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.core;
 
 import java.util.ArrayList;
@@ -70,6 +80,7 @@ public class PreferencesLookupDelegate implements IPreferencesLookupDelegate {
 	 * @return preference value or an empty string if the preference is not
 	 *         defined
 	 */
+	@Override
 	public String getString(String qualifier, String key) {
 		return service.getString(qualifier, key, "", contexts); //$NON-NLS-1$
 	}
@@ -85,6 +96,7 @@ public class PreferencesLookupDelegate implements IPreferencesLookupDelegate {
 	 * @return preference value or an empty string if the preference is not
 	 *         defined
 	 */
+	@Override
 	public int getInt(String qualifier, String key) {
 		return service.getInt(qualifier, key, 0, contexts);
 	}
@@ -100,6 +112,7 @@ public class PreferencesLookupDelegate implements IPreferencesLookupDelegate {
 	 * @return preference value or <code>false</code> if the preference is not
 	 *         defined
 	 */
+	@Override
 	public boolean getBoolean(String qualifier, String key) {
 		return service.getBoolean(qualifier, key, false, contexts);
 	}

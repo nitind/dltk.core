@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.core.model.binary;
 
 import org.eclipse.dltk.core.IModelElement;
@@ -49,6 +59,7 @@ public abstract class BinaryMember extends NamedMember implements
 		return new SourceRange(0, 0);
 	}
 
+	@Override
 	public SourceMapper getSourceMapper() {
 		IModelElement parent = getParent();
 		if (parent instanceof ISourceMapperProvider) {
@@ -67,6 +78,7 @@ public abstract class BinaryMember extends NamedMember implements
 		return ((BinaryMemberInfo) getElementInfo()).getNamespace();
 	}
 
+	@Override
 	public IModelElement getHandleFromMemento(String token,
 			MementoTokenizer memento, WorkingCopyOwner workingCopyOwner) {
 		switch (token.charAt(0)) {

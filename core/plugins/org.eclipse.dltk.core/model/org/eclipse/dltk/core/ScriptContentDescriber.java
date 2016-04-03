@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.core;
 
 import java.io.File;
@@ -17,6 +27,7 @@ import org.eclipse.core.runtime.content.ITextContentDescriber;
 import org.eclipse.dltk.utils.CharArraySequence;
 
 public abstract class ScriptContentDescriber implements ITextContentDescriber {
+	@Override
 	public QualifiedName[] getSupportedOptions() {
 		return new QualifiedName[] { DLTKContentTypeManager.DLTK_VALID };
 	}
@@ -221,11 +232,13 @@ public abstract class ScriptContentDescriber implements ITextContentDescriber {
 		return false;
 	}
 
+	@Override
 	public int describe(InputStream contents, IContentDescription description)
 			throws IOException {
 		return describe(new InputStreamReader(contents), description);
 	}
 
+	@Override
 	public int describe(Reader contents, IContentDescription description)
 			throws IOException {
 		Pattern[] header = getHeaderPatterns();

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core;
 
@@ -21,6 +20,7 @@ public class ScriptNature implements IProjectNature {
 	/**
 	 * Configure the project with Java nature.
 	 */
+	@Override
 	public void configure() throws CoreException {
 		// register Script builder
 		addToBuildSpec(DLTKCore.BUILDER_ID);
@@ -29,6 +29,7 @@ public class ScriptNature implements IProjectNature {
 	/**
 	 * /** Removes the Java nature from the project.
 	 */
+	@Override
 	public void deconfigure() throws CoreException {
 		// deregister Script builder
 		removeFromBuildSpec(DLTKCore.BUILDER_ID);
@@ -120,10 +121,12 @@ public class ScriptNature implements IProjectNature {
 	 * 
 	 * @see IProjectNature#setProject(IProject)
 	 */
+	@Override
 	public void setProject(IProject project) {
 		this.project = project;
 	}
 
+	@Override
 	public IProject getProject() {
 		return this.project;
 	}

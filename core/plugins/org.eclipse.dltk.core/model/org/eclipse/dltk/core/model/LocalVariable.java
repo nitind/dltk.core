@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -144,10 +144,12 @@ public class LocalVariable extends SourceRefElement implements ILocalVariable {
 		return this.name;
 	}
 
+	@Override
 	public int getElementType() {
 		return LOCAL_VARIABLE;
 	}
 
+	@Override
 	public ISourceRange getNameRange() {
 		return new SourceRange(this.nameStart, this.nameEnd - this.nameStart
 				+ 1);
@@ -187,6 +189,7 @@ public class LocalVariable extends SourceRefElement implements ILocalVariable {
 				this.declarationSourceEnd - this.declarationSourceStart + 1);
 	}
 
+	@Override
 	public String getType() {
 		return this.type;
 	}

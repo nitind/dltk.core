@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.core.caching;
 
 import java.io.BufferedInputStream;
@@ -257,6 +267,7 @@ public class MetadataContentCache extends AbstractContentCache {
 		}
 	}
 
+	@Override
 	public InputStream getCacheEntryAttribute(IFileHandle handle,
 			String attribute) {
 		if (handle == null) {
@@ -300,6 +311,7 @@ public class MetadataContentCache extends AbstractContentCache {
 		return null;
 	}
 
+	@Override
 	public synchronized OutputStream getCacheEntryAttributeOutputStream(
 			IFileHandle handle, String attribute) {
 		File file = getEntryAsFile(handle, attribute);
@@ -313,6 +325,7 @@ public class MetadataContentCache extends AbstractContentCache {
 		return null;
 	}
 
+	@Override
 	public File getEntryAsFile(IFileHandle handle, String attribute) {
 		if (handle == null) {
 			return null;
@@ -371,6 +384,7 @@ public class MetadataContentCache extends AbstractContentCache {
 		}
 	}
 
+	@Override
 	public synchronized void removeCacheEntryAttributes(IFileHandle handle,
 			String attribute) {
 		if (handle == null) {
@@ -388,6 +402,7 @@ public class MetadataContentCache extends AbstractContentCache {
 		}
 	}
 
+	@Override
 	public synchronized void clearCacheEntryAttributes(IFileHandle handle) {
 		if (handle == null) {
 			return;
@@ -400,6 +415,7 @@ public class MetadataContentCache extends AbstractContentCache {
 		}
 	}
 
+	@Override
 	public synchronized void clear() {
 		initialize();
 		Set<EntryKey> keySet = new HashSet<EntryKey>(entryCache.keySet());
@@ -412,6 +428,7 @@ public class MetadataContentCache extends AbstractContentCache {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public InputStream getCacheEntryAttribute(IFileHandle handle,
 			String attribute, boolean localonly) {
 		return getCacheEntryAttribute(handle, attribute);
@@ -420,6 +437,7 @@ public class MetadataContentCache extends AbstractContentCache {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void updateFolderTimestamps(IFileHandle parent) {
 		IFileHandle[] children = parent.getChildren();
 		if (children == null) {

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.core.caching;
 
 import java.io.DataInputStream;
@@ -11,6 +21,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.IFileHandle;
 
 public abstract class AbstractContentCache implements IContentCache {
+	@Override
 	public synchronized String getCacheEntryAttributeString(IFileHandle handle,
 			String attribute) {
 		return getCacheEntryAttributeString(handle, attribute, false);
@@ -19,6 +30,7 @@ public abstract class AbstractContentCache implements IContentCache {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public synchronized String getCacheEntryAttributeString(IFileHandle handle,
 			String attribute, boolean localonly) {
 		InputStream stream = getCacheEntryAttribute(handle, attribute,
@@ -44,6 +56,7 @@ public abstract class AbstractContentCache implements IContentCache {
 		return null;
 	}
 
+	@Override
 	public boolean setCacheEntryAttribute(IFileHandle handle, String attribute,
 			String value) {
 		OutputStream outputStream = getCacheEntryAttributeOutputStream(handle,
@@ -70,6 +83,7 @@ public abstract class AbstractContentCache implements IContentCache {
 		return false;
 	}
 
+	@Override
 	public synchronized long getCacheEntryAttributeLong(IFileHandle handle,
 			String attribute) {
 		return getCacheEntryAttributeLong(handle, attribute, false);
@@ -78,6 +92,7 @@ public abstract class AbstractContentCache implements IContentCache {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public synchronized long getCacheEntryAttributeLong(IFileHandle handle,
 			String attribute, boolean localonly) {
 		InputStream stream = getCacheEntryAttribute(handle, attribute,
@@ -104,6 +119,7 @@ public abstract class AbstractContentCache implements IContentCache {
 		return 0;
 	}
 
+	@Override
 	public boolean setCacheEntryAttribute(IFileHandle handle, String attribute,
 			long value) {
 		OutputStream outputStream = getCacheEntryAttributeOutputStream(handle,

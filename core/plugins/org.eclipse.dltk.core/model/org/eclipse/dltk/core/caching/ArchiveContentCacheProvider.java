@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.core.caching;
 
 import java.io.BufferedInputStream;
@@ -42,6 +52,7 @@ public class ArchiveContentCacheProvider implements IContentCacheProvider {
 	public ArchiveContentCacheProvider() {
 	}
 
+	@Override
 	public InputStream getAttributeAndUpdateCache(IFileHandle handle,
 			String attribute) {
 		if (handle == null) {
@@ -199,6 +210,7 @@ public class ArchiveContentCacheProvider implements IContentCacheProvider {
 		return found;
 	}
 
+	@Override
 	public void setCache(IContentCache cache) {
 		this.cache = cache;
 	}

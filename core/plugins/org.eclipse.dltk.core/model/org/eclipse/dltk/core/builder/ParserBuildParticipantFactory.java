@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -42,6 +42,7 @@ public class ParserBuildParticipantFactory extends AbstractBuildParticipantType
 
 	private String natureId = null;
 
+	@Override
 	public void setInitializationData(IConfigurationElement config,
 			String propertyName, Object data) throws CoreException {
 		natureId = config.getAttribute("nature"); //$NON-NLS-1$
@@ -55,6 +56,7 @@ public class ParserBuildParticipantFactory extends AbstractBuildParticipantType
 			this.parser = parser;
 		}
 
+		@Override
 		public void build(IBuildContext context) throws CoreException {
 			IModuleDeclaration moduleDeclaration = (IModuleDeclaration) context
 					.get(IBuildContext.ATTR_MODULE_DECLARATION);

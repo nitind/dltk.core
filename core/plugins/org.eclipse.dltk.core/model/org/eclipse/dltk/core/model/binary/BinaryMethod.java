@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.core.model.binary;
 
 import org.eclipse.dltk.core.IMethod;
@@ -19,6 +29,7 @@ public class BinaryMethod extends BinaryMember implements IMethod {
 	public void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public int getElementType() {
 		return METHOD;
 	}
@@ -31,6 +42,7 @@ public class BinaryMethod extends BinaryMember implements IMethod {
 		return super.equals(o);
 	}
 
+	@Override
 	public String getFullyQualifiedName(String enclosingTypeSeparator) {
 		try {
 			return getFullyQualifiedName(enclosingTypeSeparator, false/*
@@ -44,22 +56,27 @@ public class BinaryMethod extends BinaryMember implements IMethod {
 		}
 	}
 
+	@Override
 	public String getFullyQualifiedName() {
 		return getFullyQualifiedName("$"); //$NON-NLS-1$
 	}
 
+	@Override
 	public IParameter[] getParameters() throws ModelException {
 		return ((BinaryMethodElementInfo) getElementInfo()).getArguments();
 	}
 
+	@Override
 	public String[] getParameterNames() throws ModelException {
 		return ((BinaryMethodElementInfo) getElementInfo()).getArgumentNames();
 	}
 
+	@Override
 	public boolean isConstructor() throws ModelException {
 		return ((BinaryMethodElementInfo) getElementInfo()).isConstructor();
 	}
 
+	@Override
 	public String getType() throws ModelException {
 		return ((BinaryMethodElementInfo) getElementInfo()).getReturnTypeName();
 	}

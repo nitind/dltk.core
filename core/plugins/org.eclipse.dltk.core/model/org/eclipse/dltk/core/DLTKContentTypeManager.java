@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -396,6 +396,7 @@ public class DLTKContentTypeManager {
 		synchronized (contentTypesCache) {
 			if (changeListener == null) {
 				changeListener = new IContentTypeChangeListener() {
+					@Override
 					public void contentTypeChanged(ContentTypeChangeEvent event) {
 						synchronized (contentTypesCache) {
 							contentTypesCache.clear();
@@ -461,6 +462,7 @@ public class DLTKContentTypeManager {
 	private static class ResetScriptValidPropertyListener implements
 			IResourceChangeListener, IResourceDeltaVisitor {
 
+		@Override
 		public void resourceChanged(IResourceChangeEvent event) {
 			try {
 				event.getDelta().accept(this);
@@ -471,6 +473,7 @@ public class DLTKContentTypeManager {
 			}
 		}
 
+		@Override
 		public boolean visit(IResourceDelta delta) throws CoreException {
 			final IResource resource = delta.getResource();
 			if (resource.getType() == IResource.FILE) {

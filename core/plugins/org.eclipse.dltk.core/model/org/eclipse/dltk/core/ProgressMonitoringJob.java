@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.  
+ * Copyright (c) 2009, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -115,6 +115,7 @@ public class ProgressMonitoringJob extends Job implements IProgressMonitor {
 		}
 	}
 
+	@Override
 	public void beginTask(String name, int totalWork) {
 		synchronized (lock) {
 			WorkNode node = new WorkNode(BEGIN_TASK, name, totalWork);
@@ -129,21 +130,25 @@ public class ProgressMonitoringJob extends Job implements IProgressMonitor {
 		}
 	}
 
+	@Override
 	public void done() {
 		addToQueue(new WorkNode(DONE, null, 0));
 	}
 
+	@Override
 	public void internalWorked(double work) {
 		addToQueue(new WorkNode(INTERNAL_WORKED, null, work));
 
 	}
 
+	@Override
 	public boolean isCanceled() {
 		synchronized (lock) {
 			return canceled;
 		}
 	}
 
+	@Override
 	public void setCanceled(boolean value) {
 		synchronized (lock) {
 			this.canceled = value;
@@ -151,15 +156,18 @@ public class ProgressMonitoringJob extends Job implements IProgressMonitor {
 		addToQueue(new WorkNode(SET_CANCELED, null, value ? 1 : 0));
 	}
 
+	@Override
 	public void setTaskName(String name) {
 		addToQueue(new WorkNode(SET_TASK_NAME, name, 0));
 
 	}
 
+	@Override
 	public void subTask(String name) {
 		addToQueue(new WorkNode(SUB_TASK, name, 0));
 	}
 
+	@Override
 	public void worked(int work) {
 		addToQueue(new WorkNode(WORKED, null, work));
 	}

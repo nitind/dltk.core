@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.core.caching;
 
 import java.io.ByteArrayOutputStream;
@@ -36,6 +46,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void acceptFieldReference(String fieldName, int sourcePosition) {
 		this.baseRequestor.acceptFieldReference(fieldName, sourcePosition);
 		try {
@@ -50,6 +61,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void acceptMethodReference(String methodName, int argCount,
 			int sourcePosition, int sourceEndPosition) {
 		this.baseRequestor.acceptMethodReference(methodName, argCount,
@@ -68,6 +80,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void acceptPackage(int declarationStart, int declarationEnd,
 			String name) {
 		this.baseRequestor
@@ -82,6 +95,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 		}
 	}
 
+	@Override
 	public void acceptTypeReference(String typeName, int sourcePosition) {
 		this.baseRequestor.acceptTypeReference(typeName, sourcePosition);
 		try {
@@ -96,6 +110,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void enterField(FieldInfo info) {
 		this.baseRequestor.enterField(info);
 		try {
@@ -134,6 +149,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public boolean enterFieldCheckDuplicates(FieldInfo info) {
 		boolean result = this.baseRequestor.enterFieldCheckDuplicates(info);
 		try {
@@ -149,6 +165,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void enterMethod(MethodInfo info) {
 		this.baseRequestor.enterMethod(info);
 		try {
@@ -162,6 +179,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void enterMethodRemoveSame(MethodInfo info) {
 		this.baseRequestor.enterMethodRemoveSame(info);
 		try {
@@ -172,6 +190,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 		}
 	}
 
+	@Override
 	public void enterModule() {
 		this.baseRequestor.enterModule();
 		try {
@@ -181,6 +200,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 		}
 	}
 
+	@Override
 	public void enterModuleRoot() {
 		this.baseRequestor.enterModuleRoot();
 		try {
@@ -193,6 +213,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void enterType(TypeInfo info) {
 		this.baseRequestor.enterType(info);
 		try {
@@ -203,6 +224,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 		}
 	}
 
+	@Override
 	public boolean enterTypeAppend(String fullName, String delimiter) {
 		boolean result = this.baseRequestor
 				.enterTypeAppend(fullName, delimiter);
@@ -216,6 +238,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 		return result;
 	}
 
+	@Override
 	public void exitField(int declarationEnd) {
 		this.baseRequestor.exitField(declarationEnd);
 		try {
@@ -226,6 +249,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 		}
 	}
 
+	@Override
 	public void exitMethod(int declarationEnd) {
 		this.baseRequestor.exitMethod(declarationEnd);
 		try {
@@ -236,6 +260,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 		}
 	}
 
+	@Override
 	public void exitModule(int declarationEnd) {
 		this.baseRequestor.exitModule(declarationEnd);
 		try {
@@ -246,6 +271,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 		}
 	}
 
+	@Override
 	public void exitModuleRoot() {
 		this.baseRequestor.exitModuleRoot();
 		try {
@@ -255,6 +281,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 		}
 	}
 
+	@Override
 	public void exitType(int declarationEnd) {
 		this.baseRequestor.exitType(declarationEnd);
 		try {
@@ -268,6 +295,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void acceptImport(ImportInfo importInfo) {
 		this.baseRequestor.acceptImport(importInfo);
 		try {
@@ -282,6 +310,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 		}
 	}
 
+	@Override
 	public void enterNamespace(String[] namespace) {
 		this.baseRequestor.enterNamespace(namespace);
 		try {
@@ -292,6 +321,7 @@ public class StructureModelCollector extends AbstractDataSaver implements
 		}
 	}
 
+	@Override
 	public void exitNamespace() {
 		this.baseRequestor.exitNamespace();
 		try {

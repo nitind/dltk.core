@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.core.model.binary;
 
 import java.io.InputStream;
@@ -43,12 +53,14 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 		super(parent, name);
 	}
 
+	@Override
 	public void codeComplete(char[] snippet, int insertion, int position,
 			char[][] localVariableTypeNames, char[][] localVariableNames,
 			int[] localVariableModifiers, boolean isStatic,
 			CompletionRequestor requestor) throws ModelException {
 	}
 
+	@Override
 	public void codeComplete(char[] snippet, int insertion, int position,
 			char[][] localVariableTypeNames, char[][] localVariableNames,
 			int[] localVariableModifiers, boolean isStatic,
@@ -77,6 +89,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 				DLTKLanguageManager.getLanguageToolkit(this));
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof BinaryType)) {
 			return false;
@@ -87,6 +100,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 	/*
 	 * @see IType
 	 */
+	@Override
 	public IMethod[] findMethods(IMethod method) {
 		try {
 			return findMethods(method, getMethods());
@@ -96,14 +110,17 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 		}
 	}
 
+	@Override
 	public int getElementType() {
 		return TYPE;
 	}
 
+	@Override
 	public IField getField(String name) {
 		return new BinaryField(this, name);
 	}
 
+	@Override
 	public IField[] getFields() throws ModelException {
 		List<IModelElement> list = getChildrenOfType(FIELD);
 		int size;
@@ -116,10 +133,12 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 		}
 	}
 
+	@Override
 	public String getFullyQualifiedName() {
 		return getFullyQualifiedName("$"); //$NON-NLS-1$
 	}
 
+	@Override
 	public String getFullyQualifiedName(String enclosingTypeSeparator) {
 		try {
 			/*
@@ -132,10 +151,12 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 		}
 	}
 
+	@Override
 	public IMethod getMethod(String name) {
 		return new BinaryMethod(this, name);
 	}
 
+	@Override
 	public IMethod[] getMethods() throws ModelException {
 		List<IModelElement> list = getChildrenOfType(METHOD);
 		int size;
@@ -148,14 +169,17 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 		}
 	}
 
+	@Override
 	public IScriptFolder getScriptFolder() {
 		return (IScriptFolder) getAncestor(IModelElement.SCRIPT_FOLDER);
 	}
 
+	@Override
 	public String[] getSuperClasses() throws ModelException {
 		return ((BinaryTypeElementInfo) getElementInfo()).getSuperclassNames();
 	}
 
+	@Override
 	public IType getType(String name) {
 		try {
 			IType[] types = getTypes();
@@ -172,10 +196,12 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 		return null;
 	}
 
+	@Override
 	public String getTypeQualifiedName() {
 		return this.getTypeQualifiedName("$");
 	}
 
+	@Override
 	public String getTypeQualifiedName(String enclosingTypeSeparator) {
 		try {
 			/*
@@ -188,6 +214,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 		}
 	}
 
+	@Override
 	public IType[] getTypes() throws ModelException {
 		List<IModelElement> list = getChildrenOfType(TYPE);
 		int size;
@@ -207,6 +234,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 	/**
 	 * @see IType
 	 */
+	@Override
 	public ITypeHierarchy loadTypeHierachy(InputStream input,
 			IProgressMonitor monitor) throws ModelException {
 		return loadTypeHierachy(input, DefaultWorkingCopyOwner.PRIMARY, monitor);
@@ -259,6 +287,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 	/**
 	 * @see IType
 	 */
+	@Override
 	public ITypeHierarchy newSupertypeHierarchy(IProgressMonitor monitor)
 			throws ModelException {
 		return this.newSupertypeHierarchy(DefaultWorkingCopyOwner.PRIMARY,
@@ -268,6 +297,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 	/*
 	 * @see IType#newSupertypeHierarchy(ICompilationUnit[], IProgressMonitor)
 	 */
+	@Override
 	public ITypeHierarchy newSupertypeHierarchy(ISourceModule[] workingCopies,
 			IProgressMonitor monitor) throws ModelException {
 
@@ -282,6 +312,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 	/**
 	 * @see IType#newSupertypeHierarchy(WorkingCopyOwner, IProgressMonitor)
 	 */
+	@Override
 	public ITypeHierarchy newSupertypeHierarchy(WorkingCopyOwner owner,
 			IProgressMonitor monitor) throws ModelException {
 
@@ -298,6 +329,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 	/**
 	 * @see IType
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(IProgressMonitor monitor)
 			throws ModelException {
 		final ITypeHierarchy hierarchy = TypeHierarchyBuilders
@@ -315,6 +347,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 	/**
 	 * @see IType
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(IScriptProject project,
 			IProgressMonitor monitor) throws ModelException {
 		return newTypeHierarchy(project, DefaultWorkingCopyOwner.PRIMARY,
@@ -325,6 +358,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 	 * @see IType#newTypeHierarchy(IJavaProject, WorkingCopyOwner,
 	 *      IProgressMonitor)
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(IScriptProject project,
 			WorkingCopyOwner owner, IProgressMonitor monitor)
 			throws ModelException {
@@ -358,6 +392,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 	/*
 	 * @see IType#newTypeHierarchy(ICompilationUnit[], IProgressMonitor)
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(ISourceModule[] workingCopies,
 			IProgressMonitor monitor) throws ModelException {
 
@@ -371,6 +406,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 	/**
 	 * @see IType#newTypeHierarchy(WorkingCopyOwner, IProgressMonitor)
 	 */
+	@Override
 	public ITypeHierarchy newTypeHierarchy(WorkingCopyOwner owner,
 			IProgressMonitor monitor) throws ModelException {
 

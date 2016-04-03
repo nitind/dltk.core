@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.model.binary;
 
@@ -28,13 +27,12 @@ class BinaryMethodElementInfo extends BinaryMemberInfo implements
 		return this.arguments;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.IGenericMethod#getModifiers()
-	 */
+	@Override
 	public int getModifiers() {
 		return getFlags();
 	}
 
+	@Override
 	public String[] getArgumentNames() {
 		return SourceMethodUtils.getParameterNames(arguments);
 	}
@@ -43,6 +41,7 @@ class BinaryMethodElementInfo extends BinaryMemberInfo implements
 		this.isConstructor = isConstructor;
 	}
 
+	@Override
 	public boolean isConstructor() {
 		return isConstructor;
 	}

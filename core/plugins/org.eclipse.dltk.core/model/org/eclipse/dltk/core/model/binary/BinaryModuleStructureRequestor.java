@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.core.model.binary;
 
@@ -67,17 +66,20 @@ public class BinaryModuleStructureRequestor implements IBinaryElementRequestor {
 		this.newElements = newElements;
 	}
 
+	@Override
 	public void enterModule() {
 		this.handleStack = new Stack<ModelElement>();
 		this.infoStack = new Stack<ModelElementInfo>();
 		this.enterModuleRoot();
 	}
 
+	@Override
 	public void enterModuleRoot() {
 		this.handleStack.push((ModelElement) this.module);
 		this.infoStack.push(this.moduleInfo);
 	}
 
+	@Override
 	public void enterField(FieldInfo fieldInfo) {
 		ModelElement parentHandle = this.handleStack.peek();
 		ModelElementInfo parentInfo = this.infoStack.peek();
@@ -107,6 +109,7 @@ public class BinaryModuleStructureRequestor implements IBinaryElementRequestor {
 		this.infoStack.push(handleInfo);
 	}
 
+	@Override
 	public void enterMethod(MethodInfo methodInfo) {
 		ModelElement parentHandle = this.handleStack.peek();
 		ModelElementInfo parentInfo = this.infoStack.peek();
@@ -164,6 +167,7 @@ public class BinaryModuleStructureRequestor implements IBinaryElementRequestor {
 		this.infoStack.push(handleInfo);
 	}
 
+	@Override
 	public void enterType(TypeInfo typeInfo) {
 		ModelElement parentHandle = this.handleStack.peek();
 		ModelElementInfo parentInfo = this.infoStack.peek();
@@ -196,24 +200,29 @@ public class BinaryModuleStructureRequestor implements IBinaryElementRequestor {
 		this.infoStack.push(handleInfo);
 	}
 
+	@Override
 	public void exitModule(int declarationEnd) {
 		// determine if there were any parsing errors
 		this.moduleInfo.setIsStructureKnown(true);
 	}
 
+	@Override
 	public void exitModuleRoot() {
 		this.handleStack.pop();
 		this.infoStack.pop();
 	}
 
+	@Override
 	public void exitField(int declarationEnd) {
 		this.exitMember(declarationEnd);
 	}
 
+	@Override
 	public void exitMethod(int declarationEnd) {
 		this.exitMember(declarationEnd);
 	}
 
+	@Override
 	public void exitType(int declarationEnd) {
 		this.exitMember(declarationEnd);
 	}
@@ -226,6 +235,7 @@ public class BinaryModuleStructureRequestor implements IBinaryElementRequestor {
 		}
 	}
 
+	@Override
 	public void acceptPackage(int declarationStart, int declarationEnd,
 			String name) {
 		ModelElement parentHandle = this.handleStack.peek();
@@ -237,24 +247,30 @@ public class BinaryModuleStructureRequestor implements IBinaryElementRequestor {
 		newElements.put(handle, info);
 	}
 
+	@Override
 	public void acceptFieldReference(String fieldName, int BinaryPosition) {
 	}
 
+	@Override
 	public void acceptMethodReference(String methodName, int argCount,
 			int BinaryPosition, int BinaryEndPosition) {
 	}
 
+	@Override
 	public void acceptTypeReference(String typeName, int BinaryPosition) {
 	}
 
+	@Override
 	public void acceptImport(ImportInfo importInfo) {
 
 	}
 
+	@Override
 	public void enterNamespace(String[] namespace) {
 		namespaces.add(new SourceNamespace(namespace));
 	}
 
+	@Override
 	public void exitNamespace() {
 		namespaces.pop();
 	}

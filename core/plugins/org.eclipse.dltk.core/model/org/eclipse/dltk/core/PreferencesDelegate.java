@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.
+ * Copyright (c) 2009, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -28,14 +28,17 @@ public class PreferencesDelegate extends PreferencesLookupDelegate implements
 		return getTopScopeContext().getNode(qualifier);
 	}
 
+	@Override
 	public void setBoolean(String qualifier, String key, boolean value) {
 		getNode(qualifier).putBoolean(key, value);
 	}
 
+	@Override
 	public void setInt(String qualifier, String key, int value) {
 		getNode(qualifier).putInt(key, value);
 	}
 
+	@Override
 	public void setString(String qualifier, String key, String value) {
 		if (value != null) {
 			getNode(qualifier).put(key, value);

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.core;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -107,10 +117,12 @@ public class SourceParserUtil {
 				} else {
 					source = new IModuleSource() {
 
+						@Override
 						public String getFileName() {
 							return module.getPath().toString();
 						}
 
+						@Override
 						public String getSourceContents() {
 							try {
 								return module.getSource();
@@ -119,10 +131,12 @@ public class SourceParserUtil {
 							}
 						}
 
+						@Override
 						public IModelElement getModelElement() {
 							return module;
 						}
 
+						@Override
 						public char[] getContentsAsCharArray() {
 							try {
 								return module.getSourceAsCharArray();

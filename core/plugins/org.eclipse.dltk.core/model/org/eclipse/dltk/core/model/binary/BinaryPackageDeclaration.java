@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.core.model.binary;
 
 import org.eclipse.dltk.core.IPackageDeclaration;
@@ -19,6 +29,7 @@ public class BinaryPackageDeclaration extends BinaryMember implements
 	public void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public int getElementType() {
 		return PACKAGE_DECLARATION;
 	}
@@ -28,6 +39,7 @@ public class BinaryPackageDeclaration extends BinaryMember implements
 		return JEM_USER_ELEMENT;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof BinaryPackageDeclaration)) {
 			return false;

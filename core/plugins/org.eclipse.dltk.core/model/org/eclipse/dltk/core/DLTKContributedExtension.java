@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,59 +24,42 @@ public abstract class DLTKContributedExtension implements
 	private String preferencePageId;
 	private int priority;
 	
-	/*
-	 * @see org.eclipse.dltk.ast.parser.IDLTKContributedExtension#getDescription()
-	 */
+	@Override
 	public String getDescription() {
 		return description;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ast.parser.IDLTKContributedExtension#getId()
-	 */
+	@Override
 	public String getId() {
 		return id;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ast.parser.IDLTKContributedExtension#getName()
-	 */
+	@Override
 	public String getName() {
 		return name;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ast.parser.IDLTKContributedExtension#getNatureId()
-	 */
+	@Override
 	public String getNatureId() {
 		return natureId;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ast.parser.IDLTKContributedExtension#getPreferencePageId()
-	 */
+	@Override
 	public String getPreferencePageId() {
 		return preferencePageId;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ast.parser.IDLTKContributedExtension#getPriority()
-	 */
+	@Override
 	public int getPriority() {
 		return priority;
 	}
 	
-	/*
-	 * @see org.eclipse.dltk.core.IDLTKContributedExtension#getPropertyPageId()
-	 */
+	@Override
 	public String getPropertyPageId() {
 		return propertyPageId;
 	}
 
-	/*
-	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-	 *      java.lang.String, java.lang.Object)
-	 */
+	@Override
 	public void setInitializationData(IConfigurationElement config,
 			String propertyName, Object data) {
 		id = config.getAttribute(ID);

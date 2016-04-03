@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.core;
 
 import java.io.File;
@@ -23,14 +33,17 @@ public abstract class AbstractLanguageToolkit implements IDLTKLanguageToolkit {
 	public AbstractLanguageToolkit() {
 	}
 
+	@Override
 	public boolean languageSupportZIPBuildpath() {
 		return false;
 	}
 
+	@Override
 	public boolean validateSourcePackage(IPath path, IEnvironment environment) {
 		return true;
 	}
 
+	@Override
 	public IStatus validateSourceModule(IResource resource) {
 		return Status.OK_STATUS;
 	}
@@ -39,6 +52,7 @@ public abstract class AbstractLanguageToolkit implements IDLTKLanguageToolkit {
 		return name.indexOf('.') == -1;
 	}
 
+	@Override
 	public boolean canValidateContent(IResource resource) {
 		final IProject project = resource.getProject();
 		if (project == null) { // This is workspace root.
@@ -52,26 +66,32 @@ public abstract class AbstractLanguageToolkit implements IDLTKLanguageToolkit {
 		return isEmptyExtension(resource.getName());
 	}
 
+	@Override
 	public boolean canValidateContent(File file) {
 		return isEmptyExtension(file.getName());
 	}
 
+	@Override
 	public boolean canValidateContent(IFileHandle file) {
 		return false;
 	}
 
+	@Override
 	public String getPreferenceQualifier() {
 		return null;
 	}
 
+	@Override
 	public boolean get(BooleanFeature feature) {
 		return feature.getDefaultValue();
 	}
 
+	@Override
 	public int get(IntegerFeature feature) {
 		return feature.getDefaultValue();
 	}
 
+	@Override
 	public String get(StringFeature feature) {
 		return feature.getDefaultValue();
 	}
@@ -80,10 +100,12 @@ public abstract class AbstractLanguageToolkit implements IDLTKLanguageToolkit {
 	 * @throws IOException
 	 * @since 2.0
 	 */
+	@Override
 	public IArchive openArchive(File localFile) throws IOException {
 		return new ZipArchiveFile(localFile);
 	}
 
+	@Override
 	public String getFileType() {
 		final IContentType contentType = Platform.getContentTypeManager()
 				.getContentType(getLanguageContentType());

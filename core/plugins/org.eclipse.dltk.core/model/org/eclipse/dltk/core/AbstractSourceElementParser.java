@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ public abstract class AbstractSourceElementParser implements
 	private ISourceElementRequestor sourceElementRequestor = null;
 	private IProblemReporter problemReporter;
 
+	@Override
 	public void parseSourceModule(IModuleSource module) {
 		final ModuleDeclaration moduleDeclaration = parse(module);
 		if (moduleDeclaration != null) {
@@ -48,10 +49,12 @@ public abstract class AbstractSourceElementParser implements
 		}
 	}
 
+	@Override
 	public void setReporter(IProblemReporter reporter) {
 		this.problemReporter = reporter;
 	}
 
+	@Override
 	public void setRequestor(ISourceElementRequestor requestor) {
 		this.sourceElementRequestor = requestor;
 	}

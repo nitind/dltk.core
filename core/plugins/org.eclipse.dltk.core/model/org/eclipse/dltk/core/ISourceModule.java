@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core;
 
@@ -140,6 +139,7 @@ public interface ISourceModule extends IModule, ISourceReference,
 	 *                if an exception occurs while accessing its corresponding
 	 *                resource
 	 */
+	@Override
 	String getSource() throws ModelException;
 
 	/**
@@ -338,6 +338,7 @@ public interface ISourceModule extends IModule, ISourceReference,
 	/**
 	 * Read only source module. From external resources.
 	 */
+	@Override
 	boolean isReadOnly();
 
 	boolean isPrimary();
