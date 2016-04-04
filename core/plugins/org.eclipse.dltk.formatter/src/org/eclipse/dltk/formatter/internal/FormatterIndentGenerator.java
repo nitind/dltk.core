@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -31,6 +31,7 @@ public class FormatterIndentGenerator implements IFormatterIndentGenerator {
 		this.tabSize = tabSize;
 	}
 
+	@Override
 	public void generateIndent(final int indentLevel, StringBuilder target) {
 		if (indentLevel > 0) {
 			int size = indentLevel * indentationSize;
@@ -42,6 +43,7 @@ public class FormatterIndentGenerator implements IFormatterIndentGenerator {
 		}
 	}
 
+	@Override
 	public int getTabSize() {
 		return tabSize;
 	}

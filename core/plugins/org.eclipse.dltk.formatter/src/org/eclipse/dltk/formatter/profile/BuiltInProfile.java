@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,21 +32,26 @@ public class BuiltInProfile extends Profile {
 		fCurrentVersion = currentVersion;
 	}
 
+	@Override
 	public String getName() {
 		return fName;
 	}
 
+	@Override
 	public Map<String, String> getSettings() {
 		return fSettings;
 	}
 
+	@Override
 	public void setSettings(Map<String, String> settings) {
 	}
 
+	@Override
 	public String getID() {
 		return fID;
 	}
 
+	@Override
 	public final int compareTo(IProfile o) {
 		if (o instanceof BuiltInProfile) {
 			return fOrder - ((BuiltInProfile) o).fOrder;
@@ -68,10 +73,12 @@ public class BuiltInProfile extends Profile {
 		return true;
 	}
 
+	@Override
 	public int getVersion() {
 		return fCurrentVersion;
 	}
 
+	@Override
 	public String getFormatterId() {
 		return fFormatter;
 	}

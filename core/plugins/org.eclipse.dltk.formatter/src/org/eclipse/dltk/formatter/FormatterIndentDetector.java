@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -26,19 +26,23 @@ public class FormatterIndentDetector implements IFormatterWriter {
 		this.offset = offset;
 	}
 
+	@Override
 	public void addNewLineCallback(IFormatterCallback callback) {
 		// empty
 	}
 
+	@Override
 	public void excludeRegion(IRegion region) {
 		// empty
 
 	}
 
+	@Override
 	public void ensureLineStarted(IFormatterContext context) {
 		// empty
 	}
 
+	@Override
 	public void write(IFormatterContext context, int startOffset, int endOffset) {
 		if (!indentDetected && endOffset >= offset) {
 			level = context.getIndent();
@@ -46,32 +50,32 @@ public class FormatterIndentDetector implements IFormatterWriter {
 		}
 	}
 
-	/*
-	 * @see IFormatterWriter#writeText(IFormatterContext, String)
-	 */
+	@Override
 	public void writeText(IFormatterContext context, String text) {
 		// empty
 	}
 
-	/*
-	 * @see IFormatterWriter#writeLineBreak(IFormatterContext)
-	 */
+	@Override
 	public void writeLineBreak(IFormatterContext context) {
 		// empty
 	}
 
+	@Override
 	public void skipNextLineBreaks(IFormatterContext context) {
 		// empty
 	}
 
+	@Override
 	public void skipNextLineBreaks(IFormatterContext context, boolean value) {
 		// empty
 	}
 
+	@Override
 	public void appendToPreviousLine(IFormatterContext context, String text) {
 		// empty
 	}
 
+	@Override
 	public void disableAppendToPreviousLine() {
 		// empty
 	}

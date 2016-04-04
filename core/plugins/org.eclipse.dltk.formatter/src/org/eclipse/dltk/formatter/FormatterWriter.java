@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -57,12 +57,14 @@ public class FormatterWriter implements IFormatterWriter {
 		this.indentGenerator = indentGenerator;
 	}
 
+	@Override
 	public void ensureLineStarted(IFormatterContext context) {
 		if (!lineStarted) {
 			startLine(context);
 		}
 	}
 
+	@Override
 	public void write(IFormatterContext context, int startOffset, int endOffset) {
 		if (!excludes.isExcluded(startOffset, endOffset)) {
 			if (endOffset > startOffset) {
@@ -77,9 +79,7 @@ public class FormatterWriter implements IFormatterWriter {
 		}
 	}
 
-	/*
-	 * @see IFormatterWriter#writeText(IFormatterContext, String)
-	 */
+	@Override
 	public void writeText(IFormatterContext context, String text) {
 		if (text.length() != 0) {
 			skipNextNewLine = false;
@@ -103,9 +103,7 @@ public class FormatterWriter implements IFormatterWriter {
 		}
 	}
 
-	/*
-	 * @see IFormatterWriter#writeLineBreak(IFormatterContext)
-	 */
+	@Override
 	public void writeLineBreak(IFormatterContext context) {
 		if (lineStarted && !keepLines) {
 			write(context, lineDelimiter);
@@ -114,16 +112,19 @@ public class FormatterWriter implements IFormatterWriter {
 		}
 	}
 
+	@Override
 	public void skipNextLineBreaks(IFormatterContext context) {
 		skipNextLineBreaks(context, true);
 	}
 
+	@Override
 	public void skipNextLineBreaks(IFormatterContext context, boolean value) {
 		if (!keepLines) {
 			skipNextNewLine = value;
 		}
 	}
 
+	@Override
 	public void appendToPreviousLine(IFormatterContext context, String text) {
 		if (!lineStarted && canAppendToPreviousLine) {
 			skipNextNewLine = false;
@@ -151,6 +152,7 @@ public class FormatterWriter implements IFormatterWriter {
 		}
 	}
 
+	@Override
 	public void disableAppendToPreviousLine() {
 		canAppendToPreviousLine = false;
 	}
@@ -294,10 +296,12 @@ public class FormatterWriter implements IFormatterWriter {
 	private void executeNewLineCallbacks(IFormatterContext context) {
 		final IFormatterRawWriter callbackWriter = new IFormatterRawWriter() {
 
+			@Override
 			public void writeIndent(IFormatterContext context) {
 				FormatterWriter.this.writeIndent(context, callbackBuffer);
 			}
 
+			@Override
 			public void writeText(IFormatterContext context, String text) {
 				callbackBuffer.append(text);
 			}
@@ -382,10 +386,12 @@ public class FormatterWriter implements IFormatterWriter {
 
 	private final ExcludeRegionList excludes = new ExcludeRegionList();
 
+	@Override
 	public void excludeRegion(IRegion region) {
 		excludes.excludeRegion(region);
 	}
 
+	@Override
 	public void addNewLineCallback(IFormatterCallback callback) {
 		newLineCallbacks.add(callback);
 	}

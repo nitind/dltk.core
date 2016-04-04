@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,6 +74,7 @@ public class ProfileManager implements IProfileManager {
 	 * 
 	 * @see #getSortedDisplayNames()
 	 */
+	@Override
 	public List<IProfile> getSortedProfiles() {
 		return Collections.unmodifiableList(fProfilesByName);
 	}
@@ -87,6 +88,7 @@ public class ProfileManager implements IProfileManager {
 	 * @return All names, sorted alphabetically
 	 * @see #getSortedProfiles()
 	 */
+	@Override
 	public String[] getSortedDisplayNames() {
 		final String[] sortedNames = new String[fProfilesByName.size()];
 		int i = 0;
@@ -107,10 +109,12 @@ public class ProfileManager implements IProfileManager {
 		return fProfiles.get(ID);
 	}
 
+	@Override
 	public IProfile getSelected() {
 		return fSelected;
 	}
 
+	@Override
 	public void setSelected(IProfile profile) {
 		final IProfile newSelected = fProfiles.get(profile.getID());
 		if (newSelected != null && !newSelected.equals(fSelected)) {
@@ -118,6 +122,7 @@ public class ProfileManager implements IProfileManager {
 		}
 	}
 
+	@Override
 	public boolean containsName(String name) {
 		for (IProfile curr : fProfilesByName) {
 			if (name.equals(curr.getName())) {
@@ -127,13 +132,12 @@ public class ProfileManager implements IProfileManager {
 		return false;
 	}
 
-	/*
-	 * @see IProfileManager#findProfile(java.lang.String)
-	 */
+	@Override
 	public IProfile findProfile(String profileId) {
 		return fProfiles.get(profileId);
 	}
 
+	@Override
 	public void addProfile(IProfile profile) {
 		if (profile instanceof CustomProfile) {
 			CustomProfile newProfile = (CustomProfile) profile;
@@ -153,6 +157,7 @@ public class ProfileManager implements IProfileManager {
 		}
 	}
 
+	@Override
 	public boolean deleteProfile(IProfile profile) {
 		if (profile instanceof CustomProfile) {
 			CustomProfile oldProfile = (CustomProfile) profile;
@@ -174,6 +179,7 @@ public class ProfileManager implements IProfileManager {
 		return false;
 	}
 
+	@Override
 	public IProfile rename(IProfile profile, String newName) {
 		final String trimmed = newName.trim();
 		if (trimmed.equals(profile.getName()))
@@ -211,6 +217,7 @@ public class ProfileManager implements IProfileManager {
 		setSelected(newProfile);
 	}
 
+	@Override
 	public IProfile create(ProfileKind kind, String profileName,
 			Map<String, String> settings, String formatterId, int version) {
 		CustomProfile profile = new CustomProfile(profileName, settings,
@@ -221,23 +228,17 @@ public class ProfileManager implements IProfileManager {
 		return profile;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ui.formatter.IProfileManager#isDirty()
-	 */
+	@Override
 	public boolean isDirty() {
 		return fDirty;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ui.formatter.IProfileManager#markDirty()
-	 */
+	@Override
 	public void markDirty() {
 		fDirty = true;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ui.formatter.IProfileManager#clearDirty()
-	 */
+	@Override
 	public void clearDirty() {
 		fDirty = false;
 	}

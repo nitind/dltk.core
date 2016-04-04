@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -202,6 +202,7 @@ public class ProfileStore implements IProfileStore {
 		return null;
 	}
 
+	@Override
 	public List<IProfile> readProfilesFromStream(InputStream is)
 			throws CoreException {
 		return readProfilesFromSource(new InputSource(is));
@@ -216,6 +217,7 @@ public class ProfileStore implements IProfileStore {
 	 * @return returns a list of <code>CustomProfile</code> or <code>null</code>
 	 * @throws CoreException
 	 */
+	@Override
 	public List<IProfile> readProfilesFromFile(File file) throws CoreException {
 		try {
 			final FileInputStream reader = new FileInputStream(file);
@@ -274,6 +276,7 @@ public class ProfileStore implements IProfileStore {
 	 *            the encoding to use
 	 * @throws CoreException
 	 */
+	@Override
 	public void writeProfilesToFile(Collection<IProfile> profiles, File file)
 			throws CoreException {
 		final OutputStream stream;

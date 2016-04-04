@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -37,10 +37,12 @@ public class FormatterBlockNode extends AbstractFormatterNode implements
 		}
 	}
 
+	@Override
 	public void addChild(IFormatterNode child) {
 		body.add(child);
 	}
 
+	@Override
 	public void accept(IFormatterContext context, IFormatterWriter visitor)
 			throws Exception {
 		acceptBody(context, visitor);
@@ -51,9 +53,7 @@ public class FormatterBlockNode extends AbstractFormatterNode implements
 		acceptNodes(body, context, visitor);
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ruby.formatter.node.IFormatterNode#getEndOffset()
-	 */
+	@Override
 	public int getEndOffset() {
 		if (!body.isEmpty()) {
 			return body.get(body.size() - 1).getEndOffset();
@@ -62,9 +62,7 @@ public class FormatterBlockNode extends AbstractFormatterNode implements
 		}
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ruby.formatter.node.IFormatterNode#getStartOffset()
-	 */
+	@Override
 	public int getStartOffset() {
 		if (!body.isEmpty()) {
 			return body.get(0).getStartOffset();
@@ -73,10 +71,7 @@ public class FormatterBlockNode extends AbstractFormatterNode implements
 		}
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.dltk.ruby.formatter.node.IFormatterContainerNode#isEmpty()
-	 */
+	@Override
 	public boolean isEmpty() {
 		for (IFormatterNode node : body) {
 			if (!node.isEmpty()) {
@@ -86,6 +81,7 @@ public class FormatterBlockNode extends AbstractFormatterNode implements
 		return true;
 	}
 
+	@Override
 	public List<IFormatterNode> getChildren() {
 		return Collections.unmodifiableList(body);
 	}
@@ -95,6 +91,7 @@ public class FormatterBlockNode extends AbstractFormatterNode implements
 		return body.toString();
 	}
 
+	@Override
 	public List<IFormatterNode> getBody() {
 		return body;
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,20 +30,24 @@ public class CustomProfile extends Profile implements IProfile.ICustomProfile {
 		fVersion = version;
 	}
 
+	@Override
 	public String getName() {
 		return fName;
 	}
 
+	@Override
 	public Map<String, String> getSettings() {
 		return new HashMap<String, String>(fSettings);
 	}
 
+	@Override
 	public void setSettings(Map<String, String> settings) {
 		if (settings == null)
 			throw new IllegalArgumentException();
 		fSettings = settings;
 	}
 
+	@Override
 	public String getID() {
 		return fName;
 	}
@@ -56,14 +60,17 @@ public class CustomProfile extends Profile implements IProfile.ICustomProfile {
 	// return fManager;
 	// }
 
+	@Override
 	public int getVersion() {
 		return fVersion;
 	}
 
+	@Override
 	public void setVersion(int version) {
 		fVersion = version;
 	}
 
+	@Override
 	public int compareTo(IProfile o) {
 		if (o instanceof CustomProfile) {
 			return getName().compareToIgnoreCase(o.getName());
@@ -75,6 +82,7 @@ public class CustomProfile extends Profile implements IProfile.ICustomProfile {
 		return true;
 	}
 
+	@Override
 	public String getFormatterId() {
 		return fFormatter;
 	}

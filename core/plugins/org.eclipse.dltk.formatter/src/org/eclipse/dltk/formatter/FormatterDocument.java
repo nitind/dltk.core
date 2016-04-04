@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -30,9 +30,7 @@ public class FormatterDocument implements IFormatterDocument {
 		this.text = text;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ruby.formatter.node.IFormatterDocument#getText()
-	 */
+	@Override
 	public String getText() {
 		return text;
 	}
@@ -40,14 +38,17 @@ public class FormatterDocument implements IFormatterDocument {
 	/*
 	 * @see org.eclipse.dltk.ruby.formatter.node.IFormatterDocument#getLength()
 	 */
+	@Override
 	public int getLength() {
 		return text.length();
 	}
 
+	@Override
 	public String get(int startOffset, int endOffset) {
 		return text.substring(startOffset, endOffset);
 	}
 
+	@Override
 	public String get(IRegion region) {
 		return get(region.getOffset(), region.getOffset() + region.getLength());
 	}
@@ -56,6 +57,7 @@ public class FormatterDocument implements IFormatterDocument {
 		booleans.put(key, Boolean.valueOf(value));
 	}
 
+	@Override
 	public boolean getBoolean(String key) {
 		final Boolean value = (Boolean) booleans.get(key);
 		return value != null && value.booleanValue();
@@ -65,6 +67,7 @@ public class FormatterDocument implements IFormatterDocument {
 		strings.put(key, value);
 	}
 
+	@Override
 	public String getString(String key) {
 		return (String) strings.get(key);
 	}
@@ -73,11 +76,13 @@ public class FormatterDocument implements IFormatterDocument {
 		ints.put(key, Integer.valueOf(value));
 	}
 
+	@Override
 	public int getInt(String key) {
 		final Integer value = (Integer) ints.get(key);
 		return value != null ? value.intValue() : 0;
 	}
 
+	@Override
 	public char charAt(int index) {
 		return text.charAt(index);
 	}

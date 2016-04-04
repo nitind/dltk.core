@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -29,33 +29,33 @@ public class FormatterTextNode extends AbstractFormatterNode implements
 		this.endOffset = endOffset;
 	}
 
+	@Override
 	public String getText() {
 		return getDocument().get(startOffset, endOffset);
 	}
 
+	@Override
 	public void accept(IFormatterContext context, IFormatterWriter visitor)
 			throws Exception {
 		visitor.write(context, getStartOffset(), getEndOffset());
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return false;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ruby.formatter.node.IFormatterNode#getEndOffset()
-	 */
+	@Override
 	public int getEndOffset() {
 		return endOffset;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ruby.formatter.node.IFormatterNode#getStartOffset()
-	 */
+	@Override
 	public int getStartOffset() {
 		return startOffset;
 	}
 
+	@Override
 	public String toString() {
 		final StringWriter w = new StringWriter();
 		escapeJavaStyleString(w, getText());

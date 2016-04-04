@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -22,9 +22,7 @@ public abstract class AbstractFormatterNode implements IFormatterNode {
 		this.document = document;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ruby.formatter.node.IFormatterNode#getDocument()
-	 */
+	@Override
 	public IFormatterDocument getDocument() {
 		return document;
 	}
@@ -35,9 +33,7 @@ public abstract class AbstractFormatterNode implements IFormatterNode {
 		return index > 0 ? name.substring(index + 1) : name;
 	}
 
-	/*
-	 * @see java.lang.Object#toString()
-	 */
+	@Override
 	public String toString() {
 		return getShortClassName();
 	}

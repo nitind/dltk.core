@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -97,6 +97,7 @@ public class ExcludeRegionList {
 
 	private static final Comparator<IRegion> REGION_COMPARATOR = new Comparator<IRegion>() {
 
+		@Override
 		public int compare(IRegion o1, IRegion o2) {
 			return o1.getOffset() - o2.getOffset();
 		}

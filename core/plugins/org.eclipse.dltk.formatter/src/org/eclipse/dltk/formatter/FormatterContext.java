@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -42,9 +42,7 @@ public class FormatterContext implements IFormatterContext, Cloneable {
 		this.indent = indent;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ruby.formatter.node.IFormatterContext#copy()
-	 */
+	@Override
 	public IFormatterContext copy() {
 		try {
 			return (IFormatterContext) clone();
@@ -54,69 +52,70 @@ public class FormatterContext implements IFormatterContext, Cloneable {
 		}
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ruby.formatter.node.IFormatterContext#decIndent()
-	 */
+	@Override
 	public void decIndent() {
 		--indent;
 		// TODO assert indent >= 0;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ruby.formatter.node.IFormatterContext#incIndent()
-	 */
+	@Override
 	public void incIndent() {
 		++indent;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ruby.formatter.node.IFormatterContext#resetIndent()
-	 */
+	@Override
 	public void resetIndent() {
 		indent = 0;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ruby.formatter.node.IFormatterContext#getIndent()
-	 */
+	@Override
 	public int getIndent() {
 		return indent;
 	}
 
+	@Override
 	public boolean isIndenting() {
 		return indenting;
 	}
 
+	@Override
 	public void setIndenting(boolean value) {
 		this.indenting = value;
 	}
 
+	@Override
 	public boolean isComment() {
 		return comment;
 	}
 
+	@Override
 	public void setComment(boolean value) {
 		this.comment = value;
 	}
 
+	@Override
 	public int getBlankLines() {
 		return blankLines;
 	}
 
+	@Override
 	public void resetBlankLines() {
 		blankLines = -1;
 	}
 
+	@Override
 	public void setBlankLines(int value) {
 		if (value >= 0 && value > blankLines) {
 			blankLines = value;
 		}
 	}
 
+	@Override
 	public void enter(IFormatterNode node) {
 		path.add(new PathEntry(node));
 	}
 
+	@Override
 	public void leave(IFormatterNode node) {
 		final PathEntry entry = path.remove(path.size() - 1);
 		if (entry.node != node) {
@@ -132,6 +131,7 @@ public class FormatterContext implements IFormatterContext, Cloneable {
 		return true;
 	}
 
+	@Override
 	public IFormatterNode getParent() {
 		if (path.size() > 1) {
 			final PathEntry entry = path.get(path.size() - 2);
@@ -141,6 +141,7 @@ public class FormatterContext implements IFormatterContext, Cloneable {
 		}
 	}
 
+	@Override
 	public int getChildIndex() {
 		if (path.size() > 1) {
 			final PathEntry entry = path.get(path.size() - 2);
@@ -150,10 +151,12 @@ public class FormatterContext implements IFormatterContext, Cloneable {
 		}
 	}
 
+	@Override
 	public boolean isWrapping() {
 		return wrapping;
 	}
 
+	@Override
 	public void setWrapping(boolean value) {
 		this.wrapping = value;
 	}

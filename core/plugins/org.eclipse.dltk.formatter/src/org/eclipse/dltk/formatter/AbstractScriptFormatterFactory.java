@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -74,6 +74,7 @@ public abstract class AbstractScriptFormatterFactory extends
 		return FormatterMessages.AbstractScriptFormatterFactory_defaultProfileName;
 	}
 
+	@Override
 	public List<IProfile> getBuiltInProfiles() {
 		final List<IProfile> profiles = new ArrayList<IProfile>();
 
@@ -144,6 +145,7 @@ public abstract class AbstractScriptFormatterFactory extends
 		return null;
 	}
 
+	@Override
 	public List<IProfile> getCustomProfiles() {
 		final PreferenceKey profilesKey = getProfilesKey();
 		if (profilesKey != null) {
@@ -162,6 +164,7 @@ public abstract class AbstractScriptFormatterFactory extends
 		return Collections.emptyList();
 	}
 
+	@Override
 	public void saveCustomProfiles(List<IProfile> profiles) {
 		final PreferenceKey profilesKey = getProfilesKey();
 		if (profilesKey != null) {
@@ -192,6 +195,7 @@ public abstract class AbstractScriptFormatterFactory extends
 		return settings;
 	}
 
+	@Override
 	public Map<String, String> retrievePreferences(
 			IPreferencesLookupDelegate delegate) {
 		final PreferenceKey activeProfileKey = getActiveProfileKey();
@@ -227,11 +231,13 @@ public abstract class AbstractScriptFormatterFactory extends
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public Map<String, String> changeToIndentingOnly(
 			Map<String, String> preferences) {
 		return preferences;
 	}
 
+	@Override
 	public void savePreferences(Map<String, String> preferences,
 			IPreferencesSaveDelegate delegate) {
 		final PreferenceKey[] keys = getPreferenceKeys();
@@ -255,12 +261,14 @@ public abstract class AbstractScriptFormatterFactory extends
 		}
 	}
 
+	@Override
 	public IProfileVersioner getProfileVersioner() {
 		if (versioner == null)
 			versioner = createProfileVersioner();
 		return versioner;
 	}
 
+	@Override
 	public IProfileStore getProfileStore() {
 		return new ProfileStore(getProfileVersioner(), loadDefaultSettings());
 	}
@@ -269,17 +277,17 @@ public abstract class AbstractScriptFormatterFactory extends
 		return new GeneralProfileVersioner(getId());
 	}
 
-	/*
-	 * @see IScriptFormatterFactory#createProfileManager(java.util.List)
-	 */
+	@Override
 	public IProfileManager createProfileManager(List<IProfile> profiles) {
 		return new ProfileManager(profiles);
 	}
 
+	@Override
 	public boolean isValid() {
 		return true;
 	}
 
+	@Override
 	public URL getPreviewContent() {
 		return null;
 	}
