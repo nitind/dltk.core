@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,6 +74,7 @@ public class PackagesView extends ScriptBrowsingPart {
 			super(statusLineManager);
 		}
 
+		@Override
 		protected String formatMessage(ISelection sel) {
 			if (sel instanceof IStructuredSelection) {
 				IStructuredSelection selection = (IStructuredSelection) sel;
@@ -128,6 +129,7 @@ public class PackagesView extends ScriptBrowsingPart {
 	/**
 	 * Adds filters the viewer of this part.
 	 */
+	@Override
 	protected void addFilters() {
 		super.addFilters();
 		getViewer().addFilter(createNonJavaElementFilter());
@@ -142,6 +144,7 @@ public class PackagesView extends ScriptBrowsingPart {
 	 */
 	protected NonScriptElementFilter createNonJavaElementFilter() {
 		return new NonScriptElementFilter() {
+			@Override
 			public boolean select(Viewer viewer, Object parent, Object element) {
 				return ((element instanceof IModelElement)
 						|| (element instanceof LogicalPackage) || (element instanceof IFolder));
@@ -149,6 +152,7 @@ public class PackagesView extends ScriptBrowsingPart {
 		};
 	}
 
+	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		// this must be created before all actions and filters
@@ -181,6 +185,7 @@ public class PackagesView extends ScriptBrowsingPart {
 	/*
 	 * @see org.eclipse.ui.IViewPart#saveState(org.eclipse.ui.IMemento)
 	 */
+	@Override
 	public void saveState(IMemento memento) {
 		super.saveState(memento);
 		memento.putInteger(this.getViewSite().getId() + TAG_VIEW_STATE,
@@ -192,6 +197,7 @@ public class PackagesView extends ScriptBrowsingPart {
 	 * 
 	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#createViewer(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected StructuredViewer createViewer(Composite parent) {
 		// Creates the viewer of this part dependent on the current layout.
 		StructuredViewer viewer;
@@ -204,12 +210,8 @@ public class PackagesView extends ScriptBrowsingPart {
 		return fWrappedViewer;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class key) {
+	@Override
+	public <T> T getAdapter(Class<T> key) {
 		// if (key == IShowInTargetList.class) {
 		// return new IShowInTargetList() {
 		// public String[] getShowInTargetIds() {
@@ -237,6 +239,7 @@ public class PackagesView extends ScriptBrowsingPart {
 	 * Overrides the createContentProvider from JavaBrowsingPart Creates the
 	 * content provider of this part.
 	 */
+	@Override
 	protected IContentProvider createContentProvider() {
 		if (isInListState())
 			return new PackagesViewFlatContentProvider(fWrappedViewer
@@ -246,6 +249,7 @@ public class PackagesView extends ScriptBrowsingPart {
 					.getViewer());
 	}
 
+	@Override
 	protected ScriptUILabelProvider createLabelProvider() {
 		if (isInListState())
 			return createListLabelProvider();
@@ -268,11 +272,13 @@ public class PackagesView extends ScriptBrowsingPart {
 	 * 
 	 * @return the string used as ID for the Help context
 	 */
+	@Override
 	protected String getHelpContextId() {
 		// return IJavaHelpContextIds.PACKAGES_BROWSING_VIEW;
 		return ""; //$NON-NLS-1$
 	}
 
+	@Override
 	protected String getLinkToEditorKey() {
 		return PreferenceConstants.LINK_BROWSING_PACKAGES_TO_EDITOR;
 	}
@@ -285,6 +291,7 @@ public class PackagesView extends ScriptBrowsingPart {
 	 *            the object to test
 	 * @return <true> if the given element is a valid input
 	 */
+	@Override
 	protected boolean isValidInput(Object element) {
 		if (element instanceof IScriptProject
 				|| (element instanceof IProjectFragment && ((IModelElement) element)
@@ -306,6 +313,7 @@ public class PackagesView extends ScriptBrowsingPart {
 	 *            the object to test
 	 * @return <true> if the given element is a valid element
 	 */
+	@Override
 	protected boolean isValidElement(Object element) {
 		if (element instanceof IScriptFolder) {
 			IModelElement parent = ((IScriptFolder) element).getParent();
@@ -321,6 +329,7 @@ public class PackagesView extends ScriptBrowsingPart {
 	 * 
 	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#findElementToSelect(org.eclipse.jdt.core.IJavaElement)
 	 */
+	@Override
 	protected IModelElement findElementToSelect(IModelElement je) {
 		if (je == null)
 			return null;
@@ -340,6 +349,7 @@ public class PackagesView extends ScriptBrowsingPart {
 	/*
 	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#setInput(java.lang.Object)
 	 */
+	@Override
 	protected void setInput(Object input) {
 		setViewerWrapperInput(input);
 		super.updateTitle();
@@ -352,6 +362,7 @@ public class PackagesView extends ScriptBrowsingPart {
 	/**
 	 * @see org.eclipse.jdt.internal.ui.browsing.ScriptBrowsingPart#fillActionBars(org.eclipse.ui.IActionBars)
 	 */
+	@Override
 	protected void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
 		fSwitchActionGroup.fillActionBars(actionBars);
@@ -383,8 +394,10 @@ public class PackagesView extends ScriptBrowsingPart {
 	}
 
 	// alter sorter to include LogicalPackages
+	@Override
 	protected ModelElementSorter createModelElementComparator() {
 		return new ModelElementSorter() {
+			@Override
 			public int category(Object element) {
 				if (element instanceof LogicalPackage) {
 					LogicalPackage cp = (LogicalPackage) element;
@@ -393,6 +406,7 @@ public class PackagesView extends ScriptBrowsingPart {
 					return super.category(element);
 			}
 
+			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				if (e1 instanceof LogicalPackage) {
 					LogicalPackage cp = (LogicalPackage) e1;
@@ -407,6 +421,7 @@ public class PackagesView extends ScriptBrowsingPart {
 		};
 	}
 
+	@Override
 	protected StatusBarUpdater createStatusBarUpdater(
 			IStatusLineManager slManager) {
 		return new StatusBarUpdater4LogicalPackage(slManager);
@@ -416,6 +431,7 @@ public class PackagesView extends ScriptBrowsingPart {
 		getSite().setSelectionProvider(fWrappedViewer);
 	}
 
+	@Override
 	void adjustInputAndSetSelection(Object o) {
 		if (!(o instanceof LogicalPackage)) {
 			super.adjustInputAndSetSelection(o);
@@ -430,6 +446,7 @@ public class PackagesView extends ScriptBrowsingPart {
 	}
 
 	// do the same thing as the JavaBrowsingPart but with wrapper
+	@Override
 	protected void createActions() {
 		super.createActions();
 
@@ -462,6 +479,7 @@ public class PackagesView extends ScriptBrowsingPart {
 			super(actions, index);
 		}
 
+		@Override
 		public void fillActionBars(IActionBars actionBars) {
 			// create new layout group
 			IMenuManager manager = actionBars.getMenuManager();
@@ -503,6 +521,7 @@ public class PackagesView extends ScriptBrowsingPart {
 		/*
 		 * @see org.eclipse.jface.action.IAction#run()
 		 */
+		@Override
 		public void run() {
 			switchViewer(fState);
 		}
@@ -563,6 +582,7 @@ public class PackagesView extends ScriptBrowsingPart {
 		actionBars.updateActionBars();
 	}
 
+	@Override
 	protected IModelElement findInputForJavaElement(IModelElement je) {
 		// null check has to take place here as well (not only in
 		// findInputForJavaElement(IJavaElement, boolean) since we
@@ -605,10 +625,12 @@ public class PackagesView extends ScriptBrowsingPart {
 	 * 
 	 * @see org.eclipse.jdt.internal.ui.browsing.ScriptBrowsingPart#createDecoratingLabelProvider(JavaUILabelProvider)
 	 */
+	@Override
 	protected DecoratingModelLabelProvider createDecoratingLabelProvider(
 			ScriptUILabelProvider provider) {
 		return new DecoratingModelLabelProvider(provider, false, isInListState()) {
 
+			@Override
 			public String getText(Object element) {
 				if (element instanceof LogicalPackage) {
 					LogicalPackage el = (LogicalPackage) element;
@@ -617,6 +639,7 @@ public class PackagesView extends ScriptBrowsingPart {
 					return super.getText(element);
 			}
 
+			@Override
 			public Image getImage(Object element) {
 				if (element instanceof LogicalPackage) {
 					LogicalPackage el = (LogicalPackage) element;

@@ -214,6 +214,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 
 		fHierarchyLifeCycle = new TypeHierarchyLifeCycle();
 		fTypeHierarchyLifeCycleListener = new ITypeHierarchyLifeCycleListener() {
+			@Override
 			public void typeHierarchyChanged(
 					TypeHierarchyLifeCycle typeHierarchy, IType[] changedTypes) {
 				doTypeHierarchyChanged(typeHierarchy, changedTypes);
@@ -222,6 +223,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 		fHierarchyLifeCycle.addChangedListener(fTypeHierarchyLifeCycleListener);
 
 		fPropertyChangeListener = new IPropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				doPropertyChange(event);
 			}
@@ -263,6 +265,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 		fFocusOnSelectionAction = new FocusOnSelectionAction(this);
 
 		fPartListener = new IPartListener2() {
+			@Override
 			public void partVisible(IWorkbenchPartReference ref) {
 				IWorkbenchPart part = ref.getPart(false);
 				if (part == TypeHierarchyViewPart.this) {
@@ -270,6 +273,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 				}
 			}
 
+			@Override
 			public void partHidden(IWorkbenchPartReference ref) {
 				IWorkbenchPart part = ref.getPart(false);
 				if (part == TypeHierarchyViewPart.this) {
@@ -277,32 +281,39 @@ public class TypeHierarchyViewPart extends ViewPart implements
 				}
 			}
 
+			@Override
 			public void partActivated(IWorkbenchPartReference ref) {
 				IWorkbenchPart part = ref.getPart(false);
 				if (part instanceof IEditorPart)
 					editorActivated((IEditorPart) part);
 			}
 
+			@Override
 			public void partInputChanged(IWorkbenchPartReference ref) {
 				IWorkbenchPart part = ref.getPart(false);
 				if (part instanceof IEditorPart)
 					editorActivated((IEditorPart) part);
 			}
 
+			@Override
 			public void partBroughtToTop(IWorkbenchPartReference ref) {
 			}
 
+			@Override
 			public void partClosed(IWorkbenchPartReference ref) {
 			}
 
+			@Override
 			public void partDeactivated(IWorkbenchPartReference ref) {
 			}
 
+			@Override
 			public void partOpened(IWorkbenchPartReference ref) {
 			}
 		};
 
 		fSelectionChangedListener = new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				doSelectionChanged(event);
 			}
@@ -429,6 +440,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 	 * @return The input type
 	 * @deprecated
 	 */
+	@Override
 	@Deprecated
 	public IType getInput() {
 		if (fInputElement instanceof IType) {
@@ -444,6 +456,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 	 *            The new input type
 	 * @deprecated
 	 */
+	@Override
 	@Deprecated
 	public void setInput(IType type) {
 		setInputElement(type);
@@ -455,6 +468,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 	 * 
 	 * @return the input element
 	 */
+	@Override
 	public IModelElement getInputElement() {
 		return fInputElement;
 	}
@@ -465,6 +479,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 	 * @param element
 	 *            the input element
 	 */
+	@Override
 	public void setInputElement(IModelElement element) {
 		IMember memberToSelect = null;
 		if (element != null) {
@@ -588,6 +603,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 	/*
 	 * @see IWorbenchPart#setFocus
 	 */
+	@Override
 	public void setFocus() {
 		fPagebook.setFocus();
 	}
@@ -595,6 +611,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 	/*
 	 * @see IWorkbenchPart#dispose
 	 */
+	@Override
 	public void dispose() {
 		if (fContextActivation != null) {
 			IContextService ctxService = getSite()
@@ -630,17 +647,15 @@ public class TypeHierarchyViewPart extends ViewPart implements
 		super.dispose();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class key) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> key) {
 		if (key == IShowInSource.class) {
-			return getShowInSource();
+			return (T) getShowInSource();
 		}
 		if (key == IShowInTargetList.class) {
-			return new IShowInTargetList() {
+			return (T) new IShowInTargetList() {
+				@Override
 				public String[] getShowInTargetIds() {
 					return new String[] { DLTKUIPlugin.ID_SCRIPT_EXPLORER,
 							IPageLayout.ID_RES_NAV };
@@ -706,6 +721,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 
 	private KeyListener createKeyListener() {
 		return new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent event) {
 				if (event.stateMask == 0) {
 					if (event.keyCode == SWT.F5) {
@@ -728,6 +744,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 		typesViewer.getControl().setVisible(false);
 		typesViewer.getControl().addKeyListener(keyListener);
 		typesViewer.initContextMenu(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager menu) {
 				fillTypesViewerContextMenu(typesViewer, menu);
 			}
@@ -742,6 +759,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 		fMethodsViewer = new MethodsViewer(parent, fHierarchyLifeCycle, this,
 				getPreferenceStore());
 		fMethodsViewer.initContextMenu(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager menu) {
 				fillMethodsViewerContextMenu(menu);
 			}
@@ -752,10 +770,12 @@ public class TypeHierarchyViewPart extends ViewPart implements
 		Control control = fMethodsViewer.getTable();
 		control.addKeyListener(createKeyListener());
 		control.addFocusListener(new FocusListener() {
+			@Override
 			public void focusGained(FocusEvent e) {
 				fSelectAllAction.setEnabled(true);
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				fSelectAllAction.setEnabled(false);
 			}
@@ -815,6 +835,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 	 * 
 	 * @see IWorkbenchPart#createPartControl(Composite)
 	 */
+	@Override
 	public void createPartControl(Composite container) {
 		fParent = container;
 		addResizeListener(container);
@@ -967,9 +988,11 @@ public class TypeHierarchyViewPart extends ViewPart implements
 
 	private void addResizeListener(Composite parent) {
 		parent.addControlListener(new ControlListener() {
+			@Override
 			public void controlMoved(ControlEvent e) {
 			}
 
+			@Override
 			public void controlResized(ControlEvent e) {
 				computeOrientation();
 			}
@@ -1167,6 +1190,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 		} else {
 			if (getCurrentViewer().containsElements() != null) {
 				Runnable runnable = new Runnable() {
+					@Override
 					public void run() {
 						final TypeHierarchyViewer viewer = getCurrentViewer();
 						((TypeHierarchyContentProvider) viewer
@@ -1194,6 +1218,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 			if (input == fMethodsViewer.getInput()) {
 				if (input != null) {
 					Runnable runnable = new Runnable() {
+						@Override
 						public void run() {
 							fMethodsViewer.refresh(); // refresh
 						}
@@ -1211,6 +1236,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 					fMethodViewerPaneLabel.setImage(null);
 				}
 				Runnable runnable = new Runnable() {
+					@Override
 					public void run() {
 						fMethodsViewer.setInput(input); // refresh
 					}
@@ -1496,6 +1522,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 		if (display != null) {
 			fIsRefreshRunnablePosted = true;
 			display.asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					try {
 						if (fPagebook != null && !fPagebook.isDisposed()) {
@@ -1559,6 +1586,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 	/*
 	 * @see IViewPart#init
 	 */
+	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		fMemento = memento;
@@ -1567,6 +1595,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 	/*
 	 * @see ViewPart#saveState(IMemento)
 	 */
+	@Override
 	public void saveState(IMemento memento) {
 		if (fPagebook == null) {
 			// part has not been created
@@ -1646,6 +1675,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 				fNoHierarchyShownLabel.setText(label);
 
 				fRestoreStateJob = new Job(label) {
+					@Override
 					protected IStatus run(IProgressMonitor monitor) {
 						try {
 							doRestoreInBackground(memento, hierarchyInput,
@@ -1669,6 +1699,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 		fHierarchyLifeCycle.doHierarchyRefresh(hierarchyInput, monitor);
 		if (!monitor.isCanceled()) {
 			Display.getDefault().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					// running async: check first if view still exists
 					if (fPagebook != null && !fPagebook.isDisposed()) {
@@ -1782,6 +1813,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 	 * @seeorg.eclipse.jdt.internal.ui.viewsupport.IViewPartInputProvider#
 	 * getViewPartInput()
 	 */
+	@Override
 	public Object getViewPartInput() {
 		return fInputElement;
 	}
@@ -1791,6 +1823,7 @@ public class TypeHierarchyViewPart extends ViewPart implements
 	 */
 	protected IShowInSource getShowInSource() {
 		return new IShowInSource() {
+			@Override
 			public ShowInContext getShowInContext() {
 				return new ShowInContext(null, getSite().getSelectionProvider()
 						.getSelection());

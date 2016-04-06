@@ -108,6 +108,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 			super(viewers, null);
 		}
 
+		@Override
 		public ISelection getSelection() {
 			ISelection selection = super.getSelection();
 			if (!selection.isEmpty()) {
@@ -176,6 +177,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 		fMethodHistory = new ArrayList();
 	}
 
+	@Override
 	public void setFocus() {
 		fPagebook.setFocus();
 	}
@@ -365,6 +367,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 		// DLTKViewerDragAdapter(viewer, dragListeners));
 	}
 
+	@Override
 	public void createPartControl(Composite parent) {
 		fParent = parent;
 		addResizeListener(parent);
@@ -401,6 +404,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 		getSite().setSelectionProvider(fSelectionProviderMediator);
 
 		fCallHierarchyViewer.initContextMenu(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager menu) {
 				fillCallHierarchyViewerContextMenu(menu);
 			}
@@ -453,12 +457,15 @@ public class CallHierarchyViewPart extends ViewPart implements
 
 	private void addPartListener() {
 		fPartListener = new IPartListener2() {
+			@Override
 			public void partActivated(IWorkbenchPartReference partRef) {
 			}
 
+			@Override
 			public void partBroughtToTop(IWorkbenchPartReference partRef) {
 			}
 
+			@Override
 			public void partClosed(IWorkbenchPartReference partRef) {
 				if (CallHierarchyViewPart.ID_CALL_HIERARCHY.equals(partRef
 						.getId())) {
@@ -466,6 +473,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 				}
 			}
 
+			@Override
 			public void partDeactivated(IWorkbenchPartReference partRef) {
 				if (CallHierarchyViewPart.ID_CALL_HIERARCHY.equals(partRef
 						.getId())) {
@@ -473,15 +481,19 @@ public class CallHierarchyViewPart extends ViewPart implements
 				}
 			}
 
+			@Override
 			public void partOpened(IWorkbenchPartReference partRef) {
 			}
 
+			@Override
 			public void partHidden(IWorkbenchPartReference partRef) {
 			}
 
+			@Override
 			public void partVisible(IWorkbenchPartReference partRef) {
 			}
 
+			@Override
 			public void partInputChanged(IWorkbenchPartReference partRef) {
 			}
 		};
@@ -496,9 +508,11 @@ public class CallHierarchyViewPart extends ViewPart implements
 
 	private void addResizeListener(Composite parent) {
 		parent.addControlListener(new ControlListener() {
+			@Override
 			public void controlMoved(ControlEvent e) {
 			}
 
+			@Override
 			public void controlResized(ControlEvent e) {
 				computeOrientation();
 			}
@@ -602,6 +616,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 	/**
 	 * 
 	 */
+	@Override
 	public void dispose() {
 		if (fContextActivation != null) {
 			IContextService ctxService = getSite()
@@ -639,6 +654,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 	/*
 	 * (non-Javadoc) Method declared on IViewPart.
 	 */
+	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		fMemento = memento;
@@ -654,6 +670,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 		updateView();
 	}
 
+	@Override
 	public void saveState(IMemento memento) {
 		if (fPagebook == null) {
 			// part has not been created
@@ -667,6 +684,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 		fSearchScopeActions.saveState(memento);
 	}
 
+	@Override
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (e.getSelectionProvider() == fCallHierarchyViewer) {
 			methodSelectionChanged(e.getSelection());
@@ -745,7 +763,8 @@ public class CallHierarchyViewPart extends ViewPart implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public Object getAdapter(Class adapter) {
+	@Override
+	public <T> T getAdapter(Class<T> adapter) {
 		// if (adapter == IContextProvider.class) {
 		// return JavaUIHelp.getHelpContextProvider(this,
 		// IJavaHelpContextIds.CALL_HIERARCHY_VIEW);
@@ -840,6 +859,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 		fLocationViewer.getControl().addKeyListener(createKeyListener());
 
 		fLocationViewer.initContextMenu(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager menu) {
 				fillLocationViewerContextMenu(menu);
 			}
@@ -897,6 +917,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 
 	private KeyListener createKeyListener() {
 		KeyListener keyListener = new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent event) {
 				handleKeyEvent(event);
 			}
@@ -913,6 +934,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 
 		fOpenLocationAction = new OpenLocationAction(this, getSite());
 		fLocationViewer.addOpenListener(new IOpenListener() {
+			@Override
 			public void open(OpenEvent event) {
 				fOpenLocationAction.run();
 			}
@@ -922,6 +944,7 @@ public class CallHierarchyViewPart extends ViewPart implements
 		fCopyAction = new CopyCallHierarchyAction(this, fClipboard,
 				fCallHierarchyViewer);
 		fSearchScopeActions = new SearchScopeActionGroup(this, fDialogSettings) {
+			@Override
 			protected IDLTKLanguageToolkit getLangaugeToolkit() {
 				return getMethodLanguageToolkit();
 			}

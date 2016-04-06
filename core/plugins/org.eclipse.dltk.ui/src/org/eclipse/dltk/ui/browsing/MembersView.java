@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,16 +61,12 @@ public class MembersView extends ScriptBrowsingPart implements
 				.addPropertyChangeListener(this);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#getAdapter(java
-	 * .lang.Class)
-	 */
-	public Object getAdapter(Class key) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> key) {
 		if (key == IShowInTargetList.class) {
-			return new IShowInTargetList() {
+			return (T) new IShowInTargetList() {
+				@Override
 				public String[] getShowInTargetIds() {
 					return new String[] { DLTKUIPlugin.ID_SCRIPTEXPLORER };
 				}
@@ -86,6 +82,7 @@ public class MembersView extends ScriptBrowsingPart implements
 	 * @return the label provider
 	 * @see org.eclipse.jface.viewers.ILabelProvider
 	 */
+	@Override
 	protected ScriptUILabelProvider createLabelProvider() {
 		return new AppearanceAwareLabelProvider(
 				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
@@ -101,11 +98,13 @@ public class MembersView extends ScriptBrowsingPart implements
 	 * 
 	 * @return the string used as ID for the Help context
 	 */
+	@Override
 	protected String getHelpContextId() {
 		// return IJavaHelpContextIds.MEMBERS_VIEW;
 		return ""; //$NON-NLS-1$
 	}
 
+	@Override
 	protected String getLinkToEditorKey() {
 		return PreferenceConstants.LINK_BROWSING_MEMBERS_TO_EDITOR;
 	}
@@ -117,6 +116,7 @@ public class MembersView extends ScriptBrowsingPart implements
 	 * org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#createViewer(org
 	 * .eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected StructuredViewer createViewer(Composite parent) {
 		ProblemTreeViewer viewer = new ProblemTreeViewer(parent, SWT.MULTI);
 		// ColoredViewersManager.install(viewer);
@@ -125,6 +125,7 @@ public class MembersView extends ScriptBrowsingPart implements
 		return viewer;
 	}
 
+	@Override
 	protected void fillToolBar(IToolBarManager tbm) {
 		// tbm.add(new LexicalSortingAction(getViewer(),
 		// DLTKUIPlugin.ID_MEMBERS_VIEW));
@@ -139,6 +140,7 @@ public class MembersView extends ScriptBrowsingPart implements
 	 * 
 	 * @since 3.2
 	 */
+	@Override
 	protected void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
 		// fCategoryFilterActionGroup = new
@@ -155,6 +157,7 @@ public class MembersView extends ScriptBrowsingPart implements
 	 * 
 	 * @since 3.2
 	 */
+	@Override
 	protected void setInput(Object input) {
 		super.setInput(input);
 		// if (fCategoryFilterActionGroup != null)
@@ -176,6 +179,7 @@ public class MembersView extends ScriptBrowsingPart implements
 	 *            the object to test
 	 * @return <true> if the given element is a valid input
 	 */
+	@Override
 	protected boolean isValidInput(Object element) {
 		if (element instanceof ISourceModule || element instanceof IType) {
 			return true;
@@ -183,11 +187,13 @@ public class MembersView extends ScriptBrowsingPart implements
 		return false;
 	}
 
+	@Override
 	protected IContentProvider createContentProvider() {
 		final ITreeContentProvider original = (ITreeContentProvider) super
 				.createContentProvider();
 		return new ITreeContentProvider() {
 
+			@Override
 			public Object[] getChildren(Object parentElement) {
 				Object[] children = original.getChildren(parentElement);
 				List newChildren = new ArrayList();
@@ -200,15 +206,18 @@ public class MembersView extends ScriptBrowsingPart implements
 				return newChildren.toArray();
 			}
 
+			@Override
 			public Object getParent(Object element) {
 				return original.getParent(element);
 			}
 
+			@Override
 			public boolean hasChildren(Object element) {
 				// original.getParent(element);
 				return false;
 			}
 
+			@Override
 			public Object[] getElements(Object inputElement) {
 				Object[] children = original.getElements(inputElement);
 				List newChildren = new ArrayList();
@@ -221,10 +230,12 @@ public class MembersView extends ScriptBrowsingPart implements
 				return newChildren.toArray();
 			}
 
+			@Override
 			public void dispose() {
 				original.dispose();
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput,
 					Object newInput) {
 				original.inputChanged(viewer, oldInput, newInput);
@@ -240,6 +251,7 @@ public class MembersView extends ScriptBrowsingPart implements
 	 *            the object to test
 	 * @return <true> if the given element is a valid element
 	 */
+	@Override
 	protected boolean isValidElement(Object element) {
 		if (element instanceof IField || element instanceof IMethod
 				|| element instanceof IPackageDeclaration)
@@ -254,6 +266,7 @@ public class MembersView extends ScriptBrowsingPart implements
 	 *            the Java element which has the focus
 	 * @return the element to select
 	 */
+	@Override
 	protected IModelElement findElementToSelect(IModelElement je) {
 		if (je == null)
 			return null;
@@ -281,6 +294,7 @@ public class MembersView extends ScriptBrowsingPart implements
 	 * @return the closest Java element used as input for this part, or
 	 *         <code>null</code>
 	 */
+	@Override
 	protected IModelElement findInputForJavaElement(IModelElement je) {
 		if (je == null
 				|| !je.exists()
@@ -303,11 +317,13 @@ public class MembersView extends ScriptBrowsingPart implements
 	/*
 	 * Implements method from IViewPart.
 	 */
+	@Override
 	public void saveState(IMemento memento) {
 		super.saveState(memento);
 		// fMemberFilterActionGroup.saveState(memento);
 	}
 
+	@Override
 	protected void restoreState(IMemento memento) {
 		super.restoreState(memento);
 		// fMemberFilterActionGroup.restoreState(memento);
@@ -316,9 +332,11 @@ public class MembersView extends ScriptBrowsingPart implements
 		getViewer().getControl().setRedraw(true);
 	}
 
+	@Override
 	protected void hookViewerListeners() {
 		super.hookViewerListeners();
 		getViewer().addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				TreeViewer viewer = (TreeViewer) getViewer();
 				Object element = ((IStructuredSelection) event.getSelection())
@@ -341,6 +359,7 @@ public class MembersView extends ScriptBrowsingPart implements
 		return false;
 	}
 
+	@Override
 	protected void restoreSelection() {
 		IEditorPart editor = getViewSite().getPage().getActiveEditor();
 		if (editor != null)
@@ -354,6 +373,7 @@ public class MembersView extends ScriptBrowsingPart implements
 	 * org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse
 	 * .jface.util.PropertyChangeEvent)
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (MembersOrderPreferenceCache.isMemberOrderProperty(event
 				.getProperty())) {
@@ -364,6 +384,7 @@ public class MembersView extends ScriptBrowsingPart implements
 	/*
 	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#dispose()
 	 */
+	@Override
 	public void dispose() {
 		// if (fMemberFilterActionGroup != null) {
 		// fMemberFilterActionGroup.dispose();

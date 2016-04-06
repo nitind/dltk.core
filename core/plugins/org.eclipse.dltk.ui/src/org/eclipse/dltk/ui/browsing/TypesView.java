@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,6 +47,7 @@ public class TypesView extends ScriptBrowsingPart {
 	 * @return the label provider
 	 * @see org.eclipse.jface.viewers.ILabelProvider
 	 */
+	@Override
 	protected ScriptUILabelProvider createLabelProvider() {
 		return new AppearanceAwareLabelProvider(
 				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
@@ -55,18 +56,15 @@ public class TypesView extends ScriptBrowsingPart {
 						.getDefault().getPreferenceStore());
 	}
 
+	@Override
 	protected StructuredViewer createViewer(Composite parent) {
 		StructuredViewer viewer = super.createViewer(parent);
 		// ColoredViewersManager.install(viewer);
 		return viewer;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class key) {
+	@Override
+	public <T> T getAdapter(Class<T> key) {
 //		if (key == IShowInTargetList.class) {
 //			return new IShowInTargetList() {
 //				public String[] getShowInTargetIds() {
@@ -82,6 +80,7 @@ public class TypesView extends ScriptBrowsingPart {
 	/**
 	 * Adds filters the viewer of this part.
 	 */
+	@Override
 	protected void addFilters() {
 		super.addFilters();
 		getViewer().addFilter(new NonScriptElementFilter());
@@ -95,6 +94,7 @@ public class TypesView extends ScriptBrowsingPart {
 	 *            the object to test
 	 * @return <true> if the given element is a valid input
 	 */
+	@Override
 	protected boolean isValidInput(Object element) {
 		return element instanceof IScriptFolder;
 	}
@@ -107,6 +107,7 @@ public class TypesView extends ScriptBrowsingPart {
 	 *            the object to test
 	 * @return <true> if the given element is a valid element
 	 */
+	@Override
 	protected boolean isValidElement(Object element) {
 		if (element instanceof ISourceModule)
 			return super.isValidElement(((ISourceModule) element)
@@ -126,6 +127,7 @@ public class TypesView extends ScriptBrowsingPart {
 	 *            the Java element which has the focus
 	 * @return the element to select
 	 */
+	@Override
 	protected IModelElement findElementToSelect(IModelElement je) {
 		if (je == null)
 			return null;
@@ -154,20 +156,24 @@ public class TypesView extends ScriptBrowsingPart {
 	 * 
 	 * @return the string used as ID for the Help context
 	 */
+	@Override
 	protected String getHelpContextId() {
 //		return IJavaHelpContextIds.TYPES_VIEW;
 		return ""; //$NON-NLS-1$
 	}
 
+	@Override
 	protected String getLinkToEditorKey() {
 		return PreferenceConstants.LINK_BROWSING_TYPES_TO_EDITOR;
 	}
 
+	@Override
 	protected void createActions() {
 		super.createActions();
 		fSelectAllAction = new SelectAllAction((TableViewer) getViewer());
 	}
 
+	@Override
 	protected void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
 
@@ -183,6 +189,7 @@ public class TypesView extends ScriptBrowsingPart {
 	 *      org.eclipse.jface.viewers.ISelection)
 	 * @since 2.1
 	 */
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (!needsToProcessSelectionChanged(part, selection))
 			return;
@@ -218,6 +225,7 @@ public class TypesView extends ScriptBrowsingPart {
 	/*
 	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#createDecoratingLabelProvider(org.eclipse.jdt.internal.ui.viewsupport.JavaUILabelProvider)
 	 */
+	@Override
 	protected DecoratingModelLabelProvider createDecoratingLabelProvider(
 			ScriptUILabelProvider provider) {
 		DecoratingModelLabelProvider decoratingLabelProvider = super

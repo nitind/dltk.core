@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Johan Compagnern and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Johan Compagner - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.internal.ui;
 
 import org.eclipse.core.runtime.IAdapterFactory;
@@ -8,9 +18,11 @@ import org.eclipse.ui.IFileEditorInput;
 
 public class FileEditorInputAdapterFactory implements IAdapterFactory {
 
-	private static Class[] PROPERTIES = new Class[] { IModelElement.class };
+	private static Class<?>[] PROPERTIES = new Class[] { IModelElement.class };
 
-	public Object getAdapter(Object element, Class key) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Object element, Class<T> key) {
 		if (IModelElement.class.equals(key)) {
 
 			// Performance optimization, see https://bugs.eclipse.org/bugs/
@@ -20,16 +32,17 @@ public class FileEditorInputAdapterFactory implements IAdapterFactory {
 						.getWorkingCopyManager().getWorkingCopy(
 								(IFileEditorInput) element);
 				if (je != null && je.exists()) {
-					return je;
+					return (T) je;
 				}
 			}
 
-			return DLTKCore.create(((IFileEditorInput) element).getFile());
+			return (T) DLTKCore.create(((IFileEditorInput) element).getFile());
 		}
 		return null;
 	}
 
-	public Class[] getAdapterList() {
+	@Override
+	public Class<?>[] getAdapterList() {
 		return PROPERTIES;
 	}
 

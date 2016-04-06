@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,24 +61,30 @@ public class BuildPathContainer extends ProjectFragmentContainer {
 			return fParent; 
 		}
 		
-		public Object getAdapter(Class adapter) {
+		@SuppressWarnings("unchecked")
+		@Override
+		public <T> T getAdapter(Class<T> adapter) {
 			if (adapter == IWorkbenchAdapter.class) 
-				return this;
+				return (T) this;
 			return null;
 		}
 
+		@Override
 		public Object[] getChildren(Object o) {
 			return new Object[0];
 		}
 
+		@Override
 		public ImageDescriptor getImageDescriptor(Object object) {
 			return PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(IDE.SharedImages.IMG_OBJ_PROJECT);
 		}
 
+		@Override
 		public String getLabel(Object o) {
 			return fProject.getElementName();
 		}
 
+		@Override
 		public Object getParent(Object o) {
 			return fParent;
 		}
@@ -94,6 +100,7 @@ public class BuildPathContainer extends ProjectFragmentContainer {
 		}
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof BuildPathContainer) {
 			BuildPathContainer other = (BuildPathContainer)obj;
@@ -106,14 +113,17 @@ public class BuildPathContainer extends ProjectFragmentContainer {
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		return getScriptProject().hashCode()*17+fClassPathEntry.hashCode();
 	}
 
+	@Override
 	public IProjectFragment[] getProjectFragments() {
 		return getScriptProject().findProjectFragments(fClassPathEntry);
 	}
 
+	@Override
 	public IAdaptable[] getChildren() {
 		List list= new ArrayList();
 		IProjectFragment[] roots= getProjectFragments();
@@ -141,11 +151,13 @@ public class BuildPathContainer extends ProjectFragmentContainer {
 		return (IAdaptable[]) list.toArray(new IAdaptable[list.size()]);
 	}
 
+	@Override
 	public ImageDescriptor getImageDescriptor() {
 		// TODO (alex) check status and decorate with error
 		return DLTKPluginImages.DESC_OBJS_LIBRARY;
 	}
 
+	@Override
 	public String getLabel() {
 		if (fContainer != null)
 			return fContainer.getDescription();

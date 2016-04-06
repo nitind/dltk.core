@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ public abstract class ProjectFragmentContainer implements IAdaptable {
 		/* (non-Javadoc)
 		 * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
 		 */
+		@Override
 		public Object[] getChildren(Object o) {
 			if (o instanceof ProjectFragmentContainer)
 				return ((ProjectFragmentContainer) o).getChildren();
@@ -35,6 +36,7 @@ public abstract class ProjectFragmentContainer implements IAdaptable {
 		/* (non-Javadoc)
 		 * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
 		 */
+		@Override
 		public ImageDescriptor getImageDescriptor(Object o) {
 			if (o instanceof ProjectFragmentContainer)
 				return ((ProjectFragmentContainer) o).getImageDescriptor();
@@ -44,6 +46,7 @@ public abstract class ProjectFragmentContainer implements IAdaptable {
 		/* (non-Javadoc)
 		 * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
 		 */
+		@Override
 		public String getLabel(Object o) {
 			if (o instanceof ProjectFragmentContainer)
 				return ((ProjectFragmentContainer) o).getLabel();
@@ -53,6 +56,7 @@ public abstract class ProjectFragmentContainer implements IAdaptable {
 		/* (non-Javadoc)
 		 * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
 		 */
+		@Override
 		public Object getParent(Object o) {
 			if (o instanceof ProjectFragmentContainer)
 				return ((ProjectFragmentContainer) o).getScriptProject();
@@ -67,9 +71,11 @@ public abstract class ProjectFragmentContainer implements IAdaptable {
 		fProject= project;
 	}
 
-	public Object getAdapter(Class adapter) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == IWorkbenchAdapter.class) 
-			return fgAdapterInstance;
+			return (T) fgAdapterInstance;
 		return null;
 	}
 

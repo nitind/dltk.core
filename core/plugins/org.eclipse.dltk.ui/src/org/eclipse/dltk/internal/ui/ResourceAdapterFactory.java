@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui;
 
@@ -19,13 +18,16 @@ import org.eclipse.ui.part.FileEditorInput;
 
 public class ResourceAdapterFactory implements IAdapterFactory {
 
-	private static Class[] PROPERTIES = new Class[] { IModelElement.class };
+	private static Class<?>[] PROPERTIES = new Class[] { IModelElement.class };
 
-	public Class[] getAdapterList() {
+	@Override
+	public Class<?>[] getAdapterList() {
 		return PROPERTIES;
 	}
 
-	public Object getAdapter(Object element, Class key) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Object element, Class<T> key) {
 		if (IModelElement.class.equals(key)) {
 
 			// Performance optimization, see https://bugs.eclipse.org/bugs/
@@ -35,11 +37,11 @@ public class ResourceAdapterFactory implements IAdapterFactory {
 						.getWorkingCopyManager().getWorkingCopy(
 								new FileEditorInput((IFile) element));
 				if (je != null && je.exists()) {
-					return je;
+					return (T) je;
 				}
 			}
 
-			return DLTKCore.create((IResource) element);
+			return (T) DLTKCore.create((IResource) element);
 		}
 		return null;
 	}

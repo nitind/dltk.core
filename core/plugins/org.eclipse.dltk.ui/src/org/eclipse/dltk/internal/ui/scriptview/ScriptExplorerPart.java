@@ -191,30 +191,38 @@ public class ScriptExplorerPart extends ViewPart implements
 	private IContextActivation fContextActivation;
 
 	private IPartListener2 fLinkWithEditorListener = new IPartListener2() {
+		@Override
 		public void partVisible(IWorkbenchPartReference partRef) {
 		}
 
+		@Override
 		public void partBroughtToTop(IWorkbenchPartReference partRef) {
 		}
 
+		@Override
 		public void partClosed(IWorkbenchPartReference partRef) {
 		}
 
+		@Override
 		public void partDeactivated(IWorkbenchPartReference partRef) {
 		}
 
+		@Override
 		public void partHidden(IWorkbenchPartReference partRef) {
 		}
 
+		@Override
 		public void partOpened(IWorkbenchPartReference partRef) {
 		}
 
+		@Override
 		public void partInputChanged(IWorkbenchPartReference partRef) {
 			if (partRef instanceof IEditorReference) {
 				editorActivated(((IEditorReference) partRef).getEditor(true));
 			}
 		}
 
+		@Override
 		public void partActivated(IWorkbenchPartReference partRef) {
 			if (partRef instanceof IEditorReference) {
 				editorActivated(((IEditorReference) partRef).getEditor(true));
@@ -244,6 +252,7 @@ public class ScriptExplorerPart extends ViewPart implements
 			fPendingRefreshes = Collections.synchronizedList(new ArrayList());
 		}
 
+		@Override
 		public void add(Object parentElement, Object[] childElements) {
 			if (fPendingRefreshes.contains(parentElement)) {
 				return;
@@ -258,6 +267,7 @@ public class ScriptExplorerPart extends ViewPart implements
 		 * org.eclipse.jface.viewers.AbstractTreeViewer#internalRefresh(java
 		 * .lang.Object, boolean)
 		 */
+		@Override
 		protected void internalRefresh(Object element, boolean updateLabels) {
 			try {
 				fPendingRefreshes.add(element);
@@ -267,6 +277,7 @@ public class ScriptExplorerPart extends ViewPart implements
 			}
 		}
 
+		@Override
 		protected boolean evaluateExpandableWithFilters(Object parent) {
 			if (parent instanceof IScriptProject
 					|| parent instanceof ISourceModule
@@ -280,6 +291,7 @@ public class ScriptExplorerPart extends ViewPart implements
 			return true;
 		}
 
+		@Override
 		protected boolean isFiltered(Object object, Object parent,
 				ViewerFilter[] filters) {
 			// if (object instanceof PackageFragmentRootContainer) {
@@ -311,6 +323,7 @@ public class ScriptExplorerPart extends ViewPart implements
 			return false;
 		}
 
+		@Override
 		protected void handleInvalidSelection(ISelection invalidSelection,
 				ISelection newSelection) {
 			IStructuredSelection is = (IStructuredSelection) invalidSelection;
@@ -351,6 +364,7 @@ public class ScriptExplorerPart extends ViewPart implements
 		/**
 		 * {@inheritDoc}
 		 */
+		@Override
 		protected Object[] addAditionalProblemParents(Object[] elements) {
 			if (getRootMode() == ScriptExplorerPart.WORKING_SETS_AS_ROOTS
 					&& elements != null) {
@@ -362,6 +376,7 @@ public class ScriptExplorerPart extends ViewPart implements
 		// ---- special handling to preserve the selection correctly
 		private boolean fInPreserveSelection;
 
+		@Override
 		protected void preservingSelection(Runnable updateCode) {
 			try {
 				fInPreserveSelection = true;
@@ -371,6 +386,7 @@ public class ScriptExplorerPart extends ViewPart implements
 			}
 		}
 
+		@Override
 		protected void setSelectionToWidget(ISelection selection, boolean reveal) {
 			if (true) {
 				super.setSelectionToWidget(selection, reveal);
@@ -454,6 +470,7 @@ public class ScriptExplorerPart extends ViewPart implements
 
 	public ScriptExplorerPart() {
 		fPostSelectionListener = new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				handlePostSelectionChanged(event);
 			}
@@ -492,6 +509,7 @@ public class ScriptExplorerPart extends ViewPart implements
 		return HIERARCHICAL_LAYOUT;
 	}
 
+	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		if (memento == null) {
@@ -570,6 +588,7 @@ public class ScriptExplorerPart extends ViewPart implements
 		}
 	}
 
+	@Override
 	public void dispose() {
 		if (fContextActivation != null) {
 			IContextService ctxService = getSite()
@@ -627,6 +646,7 @@ public class ScriptExplorerPart extends ViewPart implements
 	 * org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets
 	 * .Composite)
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 
 		final PerformanceStats stats = PerformanceStats.getStats(
@@ -667,12 +687,14 @@ public class ScriptExplorerPart extends ViewPart implements
 		fViewer.addPostSelectionChangedListener(fPostSelectionListener);
 
 		fViewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				fActionSet.handleDoubleClick(event);
 			}
 		});
 
 		fViewer.addOpenListener(new IOpenListener() {
+			@Override
 			public void open(OpenEvent event) {
 				fActionSet.handleOpen(event);
 				fLastOpenSelection = event.getSelection();
@@ -792,6 +814,7 @@ public class ScriptExplorerPart extends ViewPart implements
 				.getBoolean(PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN);
 		if (getRootMode() == ScriptExplorerPart.PROJECTS_AS_ROOTS) {
 			return new ScriptExplorerContentProvider(showCUChildren) {
+				@Override
 				protected IPreferenceStore getPreferenceStore() {
 					return DLTKUIPlugin.getDefault().getPreferenceStore();
 				}
@@ -799,6 +822,7 @@ public class ScriptExplorerPart extends ViewPart implements
 		} else {
 			return new WorkingSetAwareContentProvider(showCUChildren,
 					fWorkingSetModel) {
+				@Override
 				protected IPreferenceStore getPreferenceStore() {
 					return DLTKUIPlugin.getDefault().getPreferenceStore();
 				}
@@ -852,20 +876,18 @@ public class ScriptExplorerPart extends ViewPart implements
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class key) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> key) {
 		if (key.equals(ISelectionProvider.class)) {
-			return fViewer;
+			return (T) fViewer;
 		}
 		if (key == IShowInSource.class) {
-			return getShowInSource();
+			return (T) getShowInSource();
 		}
 		if (key == IShowInTargetList.class) {
-			return new IShowInTargetList() {
+			return (T) new IShowInTargetList() {
+				@Override
 				public String[] getShowInTargetIds() {
 					return new String[] { IPageLayout.ID_RES_NAV };
 				}
@@ -952,6 +974,7 @@ public class ScriptExplorerPart extends ViewPart implements
 		}
 	}
 
+	@Override
 	public String getTitleToolTip() {
 		if (fViewer == null) {
 			return super.getTitleToolTip();
@@ -964,6 +987,7 @@ public class ScriptExplorerPart extends ViewPart implements
 	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
 	 */
+	@Override
 	public void setFocus() {
 		fViewer.getTree().setFocus();
 	}
@@ -980,6 +1004,7 @@ public class ScriptExplorerPart extends ViewPart implements
 	 * 
 	 * @see IMenuListener#menuAboutToShow(IMenuManager)
 	 */
+	@Override
 	public void menuAboutToShow(IMenuManager menu) {
 		DLTKUIPlugin.createStandardGroups(menu);
 
@@ -1050,6 +1075,7 @@ public class ScriptExplorerPart extends ViewPart implements
 	 * org.eclipse.ui.part.ISetSelectionTarget#selectReveal(org.eclipse.jface
 	 * .viewers.ISelection)
 	 */
+	@Override
 	public void selectReveal(final ISelection selection) {
 		Control ctrl = getTreeViewer().getControl();
 		if (ctrl == null || ctrl.isDisposed()) {
@@ -1128,10 +1154,12 @@ public class ScriptExplorerPart extends ViewPart implements
 		return original;
 	}
 
+	@Override
 	public void selectAndReveal(Object element) {
 		selectReveal(new StructuredSelection(element));
 	}
 
+	@Override
 	public boolean isLinkingEnabled() {
 		return fLinkingEnabled;
 	}
@@ -1167,6 +1195,7 @@ public class ScriptExplorerPart extends ViewPart implements
 		return this == getSite().getPage().getActivePart();
 	}
 
+	@Override
 	public void saveState(IMemento memento) {
 		if (fViewer == null && fMemento != null) {
 			// part has not been created -> keep the old state
@@ -1234,6 +1263,7 @@ public class ScriptExplorerPart extends ViewPart implements
 	 */
 	private void initKeyListener() {
 		fViewer.getControl().addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent event) {
 				fActionSet.handleKeyEvent(event);
 			}
@@ -1411,6 +1441,7 @@ public class ScriptExplorerPart extends ViewPart implements
 	/**
 	 * Returns the TreeViewer.
 	 */
+	@Override
 	public TreeViewer getTreeViewer() {
 		return fViewer;
 	}
@@ -1463,6 +1494,7 @@ public class ScriptExplorerPart extends ViewPart implements
 	/*
 	 * @see IPropertyChangeListener#propertyChange(PropertyChangeEvent)
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (fViewer == null) {
 			return;
@@ -1503,6 +1535,7 @@ public class ScriptExplorerPart extends ViewPart implements
 	 * 
 	 * @see IViewPartInputProvider#getViewPartInput()
 	 */
+	@Override
 	public Object getViewPartInput() {
 		if (fViewer != null) {
 			return fViewer.getInput();
@@ -1526,6 +1559,7 @@ public class ScriptExplorerPart extends ViewPart implements
 	 * @see
 	 * org.eclipse.ui.part.IShowInTarget#show(org.eclipse.ui.part.ShowInContext)
 	 */
+	@Override
 	public boolean show(ShowInContext context) {
 
 		ISelection selection = context.getSelection();
@@ -1561,6 +1595,7 @@ public class ScriptExplorerPart extends ViewPart implements
 	 */
 	protected IShowInSource getShowInSource() {
 		return new IShowInSource() {
+			@Override
 			public ShowInContext getShowInContext() {
 				return new ShowInContext(getTreeViewer().getInput(),
 						getTreeViewer().getSelection());
@@ -1568,6 +1603,7 @@ public class ScriptExplorerPart extends ViewPart implements
 		};
 	}
 
+	@Override
 	public void setLinkingEnabled(boolean enabled) {
 		fLinkingEnabled = enabled;
 		saveDialogSettings();
@@ -1794,10 +1830,12 @@ public class ScriptExplorerPart extends ViewPart implements
 
 	private void createWorkingSetModel() {
 		SafeRunner.run(new ISafeRunnable() {
+			@Override
 			public void run() throws Exception {
 				fWorkingSetModel = new WorkingSetModel(fMemento);
 			}
 
+			@Override
 			public void handleException(Throwable exception) {
 				fWorkingSetModel = new WorkingSetModel(null);
 			}

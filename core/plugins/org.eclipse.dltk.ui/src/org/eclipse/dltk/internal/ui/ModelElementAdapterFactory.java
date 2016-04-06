@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui;
 
@@ -40,7 +39,7 @@ import org.eclipse.ui.views.tasklist.ITaskListResourceAdapter;
  */
 public class ModelElementAdapterFactory implements IAdapterFactory,
 		IContributorResourceAdapter, IContributorResourceAdapter2 {
-	private static Class[] PROPERTIES = new Class[] { IPropertySource.class,
+	private static Class<?>[] PROPERTIES = new Class[] { IPropertySource.class,
 			IResource.class, IWorkbenchAdapter.class, IResourceLocator.class,
 			IPersistableElement.class, IContributorResourceAdapter.class,
 			IContributorResourceAdapter2.class, ITaskListResourceAdapter.class,
@@ -55,19 +54,22 @@ public class ModelElementAdapterFactory implements IAdapterFactory,
 	private static DLTKWorkbenchAdapter fgScriptWorkbenchAdapter;
 	private static DLTKElementContainmentAdapter fgScriptElementContainmentAdapter;
 
-	public Class[] getAdapterList() {
+	@Override
+	public Class<?>[] getAdapterList() {
 		updateLazyLoadedAdapters();
 		return PROPERTIES;
 	}
 
-	public Object getAdapter(Object element, Class key) {
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getAdapter(Object element, Class<T> key) {
 		updateLazyLoadedAdapters();
 		IModelElement modelElement = getModelElement(element);
 		if (IPropertySource.class.equals(key)) {
-			return getProperties(modelElement);
+			return (T) getProperties(modelElement);
 		}
 		if (IResource.class.equals(key)) {
-			return getResource(modelElement);
+			return (T) getResource(modelElement);
 		}
 		if (DLTKCore.DEBUG_SCOPES) {
 			System.err
@@ -75,31 +77,31 @@ public class ModelElementAdapterFactory implements IAdapterFactory,
 		}
 		if (fSearchPageScoreComputer != null
 				&& ISearchPageScoreComputer.class.equals(key)) {
-			return fSearchPageScoreComputer;
+			return (T) fSearchPageScoreComputer;
 		}
 		if (IWorkbenchAdapter.class.equals(key)) {
-			return getScriptWorkbenchAdapter();
+			return (T) getScriptWorkbenchAdapter();
 		}
 		if (IResourceLocator.class.equals(key)) {
-			return getResourceLocator();
+			return (T) getResourceLocator();
 		}
 		if (IPersistableElement.class.equals(key)) {
-			return new PersistableModelElementFactory(modelElement);
+			return (T) new PersistableModelElementFactory(modelElement);
 		}
 		if (IContributorResourceAdapter.class.equals(key)) {
-			return this;
+			return (T) this;
 		}
 		if (IContributorResourceAdapter2.class.equals(key)) {
-			return this;
+			return (T) this;
 		}
 		if (ITaskListResourceAdapter.class.equals(key)) {
-			return getTaskListAdapter();
+			return (T) getTaskListAdapter();
 		}
 		if (IContainmentAdapter.class.equals(key)) {
-			return getScriptElementContainmentAdapter();
+			return (T) getScriptElementContainmentAdapter();
 		}
 		if( IActionFilter.class.equals(key) ) {
-			return new ModelElementActionFilterAdapter();
+			return (T) new ModelElementActionFilterAdapter();
 		}
 		//if (IHistoryPageSource.class.equals(key)
 		//		&& JavaElementHistoryPageSource.hasEdition(java)) {
@@ -142,6 +144,7 @@ public class ModelElementAdapterFactory implements IAdapterFactory,
 		}
 	}
 
+	@Override
 	public IResource getAdaptedResource(IAdaptable adaptable) {
 		IModelElement je = getModelElement(adaptable);
 		if (je != null)
@@ -149,6 +152,7 @@ public class ModelElementAdapterFactory implements IAdapterFactory,
 		return null;
 	}
 
+	@Override
 	public ResourceMapping getAdaptedResourceMapping(IAdaptable adaptable) {
 		IModelElement je = getModelElement(adaptable);
 		if (je != null)

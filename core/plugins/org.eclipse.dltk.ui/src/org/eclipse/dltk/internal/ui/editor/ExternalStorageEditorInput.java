@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.editor;
 
@@ -31,19 +30,23 @@ public class ExternalStorageEditorInput implements IEditorInput,
 		this.fStorage = storage;
 	}
 
+	@Override
 	public boolean exists() {
 		return fStorage != null;
 	}
 
+	@Override
 	public ImageDescriptor getImageDescriptor() {
 		return PlatformUI.getWorkbench().getEditorRegistry()
 				.getImageDescriptor(this.fStorage.getName());
 	}
 
+	@Override
 	public String getName() {
 		return fStorage.getName();
 	}
 
+	@Override
 	public IPersistableElement getPersistable() {
 		if (fStorage instanceof IExternalSourceModule) {
 			return ExternalSourceModuleEditorInputFactory
@@ -52,6 +55,7 @@ public class ExternalStorageEditorInput implements IEditorInput,
 		return null;
 	}
 
+	@Override
 	public String getToolTipText() {
 		IPath path = fStorage.getFullPath();
 		if (path == null) {
@@ -70,18 +74,22 @@ public class ExternalStorageEditorInput implements IEditorInput,
 		return path.toOSString();
 	}
 
-	public Object getAdapter(Class adapter) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == IModelElement.class
 				&& fStorage instanceof IModelElement) {
-			return fStorage;
+			return (T) fStorage;
 		}
 		return null;
 	}
 
+	@Override
 	public IStorage getStorage() {
 		return this.fStorage;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -93,6 +101,7 @@ public class ExternalStorageEditorInput implements IEditorInput,
 		return fStorage.equals(other.fStorage);
 	}
 
+	@Override
 	public int hashCode() {
 		return fStorage.hashCode();
 	}

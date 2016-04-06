@@ -1590,7 +1590,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 
 	private IAnnotationModel createAnnotationModel(Object element) {
 		if (element instanceof ExternalStorageEditorInput) {
-			final IModelElement modelElement = (IModelElement) ((ExternalStorageEditorInput) element)
+			final IModelElement modelElement = ((ExternalStorageEditorInput) element)
 					.getAdapter(IModelElement.class);
 			if (modelElement != null) {
 				final IPath path = modelElement.getPath();

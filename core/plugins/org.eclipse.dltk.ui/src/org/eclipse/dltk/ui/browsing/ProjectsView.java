@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,6 +46,7 @@ public class ProjectsView extends ScriptBrowsingPart {
 	 * 
 	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#createViewer(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected StructuredViewer createViewer(Composite parent) {
 		ProblemTreeViewer result = new ProblemTreeViewer(parent, SWT.MULTI);
 		// ColoredViewersManager.install(result);
@@ -60,6 +61,7 @@ public class ProjectsView extends ScriptBrowsingPart {
 	 * 
 	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#dispose()
 	 */
+	@Override
 	public void dispose() {
 		if (fFilterUpdater != null)
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(
@@ -67,12 +69,8 @@ public class ProjectsView extends ScriptBrowsingPart {
 		super.dispose();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class key) {
+	@Override
+	public <T> T getAdapter(Class<T> key) {
 		// if (key == IShowInTargetList.class) {
 		// return new IShowInTargetList() {
 		// public String[] getShowInTargetIds() {
@@ -89,6 +87,7 @@ public class ProjectsView extends ScriptBrowsingPart {
 	 * 
 	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#createContentProvider()
 	 */
+	@Override
 	protected IContentProvider createContentProvider() {
 		return new ProjectAndSourceFolderContentProvider(this, getToolkit());
 	}
@@ -98,11 +97,13 @@ public class ProjectsView extends ScriptBrowsingPart {
 	 * 
 	 * @return the string used as ID for the Help context
 	 */
+	@Override
 	protected String getHelpContextId() {
 		// return IJavaHelpContextIds.PROJECTS_VIEW;
 		return ""; //$NON-NLS-1$
 	}
 
+	@Override
 	protected String getLinkToEditorKey() {
 		return PreferenceConstants.LINK_BROWSING_PROJECTS_TO_EDITOR;
 	}
@@ -110,9 +111,11 @@ public class ProjectsView extends ScriptBrowsingPart {
 	/**
 	 * Adds additional listeners to this view.
 	 */
+	@Override
 	protected void hookViewerListeners() {
 		super.hookViewerListeners();
 		getViewer().addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				TreeViewer viewer = (TreeViewer) getViewer();
 				Object element = ((IStructuredSelection) event.getSelection())
@@ -124,6 +127,7 @@ public class ProjectsView extends ScriptBrowsingPart {
 		});
 	}
 
+	@Override
 	protected void setInitialInput() {
 		IModelElement root = DLTKCore.create(DLTKUIPlugin.getWorkspace()
 				.getRoot());
@@ -139,6 +143,7 @@ public class ProjectsView extends ScriptBrowsingPart {
 	 *            the object to test
 	 * @return <true> if the given element is a valid input
 	 */
+	@Override
 	protected boolean isValidInput(Object element) {
 		return element instanceof IScriptModel;
 	}
@@ -151,6 +156,7 @@ public class ProjectsView extends ScriptBrowsingPart {
 	 *            the object to test
 	 * @return <true> if the given element is a valid element
 	 */
+	@Override
 	protected boolean isValidElement(Object element) {
 		if (!(element instanceof IScriptProject || element instanceof IProjectFragment)) {
 			return false;
@@ -172,6 +178,7 @@ public class ProjectsView extends ScriptBrowsingPart {
 	 *            the Java element which has the focus
 	 * @return the element to select
 	 */
+	@Override
 	protected IModelElement findElementToSelect(IModelElement je) {
 		if (je == null)
 			return null;
@@ -195,6 +202,7 @@ public class ProjectsView extends ScriptBrowsingPart {
 	/*
 	 * @see JavaBrowsingPart#setInput(Object)
 	 */
+	@Override
 	protected void setInput(Object input) {
 		// Don't allow to clear input for this view
 		if (input != null)
@@ -203,6 +211,7 @@ public class ProjectsView extends ScriptBrowsingPart {
 			getViewer().setSelection(null);
 	}
 
+	@Override
 	protected void createActions() {
 		super.createActions();
 		fActionGroups.addGroup(new ProjectActionGroup(this));
@@ -215,6 +224,7 @@ public class ProjectsView extends ScriptBrowsingPart {
 	 *      org.eclipse.jface.viewers.ISelection)
 	 * @since 2.1
 	 */
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (!needsToProcessSelectionChanged(part, selection))
 			return;

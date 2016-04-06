@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *          (report 36180: Callers/Callees view)
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.callhierarchy;
@@ -59,11 +58,13 @@ public abstract class MethodWrapper extends PlatformObject {
         this.fParent = parent;
     }
 
-    public Object getAdapter(Class adapter) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == IModelElement.class) {
-	        return getMember();
+			return (T) getMember();
 	    } else if (adapter == IWorkbenchAdapter.class){
-	    	return new MethodWrapperWorkbenchAdapter(this);
+			return (T) new MethodWrapperWorkbenchAdapter(this);
 	    } else {
 	    	return null;
 	    }
@@ -112,7 +113,8 @@ public abstract class MethodWrapper extends PlatformObject {
         return fParent;
     }
 
-    public boolean equals(Object oth) {
+	@Override
+	public boolean equals(Object oth) {
         if (this == oth) {
             return true;
         }
@@ -155,7 +157,8 @@ public abstract class MethodWrapper extends PlatformObject {
         return true;
     }
 
-    public int hashCode() {
+	@Override
+	public int hashCode() {
         final int PRIME = 1000003;
         int result = 0;
 

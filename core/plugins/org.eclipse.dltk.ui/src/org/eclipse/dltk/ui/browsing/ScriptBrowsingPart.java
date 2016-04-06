@@ -158,24 +158,31 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 	private boolean fProcessSelectionEvents = true;
 
 	private IPartListener2 fPartListener = new IPartListener2() {
+		@Override
 		public void partActivated(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partBroughtToTop(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partInputChanged(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partClosed(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partDeactivated(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partOpened(IWorkbenchPartReference ref) {
 		}
 
+		@Override
 		public void partVisible(IWorkbenchPartReference ref) {
 			if (ref != null && ref.getId() == getSite().getId()) {
 				fProcessSelectionEvents = true;
@@ -186,6 +193,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 			}
 		}
 
+		@Override
 		public void partHidden(IWorkbenchPartReference ref) {
 			if (ref != null && ref.getId() == getSite().getId())
 				fProcessSelectionEvents = false;
@@ -201,6 +209,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 	/*
 	 * Implements method from IViewPart.
 	 */
+	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		fMemento = memento;
@@ -209,6 +218,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 	/*
 	 * Implements method from IViewPart.
 	 */
+	@Override
 	public void saveState(IMemento memento) {
 		if (fViewer == null) {
 			// part has not been created
@@ -325,6 +335,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 	 * org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets
 	 * .Composite)
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		Assert.isTrue(fViewer == null);
 
@@ -390,14 +401,11 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 		setHelp();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class key) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> key) {
 		if (key == IShowInSource.class) {
-			return getShowInSource();
+			return (T) getShowInSource();
 		}
 		// if (key == IContextProvider.class)
 		// return JavaUIHelp.getHelpContextProvider(this, getHelpContextId());
@@ -412,6 +420,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 	 */
 	protected IShowInSource getShowInSource() {
 		return new IShowInSource() {
+			@Override
 			public ShowInContext getShowInContext() {
 				return new ShowInContext(null, getSite().getSelectionProvider()
 						.getSelection());
@@ -507,10 +516,12 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 	// ---- IWorkbenchPart
 	// ------------------------------------------------------
 
+	@Override
 	public void setFocus() {
 		fViewer.getControl().setFocus();
 	}
 
+	@Override
 	public void dispose() {
 		if (fContextActivation != null) {
 			IContextService ctxService = getSite()
@@ -539,6 +550,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 	 */
 	protected void addKeyListener() {
 		fViewer.getControl().addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent event) {
 				handleKeyReleased(event);
 			}
@@ -569,6 +581,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 	 * org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface
 	 * .action.IMenuManager)
 	 */
+	@Override
 	public void menuAboutToShow(IMenuManager menu) {
 		DLTKUIPlugin.createStandardGroups(menu);
 
@@ -614,6 +627,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 			String viewId = getConfigurationElement().getAttribute("id"); //$NON-NLS-1$
 			Assert.isNotNull(viewId);
 			IPropertyChangeListener workingSetListener = new IPropertyChangeListener() {
+				@Override
 				public void propertyChange(PropertyChangeEvent event) {
 					doWorkingSetChanged(event);
 				}
@@ -778,6 +792,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 		return true;
 	}
 
+	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (!needsToProcessSelectionChanged(part, selection))
 			return;
@@ -915,6 +930,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#getTitleToolTip()
 	 */
+	@Override
 	public String getTitleToolTip() {
 		if (fViewer == null)
 			return super.getTitleToolTip();
@@ -1065,6 +1081,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 	protected void hookViewerListeners() {
 		fViewer
 				.addPostSelectionChangedListener(new ISelectionChangedListener() {
+							@Override
 					public void selectionChanged(SelectionChangedEvent event) {
 						if (!fProcessSelectionEvents)
 							return;
@@ -1086,6 +1103,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 				});
 
 		fViewer.addOpenListener(new IOpenListener() {
+			@Override
 			public void open(OpenEvent event) {
 				IAction open = fOpenEditorGroup.getOpenAction();
 				if (open.isEnabled()) {
@@ -1401,6 +1419,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 	 * @seeorg.eclipse.jdt.internal.ui.viewsupport.IViewPartInputProvider#
 	 * getViewPartInput()
 	 */
+	@Override
 	public Object getViewPartInput() {
 		if (fViewer != null) {
 			return fViewer.getInput();
@@ -1465,6 +1484,7 @@ public abstract class ScriptBrowsingPart extends ViewPart implements
 		}
 	}
 
+	@Override
 	public void setInitializationData(IConfigurationElement config,
 			String propertyName, Object data) {
 		super.setInitializationData(config, propertyName, data);

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.search;
 
@@ -82,7 +81,8 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 			fLabelProvider= labelProvider;
 		}
 		
-	    public int compare(Viewer viewer, Object e1, Object e2) {
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2) {
 	        String name1= fLabelProvider.getText(e1);
 	        String name2= fLabelProvider.getText(e2);
 	        if (name1 == null)
@@ -121,6 +121,7 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 	private static final String[] SHOW_IN_TARGETS = new String[] {
 			DLTKUIPlugin.ID_SCRIPT_EXPLORER, IPageLayout.ID_RES_NAV };
 	public static final IShowInTargetList SHOW_IN_TARGET_LIST= new IShowInTargetList() {
+		@Override
 		public String[] getShowInTargetIds() {
 			return SHOW_IN_TARGETS;
 		}
@@ -152,11 +153,13 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		DLTKPluginImages.setLocalImageDescriptors(fGroupTypeAction, "type_mode.png"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void setViewPart(ISearchResultViewPart part) {
 		super.setViewPart(part);
 		fActionGroup= new NewSearchViewActionGroup(part);
 	}
 	
+	@Override
 	public void showMatch(Match match, int offset, int length, boolean activate) throws PartInitException {
 		IEditorPart editor;
 		try {
@@ -198,6 +201,7 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		}
 	}
 
+	@Override
 	protected void fillContextMenu(IMenuManager mgr) {
 		super.fillContextMenu(mgr);
 		addSortActions(mgr);
@@ -221,6 +225,7 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		mgr.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenu);
 	}
 	
+	@Override
 	protected void fillToolbar(IToolBarManager tbm) {
 		super.fillToolbar(tbm);
 		if (getLayout() != FLAG_LAYOUT_FLAT)
@@ -244,16 +249,19 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		fGroupTypeAction.setChecked(fCurrentGrouping == LevelTreeContentProvider.LEVEL_TYPE);
 	}
 
+	@Override
 	public void dispose() {
 		fActionGroup.dispose();
 		super.dispose();
 	}
 	
+	@Override
 	protected void elementsChanged(Object[] objects) {
 		if (fContentProvider != null)
 			fContentProvider.elementsChanged(objects);
 	}
 
+	@Override
 	protected void clear() {
 		if (fContentProvider != null)
 			fContentProvider.clear();
@@ -272,6 +280,7 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		viewer.addDragSupport(ops, transfers, dragAdapter);
 	}	
 
+	@Override
 	protected void configureTableViewer(TableViewer viewer) {
 		viewer.setUseHashlookup(true);
 		SortingLabelProvider sortingLabelProvider= new SortingLabelProvider(this);
@@ -283,6 +292,7 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		addDragAdapters(viewer);
 	}
 
+	@Override
 	protected void configureTreeViewer(TreeViewer viewer) {
 		PostfixLabelProvider postfixLabelProvider= new PostfixLabelProvider(this);
 		viewer.setUseHashlookup(true);
@@ -293,11 +303,13 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		addDragAdapters(viewer);
 	}
 	
+	@Override
 	protected TreeViewer createTreeViewer(Composite parent) {
 		return new ProblemTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL);
 	}
 	
+	@Override
 	protected TableViewer createTableViewer(Composite parent) {
 		return new ProblemTableViewer(parent, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL);
@@ -314,12 +326,14 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		getSettings().put(KEY_SORTING, fCurrentSortOrder);
 	}
 
+	@Override
 	public void init(IPageSite site) {
 		super.init(site);
 		IMenuManager menuManager = site.getActionBars().getMenuManager();
 		menuManager.insertBefore(IContextMenuConstants.GROUP_PROPERTIES, new Separator(GROUP_FILTERING));
 		fActionGroup.fillActionBars(site.getActionBars());
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_PROPERTIES, new Action(SearchMessages.DLTKSearchResultPage_preferences_label) {
+					@Override
 			public void run() {
 				String pageId= "org.eclipse.search.preferences.SearchPreferencePage"; //$NON-NLS-1$
 				PreferencesUtil.createPreferenceDialogOn(DLTKUIPlugin.getActiveWorkbenchShell(), pageId, null, null).open();
@@ -341,6 +355,7 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		getViewPart().updateLabel();
 	}
 	
+	@Override
 	protected StructuredViewer getViewer() {
 		// override so that it's visible in the package.
 		return super.getViewer();
@@ -349,6 +364,7 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 	/* (non-Javadoc)
 	 * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage#restoreState(org.eclipse.ui.IMemento)
 	 */
+	@Override
 	public void restoreState(IMemento memento) {
 		super.restoreState(memento);
 		try {
@@ -389,6 +405,7 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 	/* (non-Javadoc)
 	 * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage#saveState(org.eclipse.ui.IMemento)
 	 */
+	@Override
 	public void saveState(IMemento memento) {
 		super.saveState(memento);
 		memento.putInteger(KEY_GROUPING, fCurrentGrouping);
@@ -409,6 +426,7 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		return false;
 	}
 
+	@Override
 	public String getLabel() {
 		String label= super.getLabel();
 		AbstractTextSearchResult input = getInput();
@@ -478,16 +496,16 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		return count;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class adapter) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> adapter) {
 		if (IShowInTargetList.class.equals(adapter)) {
-			return SHOW_IN_TARGET_LIST;
+			return (T) SHOW_IN_TARGET_LIST;
 		}
 		return null;
 	}
 	
+	@Override
 	protected void handleOpen(OpenEvent event) {
 		Object firstElement= ((IStructuredSelection)event.getSelection()).getFirstElement();
 		if (firstElement instanceof ISourceModule || 				
@@ -504,6 +522,7 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		super.handleOpen(event);
 	}
 
+	@Override
 	public void setElementLimit(Integer elementLimit) {
 		super.setElementLimit(elementLimit);
 		int limit = elementLimit.intValue();

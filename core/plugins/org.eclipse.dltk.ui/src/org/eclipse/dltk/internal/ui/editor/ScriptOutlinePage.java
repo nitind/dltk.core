@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -122,6 +122,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 		// private Object[] NO_CLASS = new Object[] { new NoClassElement() };
 		private ElementChangedListener fListener;
 
+		@Override
 		public void dispose() {
 			if (fListener != null) {
 				DLTKCore.removeElementChangedListener(fListener);
@@ -152,6 +153,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 			return v.toArray(new IModelElement[v.size()]);
 		}
 
+		@Override
 		public Object[] getChildren(Object parent) {
 			if (parent instanceof IParent) {
 				IParent c = (IParent) parent;
@@ -170,10 +172,12 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 			return ScriptOutlinePage.NO_CHILDREN;
 		}
 
+		@Override
 		public Object[] getElements(Object parent) {
 			return getChildren(parent);
 		}
 
+		@Override
 		public Object getParent(Object child) {
 			if (child instanceof IModelElement) {
 				IModelElement e = (IModelElement) child;
@@ -182,6 +186,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(Object parent) {
 			if (parent instanceof IParent) {
 				IParent c = (IParent) parent;
@@ -204,6 +209,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 		/*
 		 * @see IContentProvider#inputChanged(Viewer, Object, Object)
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			boolean isCU = (newInput instanceof ISourceModule);
 
@@ -232,6 +238,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 	 */
 	protected class ElementChangedListener implements IElementChangedListener {
 
+		@Override
 		public void elementChanged(final ElementChangedEvent e) {
 
 			if (getControl() == null) {
@@ -241,6 +248,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 			Display d = getControl().getDisplay();
 			if (d != null) {
 				d.asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						ISourceModule cu = (ISourceModule) fInput;
 						IModelElement base = cu;
@@ -309,18 +317,22 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 	 */
 	private static final class EmptySelectionProvider implements
 			ISelectionProvider {
+		@Override
 		public void addSelectionChangedListener(
 				ISelectionChangedListener listener) {
 		}
 
+		@Override
 		public ISelection getSelection() {
 			return StructuredSelection.EMPTY;
 		}
 
+		@Override
 		public void removeSelectionChangedListener(
 				ISelectionChangedListener listener) {
 		}
 
+		@Override
 		public void setSelection(ISelection selection) {
 		}
 	}
@@ -448,6 +460,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 			setChecked(on);
 			BusyIndicator.showWhile(fOutlineViewer.getControl().getDisplay(),
 					new Runnable() {
+						@Override
 						public void run() {
 							if (on) {
 								fOutlineViewer.setComparator(fComparator);
@@ -563,6 +576,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 		}
 
 		fPropertyChangeListener = new IPropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent event) {
 				doPropertyChange(event);
 			}
@@ -604,6 +618,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 	 * org.eclipse.jface.text.IPostSelectionProvider#addPostSelectionChangedListener
 	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
 	 */
+	@Override
 	public void addPostSelectionChangedListener(
 			ISelectionChangedListener listener) {
 		if (fOutlineViewer != null) {
@@ -617,6 +632,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 	 * @see
 	 * ISelectionProvider#addSelectionChangedListener(ISelectionChangedListener)
 	 */
+	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		if (fOutlineViewer != null) {
 			fOutlineViewer.addSelectionChangedListener(listener);
@@ -694,6 +710,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 				+ ".outline", DLTKUIPlugin.getPluginId() + ".outline"); //$NON-NLS-1$ //$NON-NLS-2$
 		manager.setRemoveAllWhenShown(true);
 		manager.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager m) {
 				contextMenuAboutToShow(m);
 			}
@@ -828,15 +845,15 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 		return fActions.get(actionID);
 	}
 
-	/*
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class key) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> key) {
 		if (key == IShowInSource.class) {
-			return getShowInSource();
+			return (T) getShowInSource();
 		}
 		if (key == IShowInTargetList.class) {
-			return new IShowInTargetList() {
+			return (T) new IShowInTargetList() {
+				@Override
 				public String[] getShowInTargetIds() {
 					return new String[] { DLTKUIPlugin.ID_SCRIPT_EXPLORER };
 				}
@@ -844,7 +861,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 			};
 		}
 		if (key == IShowInTarget.class) {
-			return getShowInTarget();
+			return (T) getShowInTarget();
 		}
 
 		return null;
@@ -871,6 +888,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 	/*
 	 * @see ISelectionProvider#getSelection()
 	 */
+	@Override
 	public ISelection getSelection() {
 		if (fOutlineViewer == null) {
 			return StructuredSelection.EMPTY;
@@ -885,6 +903,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 	 */
 	protected IShowInSource getShowInSource() {
 		return new IShowInSource() {
+			@Override
 			public ShowInContext getShowInContext() {
 				return new ShowInContext(null, getSite().getSelectionProvider()
 						.getSelection());
@@ -899,6 +918,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 	 */
 	protected IShowInTarget getShowInTarget() {
 		return new IShowInTarget() {
+			@Override
 			public boolean show(ShowInContext context) {
 				ISelection sel = context.getSelection();
 				if (sel instanceof ITextSelection) {
@@ -1014,6 +1034,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 	 * removePostSelectionChangedListener
 	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
 	 */
+	@Override
 	public void removePostSelectionChangedListener(
 			ISelectionChangedListener listener) {
 		if (fOutlineViewer != null) {
@@ -1028,6 +1049,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 	 * ISelectionProvider#removeSelectionChangedListener(ISelectionChangedListener
 	 * )
 	 */
+	@Override
 	public void removeSelectionChangedListener(
 			ISelectionChangedListener listener) {
 		if (fOutlineViewer != null) {
@@ -1085,6 +1107,7 @@ public class ScriptOutlinePage extends Page implements IContentOutlinePage,
 	/*
 	 * @see ISelectionProvider#setSelection(ISelection)
 	 */
+	@Override
 	public void setSelection(ISelection selection) {
 		if (fOutlineViewer != null) {
 			fOutlineViewer.setSelection(selection);
