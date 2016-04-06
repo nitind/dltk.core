@@ -38,35 +38,39 @@ public class IndexerManager {
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 	private static final String NATURE_ATTR = "nature"; //$NON-NLS-1$
 	private static final String ID_ATTR = "id"; //$NON-NLS-1$
-	private static final String TARGET_ID_ATTR = "targetId"; //$NON-NLS-1$
 
 	private static IConfigurationElement indexerElement;
 	private static AbstractIndexer indexer;
-	private static Map<String, Map<String, IConfigurationElement>> indexerParticipants = new HashMap<String, Map<String, IConfigurationElement>>();
+	private static Map<String, IConfigurationElement> indexerParticipants = new HashMap<String, IConfigurationElement>();
 
 	static {
+		String indexerdId = getIndexerID();
 		IConfigurationElement[] elements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(INDEXER_POINT);
 		for (IConfigurationElement element : elements) {
 			String name = element.getName();
-			if (INDEXER_ATTR.equals(name)) {
+			String id = element.getAttribute(ID_ATTR);
+			if (INDEXER_ATTR.equals(name)
+					&& (indexerdId == null || indexerdId.equals(id))) {
 				indexerElement = element;
 				break;
 			}
 		}
+		if (indexerElement == null) {
+			if (indexerdId != null) {
+				DLTKCore.error("Unable to find indexer: " + indexerdId);
+			} else {
+				DLTKCore.error("Unable to find any indexer");
+			}
+		}
 
-		elements = Platform.getExtensionRegistry().getConfigurationElementsFor(
-				PARTICIPANT_POINT);
+		elements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(PARTICIPANT_POINT);
 		for (IConfigurationElement element : elements) {
 			String name = element.getName();
 			if (PARTICIPANT_ELEMENT.equals(name)) {
-				String targetId = element.getAttribute(TARGET_ID_ATTR);
 				String nature = element.getAttribute(NATURE_ATTR);
-				if (!indexerParticipants.containsKey(targetId)) {
-					indexerParticipants.put(targetId,
-							new HashMap<String, IConfigurationElement>());
-				}
-				indexerParticipants.get(targetId).put(nature, element);
+				indexerParticipants.put(nature, element);
 			}
 		}
 	}
@@ -84,21 +88,25 @@ public class IndexerManager {
 		return indexer;
 	}
 
+	private static String getIndexerID() {
+		String indexerId = System.getProperty(DLTKCore.INDEXER_ID);
+		if (indexerId != null) {
+			return indexerId;
+		}
+		return Platform.getPreferencesService().getString(DLTKCore.PLUGIN_ID,
+				DLTKCore.INDEXER_ID, null, null);
+	}
+
 	public static IIndexerParticipant getIndexerParticipant(IIndexer indexer,
 			String natureId) {
-
-		Map<String, IConfigurationElement> participants = indexerParticipants
-				.get(((AbstractIndexer) indexer).getId());
-		if (participants != null) {
-			IConfigurationElement element = participants.get(natureId);
-			if (element != null) {
-				try {
-					return (IIndexerParticipant) element
-							.createExecutableExtension(CLASS_ATTR);
-				} catch (CoreException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
+		IConfigurationElement element = indexerParticipants.get(natureId);
+		if (element != null) {
+			try {
+				return (IIndexerParticipant) element
+						.createExecutableExtension(CLASS_ATTR);
+			} catch (CoreException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
 				}
 			}
 		}

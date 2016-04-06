@@ -66,13 +66,13 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="targetId" type="string" use="required">
+         <attribute name="targetId" type="string">
             <annotation>
                <documentation>
                   Target element indexer ID
                </documentation>
                <appInfo>
-                  <meta.attribute kind="identifier" basedOn="org.eclipse.dltk.core.indexer/indexer/@id"/>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.dltk.core.indexer/indexer/@id" deprecated="true"/>
                </appInfo>
             </annotation>
          </attribute>
