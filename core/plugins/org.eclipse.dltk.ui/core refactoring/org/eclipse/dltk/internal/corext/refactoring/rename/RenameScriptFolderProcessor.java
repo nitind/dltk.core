@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.rename;
 
@@ -127,7 +126,7 @@ public class RenameScriptFolderProcessor extends ScriptRenameProcessor implement
 	}
 	
 	protected IFile[] getChangedFiles() throws CoreException {
-		Set combined= new HashSet();
+		Set<IFile> combined = new HashSet<IFile>();
 		combined.addAll(Arrays.asList(ResourceUtil.getFiles(fChangeManager.getAllSourceModules())));
 		if (fRenameSubpackages) {
 			IScriptFolder[] allPackages= ModelElementUtil.getPackageAndSubpackages(fPackage);
@@ -142,7 +141,7 @@ public class RenameScriptFolderProcessor extends ScriptRenameProcessor implement
 		}
 //		if (fQualifiedNameSearchResult != null)
 //			combined.addAll(Arrays.asList(fQualifiedNameSearchResult.getAllFiles()));
-		return (IFile[]) combined.toArray(new IFile[combined.size()]);
+		return combined.toArray(new IFile[combined.size()]);
 	}
 	
 	//---- ITextUpdating -------------------------------------------------

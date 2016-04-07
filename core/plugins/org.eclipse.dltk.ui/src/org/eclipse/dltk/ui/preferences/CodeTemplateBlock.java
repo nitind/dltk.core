@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.
+ * Copyright (c) 2009, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -367,7 +367,7 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 
 	protected TemplatePersistenceData[] getTemplatesOfCategory(
 			ICodeTemplateCategory category) {
-		ArrayList res = new ArrayList();
+		ArrayList<TemplatePersistenceData> res = new ArrayList<TemplatePersistenceData>();
 		TemplatePersistenceData[] templates = fTemplateStore.getTemplateData();
 		for (int i = 0; i < templates.length; i++) {
 			TemplatePersistenceData curr = templates[i];
@@ -376,8 +376,7 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 			res.add(curr);
 			// }
 		}
-		return (TemplatePersistenceData[]) res
-				.toArray(new TemplatePersistenceData[res.size()]);
+		return res.toArray(new TemplatePersistenceData[res.size()]);
 	}
 
 	private TemplatePersistenceData[] getTemplatesOfContextType(
@@ -387,7 +386,7 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 
 	protected TemplatePersistenceData[] getTemplatesOfContextType(
 			String contextTypeId) {
-		List res = new ArrayList();
+		List<TemplatePersistenceData> res = new ArrayList<TemplatePersistenceData>();
 		TemplatePersistenceData[] templates = fTemplateStore.getTemplateData();
 		for (int i = 0; i < templates.length; ++i) {
 			TemplatePersistenceData curr = templates[i];
@@ -395,13 +394,13 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 				res.add(curr);
 			}
 		}
-		return (TemplatePersistenceData[]) res
+		return res
 				.toArray(new TemplatePersistenceData[res.size()]);
 	}
 
 	protected TemplateContextType[] getTemplateContextTypes(
 			ICodeTemplateCategory category) {
-		ArrayList result = new ArrayList();
+		ArrayList<TemplateContextType> result = new ArrayList<TemplateContextType>();
 		TemplateContextType[] contextTypes = category.getTemplateContextTypes();
 		for (int i = 0; i < contextTypes.length; ++i) {
 			TemplateContextType contextType = contextTypes[i];
@@ -409,8 +408,7 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 				result.add(contextType);
 			}
 		}
-		return (TemplateContextType[]) result
-				.toArray(new TemplateContextType[result.size()]);
+		return result.toArray(new TemplateContextType[result.size()]);
 	}
 
 	protected boolean canAdd(List selected) {
@@ -644,11 +642,11 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 	}
 
 	private void export(List selected) {
-		Set datas = new HashSet();
+		Set<TemplatePersistenceData> datas = new HashSet<TemplatePersistenceData>();
 		for (int i = 0; i < selected.size(); i++) {
 			Object curr = selected.get(i);
 			if (curr instanceof TemplatePersistenceData) {
-				datas.add(curr);
+				datas.add((TemplatePersistenceData) curr);
 			} else if (curr instanceof TemplateContextType) {
 				TemplatePersistenceData[] cat = getTemplatesOfContextType((TemplateContextType) curr);
 				datas.addAll(Arrays.asList(cat));
@@ -667,7 +665,7 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 				}
 			}
 		}
-		export((TemplatePersistenceData[]) datas
+		export(datas
 				.toArray(new TemplatePersistenceData[datas.size()]));
 	}
 

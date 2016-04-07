@@ -17,14 +17,15 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptFolder;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.corext.buildpath.AddSelectedSourceFolderOperation;
 import org.eclipse.dltk.internal.corext.buildpath.BuildpathModifier;
+import org.eclipse.dltk.internal.corext.buildpath.BuildpathModifier.IBuildpathModifierListener;
 import org.eclipse.dltk.internal.corext.buildpath.BuildpathModifierOperation;
 import org.eclipse.dltk.internal.corext.buildpath.CreateFolderOperation;
 import org.eclipse.dltk.internal.corext.buildpath.EditFiltersOperation;
@@ -36,7 +37,6 @@ import org.eclipse.dltk.internal.corext.buildpath.PackageExplorerActionEvent;
 import org.eclipse.dltk.internal.corext.buildpath.RemoveFromBuildpathOperation;
 import org.eclipse.dltk.internal.corext.buildpath.ResetAllOperation;
 import org.eclipse.dltk.internal.corext.buildpath.UnexcludeOperation;
-import org.eclipse.dltk.internal.corext.buildpath.BuildpathModifier.IBuildpathModifierListener;
 import org.eclipse.dltk.internal.ui.actions.CompositeActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.dltk.internal.ui.util.ViewerPane;
@@ -251,7 +251,7 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
     }
     
     public BuildpathModifierAction[] getActions() {
-    	List result= new ArrayList();
+		List<BuildpathModifierAction> result = new ArrayList<BuildpathModifierAction>();
     	for (int i= 0; i < fActions.length; i++) {
 			BuildpathModifierAction action= fActions[i];
 			if (action instanceof BuildpathModifierDropDownAction) {
@@ -264,7 +264,7 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 				result.add(action);
 			}
 		}
-    	return (BuildpathModifierAction[])result.toArray(new BuildpathModifierAction[result.size()]);
+		return result.toArray(new BuildpathModifierAction[result.size()]);
     }
     
    

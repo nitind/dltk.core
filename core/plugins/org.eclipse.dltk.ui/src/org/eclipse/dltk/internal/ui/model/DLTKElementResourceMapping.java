@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.model;
 
@@ -27,11 +26,11 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptModel;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
@@ -223,7 +222,7 @@ public abstract class DLTKElementResourceMapping extends ResourceMapping {
 	}
 	
 	private static IFile[] getPackageContent(IScriptFolder pack) throws CoreException {
-		List result= new ArrayList();
+		List<IFile> result = new ArrayList<IFile>();
 		IContainer container= (IContainer)pack.getResource();
 		if (container != null) {
 			IResource[] members= container.members();
@@ -233,11 +232,11 @@ public abstract class DLTKElementResourceMapping extends ResourceMapping {
 					IFile file= (IFile)member;
 					if ("class".equals(file.getFileExtension()) && file.isDerived()) //$NON-NLS-1$
 						continue;
-					result.add(member);
+					result.add((IFile) member);
 				}
 			}
 		}
-		return (IFile[])result.toArray(new IFile[result.size()]);
+		return result.toArray(new IFile[result.size()]);
 	}
 	
 	
@@ -269,14 +268,14 @@ public abstract class DLTKElementResourceMapping extends ResourceMapping {
 			return fFragments;
 		}
 		public IProject[] getProjects() {
-			Set result= new HashSet();
+			Set<IProject> result = new HashSet<IProject>();
 			for (int i= 0; i < fFragments.length; i++) {
 				result.add(fFragments[i].getScriptProject().getProject());
 			}
-			return (IProject[])result.toArray(new IProject[result.size()]);
+			return result.toArray(new IProject[result.size()]);
 		}
 		public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor) throws CoreException {
-			List result= new ArrayList();
+			List<ResourceTraversal> result = new ArrayList<ResourceTraversal>();
 			if (context instanceof RemoteResourceMappingContext) {
 				for (int i= 0; i < fFragments.length; i++) {
 					result.add(new ResourceTraversal(
@@ -287,7 +286,7 @@ public abstract class DLTKElementResourceMapping extends ResourceMapping {
 					result.add(new LocalPackageFragementTraversal(fFragments[i]));
 				}
 			}
-			return (ResourceTraversal[])result.toArray(new ResourceTraversal[result.size()]);
+			return result.toArray(new ResourceTraversal[result.size()]);
 		}
 		
 		public String getModelProviderId() {

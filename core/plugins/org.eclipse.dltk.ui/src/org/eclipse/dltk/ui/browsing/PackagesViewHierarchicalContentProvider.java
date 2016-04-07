@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,7 +67,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 
 					IScriptFolder[] topLevelChildren = getTopLevelChildrenByElementName(project
 							.getScriptFolders());
-					List list = new ArrayList();
+					List<IScriptFolder> list = new ArrayList<IScriptFolder>();
 					for (int i = 0; i < topLevelChildren.length; i++) {
 						IScriptFolder fragment = topLevelChildren[i];
 
@@ -91,7 +91,8 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 						}
 					}
 
-					Object[] logicalPackages = combineSamePackagesIntoLogialPackages((IScriptFolder[]) list
+					Object[] logicalPackages = combineSamePackagesIntoLogialPackages(
+							list
 							.toArray(new IScriptFolder[list.size()]));
 					if (folders.size() > 0) {
 						if (logicalPackages.length > 0)
@@ -163,7 +164,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 				// @Improve: rewrite using concatenate
 			} else if (parentElement instanceof LogicalPackage) {
 
-				List children = new ArrayList();
+				List<IScriptFolder> children = new ArrayList<IScriptFolder>();
 				LogicalPackage logicalPackage = (LogicalPackage) parentElement;
 				IScriptFolder[] elements = logicalPackage.getScriptFolders();
 				for (int i = 0; i < elements.length; i++) {
@@ -172,7 +173,8 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 							(IProjectFragment) fragment.getParent(), fragment);
 					children.addAll(Arrays.asList(objects));
 				}
-				return combineSamePackagesIntoLogialPackages((IScriptFolder[]) children
+				return combineSamePackagesIntoLogialPackages(
+						children
 						.toArray(new IScriptFolder[children.size()]));
 			} else if (parentElement instanceof IFolder) {
 				IFolder folder = (IFolder) parentElement;
@@ -189,13 +191,13 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 	}
 
 	private void addFragmentsToMap(List elements) {
-		List packageFragments = new ArrayList();
+		List<IScriptFolder> packageFragments = new ArrayList<IScriptFolder>();
 		for (Iterator iter = elements.iterator(); iter.hasNext();) {
 			Object elem = iter.next();
 			if (elem instanceof IScriptFolder)
-				packageFragments.add(elem);
+				packageFragments.add((IScriptFolder) elem);
 		}
-		addFragmentsToMap((IScriptFolder[]) packageFragments
+		addFragmentsToMap(packageFragments
 				.toArray(new IScriptFolder[packageFragments.size()]));
 	}
 
@@ -238,7 +240,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 
 	private IScriptFolder[] findNextLevelChildrenByElementName(
 			IProjectFragment parent, IScriptFolder fragment) {
-		List list = new ArrayList();
+		List<IScriptFolder> list = new ArrayList<IScriptFolder>();
 		try {
 
 			IModelElement[] children = parent.getChildren();
@@ -268,22 +270,22 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 		} catch (ModelException e) {
 			DLTKUIPlugin.log(e);
 		}
-		return (IScriptFolder[]) list.toArray(new IScriptFolder[list.size()]);
+		return list.toArray(new IScriptFolder[list.size()]);
 	}
 
 	private IScriptFolder[] getTopLevelChildrenByElementName(
 			IModelElement[] elements) {
-		List topLevelElements = new ArrayList();
+		List<IScriptFolder> topLevelElements = new ArrayList<IScriptFolder>();
 		for (int i = 0; i < elements.length; i++) {
 			IModelElement iJavaElement = elements[i];
 			// if the name of the PackageFragment is the top level package it
 			// will contain no "." separators
 			if (iJavaElement instanceof IScriptFolder
 					&& iJavaElement.getElementName().indexOf('.') == -1) {
-				topLevelElements.add(iJavaElement);
+				topLevelElements.add((IScriptFolder) iJavaElement);
 			}
 		}
-		return (IScriptFolder[]) topLevelElements
+		return topLevelElements
 				.toArray(new IScriptFolder[topLevelElements.size()]);
 	}
 

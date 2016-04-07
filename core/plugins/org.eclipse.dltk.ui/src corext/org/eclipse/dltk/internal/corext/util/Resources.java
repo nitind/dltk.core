@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.util;
 
@@ -100,18 +99,19 @@ public class Resources {
 	 * @see org.eclipse.core.resources.IWorkspace#validateEdit(org.eclipse.core.resources.IFile[], java.lang.Object)
 	 */
 	public static IStatus makeCommittable(IResource[] resources, Object context) {
-		List readOnlyFiles= new ArrayList();
+		List<IFile> readOnlyFiles = new ArrayList<IFile>();
 		for (int i= 0; i < resources.length; i++) {
 			IResource resource= resources[i];
 			if (resource.getType() == IResource.FILE && isReadOnly(resource))	
-				readOnlyFiles.add(resource);
+				readOnlyFiles.add((IFile) resource);
 		}
 		if (readOnlyFiles.size() == 0)
 			return new Status(IStatus.OK, DLTKUIPlugin.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$
 			
 		Map oldTimeStamps= createModificationStampMap(readOnlyFiles);
 		IStatus status= ResourcesPlugin.getWorkspace().validateEdit(
-			(IFile[]) readOnlyFiles.toArray(new IFile[readOnlyFiles.size()]), context);
+				readOnlyFiles.toArray(new IFile[readOnlyFiles.size()]),
+				context);
 		if (!status.isOK())
 			return status;
 			
@@ -188,13 +188,13 @@ public class Resources {
 	 * @return the local locations
 	 */
 	public static String[] getLocationOSStrings(IResource[] resources) {
-		List result= new ArrayList(resources.length);
+		List<String> result = new ArrayList<String>(resources.length);
 		for (int i= 0; i < resources.length; i++) {
 			IPath location= resources[i].getLocation();
 			if (location != null)
 				result.add(location.toOSString());
 		}
-		return (String[]) result.toArray(new String[result.size()]);
+		return result.toArray(new String[result.size()]);
 	}
 	
 	/**

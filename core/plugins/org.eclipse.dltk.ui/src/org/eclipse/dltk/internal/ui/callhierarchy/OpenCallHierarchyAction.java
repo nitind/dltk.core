@@ -148,7 +148,8 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			IModelElement[] elements = resolveModelElements();
 			if (elements == null)
 			    return;
-			List candidates= new ArrayList(elements.length);
+			List<IModelElement> candidates = new ArrayList<IModelElement>(
+					elements.length);
 			for (int i= 0; i < elements.length; i++) {
 			    IModelElement[] resolvedElements= CallHierarchyUI.getCandidates(elements[i]);
 			    if (resolvedElements != null)   
@@ -160,7 +161,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			        candidates.add(enclosingMethod);
 			    }
 			}
-			run((IModelElement[])candidates.toArray(new IModelElement[candidates.size()]));
+			run(candidates.toArray(new IModelElement[candidates.size()]));
 		} catch (InvocationTargetException e) {
 			ExceptionHandler.handle(e, getShell(), getErrorDialogTitle(), ActionMessages.SelectionConverter_codeResolve_failed);
 		} catch (InterruptedException e) {
@@ -213,10 +214,10 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
         if (!ActionUtil.isProcessable(getShell(), element))
             return;
 
-        List result= new ArrayList(1);
+		List<IModelElement> result = new ArrayList<IModelElement>(1);
         IStatus status= compileCandidates(result, element);
         if (status.isOK()) {
-            run((IModelElement[]) result.toArray(new IModelElement[result.size()]));
+			run(result.toArray(new IModelElement[result.size()]));
         } else {
             openErrorDialog(status);
         }

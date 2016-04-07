@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ui.viewsupport;
 
@@ -102,7 +101,7 @@ public class ProblemMarkerManager implements IResourceChangeListener, IAnnotatio
 	 * @see IResourceChangeListener#resourceChanged
 	 */	
 	public void resourceChanged(IResourceChangeEvent event) {
-		HashSet changedElements= new HashSet();
+		HashSet<IResource> changedElements = new HashSet<IResource>();
 		
 		try {
 			IResourceDelta delta= event.getDelta();
@@ -113,7 +112,8 @@ public class ProblemMarkerManager implements IResourceChangeListener, IAnnotatio
 		}
 
 		if (!changedElements.isEmpty()) {
-			IResource[] changes= (IResource[]) changedElements.toArray(new IResource[changedElements.size()]);
+			IResource[] changes = changedElements
+					.toArray(new IResource[changedElements.size()]);
 			fireChanges(changes, true);
 		}
 	}

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.browsing;
 
@@ -14,8 +13,8 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IScriptFolder;
+import org.eclipse.dltk.core.IScriptProject;
 
 /**
  * Contains a list of package fragments with the same name
@@ -23,12 +22,12 @@ import org.eclipse.dltk.core.IScriptFolder;
  */
 public class LogicalPackage extends PlatformObject {
 
-	private Set fPackages;
+	private Set<IScriptFolder> fPackages;
 	private String fName;
 	private IScriptProject fScriptProject;
 
 	public LogicalPackage(IScriptFolder fragment){
-		fPackages= new HashSet();
+		fPackages = new HashSet<IScriptFolder>();
 		fScriptProject= fragment.getScriptProject();
 		add(fragment);
 		fName= fragment.getElementName();
@@ -39,7 +38,7 @@ public class LogicalPackage extends PlatformObject {
 	}
 
 	public IScriptFolder[] getFragments(){
-		return (IScriptFolder[]) fPackages.toArray(new IScriptFolder[fPackages.size()]);
+		return fPackages.toArray(new IScriptFolder[fPackages.size()]);
 	}
 
 	public void add(IScriptFolder fragment){

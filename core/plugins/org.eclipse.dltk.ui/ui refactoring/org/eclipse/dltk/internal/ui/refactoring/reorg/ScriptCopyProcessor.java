@@ -197,10 +197,10 @@ public final class ScriptCopyProcessor extends CopyProcessor implements IReorgDe
 	private String[] getAffectedProjectNatures() throws CoreException {
 		String[] jNatures= ScriptProcessors.computeAffectedNaturs(fCopyPolicy.getScriptElements());
 		String[] rNatures= ResourceProcessors.computeAffectedNatures(fCopyPolicy.getResources());
-		Set result= new HashSet();
+		Set<String> result = new HashSet<String>();
 		result.addAll(Arrays.asList(jNatures));
 		result.addAll(Arrays.asList(rNatures));
-		return (String[])result.toArray(new String[result.size()]);
+		return result.toArray(new String[result.size()]);
 	}
 
 	public boolean canEnableComment() {

@@ -147,11 +147,11 @@ public abstract class WorkingSetAwareContentProvider extends
 			return new TreePath[] { path };
 		}
 		List modelParents = getModelPath(element);
-		List result = new ArrayList();
+		List<TreePath> result = new ArrayList<TreePath>();
 		for (int i = 0; i < modelParents.size(); i++) {
 			result.addAll(getTreePaths(modelParents, i));
 		}
-		return (TreePath[]) result.toArray(new TreePath[result.size()]);
+		return result.toArray(new TreePath[result.size()]);
 	}
 
 	private List getModelPath(Object element) {

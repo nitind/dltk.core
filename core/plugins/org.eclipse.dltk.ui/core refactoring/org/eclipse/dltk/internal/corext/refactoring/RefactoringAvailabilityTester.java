@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring;
 
@@ -53,22 +52,21 @@ public final class RefactoringAvailabilityTester {
 	}
 
 	public static IModelElement[] getScriptElements(final Object[] elements) {
-		List result = new ArrayList();
+		List<IModelElement> result = new ArrayList<IModelElement>();
 		for (int index = 0; index < elements.length; index++) {
 			if (elements[index] instanceof IModelElement)
-				result.add(elements[index]);
+				result.add((IModelElement) elements[index]);
 		}
-		return (IModelElement[]) result
-				.toArray(new IModelElement[result.size()]);
+		return result.toArray(new IModelElement[result.size()]);
 	}
 
 	public static IResource[] getResources(final Object[] elements) {
-		List result = new ArrayList();
+		List<IResource> result = new ArrayList<IResource>();
 		for (int index = 0; index < elements.length; index++) {
 			if (elements[index] instanceof IResource)
-				result.add(elements[index]);
+				result.add((IResource) elements[index]);
 		}
-		return (IResource[]) result.toArray(new IResource[result.size()]);
+		return result.toArray(new IResource[result.size()]);
 	}
 
 	public static boolean isRenameElementAvailable(IModelElement element)

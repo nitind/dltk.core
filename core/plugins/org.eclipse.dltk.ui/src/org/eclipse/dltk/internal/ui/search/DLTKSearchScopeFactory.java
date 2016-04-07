@@ -261,14 +261,14 @@ public class DLTKSearchScopeFactory {
 
 	public IProject[] getProjects(IDLTKSearchScope scope) {
 		IPath[] paths = scope.enclosingProjectsAndZips();
-		HashSet temp = new HashSet();
+		HashSet<IProject> temp = new HashSet<IProject>();
 		for (int i = 0; i < paths.length; i++) {
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot()
 					.findMember(paths[i]);
 			if (resource != null && resource.getType() == IResource.PROJECT)
-				temp.add(resource);
+				temp.add((IProject) resource);
 		}
-		return (IProject[]) temp.toArray(new IProject[temp.size()]);
+		return temp.toArray(new IProject[temp.size()]);
 	}
 
 	public IModelElement[] getModelElements(ISelection selection) {
@@ -284,7 +284,7 @@ public class DLTKSearchScopeFactory {
 		if (elements.length == 0)
 			return new IModelElement[0];
 
-		Set result = new HashSet(elements.length);
+		Set<IModelElement> result = new HashSet<IModelElement>(elements.length);
 		for (int i = 0; i < elements.length; i++) {
 			Object selectedElement = elements[i];
 			if (selectedElement instanceof IModelElement) {
@@ -309,8 +309,7 @@ public class DLTKSearchScopeFactory {
 			}
 
 		}
-		return (IModelElement[]) result
-				.toArray(new IModelElement[result.size()]);
+		return result.toArray(new IModelElement[result.size()]);
 	}
 
 	public IDLTKSearchScope createSearchScope(IModelElement[] modelElements,
@@ -321,11 +320,12 @@ public class DLTKSearchScopeFactory {
 				getSearchFlags(includeInterp), toolkit);
 	}
 
-	private IDLTKSearchScope createSearchScope(Collection modelElements,
+	private IDLTKSearchScope createSearchScope(
+			Collection<IModelElement> modelElements,
 			boolean includeInterp, IDLTKLanguageToolkit toolkit) {
 		if (modelElements.isEmpty())
 			return EMPTY_SCOPE;
-		IModelElement[] elementArray = (IModelElement[]) modelElements
+		IModelElement[] elementArray = modelElements
 				.toArray(new IModelElement[modelElements.size()]);
 		return SearchEngine.createSearchScope(elementArray,
 				getSearchFlags(includeInterp), toolkit);

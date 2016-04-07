@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -117,7 +117,7 @@ public class ParentChecker {
 	}
 				
 	private void removeResourcesDescendantsOfScriptElements() {
-		List subResources= new ArrayList(3);
+		List<IResource> subResources = new ArrayList<IResource>(3);
 		for (int i= 0; i < fResources.length; i++) {
 			IResource subResource= fResources[i];
 			for (int j= 0; j < fScriptElements.length; j++) {
@@ -126,11 +126,12 @@ public class ParentChecker {
 					subResources.add(subResource);
 			}
 		}
-		removeFromSetToDelete((IResource[]) subResources.toArray(new IResource[subResources.size()]));
+		removeFromSetToDelete(
+				subResources.toArray(new IResource[subResources.size()]));
 	}
 
 	private void removeScriptElementsDescendantsOfScriptElements() {
-		List subElements= new ArrayList(3);
+		List<IModelElement> subElements = new ArrayList<IModelElement>(3);
 		for (int i= 0; i < fScriptElements.length; i++) {
 			IModelElement subElement= fScriptElements[i];
 			for (int j= 0; j < fScriptElements.length; j++) {
@@ -139,11 +140,12 @@ public class ParentChecker {
 					subElements.add(subElement);
 			}
 		}
-		removeFromSetToDelete((IModelElement[]) subElements.toArray(new IModelElement[subElements.size()]));
+		removeFromSetToDelete(
+				subElements.toArray(new IModelElement[subElements.size()]));
 	}
 
 	private void removeResourcesDescendantsOfResources() {
-		List subResources= new ArrayList(3);
+		List<IResource> subResources = new ArrayList<IResource>(3);
 		for (int i= 0; i < fResources.length; i++) {
 			IResource subResource= fResources[i];
 			for (int j= 0; j < fResources.length; j++) {
@@ -152,7 +154,8 @@ public class ParentChecker {
 					subResources.add(subResource);
 			}
 		}
-		removeFromSetToDelete((IResource[]) subResources.toArray(new IResource[subResources.size()]));
+		removeFromSetToDelete(
+				subResources.toArray(new IResource[subResources.size()]));
 	}
 
 	public static boolean isDescendantOf(IResource subResource, IModelElement superElement) {

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.changes;
 
@@ -92,10 +91,11 @@ public class AddToBuildpathChange extends DLTKChange {
 
 	private IBuildpathEntry[] getNewBuildpathEntries() throws ModelException {
 		IBuildpathEntry[] entries = getScriptProject().getRawBuildpath();
-		List cp = new ArrayList(entries.length + 1);
+		List<IBuildpathEntry> cp = new ArrayList<IBuildpathEntry>(
+				entries.length + 1);
 		cp.addAll(Arrays.asList(entries));
 		cp.add(fEntryToAdd);
-		return (IBuildpathEntry[]) cp.toArray(new IBuildpathEntry[cp.size()]);
+		return cp.toArray(new IBuildpathEntry[cp.size()]);
 	}
 
 	private static IBuildpathEntry createNewBuildpathEntry(int kind, IPath path) {

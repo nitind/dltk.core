@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -279,7 +279,7 @@ public class StandardModelElementContentProvider2 implements
 			throws ModelException {
 		IModelElement[] fragments = root.getChildren();
 
-		List newFragments = new ArrayList();
+		List<IModelElement> newFragments = new ArrayList<IModelElement>();
 		for (int i = 0; i < fragments.length; ++i) {
 			if (fragments[i] instanceof IScriptFolder) {
 				IScriptFolder scriptFolder = ((IScriptFolder) fragments[i]);
@@ -293,7 +293,7 @@ public class StandardModelElementContentProvider2 implements
 			}
 			newFragments.add(fragments[i]);
 		}
-		fragments = (IModelElement[]) newFragments
+		fragments = newFragments
 				.toArray(new IModelElement[newFragments.size()]);
 
 		if (isProjectProjectFragment(root)) {

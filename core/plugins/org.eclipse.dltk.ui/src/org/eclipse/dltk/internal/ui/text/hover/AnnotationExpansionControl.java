@@ -715,9 +715,9 @@ public class AnnotationExpansionControl implements IInformationControl, IInforma
 
 		StyleRange[] ranges= text.getStyleRanges(region.getOffset(), region.getLength());
 
-		List undoRanges= new ArrayList(ranges.length);
+		List<StyleRange> undoRanges = new ArrayList<StyleRange>(ranges.length);
 		for (int i= 0; i < ranges.length; i++) {
-			undoRanges.add(ranges[i].clone());
+			undoRanges.add((StyleRange) ranges[i].clone());
 		}
 
 		int offset= region.getOffset();
@@ -739,7 +739,7 @@ public class AnnotationExpansionControl implements IInformationControl, IInforma
 			index++;
 			if (index < undoRanges.size()) {
 				offset= curEnd;
-				current= (StyleRange) undoRanges.get(index);
+				current = undoRanges.get(index);
 				curStart= current.start;
 				curEnd= current.start + current.length;
 			} else if (index == undoRanges.size()) {
@@ -766,7 +766,7 @@ public class AnnotationExpansionControl implements IInformationControl, IInforma
 
 		}
 
-		return (StyleRange[]) undoRanges.toArray(undoRanges.toArray(new StyleRange[0]));
+		return undoRanges.toArray(undoRanges.toArray(new StyleRange[0]));
 	}
 
 	private void resetViewerBackground(StyleRange[] oldRanges) {

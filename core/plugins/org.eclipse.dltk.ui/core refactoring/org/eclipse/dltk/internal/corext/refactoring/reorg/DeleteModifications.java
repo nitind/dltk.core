@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.reorg;
 
@@ -148,7 +147,7 @@ public class DeleteModifications extends RefactoringModifications {
 	public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
 			RefactoringProcessor owner, String[] natures,
 			SharableParticipants shared) {
-		List result = new ArrayList();
+		List<RefactoringParticipant> result = new ArrayList<RefactoringParticipant>();
 		for (Iterator iter = fDelete.iterator(); iter.hasNext();) {
 			result.addAll(Arrays.asList(ParticipantManager
 					.loadDeleteParticipants(status, owner, iter.next(),
@@ -156,8 +155,7 @@ public class DeleteModifications extends RefactoringModifications {
 		}
 		result.addAll(Arrays.asList(getResourceModifications().getParticipants(
 				status, owner, natures, shared)));
-		return (RefactoringParticipant[]) result
-				.toArray(new RefactoringParticipant[result.size()]);
+		return result.toArray(new RefactoringParticipant[result.size()]);
 	}
 
 	/**

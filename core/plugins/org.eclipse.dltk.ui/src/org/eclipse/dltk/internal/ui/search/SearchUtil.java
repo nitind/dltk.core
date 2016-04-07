@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.search;
 
@@ -144,7 +143,7 @@ public class SearchUtil {
 		for (int i= LRU_WORKINGSET_LIST_SIZE - 1; i >= 0; i--) {
 			String[] lruWorkingSetNames= settingsStore.getArray(STORE_LRU_WORKING_SET_NAMES + i);
 			if (lruWorkingSetNames != null) {
-				Set workingSets= new HashSet(2);
+				Set<IWorkingSet> workingSets = new HashSet<IWorkingSet>(2);
 				for (int j= 0; j < lruWorkingSetNames.length; j++) {
 					IWorkingSet workingSet= PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSet(lruWorkingSetNames[j]);
 					if (workingSet != null) {
@@ -153,7 +152,8 @@ public class SearchUtil {
 				}
 				foundLRU= true;
 				if (!workingSets.isEmpty())
-					fgLRUWorkingSets.add((IWorkingSet[])workingSets.toArray(new IWorkingSet[workingSets.size()]));
+					fgLRUWorkingSets.add(workingSets
+							.toArray(new IWorkingSet[workingSets.size()]));
 			}
 		}
 		if (!foundLRU)

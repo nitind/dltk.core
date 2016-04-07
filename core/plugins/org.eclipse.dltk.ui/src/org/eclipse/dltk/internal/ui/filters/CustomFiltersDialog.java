@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.filters;
 
@@ -316,10 +315,10 @@ public class CustomFiltersDialog extends SelectionDialog {
 	 */
 	public String[] getEnabledFilterIds() {
 		Object[] result= getResult();
-		Set enabledIds= new HashSet(result.length);
+		Set<String> enabledIds = new HashSet<String>(result.length);
 		for (int i= 0; i < result.length; i++)
 			enabledIds.add(((FilterDescriptor)result[i]).getId());
-		return (String[]) enabledIds.toArray(new String[enabledIds.size()]);
+		return enabledIds.toArray(new String[enabledIds.size()]);
 	}
 
 	/**
@@ -339,21 +338,22 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 	private FilterDescriptor[] getEnabledFilterDescriptors() {
 		FilterDescriptor[] filterDescs= fBuiltInFilters;
-		List result= new ArrayList(filterDescs.length);
-		List enabledFilterIds= Arrays.asList(fEnabledFilterIds);
+		List<FilterDescriptor> result = new ArrayList<FilterDescriptor>(
+				filterDescs.length);
+		List<String> enabledFilterIds = Arrays.asList(fEnabledFilterIds);
 		for (int i= 0; i < filterDescs.length; i++) {
 			String id= filterDescs[i].getId();
 			if (enabledFilterIds.contains(id))
 				result.add(filterDescs[i]);
 		}
-		return (FilterDescriptor[])result.toArray(new FilterDescriptor[result.size()]);
+		return result.toArray(new FilterDescriptor[result.size()]);
 	}
 
 
 	public static String[] convertFromString(String patterns, String separator) {
 		StringTokenizer tokenizer= new StringTokenizer(patterns, separator, true);
 		int tokenCount= tokenizer.countTokens();
-		List result= new ArrayList(tokenCount);
+		List<String> result = new ArrayList<String>(tokenCount);
 		boolean escape= false;
 		boolean append= false;
 		while (tokenizer.hasMoreTokens()) {
@@ -374,15 +374,15 @@ public class CustomFiltersDialog extends SelectionDialog {
 				escape= false;
 			}
 		}
-		return (String[])result.toArray(new String[result.size()]);
+		return result.toArray(new String[result.size()]);
 	}
 	
-	private static void addPattern(List list, String pattern) {
+	private static void addPattern(List<String> list, String pattern) {
 		if (list.isEmpty())
 			list.add(pattern);
 		else {
 			int index= list.size() - 1;
-			list.set(index, ((String)list.get(index)) + pattern);
+			list.set(index, (list.get(index)) + pattern);
 		}
 	}
 

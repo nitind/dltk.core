@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath;
 
@@ -95,9 +94,9 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 	}
 
 	protected static AddSourceFolderWizard newSourceFolderWizard(
-			BPListElement element, List/* <BPListElement> */existingElements,
+			BPListElement element, List<BPListElement> existingElements,
 			boolean newFolder) {
-		BPListElement[] existing = (BPListElement[]) existingElements
+		BPListElement[] existing = existingElements
 				.toArray(new BPListElement[existingElements.size()]);
 		AddSourceFolderWizard wizard = new AddSourceFolderWizard(existing,
 				element, false, newFolder, newFolder, newFolder ? BPListElement
@@ -108,9 +107,9 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 	}
 
 	private static AddSourceFolderWizard newLinkedSourceFolderWizard(
-			BPListElement element, List/* <BPListElement> */existingElements,
+			BPListElement element, List<BPListElement> existingElements,
 			boolean newFolder) {
-		BPListElement[] existing = (BPListElement[]) existingElements
+		BPListElement[] existing = existingElements
 				.toArray(new BPListElement[existingElements.size()]);
 		AddSourceFolderWizard wizard = new AddSourceFolderWizard(existing,
 				element, true, newFolder, newFolder, newFolder ? BPListElement
@@ -121,8 +120,8 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 	}
 
 	private static EditFilterWizard newEditFilterWizard(BPListElement element,
-			List/* <BPListElement> */existingElements) {
-		BPListElement[] existing = (BPListElement[]) existingElements
+			List<BPListElement> existingElements) {
+		BPListElement[] existing = existingElements
 				.toArray(new BPListElement[existingElements.size()]);
 		EditFilterWizard result = new EditFilterWizard(existing, element);
 		result.setDoFlushChange(false);

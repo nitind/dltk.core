@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.editor;
 
@@ -19,7 +18,6 @@ import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.actions.DLTKActionConstants;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalCategory;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalComputerRegistry;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -111,16 +109,20 @@ public class BasicSourceModuleEditorActionContributor extends BasicScriptEditorA
 			
 			caMenu.add(fRetargetContentAssist);
 			Collection descriptors= CompletionProposalComputerRegistry.getDefault().getProposalCategories();
-			List specificAssistActions= new ArrayList(descriptors.size());
+			List<SpecificContentAssistAction> specificAssistActions = new ArrayList<SpecificContentAssistAction>(
+					descriptors.size());
 			for (Iterator it= descriptors.iterator(); it.hasNext();) {
 				final CompletionProposalCategory cat= (CompletionProposalCategory) it.next();
 				if (cat.hasComputers()) {
-					IAction caAction= new SpecificContentAssistAction(cat);
+					SpecificContentAssistAction caAction = new SpecificContentAssistAction(
+							cat);
 					caMenu.add(caAction);
 					specificAssistActions.add(caAction);
 				}
 			}
-			fSpecificAssistActions= (SpecificContentAssistAction[]) specificAssistActions.toArray(new SpecificContentAssistAction[specificAssistActions.size()]);
+			fSpecificAssistActions = specificAssistActions.toArray(
+					new SpecificContentAssistAction[specificAssistActions
+							.size()]);
 			if (fSpecificAssistActions.length > 0) {
 				fContentAssistMenuListener= new MenuListener(caMenu);
 				caMenu.addMenuListener(fContentAssistMenuListener);

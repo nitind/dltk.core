@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.rename;
 
@@ -445,7 +444,7 @@ public class RenamingNameSuggestor {
 	 * 
 	 */
 	private String[] getSuffixes(String typeName) {
-		List suffixes= new ArrayList();
+		List<String> suffixes = new ArrayList<String>();
 		DLTKWordIterator iterator= new DLTKWordIterator();
 		iterator.setText(typeName);
 		int lastmatch= 0;
@@ -454,7 +453,7 @@ public class RenamingNameSuggestor {
 			suffixes.add(typeName.substring(lastmatch, match));
 			lastmatch= match;
 		}
-		return (String[]) suffixes.toArray(new String[0]);
+		return suffixes.toArray(new String[0]);
 	}
 
 	private String concat(String[] suffixesNewEqual) {

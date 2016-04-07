@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath;
 
@@ -55,7 +54,7 @@ public class BPUserLibraryElement {
 	}
 
 	private String fName;
-	private List fChildren;
+	private List<BPListElement> fChildren;
 	private boolean fIsSystemLibrary;
 	private Map<String, String> fAttributes;
 
@@ -67,7 +66,7 @@ public class BPUserLibraryElement {
 	public BPUserLibraryElement(String name, IBuildpathContainer container,
 			IScriptProject project, Map<String, String> attributes) {
 		fName = name;
-		fChildren = new ArrayList();
+		fChildren = new ArrayList<BPListElement>();
 		if (container != null) {
 			IBuildpathEntry[] entries = container.getBuildpathEntries();
 			BPListElement[] res = new BPListElement[entries.length];
@@ -97,7 +96,7 @@ public class BPUserLibraryElement {
 	public BPUserLibraryElement(String name, boolean isSystemLibrary,
 			BPListElement[] children, Map<String, String> attributes) {
 		fName = name;
-		fChildren = new ArrayList();
+		fChildren = new ArrayList<BPListElement>();
 		if (children != null) {
 			for (int i = 0; i < children.length; i++) {
 				BPListElement child = children[i];
@@ -111,7 +110,7 @@ public class BPUserLibraryElement {
 	}
 
 	public BPListElement[] getChildren() {
-		return (BPListElement[]) fChildren.toArray(new BPListElement[fChildren
+		return fChildren.toArray(new BPListElement[fChildren
 				.size()]);
 	}
 
@@ -222,7 +221,7 @@ public class BPUserLibraryElement {
 			return true;
 		}
 		for (int i = 0; i < oldEntries.length; i++) {
-			BPListElement child = (BPListElement) fChildren.get(i);
+			BPListElement child = fChildren.get(i);
 			if (!child.getBuildpathEntry().equals(oldEntries[i])) {
 				return true;
 			}

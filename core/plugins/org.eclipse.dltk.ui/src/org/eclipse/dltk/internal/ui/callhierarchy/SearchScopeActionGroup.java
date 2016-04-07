@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -112,7 +112,7 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 		if (workingSetNames == null) {
 			return null;   
 		}
-		Set workingSets= new HashSet(2);
+		Set<IWorkingSet> workingSets = new HashSet<IWorkingSet>(2);
 		for (int j= 0; j < workingSetNames.length; j++) {
 			IWorkingSet workingSet= getWorkingSetManager().getWorkingSet(workingSetNames[j]);
 			if (workingSet != null) {
@@ -120,7 +120,7 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 			}
 		}
 		
-		return (IWorkingSet[])workingSets.toArray(new IWorkingSet[workingSets.size()]);
+		return workingSets.toArray(new IWorkingSet[workingSets.size()]);
 	}
 	
 	/**
@@ -194,7 +194,8 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 	}
 	
 	private Action[] getActions() {
-		List actions = new ArrayList(SearchUtil.LRU_WORKINGSET_LIST_SIZE + 4);
+		List<Action> actions = new ArrayList<Action>(
+				SearchUtil.LRU_WORKINGSET_LIST_SIZE + 4);
 		addAction(actions, fSearchScopeWorkspaceAction);
 		addAction(actions, fSearchScopeProjectAction);
 		addAction(actions, fSearchScopeHierarchyAction);
@@ -213,7 +214,7 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 			actions.add(workingSetAction);
 		}
 		
-		Action[] result = (Action[]) actions.toArray(new Action[actions.size()]);
+		Action[] result = actions.toArray(new Action[actions.size()]);
 		
 		ensureExactlyOneCheckedAction(result);
 		return result;

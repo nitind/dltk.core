@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.workingsets;
 
@@ -21,10 +20,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ElementChangedEvent;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IElementChangedListener;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IModelElementDelta;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
 
@@ -32,20 +31,22 @@ import org.eclipse.ui.IWorkingSetUpdater;
 
 public class ScriptWorkingSetUpdater implements IWorkingSetUpdater, IElementChangedListener {
 
-	private List fWorkingSets;
+	private List<IWorkingSet> fWorkingSets;
 	
 	private static class WorkingSetDelta {
 		private IWorkingSet fWorkingSet;
-		private List fElements;
+		private List<IAdaptable> fElements;
 		private boolean fChanged;
 		public WorkingSetDelta(IWorkingSet workingSet) {
 			fWorkingSet= workingSet;
-			fElements= new ArrayList(Arrays.asList(workingSet.getElements()));
+			fElements = new ArrayList<IAdaptable>(
+					Arrays.asList(workingSet.getElements()));
 		}
 		public int indexOf(Object element) {
 			return fElements.indexOf(element);
 		}
-		public void set(int index, Object element) {
+
+		public void set(int index, IAdaptable element) {
 			fElements.set(index, element);
 			fChanged= true;
 		}
@@ -56,13 +57,14 @@ public class ScriptWorkingSetUpdater implements IWorkingSetUpdater, IElementChan
 		}
 		public void process() {
 			if (fChanged) {
-				fWorkingSet.setElements((IAdaptable[])fElements.toArray(new IAdaptable[fElements.size()]));
+				fWorkingSet.setElements(
+						fElements.toArray(new IAdaptable[fElements.size()]));
 			}
 		}
 	}
 	
 	public ScriptWorkingSetUpdater() {
-		fWorkingSets= new ArrayList();
+		fWorkingSets = new ArrayList<IWorkingSet>();
 		DLTKCore.addElementChangedListener(this);
 	}
 	
@@ -112,7 +114,8 @@ public class ScriptWorkingSetUpdater implements IWorkingSetUpdater, IElementChan
 	public void elementChanged(ElementChangedEvent event) {
 		IWorkingSet[] workingSets;
 		synchronized(fWorkingSets) {
-			workingSets= (IWorkingSet[])fWorkingSets.toArray(new IWorkingSet[fWorkingSets.size()]);
+			workingSets = fWorkingSets
+					.toArray(new IWorkingSet[fWorkingSets.size()]);
 		}
 		for (int w= 0; w < workingSets.length; w++) {
 			WorkingSetDelta workingSetDelta= new WorkingSetDelta(workingSets[w]);
@@ -200,10 +203,11 @@ public class ScriptWorkingSetUpdater implements IWorkingSetUpdater, IElementChan
 	}
 	
 	private void checkElementExistence(IWorkingSet workingSet) {
-		List elements= new ArrayList(Arrays.asList(workingSet.getElements()));
+		List<IAdaptable> elements = new ArrayList<IAdaptable>(
+				Arrays.asList(workingSet.getElements()));
 		boolean changed= false;
-		for (Iterator iter= elements.iterator(); iter.hasNext();) {
-			IAdaptable element= (IAdaptable)iter.next();
+		for (Iterator<IAdaptable> iter = elements.iterator(); iter.hasNext();) {
+			IAdaptable element = iter.next();
 			boolean remove= false;
 			if (element instanceof IModelElement) {
 				IModelElement jElement= (IModelElement)element;
@@ -234,7 +238,8 @@ public class ScriptWorkingSetUpdater implements IWorkingSetUpdater, IElementChan
 			}
 		}
 		if (changed) {
-			workingSet.setElements((IAdaptable[])elements.toArray(new IAdaptable[elements.size()]));
+			workingSet.setElements(
+					elements.toArray(new IAdaptable[elements.size()]));
 		}
 	}
 }

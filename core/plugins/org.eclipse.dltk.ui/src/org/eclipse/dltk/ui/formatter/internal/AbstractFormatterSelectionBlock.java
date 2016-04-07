@@ -1,5 +1,5 @@
 /******************************************************************************* 
- * Copyright (c) 2008 xored software, Inc.  
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  * 
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License v1.0 
@@ -97,7 +97,7 @@ public abstract class AbstractFormatterSelectionBlock extends
 			IWorkbenchPreferenceContainer container) {
 		super(context, project, collectPreferenceKeys(TEMP_LIST, natureId,
 				formatterKey), container);
-		factories = (IScriptFormatterFactory[]) TEMP_LIST
+		factories = TEMP_LIST
 				.toArray(new IScriptFormatterFactory[TEMP_LIST.size()]);
 		TEMP_LIST = new ArrayList();
 	}
@@ -722,6 +722,6 @@ public abstract class AbstractFormatterSelectionBlock extends
 	private Map<IScriptFormatterFactory, IProfileManager> profileByFactory = new HashMap<IScriptFormatterFactory, IProfileManager>();
 	protected SourceViewer fPreviewViewer;
 
-	private static List TEMP_LIST = new ArrayList();
+	private static List<IScriptFormatterFactory> TEMP_LIST = new ArrayList<IScriptFormatterFactory>();
 
 }

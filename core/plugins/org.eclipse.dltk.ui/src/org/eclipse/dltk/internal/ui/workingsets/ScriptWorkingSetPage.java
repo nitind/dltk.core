@@ -240,11 +240,12 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 	 */
 	public void finish() {
 		String workingSetName= fWorkingSetName.getText();
-		ArrayList elements= new ArrayList(10);
+		ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(10);
 		findCheckedElements(elements, fTree.getInput());
 		if (fWorkingSet == null) {
 			IWorkingSetManager workingSetManager= PlatformUI.getWorkbench().getWorkingSetManager();
-			fWorkingSet= workingSetManager.createWorkingSet(workingSetName, (IAdaptable[])elements.toArray(new IAdaptable[elements.size()]));
+			fWorkingSet = workingSetManager.createWorkingSet(workingSetName,
+					elements.toArray(new IAdaptable[elements.size()]));
 		} else {
 			// Add inaccessible resources
 			IAdaptable[] oldItems= fWorkingSet.getElements();
@@ -266,7 +267,8 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 				}
 			}
 			fWorkingSet.setName(workingSetName);
-			fWorkingSet.setElements((IAdaptable[]) elements.toArray(new IAdaptable[elements.size()]));
+			fWorkingSet.setElements(
+					elements.toArray(new IAdaptable[elements.size()]));
 		}
 	}
 

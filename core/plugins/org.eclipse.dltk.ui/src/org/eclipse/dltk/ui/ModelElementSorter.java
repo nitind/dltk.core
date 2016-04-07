@@ -189,11 +189,10 @@ public class ModelElementSorter extends ViewerSorter implements
 					.getCompareProviders(toolkit1);
 			IModelCompareProvider[] tk2 = UIModelProviderManager
 					.getCompareProviders(toolkit1);
-			Set result = new HashSet();
+			Set<IModelCompareProvider> result = new HashSet<IModelCompareProvider>();
 			result.addAll(Arrays.asList(tk1));
 			result.addAll(Arrays.asList(tk2));
-			return (IModelCompareProvider[]) result
-					.toArray(new IModelCompareProvider[result.size()]);
+			return result.toArray(new IModelCompareProvider[result.size()]);
 		} else {
 			return UIModelProviderManager.getCompareProviders(toolkit1);
 		}

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.refactoring.reorg;
 
@@ -24,9 +23,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.internal.core.ExternalScriptFolder;
@@ -85,7 +84,7 @@ public class PasteAction extends SelectionDispatchAction{
 	private Paster[] createEnabledPasters(TransferData[] availableDataTypes) throws ModelException {
 		Paster paster;
 		Shell shell = getShell();
-		List result= new ArrayList(2);
+		List<Paster> result = new ArrayList<Paster>(2);
 		paster= new ProjectPaster(shell, fClipboard);
 		if (paster.canEnable(availableDataTypes)) 
 			result.add(paster);
@@ -109,7 +108,7 @@ public class PasteAction extends SelectionDispatchAction{
 //		paster= new TextPaster(shell, fClipboard);
 //		if (paster.canEnable(availableDataTypes))
 //			result.add(paster);
-		return (Paster[]) result.toArray(new Paster[result.size()]);
+		return result.toArray(new Paster[result.size()]);
 	}
 
 	private static Object getContents(final Clipboard clipboard, final Transfer transfer, Shell shell) {
@@ -443,7 +442,8 @@ public class PasteAction extends SelectionDispatchAction{
 		}
 		public void paste(IModelElement[] selectedScriptElements, IResource[] selectedResources, IWorkingSet[] selectedWorkingSets, TransferData[] availableTypes) throws ModelException, InterruptedException, InvocationTargetException {
 			IWorkingSet workingSet= selectedWorkingSets[0];
-			Set elements= new HashSet(Arrays.asList(workingSet.getElements()));
+			Set<IAdaptable> elements = new HashSet<IAdaptable>(
+					Arrays.asList(workingSet.getElements()));
 			IModelElement[] modelElements= getClipboardScriptElements(availableTypes);
 			if (modelElements != null) {
 				for (int i= 0; i < modelElements.length; i++) {
@@ -467,7 +467,8 @@ public class PasteAction extends SelectionDispatchAction{
 						elements.add(element);
 				}
 			}
-			workingSet.setElements((IAdaptable[])elements.toArray(new IAdaptable[elements.size()]));
+			workingSet.setElements(
+					elements.toArray(new IAdaptable[elements.size()]));
 		}
 		public boolean canEnable(TransferData[] availableTypes) throws ModelException {
 			return isAvailable(ResourceTransfer.getInstance(), availableTypes) ||

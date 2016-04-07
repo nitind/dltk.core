@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.refactoring.reorg;
 
@@ -29,10 +28,10 @@ import org.eclipse.dltk.internal.corext.refactoring.participants.ScriptProcessor
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ICreateTargetQueries;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ICreateTargetQuery;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgDestinationValidator;
+import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgPolicy.IMovePolicy;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgQueries;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ParentChecker;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgUtils;
-import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgPolicy.IMovePolicy;
 import org.eclipse.dltk.internal.corext.refactoring.tagging.ICommentProvider;
 import org.eclipse.dltk.internal.corext.refactoring.tagging.IQualifiedNameUpdating;
 import org.eclipse.dltk.internal.corext.refactoring.tagging.IScriptableRefactoring;
@@ -93,10 +92,10 @@ public final class ScriptMoveProcessor extends MoveProcessor implements IScripta
 	private String[] getAffectedProjectNatures() throws CoreException {
 		String[] jNatures= ScriptProcessors.computeAffectedNaturs(fMovePolicy.getScriptElements());
 		String[] rNatures= ResourceProcessors.computeAffectedNatures(fMovePolicy.getResources());
-		Set result= new HashSet();
+		Set<String> result = new HashSet<String>();
 		result.addAll(Arrays.asList(jNatures));
 		result.addAll(Arrays.asList(rNatures));
-		return (String[])result.toArray(new String[result.size()]);
+		return result.toArray(new String[result.size()]);
 	}
 
 	public boolean wasCanceled() {

@@ -207,9 +207,10 @@ public class BuildpathModifier {
 			if (DLTKLanguageManager.hasScriptNature(project.getProject())) {
 				// IPath outputLocation= project.getOutputLocation();
 				// IPath projPath= project.getProject().getFullPath();
-				List existingEntries = getExistingEntries(project);
+				List<BPListElement> existingEntries = getExistingEntries(
+						project);
 
-				List newEntries = new ArrayList();
+				List<BPListElement> newEntries = new ArrayList<BPListElement>();
 				for (int i = 0; i < elements.size(); i++) {
 					Object element = elements.get(i);
 					BPListElement entry;
@@ -224,9 +225,9 @@ public class BuildpathModifier {
 
 				Set modifiedSourceEntries = new HashSet();
 				BuildPathBasePage.fixNestingConflicts(
-						(BPListElement[]) newEntries
+						newEntries
 								.toArray(new BPListElement[newEntries.size()]),
-						(BPListElement[]) existingEntries
+						existingEntries
 								.toArray(new BPListElement[existingEntries
 										.size()]), modifiedSourceEntries);
 
@@ -238,7 +239,7 @@ public class BuildpathModifier {
 
 				List result = new ArrayList();
 				for (int i = 0; i < newEntries.size(); i++) {
-					IBuildpathEntry entry = ((BPListElement) newEntries.get(i))
+					IBuildpathEntry entry = newEntries.get(i)
 							.getBuildpathEntry();
 					IModelElement root;
 					if (entry.getPath().equals(project.getPath()))
@@ -1381,7 +1382,8 @@ public class BuildpathModifier {
 			IPath[] exlusions = (IPath[]) element
 					.getAttribute(BPListElement.EXCLUSION);
 			if (exlusions != null) {
-				List exlusionList = new ArrayList(exlusions.length);
+				List<IPath> exlusionList = new ArrayList<IPath>(
+						exlusions.length);
 				for (int i = 0; i < exlusions.length; i++) {
 					if (!exlusions[i].equals(path)) {
 						exlusionList.add(exlusions[i]);
@@ -1396,7 +1398,8 @@ public class BuildpathModifier {
 			IPath[] inclusion = (IPath[]) element
 					.getAttribute(BPListElement.INCLUSION);
 			if (inclusion != null) {
-				List inclusionList = new ArrayList(inclusion.length);
+				List<IPath> inclusionList = new ArrayList<IPath>(
+						inclusion.length);
 				for (int i = 0; i < inclusion.length; i++) {
 					if (!inclusion[i].equals(path)) {
 						inclusionList.add(inclusion[i]);
@@ -1720,9 +1723,10 @@ public class BuildpathModifier {
 			monitor.beginTask(
 					NewWizardMessages.BuildpathModifier_Monitor_ResetFilters, 3);
 
-			List exclusionList = getFoldersOnBP(element.getPath(), project,
+			List<IPath> exclusionList = getFoldersOnBP(element.getPath(),
+					project,
 					new SubProgressMonitor(monitor, 2));
-			IPath[] exclusions = (IPath[]) exclusionList
+			IPath[] exclusions = exclusionList
 					.toArray(new IPath[exclusionList.size()]);
 
 			entry.setAttribute(BPListElement.INCLUSION, new IPath[0]);
@@ -2045,11 +2049,11 @@ public class BuildpathModifier {
 	 *         and which are on the build path
 	 * @throws ModelException
 	 */
-	private List getFoldersOnBP(IPath path, IScriptProject project,
+	private List<IPath> getFoldersOnBP(IPath path, IScriptProject project,
 			IProgressMonitor monitor) throws ModelException {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
-		List srcFolders = new ArrayList();
+		List<IPath> srcFolders = new ArrayList<IPath>();
 		IBuildpathEntry[] cpEntries = project.getRawBuildpath();
 		for (int i = 0; i < cpEntries.length; i++) {
 			IPath cpPath = cpEntries[i].getPath();

@@ -208,7 +208,7 @@ public class EditTemplateDialog extends StatusDialog {
 
 		String delim = new Document().getLegalLineDelimiters()[0];
 
-		List contexts = new ArrayList();
+		List<String[]> contexts = new ArrayList<String[]>();
 		for (Iterator it = registry.contextTypes(); it.hasNext();) {
 			TemplateContextType type = (TemplateContextType) it.next();
 			if (type.getId().equals("javadoc")) //$NON-NLS-1$
@@ -218,8 +218,7 @@ public class EditTemplateDialog extends StatusDialog {
 				contexts.add(0,
 						new String[] { type.getId(), type.getName(), "" }); //$NON-NLS-1$
 		}
-		fContextTypes = (String[][]) contexts.toArray(new String[contexts
-				.size()][]);
+		fContextTypes = contexts.toArray(new String[contexts.size()][]);
 
 		fValidationStatus = new StatusInfo();
 

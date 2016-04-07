@@ -85,7 +85,9 @@ public class OthersWorkingSetUpdater implements IWorkingSetUpdater {
 			
 			processScriptDelta(new ArrayList(Arrays.asList(fWorkingSet.getElements())), event.getDelta());
 		}
-		private void processScriptDelta(List elements, IModelElementDelta delta) {
+
+		private void processScriptDelta(List<IAdaptable> elements,
+				IModelElementDelta delta) {
 			IModelElement jElement= delta.getElement();
 			int type= jElement.getElementType();
 			if (type == IModelElement.SCRIPT_PROJECT) {
@@ -95,12 +97,14 @@ public class OthersWorkingSetUpdater implements IWorkingSetUpdater {
 				if (kind == IModelElementDelta.CHANGED) {
 					if (index != -1 && (flags & IModelElementDelta.F_CLOSED) != 0) {
 						elements.set(index, ((IScriptProject)jElement).getProject());
-						fWorkingSet.setElements((IAdaptable[])elements.toArray(new IAdaptable[elements.size()]));
+						fWorkingSet.setElements(elements
+								.toArray(new IAdaptable[elements.size()]));
 					} else if ((flags & IModelElementDelta.F_OPENED) != 0) {
 						index= elements.indexOf(((IScriptProject)jElement).getProject());
 						if (index != -1) {
 							elements.set(index, jElement);
-							fWorkingSet.setElements((IAdaptable[])elements.toArray(new IAdaptable[elements.size()]));
+							fWorkingSet.setElements(elements
+									.toArray(new IAdaptable[elements.size()]));
 						}
 					}
 				}
@@ -168,7 +172,7 @@ public class OthersWorkingSetUpdater implements IWorkingSetUpdater {
 		
 		IWorkingSet[] activeWorkingSets= fWorkingSetModel.getActiveWorkingSets();
 
-		List result= new ArrayList();
+		List result = new ArrayList();
 		Set projects= new HashSet();
 		for (int i= 0; i < activeWorkingSets.length; i++) {
 			if (activeWorkingSets[i] == fWorkingSet) continue;

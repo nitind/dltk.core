@@ -125,7 +125,7 @@ public class BuildPathContainer extends ProjectFragmentContainer {
 
 	@Override
 	public IAdaptable[] getChildren() {
-		List list= new ArrayList();
+		List<IAdaptable> list = new ArrayList<IAdaptable>();
 		IProjectFragment[] roots= getProjectFragments();
 		for (int i= 0; i < roots.length; i++) {
 			list.add(roots[i]);
@@ -148,7 +148,7 @@ public class BuildPathContainer extends ProjectFragmentContainer {
 				}
 			}
 		}
-		return (IAdaptable[]) list.toArray(new IAdaptable[list.size()]);
+		return list.toArray(new IAdaptable[list.size()]);
 	}
 
 	@Override

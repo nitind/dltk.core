@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.scriptview;
 
@@ -212,7 +211,7 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 		if (index != -1) {
 			if (getCurrentLocation() == LOCATION_AFTER)
 				index++;
-			List result= new ArrayList(activeWorkingSets.size());
+			List result = new ArrayList(activeWorkingSets.size());
 			List selected= new ArrayList(Arrays.asList(fElementsToAdds));
 			for (int i= 0; i < activeWorkingSets.size(); i++) {
 				if (i == index) {
@@ -233,7 +232,8 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 		// only move if target isn't the other working set. If this is the case
 		// the move will happenn automatically by refreshing the other working set
 		if (!isOthersWorkingSet(fWorkingSet)) {
-			List elements= new ArrayList(Arrays.asList(fWorkingSet.getElements()));
+			List elements = new ArrayList(
+					Arrays.asList(fWorkingSet.getElements()));
 			elements.addAll(Arrays.asList(fElementsToAdds));
 			fWorkingSet.setElements((IAdaptable[])elements.toArray(new IAdaptable[elements.size()]));
 		}
@@ -243,9 +243,11 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 			for (Iterator iter= workingSets.keySet().iterator(); iter.hasNext();) {
 				IWorkingSet ws= (IWorkingSet)iter.next();
 				List toRemove= (List)workingSets.get(ws);
-				List currentElements= new ArrayList(Arrays.asList(ws.getElements()));
+				List<IAdaptable> currentElements = new ArrayList<IAdaptable>(
+						Arrays.asList(ws.getElements()));
 				currentElements.removeAll(toRemove);
-				ws.setElements((IAdaptable[])currentElements.toArray(new IAdaptable[currentElements.size()]));
+				ws.setElements(currentElements
+						.toArray(new IAdaptable[currentElements.size()]));
 			}
 		}
 	}

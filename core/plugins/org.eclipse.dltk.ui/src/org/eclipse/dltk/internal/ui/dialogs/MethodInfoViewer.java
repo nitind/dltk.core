@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.dialogs;
 
@@ -99,19 +98,19 @@ public class MethodInfoViewer {
 		private Set fHistory;
 
 		private MethodInfoFilter fFilter;
-		private List fResult;
+		private List<MethodNameMatch> fResult;
 		private MethodFilter fMethodFilter;
 
 		public SearchRequestor(MethodInfoFilter filter,
 				MethodFilter MethodFilter) {
 			super();
-			fResult = new ArrayList(2048);
+			fResult = new ArrayList<MethodNameMatch>(2048);
 			fFilter = filter;
 			fMethodFilter = MethodFilter;
 		}
 
 		public MethodNameMatch[] getResult() {
-			return (MethodNameMatch[]) fResult
+			return fResult
 					.toArray(new MethodNameMatch[fResult.size()]);
 		}
 
@@ -240,17 +239,17 @@ public class MethodInfoViewer {
 		private String[] fVMNames;
 
 		public MethodInfoLabelProvider() {
-			List locations = new ArrayList();
-			List labels = new ArrayList();
+			List<String> locations = new ArrayList<String>();
+			List<String> labels = new ArrayList<String>();
 			IInterpreterInstallType[] installs = ScriptRuntime
 					.getInterpreterInstallTypes(fToolkit.getCoreToolkit()
 							.getNatureId());
 			for (int i = 0; i < installs.length; i++) {
 				processVMInstallType(installs[i], locations, labels);
 			}
-			fInstallLocations = (String[]) locations
+			fInstallLocations = locations
 					.toArray(new String[locations.size()]);
-			fVMNames = (String[]) labels.toArray(new String[labels.size()]);
+			fVMNames = labels.toArray(new String[labels.size()]);
 
 		}
 
@@ -799,7 +798,7 @@ public class MethodInfoViewer {
 
 		protected MethodNameMatch[] getSearchResult(Set filteredHistory,
 				ProgressMonitor monitor) throws CoreException {
-			List result = new ArrayList(2048);
+			List<MethodNameMatch> result = new ArrayList<MethodNameMatch>(2048);
 			for (int i = 0; i < fLastResult.length; i++) {
 				MethodNameMatch type = fLastResult[i];
 				if (filteredHistory.contains(type))
@@ -808,7 +807,7 @@ public class MethodInfoViewer {
 					result.add(type);
 			}
 			// we have to sort if the filter is a camel case filter.
-			MethodNameMatch[] types = (MethodNameMatch[]) result
+			MethodNameMatch[] types = result
 					.toArray(new MethodNameMatch[result.size()]);
 			if (fFilter.isCamelCasePattern()) {
 				Arrays.sort(types, new MethodInfoComparator(fLabelProvider,
@@ -1117,15 +1116,15 @@ public class MethodInfoViewer {
 
 	public MethodNameMatch[] getSelection() {
 		TableItem[] items = fTable.getSelection();
-		List result = new ArrayList(items.length);
+		List<MethodNameMatch> result = new ArrayList<MethodNameMatch>(
+				items.length);
 		for (int i = 0; i < items.length; i++) {
 			Object data = items[i].getData();
 			if (data instanceof MethodNameMatch) {
-				result.add(data);
+				result.add((MethodNameMatch) data);
 			}
 		}
-		return (MethodNameMatch[]) result.toArray(new MethodNameMatch[result
-				.size()]);
+		return result.toArray(new MethodNameMatch[result.size()]);
 	}
 
 	public void stop() {

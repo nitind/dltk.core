@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ui.actions;
 
@@ -16,12 +15,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import org.eclipse.dltk.core.IScriptModel;
 import org.eclipse.dltk.internal.ui.filters.CustomFiltersDialog;
@@ -243,7 +242,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	 *
 	 */
 	public String[] internalGetEnabledFilterIds() {
-		Set enabledFilterIds= new HashSet(fEnabledFilterIds.size());
+		Set<String> enabledFilterIds = new HashSet<String>(
+				fEnabledFilterIds.size());
 		Iterator iter= fEnabledFilterIds.entrySet().iterator();
 		while (iter.hasNext()) {
 			Map.Entry entry= (Map.Entry)iter.next();
@@ -252,7 +252,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 			if (isEnabled)
 				enabledFilterIds.add(id);
 		}
-		return (String[])enabledFilterIds.toArray(new String[enabledFilterIds.size()]);
+		return enabledFilterIds.toArray(new String[enabledFilterIds.size()]);
 	}
 
 	/**
@@ -267,7 +267,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	 */
 	public String[] removeFiltersFor(Object parent, Object element, IContentProvider contentProvider) {
 	    String[] enabledFilters= internalGetEnabledFilterIds();
-	    Set newFilters= new HashSet();
+		Set<String> newFilters = new HashSet<String>();
 	    for (int i= 0; i < enabledFilters.length; i++) {
             String filterName= enabledFilters[i];
             ViewerFilter filter= (ViewerFilter) fInstalledBuiltInFilters.get(filterName);
@@ -278,7 +278,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
         }
 	    if (newFilters.size() == enabledFilters.length)
 	        return new String[0];
-	    return (String[])newFilters.toArray(new String[newFilters.size()]);
+		return newFilters.toArray(new String[newFilters.size()]);
 	}
 	
 	/**
@@ -411,8 +411,10 @@ public class CustomFiltersActionGroup extends ActionGroup {
 			return;
 		}
 		
-		SortedSet sortedFilters= new TreeSet(fLRUFilterIdsStack);
-		String[] recentlyChangedFilterIds= (String[])sortedFilters.toArray(new String[sortedFilters.size()]);
+		SortedSet<String> sortedFilters = new TreeSet<String>(
+				fLRUFilterIdsStack);
+		String[] recentlyChangedFilterIds = sortedFilters
+				.toArray(new String[sortedFilters.size()]);
 		
 		fFilterIdsUsedInLastViewMenu= new String[recentlyChangedFilterIds.length];
 		for (int i= 0; i < recentlyChangedFilterIds.length; i++) {
@@ -514,7 +516,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	}
 
 	private String[] getUserAndBuiltInPatterns() {
-		List patterns= new ArrayList(fUserDefinedPatterns.length);
+		List<String> patterns = new ArrayList<String>(
+				fUserDefinedPatterns.length);
 		if (areUserDefinedPatternsEnabled())
 			patterns.addAll(Arrays.asList(fUserDefinedPatterns));
 		FilterDescriptor[] filterDescs= getCachedFilterDescriptors();
@@ -525,7 +528,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 			if (isEnabled != null && isPatternFilter && ((Boolean)isEnabled).booleanValue())
 				patterns.add(filterDescs[i].getPattern());
 		}
-		return (String[])patterns.toArray(new String[patterns.size()]);
+		return patterns.toArray(new String[patterns.size()]);
 	}
 
 	// ---------- view kind/defaults persistency ----------
@@ -717,7 +720,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	private void cleanUpPatternDuplicates() {
 		if (!areUserDefinedPatternsEnabled())
 			return;
-		List userDefinedPatterns= new ArrayList(Arrays.asList(fUserDefinedPatterns));
+		List<String> userDefinedPatterns = new ArrayList<String>(
+				Arrays.asList(fUserDefinedPatterns));
 		FilterDescriptor[] filters= getCachedFilterDescriptors();
 
 		for (int i= 0; i < filters.length; i++) {
@@ -731,7 +735,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 				}
 			}
 		}
-		fUserDefinedPatterns= (String[])userDefinedPatterns.toArray(new String[userDefinedPatterns.size()]);
+		fUserDefinedPatterns = userDefinedPatterns
+				.toArray(new String[userDefinedPatterns.size()]);
 		setUserDefinedPatternsEnabled(fUserDefinedPatternsEnabled && fUserDefinedPatterns.length > 0);
 	}
 

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.refactoring.reorg;
 
@@ -166,7 +165,8 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 
 		public void copyToClipboard() throws CoreException {
 			// Set<String> fileNames
-			Set fileNames = new HashSet(fResources.length
+			Set<String> fileNames = new HashSet<String>(
+					fResources.length
 					+ fScriptElements.length);
 			StringBuffer namesBuf = new StringBuffer();
 			processResources(fileNames, namesBuf);
@@ -192,7 +192,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 
 			// TypedSource[] typedSources=
 			// TypedSource.createTypedSources(modelElementsForClipboard);
-			String[] fileNameArray = (String[]) fileNames
+			String[] fileNameArray = fileNames
 					.toArray(new String[fileNames.size()]);
 			copyToClipboard(resourcesForClipboard, fileNameArray, namesBuf
 					.toString(), modelElementsForClipboard/* , typedSources */, 0);
@@ -291,7 +291,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 																 * TypedSource[]
 																 * typedSources
 																 */) {
-			List result = new ArrayList(4);
+			List<Transfer> result = new ArrayList<Transfer>(4);
 			if (resources.length != 0)
 				result.add(ResourceTransfer.getInstance());
 			if (modelElements.length != 0)
@@ -301,7 +301,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 			// if (typedSources.length != 0)
 			// result.add(TypedSourceTransfer.getInstance());
 			result.add(TextTransfer.getInstance());
-			return (Transfer[]) result.toArray(new Transfer[result.size()]);
+			return result.toArray(new Transfer[result.size()]);
 		}
 
 		private static Object[] createDataArray(IResource[] resources,

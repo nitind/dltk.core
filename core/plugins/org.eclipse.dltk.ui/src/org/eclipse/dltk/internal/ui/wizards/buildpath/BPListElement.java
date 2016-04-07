@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath;
 
@@ -184,7 +183,7 @@ public class BPListElement {
 
 	private IBuildpathAttribute[] getBuildpathAttributes() {
 
-		ArrayList res = new ArrayList();
+		ArrayList<IBuildpathAttribute> res = new ArrayList<IBuildpathAttribute>();
 		for (int i = 0; i < fChildren.size(); i++) {
 			Object curr = fChildren.get(i);
 			if (curr instanceof BPListElementAttribute) {
@@ -195,8 +194,7 @@ public class BPListElement {
 			}
 		}
 		res.addAll(this.fExtraAttributes);
-		return (IBuildpathAttribute[]) res.toArray(new IBuildpathAttribute[res
-				.size()]);
+		return res.toArray(new IBuildpathAttribute[res.size()]);
 	}
 
 	private IBuildpathEntry newBuildpathEntry() {
@@ -358,10 +356,9 @@ public class BPListElement {
 				.addTrailingSeparator();
 		if (ScriptModelUtil.isExcludedPath(pathToExclude, exclusionFilters)) {
 
-			List l = new ArrayList(Arrays.asList(exclusionFilters));
+			List<IPath> l = new ArrayList<IPath>(Arrays.asList(exclusionFilters));
 			l.remove(pathToExclude);
-			IPath[] newExclusionFilters = (IPath[]) l.toArray(new IPath[l
-					.size()]);
+			IPath[] newExclusionFilters = l.toArray(new IPath[l.size()]);
 			setAttribute(key, newExclusionFilters);
 			return true;
 		}
@@ -775,10 +772,11 @@ public class BPListElement {
 		fLinkTarget = linkTarget;
 	}
 
-	public static void insert(BPListElement element, List cpList) {
+	public static void insert(BPListElement element,
+			List<BPListElement> cpList) {
 
 		int length = cpList.size();
-		BPListElement[] elements = (BPListElement[]) cpList
+		BPListElement[] elements = cpList
 				.toArray(new BPListElement[length]);
 		int i = 0;
 		while (i < length

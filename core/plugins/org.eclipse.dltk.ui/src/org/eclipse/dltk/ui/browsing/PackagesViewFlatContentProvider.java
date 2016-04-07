@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -85,7 +85,7 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements
 	 * Weeds out packageFragments from external jars
 	 */
 	private IScriptFolder[] getPackageFragments(IScriptFolder[] iPackageFragments) {
-		List list= new ArrayList();
+		List<IScriptFolder> list = new ArrayList<IScriptFolder>();
 		for (int i= 0; i < iPackageFragments.length; i++) {
 			IScriptFolder fragment= iPackageFragments[i];
 			IModelElement el= fragment.getParent();
@@ -96,7 +96,7 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements
 			}
 			list.add(fragment);
 		}
-		return (IScriptFolder[]) list.toArray(new IScriptFolder[list.size()]);
+		return list.toArray(new IScriptFolder[list.size()]);
 	}
 
 	/*

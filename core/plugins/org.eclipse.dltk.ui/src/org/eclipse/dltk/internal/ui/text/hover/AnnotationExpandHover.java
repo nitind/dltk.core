@@ -125,7 +125,7 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 		if (model == null)
 			return null;
 
-		List exact= new ArrayList();
+		List<Annotation> exact = new ArrayList<Annotation>();
 		HashMap messagesAtPosition= new HashMap();
 
 		Iterator e= model.getAnnotationIterator();
@@ -152,7 +152,7 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 			setLastRulerMouseLocation(viewer, line);
 
 		AnnotationHoverInput input= new AnnotationHoverInput();
-		input.fAnnotations= (Annotation[]) exact.toArray(new Annotation[0]);
+		input.fAnnotations = exact.toArray(new Annotation[0]);
 		input.fViewer= viewer;
 		input.fRulerInfo= fCompositeRuler;
 		input.fAnnotationListener= fgListener;

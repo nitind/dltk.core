@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ public class LibraryContainer extends ProjectFragmentContainer {
 		super(project);
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof LibraryContainer) {
 			LibraryContainer other = (LibraryContainer) obj;
@@ -36,18 +37,22 @@ public class LibraryContainer extends ProjectFragmentContainer {
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		return getScriptProject().hashCode();
 	}
 
+	@Override
 	public IAdaptable[] getChildren() {
 		return getProjectFragments();
 	}
 
+	@Override
 	public ImageDescriptor getImageDescriptor() {
 		return DLTKPluginImages.DESC_OBJS_LIBRARY;
 	}
 
+	@Override
 	public String getLabel() {
 		return ScriptMessages.LibraryContainer_libraries;
 	}
@@ -57,8 +62,9 @@ public class LibraryContainer extends ProjectFragmentContainer {
 	 * 
 	 * @see org.eclipse.jdt.internal.ui.packageview.PackageFragmentRootContainer#getPackageFragmentRoots()
 	 */
+	@Override
 	public IProjectFragment[] getProjectFragments() {
-		List list = new ArrayList();
+		List<IProjectFragment> list = new ArrayList<IProjectFragment>();
 		try {
 			IProjectFragment[] roots = getScriptProject().getProjectFragments();
 			for (int i = 0; i < roots.length; i++) {
@@ -75,7 +81,6 @@ public class LibraryContainer extends ProjectFragmentContainer {
 		} catch (ModelException e) {
 			// fall through
 		}
-		return (IProjectFragment[]) list.toArray(new IProjectFragment[list
-				.size()]);
+		return list.toArray(new IProjectFragment[list.size()]);
 	}
 }

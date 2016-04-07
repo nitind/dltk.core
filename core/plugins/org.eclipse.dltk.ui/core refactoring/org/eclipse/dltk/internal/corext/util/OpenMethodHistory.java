@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.util;
 
@@ -287,7 +286,7 @@ public class OpenMethodHistory extends History {
 	public synchronized MethodNameMatch[] getFilteredTypeInfos(
 			MethodInfoFilter filter) {
 		Collection values = getValues();
-		List result = new ArrayList();
+		List<MethodNameMatch> result = new ArrayList<MethodNameMatch>();
 		for (Iterator iter = values.iterator(); iter.hasNext();) {
 			MethodNameMatch method = (MethodNameMatch) iter.next();
 			if ((filter == null || filter.matchesHistoryElement(method))
@@ -295,8 +294,7 @@ public class OpenMethodHistory extends History {
 				result.add(method);
 		}
 		Collections.reverse(result);
-		return (MethodNameMatch[]) result.toArray(new MethodNameMatch[result
-				.size()]);
+		return result.toArray(new MethodNameMatch[result.size()]);
 
 	}
 

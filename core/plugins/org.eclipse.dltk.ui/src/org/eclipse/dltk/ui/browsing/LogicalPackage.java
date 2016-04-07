@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,13 +26,13 @@ import org.eclipse.dltk.core.ModelException;
  */
 public class LogicalPackage extends PlatformObject {
 
-	private Set fPackages;
+	private Set<IScriptFolder> fPackages;
 	private String fName;
 	private IScriptProject fScriptProject;
 
 	public LogicalPackage(IScriptFolder fragment){
 		Assert.isNotNull(fragment);
-		fPackages= new HashSet();
+		fPackages = new HashSet<IScriptFolder>();
 		fScriptProject= fragment.getScriptProject();
 		Assert.isNotNull(fScriptProject);
 		add(fragment);
@@ -44,7 +44,7 @@ public class LogicalPackage extends PlatformObject {
 	}
 
 	public IScriptFolder[] getScriptFolders(){
-		return (IScriptFolder[]) fPackages.toArray(new IScriptFolder[fPackages.size()]);
+		return fPackages.toArray(new IScriptFolder[fPackages.size()]);
 	}
 
 	public void add(IScriptFolder fragment){
@@ -89,8 +89,9 @@ public class LogicalPackage extends PlatformObject {
 	}
 	
 	public boolean hasSubpackages() throws ModelException {
-		for (Iterator iter= fPackages.iterator(); iter.hasNext();) {
-			IScriptFolder pack= (IScriptFolder) iter.next();
+		for (Iterator<IScriptFolder> iter = fPackages.iterator(); iter
+				.hasNext();) {
+			IScriptFolder pack = iter.next();
 			if (pack.hasSubfolders()) {
 				return true;
 			}

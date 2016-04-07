@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath;
 
@@ -303,10 +302,12 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 		fLibrariesList.postSetSelection(new StructuredSelection(element));
 	}
 
-	private void askForAddingExclusionPatternsDialog(List newEntries) {
+	private void askForAddingExclusionPatternsDialog(
+			List<BPListElement> newEntries) {
 		HashSet modified = new HashSet();
 		List existing = fBuildPathList.getElements();
-		fixNestingConflicts((BPListElement[]) newEntries
+		fixNestingConflicts(
+				newEntries
 				.toArray(new BPListElement[newEntries.size()]),
 				(BPListElement[]) existing.toArray(new BPListElement[existing
 						.size()]), modified);
@@ -673,15 +674,14 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 			if (selected != null) {
 				// IWorkspaceRoot root =
 				// fCurrJProject.getProject().getWorkspace().getRoot();
-				ArrayList res = new ArrayList();
+				ArrayList<BPListElement> res = new ArrayList<BPListElement>();
 				for (int i = 0; i < selected.length; i++) {
 					// IPath curr = selected[i];
 					res.add(new BPListElement(fCurrJProject,
 							IBuildpathEntry.BPE_LIBRARY, selected[i], null,
 							true));
 				}
-				return (BPListElement[]) res.toArray(new BPListElement[res
-						.size()]);
+				return res.toArray(new BPListElement[res.size()]);
 			}
 		} else {
 			// disabled
@@ -697,7 +697,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 			if (selected != null) {
 				IWorkspaceRoot root = fCurrJProject.getProject().getWorkspace()
 						.getRoot();
-				ArrayList res = new ArrayList();
+				ArrayList<BPListElement> res = new ArrayList<BPListElement>();
 				for (int i = 0; i < selected.length; i++) {
 					IPath curr = selected[i];
 					IResource resource = root.findMember(curr);
@@ -705,8 +705,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 						res.add(newBPLibraryElement(resource, false));
 					}
 				}
-				return (BPListElement[]) res.toArray(new BPListElement[res
-						.size()]);
+				return res.toArray(new BPListElement[res.size()]);
 			}
 		} else {
 			// disabled
@@ -722,7 +721,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 					getShell(), fCurrJProject.getPath(),
 					getUsedArchiveFiles(existing));
 			if (selected != null) {
-				ArrayList res = new ArrayList();
+				ArrayList<BPListElement> res = new ArrayList<BPListElement>();
 				for (int i = 0; i < selected.length; i++) {
 					IPath curr = selected[i];
 					IResource resource = root.findMember(curr);
@@ -730,8 +729,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 						res.add(newBPLibraryElement(resource, false));
 					}
 				}
-				return (BPListElement[]) res.toArray(new BPListElement[res
-						.size()]);
+				return res.toArray(new BPListElement[res.size()]);
 			}
 		} else {
 			IPath configured = BuildpathDialogAccess.configureArchiveEntry(
@@ -749,7 +747,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 	}
 
 	private IPath[] getUsedContainers(BPListElement existing) {
-		ArrayList res = new ArrayList();
+		ArrayList<IPath> res = new ArrayList<IPath>();
 		List cplist = fLibrariesList.getElements();
 		for (int i = 0; i < cplist.size(); i++) {
 			BPListElement elem = (BPListElement) cplist.get(i);
@@ -762,11 +760,11 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 				}
 			}
 		}
-		return (IPath[]) res.toArray(new IPath[res.size()]);
+		return res.toArray(new IPath[res.size()]);
 	}
 
 	private IPath[] getUsedArchiveFiles(BPListElement existing) {
-		List res = new ArrayList();
+		List<IPath> res = new ArrayList<IPath>();
 		List cplist = fLibrariesList.getElements();
 		for (int i = 0; i < cplist.size(); i++) {
 			BPListElement elem = (BPListElement) cplist.get(i);
@@ -778,7 +776,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 				}
 			}
 		}
-		return (IPath[]) res.toArray(new IPath[res.size()]);
+		return res.toArray(new IPath[res.size()]);
 	}
 
 	private BPListElement newBPLibraryElement(IResource res, boolean external) {
@@ -792,14 +790,13 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 			IPath[] selected = BuildpathDialogAccess
 					.chooseExternalArchiveEntries(getShell(), environment);
 			if (selected != null) {
-				ArrayList res = new ArrayList();
+				ArrayList<BPListElement> res = new ArrayList<BPListElement>();
 				for (int i = 0; i < selected.length; i++) {
 					res.add(new BPListElement(fCurrJProject,
 							IBuildpathEntry.BPE_LIBRARY, selected[i], null,
 							true));
 				}
-				return (BPListElement[]) res.toArray(new BPListElement[res
-						.size()]);
+				return res.toArray(new BPListElement[res.size()]);
 			}
 		} else {
 			IPath configured = BuildpathDialogAccess
