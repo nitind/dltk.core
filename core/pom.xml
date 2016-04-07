@@ -20,6 +20,8 @@
 		<module>features/org.eclipse.dltk.core.tests</module>
 		<module>features/org.eclipse.dltk.core.index-feature</module>
 		<module>features/org.eclipse.dltk.core.index.sdk</module>
+		<module>features/org.eclipse.dltk.core.index.lucene-feature</module>
+		<module>features/org.eclipse.dltk.core.index.lucene.sdk</module>
 		<module>plugins/org.eclipse.dltk</module>
 		<module>plugins/org.eclipse.dltk.annotations</module>
 		<module>plugins/org.eclipse.dltk.console</module>
@@ -30,6 +32,7 @@
 		<module>plugins/org.eclipse.dltk.core.index</module>
 		<module>plugins/org.eclipse.dltk.core.index.sql</module>
 		<module>plugins/org.eclipse.dltk.core.index.sql.h2</module>
+		<module>plugins/org.eclipse.dltk.core.index.lucene</module>
 		<module>plugins/org.eclipse.dltk.core.tools.ui</module>
 		<module>plugins/org.eclipse.dltk.debug</module>
 		<module>plugins/org.eclipse.dltk.debug.ui</module>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.dltk.core.indexer">
+      <indexer
+            class="org.eclipse.dltk.internal.core.index.lucene.LuceneIndexer"
+            id="org.eclipse.dltk.core.index.lucene.indexer">
+      </indexer>
+   </extension>
+</plugin>
