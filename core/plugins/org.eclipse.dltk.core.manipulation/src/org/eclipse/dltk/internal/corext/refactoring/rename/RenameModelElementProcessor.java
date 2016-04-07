@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2009 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,7 +96,7 @@ public abstract class RenameModelElementProcessor extends ScriptRenameProcessor 
 				if (element.getElementType() == IModelElement.SOURCE_MODULE) {
 					fCu = (ISourceModule) element;
 				} else if (element.getElementType() == IModelElement.LOCAL_VARIABLE) {
-					fModelElement= (ILocalVariable) element;
+					fModelElement= element;
 					fCu = (ISourceModule) fModelElement.getAncestor(IModelElement.SOURCE_MODULE);
 					if (fCu == null)
 						return ScriptableRefactoring.createInputFatalStatus(element, getProcessorName(), IScriptRefactorings.RENAME_LOCAL_VARIABLE);
@@ -128,7 +128,7 @@ public abstract class RenameModelElementProcessor extends ScriptRenameProcessor 
 							for (int index= 0; index < elements.length; index++) {
 								final IModelElement element= elements[index];
 								if (element instanceof ILocalVariable)
-									fModelElement= (ILocalVariable) element;
+									fModelElement= element;
 							}
 						}
 						if (fModelElement == null)

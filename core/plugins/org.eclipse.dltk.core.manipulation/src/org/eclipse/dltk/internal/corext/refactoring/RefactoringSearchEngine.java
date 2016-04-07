@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -79,7 +79,7 @@ public class RefactoringSearchEngine {
 			}
 		}
 		addStatusErrors(status, requestor.hasPotentialMatches, hasNonCuMatches);
-		return (ISourceModule[]) result.toArray(new ISourceModule[result.size()]);
+		return result.toArray(new ISourceModule[result.size()]);
 	}
 
 	public static ISourceModule[] findAffectedCompilationUnits(SearchPattern pattern,
@@ -178,7 +178,7 @@ public class RefactoringSearchEngine {
 		if (pattern == null) // check for bug 90138
 			throw new IllegalArgumentException("Invalid element: " + first.getHandleIdentifier() + "\n" + first.toString()); //$NON-NLS-1$ //$NON-NLS-2$
 		while(iter.hasNext()){
-			IModelElement each= (IModelElement)iter.next();
+			IModelElement each= iter.next();
 			SearchPattern nextPattern= SearchPattern.createPattern(each, limitTo, SearchUtils.GENERICS_AGNOSTIC_MATCH_RULE, toolkit);
 			if (nextPattern == null) // check for bug 90138
 				throw new IllegalArgumentException("Invalid element: " + each.getHandleIdentifier() + "\n" + each.toString()); //$NON-NLS-1$ //$NON-NLS-2$

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.participants;
 
@@ -20,19 +19,19 @@ public class ResourceProcessors {
 	
 	public static String[] computeAffectedNatures(IResource resource) throws CoreException {
 		IProject project= resource.getProject();
-		Set result= new HashSet();
+		Set<String> result= new HashSet<String>();
 		Set visitedProjects= new HashSet();
 		computeNatures(result, visitedProjects, project);
-		return (String[])result.toArray(new String[result.size()]);
+		return result.toArray(new String[result.size()]);
 	}
 	
 	public static String[] computeAffectedNatures(IResource[] resources) throws CoreException {
-		Set result= new HashSet();
+		Set<String> result= new HashSet<String>();
 		Set visitedProjects= new HashSet();
 		for (int i= 0; i < resources.length; i++) {
 			computeNatures(result, visitedProjects, resources[i].getProject());
 		}
-		return (String[])result.toArray(new String[result.size()]);
+		return result.toArray(new String[result.size()]);
 	}
 	
 	private static void computeNatures(Set result, Set visitedProjects, IProject focus) throws CoreException {

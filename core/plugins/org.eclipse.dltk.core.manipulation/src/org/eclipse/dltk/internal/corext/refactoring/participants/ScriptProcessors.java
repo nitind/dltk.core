@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.participants;
 
@@ -34,13 +33,13 @@ public class ScriptProcessors {
 
 	public static String[] computeAffectedNaturs(IModelElement[] elements)
 			throws CoreException {
-		Set result = new HashSet();
+		Set<String> result = new HashSet<String>();
 		for (int i = 0; i < elements.length; i++) {
 			String[] natures = computeAffectedNatures(elements[i]);
 			for (int j = 0; j < natures.length; j++) {
 				result.add(natures[j]);
 			}
 		}
-		return (String[]) result.toArray(new String[result.size()]);
+		return result.toArray(new String[result.size()]);
 	}
 }

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.rename;
 
@@ -169,7 +168,7 @@ public class RenameModifications extends RefactoringModifications {
 	}
 
 	public RefactoringParticipant[] loadParticipants(RefactoringStatus status, RefactoringProcessor owner, String[] natures, SharableParticipants shared) {
-		List result= new ArrayList();
+		List<RefactoringParticipant> result= new ArrayList<RefactoringParticipant>();
 		for (int i= 0; i < fRename.size(); i++) {
 			result.addAll(Arrays.asList(ParticipantManager.loadRenameParticipants(status, 
 				owner, fRename.get(i), 
@@ -178,7 +177,7 @@ public class RenameModifications extends RefactoringModifications {
 				natures, shared)));
 		}
 		result.addAll(Arrays.asList(getResourceModifications().getParticipants(status, owner, natures, shared)));
-		return (RefactoringParticipant[]) result.toArray(new RefactoringParticipant[result.size()]);
+		return result.toArray(new RefactoringParticipant[result.size()]);
 	}
 	
 	private void add(Object element, RefactoringArguments args, IParticipantDescriptorFilter filter) {
@@ -235,14 +234,14 @@ public class RenameModifications extends RefactoringModifications {
 		IModelElement[] allPackages= root.getChildren();
 		if (pack.isRootFolder())
 			return new IScriptFolder[0];
-		ArrayList result= new ArrayList();
+		ArrayList<IScriptFolder> result= new ArrayList<IScriptFolder>();
 		String prefix= pack.getElementName() + IScriptFolder.PACKAGE_DELIMITER;
 		for (int i= 0; i < allPackages.length; i++) {
 			IScriptFolder currentPackage= (IScriptFolder) allPackages[i];
 			if (currentPackage.getElementName().startsWith(prefix))
 				result.add(currentPackage);
 		}
-		return (IScriptFolder[]) result.toArray(new IScriptFolder[result.size()]);
+		return result.toArray(new IScriptFolder[result.size()]);
 	}
 	
 	private IFolder computeTargetFolder(IScriptFolder rootPackage, RenameArguments args, IScriptFolder pack) {

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.reorg;
 
@@ -57,7 +56,7 @@ public abstract class RefactoringModifications {
 	protected IResource[] collectResourcesOfInterest(IScriptFolder source) throws CoreException {
 		IModelElement[] children = source.getChildren();
 		int childOfInterest = IModelElement.SOURCE_MODULE;		
-		ArrayList result = new ArrayList(children.length);
+		ArrayList<IResource> result = new ArrayList<IResource>(children.length);
 		for (int i = 0; i < children.length; i++) {
 			IModelElement child = children[i];
 			if (child.getElementType() == childOfInterest && child.getResource() != null) {
@@ -69,10 +68,10 @@ public abstract class RefactoringModifications {
 		for (int i= 0; i < nonScriptResources.length; i++) {
 			Object element= nonScriptResources[i];
 			if (element instanceof IResource) {
-				result.add(element);
+				result.add((IResource) element);
 			}
 		}
-		return (IResource[]) result.toArray(new IResource[result.size()]);
+		return result.toArray(new IResource[result.size()]);
 	}
 	
 	protected IFile getBuildpathFile(IResource resource) {

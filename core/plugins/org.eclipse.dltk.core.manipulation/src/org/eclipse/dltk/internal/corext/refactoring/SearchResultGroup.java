@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,7 +53,7 @@ public class SearchResultGroup {
 		for (int i= 0; i < searchResultGroups.length; i++) {
 			resourceSet.add(searchResultGroups[i].getResource());
 		}
-		return (IResource[]) resourceSet.toArray(new IResource[resourceSet.size()]);
+		return resourceSet.toArray(new IResource[resourceSet.size()]);
 	}
 
 	public ISourceModule getSourceModule(){
@@ -66,7 +66,7 @@ public class SearchResultGroup {
 		StringBuffer buf= new StringBuffer(fResource.getFullPath().toString());
 		buf.append('\n');
 		for (int i= 0; i < fSearchMatches.size(); i++) {
-			SearchMatch match= (SearchMatch) fSearchMatches.get(i);
+			SearchMatch match= fSearchMatches.get(i);
 			buf.append("  ").append(match.getOffset()).append(", ").append(match.getLength()); //$NON-NLS-1$//$NON-NLS-2$
 			buf.append(match.getAccuracy() == SearchMatch.A_ACCURATE ? "; acc" : "; inacc"); //$NON-NLS-1$//$NON-NLS-2$
 			if (match.isInsideDocComment())
