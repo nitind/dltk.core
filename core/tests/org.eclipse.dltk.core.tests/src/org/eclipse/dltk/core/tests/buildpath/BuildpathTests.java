@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.tests.buildpath;
 
@@ -43,6 +42,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
+import org.eclipse.dltk.core.tests.model.AbstractModelTests;
 import org.eclipse.dltk.core.tests.model.ModelTestsPlugin;
 import org.eclipse.dltk.core.tests.model.ModifyingResourceTests;
 import org.eclipse.dltk.core.tests.util.Util;
@@ -336,7 +336,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 			printer.flush();
 
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -371,7 +371,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 			((ScriptProject) proj).printNode(printer);
 			printer.flush();
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -439,7 +439,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 							+ "	ResourceDelta(/P/.buildpath)[*]");
 		} finally {
 			stopDeltas();
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -482,7 +482,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"Build path contains duplicate entry: \'src\' for project P",
 					status);
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -507,7 +507,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 							+ EnvironmentPathUtils.getLocalPath(libPath)
 									.toString() + "\' for project Pv0", status);
 		} finally {
-			this.deleteProject("Pv0");
+			AbstractModelTests.deleteProject("Pv0");
 		}
 	}
 
@@ -530,7 +530,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"Cannot nest \'P/src\' inside \'P\'. To enable the nesting exclude \'src/\' from \'P\'",
 					status);
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -555,7 +555,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"Cannot nest \'P/src/lib\' inside \'P/src\'. To enable the nesting exclude \'lib/\' from \'P/src\'",
 					status);
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -584,8 +584,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"OK", status);
 
 		} finally {
-			this.deleteProject("P0var");
-			this.deleteProject("P1var");
+			AbstractModelTests.deleteProject("P0var");
+			AbstractModelTests.deleteProject("P1var");
 		}
 	}
 
@@ -629,8 +629,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 					status);
 
 		} finally {
-			this.deleteProject("P0v");
-			this.deleteProject("P1v");
+			AbstractModelTests.deleteProject("P0v");
+			AbstractModelTests.deleteProject("P1v");
 		}
 	}
 
@@ -654,7 +654,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"Cannot nest \'P0/src\' inside \'P0\'. To enable the nesting exclude \'src/\' from \'P0\'",
 					status);
 		} finally {
-			this.deleteProject("P0");
+			AbstractModelTests.deleteProject("P0");
 		}
 	}
 
@@ -679,7 +679,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"should have allowed nested source folders with exclusion on the buildpath",
 					"OK", status);
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -704,7 +704,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"should have allowed nested lib folders with exclusion on the buildpath",
 					"OK", status);
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -729,7 +729,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"End exclusion filter \'src\' with / to fully exclude \'P/src\'",
 					status);
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -757,7 +757,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"Inclusion or exclusion patterns are disabled in project P, cannot selectively include or exclude from entry: \'src\'",
 					status);
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -786,7 +786,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"Cannot nest 'P/src' inside 'P/'. To enable the nesting exclude 'src/' from 'P/'",
 					status);
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -812,7 +812,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"Cannot nest \'P/src\' inside \'P\'. To enable the nesting exclude \'src/\' from \'P\'",
 					status);
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -835,7 +835,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 
 			assertStatus("OK", status);
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -864,7 +864,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"Inclusion or exclusion patterns are disabled in project P, cannot selectively include or exclude from entry: \'src\'",
 					status);
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -893,7 +893,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"Cannot nest \'P/src\' inside \'P\'. To allow the nesting enable use of exclusion patterns in the preferences of project \'P\' and exclude \'src/\' from \'P\'",
 					status);
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -918,7 +918,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 					"Setting the buildpath with two entries specifying the same path should fail",
 					false);
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -959,7 +959,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 						.equals(newRoots[i]));
 			}
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -1000,7 +1000,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 						.equals(newRoots[i]));
 			}
 		} finally {
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 
@@ -1157,7 +1157,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 							+ "	ResourceDelta(/P/.buildpath)[*]");
 		} finally {
 			stopDeltas();
-			this.deleteProject("P");
+			AbstractModelTests.deleteProject("P");
 		}
 	}
 

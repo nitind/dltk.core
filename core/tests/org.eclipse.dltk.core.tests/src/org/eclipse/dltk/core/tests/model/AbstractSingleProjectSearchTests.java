@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -39,6 +39,7 @@ public class AbstractSingleProjectSearchTests extends AbstractModelTests
 		this.scriptProjectName = scriptProjectName;
 	}
 
+	@Override
 	public void setUpSuite() throws Exception {
 		super.setUpSuite();
 		setUpScriptProject(scriptProjectName);
@@ -61,6 +62,7 @@ public class AbstractSingleProjectSearchTests extends AbstractModelTests
 		return getScriptProject(scriptProjectName);
 	}
 
+	@Override
 	public void tearDownSuite() throws Exception {
 		deleteProject(scriptProjectName);
 		super.tearDownSuite();
