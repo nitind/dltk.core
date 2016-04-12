@@ -378,12 +378,13 @@ public class TypeDeclaration extends Declaration {
 	 * 
 	 * @return
 	 */
-	public List getSuperClassNames() {
+	public List<String> getSuperClassNames() {
 		if (this.fSuperClasses != null) {
-			final List superClasses = this.fSuperClasses.getChilds();
-			final List names = new ArrayList(superClasses.size());
-			for (Iterator i = superClasses.iterator(); i.hasNext();) {
-				final ASTNode expr = (ASTNode) i.next();
+			final List<ASTNode> superClasses = this.fSuperClasses.getChilds();
+			final List<String> names = new ArrayList<String>(
+					superClasses.size());
+			for (Iterator<ASTNode> i = superClasses.iterator(); i.hasNext();) {
+				final ASTNode expr = i.next();
 				final String name = resolveSuperClassReference(expr);
 				if (name != null) {
 					names.add(name);
@@ -391,7 +392,7 @@ public class TypeDeclaration extends Declaration {
 			}
 			return names;
 		} else {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 	}
 
