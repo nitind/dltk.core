@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.console.ui.internal;
 
@@ -32,8 +31,8 @@ import org.eclipse.ui.console.actions.TextViewerAction;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
-public class ScriptConsolePage extends TextConsolePage implements
-		IScriptConsoleContentHandler {
+public class ScriptConsolePage extends TextConsolePage
+		implements IScriptConsoleContentHandler {
 
 	protected class ContentAssistProposalsAction extends TextViewerAction {
 
@@ -55,13 +54,14 @@ public class ScriptConsolePage extends TextConsolePage implements
 	private TextViewerAction proposalsAction;
 	private IHandler proposalsHandler;
 
+	@Override
 	protected void createActions() {
 		super.createActions();
 
 		proposalsAction = new ContentAssistProposalsAction(getViewer());
-		proposalsAction
-				.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-		IHandlerService handlerService = (IHandlerService) getSite()
+		proposalsAction.setActionDefinitionId(
+				ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
+		IHandlerService handlerService = getSite()
 				.getService(IHandlerService.class);
 		proposalsHandler = new ActionHandler(proposalsAction);
 		handlerService.activateHandler(
@@ -101,6 +101,7 @@ public class ScriptConsolePage extends TextConsolePage implements
 				ScriptConsoleMessages.TerminateConsoleTooltip);
 	}
 
+	@Override
 	protected TextConsoleViewer createViewer(Composite parent) {
 		viewer = new ScriptConsoleViewer(parent, (ScriptConsole) getConsole(),
 				this);
@@ -119,6 +120,7 @@ public class ScriptConsolePage extends TextConsolePage implements
 		viewer.clear();
 	}
 
+	@Override
 	public void contentAssistRequired() {
 		proposalsAction.run();
 	}
@@ -127,6 +129,7 @@ public class ScriptConsolePage extends TextConsolePage implements
 		viewer.insertText(text);
 	}
 
+	@Override
 	public void dispose() {
 		if (viewer != null) {
 			viewer.dispose();

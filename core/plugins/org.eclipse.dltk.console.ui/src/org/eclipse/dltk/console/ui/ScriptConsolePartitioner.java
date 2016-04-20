@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.console.ui;
 
@@ -19,6 +18,7 @@ import java.util.TreeSet;
 
 import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.jface.text.rules.IPredicateRule;
+import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
@@ -27,21 +27,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.ui.console.IConsoleDocumentPartitioner;
 
-public class ScriptConsolePartitioner extends FastPartitioner implements
-		IConsoleDocumentPartitioner {
+public class ScriptConsolePartitioner extends FastPartitioner
+		implements IConsoleDocumentPartitioner {
 
-	private SortedSet ranges = new TreeSet(new Comparator() {
-
-		public int compare(Object o1, Object o2) {
-			StyleRange sr1 = (StyleRange) o1;
-			StyleRange sr2 = (StyleRange) o2;
-			int start = sr1.start - sr2.start;
-			if (start == 0) {
-				return sr1.length - sr2.length;
-			}
-			return start;
-		}
-	});
+	private SortedSet<StyleRange> ranges = new TreeSet<StyleRange>(
+			new Comparator<StyleRange>() {
+				@Override
+				public int compare(StyleRange sr1, StyleRange sr2) {
+					int start = sr1.start - sr2.start;
+					if (start == 0) {
+						return sr1.length - sr2.length;
+					}
+					return start;
+				}
+			});
 
 	private static class Constants {
 		public static final String MY_DOUBLE_QUOTED = "__my_double"; //$NON-NLS-1$
@@ -54,7 +53,7 @@ public class ScriptConsolePartitioner extends FastPartitioner implements
 			IToken myDouble = new Token(Constants.MY_DOUBLE_QUOTED);
 			IToken mySingle = new Token(Constants.MY_SINGLE_QUOTED);
 
-			List rules = new ArrayList();
+			List<IRule> rules = new ArrayList<IRule>();
 
 			rules.add(new MultiLineRule("\'", "\'", mySingle, '\\')); //$NON-NLS-1$ //$NON-NLS-2$
 			rules.add(new MultiLineRule("\"", "\"", myDouble, '\\')); //$NON-NLS-1$ //$NON-NLS-2$
@@ -84,14 +83,15 @@ public class ScriptConsolePartitioner extends FastPartitioner implements
 		ranges.clear();
 	}
 
+	@Override
 	public StyleRange[] getStyleRanges(int offset, int length) {
-		List result = new ArrayList();
+		List<StyleRange> result = new ArrayList<StyleRange>();
 		// get the sublist with length = 0 so that it will return all with that
 		// offset.
 		StyleRange sr = new StyleRange(offset, 0, null, null, SWT.NO);
-		for (Iterator iterator = ranges.tailSet(sr).iterator(); iterator
-				.hasNext();) {
-			StyleRange r = (StyleRange) iterator.next();
+		for (Iterator<StyleRange> iterator = ranges.tailSet(sr)
+				.iterator(); iterator.hasNext();) {
+			StyleRange r = iterator.next();
 			if (r.start >= offset && r.start + r.length <= offset + length)
 				result.add((StyleRange) r.clone());
 			else
@@ -99,12 +99,13 @@ public class ScriptConsolePartitioner extends FastPartitioner implements
 		}
 
 		if (result.size() > 0)
-			return (StyleRange[]) result.toArray(new StyleRange[result.size()]);
+			return result.toArray(new StyleRange[result.size()]);
 
 		sr.length = length;
 		return new StyleRange[] { sr };
 	}
 
+	@Override
 	public boolean isReadOnly(int offset) {
 		return false;
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.  
+ * Copyright (c) 2009, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -61,14 +61,15 @@ public class ConsoleViewManager {
 		extensions = new ArrayList<Descriptor>(5);
 		extensions.add(new Descriptor(IConsoleConstants.ID_CONSOLE_VIEW, 0));
 		for (final IConfigurationElement element : Platform
-				.getExtensionRegistry().getConfigurationElementsFor(
-						extensionPoint)) {
+				.getExtensionRegistry()
+				.getConfigurationElementsFor(extensionPoint)) {
 			final Descriptor descriptor = new Descriptor(element);
 			if (isValidDescriptor(descriptor)) {
 				extensions.add(descriptor);
 			}
 		}
 		Collections.sort(extensions, new Comparator<Descriptor>() {
+			@Override
 			public int compare(Descriptor arg0, Descriptor arg1) {
 				return arg1.priority - arg0.priority;
 			}

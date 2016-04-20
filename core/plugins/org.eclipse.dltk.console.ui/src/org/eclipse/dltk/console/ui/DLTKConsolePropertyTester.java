@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     xored software, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.dltk.console.ui;
 
 import org.eclipse.core.expressions.PropertyTester;
@@ -18,6 +28,7 @@ public class DLTKConsolePropertyTester extends PropertyTester {
 	public DLTKConsolePropertyTester() {
 	}
 
+	@Override
 	public boolean test(Object receiver, String property, Object[] args,
 			Object expectedValue) {
 		if (IS_DLTK_CONSOLE_PROPERTY.equals(property)) {
@@ -29,8 +40,8 @@ public class DLTKConsolePropertyTester extends PropertyTester {
 						.getAttribute(IDebugUIConstants.ATTR_CONSOLE_PROCESS);
 				if (process != null && process instanceof IProcess) {
 					final String nature = getProcessNature((IProcess) process);
-					return nature != null
-							&& DLTKLanguageManager.getLanguageToolkit(nature) != null;
+					return nature != null && DLTKLanguageManager
+							.getLanguageToolkit(nature) != null;
 				}
 			}
 		}

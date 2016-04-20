@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.console.ui;
 
@@ -17,8 +16,8 @@ import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
-public class ScriptConsoleSourceViewerConfiguration extends
-		SourceViewerConfiguration {
+public class ScriptConsoleSourceViewerConfiguration
+		extends SourceViewerConfiguration {
 	private static final int DEFAULT_TAB_WIDTH = 4;
 
 	private static final int DEFAULT_CA_DELAY = 50;
@@ -35,18 +34,22 @@ public class ScriptConsoleSourceViewerConfiguration extends
 		this.hover = hover;
 	}
 
+	@Override
 	public int getTabWidth(ISourceViewer sourceViewer) {
 		return DEFAULT_TAB_WIDTH;
 	}
 
+	@Override
 	public ITextHover getTextHover(ISourceViewer sv, String contentType) {
 		return hover;
 	}
 
+	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
-		return new String[] { PARTITION_TYPE };		
+		return new String[] { PARTITION_TYPE };
 	}
 
+	@Override
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 		ContentAssistant ca = new ContentAssistant();
 		ca.setContentAssistProcessor(processor, PARTITION_TYPE);
@@ -54,7 +57,7 @@ public class ScriptConsoleSourceViewerConfiguration extends
 		ca.enableAutoActivation(true);
 		ca.enableAutoInsert(false);
 		ca.setAutoActivationDelay(DEFAULT_CA_DELAY);
-				
+
 		return ca;
 	}
 }

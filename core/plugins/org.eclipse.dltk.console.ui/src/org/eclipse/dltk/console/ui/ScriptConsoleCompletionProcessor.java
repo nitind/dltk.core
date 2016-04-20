@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.console.ui;
 
@@ -24,9 +23,8 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
 
-
-public abstract class ScriptConsoleCompletionProcessor implements
-		IContentAssistProcessor {
+public abstract class ScriptConsoleCompletionProcessor
+		implements IContentAssistProcessor {
 	protected static interface IProposalDecorator {
 		String formatProposal(ScriptConsoleCompletionProposal c);
 
@@ -38,10 +36,13 @@ public abstract class ScriptConsoleCompletionProcessor implements
 	protected IProposalDecorator getDefaultDecorator() {
 		if (defaultDecorator == null) {
 			defaultDecorator = new IProposalDecorator() {
-				public String formatProposal(ScriptConsoleCompletionProposal c) {
+				@Override
+				public String formatProposal(
+						ScriptConsoleCompletionProposal c) {
 					return c.getDisplay();
 				}
 
+				@Override
 				public Image getImage(ScriptConsoleCompletionProposal c) {
 					return null;
 				}
@@ -62,18 +63,19 @@ public abstract class ScriptConsoleCompletionProcessor implements
 		return this.interpreterShell;
 	}
 
-	protected List createProposalsFromString(List list, int offset,
+	protected List<CompletionProposal> createProposalsFromString(
+			List<ScriptConsoleCompletionProposal> list, int offset,
 			IProposalDecorator decorator) {
-		
-		if (decorator == null){
+
+		if (decorator == null) {
 			decorator = getDefaultDecorator();
 		}
 
-		List result = new ArrayList();
+		List<CompletionProposal> result = new ArrayList<CompletionProposal>();
 
-		Iterator it = list.iterator();
+		Iterator<ScriptConsoleCompletionProposal> it = list.iterator();
 		while (it.hasNext()) {
-			ScriptConsoleCompletionProposal c = (ScriptConsoleCompletionProposal) it.next();
+			ScriptConsoleCompletionProposal c = it.next();
 
 			CompletionProposal proposal = new CompletionProposal(c.getInsert(), // replacementString
 					offset, // replacementOffset
@@ -87,10 +89,9 @@ public abstract class ScriptConsoleCompletionProcessor implements
 			result.add(proposal);
 		}
 
-		Collections.sort(result, new Comparator() {
-			public int compare(Object o1, Object o2) {
-				CompletionProposal p1 = (CompletionProposal) o1;
-				CompletionProposal p2 = (CompletionProposal) o2;
+		Collections.sort(result, new Comparator<CompletionProposal>() {
+			@Override
+			public int compare(CompletionProposal p1, CompletionProposal p2) {
 				return p1.getDisplayString().compareTo(p2.getDisplayString());
 			}
 		});
@@ -104,25 +105,30 @@ public abstract class ScriptConsoleCompletionProcessor implements
 	protected abstract IContextInformation[] computeContextInformationImpl(
 			ITextViewer viewer, int offset);
 
+	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
 		return computeCompletionProposalsImpl((IScriptConsoleViewer) viewer,
 				offset);
 	}
 
+	@Override
 	public char[] getCompletionProposalAutoActivationCharacters() {
 		return null;
 	}
 
+	@Override
 	public IContextInformation[] computeContextInformation(ITextViewer viewer,
 			int offset) {
 		return computeContextInformationImpl(viewer, offset);
 	}
 
+	@Override
 	public char[] getContextInformationAutoActivationCharacters() {
 		return null;
 	}
 
+	@Override
 	public String getErrorMessage() {
 		return null;
 	}

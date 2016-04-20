@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.console.ui;
 
@@ -76,7 +75,8 @@ public class ScriptConsoleManager implements ILaunchListener {
 		if (consoleViewIds == null) {
 			final List<String> viewIds = new ArrayList<String>();
 			for (ConsoleViewManager.Descriptor descriptor : new ConsoleViewManager(
-					"org.eclipse.dltk.console.ui.consoleView").getDescriptors()) { //$NON-NLS-1$
+					"org.eclipse.dltk.console.ui.consoleView") //$NON-NLS-1$
+							.getDescriptors()) {
 				viewIds.add(descriptor.getViewId());
 			}
 			consoleViewIds = viewIds.toArray(new String[viewIds.size()]);
@@ -160,11 +160,10 @@ public class ScriptConsoleManager implements ILaunchListener {
 			IExtension ext = extensions[i];
 			IConfigurationElement[] ce = ext.getConfigurationElements();
 			for (int j = 0; j < ce.length; j++) {
-				if (natureId
-						.equals(ce[j]
-								.getAttribute(ScriptConsoleUIConstants.SCRIPT_CONSOLE_NATURE_ID))) {
-					Object obj = ce[j]
-							.createExecutableExtension(ScriptConsoleUIConstants.SCRIPT_CONSOLE_CLASS);
+				if (natureId.equals(ce[j].getAttribute(
+						ScriptConsoleUIConstants.SCRIPT_CONSOLE_NATURE_ID))) {
+					Object obj = ce[j].createExecutableExtension(
+							ScriptConsoleUIConstants.SCRIPT_CONSOLE_CLASS);
 					if (obj instanceof IScriptConsoleFactory) {
 						return (IScriptConsoleFactory) obj;
 					} else {
@@ -178,10 +177,12 @@ public class ScriptConsoleManager implements ILaunchListener {
 	}
 
 	// ILaunchListener
+	@Override
 	public void launchAdded(final ILaunch launch) {
 		launchChanged(launch);
 	}
 
+	@Override
 	public void launchChanged(final ILaunch launch) {
 		if (!ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) {
 			return;
@@ -192,10 +193,9 @@ public class ScriptConsoleManager implements ILaunchListener {
 			if (configuration == null) {
 				return;
 			}
-			boolean useDltk = configuration
-					.getAttribute(
-							ScriptLaunchConfigurationConstants.ATTR_USE_INTERACTIVE_CONSOLE,
-							false);
+			boolean useDltk = configuration.getAttribute(
+					ScriptLaunchConfigurationConstants.ATTR_USE_INTERACTIVE_CONSOLE,
+					false);
 			if (!useDltk) {
 				return;
 			}
@@ -219,14 +219,17 @@ public class ScriptConsoleManager implements ILaunchListener {
 			final String consoleId = configuration.getAttribute(
 					ScriptLaunchConfigurationConstants.ATTR_DLTK_CONSOLE_ID,
 					(String) null);
-			final IScriptConsoleFactory factory = findScriptConsoleFactory(natureId);
+			final IScriptConsoleFactory factory = findScriptConsoleFactory(
+					natureId);
 			if (factory == null) {
 				return;
 			}
 			SafeRunner.run(new ISafeRunnable() {
+				@Override
 				public void handleException(Throwable exception) {
 				}
 
+				@Override
 				public void run() throws Exception {
 					IScriptInterpreter interpreter = ScriptInterpreterManager
 							.getInstance().createInterpreter(natureId);
@@ -260,6 +263,7 @@ public class ScriptConsoleManager implements ILaunchListener {
 		return null;
 	}
 
+	@Override
 	public void launchRemoved(ILaunch launch) {
 		final IConsole console = getConsole(launch);
 		if (console != null) {

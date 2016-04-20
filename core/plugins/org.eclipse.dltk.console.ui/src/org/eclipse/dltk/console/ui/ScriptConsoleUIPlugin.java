@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.console.ui;
 
@@ -39,12 +38,7 @@ public class ScriptConsoleUIPlugin extends AbstractUIPlugin {
 		plugin = this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
@@ -53,20 +47,15 @@ public class ScriptConsoleUIPlugin extends AbstractUIPlugin {
 		launchManager.addLaunchListener(ScriptConsoleManager.getInstance());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
 
 		ScriptConsoleManager manager = ScriptConsoleManager.getInstance();
 
-		DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(
-				manager);
+		DebugPlugin.getDefault().getLaunchManager()
+				.removeLaunchListener(manager);
 		manager.closeAll();
 	}
 
@@ -85,6 +74,7 @@ public class ScriptConsoleUIPlugin extends AbstractUIPlugin {
 			{ "icons/elcl16/terminate-red-square.gif", //$NON-NLS-1$
 					ScriptConsoleUIConstants.TERMINATE_ICON } };
 
+	@Override
 	protected void initializeImageRegistry(ImageRegistry registry) {
 		for (int i = 0; i < IMAGES.length; ++i) {
 			URL url = getDefault().getBundle().getEntry(IMAGES[i][0]);

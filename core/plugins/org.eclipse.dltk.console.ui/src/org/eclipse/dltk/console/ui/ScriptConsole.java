@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.console.ui;
 
@@ -53,12 +52,13 @@ import org.eclipse.ui.console.IConsoleView;
 import org.eclipse.ui.console.TextConsole;
 import org.eclipse.ui.part.IPageBookViewPage;
 
-public class ScriptConsole extends TextConsole implements ICommandHandler,
-		IScriptConsole {
+public class ScriptConsole extends TextConsole
+		implements ICommandHandler, IScriptConsole {
 	private ILaunch launch = null;
 	private ILaunchesListener2 listener = null;
 
 	private class ScriptConsoleLaunchListener implements ILaunchesListener2 {
+		@Override
 		public void launchesTerminated(ILaunch[] launches) {
 			if (terminated) {
 				return;
@@ -68,12 +68,12 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 					final ScriptConsoleViewer consoleViewer = (ScriptConsoleViewer) page
 							.getViewer();
 					page.getControl().getDisplay().asyncExec(new Runnable() {
+						@Override
 						public void run() {
 							if (consoleViewer != null) {
 								consoleViewer.disableProcessing();
 								// TODO use different color
-								updateText(
-										consoleViewer,
+								updateText(consoleViewer,
 										Messages.ScriptConsole_processTerminated);
 								consoleViewer.setEditable(false);
 							}
@@ -83,15 +83,18 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 			}
 		}
 
+		@Override
 		public void launchesAdded(ILaunch[] launches) {
 		}
 
+		@Override
 		public void launchesChanged(ILaunch[] launches) {
 		}
 
+		@Override
 		public void launchesRemoved(ILaunch[] launches) {
 		}
-	};
+	}
 
 	private final class InitialStreamReader implements Runnable {
 		private final IScriptInterpreter interpreter;
@@ -100,6 +103,7 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 			this.interpreter = interpreter;
 		}
 
+		@Override
 		public void run() {
 			// We need to be sure what page is already created
 			while (page == null || (page != null && page.getViewer() == null)) {
@@ -153,18 +157,21 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 			return;
 		}
 		control.getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				viewer.setEditable(true);
 			}
 		});
 	}
 
-	private void updateText(final ScriptConsoleViewer viewer, final String text) {
+	private void updateText(final ScriptConsoleViewer viewer,
+			final String text) {
 		Control control = viewer.getControl();
 		if (control == null) {
 			return;
 		}
 		control.getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				IDocument document = getDocument();
 				final String delim = TextUtilities
@@ -235,14 +242,15 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 		consoleListeners.remove(listener);
 	}
 
-	protected void setContentAssistProcessor(IContentAssistProcessor processor) {
+	protected void setContentAssistProcessor(
+			IContentAssistProcessor processor) {
 		this.processor = processor;
 	}
 
 	protected void setInterpreter(final IScriptInterpreter interpreter) {
 		this.interpreter = interpreter;
-		interpreter.addInitialListenerOperation(new InitialStreamReader(
-				interpreter));
+		interpreter.addInitialListenerOperation(
+				new InitialStreamReader(interpreter));
 	}
 
 	public void setPrompt(ScriptConsolePrompt prompt) {
@@ -265,8 +273,8 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 
 	public ConsoleDocumentListener getDocumentListener() {
 		if (documentListener == null) {
-			documentListener = new ConsoleDocumentListener(this, this
-					.getPrompt(), this.getHistory());
+			documentListener = new ConsoleDocumentListener(this,
+					this.getPrompt(), this.getHistory());
 			documentListener.setDocument(getDocument());
 
 		}
@@ -295,6 +303,7 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void insertText(String line) {
 		page.insertText(line);
 	}
@@ -303,7 +312,9 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 		return interpreter.getState();
 	}
 
-	public IScriptExecResult handleCommand(String userInput) throws IOException {
+	@Override
+	public IScriptExecResult handleCommand(String userInput)
+			throws IOException {
 		if (this.interpreter == null || !this.interpreter.isValid()) {
 			return new ScriptExecResult(Util.EMPTY_STRING);
 		}
@@ -314,7 +325,8 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 
 		IScriptExecResult output = interpreter.exec(userInput);
 
-		if (interpreter.getState() == IScriptConsoleInterpreter.WAIT_NEW_COMMAND) {
+		if (interpreter
+				.getState() == IScriptConsoleInterpreter.WAIT_NEW_COMMAND) {
 			prompt.setMode(true);
 		} else {
 			prompt.setMode(false);
@@ -336,6 +348,7 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 		getDocumentListener().executeCommand(command);
 	}
 
+	@Override
 	public void terminate() {
 		terminated = true;
 		try {
@@ -353,8 +366,8 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 
 		terminate();
 		if (listener != null) {
-			DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(
-					listener);
+			DebugPlugin.getDefault().getLaunchManager()
+					.removeLaunchListener(listener);
 			listener = null;
 		}
 		closeStreams();
@@ -367,8 +380,8 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 		this.launch = launch;
 		if (this.launch != null && this.listener == null) {
 			this.listener = new ScriptConsoleLaunchListener();
-			DebugPlugin.getDefault().getLaunchManager().addLaunchListener(
-					listener);
+			DebugPlugin.getDefault().getLaunchManager()
+					.addLaunchListener(listener);
 		}
 	}
 
@@ -397,6 +410,7 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 		}
 	}
 
+	@Override
 	public void connect(final IStreamsProxy proxy) {
 		IStreamMonitor streamMonitor = proxy.getErrorStreamMonitor();
 		if (streamMonitor != null) {
@@ -414,7 +428,8 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 	 * @param streamMonitor
 	 * @param idStandardErrorStream
 	 */
-	private void connect(IStreamMonitor streamMonitor, String streamIdentifier) {
+	private void connect(IStreamMonitor streamMonitor,
+			String streamIdentifier) {
 		synchronized (streamMonitor) {
 			StreamListener listener = new StreamListener(streamIdentifier,
 					streamMonitor);
@@ -459,10 +474,10 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 			streamAppended(null, monitor);
 		}
 
+		@Override
 		public void streamAppended(String text, IStreamMonitor monitor) {
 			if (fFlushed) {
-				getDocumentListener().write(
-						text,
+				getDocumentListener().write(text,
 						IDebugUIConstants.ID_STANDARD_ERROR_STREAM
 								.equals(fStreamId));
 			} else {
@@ -477,8 +492,7 @@ public class ScriptConsole extends TextConsole implements ICommandHandler,
 					}
 				}
 				if (contents != null && contents.length() > 0) {
-					getDocumentListener().write(
-							contents,
+					getDocumentListener().write(contents,
 							IDebugUIConstants.ID_STANDARD_ERROR_STREAM
 									.equals(fStreamId));
 				}

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.console.ui.internal.actions;
 
@@ -28,6 +27,7 @@ public class CloseScriptConsoleAction extends Action {
 		setToolTipText(tooltip);
 	}
 
+	@Override
 	public void run() {
 		ScriptConsoleManager.getInstance().close(console);
 	}
@@ -36,8 +36,9 @@ public class CloseScriptConsoleAction extends Action {
 		setEnabled(true);
 	}
 
+	@Override
 	public ImageDescriptor getImageDescriptor() {
-		return ScriptConsoleUIPlugin.getDefault().getImageDescriptor(
-				ScriptConsoleUIConstants.TERMINATE_ICON);
+		return ScriptConsoleUIPlugin.getDefault()
+				.getImageDescriptor(ScriptConsoleUIConstants.TERMINATE_ICON);
 	}
 }

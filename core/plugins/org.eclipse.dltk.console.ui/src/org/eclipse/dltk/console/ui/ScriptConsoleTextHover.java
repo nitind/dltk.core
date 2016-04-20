@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.console.ui;
 
@@ -16,13 +15,16 @@ import org.eclipse.jface.text.Region;
 
 public abstract class ScriptConsoleTextHover implements ITextHover {
 
-	protected abstract String getHoverInfoImpl(IScriptConsoleViewer viewer, IRegion hoverRegion);
-		
+	protected abstract String getHoverInfoImpl(IScriptConsoleViewer viewer,
+			IRegion hoverRegion);
+
+	@Override
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
-		return getHoverInfoImpl((IScriptConsoleViewer)textViewer, hoverRegion);
+		return getHoverInfoImpl((IScriptConsoleViewer) textViewer, hoverRegion);
 	}
 
+	@Override
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
-		return new Region(offset, 0); 
+		return new Region(offset, 0);
 	}
 }
