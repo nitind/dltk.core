@@ -145,12 +145,13 @@ public class BPUserLibraryElement {
 		}
 	}
 
-	private List moveUp(List elements, List move) {
+	private List<BPListElement> moveUp(List<BPListElement> elements,
+			List<BPListElement> move) {
 		int nElements = elements.size();
-		List res = new ArrayList(nElements);
-		Object floating = null;
+		List<BPListElement> res = new ArrayList<BPListElement>(nElements);
+		BPListElement floating = null;
 		for (int i = 0; i < nElements; i++) {
-			Object curr = elements.get(i);
+			BPListElement curr = elements.get(i);
 			if (move.contains(curr)) {
 				res.add(curr);
 			} else {
@@ -166,13 +167,13 @@ public class BPUserLibraryElement {
 		return res;
 	}
 
-	public void moveUp(List toMoveUp) {
+	public void moveUp(List<BPListElement> toMoveUp) {
 		if (toMoveUp.size() > 0) {
 			fChildren = moveUp(fChildren, toMoveUp);
 		}
 	}
 
-	public void moveDown(List toMoveDown) {
+	public void moveDown(List<BPListElement> toMoveDown) {
 		if (toMoveDown.size() > 0) {
 			Collections.reverse(fChildren);
 			fChildren = moveUp(fChildren, toMoveDown);
