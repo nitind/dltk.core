@@ -62,7 +62,8 @@ public class ScriptEvaluationEngine implements IScriptEvaluationEngine {
 				result = new FailedScriptEvaluationResult(
 						thread,
 						snippet,
-						new String[] { Messages.ScriptEvaluationEngine_cantEvaluate });
+						new String[] {
+								Messages.ScriptEvaluationEngine_cantEvaluate });
 			}
 
 		} catch (Exception e) {
@@ -87,6 +88,12 @@ public class ScriptEvaluationEngine implements IScriptEvaluationEngine {
 	public IScriptEvaluationResult syncEvaluate(String snippet,
 			IScriptStackFrame frame) {
 		snippet = snippet.trim();
+		/*
+		 * If thread is not suspended we should not do evaluation.
+		 */
+		if (!thread.isSuspended()) {
+			return null;
+		}
 		synchronized (cache) {
 			IScriptEvaluationResult result = getFromCache(snippet);
 

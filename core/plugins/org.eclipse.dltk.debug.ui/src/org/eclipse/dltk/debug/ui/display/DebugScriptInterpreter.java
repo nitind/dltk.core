@@ -81,7 +81,16 @@ public class DebugScriptInterpreter implements IScriptInterpreter {
 				.getEvaluationContext(part);
 		if (frame != null) {
 			final IScriptThread thread = frame.getScriptThread();
+
+			// TODO: Add a check for sync mode only if Async support will be
+			// implemented.
 			if (thread != null) {
+				if (!thread.isSuspended()) {
+					return new ScriptExecResult(
+							Messages.DebugScriptInterpreter_NeedToBeSuspended
+									+ Util.LINE_SEPARATOR,
+							true);
+				}
 				final IScriptEvaluationResult result = thread
 						.getEvaluationEngine().syncEvaluate(command, frame);
 				if (result != null) {
@@ -97,7 +106,8 @@ public class DebugScriptInterpreter implements IScriptInterpreter {
 							if (!datatypes
 									&& output.length() > 2
 									&& output.charAt(0) == '"'
-									&& output.charAt(output.length() - 1) == '"') {
+									&& output.charAt(
+											output.length() - 1) == '"') {
 								output = output.substring(1,
 										output.length() - 1);
 							}

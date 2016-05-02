@@ -101,8 +101,9 @@ public class ScriptStackFrame extends ScriptDebugElement implements
 		final IDbgpContextCommands commands = thread.getDbgpSession()
 				.getCoreCommands();
 
-		final Map names = commands.getContextNames(getLevel());
 		final ScriptVariableContainer result = new ScriptVariableContainer();
+
+		final Map names = commands.getContextNames(getLevel());
 		if (thread.retrieveLocalVariables()
 				&& names.containsKey(Integer.valueOf(
 						IDbgpContextCommands.LOCAL_CONTEXT_ID))) {
@@ -362,10 +363,18 @@ public class ScriptStackFrame extends ScriptDebugElement implements
 
 	public synchronized boolean hasVariables() throws DebugException {
 		checkVariablesAvailable();
+		if (variables == null) {
+			return false;
+		}
 		return variables.hasVariables();
 	}
 
 	private synchronized void checkVariablesAvailable() throws DebugException {
+		if (!thread.isSuspended()) {
+			// Do not do variables lookup if not suspended, since it could
+			// become in running/stepping state until we get here.
+			return;
+		}
 		try {
 			if (variables == null) {
 				variables = readAllVariables();
@@ -436,7 +445,10 @@ public class ScriptStackFrame extends ScriptDebugElement implements
 
 	public synchronized IVariable[] getVariables() throws DebugException {
 		checkVariablesAvailable();
-		return variables.toArray(getDebugTarget());
+		if (variables != null) {
+			return variables.toArray(getDebugTarget());
+		}
+		return new IVariable[0];
 	}
 
 	// IStep
@@ -510,7 +522,10 @@ public class ScriptStackFrame extends ScriptDebugElement implements
 	public synchronized IScriptVariable findVariable(String varName)
 			throws DebugException {
 		checkVariablesAvailable();
-		return (IScriptVariable) variables.findVariable(varName);
+		if (variables != null) {
+			return (IScriptVariable) variables.findVariable(varName);
+		}
+		return null;
 	}
 
 	public int getLevel() {
