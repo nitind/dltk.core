@@ -97,30 +97,49 @@ public class ScriptStackFrame extends ScriptDebugElement implements
 		return duplicates;
 	}
 
+	/**
+	 * Return null in case suspend more is no more active during calculation of
+	 * variables.
+	 * 
+	 * @return
+	 * @throws DbgpException
+	 */
 	protected ScriptVariableContainer readAllVariables() throws DbgpException {
 		final IDbgpContextCommands commands = thread.getDbgpSession()
 				.getCoreCommands();
+
+		// TODO: Until more sequence approach will be implemented
+		if (!thread.isSuspended()) {
+			return null;
+		}
 
 		final ScriptVariableContainer result = new ScriptVariableContainer();
 
 		final Map names = commands.getContextNames(getLevel());
 		if (thread.retrieveLocalVariables()
 				&& names.containsKey(Integer.valueOf(
-						IDbgpContextCommands.LOCAL_CONTEXT_ID))) {
+						IDbgpContextCommands.LOCAL_CONTEXT_ID))
+				&& thread.isSuspended()) {
 			result.locals = readVariables(this,
 					IDbgpContextCommands.LOCAL_CONTEXT_ID, commands);
 		}
 		if (thread.retrieveGlobalVariables()
 				&& names.containsKey(Integer.valueOf(
-						IDbgpContextCommands.GLOBAL_CONTEXT_ID))) {
+						IDbgpContextCommands.GLOBAL_CONTEXT_ID))
+				&& thread.isSuspended()) {
 			result.globals = readVariables(this,
 					IDbgpContextCommands.GLOBAL_CONTEXT_ID, commands);
 		}
 		if (thread.retrieveClassVariables()
 				&& names.containsKey(Integer.valueOf(
-						IDbgpContextCommands.CLASS_CONTEXT_ID))) {
+						IDbgpContextCommands.CLASS_CONTEXT_ID))
+				&& thread.isSuspended()) {
 			result.classes = readVariables(this,
 					IDbgpContextCommands.CLASS_CONTEXT_ID, commands);
+		}
+		// TODO: Until more sequence approach will be implemented
+		if (!thread.isSuspended()) {
+			return null;
 		}
 		return result;
 	}
@@ -378,8 +397,9 @@ public class ScriptStackFrame extends ScriptDebugElement implements
 		try {
 			if (variables == null) {
 				variables = readAllVariables();
-
-				variables.sort(getDebugTarget());
+				if (variables != null) {
+					variables.sort(getDebugTarget());
+				}
 			} else if (needRefreshVariables) {
 				try {
 					refreshVariables();
@@ -403,6 +423,11 @@ public class ScriptStackFrame extends ScriptDebugElement implements
 	 */
 	private void refreshVariables() throws DebugException, DbgpException {
 		final ScriptVariableContainer newVars = readAllVariables();
+		if (newVars == null) {
+			// No need to refresh, refresh will happen in next
+			variables = null;
+			return;
+		}
 		newVars.sort(getDebugTarget());
 		variables.locals = refreshVariables(newVars.locals, variables.locals);
 		variables.globals = refreshVariables(newVars.globals,
