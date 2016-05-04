@@ -60,13 +60,13 @@ public class ProjectRequest extends AbstractIndexRequest {
 			} else if (fragment.isExternal()) {
 				projectIndexer.request(new ExternalProjectFragmentRequest(
 						projectIndexer, fragment, progressJob));
-			} else {
+			} else if (project.equals(fragment.getScriptProject())) {
 				getSourceModules(fragment, sourceModules);
 			}
 		}
 
-		projectIndexer.request(new SourceModulesRequest(projectIndexer, project
-				.getPath(), sourceModules, progressJob));
+		projectIndexer.request(new SourceModulesRequest(projectIndexer,
+				project.getPath(), sourceModules, progressJob));
 	}
 
 	private void getSourceModules(IProjectFragment fragment,
