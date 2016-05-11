@@ -28,7 +28,6 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -120,7 +119,7 @@ class IndexContainer {
 	public synchronized IndexWriter getTimestampsWriter() {
 		if (fTimestampsWriter == null) {
 			try {
-				Directory indexDir = FSDirectory.open(
+				Directory indexDir = new IndexDirectory(
 						Paths.get(fIndexRoot, fContainerId, TIMESTAMPS_DIR));
 				IndexWriterConfig config = new IndexWriterConfig(
 						new SimpleAnalyzer());
@@ -152,7 +151,7 @@ class IndexContainer {
 		IndexWriter writer = fIndexWriters.get(dataType).get(elementType);
 		if (writer == null) {
 			try {
-				Directory indexDir = FSDirectory.open(Paths.get(fIndexRoot,
+				Directory indexDir = new IndexDirectory(Paths.get(fIndexRoot,
 						fContainerId, dataType.getDirectory(),
 						String.valueOf(elementType)));
 				IndexWriterConfig config = new IndexWriterConfig(
