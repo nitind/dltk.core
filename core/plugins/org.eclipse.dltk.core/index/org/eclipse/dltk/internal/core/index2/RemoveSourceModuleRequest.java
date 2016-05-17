@@ -45,7 +45,7 @@ public class RemoveSourceModuleRequest extends AbstractIndexRequest {
 	@Override
 	protected void run() throws CoreException, IOException {
 		IIndexer indexer = IndexerManager.getIndexer();
-		if (indexer == null) {
+		if (indexer == null || isCancelled) {
 			return;
 		}
 		indexer.removeDocument(containerPath, relativePath);

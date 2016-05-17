@@ -42,7 +42,7 @@ public class AddSourceModuleRequest extends AbstractIndexRequest {
 	@Override
 	protected void run() throws CoreException, IOException {
 		IIndexer indexer = IndexerManager.getIndexer();
-		if (indexer == null) {
+		if (indexer == null || isCancelled) {
 			return;
 		}
 		reportToProgress(sourceModule);

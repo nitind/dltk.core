@@ -50,6 +50,9 @@ public class ExternalProjectFragmentRequest extends AbstractIndexRequest {
 
 	@Override
 	protected void run() throws CoreException, IOException {
+		if (isCancelled) {
+			return;
+		}
 		final Set<ISourceModule> sourceModules = getExternalSourceModules();
 		projectIndexer.request(new SourceModulesRequest(projectIndexer,
 				fragment.getPath(), sourceModules, progressJob));

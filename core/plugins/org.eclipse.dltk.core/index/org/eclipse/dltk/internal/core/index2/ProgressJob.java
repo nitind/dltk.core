@@ -45,6 +45,9 @@ public class ProgressJob extends Job {
 					// ignore
 				}
 			}
+			if (monitor.isCanceled()) {
+				jobManager.discardJobs(null);
+			}
 			monitor.done();
 			return Status.OK_STATUS;
 		} finally {

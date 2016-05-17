@@ -54,7 +54,7 @@ public class SourceModulesRequest extends AbstractIndexRequest {
 	protected void run() throws CoreException, IOException {
 
 		IIndexer indexer = IndexerManager.getIndexer();
-		if (indexer == null) {
+		if (indexer == null || isCancelled) {
 			return;
 		}
 
@@ -65,6 +65,8 @@ public class SourceModulesRequest extends AbstractIndexRequest {
 				toReindex);
 
 		for (final String path : toRemove) {
+			if (isCancelled)
+				return;
 			indexer.removeDocument(containerPath, path);
 		}
 
@@ -77,6 +79,8 @@ public class SourceModulesRequest extends AbstractIndexRequest {
 		});
 
 		for (final ISourceModule sourceModule : toReindex) {
+			if (isCancelled)
+				return;
 			reportToProgress(sourceModule);
 			indexer.indexDocument(sourceModule);
 		}

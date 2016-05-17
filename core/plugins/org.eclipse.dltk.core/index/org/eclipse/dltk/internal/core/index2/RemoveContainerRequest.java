@@ -45,7 +45,7 @@ public class RemoveContainerRequest extends AbstractIndexRequest {
 	@Override
 	protected void run() throws CoreException, IOException {
 		IIndexer indexer = IndexerManager.getIndexer();
-		if (indexer == null) {
+		if (indexer == null || isCancelled) {
 			return;
 		}
 		if (progressJob != null) {
