@@ -31,20 +31,12 @@ import java.util.UUID;
 
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.SearcherManager;
-import org.eclipse.core.resources.ISaveContext;
-import org.eclipse.core.resources.ISaveParticipant;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
+import org.eclipse.dltk.core.IShutdownListener;
 import org.eclipse.dltk.core.index.lucene.LucenePlugin;
-import org.eclipse.dltk.core.search.indexing.IndexManager;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.DLTKWorkspaceScope;
 
@@ -77,56 +69,11 @@ public enum LuceneManager {
 	 */
 	INSTANCE;
 
-	private final class SaveParticipant extends Job
-			implements ISaveParticipant {
-
-		public SaveParticipant() {
-			super(""); //$NON-NLS-1$
-			setSystem(true);
-			setUser(false);
-		}
+	private static final class ShutdownListener implements IShutdownListener {
 
 		@Override
-		public void doneSaving(ISaveContext context) {
-			// ignore
-		}
-
-		@Override
-		public void prepareToSave(ISaveContext context) throws CoreException {
-			// ignore
-		}
-
-		@Override
-		public void rollback(ISaveContext context) {
-			// ignore
-		}
-
-		@Override
-		public void saving(ISaveContext context) throws CoreException {
-			// Close all indexes on workspace save
-			if (context.getKind() == ISaveContext.FULL_SAVE)
-				schedule();
-		}
-
-		@Override
-		public boolean belongsTo(Object family) {
-			return family == LucenePlugin.LUCENE_JOB_FAMILY;
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			IndexManager indexManager = ModelManager.getModelManager()
-					.getIndexManager();
-			// Wait for indexer before shutting down
-			while (indexManager.awaitingJobsCount() > 0) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					Logger.logException(e);
-				}
-			}
-			shutdown();
-			return Status.OK_STATUS;
+		public void shutdown() {
+			LuceneManager.INSTANCE.shutdown();
 		}
 
 	}
@@ -248,12 +195,9 @@ public enum LuceneManager {
 		}
 		loadMappings();
 		registerIndexContainers();
-		try {
-			ResourcesPlugin.getWorkspace().addSaveParticipant(LucenePlugin.ID,
-					new SaveParticipant());
-		} catch (CoreException e) {
-			Logger.logException(e);
-		}
+		ModelManager.getModelManager().getIndexManager()
+				.addShutdownListener(new ShutdownListener());
+
 	}
 
 	private synchronized void shutdown() {

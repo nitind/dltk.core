@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.compiler.util.SimpleLookupTable;
@@ -33,6 +34,7 @@ import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.IShutdownListener;
 import org.eclipse.dltk.core.ISourceElementParser;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.environment.IFileHandle;
@@ -62,6 +64,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
 	private boolean needToSave = false;
 	private static final CRC32 checksumCalculator = new CRC32();
 	private IPath scriptPluginLocation = null;
+	private final ListenerList shutdownListeners = new ListenerList();
 	/* can only replace a current state if its less than the new one */
 	private SimpleLookupTable indexStates = null;
 	private File savedIndexNamesFile = getScriptPluginWorkingLocation().append(
@@ -96,6 +99,10 @@ public class IndexManager extends JobManager implements IIndexConstants {
 			// if already cached index then there is nothing more to do
 			this.rebuildIndex(indexLocation, containerPath);
 		}
+	}
+
+	public void addShutdownListener(IShutdownListener listener) {
+		shutdownListeners.add(listener);
 	}
 
 	/*
@@ -851,6 +858,16 @@ public class IndexManager extends JobManager implements IIndexConstants {
 			}
 		}
 		this.needToSave = !allSaved;
+	}
+
+	@Override
+	public void shutdown() {
+		super.shutdown();
+		Object[] listeners = shutdownListeners.getListeners();
+		for (int i = 0; i < listeners.length; ++i) {
+			((IShutdownListener) listeners[i]).shutdown();
+		}
+		shutdownListeners.clear();
 	}
 
 	@Override
