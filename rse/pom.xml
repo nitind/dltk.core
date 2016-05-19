@@ -12,6 +12,9 @@
 	<groupId>org.eclipse.dltk.rse</groupId>
 	<artifactId>rse</artifactId>
 	<packaging>pom</packaging>
+	<properties>
+		<tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git</tycho.scmUrl>
+	</properties>
 
 	<modules>
 		<module>features/org.eclipse.dltk.rse-feature</module>
