@@ -67,7 +67,8 @@ public class DLTKEditingMonitor extends AbstractUserInteractionMonitor {
 				for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
 					Object selectedObject = iterator.next();
 					if (selectedObject instanceof IModelElement) {
-						IModelElement checkedElement = checkIfAcceptedAndPromoteIfNecessary((IModelElement) selectedObject);
+						IModelElement checkedElement = checkIfAcceptedAndPromoteIfNecessary(
+								(IModelElement) selectedObject);
 						if (checkedElement == null) {
 							return;
 						} else {
@@ -125,7 +126,8 @@ public class DLTKEditingMonitor extends AbstractUserInteractionMonitor {
 					if (selectedElement != null) {
 						// selection of an element
 						if (!selectionResolved && selectedElement.equals(lastSelectedElement)) {
-							super.handleElementEdit(part, selectedElement, contributeToContext);
+							// we no longer produce edit events from here. See bug 371222 http://eclip.se/371222
+							//super.handleElementEdit(part, selectedElement, contributeToContext);
 						} else if (!selectedElement.equals(lastSelectedElement)) {
 							super.handleElementSelection(part, selectedElement, contributeToContext);
 						}
