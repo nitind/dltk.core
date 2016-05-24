@@ -52,6 +52,10 @@ public class DbgpRequest implements IDbgpRawPacket {
 		options.put(optionName, optionValue.toString());
 	}
 
+	public void removeOption(String optionName) {
+		options.remove(optionName);
+	}
+
 	public String getOption(String optionName) {
 		return (String) options.get(optionName);
 	}
