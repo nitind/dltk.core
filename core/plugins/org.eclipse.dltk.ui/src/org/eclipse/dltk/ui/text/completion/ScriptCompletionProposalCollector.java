@@ -674,10 +674,22 @@ public abstract class ScriptCompletionProposalCollector extends
 				image, displayString, relevance, isInDoc);
 	}
 
+	@Deprecated
 	protected ScriptCompletionProposal createOverrideCompletionProposal(
 			IScriptProject scriptProject, ISourceModule compilationUnit,
 			String name, String[] paramTypes, int start, int length,
 			String label, String string) {
+		// default implementation return null, as this functionality is optional
+		return null;
+	}
+
+	/**
+	 * @since 5.5
+	 */
+	protected ScriptCompletionProposal createOverrideCompletionProposal(
+			IScriptProject scriptProject, ISourceModule compilationUnit,
+			String name, String[] paramTypes, int start, int length,
+			StyledString label, String string) {
 		// default implementation return null, as this functionality is optional
 		return null;
 	}
@@ -853,11 +865,22 @@ public abstract class ScriptCompletionProposalCollector extends
 
 		int start = proposal.getReplaceStart();
 		int length = getLength(proposal);
-		String label = getLabelProvider().createOverrideMethodProposalLabel(
-				proposal);
-		ScriptCompletionProposal scriptProposal = createOverrideCompletionProposal(
-				fScriptProject, fSourceModule, name, paramTypes, start, length,
-				label, String.valueOf(proposal.getCompletion()));
+		CompletionProposalLabelProvider labelProvider = getLabelProvider();
+		ScriptCompletionProposal scriptProposal;
+		if (labelProvider instanceof ICompletionProposalLabelProviderExtension2) {
+			StyledString label = ((ICompletionProposalLabelProviderExtension2) labelProvider)
+					.createStyledOverrideMethodProposalLabel(proposal);
+			scriptProposal = createOverrideCompletionProposal(fScriptProject,
+					fSourceModule, name, paramTypes, start, length, label,
+					String.valueOf(proposal.getCompletion()));
+		} else {
+			String label = labelProvider
+					.createOverrideMethodProposalLabel(proposal);
+			scriptProposal = createOverrideCompletionProposal(fScriptProject,
+					fSourceModule, name, paramTypes, start, length, label,
+					String.valueOf(proposal.getCompletion()));
+		}
+
 		if (scriptProposal == null)
 			return null;
 		scriptProposal.setImage(getImage(getLabelProvider()

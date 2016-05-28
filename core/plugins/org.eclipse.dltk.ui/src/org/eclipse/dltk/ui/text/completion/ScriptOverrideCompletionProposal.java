@@ -10,6 +10,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.viewers.StyledString;
 
 
 public class ScriptOverrideCompletionProposal extends ScriptTypeCompletionProposal implements ICompletionProposalExtension4 {
@@ -17,7 +18,18 @@ public class ScriptOverrideCompletionProposal extends ScriptTypeCompletionPropos
 	private String fMethodName;
 
 	public ScriptOverrideCompletionProposal(IScriptProject jproject, ISourceModule cu, String methodName, String[] paramTypes, int start, int length, String displayName, String completionProposal) {
-		super(completionProposal, cu, start, length, null, displayName, 0);
+		this(jproject, cu, methodName, paramTypes, start, length,
+				new StyledString(displayName), completionProposal);
+	}
+
+	/**
+	 * @since 5.5
+	 */
+	public ScriptOverrideCompletionProposal(IScriptProject jproject,
+			ISourceModule cu, String methodName, String[] paramTypes, int start,
+			int length, StyledString displayName, String completionProposal) {
+		super(completionProposal, cu, start, length, null, displayName, 0,
+				null);
 		Assert.isNotNull(jproject);
 		Assert.isNotNull(methodName);
 		Assert.isNotNull(paramTypes);

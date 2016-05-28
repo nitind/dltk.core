@@ -14,6 +14,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
 
@@ -34,10 +35,24 @@ public class ScriptTypeCompletionProposal extends ScriptCompletionProposal {
 		this(replacementString, cu, replacementOffset, replacementLength, image, displayString, relevance, null);
 	}
 
-	public ScriptTypeCompletionProposal(String replacementString, ISourceModule cu, int replacementOffset, int replacementLength, Image image, String displayString, int relevance,
+	public ScriptTypeCompletionProposal(String replacementString,
+			ISourceModule cu, int replacementOffset, int replacementLength,
+			Image image, String displayString, int relevance,
+			String fullyQualifiedTypeName) {
+		this(replacementString, cu, replacementOffset, replacementLength, image,
+				new StyledString(displayString), relevance, null);
+	}
+
+	/**
+	 * @since 5.5
+	 */
+	public ScriptTypeCompletionProposal(String replacementString,
+			ISourceModule cu, int replacementOffset, int replacementLength,
+			Image image, StyledString displayString, int relevance,
 		String fullyQualifiedTypeName)
 	{
-		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance);
+		super(replacementString, replacementOffset, replacementLength, image,
+				displayString, relevance, false);
 		fSourceModule= cu;
 		fFullyQualifiedTypeName= fullyQualifiedTypeName;
 		fUnqualifiedTypeName = null;
