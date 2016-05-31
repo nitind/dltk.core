@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
+import org.apache.lucene.index.ConcurrentMergeScheduler;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
@@ -112,22 +113,32 @@ class IndexContainer {
 				new HashMap<Integer, SearcherManager>());
 	}
 
+	private IndexWriter createIndexWriter(Path path) {
+		IndexWriter indexWriter = null;
+		try {
+			Directory indexDir = new IndexDirectory(path);
+			IndexWriterConfig config = new IndexWriterConfig(
+					new SimpleAnalyzer());
+			ConcurrentMergeScheduler mergeScheduler = new ConcurrentMergeScheduler();
+			mergeScheduler.setDefaultMaxMergesAndThreads(true);
+			config.setMergeScheduler(mergeScheduler);
+			config.setOpenMode(OpenMode.CREATE_OR_APPEND);
+			indexWriter = new IndexWriter(indexDir, config);
+		} catch (IOException e) {
+			Logger.logException(e);
+		}
+		return indexWriter;
+	}
+
 	public final String getId() {
 		return fContainerId;
 	}
 
 	public synchronized IndexWriter getTimestampsWriter() {
 		if (fTimestampsWriter == null) {
-			try {
-				Directory indexDir = new IndexDirectory(
-						Paths.get(fIndexRoot, fContainerId, TIMESTAMPS_DIR));
-				IndexWriterConfig config = new IndexWriterConfig(
-						new SimpleAnalyzer());
-				config.setOpenMode(OpenMode.CREATE_OR_APPEND);
-				fTimestampsWriter = new IndexWriter(indexDir, config);
-			} catch (IOException e) {
-				Logger.logException(e);
-			}
+			Path writerPath = Paths.get(fIndexRoot, fContainerId,
+					TIMESTAMPS_DIR);
+			fTimestampsWriter = createIndexWriter(writerPath);
 		}
 		return fTimestampsWriter;
 	}
@@ -150,18 +161,10 @@ class IndexContainer {
 			int elementType) {
 		IndexWriter writer = fIndexWriters.get(dataType).get(elementType);
 		if (writer == null) {
-			try {
-				Directory indexDir = new IndexDirectory(Paths.get(fIndexRoot,
-						fContainerId, dataType.getDirectory(),
-						String.valueOf(elementType)));
-				IndexWriterConfig config = new IndexWriterConfig(
-						new SimpleAnalyzer());
-				config.setOpenMode(OpenMode.CREATE_OR_APPEND);
-				writer = new IndexWriter(indexDir, config);
-				fIndexWriters.get(dataType).put(elementType, writer);
-			} catch (IOException e) {
-				Logger.logException(e);
-			}
+			Path writerPath = Paths.get(fIndexRoot, fContainerId,
+					dataType.getDirectory(), String.valueOf(elementType));
+			writer = createIndexWriter(writerPath);
+			fIndexWriters.get(dataType).put(elementType, writer);
 		}
 		return writer;
 	}
