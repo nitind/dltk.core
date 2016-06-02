@@ -13,7 +13,9 @@ package org.eclipse.dltk.internal.debug.ui.console;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchesListener2;
 import org.eclipse.debug.core.commands.ITerminateHandler;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
@@ -24,6 +26,7 @@ import org.eclipse.debug.internal.ui.commands.actions.DebugCommandService;
 import org.eclipse.dltk.debug.ui.ScriptDebugConsole;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.IUpdate;
 
 /**
@@ -31,8 +34,36 @@ import org.eclipse.ui.texteditor.IUpdate;
  */
 public class ConsoleTerminateAction extends Action implements IUpdate {
 
+	private final class TerminateListener implements ILaunchesListener2 {
+		@Override
+		public void launchesRemoved(ILaunch[] launches) {
+
+		}
+
+		@Override
+		public void launchesChanged(ILaunch[] launches) {
+		}
+
+		@Override
+		public void launchesAdded(ILaunch[] launches) {
+
+		}
+
+		@Override
+		public void launchesTerminated(ILaunch[] launches) {
+			PlatformUI.getWorkbench().getDisplay()
+					.asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							update();
+						}
+					});
+		}
+	}
+
 	private ScriptDebugConsole fConsole;
 	private IWorkbenchWindow fWindow;
+	private TerminateListener listener;
 
 	/**
 	 * Creates a terminate action for the console
@@ -46,11 +77,18 @@ public class ConsoleTerminateAction extends Action implements IUpdate {
 		fWindow = window;
 		setToolTipText(ConsoleMessages.ConsoleTerminateAction_1);
 		setImageDescriptor(DebugPluginImages
-				.getImageDescriptor(IInternalDebugUIConstants.IMG_LCL_TERMINATE));
+				.getImageDescriptor(
+						IInternalDebugUIConstants.IMG_LCL_TERMINATE));
 		setDisabledImageDescriptor(DebugPluginImages
-				.getImageDescriptor(IInternalDebugUIConstants.IMG_DLCL_TERMINATE));
+				.getImageDescriptor(
+						IInternalDebugUIConstants.IMG_DLCL_TERMINATE));
 		setHoverImageDescriptor(DebugPluginImages
-				.getImageDescriptor(IInternalDebugUIConstants.IMG_LCL_TERMINATE));
+				.getImageDescriptor(
+						IInternalDebugUIConstants.IMG_LCL_TERMINATE));
+
+		listener = new TerminateListener();
+		DebugPlugin.getDefault().getLaunchManager()
+				.addLaunchListener(listener);
 		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
 		// IDebugHelpContextIds.CONSOLE_TERMINATE_ACTION);
 		update();
@@ -60,8 +98,10 @@ public class ConsoleTerminateAction extends Action implements IUpdate {
 	 * @see org.eclipse.ui.texteditor.IUpdate#update()
 	 */
 	public void update() {
-		ILaunch launch = fConsole.getLaunch();
-		setEnabled(launch.canTerminate());
+		if (fConsole != null) {
+			ILaunch launch = fConsole.getLaunch();
+			setEnabled(launch.canTerminate());
+		}
 	}
 
 	/*
@@ -79,14 +119,18 @@ public class ConsoleTerminateAction extends Action implements IUpdate {
 		for (int k = 0; k < processes.length; ++k) {
 			targets.add(processes[k]);
 		}
+
 		DebugCommandService service = DebugCommandService.getService(fWindow);
 		service
 				.executeCommand(ITerminateHandler.class, targets.toArray(),
 						null);
+
 	}
 
 	public void dispose() {
 		fConsole = null;
+		DebugPlugin.getDefault().getLaunchManager()
+				.removeLaunchListener(listener);
 	}
 
 }
