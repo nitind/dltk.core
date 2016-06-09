@@ -677,7 +677,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 				break;
 			}
 			if (checkExistency) {
-				if (entryPath.segment(0).startsWith(
+				if (entryPath.segmentCount() > 0
+						&& entryPath.segment(0).startsWith(
 						IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)
 						&& BuiltinProjectFragment.isSupported(this)) {
 					root = new BuiltinProjectFragment(entryPath, this);

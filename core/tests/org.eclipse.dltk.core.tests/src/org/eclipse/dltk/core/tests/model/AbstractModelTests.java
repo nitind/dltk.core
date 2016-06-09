@@ -302,8 +302,8 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		if (project == null) {
 			return null;
 		}
-		IPath path = new Path(fragmentPath);
-		if (path.isAbsolute()) {
+		IPath path = Path.fromPortableString(fragmentPath);
+		if (path.isAbsolute() && path.getDevice() == null) {
 			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
 					.getRoot();
 			IResource resource = workspaceRoot.findMember(path);
@@ -318,8 +318,13 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 			}
 			for (int i = 0; i < roots.length; i++) {
 				IProjectFragment root = roots[i];
-				if (root.getUnderlyingResource().getProjectRelativePath()
+				IResource underlyingResource = root.getUnderlyingResource();
+				if (underlyingResource != null && underlyingResource
+						.getProjectRelativePath()
 						.equals(path)) {
+					return root;
+				}
+				if (root.getPath().equals(path)) {
 					return root;
 				}
 			}

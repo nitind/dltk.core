@@ -95,5 +95,13 @@
            class="org.eclipse.dltk.core.tests.cache.TestContentCacheProvider">
      </contentCacheProvider>
   </extension>
+  <extension
+        point="org.eclipse.dltk.core.environment">
+     <environment
+           class="org.eclipse.dltk.core.tests.util.EnvironmentProvider"
+           id="org.eclipse.dltk.core.tests.environment1"
+           priority="0">
+     </environment>
+  </extension>
 
 </plugin>

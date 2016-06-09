@@ -15,6 +15,7 @@ import java.io.InputStream;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.dltk.core.IModelStatusConstants;
 import org.eclipse.dltk.core.ModelException;
@@ -29,6 +30,8 @@ public class ExternalEntryFile extends PlatformObject implements IStorage {
 	private IFileHandle file;
 
 	public ExternalEntryFile(IFileHandle file) {
+		if (file == null)
+			throw new NullPointerException();
 		this.file = file;
 	}
 
@@ -59,5 +62,13 @@ public class ExternalEntryFile extends PlatformObject implements IStorage {
 	@Override
 	public String toString() {
 		return "ExternalEntryFile[" + this.file.toOSString() + "]"; //$NON-NLS-2$ //$NON-NLS-1$
+	}
+
+	@Override
+	public <T> T getAdapter(Class<T> adapter) {
+		T rv = super.getAdapter(adapter);
+		if (rv != null)
+			return rv;
+		return Platform.getAdapterManager().getAdapter(file, adapter);
 	}
 }

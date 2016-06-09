@@ -7,9 +7,9 @@
  ******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
@@ -87,40 +87,36 @@ public class ExternalSourceModule extends AbstractExternalSourceModule {
 	protected char[] getBufferContent() throws ModelException {
 		IPath path = getBufferPath();
 		IFileHandle file = EnvironmentPathUtils.getFile(path);
-
+		Charset charset = storage.getAdapter(Charset.class);
 		IProjectFragment projectFragment = this.getProjectFragment();
-		if (file != null && file.exists() && !projectFragment.isArchive()) {
-			return org.eclipse.dltk.internal.core.util.Util
-					.getResourceContentsAsCharArray(file);
-		} else {
-			if (projectFragment.isArchive()) {
-				final InputStream stream;
-				PerformanceNode p = RuntimePerformanceMonitor.begin();
-				try {
-					stream = new BufferedInputStream(storage.getContents(),
-							4096);
-				} catch (CoreException e) {
-					throw new ModelException(e,
-							IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
-				}
-				try {
-					char[] data = Util.getInputStreamAsCharArray(stream, -1,
-							Util.UTF_8);
-					p.done("#", RuntimePerformanceMonitor.IOREAD, data.length);
-					return data;
-				} catch (IOException e) {
-					throw new ModelException(e,
-							IModelStatusConstants.IO_EXCEPTION);
-				} finally {
-					try {
-						stream.close();
-					} catch (IOException e) {
-						// ignore
-					}
-				}
-			}
+		if (charset == null) {
+			if (projectFragment.isArchive())
+				charset = Charset.forName(Util.UTF_8);
 		}
-		throw newNotPresentException();
+		PerformanceNode p = RuntimePerformanceMonitor.begin();
+		long length = 0;
+		try {
+			try {
+				InputStream stream = null;
+				try {
+					stream = storage.getContents();
+					char[] rv = Util.getInputStreamAsCharArray(stream, -1,
+							charset == null ? null : charset.name());
+					length = rv.length;
+					return rv;
+				} finally {
+					if (stream != null)
+						stream.close();
+				}
+			} catch (CoreException e) {
+				throw new ModelException(e,
+						IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
+			}
+		} catch (IOException e) {
+			throw new ModelException(e, IModelStatusConstants.IO_EXCEPTION);
+		} finally {
+			p.done("#", RuntimePerformanceMonitor.IOREAD, length);
+		}
 	}
 
 	/**

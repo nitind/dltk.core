@@ -638,11 +638,16 @@ public class BuildpathEntry implements IBuildpathEntry {
 			break;
 		case IBuildpathEntry.BPE_LIBRARY:
 			if (isExternal) {
-				String environmentId = EnvironmentManager
-						.getEnvironmentId(project.getProject());
-				if (environmentId != null) {
-					path = EnvironmentPathUtils
-							.getFullPath(environmentId, path);
+				IPath fullPath = Path.fromPortableString(pathAttr);
+				if (!EnvironmentPathUtils.isFull(fullPath)) {
+					String environmentId = EnvironmentManager
+							.getEnvironmentId(project.getProject());
+					if (environmentId != null) {
+						path = EnvironmentPathUtils
+								.getFullPath(environmentId, path);
+					}
+				} else {
+					path = fullPath;
 				}
 			}
 			entry = DLTKCore.newLibraryEntry(path, accessRules,
