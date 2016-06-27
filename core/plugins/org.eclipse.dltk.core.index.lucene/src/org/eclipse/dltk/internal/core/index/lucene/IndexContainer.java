@@ -11,12 +11,9 @@
 package org.eclipse.dltk.internal.core.index.lucene;
 
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,9 +26,11 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.SimpleFSLockFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.index.lucene.LucenePlugin;
 
@@ -57,35 +56,32 @@ class IndexContainer {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
+			doClean();
+			return Status.OK_STATUS;
+		}
+
+		void clean(boolean fork) {
+			if (fork) {
+				schedule();
+			} else {
+				doClean();
+			}
+		}
+
+		private void doClean() {
 			close();
 			Path containerPath = Paths.get(fIndexRoot, getId());
 			try {
-				Files.walkFileTree(containerPath,
-						new SimpleFileVisitor<Path>() {
-							@Override
-							public FileVisitResult visitFile(Path file,
-									BasicFileAttributes attrs)
-									throws IOException {
-								Files.delete(file);
-								return FileVisitResult.CONTINUE;
-							}
-
-							@Override
-							public FileVisitResult postVisitDirectory(Path dir,
-									IOException exc) throws IOException {
-								Files.delete(dir);
-								return FileVisitResult.CONTINUE;
-							}
-						});
+				Utils.delete(containerPath);
 			} catch (IOException e) {
 				Logger.logException(e);
 			}
-			return Status.OK_STATUS;
 		}
 
 	}
 
 	private static final String TIMESTAMPS_DIR = "timestamps"; //$NON-NLS-1$
+	private static final long WRITE_LOCK_TIMEOUT = 3000;
 
 	private final String fIndexRoot;
 	private final String fContainerId;
@@ -113,19 +109,47 @@ class IndexContainer {
 				new HashMap<Integer, SearcherManager>());
 	}
 
-	private IndexWriter createIndexWriter(Path path) {
+	private void purgeLocks(Path path) {
+		/*
+		 * Checks if any write locks exist (might be not removed if JVM crashed
+		 * or was terminated abnormally) and simply deletes them.
+		 */
+		Path writeLockPath = path.resolve(IndexWriter.WRITE_LOCK_NAME);
+		if (writeLockPath.toFile().exists()) {
+			try {
+				Files.delete(writeLockPath);
+			} catch (IOException e) {
+				Logger.logException(e);
+			}
+		}
+	}
+
+	private IndexWriter createWriter(Path path) throws IOException {
+		Directory indexDir = new IndexDirectory(path,
+				SimpleFSLockFactory.INSTANCE);
+		purgeLocks(path);
+		IndexWriterConfig config = new IndexWriterConfig(new SimpleAnalyzer());
+		ConcurrentMergeScheduler mergeScheduler = new ConcurrentMergeScheduler();
+		mergeScheduler.setDefaultMaxMergesAndThreads(true);
+		config.setMergeScheduler(mergeScheduler);
+		config.setOpenMode(OpenMode.CREATE_OR_APPEND);
+		config.setWriteLockTimeout(WRITE_LOCK_TIMEOUT);
+		config.setCommitOnClose(false);
+		return new IndexWriter(indexDir, config);
+	}
+
+	private IndexWriter getWriter(Path path) {
 		IndexWriter indexWriter = null;
 		try {
-			Directory indexDir = new IndexDirectory(path);
-			IndexWriterConfig config = new IndexWriterConfig(
-					new SimpleAnalyzer());
-			ConcurrentMergeScheduler mergeScheduler = new ConcurrentMergeScheduler();
-			mergeScheduler.setDefaultMaxMergesAndThreads(true);
-			config.setMergeScheduler(mergeScheduler);
-			config.setOpenMode(OpenMode.CREATE_OR_APPEND);
-			indexWriter = new IndexWriter(indexDir, config);
+			indexWriter = createWriter(path);
 		} catch (IOException e) {
-			Logger.logException(e);
+			// Try to recover possibly corrupted index
+			IndexRecovery.tryRecover(this, path, e);
+			try {
+				indexWriter = createWriter(path);
+			} catch (IOException ex) {
+				Logger.logException(ex);
+			}
 		}
 		return indexWriter;
 	}
@@ -138,7 +162,7 @@ class IndexContainer {
 		if (fTimestampsWriter == null) {
 			Path writerPath = Paths.get(fIndexRoot, fContainerId,
 					TIMESTAMPS_DIR);
-			fTimestampsWriter = createIndexWriter(writerPath);
+			fTimestampsWriter = getWriter(writerPath);
 		}
 		return fTimestampsWriter;
 	}
@@ -163,7 +187,7 @@ class IndexContainer {
 		if (writer == null) {
 			Path writerPath = Paths.get(fIndexRoot, fContainerId,
 					dataType.getDirectory(), String.valueOf(elementType));
-			writer = createIndexWriter(writerPath);
+			writer = getWriter(writerPath);
 			fIndexWriters.get(dataType).put(elementType, writer);
 		}
 		return writer;
@@ -205,9 +229,9 @@ class IndexContainer {
 		}
 	}
 
-	public synchronized void delete() {
+	public synchronized void delete(boolean wait) {
 		// Delete container entry entirely
-		(new IndexCleaner()).schedule();
+		(new IndexCleaner()).clean(!wait);
 	}
 
 	public synchronized void close() {
@@ -233,6 +257,48 @@ class IndexContainer {
 						writer.close();
 				}
 			}
+		} catch (IOException e) {
+			Logger.logException(e);
+		}
+	}
+
+	synchronized boolean hasUncommittedChanges() {
+		for (Map<Integer, IndexWriter> dataWriters : fIndexWriters.values()) {
+			for (IndexWriter writer : dataWriters.values()) {
+				if (writer != null && writer.hasUncommittedChanges()) {
+					return true;
+				}
+			}
+			if (fTimestampsWriter != null) {
+				return fTimestampsWriter.hasUncommittedChanges();
+			}
+		}
+		return false;
+	}
+
+	synchronized void commit(IProgressMonitor monitor) {
+		int ticks = 1;
+		for (Map<?, ?> dataWriters : fIndexWriters.values()) {
+			ticks += dataWriters.size();
+		}
+		SubMonitor subMonitor = SubMonitor.convert(monitor, ticks);
+		try {
+			for (Map<Integer, IndexWriter> dataWriters : fIndexWriters
+					.values()) {
+				for (IndexWriter writer : dataWriters.values()) {
+					if (writer != null && !subMonitor.isCanceled()) {
+						writer.forceMergeDeletes(true);
+						writer.commit();
+						subMonitor.worked(1);
+					}
+				}
+			}
+			if (fTimestampsWriter != null && !subMonitor.isCanceled()) {
+				fTimestampsWriter.forceMergeDeletes(true);
+				fTimestampsWriter.commit();
+				subMonitor.worked(1);
+			}
+			subMonitor.done();
 		} catch (IOException e) {
 			Logger.logException(e);
 		}
