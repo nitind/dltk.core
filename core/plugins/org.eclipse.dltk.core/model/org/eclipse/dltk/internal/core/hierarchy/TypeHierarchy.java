@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -101,6 +102,8 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	protected Map<IType, TypeVector> classToSuperclass;
 	protected Map<IType, TypeVector> typeToSubtypes;
 	protected Map<IType, Integer> typeFlags;
+	protected Set<IType> exploredClasses;
+	protected Set<IType> cyclicClasses;
 	protected TypeVector rootClasses = new TypeVector();
 	public ArrayList<String> missingTypes = new ArrayList<String>(4);
 
@@ -247,14 +250,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	 * Adds the given subtype to the type.
 	 */
 	protected void addSubtype(IType type, IType subtype) {
-		TypeVector subtypes = this.typeToSubtypes.get(type);
-		if (subtypes == null) {
-			subtypes = new TypeVector();
-			this.typeToSubtypes.put(type, subtypes);
-		}
-		if (!subtypes.contains(subtype)) {
-			subtypes.add(subtype);
-		}
+		cacheSuperclass(subtype, type);
 	}
 
 	/**
@@ -308,8 +304,17 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 			}
 			if (!superTypes.contains(superclass)) {
 				superTypes.add(superclass);
+				resetClassPaths();
 			}
-			addSubtype(superclass, type);
+			TypeVector subtypes = this.typeToSubtypes.get(superclass);
+			if (subtypes == null) {
+				subtypes = new TypeVector();
+				this.typeToSubtypes.put(superclass, subtypes);
+			}
+			if (!subtypes.contains(type)) {
+				subtypes.add(type);
+				resetClassPaths();
+			}
 		}
 	}
 
@@ -568,12 +573,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	 */
 	@Override
 	public IType[] getSubclasses(IType type) {
-		TypeVector vector = this.typeToSubtypes.get(type);
-		if (vector == null) {
-			return NO_TYPE;
-		} else {
-			return vector.elements();
-		}
+		return getSubtypesForType(type);
 	}
 
 	/**
@@ -588,12 +588,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	 * Returns an array of subtypes for the given type - will never return null.
 	 */
 	private IType[] getSubtypesForType(IType type) {
-		TypeVector vector = this.typeToSubtypes.get(type);
-		if (vector == null) {
-			return NO_TYPE;
-		} else {
-			return vector.elements();
-		}
+		return filterSuperOrSubclasses(type, true);
 	}
 
 	/**
@@ -601,11 +596,7 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 	 */
 	@Override
 	public IType[] getSuperclass(IType type) {
-		TypeVector superTypes = this.classToSuperclass.get(type);
-		if (superTypes != null) {
-			return superTypes.elements();
-		}
-		return TypeVector.NoElements;
+		return filterSuperOrSubclasses(type, false);
 	}
 
 	/**
@@ -756,6 +747,8 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 		this.rootClasses = new TypeVector();
 		this.typeToSubtypes = new HashMap<IType, TypeVector>(smallSize);
 		this.typeFlags = new HashMap<IType, Integer>(smallSize);
+		this.exploredClasses = new HashSet<IType>(smallSize);
+		this.cyclicClasses = new HashSet<IType>(smallSize);
 
 		this.projectRegion = new Region();
 		this.packageRegion = new Region();
@@ -1478,8 +1471,8 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 				buffer.append("  "); //$NON-NLS-1$
 			}
 			ModelElement element = (ModelElement) sortedTypes[i];
-			buffer.append(element
-					.toStringWithAncestors(false/* don't show key */));
+			buffer.append(
+					element.toStringWithAncestors(false/* don't show key */));
 			buffer.append('\n');
 			toString(buffer, types[i], indent + 1, ascendant);
 		}
@@ -1514,5 +1507,115 @@ public class TypeHierarchy implements ITypeHierarchy, IElementChangedListener {
 			this.progressMonitor.worked(work);
 			checkCanceled();
 		}
+	}
+
+	/**
+	 * Returns whether a class belongs to an explored class path or not.
+	 */
+	protected boolean isExplored(IType type) {
+		return this.exploredClasses.contains(type);
+	}
+
+	/**
+	 * Returns whether a class belongs to a cyclic class path or not.
+	 */
+	protected boolean isCyclic(IType type) {
+		return this.cyclicClasses.contains(type);
+	}
+
+	/**
+	 * Removes all explored class paths. Necessary when new types are added to
+	 * maps "classToSuperclass" or "typeToSubtypes" otherwise new cyclic paths
+	 * won't be detected.
+	 */
+	protected void resetClassPaths() {
+		this.exploredClasses.clear();
+		this.cyclicClasses.clear();
+	}
+
+	/**
+	 * Main method to discover cyclic and non-cyclic (graph) paths. It is a
+	 * depth-first search that will mark as explored (in set "exploredClasses")
+	 * all children (i.e. super classes) of "currentClass" and will store (in
+	 * set "cyclicClasses") every child that is on a cyclic graph path. All
+	 * cyclic paths will be fully explored and list "currentClassPath" avoids
+	 * infinite recursion of this method by storing current class path going
+	 * from first explored "currentClass" (included) to actual explored
+	 * "currentClass" (excluded).
+	 */
+	void explore(LinkedList<IType> currentClassPath, IType currentClass) {
+		if (currentClass == null) {
+			return;
+		}
+		int idx = currentClassPath.indexOf(currentClass);
+		if (idx == -1 && isExplored(currentClass) && !isCyclic(currentClass)) {
+			// we already explored currentClass and its super classes (if any),
+			// we can stop here, this class path (without "currentClass") being
+			// a non-cyclic path
+			return;
+		}
+		this.exploredClasses.add(currentClass);
+		if (idx != -1) {
+			// We found a cyclic path.
+			// Split class path in 2, the delimiter being "currentClass". First
+			// part is non-cyclic whereas second part is cyclic (and includes
+			// "currentClass").
+			this.cyclicClasses.addAll(
+					currentClassPath.subList(idx, currentClassPath.size()));
+			return;
+		}
+		TypeVector superclasses = this.classToSuperclass.get(currentClass);
+		if (superclasses != null && superclasses.size > 0) {
+			// add current class to current class path
+			currentClassPath.addLast(currentClass);
+			// visit all super classes
+			for (IType superclass : superclasses.elements()) {
+				explore(currentClassPath, superclass);
+			}
+			// remove current class from current class path
+			currentClassPath.removeLast();
+		}
+	}
+
+	/**
+	 * Filters either super or subclasses (depending on value of parameter
+	 * "isFilterForSubclasses"). Only super or subclasses having no cyclic
+	 * path/hierarchy will be returned.
+	 */
+	IType[] filterSuperOrSubclasses(IType type, boolean isFilterForSubclasses) {
+		if (type == null) {
+			return TypeVector.NoElements;
+		}
+		if (!this.typeToSubtypes.containsKey(type)
+				&& !this.classToSuperclass.containsKey(type)) {
+			// this type is not handled by current type hierarchy,
+			// do not cache its path informations
+			return TypeVector.NoElements;
+		}
+		if (!isExplored(type)) {
+			// this type was never explored, go through this type and its
+			// unexplored super classes to cache all path informations
+			explore(new LinkedList<IType>(), type);
+		}
+		assert isExplored(type);
+		TypeVector superOrSubclasses = isFilterForSubclasses
+				? typeToSubtypes.get(type) : classToSuperclass.get(type);
+		if (superOrSubclasses == null) {
+			return TypeVector.NoElements;
+		}
+		ArrayList<IType> l = new ArrayList<IType>();
+		for (IType superOrSubclass : superOrSubclasses.elements()) {
+			if (isFilterForSubclasses && superOrSubclass != null
+					&& !isExplored(superOrSubclass)) {
+				// this type was never explored, go through this type and its
+				// unexplored super classes to cache all path informations
+				explore(new LinkedList<IType>(), superOrSubclass);
+			}
+			assert superOrSubclass == null || isExplored(superOrSubclass);
+			if (superOrSubclass == null || !isCyclic(superOrSubclass)) {
+				l.add(superOrSubclass);
+			}
+		}
+		return l.toArray(new IType[l.size()]);
 	}
 }
