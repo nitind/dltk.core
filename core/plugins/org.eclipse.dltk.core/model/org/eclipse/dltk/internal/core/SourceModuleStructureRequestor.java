@@ -211,6 +211,7 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 				String name = manager.intern(parameterNames[i]);
 				String type = null;
 				String defaultValue = null;
+				int flags = 0;
 				if (methodInfo.parameterTypes != null
 						&& i < methodInfo.parameterTypes.length) {
 					type = methodInfo.parameterTypes[i];
@@ -225,7 +226,12 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 						defaultValue = manager.intern(defaultValue);
 					}
 				}
-				params[i] = new MethodParameterInfo(name, type, defaultValue);
+				if (methodInfo.parameterFlags != null
+						&& i < methodInfo.parameterFlags.length) {
+					flags = methodInfo.parameterFlags[i];
+				}
+				params[i] = new MethodParameterInfo(name, type, defaultValue,
+						flags);
 			}
 			info.setArguments(params);
 		}

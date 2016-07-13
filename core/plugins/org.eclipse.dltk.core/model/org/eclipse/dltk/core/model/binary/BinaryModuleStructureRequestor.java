@@ -137,6 +137,7 @@ public class BinaryModuleStructureRequestor implements IBinaryElementRequestor {
 			for (int i = 0; i < parameterNames.length; ++i) {
 				String type = null;
 				String defaultValue = null;
+				int flags = 0;
 				if (methodInfo.parameterTypes != null
 						&& i < methodInfo.parameterTypes.length) {
 					type = methodInfo.parameterTypes[i];
@@ -151,8 +152,13 @@ public class BinaryModuleStructureRequestor implements IBinaryElementRequestor {
 						defaultValue = manager.intern(defaultValue);
 					}
 				}
+				if (methodInfo.parameterFlags != null
+						&& i < methodInfo.parameterFlags.length) {
+					flags = methodInfo.parameterFlags[i];
+				}
 				params[i] = new MethodParameterInfo(
-						manager.intern(parameterNames[i]), type, defaultValue);
+						manager.intern(parameterNames[i]), type, defaultValue,
+						flags);
 			}
 			handleInfo.setArguments(params);
 		}

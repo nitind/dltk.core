@@ -36,4 +36,11 @@ public interface IParameter {
 	 */
 	String getDefaultValue();
 
+	/**
+	 * Returns the modifier flags for this parameter. The flags can be examined
+	 * using class <code>Flags</code>.
+	 * 
+	 * @return
+	 */
+	int getFlags();
 }

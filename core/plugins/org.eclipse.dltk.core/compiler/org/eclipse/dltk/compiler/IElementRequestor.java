@@ -21,6 +21,7 @@ public interface IElementRequestor {
 		public String[] parameterInitializers;
 		public String[] parameterTypes;
 		public String[] exceptionTypes;
+		public int[] parameterFlags;
 		public String returnType;
 		public boolean isConstructor;
 	}

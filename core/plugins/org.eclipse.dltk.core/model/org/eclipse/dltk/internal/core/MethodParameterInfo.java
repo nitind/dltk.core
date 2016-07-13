@@ -19,15 +19,22 @@ public class MethodParameterInfo implements IParameter {
 	private final String name;
 	private final String type;
 	private final String defaultValue;
+	private final int flags;
 
 	public MethodParameterInfo(String name) {
 		this(name, null, null);
 	}
 
 	public MethodParameterInfo(String name, String type, String defaultValue) {
+		this(name, type, defaultValue, 0);
+	}
+
+	public MethodParameterInfo(String name, String type, String defaultValue,
+			int flags) {
 		this.name = name;
 		this.type = type;
 		this.defaultValue = defaultValue;
+		this.flags = flags;
 	}
 
 	@Override
@@ -46,6 +53,11 @@ public class MethodParameterInfo implements IParameter {
 	}
 
 	@Override
+	public int getFlags() {
+		return flags;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
@@ -53,7 +65,8 @@ public class MethodParameterInfo implements IParameter {
 			final MethodParameterInfo other = (MethodParameterInfo) obj;
 			return name.equals(other.name)
 					&& CharOperation.equals(type, other.type)
-					&& CharOperation.equals(defaultValue, other.defaultValue);
+					&& CharOperation.equals(defaultValue, other.defaultValue)
+					&& flags == other.flags;
 		}
 		return false;
 	}
