@@ -65,6 +65,7 @@ public class IndexManager extends JobManager implements IIndexConstants {
 	private static final CRC32 checksumCalculator = new CRC32();
 	private IPath scriptPluginLocation = null;
 	private final ListenerList shutdownListeners = new ListenerList();
+	private final ListenerList indexerThreadListeners = new ListenerList();
 	/* can only replace a current state if its less than the new one */
 	private SimpleLookupTable indexStates = null;
 	private File savedIndexNamesFile = getScriptPluginWorkingLocation().append(
@@ -103,6 +104,10 @@ public class IndexManager extends JobManager implements IIndexConstants {
 
 	public void addShutdownListener(IShutdownListener listener) {
 		shutdownListeners.add(listener);
+	}
+
+	public void addIndexerThreadListener(IIndexThreadListener listener) {
+		indexerThreadListeners.add(listener);
 	}
 
 	/*
@@ -511,6 +516,13 @@ public class IndexManager extends JobManager implements IIndexConstants {
 		super.moveToNextJob();
 	}
 
+	@Override
+	protected void notifyIdle() {
+		for (Object listener : indexerThreadListeners.getListeners()) {
+			((IIndexThreadListener) listener).aboutToBeIdle();
+		}
+	}
+
 	/**
 	 * No more job awaiting.
 	 */
@@ -518,6 +530,9 @@ public class IndexManager extends JobManager implements IIndexConstants {
 	protected void notifyIdle(long idlingTime) {
 		if (idlingTime > 1000 && this.needToSave) {
 			this.saveIndexes();
+		}
+		for (Object listener : indexerThreadListeners.getListeners()) {
+			((IIndexThreadListener) listener).aboutToBeRun(idlingTime);
 		}
 	}
 
@@ -734,6 +749,10 @@ public class IndexManager extends JobManager implements IIndexConstants {
 				this.removeIndex((IPath) toRemove.get(i));
 			}
 		}
+	}
+
+	public void removeIndexerThreadListener(IIndexThreadListener listener) {
+		indexerThreadListeners.remove(listener);
 	}
 
 	/**

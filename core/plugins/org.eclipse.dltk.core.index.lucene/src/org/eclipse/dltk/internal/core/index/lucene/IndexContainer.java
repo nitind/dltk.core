@@ -262,7 +262,7 @@ class IndexContainer {
 		}
 	}
 
-	synchronized boolean hasUncommittedChanges() {
+	synchronized boolean hasChanges() {
 		for (Map<Integer, IndexWriter> dataWriters : fIndexWriters.values()) {
 			for (IndexWriter writer : dataWriters.values()) {
 				if (writer != null && writer.hasUncommittedChanges()) {
@@ -276,7 +276,7 @@ class IndexContainer {
 		return false;
 	}
 
-	synchronized void commit(IProgressMonitor monitor) {
+	synchronized void commit(IProgressMonitor monitor, boolean mergeDeletes) {
 		int ticks = 1;
 		for (Map<?, ?> dataWriters : fIndexWriters.values()) {
 			ticks += dataWriters.size();
@@ -287,14 +287,14 @@ class IndexContainer {
 					.values()) {
 				for (IndexWriter writer : dataWriters.values()) {
 					if (writer != null && !subMonitor.isCanceled()) {
-						writer.forceMergeDeletes(true);
+						writer.forceMergeDeletes(mergeDeletes);
 						writer.commit();
 						subMonitor.worked(1);
 					}
 				}
 			}
 			if (fTimestampsWriter != null && !subMonitor.isCanceled()) {
-				fTimestampsWriter.forceMergeDeletes(true);
+				fTimestampsWriter.forceMergeDeletes(mergeDeletes);
 				fTimestampsWriter.commit();
 				subMonitor.worked(1);
 			}

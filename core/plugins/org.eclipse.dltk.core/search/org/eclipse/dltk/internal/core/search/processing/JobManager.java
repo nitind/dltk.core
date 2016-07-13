@@ -179,9 +179,16 @@ public abstract class JobManager implements Runnable {
 	}
 
 	/**
-	 * When idle, give chance to do something
+	 * Notifies that processing thread idle state has come to an end.
 	 */
 	protected void notifyIdle(long idlingTime) {
+		// do nothing
+	}
+
+	/**
+	 * Notifies that processing thread is going to idle state.
+	 */
+	protected void notifyIdle() {
 		// do nothing
 	}
 
@@ -443,8 +450,10 @@ public abstract class JobManager implements Runnable {
 						// avoid timing hole
 						if ((job = currentJob()) == null) {
 							hideProgress();
-							if (idlingStart < 0)
+							if (idlingStart < 0) {
 								idlingStart = System.currentTimeMillis();
+								notifyIdle();
+							}
 							else
 								notifyIdle(System.currentTimeMillis()
 										- idlingStart);

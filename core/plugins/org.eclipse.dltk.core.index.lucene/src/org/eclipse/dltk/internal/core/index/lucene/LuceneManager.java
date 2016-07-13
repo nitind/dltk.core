@@ -16,7 +16,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,7 +24,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Semaphore;
 
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.SearcherManager;
@@ -36,6 +34,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
@@ -44,11 +43,9 @@ import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IShutdownListener;
 import org.eclipse.dltk.core.index.lucene.LucenePlugin;
+import org.eclipse.dltk.core.search.indexing.IIndexThreadListener;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.DLTKWorkspaceScope;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchListener;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * <p>
@@ -79,130 +76,119 @@ public enum LuceneManager {
 	 */
 	INSTANCE;
 
-	private final class ShutdownListener
-			implements IShutdownListener, IWorkbenchListener, ISaveParticipant {
+	private final class Committer extends Job {
 
-		private final class Committer extends Job {
+		private final static int DELAY = 5000;
+		private boolean fClosed = false;
 
-			private List<IndexContainer> fContainers;
-
-			public Committer() {
-				super(Messages.LuceneManager_Committer_saving_indexes);
-				setUser(false);
-				setSystem(false);
-			}
-
-			@Override
-			public IStatus run(IProgressMonitor monitor) {
-				int containersNumber = fContainers.size();
-				monitor.beginTask("", containersNumber); //$NON-NLS-1$
-				SubMonitor subMonitor = SubMonitor.convert(monitor,
-						containersNumber);
-				int counter = 0;
-				try {
-					for (IndexContainer indexContainer : fContainers) {
-						if (!monitor.isCanceled()) {
-							counter++;
-							monitor.subTask(MessageFormat.format(
-									Messages.LuceneManager_Committer_flushing_index_data,
-									counter, containersNumber));
-							// Commit index data to file system storage
-							indexContainer.commit(subMonitor.newChild(1));
-						}
-					}
-					monitor.done();
-				} catch (Exception e) {
-					Logger.logException(e);
-				} finally {
-					// Whatever happens semaphore must be released.
-					fSemaphore.release();
-				}
-				return Status.OK_STATUS;
-			}
-
-			@Override
-			public boolean belongsTo(Object family) {
-				return family == LucenePlugin.LUCENE_JOB_FAMILY;
-			}
-
-			void committ() {
-				fContainers = getUncommittedContainers();
-				schedule();
-			}
-
-		}
-
-		private final Committer fCommitter = new Committer();
-		private final Semaphore fSemaphore = new Semaphore(0);
-
-		@Override
-		public boolean preShutdown(IWorkbench workbench, boolean forced) {
-			// Check if there is anything to commit first
-			if (getUncommittedContainers().isEmpty())
-				return true;
-			/*
-			 * Trigger this hidden job that will use workspace root as
-			 * scheduling rule just to show the committer job progress in the
-			 * details pane of "Saving Workspace" dialog.
-			 */
-			Job job = new Job("") { //$NON-NLS-1$
-				@Override
-				protected IStatus run(IProgressMonitor monitor) {
-					try {
-						fSemaphore.acquire();
-					} catch (InterruptedException e) {
-						// ignore
-					}
-					return Status.OK_STATUS;
-				}
-			};
-			job.setRule(ResourcesPlugin.getWorkspace().getRoot());
-			job.setSystem(true);
-			job.setUser(false);
-			job.schedule();
-			// Trigger committer job
-			fCommitter.committ();
-			return true;
+		public Committer() {
+			super(""); //$NON-NLS-1$
+			setUser(false);
+			setSystem(true);
 		}
 
 		@Override
-		public void saving(ISaveContext context) throws CoreException {
-			joinCommitter();
+		public IStatus run(IProgressMonitor monitor) {
+			// Get containers with uncommitted changes only
+			List<IndexContainer> dirtyContainers = getDirtyContainers();
+			if (dirtyContainers.isEmpty()) {
+				return Status.CANCEL_STATUS;
+			}
+			int containersNumber = dirtyContainers.size();
+			SubMonitor subMonitor = SubMonitor.convert(monitor,
+					containersNumber);
+			try {
+				for (IndexContainer indexContainer : dirtyContainers) {
+					if (!monitor.isCanceled()) {
+						// Commit index data without merging deletions (better performance)
+						indexContainer.commit(subMonitor.newChild(1), false);
+					}
+				}
+				monitor.done();
+			} catch (Exception e) {
+				Logger.logException(e);
+			}
+			return Status.OK_STATUS;
 		}
+
+		@Override
+		public boolean belongsTo(Object family) {
+			return family == LucenePlugin.LUCENE_JOB_FAMILY;
+		}
+
+		synchronized void commit() {
+			if (fClosed) {
+				return;
+			}
+			int currentState = getState();
+			if (currentState == NONE) {
+				schedule(DELAY);
+			} else if (currentState == SLEEPING) {
+				wakeUp(DELAY);
+			} else if (currentState == WAITING) {
+				sleep();
+				wakeUp(DELAY);
+			} else {
+				cancel();
+				schedule(DELAY);
+			}
+		}
+
+		synchronized void close() {
+			if (!fClosed) {
+				cancel();
+				fClosed = true;
+			}
+		}
+
+	}
+
+	private final class ShutdownListener implements IShutdownListener {
 
 		@Override
 		public void shutdown() {
-			joinCommitter();
-			// Shutdown manager and close all the writers and searchers
+			// Close background committer if it is not already closed
+			fCommitter.close();
+			// Shutdown manager
 			LuceneManager.INSTANCE.shutdown();
 		}
 
-		@Override
-		public void postShutdown(IWorkbench workbench) {
-			// ignore
-		}
+	}
+
+	private final class SaveParticipant implements ISaveParticipant {
 
 		@Override
-		public void doneSaving(ISaveContext context) {
-			// ignore
-		}
-
-		@Override
-		public void prepareToSave(ISaveContext context) throws CoreException {
-			// ignore
-		}
-
-		@Override
-		public void rollback(ISaveContext context) {
-			// ignore
-		}
-
-		private void joinCommitter() {
-			try {
-				fCommitter.join();
-			} catch (InterruptedException e) {
-				// ignore
+		public void saving(ISaveContext context) throws CoreException {
+			if (context.getKind() != ISaveContext.FULL_SAVE)
+				return;
+			// Close background committer
+			fCommitter.close();
+			// Commit all indexes data, merge deletions
+			for (IndexContainer indexContainer : fIndexContainers.values()) {
+				indexContainer.commit(new NullProgressMonitor(), true);
 			}
+		}
+
+		@Override
+		public void doneSaving(ISaveContext context) {}
+
+		@Override
+		public void prepareToSave(ISaveContext context) throws CoreException {}
+
+		@Override
+		public void rollback(ISaveContext context) {}
+
+	}
+
+	private final class IndexerThreadListener implements IIndexThreadListener {
+
+		@Override
+		public void aboutToBeIdle() {
+			fCommitter.commit();
+		}
+
+		@Override
+		public void aboutToBeRun(long idlingTime) {
 		}
 
 	}
@@ -215,11 +201,13 @@ public enum LuceneManager {
 	private final Properties fIndexProperties;
 	private final Properties fContainerMappings;
 	private final Map<String, IndexContainer> fIndexContainers;
+	private final Committer fCommitter;
 
 	private LuceneManager() {
 		fIndexProperties = new Properties();
 		fContainerMappings = new Properties();
 		fIndexContainers = new ConcurrentHashMap<>();
+		fCommitter = new Committer();
 		fIndexRoot = Platform
 				.getStateLocation(LucenePlugin.getDefault().getBundle())
 				.append(INDEX_DIR).toOSString();
@@ -302,27 +290,17 @@ public enum LuceneManager {
 		}
 	}
 
-	synchronized String getContainerPath(String containerId) {
-		for (Object key : fContainerMappings.keySet()) {
-			String container = (String) key;
-			if (containerId.equals(fContainerMappings.getProperty(container))) {
-				return container;
-			}
-		}
-		return null;
-	}
-
-	synchronized List<IndexContainer> getUncommittedContainers() {
+	private synchronized List<IndexContainer> getDirtyContainers() {
 		List<IndexContainer> uncommittedContainers = new ArrayList<>();
 		for (IndexContainer indexContainer : fIndexContainers.values()) {
-			if (indexContainer.hasUncommittedChanges()) {
+			if (indexContainer.hasChanges()) {
 				uncommittedContainers.add(indexContainer);
 			}
 		}
 		return uncommittedContainers;
 	}
 
-	synchronized IndexContainer getIndexContainer(String container) {
+	private synchronized IndexContainer getIndexContainer(String container) {
 		String containerId = fContainerMappings.getProperty(container);
 		if (containerId == null) {
 			do {
@@ -338,7 +316,8 @@ public enum LuceneManager {
 		return fIndexContainers.get(containerId);
 	}
 
-	synchronized void deleteIndexContainer(String container, boolean wait) {
+	private synchronized void deleteIndexContainer(String container,
+			boolean wait) {
 		String containerId = (String) fContainerMappings.remove(container);
 		if (containerId != null) {
 			IndexContainer containerEntry = fIndexContainers
@@ -370,13 +349,13 @@ public enum LuceneManager {
 		}
 		loadMappings();
 		registerIndexContainers();
-		ShutdownListener shutdownListener = new ShutdownListener();
 		ModelManager.getModelManager().getIndexManager()
-				.addShutdownListener(shutdownListener);
-		PlatformUI.getWorkbench().addWorkbenchListener(shutdownListener);
+				.addIndexerThreadListener(new IndexerThreadListener());
+		ModelManager.getModelManager().getIndexManager()
+				.addShutdownListener(new ShutdownListener());
 		try {
 			ResourcesPlugin.getWorkspace().addSaveParticipant(LucenePlugin.ID,
-					shutdownListener);
+					new SaveParticipant());
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}

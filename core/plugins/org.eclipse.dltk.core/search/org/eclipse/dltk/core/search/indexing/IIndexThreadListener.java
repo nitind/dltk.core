@@ -8,24 +8,27 @@
  * Contributors:
  *     Zend Technologies - initial API and implementation
  *******************************************************************************/
-package org.eclipse.dltk.internal.core.index.lucene;
-
-import org.eclipse.osgi.util.NLS;
+package org.eclipse.dltk.core.search.indexing;
 
 /**
- * Messages.
+ * Implementors of this interface are notified about the index manager thread
+ * state changes.
  * 
  * @author Bartlomiej Laczkowski
  */
-public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.dltk.internal.core.index.lucene.messages"; //$NON-NLS-1$
-	public static String LuceneManager_Committer_flushing_index_data;
-	public static String LuceneManager_Committer_saving_indexes;
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
+public interface IIndexThreadListener {
 
-	private Messages() {
-	}
+	/**
+	 * Index manager thread is about to be put in an idle state.
+	 */
+	public void aboutToBeIdle();
+
+	/**
+	 * Index manager thread was awaken and is about to be run.
+	 *
+	 * @param idlingTime
+	 *            The time of being in idle state before being awaken
+	 */
+	public void aboutToBeRun(long idlingTime);
+
 }

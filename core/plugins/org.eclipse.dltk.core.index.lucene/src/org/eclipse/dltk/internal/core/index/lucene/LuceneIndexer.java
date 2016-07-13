@@ -123,23 +123,23 @@ public class LuceneIndexer extends AbstractIndexer {
 
 	@Override
 	public void addDeclaration(DeclarationInfo info) {
+		IndexWriter writer = LuceneManager.INSTANCE.findIndexWriter(fContainer,
+				IndexType.DECLARATIONS, info.elementType);
 		try {
-			IndexWriter writer = LuceneManager.INSTANCE.findIndexWriter(
-					fContainer, IndexType.DECLARATIONS, info.elementType);
 			writer.addDocument(
 					DocumentFactory.createForDeclaration(fFile, info));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Logger.logException(e);
 		}
 	}
 
 	@Override
 	public void addReference(ReferenceInfo info) {
+		IndexWriter writer = LuceneManager.INSTANCE.findIndexWriter(fContainer,
+				IndexType.REFERENCES, info.elementType);
 		try {
-			IndexWriter writer = LuceneManager.INSTANCE.findIndexWriter(
-					fContainer, IndexType.REFERENCES, info.elementType);
 			writer.addDocument(DocumentFactory.createForReference(fFile, info));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Logger.logException(e);
 		}
 	}
@@ -148,25 +148,24 @@ public class LuceneIndexer extends AbstractIndexer {
 	public void indexDocument(ISourceModule sourceModule) {
 		final IFileHandle fileHandle = EnvironmentPathUtils
 				.getFile(sourceModule);
+		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
+				.getLanguageToolkit(sourceModule);
+		if (toolkit == null) {
+			return;
+		}
+		resetDocument(sourceModule, toolkit);
+		long lastModified = fileHandle == null ? 0 : fileHandle.lastModified();
+		// Cleanup and write new info...
+		LuceneManager.INSTANCE.delete(fContainer, fFile);
+		IndexWriter indexWriter = LuceneManager.INSTANCE
+				.findTimestampsWriter(fContainer);
 		try {
-			IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-					.getLanguageToolkit(sourceModule);
-			if (toolkit == null) {
-				return;
-			}
-			resetDocument(sourceModule, toolkit);
-			long lastModified = fileHandle == null ? 0
-					: fileHandle.lastModified();
-			// Cleanup and write new info...
-			LuceneManager.INSTANCE.delete(fContainer, fFile);
-			IndexWriter indexWriter = LuceneManager.INSTANCE
-					.findTimestampsWriter(fContainer);
 			indexWriter.addDocument(
 					DocumentFactory.createForTimestamp(fFile, lastModified));
-			super.indexDocument(sourceModule);
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
+		super.indexDocument(sourceModule);
 	}
 
 	@Override
