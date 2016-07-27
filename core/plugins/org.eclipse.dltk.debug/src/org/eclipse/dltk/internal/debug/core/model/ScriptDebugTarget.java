@@ -44,6 +44,7 @@ import org.eclipse.dltk.debug.core.ExtendedDebugEventDetails;
 import org.eclipse.dltk.debug.core.IDbgpService;
 import org.eclipse.dltk.debug.core.IDebugOptions;
 import org.eclipse.dltk.debug.core.model.DefaultDebugOptions;
+import org.eclipse.dltk.debug.core.model.IScriptBreakpoint;
 import org.eclipse.dltk.debug.core.model.IScriptBreakpointLineMapper;
 import org.eclipse.dltk.debug.core.model.IScriptBreakpointPathMapper;
 import org.eclipse.dltk.debug.core.model.IScriptDebugTarget;
@@ -235,7 +236,7 @@ public class ScriptDebugTarget extends ScriptDebugElement implements
 			final int CHUNK = 500;
 			if (!(waitTerminated(threadManager, CHUNK,
 					THREAD_TERMINATION_TIMEOUT) && (p == null || waitTerminated(
-					p, CHUNK, THREAD_TERMINATION_TIMEOUT)))) {
+							p, CHUNK, THREAD_TERMINATION_TIMEOUT)))) {
 				// Debugging process is not answering, so terminating it
 				if (p != null && p.canTerminate()) {
 					p.terminate();
@@ -397,7 +398,11 @@ public class ScriptDebugTarget extends ScriptDebugElement implements
 	}
 
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
-		return breakpointManager.supportsBreakpoint(breakpoint);
+		if (breakpoint instanceof IScriptBreakpoint) {
+			return StrUtils.equals(breakpoint.getModelIdentifier(),
+					getModelIdentifier());
+		}
+		return false;
 	}
 
 	public void setFilters(String[] activeFilters) {

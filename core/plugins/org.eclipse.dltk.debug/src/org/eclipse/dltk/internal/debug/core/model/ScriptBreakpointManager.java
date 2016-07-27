@@ -116,6 +116,8 @@ public class ScriptBreakpointManager
 	// Adding, removing, updating
 	protected void addBreakpoint(final IDbgpSession session,
 			IScriptBreakpoint breakpoint) throws CoreException, DbgpException {
+		if (!target.supportsBreakpoint(breakpoint))
+			return;
 		final IDbgpCoreCommands commands = session.getCoreCommands();
 		DbgpBreakpointConfig config = createBreakpointConfig(breakpoint);
 
@@ -183,6 +185,8 @@ public class ScriptBreakpointManager
 
 	private void addSpawnpoint(final IDbgpSession session,
 			IScriptSpawnpoint spawnpoint) throws DbgpException, CoreException {
+		if (!target.supportsBreakpoint(spawnpoint))
+			return;
 		final IDbgpSpawnpointCommands commands = (IDbgpSpawnpointCommands) session
 				.get(IDbgpSpawnpointCommands.class);
 		final IDbgpSpawnpoint p = commands.setSpawnpoint(
@@ -195,6 +199,8 @@ public class ScriptBreakpointManager
 
 	protected void changeBreakpoint(final IDbgpSession session,
 			IScriptBreakpoint breakpoint) throws DbgpException, CoreException {
+		if (!target.supportsBreakpoint(breakpoint))
+			return;
 		final IDbgpBreakpointCommands commands = session.getCoreCommands();
 		URI bpUri = null;
 
@@ -377,7 +383,7 @@ public class ScriptBreakpointManager
 	// DebugTarget
 	private final IScriptDebugTarget target;
 
-	private void changeSpawnpoint(final IDbgpSession session,
+	private static void changeSpawnpoint(final IDbgpSession session,
 			IScriptSpawnpoint spawnpoint) throws DbgpException, CoreException {
 		final IDbgpSpawnpointCommands commands = (IDbgpSpawnpointCommands) session
 				.get(IDbgpSpawnpointCommands.class);
@@ -412,12 +418,7 @@ public class ScriptBreakpointManager
 	}
 
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
-		if (breakpoint instanceof IScriptBreakpoint) {
-			return StrUtils.equals(breakpoint.getModelIdentifier(),
-					target.getModelIdentifier());
-		}
-
-		return false;
+		return target.supportsBreakpoint(breakpoint);
 	}
 
 	private void threadAccepted() {
@@ -539,6 +540,7 @@ public class ScriptBreakpointManager
 			}
 		}
 
+		@Override
 		public void handleDebugEvents(DebugEvent[] events) {
 			for (int i = 0; i < events.length; ++i) {
 				DebugEvent event = events[i];
@@ -577,8 +579,9 @@ public class ScriptBreakpointManager
 	}
 
 	// IBreakpointListener
+	@Override
 	public void breakpointAdded(final IBreakpoint breakpoint) {
-		if (!supportsBreakpoint(breakpoint)) {
+		if (!target.supportsBreakpoint(breakpoint)) {
 			return;
 		}
 		final IDbgpSession[] sessions = getSessions();
@@ -612,9 +615,10 @@ public class ScriptBreakpointManager
 	 *            BreakPointManager.fireBreakpointChanged(IBreakpoint
 	 *            breakpoint), so see it as a major change.
 	 */
+	@Override
 	public void breakpointChanged(final IBreakpoint breakpoint,
 			final IMarkerDelta delta) {
-		if (!supportsBreakpoint(breakpoint)) {
+		if (!target.supportsBreakpoint(breakpoint)) {
 			return;
 		}
 		if (breakpoint instanceof IScriptSpawnpoint) {
@@ -672,9 +676,10 @@ public class ScriptBreakpointManager
 		}
 	}
 
+	@Override
 	public void breakpointRemoved(final IBreakpoint breakpoint,
 			final IMarkerDelta delta) {
-		if (!supportsBreakpoint(breakpoint)) {
+		if (!target.supportsBreakpoint(breakpoint)) {
 			return;
 		}
 		final IDbgpSession[] sessions = getSessions();
@@ -700,6 +705,7 @@ public class ScriptBreakpointManager
 	}
 
 	// IBreakpointManagerListener
+	@Override
 	public void breakpointManagerEnablementChanged(boolean enabled) {
 		IBreakpoint[] breakpoints = getBreakpointManager()
 				.getBreakpoints(target.getModelIdentifier());
@@ -728,7 +734,8 @@ public class ScriptBreakpointManager
 		}
 	}
 
-	private void scheduleBackgroundOperation(final IScriptDebugTarget target,
+	private static void scheduleBackgroundOperation(
+			final IScriptDebugTarget target,
 			final Runnable runnable) {
 		String name = target.getLaunch().getLaunchConfiguration().getName();
 
