@@ -63,7 +63,7 @@ public class InternalDLTKLanguageManager {
 		protected void saveInstances(String natureId,
 				ISelectionEngine[] resultArray) {
 			// empty
-		};
+		}
 	};
 	private static PriorityNatureExtensionManager<ICompletionEngine> completionEngineManager = new PriorityNatureExtensionManager<ICompletionEngine>(
 			COMPLETION_ENGINE_EXTPOINT, ICompletionEngine.class) {

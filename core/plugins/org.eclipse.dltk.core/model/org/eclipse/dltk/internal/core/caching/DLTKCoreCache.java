@@ -45,7 +45,7 @@ public class DLTKCoreCache extends AbstractContentCache {
 			if (handle != null) {
 				metadataCache.clearCacheEntryAttributes(handle);
 			}
-		};
+		}
 
 		@Override
 		protected void remove(IScriptProject element) {
@@ -57,17 +57,17 @@ public class DLTKCoreCache extends AbstractContentCache {
 			if (handle != null) {
 				metadataCache.clearCacheEntryAttributes(handle);
 			}
-		};
+		}
 
 		@Override
 		protected void remove(IScriptFolder element) {
 			removeElement(element);
-		};
+		}
 
 		@Override
 		protected void remove(ISourceModule element) {
 			removeElement(element);
-		};
+		}
 
 		@Override
 		protected void remove(org.eclipse.dltk.core.IProjectFragment element) {

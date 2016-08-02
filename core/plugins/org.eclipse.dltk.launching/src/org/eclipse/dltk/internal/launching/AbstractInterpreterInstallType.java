@@ -68,7 +68,7 @@ public abstract class AbstractInterpreterInstallType
 	public interface ILookupRunnable {
 		public void run(IProgressMonitor monitor)
 				throws InvocationTargetException, InterruptedException;
-	};
+	}
 
 	private static final int NOT_WORK_COUNT = -2;
 

@@ -202,7 +202,7 @@ public class MixinModel {
 		protected LRUCache newInstance(int size, int overflow) {
 			return new RequestCache(size, overflow);
 		}
-	};
+	}
 
 	/**
 	 * @deprecated
@@ -899,7 +899,7 @@ public class MixinModel {
 				buildElementTree(this);
 			}
 		}
-	};
+	}
 
 	private final class MixinRequestor implements IMixinRequestor {
 		@Override
