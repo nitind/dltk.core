@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.debug.core.model;
 
@@ -26,6 +25,7 @@ public interface IScriptBreakpoint extends IBreakpoint {
 	 * @throws CoreException
 	 * @deprecated
 	 */
+	@Deprecated
 	String getIdentifier() throws CoreException;
 
 	/**
@@ -33,6 +33,7 @@ public interface IScriptBreakpoint extends IBreakpoint {
 	 * @throws CoreException
 	 * @deprecated
 	 */
+	@Deprecated
 	void setIdentifier(String id) throws CoreException;
 
 	String[] getIdentifiers();
@@ -60,6 +61,7 @@ public interface IScriptBreakpoint extends IBreakpoint {
 	 * @throws CoreException
 	 * @deprecated
 	 */
+	@Deprecated
 	void setHitCount(int value) throws CoreException;
 
 	int getHitCount(IDbgpSession session) throws CoreException;

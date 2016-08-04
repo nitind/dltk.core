@@ -557,6 +557,7 @@ public abstract class AbstractInterpreterLibraryBlock
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	protected IDialogSettings getDialogSettions() {
 		return null;
 	}

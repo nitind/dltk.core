@@ -20,8 +20,8 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 /**
  * Options block for debugging engine preferences.
  */
-public abstract class DebuggingEngineConfigOptionsBlock extends
-		AbstractOptionsBlock {
+public abstract class DebuggingEngineConfigOptionsBlock
+		extends AbstractOptionsBlock {
 
 	private EnvironmentPathBlock logFilePaths;
 
@@ -38,8 +38,8 @@ public abstract class DebuggingEngineConfigOptionsBlock extends
 	 * @see AbstractOptionsBlock#createOptionsBlock(Composite)
 	 */
 	protected Control createOptionsBlock(Composite parent) {
-		final Composite composite = SWTFactory.createComposite(parent, parent
-				.getFont(), 1, 1, GridData.FILL);
+		final Composite composite = SWTFactory.createComposite(parent,
+				parent.getFont(), 1, 1, GridData.FILL);
 		createEngineBlock(composite);
 		createLoggingBlock(composite);
 		createOtherBlock(composite);
@@ -133,8 +133,8 @@ public abstract class DebuggingEngineConfigOptionsBlock extends
 	protected IEnvironment[] getRelevantEnvironments() {
 		final IProject project = getProject();
 		if (project != null) {
-			return new IEnvironment[] { EnvironmentManager
-					.getEnvironment(project) };
+			return new IEnvironment[] {
+					EnvironmentManager.getEnvironment(project) };
 		} else {
 			return EnvironmentManager.getEnvironments();
 		}
@@ -147,8 +147,8 @@ public abstract class DebuggingEngineConfigOptionsBlock extends
 
 	protected void saveLoggingOptions() {
 		if (logFilePaths != null) {
-			String loggingPaths = EnvironmentPathUtils.encodePaths(logFilePaths
-					.getPaths());
+			String loggingPaths = EnvironmentPathUtils
+					.encodePaths(logFilePaths.getPaths());
 			setString(getLogFileNamePreferenceKey(), loggingPaths);
 		}
 	}
@@ -177,6 +177,7 @@ public abstract class DebuggingEngineConfigOptionsBlock extends
 	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	protected PreferenceKey getEnableLoggingPreferenceKey() {
 		return null;
 	}
@@ -191,6 +192,7 @@ public abstract class DebuggingEngineConfigOptionsBlock extends
 	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	protected PreferenceKey getLogFilePathPreferenceKey() {
 		return null;
 	}

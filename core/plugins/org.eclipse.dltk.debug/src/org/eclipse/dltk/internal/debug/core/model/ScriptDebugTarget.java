@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,6 +60,7 @@ public class ScriptDebugTarget extends ScriptDebugElement implements
 	 * @deprecated
 	 * @see #getScriptProject()
 	 */
+	@Deprecated
 	private static final String LAUNCH_CONFIGURATION_ATTR_PROJECT = "project"; //$NON-NLS-1$
 
 	private static final int THREAD_TERMINATION_TIMEOUT = 5000; // 5 seconds
@@ -195,8 +196,8 @@ public class ScriptDebugTarget extends ScriptDebugElement implements
 	// ITerminate
 	public boolean canTerminate() {
 		synchronized (processLock) {
-			return threadManager.canTerminate() || process != null
-					&& process.canTerminate();
+			return threadManager.canTerminate()
+					|| process != null && process.canTerminate();
 		}
 	}
 
@@ -235,8 +236,9 @@ public class ScriptDebugTarget extends ScriptDebugElement implements
 			final IProcess p = getProcess();
 			final int CHUNK = 500;
 			if (!(waitTerminated(threadManager, CHUNK,
-					THREAD_TERMINATION_TIMEOUT) && (p == null || waitTerminated(
-							p, CHUNK, THREAD_TERMINATION_TIMEOUT)))) {
+					THREAD_TERMINATION_TIMEOUT)
+					&& (p == null || waitTerminated(p, CHUNK,
+							THREAD_TERMINATION_TIMEOUT)))) {
 				// Debugging process is not answering, so terminating it
 				if (p != null && p.canTerminate()) {
 					p.terminate();
@@ -441,6 +443,7 @@ public class ScriptDebugTarget extends ScriptDebugElement implements
 	 *             have multiple natures in the same project, so it will not
 	 *             work correctly either.
 	 */
+	@Deprecated
 	protected IScriptProject getScriptProject() {
 		final ILaunchConfiguration configuration = launch
 				.getLaunchConfiguration();
@@ -499,8 +502,8 @@ public class ScriptDebugTarget extends ScriptDebugElement implements
 	public String getConsoleEncoding() {
 		String encoding = "UTF-8"; //$NON-NLS-1$
 		try {
-			encoding = getLaunch().getLaunchConfiguration().getAttribute(
-					DebugPlugin.ATTR_CONSOLE_ENCODING, encoding);
+			encoding = getLaunch().getLaunchConfiguration()
+					.getAttribute(DebugPlugin.ATTR_CONSOLE_ENCODING, encoding);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

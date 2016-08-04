@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.core.model;
 
@@ -28,8 +27,8 @@ import org.eclipse.dltk.dbgp.IDbgpSession;
 import org.eclipse.dltk.debug.core.DLTKDebugPlugin;
 import org.eclipse.dltk.debug.core.model.IScriptBreakpoint;
 
-public abstract class AbstractScriptBreakpoint extends Breakpoint implements
-		IScriptBreakpoint {
+public abstract class AbstractScriptBreakpoint extends Breakpoint
+		implements IScriptBreakpoint {
 
 	/**
 	 * Debugging engine breakpoint identifier (available only during debug
@@ -37,6 +36,7 @@ public abstract class AbstractScriptBreakpoint extends Breakpoint implements
 	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	public static final String ENGINE_IDENTIFIER = DLTKDebugPlugin.PLUGIN_ID
 			+ ".id"; //$NON-NLS-1$
 
@@ -46,6 +46,7 @@ public abstract class AbstractScriptBreakpoint extends Breakpoint implements
 	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	public static final String HIT_COUNT = DLTKDebugPlugin.PLUGIN_ID
 			+ ".hit_count"; //$NON-NLS-1$
 
@@ -102,8 +103,8 @@ public abstract class AbstractScriptBreakpoint extends Breakpoint implements
 	public String getModelIdentifier() {
 		if (debugModelId == null) {
 			try {
-				debugModelId = ensureMarker()
-						.getAttribute(IBreakpoint.ID, null);
+				debugModelId = ensureMarker().getAttribute(IBreakpoint.ID,
+						null);
 			} catch (DebugException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();
@@ -172,8 +173,8 @@ public abstract class AbstractScriptBreakpoint extends Breakpoint implements
 	public String[] getIdentifiers() {
 		final PerSessionInfo[] infos;
 		synchronized (sessions) {
-			infos = (PerSessionInfo[]) sessions.values().toArray(
-					new PerSessionInfo[sessions.size()]);
+			infos = (PerSessionInfo[]) sessions.values()
+					.toArray(new PerSessionInfo[sessions.size()]);
 		}
 		int count = 0;
 		for (int i = 0; i < infos.length; ++i) {

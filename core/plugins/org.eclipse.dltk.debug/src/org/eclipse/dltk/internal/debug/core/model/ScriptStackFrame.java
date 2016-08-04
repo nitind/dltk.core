@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.core.model;
 
@@ -41,8 +40,8 @@ import org.eclipse.dltk.debug.core.model.IScriptVariable;
 import org.eclipse.dltk.debug.core.model.ISourceOffsetLookup;
 import org.eclipse.osgi.util.NLS;
 
-public class ScriptStackFrame extends ScriptDebugElement implements
-		IScriptStackFrame {
+public class ScriptStackFrame extends ScriptDebugElement
+		implements IScriptStackFrame {
 
 	private final IScriptThread thread;
 	private IDbgpStackLevel level;
@@ -56,8 +55,8 @@ public class ScriptStackFrame extends ScriptDebugElement implements
 			IDbgpContextCommands commands) throws DbgpException {
 
 		try {
-			IDbgpProperty[] properties = commands.getContextProperties(
-					parentFrame.getLevel(), contextId);
+			IDbgpProperty[] properties = commands
+					.getContextProperties(parentFrame.getLevel(), contextId);
 
 			IScriptVariable[] variables = new IScriptVariable[properties.length];
 
@@ -117,22 +116,22 @@ public class ScriptStackFrame extends ScriptDebugElement implements
 
 		final Map names = commands.getContextNames(getLevel());
 		if (thread.retrieveLocalVariables()
-				&& names.containsKey(Integer.valueOf(
-						IDbgpContextCommands.LOCAL_CONTEXT_ID))
+				&& names.containsKey(
+						Integer.valueOf(IDbgpContextCommands.LOCAL_CONTEXT_ID))
 				&& thread.isSuspended()) {
 			result.locals = readVariables(this,
 					IDbgpContextCommands.LOCAL_CONTEXT_ID, commands);
 		}
 		if (thread.retrieveGlobalVariables()
-				&& names.containsKey(Integer.valueOf(
-						IDbgpContextCommands.GLOBAL_CONTEXT_ID))
+				&& names.containsKey(
+						Integer.valueOf(IDbgpContextCommands.GLOBAL_CONTEXT_ID))
 				&& thread.isSuspended()) {
 			result.globals = readVariables(this,
 					IDbgpContextCommands.GLOBAL_CONTEXT_ID, commands);
 		}
 		if (thread.retrieveClassVariables()
-				&& names.containsKey(Integer.valueOf(
-						IDbgpContextCommands.CLASS_CONTEXT_ID))
+				&& names.containsKey(
+						Integer.valueOf(IDbgpContextCommands.CLASS_CONTEXT_ID))
 				&& thread.isSuspended()) {
 			result.classes = readVariables(this,
 					IDbgpContextCommands.CLASS_CONTEXT_ID, commands);
@@ -275,6 +274,7 @@ public class ScriptStackFrame extends ScriptDebugElement implements
 	 * @return
 	 * @deprecated use #getSourceURI()
 	 */
+	@Deprecated
 	public URI getFileName() {
 		return level.getFileURI();
 	}
@@ -443,8 +443,7 @@ public class ScriptStackFrame extends ScriptDebugElement implements
 	 * @throws DebugException
 	 */
 	static IVariable[] refreshVariables(IVariable[] newVars,
-			IVariable[] oldVars)
-					throws DebugException {
+			IVariable[] oldVars) throws DebugException {
 		if (oldVars != null) {
 			final Map map = new HashMap();
 			for (int i = 0; i < oldVars.length; ++i) {

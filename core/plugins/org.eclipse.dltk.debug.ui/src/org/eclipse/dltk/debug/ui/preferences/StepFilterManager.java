@@ -63,6 +63,7 @@ public class StepFilterManager {
 	 * @return
 	 * @deprecated
 	 */
+	@Deprecated
 	public static boolean isUseStepFilters(IScriptProject project) {
 		return DebugPlugin.isUseStepFilters();
 	}
@@ -72,6 +73,7 @@ public class StepFilterManager {
 	 * @return
 	 * @deprecated
 	 */
+	@Deprecated
 	public static boolean isUseStepFilters(IPreferenceStore preferenceStore) {
 		return DebugPlugin.isUseStepFilters();
 	}
@@ -81,6 +83,7 @@ public class StepFilterManager {
 	 * @param preferenceStore
 	 * @deprecated
 	 */
+	@Deprecated
 	public static void setUseStepFilters(boolean selection,
 			IPreferenceStore preferenceStore) {
 		DebugPlugin.setUseStepFilters(selection);

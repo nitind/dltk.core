@@ -7,6 +7,7 @@ import org.eclipse.dltk.launching.InterpreterConfig;
  * 
  * @deprecated
  */
+@Deprecated
 public class DbgpInterpreterConfig {
 	private InterpreterConfig config;
 
@@ -31,8 +32,8 @@ public class DbgpInterpreterConfig {
 	}
 
 	public int getPort() {
-		return Integer.parseInt((String) config
-				.getProperty(DbgpConstants.PORT_PROP));
+		return Integer
+				.parseInt((String) config.getProperty(DbgpConstants.PORT_PROP));
 	}
 
 	public void setSessionId(String sessionId) {

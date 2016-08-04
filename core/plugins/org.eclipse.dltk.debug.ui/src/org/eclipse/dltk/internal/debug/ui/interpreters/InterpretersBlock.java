@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.ui.interpreters;
 
@@ -83,8 +82,8 @@ import org.eclipse.swt.widgets.TableColumn;
  * </p>
  * @
  */
-public abstract class InterpretersBlock implements
-		IAddInterpreterDialogRequestor, ISelectionProvider {
+public abstract class InterpretersBlock
+		implements IAddInterpreterDialogRequestor, ISelectionProvider {
 
 	/**
 	 * This block's control
@@ -138,7 +137,8 @@ public abstract class InterpretersBlock implements
 			return getCurrentInterprers();
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer viewer, Object oldInput,
+				Object newInput) {
 		}
 
 		public void dispose() {
@@ -148,8 +148,8 @@ public abstract class InterpretersBlock implements
 	/**
 	 * Label provider for installed InterpreterEnvironments table.
 	 */
-	class InterpreterLabelProvider extends LabelProvider implements
-			ITableLabelProvider {
+	class InterpreterLabelProvider extends LabelProvider
+			implements ITableLabelProvider {
 
 		/**
 		 * @see ITableLabelProvider#getColumnText(Object, int)
@@ -188,7 +188,8 @@ public abstract class InterpretersBlock implements
 	 * org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener
 	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
 	 */
-	public void addSelectionChangedListener(ISelectionChangedListener listener) {
+	public void addSelectionChangedListener(
+			ISelectionChangedListener listener) {
 		fSelectionListeners.add(listener);
 	}
 
@@ -204,8 +205,8 @@ public abstract class InterpretersBlock implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener
+	 * @see org.eclipse.jface.viewers.ISelectionProvider#
+	 * removeSelectionChangedListener
 	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
 	 */
 	public void removeSelectionChangedListener(
@@ -322,8 +323,8 @@ public abstract class InterpretersBlock implements
 		TableLayoutComposite tblComposite = new TableLayoutComposite(parent,
 				SWT.NONE);
 		tblComposite.setLayoutData(data);
-		fTable = new Table(tblComposite, SWT.CHECK | SWT.BORDER | SWT.MULTI
-				| SWT.FULL_SELECTION);
+		fTable = new Table(tblComposite,
+				SWT.CHECK | SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 
 		data = new GridData(GridData.FILL_BOTH);
 		data.widthHint = 450;
@@ -376,8 +377,8 @@ public abstract class InterpretersBlock implements
 		fInterpreterList.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				if (event.getChecked()) {
-					setCheckedInterpreter((IInterpreterInstall) event
-							.getElement());
+					setCheckedInterpreter(
+							(IInterpreterInstall) event.getElement());
 				} else {
 					setCheckedInterpreter(null);
 				}
@@ -615,18 +616,18 @@ public abstract class InterpretersBlock implements
 	 * @return InterpreterEnvironments currently being displayed in this block
 	 */
 	public IInterpreterInstall[] getInterpreters() {
-		return fInterpreters.toArray(new IInterpreterInstall[fInterpreters
-				.size()]);
+		return fInterpreters
+				.toArray(new IInterpreterInstall[fInterpreters.size()]);
 	}
 
 	public IInterpreterInstall[] getCurrentInterprers() {
 		IEnvironment environment = getCurrentEnvironment();
 		List<IInterpreterInstall> result = new ArrayList<IInterpreterInstall>();
-		for (Iterator<IInterpreterInstall> iterator = fInterpreters.iterator(); iterator
-				.hasNext();) {
+		for (Iterator<IInterpreterInstall> iterator = fInterpreters
+				.iterator(); iterator.hasNext();) {
 			IInterpreterInstall install = iterator.next();
-			if (install.getInstallLocation().getEnvironmentId().equals(
-					environment.getId())) {
+			if (install.getInstallLocation().getEnvironmentId()
+					.equals(environment.getId())) {
 				result.add(install);
 			}
 		}
@@ -837,8 +838,8 @@ public abstract class InterpretersBlock implements
 		Collection<IInterpreterInstall> values = checkedInterpreters.values();
 		IInterpreterInstall[] installs = new IInterpreterInstall[values.size()];
 		int i = 0;
-		for (Iterator<IInterpreterInstall> iterator = values.iterator(); iterator
-				.hasNext();) {
+		for (Iterator<IInterpreterInstall> iterator = values
+				.iterator(); iterator.hasNext();) {
 			installs[i] = iterator.next();
 			++i;
 		}
@@ -857,9 +858,8 @@ public abstract class InterpretersBlock implements
 	public void saveColumnSettings(IDialogSettings settings, String qualifier) {
 		int columnCount = fTable.getColumnCount();
 		for (int i = 0; i < columnCount; i++) {
-			settings
-					.put(
-							qualifier + ".columnWidth" + i, fTable.getColumn(i).getWidth()); //$NON-NLS-1$
+			settings.put(qualifier + ".columnWidth" + i, //$NON-NLS-1$
+					fTable.getColumn(i).getWidth());
 		}
 		settings.put(qualifier + ".sortColumn", fSortColumn); //$NON-NLS-1$
 	}
@@ -872,7 +872,8 @@ public abstract class InterpretersBlock implements
 	 * @param qualifier
 	 *            key to restore settings from
 	 */
-	public void restoreColumnSettings(IDialogSettings settings, String qualifier) {
+	public void restoreColumnSettings(IDialogSettings settings,
+			String qualifier) {
 		fInterpreterList.getTable().layout(true);
 		restoreColumnWidths(settings, qualifier);
 		try {
@@ -893,7 +894,8 @@ public abstract class InterpretersBlock implements
 		}
 	}
 
-	private void restoreColumnWidths(IDialogSettings settings, String qualifier) {
+	private void restoreColumnWidths(IDialogSettings settings,
+			String qualifier) {
 		int columnCount = fTable.getColumnCount();
 		for (int i = 0; i < columnCount; i++) {
 			int width = -1;
@@ -929,8 +931,8 @@ public abstract class InterpretersBlock implements
 					standins.add(new InterpreterStandin(install));
 				}
 		}
-		setInterpreters(standins.toArray(new IInterpreterInstall[standins
-				.size()]));
+		setInterpreters(
+				standins.toArray(new IInterpreterInstall[standins.size()]));
 	}
 
 	public void interpreterAdded(IInterpreterInstall Interpreter) {
@@ -1016,7 +1018,8 @@ public abstract class InterpretersBlock implements
 	protected IScriptInterpreterDialog createInterpreterDialog(
 			IEnvironment environment, IInterpreterInstall standin) {
 		// backwards compatible implementation
-		final AddScriptInterpreterDialog dialog = createInterpreterDialog(standin);
+		final AddScriptInterpreterDialog dialog = createInterpreterDialog(
+				standin);
 		if (dialog != null) {
 			dialog.setEnvironment(environment);
 		}
@@ -1030,6 +1033,7 @@ public abstract class InterpretersBlock implements
 	 *             method above should be overridden. This one is kept for
 	 *             compatibility purposes only.
 	 */
+	@Deprecated
 	protected AddScriptInterpreterDialog createInterpreterDialog(
 			IInterpreterInstall standin) {
 		return null;
@@ -1047,8 +1051,8 @@ public abstract class InterpretersBlock implements
 
 			// duplicate & add Interpreter
 			InterpreterStandin standin = new InterpreterStandin(
-					selectedInterpreter, createUniqueId(selectedInterpreter
-							.getInterpreterInstallType()));
+					selectedInterpreter, createUniqueId(
+							selectedInterpreter.getInterpreterInstallType()));
 			standin.setName(generateName(selectedInterpreter.getName()));
 			IScriptInterpreterDialog dialog = createInterpreterDialog(
 					getCurrentEnvironment(), standin);
@@ -1062,8 +1066,8 @@ public abstract class InterpretersBlock implements
 			fInterpreters.add(standin);
 		}
 		fInterpreterList.refresh();
-		fInterpreterList.setSelection(new StructuredSelection(newEntries
-				.toArray()));
+		fInterpreterList
+				.setSelection(new StructuredSelection(newEntries.toArray()));
 	}
 
 	/**

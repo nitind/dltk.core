@@ -206,6 +206,7 @@ public abstract class AddScriptInterpreterDialog extends StatusDialog
 	 * @deprecated createEnvironmentVariablesBlock() without parameters should
 	 *             be overridden when needed
 	 */
+	@Deprecated
 	protected AbstractInterpreterEnvironmentVariablesBlock createEnvironmentVariablesBlock(
 			AddScriptInterpreterDialog dialog) {
 		return null;
