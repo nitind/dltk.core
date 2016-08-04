@@ -17,7 +17,7 @@ import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.action.Action;
