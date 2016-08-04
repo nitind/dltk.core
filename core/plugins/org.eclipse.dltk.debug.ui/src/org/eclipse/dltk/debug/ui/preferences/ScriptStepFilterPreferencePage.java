@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.DLTKLanguageManager;
@@ -167,8 +168,7 @@ public class ScriptStepFilterPreferencePage extends PreferencePage
 				parent.getFont(), 2, 1, GridData.FILL_BOTH, 0, 0);
 		fUseStepFiltersButton = SWTFactory.createCheckButton(container,
 				ScriptDebugPreferencesMessages.ScriptStepFilterPreferencePage__Use_step_filters,
-				null, StepFilterManager.isUseStepFilters(getPreferenceStore()),
-				2);
+				null, DebugPlugin.isUseStepFilters(), 2);
 		fUseStepFiltersButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				setPageEnablement(fUseStepFiltersButton.getSelection());
@@ -434,14 +434,9 @@ public class ScriptStepFilterPreferencePage extends PreferencePage
 				((IStructuredSelection) fTableViewer.getSelection()).toArray());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
-	 */
+	@Override
 	public boolean performOk() {
-		StepFilterManager.setUseStepFilters(
-				fUseStepFiltersButton.getSelection(), getPreferenceStore());
+		DebugPlugin.setUseStepFilters(fUseStepFiltersButton.getSelection());
 		IPreferenceStore store = getPreferenceStore();
 		ArrayList active = new ArrayList();
 		ArrayList inactive = new ArrayList();
