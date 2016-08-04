@@ -24,6 +24,7 @@ import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgUtils;
 import org.eclipse.dltk.internal.ui.dnd.DLTKViewerDropAdapter;
 import org.eclipse.dltk.internal.ui.workingsets.WorkingSetIDs;
 import org.eclipse.dltk.internal.ui.workingsets.WorkingSetModel;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -34,7 +35,6 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
 
 public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements TransferDropTargetListener {
@@ -60,15 +60,18 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 
 	//---- TransferDropTargetListener interface ---------------------------------------
 	
+	@Override
 	public Transfer getTransfer() {
-		return LocalSelectionTransfer.getInstance();
+		return LocalSelectionTransfer.getTransfer();
 	}
 	
+	@Override
 	public boolean isEnabled(DropTargetEvent event) {
 		Object target= event.item != null ? event.item.getData() : null;
 		if (target == null)
 			return false;
-		ISelection selection= LocalSelectionTransfer.getInstance().getSelection();
+		ISelection selection = LocalSelectionTransfer.getTransfer()
+				.getSelection();
 		if (!isValidSelection(selection)) {
 			return false;
 		}
@@ -108,7 +111,7 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 		setExpandEnabled(true);
 		if (!isValidTarget(target))
 			return DND.DROP_NONE;
-		ISelection s= LocalSelectionTransfer.getInstance().getSelection();
+		ISelection s = LocalSelectionTransfer.getTransfer().getSelection();
 		if (!isValidSelection(s)) {
 			return DND.DROP_NONE;
 		}

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.scriptview;
 
@@ -16,17 +15,18 @@ import java.util.List;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgPolicy.ICopyPolicy;
+import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgPolicy.IMovePolicy;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgMoveStarter;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgPolicyFactory;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgUtils;
-import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgPolicy.ICopyPolicy;
-import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgPolicy.IMovePolicy;
 import org.eclipse.dltk.internal.ui.dnd.DLTKViewerDropAdapter;
 import org.eclipse.dltk.internal.ui.refactoring.RefactoringMessages;
 import org.eclipse.dltk.internal.ui.refactoring.reorg.ReorgCopyStarter;
 import org.eclipse.dltk.internal.ui.refactoring.reorg.ScriptCopyProcessor;
 import org.eclipse.dltk.internal.ui.refactoring.reorg.ScriptMoveProcessor;
 import org.eclipse.dltk.ui.util.ExceptionHandler;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -37,7 +37,6 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
 public class SelectionTransferDropAdapter extends DLTKViewerDropAdapter
 		implements TransferDropTargetListener {
@@ -63,8 +62,9 @@ public class SelectionTransferDropAdapter extends DLTKViewerDropAdapter
 	// ---- TransferDropTargetListener interface
 	// ---------------------------------------
 
+	@Override
 	public Transfer getTransfer() {
-		return LocalSelectionTransfer.getInstance();
+		return LocalSelectionTransfer.getTransfer();
 	}
 
 	public boolean isEnabled(DropTargetEvent event) {
@@ -181,7 +181,7 @@ public class SelectionTransferDropAdapter extends DLTKViewerDropAdapter
 	protected void initializeSelection() {
 		if (fElements != null)
 			return;
-		ISelection s = LocalSelectionTransfer.getInstance().getSelection();
+		ISelection s = LocalSelectionTransfer.getTransfer().getSelection();
 		if (!(s instanceof IStructuredSelection)) {
 			fSelection = StructuredSelection.EMPTY;
 			fElements = Collections.EMPTY_LIST;

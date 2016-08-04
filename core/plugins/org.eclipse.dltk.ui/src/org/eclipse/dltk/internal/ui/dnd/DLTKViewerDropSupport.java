@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,13 +14,13 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.internal.ui.scriptview.FileTransferDropAdapter;
 import org.eclipse.dltk.internal.ui.scriptview.SelectionTransferDropAdapter;
 import org.eclipse.jface.util.DelegatingDropAdapter;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.part.PluginTransfer;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
 public class DLTKViewerDropSupport {
 
@@ -52,10 +52,9 @@ public class DLTKViewerDropSupport {
 
 		int ops= DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_DEFAULT;
 
-		Transfer[] transfers= new Transfer[] {
-			LocalSelectionTransfer.getInstance(),
-			FileTransfer.getInstance(),
-			PluginTransfer.getInstance()};
+		Transfer[] transfers = new Transfer[] {
+				LocalSelectionTransfer.getTransfer(),
+				FileTransfer.getInstance(), PluginTransfer.getInstance() };
 
 		fViewer.addDropSupport(ops, transfers, fDelegatingDropAdapter);
 

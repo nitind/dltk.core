@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,12 +13,12 @@ package org.eclipse.dltk.internal.ui.dnd;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.internal.ui.scriptview.FileTransferDragAdapter;
 import org.eclipse.dltk.internal.ui.scriptview.SelectionTransferDragAdapter;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.part.ResourceTransfer;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 
 public class DLTKViewerDragSupport {
 
@@ -43,10 +43,9 @@ public class DLTKViewerDragSupport {
 
 		int ops= DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
 
-		Transfer[] transfers= new Transfer[] {
-			LocalSelectionTransfer.getInstance(),
-			ResourceTransfer.getInstance(),
-			FileTransfer.getInstance()};
+		Transfer[] transfers = new Transfer[] {
+				LocalSelectionTransfer.getTransfer(),
+				ResourceTransfer.getInstance(), FileTransfer.getInstance() };
 
 		fViewer.addDragSupport(ops, transfers, fDragAdapter);
 
