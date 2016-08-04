@@ -69,7 +69,7 @@ public class EFSFileHandle implements IFileHandle, IFileStoreProvider {
 	@Override
 	public IFileHandle getChild(final String childname) {
 		return new EFSFileHandle(environment, file
-				.getChild(new Path(childname)));
+				.getFileStore(new Path(childname)));
 	}
 
 	@Override
