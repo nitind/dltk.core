@@ -80,13 +80,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.ActiveShellExpression;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * Dialog to edit a template.
@@ -524,11 +524,13 @@ public class EditTemplateDialog extends StatusDialog {
 				IAction action = fGlobalActions
 						.get(ITextEditorActionConstants.REDO);
 				handlerActivations.add(handlerService.activateHandler(
-						IWorkbenchActionDefinitionIds.REDO, new ActionHandler(
+						IWorkbenchCommandConstants.EDIT_REDO,
+						new ActionHandler(
 								action), expression));
 				action = fGlobalActions.get(ITextEditorActionConstants.UNDO);
 				handlerActivations.add(handlerService.activateHandler(
-						IWorkbenchActionDefinitionIds.UNDO, new ActionHandler(
+						IWorkbenchCommandConstants.EDIT_UNDO,
+						new ActionHandler(
 								action), expression));
 				action = fGlobalActions.get("ContentAssistProposal");
 				handlerActivations
