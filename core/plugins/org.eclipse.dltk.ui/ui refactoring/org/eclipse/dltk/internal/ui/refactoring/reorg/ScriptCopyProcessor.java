@@ -165,6 +165,7 @@ public final class ScriptCopyProcessor extends CopyProcessor implements IReorgDe
 					return null;
 				}
 
+				@Override
 				public Object getAdapter(Class adapter) {
 					if (ReorgExecutionLog.class.equals(adapter))
 						return fExecutionLog;

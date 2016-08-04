@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.core.model;
 
@@ -25,8 +24,8 @@ import org.eclipse.dltk.debug.core.DLTKDebugPlugin;
 import org.eclipse.dltk.debug.core.model.IScriptDebugElement;
 import org.eclipse.dltk.debug.core.model.IScriptDebugTarget;
 
-public abstract class ScriptDebugElement extends PlatformObject implements
-		IScriptDebugElement {
+public abstract class ScriptDebugElement extends PlatformObject
+		implements IScriptDebugElement {
 
 	public IScriptDebugTarget getScriptDebugTarget() {
 		return (IScriptDebugTarget) getDebugTarget();
@@ -40,9 +39,11 @@ public abstract class ScriptDebugElement extends PlatformObject implements
 		return getDebugTarget().getModelIdentifier();
 	}
 
-	public Object getAdapter(Class adapter) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == IDebugElement.class) {
-			return this;
+			return (T) this;
 		}
 
 		/*
@@ -52,46 +53,47 @@ public abstract class ScriptDebugElement extends PlatformObject implements
 		 */
 
 		if (adapter == IDebugTarget.class) {
-			return getDebugTarget();
+			return (T) getDebugTarget();
 		}
 
 		if (adapter == ITerminate.class) {
-			return getDebugTarget();
+			return (T) getDebugTarget();
 		}
 
 		if (adapter == IScriptDebugTarget.class) {
-			return getScriptDebugTarget();
+			return (T) getScriptDebugTarget();
 		}
 
 		if (adapter == ILaunch.class) {
-			return getLaunch();
+			return (T) getLaunch();
 		}
 
 		return super.getAdapter(adapter);
 	}
 
 	protected void abort(String message, Throwable e) throws DebugException {
-		throw new DebugException(new Status(IStatus.ERROR,
-				DLTKDebugPlugin.PLUGIN_ID, DebugPlugin.INTERNAL_ERROR, message,
-				e));
+		throw new DebugException(
+				new Status(IStatus.ERROR, DLTKDebugPlugin.PLUGIN_ID,
+						DebugPlugin.INTERNAL_ERROR, message, e));
 	}
 
 	protected DebugException makeNotSupported(String message, Throwable e)
 			throws DebugException {
-		return new DebugException(new Status(IStatus.ERROR,
-				DLTKDebugPlugin.PLUGIN_ID, DebugException.NOT_SUPPORTED,
-				message, e));
+		return new DebugException(
+				new Status(IStatus.ERROR, DLTKDebugPlugin.PLUGIN_ID,
+						DebugException.NOT_SUPPORTED, message, e));
 	}
 
-	protected DebugException wrapDbgpException(String message, DbgpException e) {
-		return new DebugException(new Status(IStatus.ERROR, DebugPlugin
-				.getUniqueIdentifier(), DebugException.INTERNAL_ERROR, message,
-				e));
+	protected DebugException wrapDbgpException(String message,
+			DbgpException e) {
+		return new DebugException(
+				new Status(IStatus.ERROR, DebugPlugin.getUniqueIdentifier(),
+						DebugException.INTERNAL_ERROR, message, e));
 	}
 
 	protected DebugException wrapIOException(String message, IOException e) {
-		return new DebugException(new Status(IStatus.ERROR, DebugPlugin
-				.getUniqueIdentifier(), DebugException.INTERNAL_ERROR, message,
-				e));
+		return new DebugException(
+				new Status(IStatus.ERROR, DebugPlugin.getUniqueIdentifier(),
+						DebugException.INTERNAL_ERROR, message, e));
 	}
 }

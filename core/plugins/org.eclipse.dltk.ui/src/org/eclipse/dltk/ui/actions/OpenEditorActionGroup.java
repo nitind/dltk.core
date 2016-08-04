@@ -137,7 +137,7 @@ public class OpenEditorActionGroup extends ActionGroup {
 		if (!(o instanceof IAdaptable))
 			return;
 		IAdaptable element = (IAdaptable) o;
-		Object resource = element.getAdapter(IResource.class);
+		IResource resource = element.getAdapter(IResource.class);
 		if (element instanceof IStorage && !(resource instanceof IFile)) {
 			// Create a menu.
 			IMenuManager submenu = new MenuManager(ActionMessages.OpenWithMenu_label);
@@ -154,7 +154,7 @@ public class OpenEditorActionGroup extends ActionGroup {
 		} else if ((resource instanceof IFile)) {
 			// Create a menu.
 			IMenuManager submenu = new MenuManager(ActionMessages.OpenWithMenu_label);
-			submenu.add(new OpenWithMenu(fSite.getPage(), (IFile) resource));
+			submenu.add(new OpenWithMenu(fSite.getPage(), resource));
 			// Add the submenu.
 			menu.appendToGroup(IContextMenuConstants.GROUP_OPEN, submenu);
 		} 

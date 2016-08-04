@@ -93,10 +93,11 @@ public class LocalEnvironment implements IEnvironment, IAdaptable {
 		return EnvironmentPathUtils.getLocalPath(path).toOSString();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getAdapter(Class adapter) {
-		return Platform.getAdapterManager()
-				.loadAdapter(this, adapter.getName());
+	public <T> T getAdapter(Class<T> adapter) {
+		return (T) Platform.getAdapterManager().loadAdapter(this,
+				adapter.getName());
 	}
 
 	@Override

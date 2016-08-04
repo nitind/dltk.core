@@ -79,10 +79,11 @@ public abstract class AbstractExternalSourceModule extends AbstractSourceModule
 		// external, do nothing
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getAdapter(Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == IStorage.class) {
-			return this;
+			return (T) this;
 		}
 
 		return super.getAdapter(adapter);

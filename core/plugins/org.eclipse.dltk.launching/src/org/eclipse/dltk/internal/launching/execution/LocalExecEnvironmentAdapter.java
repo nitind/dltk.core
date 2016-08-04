@@ -5,19 +5,23 @@ import org.eclipse.dltk.core.environment.IExecutionEnvironment;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 
 public class LocalExecEnvironmentAdapter implements IAdapterFactory {
-	public static final Class[] ADAPTER_LIST = { IExecutionEnvironment.class };
+	public static final Class<?>[] ADAPTER_LIST = {
+			IExecutionEnvironment.class };
 	private IExecutionEnvironment localEnvironment = new LocalExecEnvironment();
-	
-	public Object getAdapter(Object adaptableObject, Class adapterType) {
-		if (adapterType == IExecutionEnvironment.class && 
-				adaptableObject instanceof LocalEnvironment) {
-			return localEnvironment;
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
+		if (adapterType == IExecutionEnvironment.class
+				&& adaptableObject instanceof LocalEnvironment) {
+			return (T) localEnvironment;
 		}
 		return null;
 	}
 
-	public Class[] getAdapterList() {
-		return ADAPTER_LIST; 
+	@Override
+	public Class<?>[] getAdapterList() {
+		return ADAPTER_LIST;
 	}
 
 }

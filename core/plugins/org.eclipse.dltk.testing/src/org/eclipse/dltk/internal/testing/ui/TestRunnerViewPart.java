@@ -1100,10 +1100,10 @@ public class TestRunnerViewPart extends ViewPart {
 	}
 
 	private IWorkbenchSiteProgressService getProgressService() {
-		Object siteService = getSite().getAdapter(
+		IWorkbenchSiteProgressService siteService = getSite().getAdapter(
 				IWorkbenchSiteProgressService.class);
 		if (siteService != null)
-			return (IWorkbenchSiteProgressService) siteService;
+			return siteService;
 		return null;
 	}
 

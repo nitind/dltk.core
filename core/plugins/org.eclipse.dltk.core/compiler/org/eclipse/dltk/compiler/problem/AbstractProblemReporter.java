@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -20,7 +20,8 @@ import org.eclipse.core.runtime.IAdaptable;
 public abstract class AbstractProblemReporter implements IProblemReporter,
 		IAdaptable {
 
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	@Override
+	public <T> T getAdapter(Class<T> adapter) {
 		return null;
 	}
 

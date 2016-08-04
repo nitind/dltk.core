@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.model;
 
@@ -44,13 +43,14 @@ public final class ScriptModelProvider extends ModelProvider {
 			resource= (IResource) element;
 		} else if (element instanceof IAdaptable) {
 			final IAdaptable adaptable= (IAdaptable) element;
-			final Object adapted= adaptable.getAdapter(IResource.class);
-			if (adapted instanceof IResource)
-				resource= (IResource) adapted;
+			final IResource adapted = adaptable.getAdapter(IResource.class);
+			if (adapted != null)
+				resource = adapted;
 		} else {
-			final Object adapted= Platform.getAdapterManager().getAdapter(element, IResource.class);
-			if (adapted instanceof IResource)
-				resource= (IResource) adapted;
+			final IResource adapted = Platform.getAdapterManager()
+					.getAdapter(element, IResource.class);
+			if (adapted != null)
+				resource = adapted;
 		}
 		return resource;
 	}
@@ -69,9 +69,10 @@ public final class ScriptModelProvider extends ModelProvider {
 		final IModelElement element= DLTKCore.create(resource);
 		if (element != null)
 			return new ResourceMapping[] { DLTKElementResourceMapping.create(element)};
-		final Object adapted= resource.getAdapter(ResourceMapping.class);
-		if (adapted instanceof ResourceMapping)
-			return new ResourceMapping[] { ((ResourceMapping) adapted)};
+		final ResourceMapping adapted = resource
+				.getAdapter(ResourceMapping.class);
+		if (adapted != null)
+			return new ResourceMapping[] { (adapted) };
 		return new ResourceMapping[] { new DLTKResourceMapping(resource)};
 	}
 }

@@ -646,10 +646,9 @@ public class ScriptDisplayView extends PageBookView
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getAdapter(Class<T> key) {
-		Object adpater = super.getAdapter(key);
+		T adpater = super.getAdapter(key);
 		if (adpater == null) {
 			IConsole console = getConsole();
 			if (console != null) {
@@ -662,13 +661,13 @@ public class ScriptDisplayView extends PageBookView
 						IConsolePageParticipant participant = (IConsolePageParticipant) participants[i];
 						adpater = participant.getAdapter(key);
 						if (adpater != null) {
-							return (T) adpater;
+							return adpater;
 						}
 					}
 				}
 			}
 		}
-		return (T) adpater;
+		return adpater;
 	}
 
 	@Override

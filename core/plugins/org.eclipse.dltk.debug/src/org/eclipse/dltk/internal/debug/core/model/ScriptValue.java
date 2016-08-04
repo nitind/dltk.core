@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.core.model;
 
@@ -32,8 +31,8 @@ import org.eclipse.dltk.debug.core.model.IScriptValue;
 import org.eclipse.dltk.internal.debug.core.eval.ScriptEvaluationCommand;
 import org.eclipse.osgi.util.NLS;
 
-public class ScriptValue extends ScriptDebugElement implements IScriptValue,
-		IIndexedValue {
+public class ScriptValue extends ScriptDebugElement
+		implements IScriptValue, IIndexedValue {
 
 	static final IVariable[] NO_VARIABLES = new IVariable[0];
 
@@ -97,8 +96,8 @@ public class ScriptValue extends ScriptDebugElement implements IScriptValue,
 	private void loadPage(int page) throws DbgpException {
 		IDbgpPropertyCommands commands = frame.getScriptThread()
 				.getDbgpSession().getCoreCommands();
-		IDbgpProperty pageProperty = commands.getProperty(page, fullname, frame
-				.getLevel());
+		IDbgpProperty pageProperty = commands.getProperty(page, fullname,
+				frame.getLevel());
 		fillVariables(page, pageProperty);
 		final int endIndex = Math.min((page + 1) * pageSize, variables.length);
 		for (int i = page * pageSize; i < endIndex; ++i) {
@@ -113,8 +112,9 @@ public class ScriptValue extends ScriptDebugElement implements IScriptValue,
 		IDbgpProperty[] properties = pageProperty.getAvailableChildren();
 		final int size = Math.min(properties.length, variables.length - offset);
 		if (size != properties.length) {
-			DLTKDebugPlugin.logWarning(NLS.bind(
-					Messages.AvailableChildrenExceedsVariableLength, name),
+			DLTKDebugPlugin.logWarning(
+					NLS.bind(Messages.AvailableChildrenExceedsVariableLength,
+							name),
 					null);
 		}
 		if (size > 0) {
@@ -206,17 +206,14 @@ public class ScriptValue extends ScriptDebugElement implements IScriptValue,
 			String snippet = replacePattern(messageTemplate, pattern, evalName);
 			return new ScriptEvaluationCommand(engine, snippet, frame);
 		}
-		DLTKDebugPlugin
-				.logWarning(
-						NLS
-								.bind(
-										Messages.ScriptValue_detailFormatterRequiredToContainIdentifier,
-										pattern), null);
+		DLTKDebugPlugin.logWarning(NLS.bind(
+				Messages.ScriptValue_detailFormatterRequiredToContainIdentifier,
+				pattern), null);
 		return new ScriptEvaluationCommand(engine, evalName, frame);
 	}
 
-	private static String replacePattern(String messageTemplate,
-			String pattern, String evalName) {
+	private static String replacePattern(String messageTemplate, String pattern,
+			String evalName) {
 		String result = messageTemplate;
 		while (result.indexOf(pattern) != -1) {
 			int pos = result.indexOf(pattern);
@@ -241,8 +238,9 @@ public class ScriptValue extends ScriptDebugElement implements IScriptValue,
 			}
 			return variables[offset];
 		} catch (DbgpException e) {
-			throw wrapDbgpException(NLS.bind(
-					Messages.ScriptValue_unableToLoadChildrenOf, name), e);
+			throw wrapDbgpException(
+					NLS.bind(Messages.ScriptValue_unableToLoadChildrenOf, name),
+					e);
 		}
 	}
 
@@ -259,9 +257,11 @@ public class ScriptValue extends ScriptDebugElement implements IScriptValue,
 		return variables;
 	}
 
-	public Object getAdapter(Class adapter) {
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == IIndexedValue.class && type.isCollection()) {
-			return this;
+			return (T) this;
 		}
 		return super.getAdapter(adapter);
 	}

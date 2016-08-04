@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -51,11 +51,12 @@ public class ProblemCollector extends AbstractProblemReporter implements
 		return problems.isEmpty();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		if (ITaskReporter.class.equals(adapter)
 				|| IProblemReporter.class.equals(adapter)) {
-			return this;
+			return (T) this;
 		}
 		return super.getAdapter(adapter);
 	}

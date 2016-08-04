@@ -136,7 +136,7 @@ public abstract class LazyEnvironment implements IEnvironment {
 	}
 
 	@Override
-	public Object getAdapter(Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		initialize();
 		return environment != null ? environment.getAdapter(adapter) : null;
 	}

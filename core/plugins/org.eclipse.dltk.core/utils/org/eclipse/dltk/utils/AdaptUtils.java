@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2006 IBM Corporation and others.
+ * Copyright (c) 2003, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,18 +44,18 @@ public class AdaptUtils {
 		}
 		if (anElement instanceof IAdaptable) {
 			final IAdaptable adaptable = (IAdaptable) anElement;
-			Object result = adaptable.getAdapter(anAdapterType);
+			T result = adaptable.getAdapter(anAdapterType);
 			if (result != null) {
 				// Sanity-check
 				Assert.isTrue(anAdapterType.isInstance(result));
-				return (T) result;
+				return result;
 			}
 		}
 		if (!(anElement instanceof PlatformObject)) {
-			Object result = Platform.getAdapterManager().getAdapter(anElement,
+			T result = Platform.getAdapterManager().getAdapter(anElement,
 					anAdapterType);
 			if (result != null) {
-				return (T) result;
+				return result;
 			}
 		}
 		return null;
