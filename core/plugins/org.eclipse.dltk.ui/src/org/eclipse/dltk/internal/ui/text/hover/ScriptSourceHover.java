@@ -50,25 +50,18 @@ public class ScriptSourceHover extends AbstractScriptEditorTextHover implements
 				if (source == null)
 					return null;
 
+				String[] sourceLines = Strings.convertIntoLines(source);
+				if (sourceLines == null)
+					return null;
+
 				// source = removeLeadingComments(source);
 				String delim = System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-
-				String[] sourceLines = Strings.convertIntoLines(source);
-				String firstLine = sourceLines[0];
-				if (!Character.isWhitespace(firstLine.charAt(0)))
-					sourceLines[0] = ""; //$NON-NLS-1$
-
-				if (!Character.isWhitespace(firstLine.charAt(0)))
-					sourceLines[0] = firstLine;
-
 				source = Strings.concatenate(sourceLines, delim);
 
 				return source;
-
 			} catch (ModelException ex) {
 			}
 		}
-
 		return null;
 	}
 
