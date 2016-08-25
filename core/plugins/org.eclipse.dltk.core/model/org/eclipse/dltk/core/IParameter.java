@@ -41,6 +41,9 @@ public interface IParameter {
 	 * using class <code>Flags</code>.
 	 * 
 	 * @return
+	 * @since 5.6
 	 */
-	int getFlags();
+	default int getFlags() {
+		return 0;
+	}
 }
