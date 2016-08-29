@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -29,9 +29,7 @@ public class MethodSourceCode implements ISourceModule {
 		this.method = method;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.ISourceModule#getContentsAsCharArray()
-	 */
+	@Override
 	public char[] getContentsAsCharArray() {
 		try {
 			return method.getSource().toCharArray();
@@ -43,16 +41,12 @@ public class MethodSourceCode implements ISourceModule {
 		}
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.ISourceModule#getModelElement()
-	 */
+	@Override
 	public IModelElement getModelElement() {
 		return method;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.ISourceModule#getSourceContents()
-	 */
+	@Override
 	public String getSourceContents() {
 		try {
 			return method.getSource();
@@ -64,9 +58,7 @@ public class MethodSourceCode implements ISourceModule {
 		}
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.IDependent#getFileName()
-	 */
+	@Override
 	public String getFileName() {
 		return method.getSourceModule().getPath().toString();
 	}

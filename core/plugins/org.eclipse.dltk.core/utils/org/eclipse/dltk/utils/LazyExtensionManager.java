@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.  
+ * Copyright (c) 2009, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -97,6 +97,7 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 		private boolean nextEvaluated = false;
 		private E next = null;
 
+		@Override
 		public boolean hasNext() {
 			if (!nextEvaluated) {
 				evaluateNext();
@@ -114,6 +115,7 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 			}
 		}
 
+		@Override
 		public E next() {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
@@ -124,6 +126,7 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 			return result;
 		}
 
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
@@ -143,6 +146,7 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 		private boolean nextEvaluated = false;
 		private Descriptor<E> next = null;
 
+		@Override
 		public boolean hasNext() {
 			if (!nextEvaluated) {
 				evaluateNext();
@@ -160,6 +164,7 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 			}
 		}
 
+		@Override
 		public Descriptor<E> next() {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
@@ -170,6 +175,7 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 			return result;
 		}
 
+		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
@@ -238,6 +244,7 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 	 * 
 	 * @return
 	 */
+	@Override
 	public Iterator<E> iterator() {
 		return new InstanceIterator<E>(internalGetInstances());
 	}

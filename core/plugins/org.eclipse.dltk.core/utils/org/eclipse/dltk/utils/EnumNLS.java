@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 xored software, Inc.
+ * Copyright (c) 2011, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -105,11 +105,9 @@ public class EnumNLS {
 			load(clazz.getName(), clazz, values, fieldName);
 			return;
 		}
-		AccessController.doPrivileged(new PrivilegedAction<Object>() {
-			public Object run() {
-				load(clazz.getName(), clazz, values, fieldName);
-				return null;
-			}
+		AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+			load(clazz.getName(), clazz, values, fieldName);
+			return null;
 		});
 	}
 
@@ -287,11 +285,7 @@ public class EnumNLS {
 			this.bundleName = bundleName;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.util.Hashtable#put(java.lang.Object, java.lang.Object)
-		 */
+		@Override
 		public synchronized Object put(Object key, Object value) {
 			Enum<?> fieldObject = fields.put((String) key, Assigned.ASSIGNED);
 			// if already assigned, there is nothing to do

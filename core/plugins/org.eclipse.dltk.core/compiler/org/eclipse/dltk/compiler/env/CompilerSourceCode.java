@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -31,9 +31,7 @@ public class CompilerSourceCode implements IModuleSource {
 		this.charArray = content;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.ISourceModule#getContentsAsCharArray()
-	 */
+	@Override
 	public char[] getContentsAsCharArray() {
 		if (charArray == null) {
 			charArray = string.toCharArray();
@@ -41,9 +39,7 @@ public class CompilerSourceCode implements IModuleSource {
 		return charArray;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.ISourceModule#getSourceContents()
-	 */
+	@Override
 	public String getSourceContents() {
 		if (string == null) {
 			string = new String(charArray);
@@ -51,16 +47,12 @@ public class CompilerSourceCode implements IModuleSource {
 		return string;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.ISourceModule#getModelElement()
-	 */
+	@Override
 	public IModelElement getModelElement() {
 		return null;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.compiler.env.IDependent#getFileName()
-	 */
+	@Override
 	public String getFileName() {
 		return Util.EMPTY_STRING;
 	}

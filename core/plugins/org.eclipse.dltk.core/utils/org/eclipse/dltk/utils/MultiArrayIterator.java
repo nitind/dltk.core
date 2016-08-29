@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 NumberFour AG
+ * Copyright (c) 2012, 2016 NumberFour AG and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -41,10 +41,12 @@ public class MultiArrayIterator<E> implements Iterator<E> {
 		advance();
 	}
 
+	@Override
 	public boolean hasNext() {
 		return next < current.length;
 	}
 
+	@Override
 	public E next() {
 		final E result;
 		try {
@@ -68,6 +70,7 @@ public class MultiArrayIterator<E> implements Iterator<E> {
 		}
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

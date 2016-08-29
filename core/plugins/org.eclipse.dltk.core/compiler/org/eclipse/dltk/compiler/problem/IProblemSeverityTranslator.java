@@ -9,15 +9,13 @@ public interface IProblemSeverityTranslator {
 	 * Implementation of {@link IProblemSeverityTranslator} which always returns
 	 * the default value.
 	 */
-	static IProblemSeverityTranslator IDENTITY = new IProblemSeverityTranslator() {
-		public ProblemSeverity getSeverity(IProblemIdentifier problemId,
-				ProblemSeverity defaultSeverity) {
-			if (defaultSeverity == null
-					|| defaultSeverity == ProblemSeverity.DEFAULT) {
-				return ProblemSeverity.WARNING;
-			} else {
-				return defaultSeverity;
-			}
+	static IProblemSeverityTranslator IDENTITY = (problemId,
+			defaultSeverity) -> {
+		if (defaultSeverity == null
+				|| defaultSeverity == ProblemSeverity.DEFAULT) {
+			return ProblemSeverity.WARNING;
+		} else {
+			return defaultSeverity;
 		}
 	};
 

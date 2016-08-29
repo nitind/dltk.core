@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 NumberFour AG
+ * Copyright (c) 2011, 2016 NumberFour AG and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -58,6 +58,7 @@ public class ProblemCategoryManager {
 			return natureId.hashCode() * 13 + scopeId.hashCode();
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			if (obj instanceof Key) {
 				final Key other = (Key) obj;
@@ -87,10 +88,12 @@ public class ProblemCategoryManager {
 			contents = Collections.unmodifiableCollection(this);
 		}
 
+		@Override
 		public String name() {
 			return name;
 		}
 
+		@Override
 		public Collection<IProblemIdentifier> contents() {
 			return contents;
 		}

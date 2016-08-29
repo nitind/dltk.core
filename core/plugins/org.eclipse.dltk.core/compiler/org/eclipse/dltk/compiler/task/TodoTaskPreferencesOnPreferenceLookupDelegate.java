@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -40,10 +40,12 @@ public class TodoTaskPreferencesOnPreferenceLookupDelegate extends
 		this(pluginId, new PreferencesLookupDelegate(project));
 	}
 
+	@Override
 	public boolean isEnabled() {
 		return delegate.getBoolean(pluginId, ENABLED);
 	}
 
+	@Override
 	public boolean isCaseSensitive() {
 		return delegate.getBoolean(pluginId, CASE_SENSITIVE);
 	}

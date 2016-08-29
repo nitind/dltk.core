@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -32,6 +32,7 @@ public class TodoTaskAstParser extends TodoTaskRangeParser {
 			setCheckRanges(true);
 			final ASTVisitor visitor = new ASTVisitor() {
 
+				@Override
 				public boolean visitGeneral(ASTNode node) throws Exception {
 					if (isSimpleNode(node)) {
 						excludeRange(node.sourceStart(), node.sourceEnd());

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.  
+ * Copyright (c) 2009, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -19,6 +19,7 @@ public abstract class ExecutableOperation implements IExecutableOperation {
 		this.operationName = operationName;
 	}
 
+	@Override
 	public String getOperationName() {
 		return operationName;
 	}

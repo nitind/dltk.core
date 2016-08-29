@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 xored software, Inc.
+ * Copyright (c) 2011, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -28,6 +28,7 @@ import org.eclipse.dltk.utils.NatureExtensionManager;
 public enum DefaultProblemIdentifier implements IProblemIdentifier {
 	TASK;
 
+	@Override
 	public String contributor() {
 		return DLTKCore.PLUGIN_ID;
 	}

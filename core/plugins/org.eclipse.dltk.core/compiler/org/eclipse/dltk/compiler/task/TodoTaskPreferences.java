@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -28,14 +28,17 @@ public class TodoTaskPreferences extends AbstractTodoTaskPreferences implements
 		this.store = store;
 	}
 
+	@Override
 	public boolean isEnabled() {
 		return store.getBoolean(ENABLED);
 	}
 
+	@Override
 	public boolean isCaseSensitive() {
 		return store.getBoolean(CASE_SENSITIVE);
 	}
 
+	@Override
 	protected String getRawTaskTags() {
 		return store.getString(TAGS);
 	}
@@ -43,6 +46,7 @@ public class TodoTaskPreferences extends AbstractTodoTaskPreferences implements
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	public void setTaskTags(List<TodoTask> elements) {
 		store.setValue(TAGS, TaskTagUtils.encodeTaskTags(elements));
 	}
@@ -50,6 +54,7 @@ public class TodoTaskPreferences extends AbstractTodoTaskPreferences implements
 	/**
 	 * @deprecated use {@link TaskTagUtils#initializeDefaultValues(Preferences)}
 	 */
+	@Deprecated
 	public static void initializeDefaultValues(Preferences store) {
 		TaskTagUtils.initializeDefaultValues(store);
 	}

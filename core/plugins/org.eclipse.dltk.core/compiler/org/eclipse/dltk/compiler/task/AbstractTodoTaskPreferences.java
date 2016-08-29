@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -18,10 +18,12 @@ public abstract class AbstractTodoTaskPreferences implements
 
 	protected abstract String getRawTaskTags();
 
+	@Override
 	public final List<TodoTask> getTaskTags() {
 		return TaskTagUtils.decodeTaskTags(getRawTaskTags());
 	}
 
+	@Override
 	public final String[] getTagNames() {
 		final List<TodoTask> taskTags = getTaskTags();
 		final int size = taskTags.size();

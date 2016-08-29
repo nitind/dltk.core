@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.compiler.problem;
 
@@ -164,6 +163,7 @@ public class DefaultProblem extends CategorizedProblem {
 	 * 
 	 * @return java.lang.String[]
 	 */
+	@Override
 	public String[] getArguments() {
 		return this.arguments;
 	}
@@ -171,6 +171,7 @@ public class DefaultProblem extends CategorizedProblem {
 	/**
 	 * @see org.eclipse.dltk.core.compiler.CategorizedProblem#getCategoryID()
 	 */
+	@Override
 	public int getCategoryID() {
 		// return ProblemReporter.getProblemCategory(this.severity, this.id);
 		if (DLTKCore.DEBUG) {
@@ -186,6 +187,7 @@ public class DefaultProblem extends CategorizedProblem {
 	 * @see org.eclipse.dltk.core.compiler.IProblem#getID()
 	 * @return int
 	 */
+	@Override
 	public IProblemIdentifier getID() {
 		return this.id;
 	}
@@ -237,6 +239,7 @@ public class DefaultProblem extends CategorizedProblem {
 	 * 
 	 * @see org.eclipse.dltk.core.compiler.CategorizedProblem#getMarkerType()
 	 */
+	@Override
 	public String getMarkerType() {
 		return isTask() ? MARKER_TYPE_TASK : MARKER_TYPE_PROBLEM;
 	}
@@ -244,6 +247,7 @@ public class DefaultProblem extends CategorizedProblem {
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public boolean isTask() {
 		return this.id == IProblem.Task;
 	}
@@ -254,6 +258,7 @@ public class DefaultProblem extends CategorizedProblem {
 	 * 
 	 * @return java.lang.String
 	 */
+	@Override
 	public String getMessage() {
 		return this.message;
 	}
@@ -267,6 +272,7 @@ public class DefaultProblem extends CategorizedProblem {
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String getOriginatingFileName() {
 		return this.fileName;
 	}
@@ -276,6 +282,7 @@ public class DefaultProblem extends CategorizedProblem {
 	 * 
 	 * @return int
 	 */
+	@Override
 	public int getSourceEnd() {
 		return this.endPosition;
 	}
@@ -285,6 +292,7 @@ public class DefaultProblem extends CategorizedProblem {
 	 * 
 	 * @return int
 	 */
+	@Override
 	public int getSourceLineNumber() {
 		return this.line;
 	}
@@ -294,6 +302,7 @@ public class DefaultProblem extends CategorizedProblem {
 	 * 
 	 * @return int
 	 */
+	@Override
 	public int getSourceStart() {
 		return this.startPosition;
 	}
@@ -303,6 +312,7 @@ public class DefaultProblem extends CategorizedProblem {
 		return severity;
 	}
 
+	@Override
 	public void setSeverity(ProblemSeverity severity) {
 		this.severity = severity;
 	}
@@ -312,6 +322,7 @@ public class DefaultProblem extends CategorizedProblem {
 	 * 
 	 * @return boolean
 	 */
+	@Override
 	public boolean isError() {
 		return this.severity == ProblemSeverity.ERROR;
 	}
@@ -321,6 +332,7 @@ public class DefaultProblem extends CategorizedProblem {
 	 * 
 	 * @return boolean
 	 */
+	@Override
 	public boolean isWarning() {
 		return this.severity == ProblemSeverity.WARNING;
 	}
@@ -337,6 +349,7 @@ public class DefaultProblem extends CategorizedProblem {
 	 * @param sourceEnd
 	 *            the new value of the sourceEnd of the receiver
 	 */
+	@Override
 	public void setSourceEnd(int sourceEnd) {
 		this.endPosition = sourceEnd;
 	}
@@ -347,6 +360,7 @@ public class DefaultProblem extends CategorizedProblem {
 	 * @param lineNumber
 	 *            the new value of the line number of the receiver
 	 */
+	@Override
 	public void setSourceLineNumber(int lineNumber) {
 
 		this.line = lineNumber;
@@ -360,6 +374,7 @@ public class DefaultProblem extends CategorizedProblem {
 	 * @param sourceStart
 	 *            the new value of the source start position of the receiver
 	 */
+	@Override
 	public void setSourceStart(int sourceStart) {
 		this.startPosition = sourceStart;
 	}

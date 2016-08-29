@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,6 +65,7 @@ public void clear() {
 	this.elementSize = 0;
 }
 
+	@Override
 public Object clone() throws CloneNotSupportedException {
 	SimpleSetOfCharArray result = (SimpleSetOfCharArray) super.clone();
 	result.elementSize = this.elementSize;
@@ -132,6 +133,7 @@ private void rehash() {
 	this.threshold = newSet.threshold;
 }
 
+	@Override
 public String toString() {
 	String s = ""; //$NON-NLS-1$
 	char[] object;

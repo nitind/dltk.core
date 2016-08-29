@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.compiler;
 
@@ -137,6 +136,7 @@ public class SourceElementRequestVisitor extends ASTVisitor {
 		return value;
 	}
 
+	@Override
 	public boolean endvisit(MethodDeclaration method) throws Exception {
 		this.fRequestor.exitMethod(method.sourceEnd());
 		this.fInMethod = false;
@@ -148,6 +148,7 @@ public class SourceElementRequestVisitor extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(TypeDeclaration type) throws Exception {
 		this.fRequestor.exitType(type.sourceEnd());
 		this.fInClass = false;
@@ -159,6 +160,7 @@ public class SourceElementRequestVisitor extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(MethodDeclaration method) throws Exception {
 		this.fNodes.push(method);
 		List args = method.getArguments();
@@ -194,6 +196,7 @@ public class SourceElementRequestVisitor extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(TypeDeclaration type) throws Exception {
 		this.fNodes.push(type);
 
@@ -215,33 +218,39 @@ public class SourceElementRequestVisitor extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ModuleDeclaration declaration) throws Exception {
 		this.fRequestor.exitModule(declaration.sourceEnd());
 		this.fNodes.pop();
 		return true;
 	}
 
+	@Override
 	public boolean visit(ModuleDeclaration declaration) throws Exception {
 		this.fNodes.push(declaration);
 		this.fRequestor.enterModule();
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(Expression expression) throws Exception {
 		this.fNodes.pop();
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(Statement statement) throws Exception {
 		this.fNodes.pop();
 		return true;
 	}
 
+	@Override
 	public boolean visit(Expression expression) throws Exception {
 		this.fNodes.push(expression);
 		return true;
 	}
 
+	@Override
 	public boolean visit(Statement statement) throws Exception {
 		this.fNodes.push(statement);
 		return true;

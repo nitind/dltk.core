@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -46,9 +46,7 @@ public class CharArraySequence implements CharSequence {
 		this.count = count;
 	}
 
-	/*
-	 * @see java.lang.CharSequence#charAt(int)
-	 */
+	@Override
 	public char charAt(int index) {
 		if (index < 0 || index >= count) {
 			throw new StringIndexOutOfBoundsException(index);
@@ -56,16 +54,12 @@ public class CharArraySequence implements CharSequence {
 		return buff[offset + index];
 	}
 
-	/*
-	 * @see java.lang.CharSequence#length()
-	 */
+	@Override
 	public int length() {
 		return count;
 	}
 
-	/*
-	 * @see java.lang.CharSequence#subSequence(int, int)
-	 */
+	@Override
 	public CharSequence subSequence(int beginIndex, int endIndex) {
 		if (beginIndex < 0) {
 			throw new StringIndexOutOfBoundsException(beginIndex);
@@ -81,6 +75,7 @@ public class CharArraySequence implements CharSequence {
 						- beginIndex);
 	}
 
+	@Override
 	public String toString() {
 		return new String(this.buff, this.offset, this.count);
 	}

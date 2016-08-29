@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.compiler.env;
 
@@ -28,10 +27,12 @@ public class AccessRule {
 		this.problemId = keepLooking ? problemId | IgnoreIfBetter : problemId;
 	}
 	
+	@Override
 	public int hashCode() {
 		return this.problemId * 17 + CharOperation.hashCode(this.pattern);
 	}
 	
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof AccessRule)) return false;
 		AccessRule other = (AccessRule) obj;
@@ -47,6 +48,7 @@ public class AccessRule {
 		return (this.problemId & IgnoreIfBetter) != 0;
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("pattern="); //$NON-NLS-1$

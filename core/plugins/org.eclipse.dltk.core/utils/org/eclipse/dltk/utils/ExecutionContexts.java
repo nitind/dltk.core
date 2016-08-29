@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.  
+ * Copyright (c) 2009, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -19,10 +19,12 @@ public class ExecutionContexts {
 
 	private static IExecutionContextManager fDefaultManager = new IExecutionContextManager() {
 
+		@Override
 		public void executeInBackground(IExecutableOperation operation) {
 			operation.execute(new NullProgressMonitor());
 		}
 
+		@Override
 		public boolean isRunningInUIThread() {
 			return false;
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 NumberFour AG
+ * Copyright (c) 2012, 2016 NumberFour AG and others
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -30,10 +30,12 @@ public class ArrayIterator<T> implements Iterator<T> {
 		this.endIndex = endIndex;
 	}
 
+	@Override
 	public boolean hasNext() {
 		return index < endIndex;
 	}
 
+	@Override
 	public T next() throws NoSuchElementException {
 		try {
 			return items[index++];
@@ -42,6 +44,7 @@ public class ArrayIterator<T> implements Iterator<T> {
 		}
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.utils;
 
@@ -250,10 +249,12 @@ public abstract class TextUtils {
 			this.delimiters = delimiters;
 		}
 
+		@Override
 		public int getLength() {
 			return contentLength;
 		}
 
+		@Override
 		public String getLineDelimiter(int line) {
 			if (line < delimiters.length) {
 				return delimiters[line];
@@ -262,6 +263,7 @@ public abstract class TextUtils {
 			}
 		}
 
+		@Override
 		public ISourceRange getLineInformation(int line) {
 			if (line < lineOffsets.length) {
 				int length;
@@ -279,6 +281,7 @@ public abstract class TextUtils {
 			}
 		}
 
+		@Override
 		public ISourceRange getLineInformationOfOffset(int offset) {
 			if (offset < contentLength) {
 				return getLineInformation(findLine(offset));
@@ -286,6 +289,7 @@ public abstract class TextUtils {
 			return NULL_RANGE;
 		}
 
+		@Override
 		public int getLineLength(int line) {
 			if (line < lineOffsets.length) {
 				if (line == lineOffsets.length - 1) {
@@ -298,6 +302,7 @@ public abstract class TextUtils {
 			}
 		}
 
+		@Override
 		public int getLineNumberOfOffset(int offset) {
 			if (offset < contentLength) {
 				return findLine(offset);
@@ -315,6 +320,7 @@ public abstract class TextUtils {
 			return 0;
 		}
 
+		@Override
 		public int getLineOffset(int line) {
 			if (line < 0 || line > lineOffsets.length) {
 				return WRONG_OFFSET;
@@ -328,14 +334,17 @@ public abstract class TextUtils {
 			return lineOffsets[line];
 		}
 
+		@Override
 		public int getNumberOfLines() {
 			return lineOffsets.length;
 		}
 
+		@Override
 		public String[] getDelimeters() {
 			return delimiters;
 		}
 
+		@Override
 		public int[] getLineOffsets() {
 			return lineOffsets;
 		}

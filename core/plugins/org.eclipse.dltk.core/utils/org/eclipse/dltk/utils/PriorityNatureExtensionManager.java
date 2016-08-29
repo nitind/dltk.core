@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 NumberFour AG
+ * Copyright (c) 2011, 2016 NumberFour AG and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -40,6 +40,7 @@ public class PriorityNatureExtensionManager<E> extends
 				}
 			}
 
+			@Override
 			public int compare(Object o1, Object o2) {
 				return priority((IConfigurationElement) o2)
 						- priority((IConfigurationElement) o1);

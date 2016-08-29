@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2016 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -67,87 +67,107 @@ public class SourceElementRequestorDelegate implements ISourceElementRequestor {
 		return result;
 	}
 
+	@Override
 	public void acceptFieldReference(String fieldName, int sourcePosition) {
 		target.acceptFieldReference(fieldName, translate(sourcePosition));
 	}
 
+	@Override
 	public void acceptImport(ImportInfo importInfo) {
 		target.acceptImport(translate(importInfo));
 	}
 
+	@Override
 	public void acceptMethodReference(String methodName, int argCount,
 			int sourcePosition, int sourceEndPosition) {
 		target.acceptMethodReference(methodName, argCount,
 				translate(sourcePosition), translate(sourceEndPosition));
 	}
 
+	@Override
 	public void acceptPackage(int declarationStart, int declarationEnd,
 			String name) {
 		target.acceptPackage(translate(declarationStart),
 				translate(declarationEnd), name);
 	}
 
+	@Override
 	public void acceptTypeReference(String typeName, int sourcePosition) {
 		target.acceptTypeReference(typeName, translate(sourcePosition));
 	}
 
+	@Override
 	public void enterField(FieldInfo info) {
 		target.enterField(translate(info));
 
 	}
 
+	@Override
 	public void enterMethod(MethodInfo info) {
 		target.enterMethod(translate(info));
 	}
 
+	@Override
 	public void enterModule() {
 		target.enterModule();
 	}
 
+	@Override
 	public void enterModuleRoot() {
 		target.enterModuleRoot();
 	}
 
+	@Override
 	public void enterType(TypeInfo info) {
 		target.enterType(translate(info));
 	}
 
+	@Override
 	public void exitField(int declarationEnd) {
 		target.exitField(translate(declarationEnd));
 	}
 
+	@Override
 	public void exitMethod(int declarationEnd) {
 		target.exitMethod(translate(declarationEnd));
 	}
 
+	@Override
 	public void exitModule(int declarationEnd) {
 		target.exitModule(translate(declarationEnd));
 	}
 
+	@Override
 	public void exitModuleRoot() {
 		target.exitModuleRoot();
 	}
 
+	@Override
 	public void exitType(int declarationEnd) {
 		target.exitType(translate(declarationEnd));
 	}
 
+	@Override
 	public boolean enterFieldCheckDuplicates(FieldInfo info) {
 		return target.enterFieldCheckDuplicates(translate(info));
 	}
 
+	@Override
 	public void enterMethodRemoveSame(MethodInfo info) {
 		target.enterMethodRemoveSame(translate(info));
 	}
 
+	@Override
 	public boolean enterTypeAppend(String fullName, String delimiter) {
 		return target.enterTypeAppend(fullName, fullName);
 	}
 
+	@Override
 	public void enterNamespace(String[] namespace) {
 		target.enterNamespace(namespace);
 	}
 
+	@Override
 	public void exitNamespace() {
 		target.exitNamespace();
 	}

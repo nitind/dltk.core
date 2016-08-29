@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -31,6 +31,7 @@ public class ProblemCollector extends AbstractProblemReporter implements
 		problems.clear();
 	}
 
+	@Override
 	public void reportProblem(IProblem problem) {
 		if (!problems.contains(problem)) {
 			// FIXME (alex) duplicates happen because of AST caching
@@ -38,6 +39,7 @@ public class ProblemCollector extends AbstractProblemReporter implements
 		}
 	}
 
+	@Override
 	public void reportTask(String message, int lineNumber, int priority,
 			int charStart, int charEnd) {
 		reportProblem(new TaskInfo(message, lineNumber, priority, charStart,
@@ -103,42 +105,52 @@ public class ProblemCollector extends AbstractProblemReporter implements
 			this.charStart = charStart;
 		}
 
+		@Override
 		public int getCategoryID() {
 			return 0;
 		}
 
+		@Override
 		public boolean isTask() {
 			return true;
 		}
 
+		@Override
 		public String getMarkerType() {
 			return DefaultProblem.MARKER_TYPE_TASK;
 		}
 
+		@Override
 		public String[] getArguments() {
 			return null;
 		}
 
+		@Override
 		public IProblemIdentifier getID() {
 			return IProblem.Task;
 		}
 
+		@Override
 		public String getMessage() {
 			return message;
 		}
 
+		@Override
 		public String getOriginatingFileName() {
 			return null;
 		}
 
+		@Override
 		public int getSourceEnd() {
 			return charEnd;
 		}
 
+		@Override
 		public int getSourceLineNumber() {
 			return lineNumber;
 		}
 
+		@Override
 		public int getSourceStart() {
 			return charStart;
 		}
@@ -147,26 +159,32 @@ public class ProblemCollector extends AbstractProblemReporter implements
 			return priority;
 		}
 
+		@Override
 		public void setSeverity(ProblemSeverity severity) {
 			// unsupported
 		}
 
+		@Override
 		public boolean isError() {
 			return false;
 		}
 
+		@Override
 		public boolean isWarning() {
 			return false;
 		}
 
+		@Override
 		public void setSourceEnd(int sourceEnd) {
 			// unsupported
 		}
 
+		@Override
 		public void setSourceLineNumber(int lineNumber) {
 			// unsupported
 		}
 
+		@Override
 		public void setSourceStart(int sourceStart) {
 			// unsupported
 		}
