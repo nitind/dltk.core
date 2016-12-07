@@ -44,8 +44,7 @@ public class ScriptSourceLookupParticipant
 				return path.substring(root.length() + 1);
 			}
 
-			IFile[] files = getWorkspaceRoot()
-					.findFilesForLocation(new Path(path));
+			IFile[] files = getWorkspaceRoot().findFilesForLocationURI(uri);
 
 			IProject project = LaunchConfigurationUtils
 					.getProject(getDirector().getLaunchConfiguration());

@@ -12,7 +12,7 @@ public class RemoteScriptSourceLookupParticipant
 	public String getSourceName(Object object) throws CoreException {
 		ScriptStackFrame frame = (ScriptStackFrame) object;
 
-		String path = frame.getFileName().getPath();
+		String path = frame.getSourceURI().getPath();
 
 		/*
 		 * XXX: we may also need to know the remote operating system type - see

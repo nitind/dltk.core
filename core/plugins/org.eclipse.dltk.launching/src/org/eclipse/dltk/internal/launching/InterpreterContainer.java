@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IAccessRule;
 import org.eclipse.dltk.core.IBuildpathAttribute;
 import org.eclipse.dltk.core.IBuildpathContainer;
 import org.eclipse.dltk.core.IBuildpathContainerExtension;
@@ -167,7 +166,7 @@ public class InterpreterContainer
 				}
 
 				entries.add(DLTKCore.newLibraryEntry(entryPath,
-						IAccessRule.EMPTY_RULES, attributes,
+						IBuildpathEntry.NO_ACCESS_RULES, attributes,
 						BuildpathEntry.INCLUDE_ALL,
 						excluded.toArray(new IPath[excluded.size()]), false,
 						true));
@@ -179,7 +178,7 @@ public class InterpreterContainer
 			entries.add(DLTKCore.newBuiltinEntry(
 					IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY.append(
 							interpreter.getInstallLocation().toOSString()),
-					IAccessRule.EMPTY_RULES, new IBuildpathAttribute[0],
+					IBuildpathEntry.NO_ACCESS_RULES, new IBuildpathAttribute[0],
 					BuildpathEntry.INCLUDE_ALL, BuildpathEntry.EXCLUDE_NONE,
 					false, true));
 		}

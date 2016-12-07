@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.DLTKLanguageManager;
-import org.eclipse.dltk.core.IAccessRule;
 import org.eclipse.dltk.core.IBuildpathAttribute;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
@@ -261,7 +260,7 @@ public class InterpreterRuntimeBuildpathEntryResolver
 		IPath libraryPath = location.getLibraryPath();
 		IBuildpathAttribute[] attributes = new IBuildpathAttribute[0];
 		IBuildpathEntry bpe = DLTKCore.newLibraryEntry(libraryPath,
-				IAccessRule.EMPTY_RULES, attributes, false, false);
+				IBuildpathEntry.NO_ACCESS_RULES, attributes, false, false);
 		IRuntimeBuildpathEntry resolved = new RuntimeBuildpathEntry(bpe);
 		resolved.setBuildpathProperty(kind);
 		return resolved;

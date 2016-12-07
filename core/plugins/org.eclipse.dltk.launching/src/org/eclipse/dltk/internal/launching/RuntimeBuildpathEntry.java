@@ -15,6 +15,7 @@ import java.net.URI;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -353,11 +354,12 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 				return root.findMember(path);
 			}
 			// look for files or folders with the given path
-			IFile[] files = root.findFilesForLocation(path);
+			IFile[] files = root.findFilesForLocationURI(URIUtil.toURI(path));
 			if (files.length > 0) {
 				return files[0];
 			}
-			IContainer[] containers = root.findContainersForLocation(path);
+			IContainer[] containers = root
+					.findContainersForLocationURI(URIUtil.toURI(path));
 			if (containers.length > 0) {
 				return containers[0];
 			}

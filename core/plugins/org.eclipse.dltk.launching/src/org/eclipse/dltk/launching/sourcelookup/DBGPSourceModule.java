@@ -99,7 +99,7 @@ public class DBGPSourceModule extends AbstractExternalSourceModule {
 		 * return the path of the file on the remote host, allows remote
 		 * breakpoints to be set in debugger engine
 		 */
-		return new Path(frame.getFileName().getPath());
+		return new Path(frame.getSourceURI().getPath());
 	}
 
 	/*
