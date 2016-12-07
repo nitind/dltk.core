@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * <p>
  * Clients implementing runtime buildpath entries must subclass this class.
  * </p>
- * 
+ *
  */
 public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 		implements IRuntimeBuildpathEntry2 {
@@ -41,9 +41,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	 */
 	private IScriptProject fProject;
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * Default implementation returns <code>null</code>. Subclasses should
 	 * override if required.
 	 */
@@ -52,28 +50,23 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * Default implementation returns <code>false</code>. Subclasses should
 	 * override if required.
-	 * 
-	 * @see
-	 * org.eclipse.dltk.internal.launching.IRuntimeBuildpathEntry2#isComposite()
+	 *
+	 * @see org.eclipse.dltk.internal.launching.IRuntimeBuildpathEntry2#isComposite()
 	 */
 	@Override
 	public boolean isComposite() {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * Default implementation returns an empty collection. Subclasses should
 	 * override if required.
-	 * 
-	 * @seeorg.eclipse.dltk.internal.launching.IRuntimeBuildpathEntry2#
-	 * getRuntimeBuildpathEntries()
+	 *
+	 * @see org.eclipse.dltk.internal.launching.IRuntimeBuildpathEntry2#
+	 *      getRuntimeBuildpathEntries()
 	 */
 	public IRuntimeBuildpathEntry[] getRuntimeBuildpathEntries()
 			throws CoreException {
@@ -82,7 +75,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 
 	/**
 	 * Throws an exception with the given message and underlying exception.
-	 * 
+	 *
 	 * @param message
 	 *            error message
 	 * @param exception
@@ -99,12 +92,10 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
 	 * Default implementation generates a string containing an XML document.
 	 * Subclasses should override <code>buildMemento</code> to specify the
 	 * contents of the required <code>memento</code> node.
-	 * 
+	 *
 	 * @see org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getMemento()
 	 */
 	@Override
@@ -122,7 +113,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	/**
 	 * Constructs a memento for this buildpath entry in the given document and
 	 * element. The memento element has already been appended to the document.
-	 * 
+	 *
 	 * @param document
 	 *            XML document
 	 * @param memento
@@ -133,12 +124,10 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	protected abstract void buildMemento(Document document, Element memento)
 			throws CoreException;
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * Default implementation returns <code>null</code>. Subclasses should
 	 * override if required.
-	 * 
+	 *
 	 * @see org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getPath()
 	 */
 	@Override
@@ -146,12 +135,10 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * Default implementation returns <code>null</code>. Subclasses should
 	 * override if required.
-	 * 
+	 *
 	 * @see org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getResource()
 	 */
 	@Override
@@ -159,35 +146,20 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getBuildpathProperty()
-	 */
 	@Override
 	public int getBuildpathProperty() {
 		return buildpathProperty;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.dltk.launching.IRuntimeBuildpathEntry#setBuildpathProperty
-	 * (int)
-	 */
 	@Override
 	public void setBuildpathProperty(int property) {
 		buildpathProperty = property;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * Default implementation returns <code>null</code>. Subclasses should
 	 * override if required.
-	 * 
+	 *
 	 * @see org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getLocation()
 	 */
 	@Override
@@ -195,33 +167,22 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 		return null;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getLocationURI()
-	 */
 	@Override
 	public URI getLocationURI() {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * Default implementation returns <code>null</code>. Subclasses should
 	 * override if required.
-	 * 
-	 * @see
-	 * org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getBuildpathEntry()
+	 *
+	 * @see org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getBuildpathEntry()
 	 */
 	@Override
 	public IBuildpathEntry getBuildpathEntry() {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getScriptProject()
-	 */
 	@Override
 	public IScriptProject getScriptProject() {
 		return fProject;
@@ -229,7 +190,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 
 	/**
 	 * Sets the Script project associated with this entry.
-	 * 
+	 *
 	 * @param scriptProject
 	 */
 	protected void setScriptProject(IScriptProject sProject) {

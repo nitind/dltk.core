@@ -54,7 +54,7 @@ public class DefaultProjectBuildpathEntry
 
 	/**
 	 * Constructs a new buildpath entry for the given project.
-	 * 
+	 *
 	 * @param project
 	 *            Script project
 	 */
@@ -155,7 +155,7 @@ public class DefaultProjectBuildpathEntry
 	/**
 	 * Returns the transitive closure of buildpath entries for the given project
 	 * entry.
-	 * 
+	 *
 	 * @param projectEntry
 	 *            project buildpath entry
 	 * @param expandedPath
@@ -321,11 +321,6 @@ public class DefaultProjectBuildpathEntry
 				getScriptProject().getElementName());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof DefaultProjectBuildpathEntry) {
@@ -336,11 +331,6 @@ public class DefaultProjectBuildpathEntry
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		return getScriptProject().hashCode();
@@ -349,9 +339,9 @@ public class DefaultProjectBuildpathEntry
 	/**
 	 * Sets whether the runtime buildpath computaion should only include
 	 * exported entries in referenced projects.
-	 * 
+	 *
 	 * @param exportedOnly
-	 * 
+	 *
 	 */
 	public void setExportedEntriesOnly(boolean exportedOnly) {
 		fExportedEntriesOnly = exportedOnly;
@@ -360,9 +350,9 @@ public class DefaultProjectBuildpathEntry
 	/**
 	 * Returns whether the buildpath computation only includes exported entries
 	 * in referenced projects.
-	 * 
+	 *
 	 * @return
-	 * 
+	 *
 	 */
 	public boolean isExportedEntriesOnly() {
 		return fExportedEntriesOnly;
