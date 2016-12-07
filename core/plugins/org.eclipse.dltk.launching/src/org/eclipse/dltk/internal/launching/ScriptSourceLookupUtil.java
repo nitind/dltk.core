@@ -24,16 +24,15 @@ public class ScriptSourceLookupUtil {
 
 	/**
 	 * Translate the runtime buildpath entries into a set of source containers.
-	 * 
+	 *
 	 * @param entries
 	 *            build path entries
-	 * 
+	 *
 	 * @return source container representation of the build path entries
 	 */
 	public static ISourceContainer[] translate(
 			IRuntimeBuildpathEntry[] entries) {
-		List<ISourceContainer> containers = new ArrayList<ISourceContainer>(
-				entries.length);
+		List<ISourceContainer> containers = new ArrayList<>(entries.length);
 		for (int i = 0; i < entries.length; i++) {
 			IRuntimeBuildpathEntry entry = entries[i];
 

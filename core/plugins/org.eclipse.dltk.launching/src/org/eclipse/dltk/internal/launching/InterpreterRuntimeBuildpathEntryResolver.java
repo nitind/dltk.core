@@ -126,7 +126,7 @@ public class InterpreterRuntimeBuildpathEntryResolver
 			// determine if bootpath should be explicit
 			kind = IRuntimeBuildpathEntry.BOOTSTRAP_ENTRY;
 		}
-		List<IRuntimeBuildpathEntry> resolvedEntries = new ArrayList<IRuntimeBuildpathEntry>(
+		List<IRuntimeBuildpathEntry> resolvedEntries = new ArrayList<>(
 				libs.length);
 		final IEnvironment environment = interpreter.getEnvironment();
 		for (int i = 0; i < libs.length; i++) {
@@ -193,7 +193,7 @@ public class InterpreterRuntimeBuildpathEntryResolver
 	 * Return whether the given list of libraries refer to the same archives in
 	 * the same order. Only considers the binary archive (not source or javadoc
 	 * locations).
-	 * 
+	 *
 	 * @param libs
 	 * @param defaultLibs
 	 * @return whether the given list of libraries refer to the same archives in
@@ -247,12 +247,12 @@ public class InterpreterRuntimeBuildpathEntryResolver
 	/**
 	 * Returns a runtime buildpath entry for the given library in the specified
 	 * Interpreter.
-	 * 
+	 *
 	 * @param Interpreter
 	 * @param location
 	 * @param kind
 	 * @return runtime buildpath entry
-	 * 
+	 *
 	 */
 	private IRuntimeBuildpathEntry resolveLibraryLocation(
 			IInterpreterInstall Interpreter, LibraryLocation location,

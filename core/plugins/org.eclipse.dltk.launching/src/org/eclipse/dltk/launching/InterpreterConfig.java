@@ -85,10 +85,10 @@ public class InterpreterConfig implements Cloneable {
 					: scriptFile.removeLastSegments(1);
 		}
 
-		this.interpreterArgs = new ArrayList<String>();
-		this.scriptArgs = new ArrayList<String>();
-		this.environmentVariables = new HashMap<String, String>();
-		this.properties = new HashMap<String, Object>();
+		this.interpreterArgs = new ArrayList<>();
+		this.scriptArgs = new ArrayList<>();
+		this.environmentVariables = new HashMap<>();
+		this.properties = new HashMap<>();
 	}
 
 	public InterpreterConfig() {
@@ -271,7 +271,7 @@ public class InterpreterConfig implements Cloneable {
 	}
 
 	public String[] getEnvironmentAsStrings() {
-		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<>();
 		Iterator<String> it = environmentVariables.keySet().iterator();
 		while (it.hasNext()) {
 			String key = it.next();
@@ -287,8 +287,8 @@ public class InterpreterConfig implements Cloneable {
 
 		EnvironmentVariable[] variables = EnvironmentResolver
 				.resolve(getEnvVars(), vars, true);
-		Set<String> pressentVars = new HashSet<String>();
-		ArrayList<String> list = new ArrayList<String>();
+		Set<String> pressentVars = new HashSet<>();
+		ArrayList<String> list = new ArrayList<>();
 		if (variables != null) {
 			for (int i = 0; i < variables.length; i++) {
 				String name = variables[i].getName();
@@ -343,7 +343,7 @@ public class InterpreterConfig implements Cloneable {
 	}
 
 	public String[] renderCommandLine(IInterpreterInstall interpreter) {
-		final List<String> items = new ArrayList<String>();
+		final List<String> items = new ArrayList<>();
 
 		items.add(interpreter.getInstallLocation().toOSString());
 		items.addAll(interpreterArgs);
@@ -361,7 +361,7 @@ public class InterpreterConfig implements Cloneable {
 
 	protected String[] renderCommandLine(IEnvironment environment,
 			IPath interpreter) {
-		final List<String> items = new ArrayList<String>();
+		final List<String> items = new ArrayList<>();
 
 		items.add(environment.convertPathToString(interpreter));
 		items.addAll(interpreterArgs);
@@ -382,7 +382,7 @@ public class InterpreterConfig implements Cloneable {
 	// TODO: make more real implementation
 	@Override
 	public String toString() {
-		final List<String> items = new ArrayList<String>();
+		final List<String> items = new ArrayList<>();
 		items.add("<interpreter>"); //$NON-NLS-1$
 		items.addAll(interpreterArgs);
 		items.add(String.valueOf(scriptFile));

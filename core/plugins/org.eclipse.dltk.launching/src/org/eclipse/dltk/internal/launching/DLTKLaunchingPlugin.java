@@ -155,7 +155,7 @@ public class DLTKLaunchingPlugin extends Plugin
 
 	/**
 	 * Returns a Document that can be used to build a DOM tree
-	 * 
+	 *
 	 * @return the Document
 	 * @throws ParserConfigurationException
 	 *             if an exception occurs creating the document builder
@@ -170,7 +170,7 @@ public class DLTKLaunchingPlugin extends Plugin
 	/**
 	 * Serializes a XML document into a string - encoded in UTF8 format, with
 	 * platform line separators.
-	 * 
+	 *
 	 * @param doc
 	 *            document to serialize
 	 * @return the document as a string
@@ -193,11 +193,11 @@ public class DLTKLaunchingPlugin extends Plugin
 
 	/**
 	 * Returns a shared XML parser.
-	 * 
+	 *
 	 * @return an XML parser
 	 * @throws CoreException
 	 *             if unable to create a parser
-	 * 
+	 *
 	 */
 	public static DocumentBuilder getParser() throws CoreException {
 		if (fgXMLParser == null) {
@@ -216,7 +216,7 @@ public class DLTKLaunchingPlugin extends Plugin
 
 	/**
 	 * Throws an exception with the given message and underlying exception.
-	 * 
+	 *
 	 * @param message
 	 *            error message
 	 * @param exception
@@ -233,7 +233,7 @@ public class DLTKLaunchingPlugin extends Plugin
 
 	/**
 	 * Returns a new runtime buildpath entry of the specified type.
-	 * 
+	 *
 	 * @param id
 	 *            extension type id
 	 * @return new uninitialized runtime buildpath entry
@@ -263,7 +263,7 @@ public class DLTKLaunchingPlugin extends Plugin
 						ID_EXTENSION_POINT_RUNTIME_BUILDPATH_ENTRIES);
 		IConfigurationElement[] configs = extensionPoint
 				.getConfigurationElements();
-		fBuildpathEntryExtensions = new HashMap<String, IConfigurationElement>(
+		fBuildpathEntryExtensions = new HashMap<>(
 				configs.length);
 		for (int i = 0; i < configs.length; i++) {
 			fBuildpathEntryExtensions.put(configs[i].getAttribute("id"), //$NON-NLS-1$
@@ -318,7 +318,7 @@ public class DLTKLaunchingPlugin extends Plugin
 
 	/**
 	 * Clears zip file cache. Shutdown the launch config helper.
-	 * 
+	 *
 	 * @see Plugin#stop(BundleContext)
 	 */
 	@Override
@@ -351,7 +351,7 @@ public class DLTKLaunchingPlugin extends Plugin
 	/**
 	 * Save preferences whenever the connect timeout changes. Process changes to
 	 * the list of installed InterpreterEnvironments.
-	 * 
+	 *
 	 * @see org.eclipse.core.runtime.Preferences.IPropertyChangeListener#propertyChange(PropertyChangeEvent)
 	 */
 	@Override
@@ -371,7 +371,7 @@ public class DLTKLaunchingPlugin extends Plugin
 	 * Check for differences between the old & new sets of installed
 	 * InterpreterEnvironments. Differences may include additions, deletions and
 	 * changes. Take appropriate action for each type of difference.
-	 * 
+	 *
 	 * When importing preferences, TWO propertyChange events are fired. The
 	 * first has an old value but an empty new value. The second has a new
 	 * value, but an empty old value. Normal user changes to the preferences
@@ -488,7 +488,7 @@ public class DLTKLaunchingPlugin extends Plugin
 	/**
 	 * Parse the given xml into a Interpreter definitions container, returning
 	 * an empty container if an exception occurs.
-	 * 
+	 *
 	 * @param xml
 	 * @return InterpreterDefinitionsContainer
 	 */
@@ -554,7 +554,7 @@ public class DLTKLaunchingPlugin extends Plugin
 	/**
 	 * Re-bind buildpath variables and containers affected by the
 	 * InterpreterEnvironment changes.
-	 * 
+	 *
 	 * @param monitor
 	 */
 	public void rebind(IProgressMonitor monitor, IScriptProject[] projects,
@@ -617,7 +617,7 @@ public class DLTKLaunchingPlugin extends Plugin
 	class InterpreterChanges implements IInterpreterInstallChangedListener {
 
 		// old container ids to new
-		private HashMap<IPath, IPath> fRenamedContainerIds = new HashMap<IPath, IPath>();
+		private HashMap<IPath, IPath> fRenamedContainerIds = new HashMap<>();
 
 		@Override
 		public void defaultInterpreterInstallChanged(

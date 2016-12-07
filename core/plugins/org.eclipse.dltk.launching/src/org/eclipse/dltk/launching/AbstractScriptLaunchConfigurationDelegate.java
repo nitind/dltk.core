@@ -76,7 +76,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 
 	/**
 	 * Convenience method to get the launch manager.
-	 * 
+	 *
 	 * @return the launch manager
 	 */
 	protected ILaunchManager getLaunchManager() {
@@ -86,7 +86,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Throws a core exception with an error status object built from the given
 	 * message, lower level exception, and error code.
-	 * 
+	 *
 	 * @param message
 	 *            the status message
 	 * @param exception
@@ -118,7 +118,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Returns the Interpreter install specified by the given launch
 	 * configuration, or <code>null</code> if none.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the Interpreter install specified by the given launch
@@ -134,7 +134,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Verifies the Interpreter install specified by the given launch
 	 * configuration exists and returns the Interpreter install.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the Interpreter install specified by the given launch
@@ -172,7 +172,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Returns the Interpreter connector identifier specified by the given
 	 * launch configuration, or <code>null</code> if none.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the Interpreter connector identifier specified by the given
@@ -197,7 +197,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	 * buildpath as specified by the given launch configuration, as an array of
 	 * resolved strings. The returned array is empty if no buildpath is
 	 * specified.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the buildpath specified by the given launch configuration,
@@ -214,7 +214,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 		entries = ScriptRuntime.resolveRuntimeBuildpath(entries, configuration);
 
 		// Get USER_ENTRY
-		List<String> userEntries = new ArrayList<String>();
+		List<String> userEntries = new ArrayList<>();
 		for (int i = 0; i < entries.length; i++) {
 			if (entries[i]
 					.getBuildpathProperty() == IRuntimeBuildpathEntry.USER_ENTRY) {
@@ -248,7 +248,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	 * resolved strings. The returned array is <code>null</code> if all entries
 	 * are standard (i.e. appear by default), or empty to represent an empty
 	 * bootpath.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the bootpath specified by the given launch configuration. An
@@ -270,7 +270,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 		IRuntimeBuildpathEntry[] entries = ScriptRuntime
 				.computeUnresolvedRuntimeBuildpath(configuration);
 		entries = ScriptRuntime.resolveRuntimeBuildpath(entries, configuration);
-		List<String> bootEntries = new ArrayList<String>(entries.length);
+		List<String> bootEntries = new ArrayList<>(entries.length);
 		boolean empty = true;
 		boolean allStandard = true;
 		for (int i = 0; i < entries.length; i++) {
@@ -303,21 +303,21 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	 * part of the boot buildpath -<code>null</code> represents the default
 	 * bootbuildpath. The third array represents the buildpath that should be
 	 * appended to the boot buildpath.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return a description of the boot buildpath specified by the given launch
 	 *         configuration.
 	 * @exception CoreException
 	 *                if unable to retrieve the attribute
-	 * 
+	 *
 	 */
 	public String[][] getBootpathExt(ILaunchConfiguration configuration)
 			throws CoreException {
 		String[][] bootpathInfo = new String[3][];
 		IRuntimeBuildpathEntry[] entries = ScriptRuntime
 				.computeUnresolvedRuntimeBuildpath(configuration);
-		List<IRuntimeBuildpathEntry> bootEntriesPrepend = new ArrayList<IRuntimeBuildpathEntry>();
+		List<IRuntimeBuildpathEntry> bootEntriesPrepend = new ArrayList<>();
 		int index = 0;
 		IRuntimeBuildpathEntry interpreterEnvironmentEntry = null;
 		IScriptProject project = getScriptProject(configuration);
@@ -347,7 +347,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 			}
 		}
 		if (interpreterEnvironmentEntry != null) {
-			List<IRuntimeBuildpathEntry> bootEntriesAppend = new ArrayList<IRuntimeBuildpathEntry>();
+			List<IRuntimeBuildpathEntry> bootEntriesAppend = new ArrayList<>();
 			for (; index < entries.length; index++) {
 				IRuntimeBuildpathEntry entry = entries[index];
 				if (entry
@@ -441,7 +441,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Returns the Script project specified by the given launch configuration,
 	 * or <code>null</code> if none.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the Script project specified by the given launch configuration,
@@ -487,7 +487,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Returns the Script project name specified by the given launch
 	 * configuration, or <code>null</code> if none.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the Script project name specified by the given launch
@@ -505,7 +505,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Returns the main type name specified by the given launch configuration,
 	 * or <code>null</code> if none.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the main type name specified by the given launch configuration,
@@ -529,7 +529,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	 * Returns the program arguments specified by the given launch
 	 * configuration, as a string. The returned string is empty if no program
 	 * arguments are specified.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the program arguments specified by the given launch
@@ -551,7 +551,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	 * Returns the Interpreter arguments specified by the given launch
 	 * configuration, as a string. The returned string is empty if no
 	 * Interpreter arguments are specified.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the Interpreter arguments specified by the given launch
@@ -574,7 +574,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Returns the Map of Interpreter-specific attributes specified by the given
 	 * launch configuration, or <code>null</code> if none.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the <code>Map</code> of Interpreter-specific attributes
@@ -592,7 +592,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Returns the working directory specified by the given launch
 	 * configuration, or <code>null</code> if none.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the working directory specified by the given launch
@@ -608,7 +608,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Returns the working directory path specified by the given launch
 	 * configuration, or <code>null</code> if none.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the working directory path specified by the given launch
@@ -641,7 +641,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	 * Verifies the working directory specified by the given launch
 	 * configuration exists, and returns the working directory, or
 	 * <code>null</code> if none is specified.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the working directory specified by the given launch
@@ -699,7 +699,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Verifies a main script name is specified by the given launch
 	 * configuration, and returns the script type name.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return the main type name specified by the given launch configuration
@@ -792,7 +792,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 				ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,
 				(Map<String, String>) null);
 		// build base environment
-		final Map<String, String> env = new HashMap<String, String>();
+		final Map<String, String> env = new HashMap<>();
 		if (append || configEnv == null) {
 			Map<String, String> envVars = scriptExecEnvironment
 					.getEnvironmentVariables(false);
@@ -888,9 +888,9 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 		 * reset ATTR_CAPTURE_OUTPUT, since it's not used now. This attribute is
 		 * set in ScriptCommonTab if interactive console is on, but at the
 		 * moment we use another way, so this attribute should be removed.
-		 * 
+		 *
 		 * TODO #1: do it in migration delegate?
-		 * 
+		 *
 		 * TODO #2: modify ScriptCommonTab so, it would not set it.
 		 */
 		launch.setAttribute(DebugPlugin.ATTR_CAPTURE_OUTPUT, null);
@@ -1004,7 +1004,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 
 	protected IPath[] createBuildPath(ILaunchConfiguration configuration,
 			IEnvironment environment) throws CoreException {
-		List<Path> paths = new ArrayList<Path>();
+		List<Path> paths = new ArrayList<>();
 
 		// Buildpath
 		String[] buildpath = getBuildpath(configuration, environment);
@@ -1074,7 +1074,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Returns the Interpreter runner for the given launch mode to use when
 	 * launching the given configuration.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @param mode
@@ -1085,7 +1085,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	 *         in the given mode
 	 * @throws CoreException
 	 *             if a Interpreter runner cannot be determined
-	 * 
+	 *
 	 */
 	public IInterpreterRunner getInterpreterRunner(
 			ILaunchConfiguration configuration, String mode)
@@ -1108,13 +1108,13 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Returns an array of environment variables to be used when launching the
 	 * given configuration or <code>null</code> if unspecified.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @throws CoreException
 	 *             if unable to access associated attribute or if unable to
 	 *             resolve a variable in an environment variable's value
-	 * 
+	 *
 	 */
 	public String[] getEnvironment(ILaunchConfiguration configuration)
 			throws CoreException {
@@ -1125,13 +1125,13 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 	/**
 	 * Returns the default working directory for the given launch configuration,
 	 * or <code>null</code> if none. Subclasses may override as necessary.
-	 * 
+	 *
 	 * @param configuration
 	 * @return default working directory or <code>null</code> if none
 	 * @throws CoreException
 	 *             if an exception occurs computing the default working
 	 *             directory
-	 * 
+	 *
 	 */
 	protected IPath getDefaultWorkingDirectory(
 			ILaunchConfiguration configuration) throws CoreException {

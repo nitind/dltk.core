@@ -69,8 +69,7 @@ public class StandardBuildpathProvider implements IRuntimeBuildpathProvider {
 	public IRuntimeBuildpathEntry[] resolveBuildpath(
 			IRuntimeBuildpathEntry[] entries,
 			ILaunchConfiguration configuration) throws CoreException {
-		List<IRuntimeBuildpathEntry> all = new ArrayList<IRuntimeBuildpathEntry>(
-				entries.length);
+		List<IRuntimeBuildpathEntry> all = new ArrayList<>(entries.length);
 		for (int i = 0; i < entries.length; i++) {
 			IRuntimeBuildpathEntry[] resolved = ScriptRuntime
 					.resolveRuntimeBuildpathEntry(entries[i], configuration);
@@ -85,7 +84,7 @@ public class StandardBuildpathProvider implements IRuntimeBuildpathProvider {
 	 * Returns a collection of runtime buildpath entries that are defined in the
 	 * specified attribute of the given launch configuration. When present, the
 	 * attribute must contain a list of runtime buildpath entry mementos.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @param attribute

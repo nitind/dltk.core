@@ -60,7 +60,7 @@ public class StandardSourcepathProvider extends StandardBuildpathProvider {
 
 		public UniqueList(int length) {
 			super(length);
-			set = new HashSet<T>(length);
+			set = new HashSet<>(length);
 		}
 
 		@Override

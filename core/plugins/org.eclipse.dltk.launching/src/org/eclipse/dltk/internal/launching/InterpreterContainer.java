@@ -40,8 +40,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Interpreter Container - resolves a buildpath container to an interpreter
  */
-public class InterpreterContainer
-		implements IBuildpathContainer, IBuildpathContainerExtension {
+public class InterpreterContainer implements IBuildpathContainerExtension {
 	/**
 	 * Corresponding interpreter
 	 */
@@ -59,7 +58,7 @@ public class InterpreterContainer
 	 * Cache of buildpath entries per Interpreter install. Cleared when a
 	 * Interpreter changes.
 	 */
-	private static final Map<IInterpreterInstall, IBuildpathEntry[]> fgBuildpathEntries = new HashMap<IInterpreterInstall, IBuildpathEntry[]>(
+	private static final Map<IInterpreterInstall, IBuildpathEntry[]> fgBuildpathEntries = new HashMap<>(
 			10);
 
 	private static ChangeListener changeListener = null;
@@ -98,7 +97,7 @@ public class InterpreterContainer
 
 	/**
 	 * Returns the buildpath entries associated with the given interpreter.
-	 * 
+	 *
 	 * @param interpreter
 	 * @return buildpath entries
 	 */
@@ -128,16 +127,15 @@ public class InterpreterContainer
 	/**
 	 * Computes the buildpath entries associated with a interpreter - one entry
 	 * per library.
-	 * 
+	 *
 	 * @param interpreter
 	 * @return buildpath entries
 	 */
 	private static IBuildpathEntry[] computeBuildpathEntries(
 			IInterpreterInstall interpreter) {
 		LibraryLocation[] libs = ScriptRuntime.getLibraryLocations(interpreter);
-		List<IBuildpathEntry> entries = new ArrayList<IBuildpathEntry>(
-				libs.length);
-		Set<IPath> rawEntries = new HashSet<IPath>(libs.length);
+		List<IBuildpathEntry> entries = new ArrayList<>(libs.length);
+		Set<IPath> rawEntries = new HashSet<>(libs.length);
 		for (int i = 0; i < libs.length; i++) {
 			IPath entryPath = libs[i].getLibraryPath();
 
@@ -146,7 +144,7 @@ public class InterpreterContainer
 					continue;
 
 				IBuildpathAttribute[] attributes = new IBuildpathAttribute[0];
-				ArrayList<IPath> excluded = new ArrayList<IPath>(); // paths to
+				ArrayList<IPath> excluded = new ArrayList<>(); // paths to
 				// exclude
 				for (int j = 0; j < libs.length; j++) {
 					IPath otherPath = libs[j].getLibraryPath();
@@ -196,7 +194,7 @@ public class InterpreterContainer
 	/**
 	 * Constructs a interpreter buildpath container on the given interpreter
 	 * install
-	 * 
+	 *
 	 * @param interpreter
 	 *            Interpreter install - cannot be <code>null</code>
 	 * @param path
@@ -223,7 +221,7 @@ public class InterpreterContainer
 	private IBuildpathEntry[] computeBuildpathEntries() {
 		IBuildpathEntry[] buildpathEntries = getBuildpathEntries(
 				fInterpreterInstall);
-		List<IBuildpathEntry> entries = new ArrayList<IBuildpathEntry>(
+		List<IBuildpathEntry> entries = new ArrayList<>(
 				buildpathEntries.length);
 		Collections.addAll(entries, buildpathEntries);
 		// customize entries for this project

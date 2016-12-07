@@ -13,7 +13,7 @@ import org.eclipse.dltk.launching.EnvironmentVariable;
 public final class EnvironmentResolver {
 	private static class REnvironmentVariable {
 		EnvironmentVariable var;
-		final Set<String> dependencies = new HashSet<String>();
+		final Set<String> dependencies = new HashSet<>();
 
 		public REnvironmentVariable(EnvironmentVariable var) {
 			this.var = var;
@@ -36,8 +36,8 @@ public final class EnvironmentResolver {
 		if (variables == null) {
 			return null;
 		}
-		Map<String, String> env = new HashMap<String, String>();
-		Map<String, String> selfDep = new HashMap<String, String>();
+		Map<String, String> env = new HashMap<>();
+		Map<String, String> selfDep = new HashMap<>();
 		for (Map.Entry<String, String> entry : penv.entrySet()) {
 			String name = entry.getKey();
 			String value = entry.getValue();
@@ -51,10 +51,10 @@ public final class EnvironmentResolver {
 				env.remove(name);
 			}
 		}
-		Map<String, String> resolved = new HashMap<String, String>();
-		List<EnvironmentVariable> result = new ArrayList<EnvironmentVariable>();
+		Map<String, String> resolved = new HashMap<>();
+		List<EnvironmentVariable> result = new ArrayList<>();
 		// 1) replace all top level environment variables
-		List<REnvironmentVariable> unresolved = new ArrayList<REnvironmentVariable>();
+		List<REnvironmentVariable> unresolved = new ArrayList<>();
 		for (int i = 0; i < variables.length; i++) {
 			REnvironmentVariable var = new REnvironmentVariable(
 					new EnvironmentVariable(variables[i]));
@@ -137,8 +137,8 @@ public final class EnvironmentResolver {
 			for (REnvironmentVariable rvar : unresolved) {
 				if (!rvar.var.getName().equals(t.getName())
 						&& containVar(t, rvar.var.getName())) {
-					t = resolveVariable(t, rvar.var.getName(), rvar.var
-							.getValue());
+					t = resolveVariable(t, rvar.var.getName(),
+							rvar.var.getValue());
 					step = true;
 				}
 			}
@@ -213,9 +213,8 @@ public final class EnvironmentResolver {
 		final String value = var.getValue();
 		final String ref = "$" + vName; //$NON-NLS-1$
 		final int pos = value.indexOf(ref);
-		if (pos != -1
-				&& (pos + ref.length() >= value.length() || !Character
-						.isLetterOrDigit(value.charAt(pos + ref.length())))) {
+		if (pos != -1 && (pos + ref.length() >= value.length() || !Character
+				.isLetterOrDigit(value.charAt(pos + ref.length())))) {
 			return true;
 		}
 		return false;
@@ -223,7 +222,7 @@ public final class EnvironmentResolver {
 
 	/**
 	 * Finds the variable with the specified name
-	 * 
+	 *
 	 * @param vars
 	 * @param name
 	 * @return

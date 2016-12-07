@@ -58,7 +58,7 @@ public class InterpreterSearcher {
 		// Folder list
 		final String separator = environment.getPathsSeparator();
 
-		final List<IPath> folders = new ArrayList<IPath>();
+		final List<IPath> folders = new ArrayList<>();
 		String[] res = path.split(separator);
 		for (int i = 0; i < res.length; i++) {
 			folders.add(Path.fromOSString(res[i]));
@@ -79,7 +79,7 @@ public class InterpreterSearcher {
 	 * Searches the specified directory recursively for installed Interpreters,
 	 * adding each detected Interpreter to the <code>found</code> list. Any
 	 * directories specified in the <code>ignore</code> are not traversed.
-	 * 
+	 *
 	 * @param directory
 	 * @param found
 	 * @param types
@@ -106,7 +106,7 @@ public class InterpreterSearcher {
 			return;
 		}
 
-		List<IFileHandle> subDirs = new ArrayList<IFileHandle>();
+		List<IFileHandle> subDirs = new ArrayList<>();
 		for (int i = 0; i < files.length; i++) {
 			if (monitor.isCanceled()) {
 				return;
@@ -160,9 +160,9 @@ public class InterpreterSearcher {
 	}
 
 	public InterpreterSearcher() {
-		this.searchedDirs = new HashSet<IFileHandle>();
-		this.found = new ArrayList<IFileHandle>();
-		this.types = new ArrayList<IInterpreterInstallType>();
+		this.searchedDirs = new HashSet<>();
+		this.found = new ArrayList<>();
+		this.types = new ArrayList<>();
 	}
 
 	public void search(IEnvironment environment, String natureId,

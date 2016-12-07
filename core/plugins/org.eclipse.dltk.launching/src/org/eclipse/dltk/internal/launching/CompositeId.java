@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.launching;
 
@@ -22,13 +21,13 @@ public class CompositeId {
 	}
 
 	public static CompositeId fromString(String idString) {
-		ArrayList<String> parts = new ArrayList<String>();
+		ArrayList<String> parts = new ArrayList<>();
 		int commaIndex = idString.indexOf(',');
 		while (commaIndex > 0) {
 			int length = Integer.valueOf(idString.substring(0, commaIndex))
 					.intValue();
-			String part = idString.substring(commaIndex + 1, commaIndex + 1
-					+ length);
+			String part = idString.substring(commaIndex + 1,
+					commaIndex + 1 + length);
 			parts.add(part);
 			idString = idString.substring(commaIndex + 1 + length);
 			commaIndex = idString.indexOf(',');

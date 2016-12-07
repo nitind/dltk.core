@@ -43,7 +43,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
  * <p>
  * Clients implementing interpreter installs must subclass this class.
  * </p>
- * 
+ *
  * @since 2.0
  */
 public abstract class AbstractInterpreterInstall
@@ -67,7 +67,7 @@ public abstract class AbstractInterpreterInstall
 
 	/**
 	 * Constructs a new interpreter install.
-	 * 
+	 *
 	 * @param type
 	 *            The type of this interpreter install. Must not be
 	 *            <code>null</code>
@@ -212,7 +212,7 @@ public abstract class AbstractInterpreterInstall
 
 	/**
 	 * Whether this Interpreter should fire property change notifications.
-	 * 
+	 *
 	 * @param notify
 	 */
 	protected void setNotify(boolean notify) {
@@ -285,7 +285,7 @@ public abstract class AbstractInterpreterInstall
 	/**
 	 * Throws a core exception with an error status object built from the given
 	 * message, lower level exception, and error code.
-	 * 
+	 *
 	 * @param message
 	 *            the status message
 	 * @param exception
@@ -295,7 +295,7 @@ public abstract class AbstractInterpreterInstall
 	 *            error code
 	 * @throws CoreException
 	 *             the "abort" core exception
-	 * 
+	 *
 	 */
 	protected void abort(String message, Throwable exception, int code)
 			throws CoreException {
@@ -423,7 +423,7 @@ public abstract class AbstractInterpreterInstall
 			if (copy instanceof List<?>) {
 				return (List<EObject>) copy;
 			} else {
-				return new ArrayList<EObject>(copy);
+				return new ArrayList<>(copy);
 			}
 		} else {
 			return Collections.emptyList();
@@ -436,7 +436,7 @@ public abstract class AbstractInterpreterInstall
 	@Override
 	public List<EObject> getExtensions() {
 		if (resource != null && !resource.getContents().isEmpty()) {
-			return new ArrayList<EObject>(resource.getContents());
+			return new ArrayList<>(resource.getContents());
 		} else {
 			return Collections.emptyList();
 		}
@@ -452,7 +452,7 @@ public abstract class AbstractInterpreterInstall
 			resource = createResource();
 			oldValue = null;
 		} else {
-			oldValue = new ArrayList<EObject>(resource.getContents());
+			oldValue = new ArrayList<>(resource.getContents());
 			resource.getContents().clear();
 		}
 		resource.getContents().addAll(value);
@@ -469,7 +469,7 @@ public abstract class AbstractInterpreterInstall
 		if (resource != null && !resource.getContents().isEmpty()) {
 			StringWriter stringWriter = new StringWriter();
 			try {
-				Map<String, Object> saveOptions = new HashMap<String, Object>();
+				Map<String, Object> saveOptions = new HashMap<>();
 				saveOptions.put(XMLResource.OPTION_DECLARE_XML, Boolean.FALSE);
 				saveOptions.put(XMLResource.OPTION_FORMATTED, Boolean.FALSE);
 				resource.save(new URIConverter.WriteableOutputStream(

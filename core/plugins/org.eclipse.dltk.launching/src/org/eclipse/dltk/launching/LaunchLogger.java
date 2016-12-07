@@ -4,7 +4,7 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html  
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
@@ -32,18 +32,9 @@ class LaunchLogger implements IExecutionLogger {
 	@Override
 	public void logLine(String line) {
 		final File file = new File(System.getProperty("user.home"), fileName);
-		try {
-			final FileWriter writer = new FileWriter(file, true);
-			try {
-				writer.write(line);
-				writer.write("\n");
-			} finally {
-				try {
-					writer.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
+		try (final FileWriter writer = new FileWriter(file, true)) {
+			writer.write(line);
+			writer.write("\n");
 		} catch (IOException e) {
 			// ignore?
 		}

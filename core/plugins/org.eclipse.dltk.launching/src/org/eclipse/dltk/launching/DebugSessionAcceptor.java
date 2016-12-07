@@ -31,7 +31,7 @@ public class DebugSessionAcceptor
 		implements IDbgpThreadAcceptor, IScriptDebugTargetListener {
 
 	private static class NopLaunchStatusHandler
-			implements ILaunchStatusHandler, ILaunchStatusHandlerExtension {
+			implements ILaunchStatusHandlerExtension {
 
 		@Override
 		public void initialize(IDebugTarget target, IProgressMonitor monitor) {

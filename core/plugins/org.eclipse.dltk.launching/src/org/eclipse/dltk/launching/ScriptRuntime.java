@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.launching;
 
@@ -124,7 +123,7 @@ public final class ScriptRuntime {
 	 * <li>Identifier of a contributed execution environment</li>
 	 * </ol>
 	 * </p>
-	 * 
+	 *
 	 */
 	public static final String INTERPRETER_CONTAINER = DLTKLaunchingPlugin
 			.getUniqueIdentifier() + ".INTERPRETER_CONTAINER"; //$NON-NLS-1$
@@ -134,19 +133,19 @@ public final class ScriptRuntime {
 	 * <code>"runtimeBuildpathEntryResolvers"</code>) for the runtime buildpath
 	 * entry resolvers extension point.
 	 */
-	public static final String EXTENSION_POINT_RUNTIME_BUILDPATH_ENTRY_RESOLVERS = "runtimeBuildpathEntryResolvers"; //$NON-NLS-1$	
+	public static final String EXTENSION_POINT_RUNTIME_BUILDPATH_ENTRY_RESOLVERS = "runtimeBuildpathEntryResolvers"; //$NON-NLS-1$
 
 	/**
 	 * Simple identifier constant (value <code>"buildpathProviders"</code>) for
 	 * the runtime buildpath providers extension point.
 	 */
-	public static final String EXTENSION_POINT_RUNTIME_BUILDPATH_PROVIDERS = "buildpathProviders"; //$NON-NLS-1$		
+	public static final String EXTENSION_POINT_RUNTIME_BUILDPATH_PROVIDERS = "buildpathProviders"; //$NON-NLS-1$
 
 	/**
 	 * Simple identifier constant (value <code>"interpreterInstalls"</code>) for
 	 * the interpreters installs extension point.
 	 */
-	public static final String EXTENSION_POINT_INTERPRETER_INSTALLS = "interpreterInstalls"; //$NON-NLS-1$		
+	public static final String EXTENSION_POINT_INTERPRETER_INSTALLS = "interpreterInstalls"; //$NON-NLS-1$
 
 	/**
 	 * A status code indicating that a interpreter could not be resolved for a
@@ -274,12 +273,12 @@ public final class ScriptRuntime {
 	 * Contain association of default interpreter entries to interprter
 	 * identifiers.
 	 */
-	private static Map<DefaultInterpreterEntry, String> fgDefaultInterpreterId = new HashMap<DefaultInterpreterEntry, String>();
+	private static Map<DefaultInterpreterEntry, String> fgDefaultInterpreterId = new HashMap<>();
 
 	/**
 	 * Contain DefaultInterpreterEntry entry assocications
 	 */
-	private static Map<DefaultInterpreterEntry, String> fgDefaultInterpreterConnectorId = new HashMap<DefaultInterpreterEntry, String>();
+	private static Map<DefaultInterpreterEntry, String> fgDefaultInterpreterConnectorId = new HashMap<>();
 
 	/**
 	 * Resolvers keyed by variable name, container id, and runtime buildpath
@@ -310,14 +309,14 @@ public final class ScriptRuntime {
 	 * cycles in project dependencies when resolving buildpath container
 	 * entries. Counters used to know when entering/exiting to clear cache
 	 */
-	private static ThreadLocal<List<IScriptProject>> fgProjects = new ThreadLocal<List<IScriptProject>>();
-	private static ThreadLocal<Integer> fgEntryCount = new ThreadLocal<Integer>();
+	private static ThreadLocal<List<IScriptProject>> fgProjects = new ThreadLocal<>();
+	private static ThreadLocal<Integer> fgEntryCount = new ThreadLocal<>();
 
 	/**
 	 * Set of IDs of Interpreters contributed via InterpreterInstalls extension
 	 * point.
 	 */
-	private static Set<String> fgContributedInterpreters = new HashSet<String>();
+	private static Set<String> fgContributedInterpreters = new HashSet<>();
 
 	/**
 	 * This class contains only static methods, and is not intended to be
@@ -354,7 +353,7 @@ public final class ScriptRuntime {
 			// only happens on a CoreException
 			DLTKLaunchingPlugin.log(status);
 			// cleanup null entries in fgInterpreterTypes
-			List<IInterpreterInstallType> temp = new ArrayList<IInterpreterInstallType>(
+			List<IInterpreterInstallType> temp = new ArrayList<>(
 					fgInterpreterTypes.length);
 			for (int i = 0; i < fgInterpreterTypes.length; i++) {
 				if (fgInterpreterTypes[i] != null) {
@@ -386,7 +385,7 @@ public final class ScriptRuntime {
 	 * Returns the interpreter assigned to build the given script project. The
 	 * project must exist. The interpreter assigned to a project is determined
 	 * from its build path.
-	 * 
+	 *
 	 * @param project
 	 *            the project to retrieve the interpreter from
 	 * @return the interpreter instance that is assigned to build the given
@@ -406,8 +405,8 @@ public final class ScriptRuntime {
 			IBuildpathEntry entry = buildpath[i];
 			switch (entry.getEntryKind()) {
 			case IBuildpathEntry.BPE_CONTAINER:
-				IRuntimeBuildpathEntryResolver resolver = getContainerResolver(entry
-						.getPath().segment(0));
+				IRuntimeBuildpathEntryResolver resolver = getContainerResolver(
+						entry.getPath().segment(0));
 				if (resolver != null) {
 					interpreter = resolver.resolveInterpreterInstall(
 							getNatureFromProject(project),
@@ -426,7 +425,7 @@ public final class ScriptRuntime {
 
 	/**
 	 * Returns the interpreter install type with the given unique id.
-	 * 
+	 *
 	 * @param id
 	 *            the interpreter install type unique id
 	 * @return The interpreter install type for the given id, or
@@ -452,7 +451,7 @@ public final class ScriptRuntime {
 	/**
 	 * Sets a Interpreter as the system-wide default Interpreter, and notifies
 	 * registered Interpreter install change listeners of the change.
-	 * 
+	 *
 	 * @param interpreter
 	 *            The Interpreter to make the default. May be <code>null</code>
 	 *            to clear the default.
@@ -468,7 +467,7 @@ public final class ScriptRuntime {
 	/**
 	 * Sets a Interpreter as the nature default Interpreter, and notifies
 	 * registered Interpreter install change listeners of the change.
-	 * 
+	 *
 	 * @param interpreter
 	 *            The Interpreter to make the default. May be <code>null</code>
 	 *            to clear the default.
@@ -477,7 +476,7 @@ public final class ScriptRuntime {
 	 * @param savePreference
 	 *            If <code>true</code>, update workbench preferences to reflect
 	 *            the new default Interpreter.
-	 * 
+	 *
 	 */
 	public static void setDefaultInterpreterInstall(
 			IInterpreterInstall interpreter, IProgressMonitor monitor,
@@ -493,8 +492,8 @@ public final class ScriptRuntime {
 		DefaultInterpreterEntry defaultInterpreterID = new DefaultInterpreterEntry(
 				nature, environmentId);
 		if (fgDefaultInterpreterId.get(defaultInterpreterID) != null) {
-			previous = getInterpreterFromCompositeId(fgDefaultInterpreterId
-					.get(defaultInterpreterID));
+			previous = getInterpreterFromCompositeId(
+					fgDefaultInterpreterId.get(defaultInterpreterID));
 		}
 		fgDefaultInterpreterId.put(defaultInterpreterID,
 				getCompositeIdFromInterpreter(interpreter));
@@ -503,8 +502,8 @@ public final class ScriptRuntime {
 		}
 		IInterpreterInstall current = null;
 		if (fgDefaultInterpreterId.get(defaultInterpreterID) != null) {
-			current = getInterpreterFromCompositeId(fgDefaultInterpreterId
-					.get(defaultInterpreterID));
+			current = getInterpreterFromCompositeId(
+					fgDefaultInterpreterId.get(defaultInterpreterID));
 		}
 		if (previous != current) {
 			notifyDefaultInterpreterChanged(previous, current);
@@ -526,13 +525,14 @@ public final class ScriptRuntime {
 	/**
 	 * Return the default Interpreter set with
 	 * <code>setDefaultInterpreter()</code>.
-	 * 
+	 *
 	 * @return Returns the default Interpreter.
 	 */
 	@Deprecated
 	public static IInterpreterInstall getDefaultInterpreterInstall(
 			DefaultInterpreterEntry entry) {
-		IInterpreterInstall install = getInterpreterFromCompositeId(getDefaultInterpreterId(entry));
+		IInterpreterInstall install = getInterpreterFromCompositeId(
+				getDefaultInterpreterId(entry));
 		if (install != null && install.getInstallLocation().exists()) {
 			return install;
 		}
@@ -541,7 +541,8 @@ public final class ScriptRuntime {
 			// install.getInterpreterInstallType().disposeInterpreterInstall(
 			// install.getId());
 		}
-		if (!hasInterpreterInstalls(entry.getNature(), entry.getEnvironment())) {
+		if (!hasInterpreterInstalls(entry.getNature(),
+				entry.getEnvironment())) {
 			/*
 			 * If there are no any interpreters for the specified nature and
 			 * environment - just return null and avoid re-initialization.
@@ -562,7 +563,7 @@ public final class ScriptRuntime {
 
 	/**
 	 * Tests if there are any interpreters for the specified nature and host.
-	 * 
+	 *
 	 * @param natureId
 	 * @param environmentId
 	 * @return
@@ -572,7 +573,8 @@ public final class ScriptRuntime {
 		if (environmentId == null) {
 			return false;
 		}
-		for (IInterpreterInstallType type : getInterpreterInstallTypes(natureId)) {
+		for (IInterpreterInstallType type : getInterpreterInstallTypes(
+				natureId)) {
 			for (IInterpreterInstall install : type.getInterpreterInstalls()) {
 				if (environmentId.equals(install.getEnvironmentId())) {
 					return true;
@@ -587,7 +589,7 @@ public final class ScriptRuntime {
 	 * registered via <code>"org.eclipse.dltk.launching.interpreterTypes"</code>
 	 * extension point. Returns an empty list if there are no registered
 	 * interpreter types.
-	 * 
+	 *
 	 * @return the list of registered Interpreter types
 	 */
 	public static IInterpreterInstallType[] getInterpreterInstallTypes() {
@@ -601,12 +603,12 @@ public final class ScriptRuntime {
 	 * <code>"org.eclipse.dltk.launching.interpreterTypes"</code> extension
 	 * point. Returns an empty list if there are no registered interpreter
 	 * types.
-	 * 
+	 *
 	 * @return the list of registered Interpreter types
 	 */
 	public static IInterpreterInstallType[] getInterpreterInstallTypes(
 			String nature) {
-		List<IInterpreterInstallType> res = new ArrayList<IInterpreterInstallType>();
+		List<IInterpreterInstallType> res = new ArrayList<>();
 		synchronized (fgInterpreterLock) {
 			initializeInterpreters();
 			for (int i = 0; i < fgInterpreterTypes.length; i++) {
@@ -623,7 +625,8 @@ public final class ScriptRuntime {
 		return set.toArray(new DefaultInterpreterEntry[set.size()]);
 	}
 
-	private static String getDefaultInterpreterId(DefaultInterpreterEntry entry) {
+	private static String getDefaultInterpreterId(
+			DefaultInterpreterEntry entry) {
 		initializeInterpreters();
 		return fgDefaultInterpreterId.get(entry);
 	}
@@ -637,11 +640,11 @@ public final class ScriptRuntime {
 	/**
 	 * Returns a String that uniquely identifies the specified Interpreter
 	 * across all Interpreter types.
-	 * 
+	 *
 	 * @param interpreter
 	 *            the instance of IInterpreterInstallType to be identified
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public static String getCompositeIdFromInterpreter(
 			IInterpreterInstall interpreter) {
@@ -651,20 +654,20 @@ public final class ScriptRuntime {
 		IInterpreterInstallType interpreterType = interpreter
 				.getInterpreterInstallType();
 		String typeID = interpreterType.getId();
-		CompositeId id = new CompositeId(new String[] { typeID,
-				interpreter.getId() });
+		CompositeId id = new CompositeId(
+				new String[] { typeID, interpreter.getId() });
 		return id.toString();
 	}
 
 	/**
 	 * Return the Interpreter corresponding to the specified composite Id. The
 	 * id uniquely identifies a Interpreter across all Interpreter types.
-	 * 
+	 *
 	 * @param idString
 	 *            the composite id that specifies an instance of
 	 *            IInterpreterInstall
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public static IInterpreterInstall getInterpreterFromCompositeId(
 			String idString) {
@@ -673,8 +676,8 @@ public final class ScriptRuntime {
 		}
 		CompositeId id = CompositeId.fromString(idString);
 		if (id.getPartCount() == 2) {
-			IInterpreterInstallType InterpreterType = getInterpreterInstallType(id
-					.get(0));
+			IInterpreterInstallType InterpreterType = getInterpreterInstallType(
+					id.get(0));
 			if (InterpreterType != null) {
 				return InterpreterType.findInterpreterInstall(id.get(1));
 			}
@@ -685,10 +688,10 @@ public final class ScriptRuntime {
 	/**
 	 * Return the <code>IScriptProject</code> referenced in the specified
 	 * configuration or <code>null</code> if none.
-	 * 
+	 *
 	 * @exception CoreException
 	 *                if the referenced Script project does not exist
-	 * 
+	 *
 	 */
 	public static IScriptProject getScriptProject(
 			ILaunchConfiguration configuration) throws CoreException {
@@ -698,18 +701,19 @@ public final class ScriptRuntime {
 		if ((projectName == null) || (projectName.trim().length() < 1)) {
 			return null;
 		}
-		IScriptProject scriptProject = getScriptModel().getScriptProject(
-				projectName);
+		IScriptProject scriptProject = getScriptModel()
+				.getScriptProject(projectName);
 		if (scriptProject != null && scriptProject.getProject().exists()
 				&& !scriptProject.getProject().isOpen()) {
 			abort(MessageFormat.format(LaunchingMessages.ScriptRuntime_28,
 					configuration.getName(), projectName),
-					ScriptLaunchConfigurationConstants.ERR_PROJECT_CLOSED, null);
+					ScriptLaunchConfigurationConstants.ERR_PROJECT_CLOSED,
+					null);
 		}
 		if ((scriptProject == null) || !scriptProject.exists()) {
-			abort(MessageFormat
-					.format(LaunchingMessages.ScriptRuntime_Launch_configuration__0__references_non_existing_project__1___1,
-							configuration.getName(), projectName),
+			abort(MessageFormat.format(
+					LaunchingMessages.ScriptRuntime_Launch_configuration__0__references_non_existing_project__1___1,
+					configuration.getName(), projectName),
 					ScriptLaunchConfigurationConstants.ERR_NOT_A_SCRIPT_PROJECT,
 					null);
 		}
@@ -730,18 +734,19 @@ public final class ScriptRuntime {
 	 * <li>The Interpreter install is explicitly specified on the launch
 	 * configuration via the <code>ATTR_CONTAINER_PATH</code> attribute.</li>
 	 * <li>If no explicit Interpreter install is specified, the Interpreter
-	 * install associated with the launch configuration's project is returned.</li>
+	 * install associated with the launch configuration's project is
+	 * returned.</li>
 	 * <li>If no project is specified, or the project does not specify a custom
 	 * Interpreter install, the workspace default Interpreter install is
 	 * returned.</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return interpreter install
 	 * @exception CoreException
 	 *                if unable to compute a Interpreter install
-	 * 
+	 *
 	 */
 	public static IInterpreterInstall computeInterpreterInstall(
 			ILaunchConfiguration configuration) throws CoreException {
@@ -769,8 +774,8 @@ public final class ScriptRuntime {
 		} else {
 			IPath interpreterPath = Path.fromPortableString(containerPath);
 			IBuildpathEntry entry = DLTKCore.newContainerEntry(interpreterPath);
-			IRuntimeBuildpathEntryResolver2 resolver = getContainerResolver(interpreterPath
-					.segment(0));
+			IRuntimeBuildpathEntryResolver2 resolver = getContainerResolver(
+					interpreterPath.segment(0));
 			if (resolver != null) {
 				return resolver.resolveInterpreterInstall(nature, environment,
 						entry);
@@ -803,7 +808,7 @@ public final class ScriptRuntime {
 
 	/**
 	 * Throws a core exception with an internal error status.
-	 * 
+	 *
 	 * @param message
 	 *            the status message
 	 * @param exception
@@ -819,14 +824,14 @@ public final class ScriptRuntime {
 
 	/**
 	 * Throws a core exception with an internal error status.
-	 * 
+	 *
 	 * @param message
 	 *            the status message
 	 * @param code
 	 *            status code
 	 * @param exception
 	 *            lower level exception associated with the
-	 * 
+	 *
 	 *            error, or <code>null</code> if none
 	 */
 	private static CoreException abort(String message, int code,
@@ -903,21 +908,21 @@ public final class ScriptRuntime {
 	 * preference or old Interpreter configurations file. The interpreters found
 	 * in the preference or interpreter configurations file are added to the
 	 * given Interpreter definitions container.
-	 * 
+	 *
 	 * Returns whether the user preferences should be set - i.e. if it was not
 	 * already set when initialized.
 	 */
 	private static boolean addPersistedInterpreters(
 			InterpreterDefinitionsContainer interpreterDefs) {
 		// Try retrieving the interpreter preferences from the preference store
-		String interpreterXMLString = getPreferences().get(
-				PREF_INTERPRETER_XML, "");
+		String interpreterXMLString = getPreferences().get(PREF_INTERPRETER_XML,
+				"");
 
 		if (interpreterXMLString.length() == 0) {
 			// default scope value could be specified in the
 			// plugin_customization.ini file
-			interpreterXMLString = DefaultScope.INSTANCE.getNode(
-					DLTKLaunchingPlugin.PLUGIN_ID)
+			interpreterXMLString = DefaultScope.INSTANCE
+					.getNode(DLTKLaunchingPlugin.PLUGIN_ID)
 					.get(PREF_INTERPRETER_XML, "");
 		}
 
@@ -925,8 +930,8 @@ public final class ScriptRuntime {
 		if (interpreterXMLString.length() > 0) {
 			try {
 				Reader inputStream = new StringReader(interpreterXMLString);
-				InterpreterDefinitionsContainer.parseXMLIntoContainer(
-						inputStream, interpreterDefs);
+				InterpreterDefinitionsContainer
+						.parseXMLIntoContainer(inputStream, interpreterDefs);
 				return false;
 			} catch (IOException ioe) {
 				DLTKLaunchingPlugin.log(ioe);
@@ -937,11 +942,11 @@ public final class ScriptRuntime {
 
 	/**
 	 * Performs string substitution on the given expression.
-	 * 
+	 *
 	 * @param expression
 	 * @return expression after string substitution
 	 * @throws CoreException
-	 * 
+	 *
 	 */
 	private static String substitute(String expression) throws CoreException {
 		return VariablesPlugin.getDefault().getStringVariableManager()
@@ -951,12 +956,12 @@ public final class ScriptRuntime {
 	/**
 	 * Returns whether the Interpreter install with the specified id was
 	 * contributed via the InterpreterInstalls extension point.
-	 * 
+	 *
 	 * @param id
 	 *            Interpreter id
 	 * @return whether the Interpreter install was contributed via extension
 	 *         point
-	 * 
+	 *
 	 */
 	public static boolean isContributedInterpreterInstall(String id) {
 		getInterpreterInstallTypes(); // ensure Interpreters are initialized
@@ -967,9 +972,9 @@ public final class ScriptRuntime {
 	 * Evaluates library locations for a IInterpreterInstall. If no library
 	 * locations are set on the install, a default location is evaluated and
 	 * checked if it exists.
-	 * 
+	 *
 	 * @return library locations with paths that exist or are empty
-	 * 
+	 *
 	 */
 	public static LibraryLocation[] getLibraryLocations(
 			IInterpreterInstall interperterInstall) {
@@ -989,12 +994,12 @@ public final class ScriptRuntime {
 						interperterInstall.getInstallLocation(),
 						interperterInstall.getEnvironmentVariables(), monitor);
 
-		List<LibraryLocation> existingDefaultLocations = new ArrayList<LibraryLocation>();
+		List<LibraryLocation> existingDefaultLocations = new ArrayList<>();
 		for (int i = 0; i < defaultLocations.length; ++i) {
 			LibraryLocation location = defaultLocations[i];
 
-			IFileHandle file = EnvironmentPathUtils.getFile(location
-					.getLibraryPath());
+			IFileHandle file = EnvironmentPathUtils
+					.getFile(location.getLibraryPath());
 			if (file.exists()) {
 				existingDefaultLocations.add(location);
 			}
@@ -1007,10 +1012,10 @@ public final class ScriptRuntime {
 	/**
 	 * Creates and returns a buildpath entry describing the default interpreter
 	 * container entry.
-	 * 
+	 *
 	 * @return a new IBuildpathEntry that describes the default interpreter
 	 *         container entry
-	 * 
+	 *
 	 */
 	public static IBuildpathEntry getDefaultInterpreterContainerEntry() {
 		return DLTKCore.newContainerEntry(newDefaultInterpreterContainerPath());
@@ -1019,9 +1024,9 @@ public final class ScriptRuntime {
 	/**
 	 * Returns a path for the interpreter buildpath container identifying the
 	 * default interpreter install.
-	 * 
+	 *
 	 * @return buildpath container path
-	 * 
+	 *
 	 */
 	public static IPath newDefaultInterpreterContainerPath() {
 		return new Path(INTERPRETER_CONTAINER);
@@ -1030,11 +1035,11 @@ public final class ScriptRuntime {
 	/**
 	 * Returns a path for the interpreter buildpath container identifying the
 	 * specified Interpreter install by type and name.
-	 * 
+	 *
 	 * @param Interpreter
 	 *            Interpreter install
 	 * @return buildpath container path
-	 * 
+	 *
 	 */
 	public static IPath newInterpreterContainerPath(
 			IInterpreterInstall interpreter) {
@@ -1049,15 +1054,16 @@ public final class ScriptRuntime {
 	/**
 	 * Returns a path for the InterpreterEnvironment buildpath container
 	 * identifying the specified Interpreter install by type and name.
-	 * 
+	 *
 	 * @param typeId
 	 *            Interpreter install type identifier
 	 * @param name
 	 *            Interpreter install name
 	 * @return buildpath container path
-	 * 
+	 *
 	 */
-	public static IPath newInterpreterContainerPath(String typeId, String name) {
+	public static IPath newInterpreterContainerPath(String typeId,
+			String name) {
 		if (typeId == null || name == null) {
 			return null;
 		}
@@ -1072,12 +1078,12 @@ public final class ScriptRuntime {
 	 * Returns the InterpreterEnvironment referenced by the specified
 	 * InterpreterEnvironment buildpath container path or <code>null</code> if
 	 * none.
-	 * 
+	 *
 	 * @param InterpreterEnvironmentContainerPath
 	 * @return InterpreterEnvironment referenced by the specified
 	 *         InterpreterEnvironment buildpath container path or
 	 *         <code>null</code>
-	 * 
+	 *
 	 */
 	public static IInterpreterInstall getInterpreterInstall(String nature,
 			String environment, IPath InterpreterEnvironmentContainerPath) {
@@ -1092,28 +1098,29 @@ public final class ScriptRuntime {
 	/**
 	 * Returns the <code>IInterpreterInstall</code> represented by the specified
 	 * <code>compositeId</code>.
-	 * 
+	 *
 	 * <p>
 	 * If an interpreter can not be found for the given <code>compositeId</code>
 	 * , the default interpreter for the specified <code>natureId</code> will be
 	 * returned.
-	 * 
+	 *
 	 * If no default interpreter has been configured, <code>null</code> will be
 	 * returned.
 	 * </p>
-	 * 
+	 *
 	 * @param compositeId
 	 *            the composite id that specifies an instance of
 	 *            IInterpreterInstall
 	 * @param natureId
 	 *            nature id
-	 * 
+	 *
 	 * @return IInterpreterInstall instance or <code>null</code> if one can not
 	 *         be found.
 	 */
 	public static IInterpreterInstall getInterpreterInstall(String compositeId,
 			String natureId) {
-		IInterpreterInstall install = getInterpreterFromCompositeId(compositeId);
+		IInterpreterInstall install = getInterpreterFromCompositeId(
+				compositeId);
 		if (install == null) {
 			DefaultInterpreterEntry entry = new DefaultInterpreterEntry(
 					natureId, LocalEnvironment.ENVIRONMENT_ID);
@@ -1127,10 +1134,10 @@ public final class ScriptRuntime {
 	 * Returns the identifier of the Interpreter install type referenced by the
 	 * given InterpreterEnvironment buildpath container path, or
 	 * <code>null</code> if none.
-	 * 
+	 *
 	 * @param InterpreterEnvironmentContainerPath
 	 * @return Interpreter install type identifier or <code>null</code>
-	 * 
+	 *
 	 */
 	public static String getInterpreterInstallTypeId(
 			IPath InterpreterEnvironmentContainerPath) {
@@ -1142,10 +1149,10 @@ public final class ScriptRuntime {
 	 * Returns the name of the Interpreter install referenced by the given
 	 * InterpreterEnvironment buildpath container path, or <code>null</code> if
 	 * none.
-	 * 
+	 *
 	 * @param InterpreterEnvironmentContainerPath
 	 * @return Interpreter name or <code>null</code>
-	 * 
+	 *
 	 */
 	public static String getInterpreterInstallName(
 			IPath InterpreterEnvironmentContainerPath) {
@@ -1171,7 +1178,7 @@ public final class ScriptRuntime {
 	 * workspace default interpreter is used to create a container path.</li>
 	 * </ol>
 	 * </p>
-	 * 
+	 *
 	 * @param configuration
 	 * @return buildpath container path identifying a interpreter or
 	 *         <code>null</code>
@@ -1208,14 +1215,14 @@ public final class ScriptRuntime {
 	 * referenced by the specified project, or <code>null</code> if none. The
 	 * entry returned represents a either a buildpath variable or buildpath
 	 * container that resolves to a InterpreterEnvironment.
-	 * 
+	 *
 	 * @param project
 	 *            Script project
 	 * @return InterpreterEnvironment runtime buildpath entry or
 	 *         <code>null</code>
 	 * @exception org.eclipse.core.runtime.CoreException
 	 *                if an exception occurs accessing the project's buildpath
-	 * 
+	 *
 	 */
 	public static IRuntimeBuildpathEntry computeInterpreterEntry(
 			IScriptProject project) throws CoreException {
@@ -1231,7 +1238,8 @@ public final class ScriptRuntime {
 							getNatureFromProject(project),
 							getEnvironmentFromProject(project), entry)) {
 						IBuildpathContainer container = DLTKCore
-								.getBuildpathContainer(entry.getPath(), project);
+								.getBuildpathContainer(entry.getPath(),
+										project);
 						if (container != null) {
 							switch (container.getKind()) {
 							case IBuildpathContainer.K_APPLICATION:
@@ -1258,11 +1266,11 @@ public final class ScriptRuntime {
 	/**
 	 * Returns whether the given runtime buildpath entry refers to a Interpreter
 	 * install.
-	 * 
+	 *
 	 * @param entry
 	 * @return whether the given runtime buildpath entry refers to a Interpreter
 	 *         install
-	 * 
+	 *
 	 */
 	public static boolean isInterpreterInstallReference(String lang,
 			String environment, IRuntimeBuildpathEntry entry) {
@@ -1270,8 +1278,8 @@ public final class ScriptRuntime {
 		if (buildpathEntry != null) {
 			switch (buildpathEntry.getEntryKind()) {
 			case IBuildpathEntry.BPE_CONTAINER:
-				IRuntimeBuildpathEntryResolver2 resolver = getContainerResolver(buildpathEntry
-						.getPath().segment(0));
+				IRuntimeBuildpathEntryResolver2 resolver = getContainerResolver(
+						buildpathEntry.getPath().segment(0));
 				if (resolver != null) {
 					return resolver.isInterpreterInstallReference(lang,
 							environment, buildpathEntry);
@@ -1286,10 +1294,10 @@ public final class ScriptRuntime {
 	 * Adds the given listener to the list of registered Interpreter install
 	 * changed listeners. Has no effect if an identical listener is already
 	 * registered.
-	 * 
+	 *
 	 * @param listener
 	 *            the listener to add
-	 * 
+	 *
 	 */
 	public static void addInterpreterInstallChangedListener(
 			IInterpreterInstallChangedListener listener) {
@@ -1300,10 +1308,10 @@ public final class ScriptRuntime {
 	 * Removes the given listener from the list of registered Interpreter
 	 * install changed listeners. Has no effect if an identical listener is not
 	 * already registered.
-	 * 
+	 *
 	 * @param listener
 	 *            the listener to remove
-	 * 
+	 *
 	 */
 	public static void removeInterpreterInstallChangedListener(
 			IInterpreterInstallChangedListener listener) {
@@ -1322,10 +1330,10 @@ public final class ScriptRuntime {
 	/**
 	 * Notifies all Interpreter install changed listeners of the given property
 	 * change.
-	 * 
+	 *
 	 * @param event
 	 *            event describing the change.
-	 * 
+	 *
 	 */
 	public static void fireInterpreterChanged(PropertyChangeEvent event) {
 		Object[] listeners = fgInterpreterListeners.getListeners();
@@ -1338,10 +1346,10 @@ public final class ScriptRuntime {
 	/**
 	 * Notifies all Interpreter install changed listeners of the Interpreter
 	 * addition
-	 * 
+	 *
 	 * @param Interpreter
 	 *            the Interpreter that has been added
-	 * 
+	 *
 	 */
 	public static void fireInterpreterAdded(IInterpreterInstall Interpreter) {
 		if (!fgInitializingInterpreters) {
@@ -1356,10 +1364,10 @@ public final class ScriptRuntime {
 	/**
 	 * Notifies all Interpreter install changed listeners of the Interpreter
 	 * removal
-	 * 
+	 *
 	 * @param Interpreter
 	 *            the Interpreter that has been removed
-	 * 
+	 *
 	 */
 	public static void fireInterpreterRemoved(IInterpreterInstall Interpreter) {
 		Object[] listeners = fgInterpreterListeners.getListeners();
@@ -1371,7 +1379,7 @@ public final class ScriptRuntime {
 
 	/**
 	 * Returns the preference store for the launching plug-in.
-	 * 
+	 *
 	 * @return the preference store for the launching plug-in
 	 * @since 5.0 return type changed to {@link IEclipsePreferences}
 	 */
@@ -1381,8 +1389,8 @@ public final class ScriptRuntime {
 
 	/**
 	 * Saves the preferences for the launching plug-in.
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public static void savePreferences() {
 		try {
@@ -1394,15 +1402,16 @@ public final class ScriptRuntime {
 
 	/**
 	 * Registers the given resolver for the specified container.
-	 * 
+	 *
 	 * @param resolver
 	 *            runtime buildpath entry resolver
 	 * @param containerIdentifier
 	 *            identifier of the buildpath container to register for
-	 * 
+	 *
 	 */
 	public static void addContainerResolver(
-			IRuntimeBuildpathEntryResolver resolver, String containerIdentifier) {
+			IRuntimeBuildpathEntryResolver resolver,
+			String containerIdentifier) {
 		Map<String, IRuntimeBuildpathEntryResolver> map = getContainerResolvers();
 		map.put(containerIdentifier, resolver);
 	}
@@ -1422,10 +1431,8 @@ public final class ScriptRuntime {
 				.getExtensionPoint(DLTKLaunchingPlugin.PLUGIN_ID,
 						EXTENSION_POINT_RUNTIME_BUILDPATH_ENTRY_RESOLVERS);
 		IConfigurationElement[] extensions = point.getConfigurationElements();
-		fgContainerResolvers = new HashMap<String, IRuntimeBuildpathEntryResolver>(
-				extensions.length);
-		fgRuntimeBuildpathEntryResolvers = new HashMap<String, IRuntimeBuildpathEntryResolver>(
-				extensions.length);
+		fgContainerResolvers = new HashMap<>(extensions.length);
+		fgRuntimeBuildpathEntryResolvers = new HashMap<>(extensions.length);
 		for (int i = 0; i < extensions.length; i++) {
 			RuntimeBuildpathEntryResolver res = new RuntimeBuildpathEntryResolver(
 					extensions[i]);
@@ -1455,8 +1462,7 @@ public final class ScriptRuntime {
 				.getExtensionPoint(DLTKLaunchingPlugin.PLUGIN_ID,
 						EXTENSION_POINT_RUNTIME_BUILDPATH_PROVIDERS);
 		IConfigurationElement[] extensions = point.getConfigurationElements();
-		fgPathProviders = new HashMap<String, IRuntimeBuildpathProvider>(
-				extensions.length);
+		fgPathProviders = new HashMap<>(extensions.length);
 		for (int i = 0; i < extensions.length; i++) {
 			RuntimeBuildpathProvider res = new RuntimeBuildpathProvider(
 					extensions[i]);
@@ -1467,7 +1473,7 @@ public final class ScriptRuntime {
 	/**
 	 * Returns the resolver registered for the given container id, or
 	 * <code>null</code> if none.
-	 * 
+	 *
 	 * @param containerId
 	 *            the container to determine the resolver for
 	 * @return the resolver registered for the given container id, or
@@ -1475,8 +1481,8 @@ public final class ScriptRuntime {
 	 */
 	private static IRuntimeBuildpathEntryResolver2 getContainerResolver(
 			String containerId) {
-		return (IRuntimeBuildpathEntryResolver2) getContainerResolvers().get(
-				containerId);
+		return (IRuntimeBuildpathEntryResolver2) getContainerResolvers()
+				.get(containerId);
 	}
 
 	/**
@@ -1484,7 +1490,7 @@ public final class ScriptRuntime {
 	 * project's library path when launched. Entries are searched for on the
 	 * project's build path as extra buildpath attributes. Each entry represents
 	 * an absolute path in the local file system.
-	 * 
+	 *
 	 * @param project
 	 *            the project to compute the <code>java.library.path</code> for
 	 * @param requiredProjects
@@ -1493,17 +1499,17 @@ public final class ScriptRuntime {
 	 *         appended to the given project's <code>java.library.path</code>
 	 * @throws CoreException
 	 *             if unable to compute the Script library path
-	 * 
+	 *
 	 * @see org.eclipse.dltk.core.IBuildpathAttribute
 	 * @see ScriptRuntime#BUILDPATH_ATTR_LIBRARY_PATH_ENTRY
 	 */
 	public static String[] computeScriptLibraryPath(IScriptProject project,
 			boolean requiredProjects) throws CoreException {
-		Set<IScriptProject> visited = new HashSet<IScriptProject>();
-		List<String> entries = new ArrayList<String>();
+		Set<IScriptProject> visited = new HashSet<>();
+		List<String> entries = new ArrayList<>();
 		gatherScriptLibraryPathEntries(project, requiredProjects, visited,
 				entries);
-		List<String> resolved = new ArrayList<String>(entries.size());
+		List<String> resolved = new ArrayList<>(entries.size());
 		IStringVariableManager manager = VariablesPlugin.getDefault()
 				.getStringVariableManager();
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -1529,7 +1535,7 @@ public final class ScriptRuntime {
 	/**
 	 * Gathers all Script library entries for the given project and optionally
 	 * its required projects.
-	 * 
+	 *
 	 * @param project
 	 *            project to gather entries for
 	 * @param requiredProjects
@@ -1540,7 +1546,7 @@ public final class ScriptRuntime {
 	 *            collection to add library entries to
 	 * @throws CoreException
 	 *             if unable to gather buildpath entries
-	 * 
+	 *
 	 */
 	private static void gatherScriptLibraryPathEntries(IScriptProject project,
 			boolean requiredProjects, Set<IScriptProject> visited,
@@ -1573,7 +1579,7 @@ public final class ScriptRuntime {
 	 * Adds all library path extra buildpath entry values to the given entries
 	 * collection specified on the given project's buildpath, and returns a
 	 * collection of required projects, or <code>null</code>.
-	 * 
+	 *
 	 * @param project
 	 *            project being processed
 	 * @param collectRequired
@@ -1584,7 +1590,7 @@ public final class ScriptRuntime {
 	 *            collection to add script library path entries to
 	 * @return required project buildpath entries or <code>null</code>
 	 * @throws CoreException
-	 * 
+	 *
 	 */
 	private static IBuildpathEntry[] processScriptLibraryPathEntries(
 			IScriptProject project, boolean collectRequired,
@@ -1603,15 +1609,15 @@ public final class ScriptRuntime {
 				}
 			}
 			if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
-				IBuildpathContainer container = DLTKCore.getBuildpathContainer(
-						entry.getPath(), project);
+				IBuildpathContainer container = DLTKCore
+						.getBuildpathContainer(entry.getPath(), project);
 				if (container != null) {
 					IBuildpathEntry[] requiredProjects = processScriptLibraryPathEntries(
 							project, collectRequired,
 							container.getBuildpathEntries(), entries);
 					if (requiredProjects != null) {
 						if (req == null) {
-							req = new ArrayList<IBuildpathEntry>();
+							req = new ArrayList<>();
 						}
 						for (int j = 0; j < requiredProjects.length; j++) {
 							req.add(requiredProjects[j]);
@@ -1621,7 +1627,7 @@ public final class ScriptRuntime {
 			} else if (collectRequired
 					&& entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
 				if (req == null) {
-					req = new ArrayList<IBuildpathEntry>();
+					req = new ArrayList<>();
 				}
 				req.add(entry);
 			}
@@ -1641,7 +1647,7 @@ public final class ScriptRuntime {
 	 * <code>getLibraryPaths(IBuildpathAttribute)</code> should be used to
 	 * encode and decode the attribute value.
 	 * </p>
-	 * 
+	 *
 	 * @param paths
 	 *            an array of strings representing paths of shared libraries.
 	 *            Each string is used to create an <code>IPath</code> using the
@@ -1652,7 +1658,7 @@ public final class ScriptRuntime {
 	 * @return a buildpath attribute with the name
 	 *         <code>CLASSPATH_ATTR_LIBRARY_PATH_ENTRY</code> and an value
 	 *         encoded to the specified paths.
-	 * 
+	 *
 	 */
 	public static IBuildpathAttribute newLibraryPathsAttribute(String[] paths) {
 		StringBuffer value = new StringBuffer();
@@ -1662,8 +1668,8 @@ public final class ScriptRuntime {
 				value.append("|"); //$NON-NLS-1$
 			}
 		}
-		return DLTKCore.newBuildpathAttribute(
-				BUILDPATH_ATTR_LIBRARY_PATH_ENTRY, value.toString());
+		return DLTKCore.newBuildpathAttribute(BUILDPATH_ATTR_LIBRARY_PATH_ENTRY,
+				value.toString());
 	}
 
 	/**
@@ -1672,14 +1678,14 @@ public final class ScriptRuntime {
 	 * for an associated {@link IBuildpathEntry}, or <code>null</code> if the
 	 * given attribute is not a <code>CLASSPATH_ATTR_LIBRARY_PATH_ENTRY</code>.
 	 * Each string is used to create an <code>IPath</code> using the constructor
-	 * <code>Path(String)</code>, and may contain <code>IStringVariable</code> 
+	 * <code>Path(String)</code>, and may contain <code>IStringVariable</code>
 	 * 's.
 	 * <p>
 	 * The factory methods <code>newLibraryPathsAttribute(String[])</code> and
 	 * <code>getLibraryPaths(IBuildpathAttribute)</code> should be used to
 	 * encode and decode the attribute value.
 	 * </p>
-	 * 
+	 *
 	 * @param attribute
 	 *            a <code>CLASSPATH_ATTR_LIBRARY_PATH_ENTRY</code> buildpath
 	 *            attribute
@@ -1691,7 +1697,7 @@ public final class ScriptRuntime {
 	 *         used to create an <code>IPath</code> using the constructor
 	 *         <code>Path(String)</code>, and may contain
 	 *         <code>IStringVariable</code>'s.
-	 * 
+	 *
 	 */
 	public static String[] getLibraryPaths(IBuildpathAttribute attribute) {
 		if (BUILDPATH_ATTR_LIBRARY_PATH_ENTRY.equals(attribute.getName())) {
@@ -1703,7 +1709,7 @@ public final class ScriptRuntime {
 
 	/**
 	 * Loads contributed interpreter installs
-	 * 
+	 *
 	 */
 	private static void addInterpreterExtensions(
 			InterpreterDefinitionsContainer InterpreterDefs) {
@@ -1729,13 +1735,13 @@ public final class ScriptRuntime {
 								"Missing required id attribute for interpreterInstall contributed by {0}", //$NON-NLS-1$
 								element.getContributor().getName()), null);
 					}
-					IInterpreterInstallType installType = getInterpreterInstallType(InterpreterType);
+					IInterpreterInstallType installType = getInterpreterInstallType(
+							InterpreterType);
 					if (installType == null) {
-						throw abort(
-								MessageFormat.format(
-										"InterpreterInstall {0} contributed by {1} references undefined Interpreter install type {2}", //$NON-NLS-1$
-										id, element.getContributor().getName(),
-										InterpreterType), null);
+						throw abort(MessageFormat.format(
+								"InterpreterInstall {0} contributed by {1} references undefined Interpreter install type {2}", //$NON-NLS-1$
+								id, element.getContributor().getName(),
+								InterpreterType), null);
 					}
 					IInterpreterInstall install = installType
 							.findInterpreterInstall(id);
@@ -1767,12 +1773,12 @@ public final class ScriptRuntime {
 						final IEnvironment localEnv = EnvironmentManager
 								.getLocalEnvironment();
 
-						IFileHandle homeFile = localEnv.getFile(toPath(element,
-								substitute(home)));
+						IFileHandle homeFile = localEnv
+								.getFile(toPath(element, substitute(home)));
 						if (homeFile.exists()) {
 							// adjust for relative path names
-							homeFile = localEnv.getFile(new Path(homeFile
-									.getCanonicalPath()));
+							homeFile = localEnv.getFile(
+									new Path(homeFile.getCanonicalPath()));
 						}
 						IStatus status = installType.validateInstallLocation(
 								homeFile, standin.getEnvironmentVariables(),
@@ -1781,9 +1787,9 @@ public final class ScriptRuntime {
 						if (!status.isOK()) {
 							abort(MessageFormat.format(
 									"Illegal install location {0} for interpreterInstall {1} contributed by {2}: {3}", //$NON-NLS-1$
-									home, id, element.getContributor()
-											.getName(), status.getMessage()),
-									null);
+									home, id,
+									element.getContributor().getName(),
+									status.getMessage()), null);
 						}
 						standin.setInstallLocation(homeFile);
 
@@ -1802,12 +1808,13 @@ public final class ScriptRuntime {
 								if (libPathStr == null) {
 									abort(MessageFormat.format(
 											"library for interpreterInstall {0} contributed by {1} missing required attribute libPath", //$NON-NLS-1$
-											id, element.getContributor()
-													.getName()), null);
+											id,
+											element.getContributor().getName()),
+											null);
 								}
 
-								locations[j] = new LibraryLocation(homeFile
-										.getFullPath().append(
+								locations[j] = new LibraryLocation(
+										homeFile.getFullPath().append(
 												substitute(libPathStr)));
 							}
 						}
@@ -1818,8 +1825,8 @@ public final class ScriptRuntime {
 				} else {
 					abort(MessageFormat.format(
 							"Illegal element {0} in InterpreterInstalls extension contributed by {1}", //$NON-NLS-1$
-							element.getName(), element.getContributor()
-									.getName()), null);
+							element.getName(),
+							element.getContributor().getName()), null);
 				}
 			} catch (CoreException e) {
 				DLTKLaunchingPlugin.log(e);
@@ -1861,8 +1868,8 @@ public final class ScriptRuntime {
 				long unique = System.currentTimeMillis();
 				final InterpreterStandin[] result = new InterpreterStandin[detectedLocations.length];
 				for (int j = 0; j < detectedLocations.length; ++j) {
-					while (interpType.findInterpreterInstall(String
-							.valueOf(unique)) != null) {
+					while (interpType.findInterpreterInstall(
+							String.valueOf(unique)) != null) {
 						unique++;
 					}
 					final IFileHandle location = detectedLocations[j];
@@ -1881,7 +1888,7 @@ public final class ScriptRuntime {
 	}
 
 	private static Map<String, List<IInterpreterInstallType>> getInterpreterTypesByNature() {
-		Map<String, List<IInterpreterInstallType>> result = new HashMap<String, List<IInterpreterInstallType>>();
+		Map<String, List<IInterpreterInstallType>> result = new HashMap<>();
 		for (IInterpreterInstallType type : fgInterpreterTypes) {
 			String natureId = type.getNatureId();
 			if (!result.containsKey(natureId)) {
@@ -1894,7 +1901,7 @@ public final class ScriptRuntime {
 
 	private static Map<String, List<IInterpreterInstall>> getValidInterpretersByNature(
 			List<IInterpreterInstall> validInterpreters) {
-		Map<String, List<IInterpreterInstall>> result = new HashMap<String, List<IInterpreterInstall>>();
+		Map<String, List<IInterpreterInstall>> result = new HashMap<>();
 		for (IInterpreterInstall install : validInterpreters) {
 			String natureId = install.getNatureId();
 			if (!result.containsKey(natureId)) {
@@ -1908,8 +1915,8 @@ public final class ScriptRuntime {
 	/**
 	 * Perform Interpreter type and Interpreter install initialization. Does not
 	 * hold locks while performing change notification.
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	private static void initializeInterpreters() {
 		InterpreterDefinitionsContainer defs = null;
@@ -1927,8 +1934,8 @@ public final class ScriptRuntime {
 
 					// 3. if there are none, detect interpreters
 					Map<String, List<IInterpreterInstallType>> typesByNature = getInterpreterTypesByNature();
-					Map<String, List<IInterpreterInstall>> interpsByNature = getValidInterpretersByNature(defs
-							.getValidInterpreterList());
+					Map<String, List<IInterpreterInstall>> interpsByNature = getValidInterpretersByNature(
+							defs.getValidInterpreterList());
 					for (String natureId : typesByNature.keySet()) {
 						if (!interpsByNature.containsKey(natureId)
 								|| interpsByNature.get(natureId).isEmpty()) {
@@ -1949,9 +1956,11 @@ public final class ScriptRuntime {
 									}
 									defs.setDefaultInterpreterInstallCompositeID(
 											new DefaultInterpreterEntry(
-													natureId, interp[0]
+													natureId,
+													interp[0]
 															.getEnvironmentId()),
-											getCompositeIdFromInterpreter(interp[0]));
+											getCompositeIdFromInterpreter(
+													interp[0]));
 								}
 							} else {
 								// interpreters were changed - reflect current
@@ -1975,7 +1984,8 @@ public final class ScriptRuntime {
 							.getInterpreterNatures();
 					for (int i = 0; i < natures.length; i++) {
 						String defId = defs
-								.getDefaultInterpreterInstallCompositeID(natures[i]);
+								.getDefaultInterpreterInstallCompositeID(
+										natures[i]);
 						boolean validDef = false;
 						if (defId != null) {
 							for (IInterpreterInstall iterpreter : defs
@@ -1997,15 +2007,18 @@ public final class ScriptRuntime {
 								IInterpreterInstall Interpreter = list.get(0);
 								defs.setDefaultInterpreterInstallCompositeID(
 										natures[i],
-										getCompositeIdFromInterpreter(Interpreter));
+										getCompositeIdFromInterpreter(
+												Interpreter));
 							}
 						}
 
 						String defInstCID = defs
-								.getDefaultInterpreterInstallCompositeID(natures[i]);
+								.getDefaultInterpreterInstallCompositeID(
+										natures[i]);
 						fgDefaultInterpreterId.put(natures[i], defInstCID);
 						String defIntCTypeID = defs
-								.getDefaultInterpreterInstallConnectorTypeID(natures[i]);
+								.getDefaultInterpreterInstallConnectorTypeID(
+										natures[i]);
 						fgDefaultInterpreterConnectorId.put(natures[i],
 								defIntCTypeID);
 					}
@@ -2060,11 +2073,11 @@ public final class ScriptRuntime {
 	/**
 	 * Returns a new runtime buildpath entry containing the default buildpath
 	 * for the specified script project.
-	 * 
+	 *
 	 * @param project
 	 *            project
 	 * @return runtime buildpath entry
-	 * 
+	 *
 	 */
 	public static IRuntimeBuildpathEntry newDefaultProjectBuildpathEntry(
 			IScriptProject project) {
@@ -2073,26 +2086,26 @@ public final class ScriptRuntime {
 
 	/**
 	 * Returns a new runtime buildpath entry for the given project.
-	 * 
+	 *
 	 * @param project
 	 *            Script project
 	 * @return runtime buildpath entry
-	 * 
+	 *
 	 */
 	public static IRuntimeBuildpathEntry newProjectRuntimeBuildpathEntry(
 			IScriptProject project) {
-		IBuildpathEntry cpe = DLTKCore.newProjectEntry(project.getProject()
-				.getFullPath());
+		IBuildpathEntry cpe = DLTKCore
+				.newProjectEntry(project.getProject().getFullPath());
 		return newRuntimeBuildpathEntry(cpe);
 	}
 
 	/**
 	 * Returns a new runtime buildpath entry for the given archive.
-	 * 
+	 *
 	 * @param resource
 	 *            archive resource
 	 * @return runtime buildpath entry
-	 * 
+	 *
 	 */
 	public static IRuntimeBuildpathEntry newArchiveRuntimeBuildpathEntry(
 			IResource resource) {
@@ -2103,11 +2116,11 @@ public final class ScriptRuntime {
 	/**
 	 * Returns a new runtime buildpath entry for the given archive (possibly
 	 * external).
-	 * 
+	 *
 	 * @param path
 	 *            absolute path to an archive
 	 * @return runtime buildpath entry
-	 * 
+	 *
 	 */
 	public static IRuntimeBuildpathEntry newArchiveRuntimeBuildpathEntry(
 			IPath path) {
@@ -2118,7 +2131,7 @@ public final class ScriptRuntime {
 	/**
 	 * Returns a runtime buildpath entry for the given container path with the
 	 * given buildpath property.
-	 * 
+	 *
 	 * @param path
 	 *            container path
 	 * @param buildpathProperty
@@ -2127,7 +2140,7 @@ public final class ScriptRuntime {
 	 * @return runtime buildpath entry
 	 * @exception CoreException
 	 *                if unable to construct a runtime buildpath entry
-	 * 
+	 *
 	 */
 	public static IRuntimeBuildpathEntry newRuntimeContainerBuildpathEntry(
 			IPath path, int buildpathProperty) throws CoreException {
@@ -2138,7 +2151,7 @@ public final class ScriptRuntime {
 	 * Returns a runtime buildpath entry for the given container path with the
 	 * given buildpath property to be resolved in the context of the given
 	 * Script project.
-	 * 
+	 *
 	 * @param path
 	 *            container path
 	 * @param buildpathProperty
@@ -2164,15 +2177,15 @@ public final class ScriptRuntime {
 
 	/**
 	 * Returns a runtime buildpath entry constructed from the given memento.
-	 * 
+	 *
 	 * @param memento
 	 *            a memento for a runtime buildpath entry
 	 * @return runtime buildpath entry
 	 * @exception CoreException
 	 *                if unable to construct a runtime buildpath entry
 	 */
-	public static IRuntimeBuildpathEntry newRuntimeBuildpathEntry(String memento)
-			throws CoreException {
+	public static IRuntimeBuildpathEntry newRuntimeBuildpathEntry(
+			String memento) throws CoreException {
 		try {
 			Element root = null;
 			DocumentBuilder parser = DLTKLaunchingPlugin.getParser();
@@ -2211,7 +2224,7 @@ public final class ScriptRuntime {
 	 * Returns a runtime buildpath entry that corresponds to the given buildpath
 	 * entry. The buildpath entry may not be of type <code>CPE_SOURCE</code> or
 	 * <code>BPE_CONTAINER</code>.
-	 * 
+	 *
 	 * @param entry
 	 *            a buildpath entry
 	 * @return runtime buildpath entry
@@ -2224,24 +2237,23 @@ public final class ScriptRuntime {
 	/**
 	 * Computes and returns the default unresolved runtime buildpath for the
 	 * given project.
-	 * 
+	 *
 	 * @return runtime buildpath entries
 	 * @exception CoreException
 	 *                if unable to compute the runtime buildpath
 	 * @see IRuntimeBuildpathEntry
-	 * 
+	 *
 	 */
 	public static IRuntimeBuildpathEntry[] computeUnresolvedRuntimeBuildpath(
 			IScriptProject project) throws CoreException {
 		IBuildpathEntry[] entries = project.getRawBuildpath();
-		List<IRuntimeBuildpathEntry> buildpathEntries = new ArrayList<IRuntimeBuildpathEntry>(
-				3);
+		List<IRuntimeBuildpathEntry> buildpathEntries = new ArrayList<>(3);
 		for (int i = 0; i < entries.length; i++) {
 			IBuildpathEntry entry = entries[i];
 			switch (entry.getEntryKind()) {
 			case IBuildpathEntry.BPE_CONTAINER:
-				IBuildpathContainer container = DLTKCore.getBuildpathContainer(
-						entry.getPath(), project);
+				IBuildpathContainer container = DLTKCore
+						.getBuildpathContainer(entry.getPath(), project);
 				if (container != null) {
 					switch (container.getKind()) {
 					case IBuildpathContainer.K_APPLICATION:
@@ -2249,11 +2261,10 @@ public final class ScriptRuntime {
 						break;
 					case IBuildpathContainer.K_DEFAULT_SYSTEM:
 					case IBuildpathContainer.K_SYSTEM:
-						buildpathEntries
-								.add(newRuntimeContainerBuildpathEntry(
-										container.getPath(),
-										IRuntimeBuildpathEntry.STANDARD_ENTRY,
-										project));
+						buildpathEntries.add(newRuntimeContainerBuildpathEntry(
+								container.getPath(),
+								IRuntimeBuildpathEntry.STANDARD_ENTRY,
+								project));
 						break;
 					}
 				}
@@ -2269,7 +2280,7 @@ public final class ScriptRuntime {
 
 	/**
 	 * Returns the buildpath provider for the given launch configuration.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return buildpath provider
@@ -2339,8 +2350,8 @@ public final class ScriptRuntime {
 			// cannot resolve without entry or project context
 			return new IRuntimeBuildpathEntry[0];
 		}
-		IBuildpathContainer container = DLTKCore.getBuildpathContainer(
-				entry.getPath(), project);
+		IBuildpathContainer container = DLTKCore
+				.getBuildpathContainer(entry.getPath(), project);
 		if (container == null) {
 			abort(MessageFormat.format(
 					LaunchingMessages.ScriptRuntime_Could_not_resolve_classpath_container___0__1,
@@ -2361,12 +2372,11 @@ public final class ScriptRuntime {
 			property = IRuntimeBuildpathEntry.BOOTSTRAP_ENTRY;
 			break;
 		}
-		List<IRuntimeBuildpathEntry> resolved = new ArrayList<IRuntimeBuildpathEntry>(
-				cpes.length);
+		List<IRuntimeBuildpathEntry> resolved = new ArrayList<>(cpes.length);
 		List<IScriptProject> projects = fgProjects.get();
 		Integer count = fgEntryCount.get();
 		if (projects == null) {
-			projects = new ArrayList<IScriptProject>();
+			projects = new ArrayList<>();
 			fgProjects.set(projects);
 			count = Integer.valueOf(0);
 		}
@@ -2382,7 +2392,8 @@ public final class ScriptRuntime {
 					IScriptProject jp = DLTKCore.create(p);
 					if (!projects.contains(jp)) {
 						projects.add(jp);
-						IRuntimeBuildpathEntry buildpath = newDefaultProjectBuildpathEntry(jp);
+						IRuntimeBuildpathEntry buildpath = newDefaultProjectBuildpathEntry(
+								jp);
 						IRuntimeBuildpathEntry[] entries = resolveRuntimeBuildpathEntry(
 								buildpath, jp);
 						for (int j = 0; j < entries.length; j++) {
@@ -2429,7 +2440,7 @@ public final class ScriptRuntime {
 	 * container buildpath entries, in the context of the project associated
 	 * with the given launch configuration.
 	 * </p>
-	 * 
+	 *
 	 * @param entry
 	 *            runtime classpath entry
 	 * @param configuration
@@ -2438,7 +2449,7 @@ public final class ScriptRuntime {
 	 * @exception CoreException
 	 *                if unable to resolve
 	 * @see IRuntimeBuildpathEntryResolver
-	 * 
+	 *
 	 */
 	public static IRuntimeBuildpathEntry[] resolveRuntimeBuildpathEntry(
 			IRuntimeBuildpathEntry entry, ILaunchConfiguration configuration)
@@ -2461,8 +2472,8 @@ public final class ScriptRuntime {
 			}
 			break;
 		case IRuntimeBuildpathEntry.CONTAINER:
-			IRuntimeBuildpathEntryResolver resolver = getContainerResolver(entry
-					.getContainerName());
+			IRuntimeBuildpathEntryResolver resolver = getContainerResolver(
+					entry.getContainerName());
 			if (resolver == null) {
 				return computeDefaultContainerEntries(entry, configuration);
 			}
@@ -2488,8 +2499,8 @@ public final class ScriptRuntime {
 			}
 			break;
 		case IRuntimeBuildpathEntry.OTHER:
-			resolver = getContributedResolver(((IRuntimeBuildpathEntry2) entry)
-					.getTypeId());
+			resolver = getContributedResolver(
+					((IRuntimeBuildpathEntry2) entry).getTypeId());
 			return resolver.resolveRuntimeBuildpathEntry(entry, configuration);
 		default:
 			break;
@@ -2506,7 +2517,7 @@ public final class ScriptRuntime {
 	 * resolved runtime classpath entries are calculated from the associated
 	 * container classpath entries, in the context of the given project.
 	 * </p>
-	 * 
+	 *
 	 * @param entry
 	 *            runtime classpath entry
 	 * @param project
@@ -2515,22 +2526,22 @@ public final class ScriptRuntime {
 	 * @exception CoreException
 	 *                if unable to resolve
 	 * @see IRuntimeBuildpathEntryResolver
-	 * 
+	 *
 	 */
 	public static IRuntimeBuildpathEntry[] resolveRuntimeBuildpathEntry(
 			IRuntimeBuildpathEntry entry, IScriptProject project)
 			throws CoreException {
 		switch (entry.getType()) {
 		case IRuntimeBuildpathEntry.CONTAINER:
-			IRuntimeBuildpathEntryResolver resolver = getContainerResolver(entry
-					.getContainerName());
+			IRuntimeBuildpathEntryResolver resolver = getContainerResolver(
+					entry.getContainerName());
 			if (resolver == null) {
 				return computeDefaultContainerEntries(entry, project);
 			}
 			return resolver.resolveRuntimeBuildpathEntry(entry, project);
 		case IRuntimeBuildpathEntry.OTHER:
-			resolver = getContributedResolver(((IRuntimeBuildpathEntry2) entry)
-					.getTypeId());
+			resolver = getContributedResolver(
+					((IRuntimeBuildpathEntry2) entry).getTypeId());
 			return resolver.resolveRuntimeBuildpathEntry(entry, project);
 		default:
 			break;
@@ -2541,7 +2552,7 @@ public final class ScriptRuntime {
 	/**
 	 * Computes and returns the unresolved build path for the given launch
 	 * configuration. Variable and container entries are unresolved.
-	 * 
+	 *
 	 * @param configuration
 	 *            launch configuration
 	 * @return unresolved runtime buildpath entries
@@ -2550,14 +2561,14 @@ public final class ScriptRuntime {
 	 */
 	public static IRuntimeBuildpathEntry[] computeUnresolvedRuntimeBuildpath(
 			ILaunchConfiguration configuration) throws CoreException {
-		return getBuildpathProvider(configuration).computeUnresolvedBuildpath(
-				configuration);
+		return getBuildpathProvider(configuration)
+				.computeUnresolvedBuildpath(configuration);
 	}
 
 	/**
 	 * Resolves the given buildpath, returning the resolved buildpath in the
 	 * context of the given launch configuration.
-	 * 
+	 *
 	 * @param entries
 	 *            unresolved buildpath
 	 * @param configuration
@@ -2567,8 +2578,8 @@ public final class ScriptRuntime {
 	 *                if unable to compute the buildpath
 	 */
 	public static IRuntimeBuildpathEntry[] resolveRuntimeBuildpath(
-			IRuntimeBuildpathEntry[] entries, ILaunchConfiguration configuration)
-			throws CoreException {
+			IRuntimeBuildpathEntry[] entries,
+			ILaunchConfiguration configuration) throws CoreException {
 		return getBuildpathProvider(configuration).resolveBuildpath(entries,
 				configuration);
 	}
@@ -2586,15 +2597,15 @@ public final class ScriptRuntime {
 	/**
 	 * Returns the resolver registered for the given contributed buildpath entry
 	 * type.
-	 * 
+	 *
 	 * @param typeId
 	 *            the id of the contributed buildpath entry
 	 * @return the resolver registered for the given buildpath entry
 	 */
 	private static IRuntimeBuildpathEntryResolver getContributedResolver(
 			String typeId) {
-		IRuntimeBuildpathEntryResolver resolver = getEntryResolvers().get(
-				typeId);
+		IRuntimeBuildpathEntryResolver resolver = getEntryResolvers()
+				.get(typeId);
 		if (resolver == null) {
 			return new DefaultEntryResolver();
 		}
@@ -2603,7 +2614,7 @@ public final class ScriptRuntime {
 
 	/**
 	 * Computes the default application buildpath entries for the given project.
-	 * 
+	 *
 	 * @param jproject
 	 *            The project to compute the buildpath for
 	 * @return The computed buildpath. May be empty, but not null.
@@ -2612,13 +2623,15 @@ public final class ScriptRuntime {
 	 */
 	public static String[] computeDefaultRuntimeClassPath(
 			IScriptProject jproject) throws CoreException {
-		IRuntimeBuildpathEntry[] unresolved = computeUnresolvedRuntimeBuildpath(jproject);
+		IRuntimeBuildpathEntry[] unresolved = computeUnresolvedRuntimeBuildpath(
+				jproject);
 		// 1. remove bootpath entries
 		// 2. resolve & translate to local file system paths
-		List<String> resolved = new ArrayList<String>(unresolved.length);
+		List<String> resolved = new ArrayList<>(unresolved.length);
 		for (int i = 0; i < unresolved.length; i++) {
 			IRuntimeBuildpathEntry entry = unresolved[i];
-			if (entry.getBuildpathProperty() == IRuntimeBuildpathEntry.USER_ENTRY) {
+			if (entry
+					.getBuildpathProperty() == IRuntimeBuildpathEntry.USER_ENTRY) {
 				IRuntimeBuildpathEntry[] entries = resolveRuntimeBuildpathEntry(
 						entry, jproject);
 				for (int j = 0; j < entries.length; j++) {
@@ -2639,8 +2652,8 @@ public final class ScriptRuntime {
 
 	public static IRuntimeBuildpathEntry[] computeUnresolvedSourceBuildpath(
 			ILaunchConfiguration configuration) throws CoreException {
-		return getScriptpathProvider(configuration).computeUnresolvedBuildpath(
-				configuration);
+		return getScriptpathProvider(configuration)
+				.computeUnresolvedBuildpath(configuration);
 	}
 
 }

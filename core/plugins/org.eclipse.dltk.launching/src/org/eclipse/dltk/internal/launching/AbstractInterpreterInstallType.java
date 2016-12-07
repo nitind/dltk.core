@@ -82,10 +82,10 @@ public abstract class AbstractInterpreterInstallType
 
 	private String fId;
 
-	private static HashMap<Object, LibraryLocation[]> fCachedLocations = new HashMap<Object, LibraryLocation[]>();
+	private static HashMap<Object, LibraryLocation[]> fCachedLocations = new HashMap<>();
 
 	protected AbstractInterpreterInstallType() {
-		fInterpreters = new ArrayList<IInterpreterInstall>();
+		fInterpreters = new ArrayList<>();
 	}
 
 	@Override
@@ -134,7 +134,7 @@ public abstract class AbstractInterpreterInstallType
 	/**
 	 * Subclasses should return a new instance of the appropriate
 	 * <code>IInterpreterInstall</code> subclass from this method.
-	 * 
+	 *
 	 * @param id
 	 *            The Interpreter's id. The <code>IInterpreterInstall</code>
 	 *            instance that is created must return <code>id</code> from its
@@ -148,7 +148,7 @@ public abstract class AbstractInterpreterInstallType
 	/**
 	 * Initializes the id parameter from the "id" attribute in the configuration
 	 * markup. Subclasses should not override this method.
-	 * 
+	 *
 	 * @param config
 	 *            the configuration element used to trigger this execution. It
 	 *            can be queried by the executable extension for specific
@@ -187,24 +187,13 @@ public abstract class AbstractInterpreterInstallType
 	}
 
 	protected static void storeFile(File dest, URL url) throws IOException {
-		InputStream input = null;
-		OutputStream output = null;
-		try {
-			input = new BufferedInputStream(url.openStream());
-			output = new BufferedOutputStream(new FileOutputStream(dest));
-
+		try (InputStream input = new BufferedInputStream(url.openStream());
+				OutputStream output = new BufferedOutputStream(
+						new FileOutputStream(dest));) {
 			// Simple copy
 			int ch = -1;
 			while ((ch = input.read()) != -1) {
 				output.write(ch);
-			}
-		} finally {
-			if (input != null) {
-				input.close();
-			}
-
-			if (output != null) {
-				output.close();
 			}
 		}
 	}
@@ -226,7 +215,7 @@ public abstract class AbstractInterpreterInstallType
 			}
 		}
 
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		for (Map.Entry<String, String> entry : env.entrySet()) {
 			list.add(entry.getKey() + "=" + entry.getValue()); //$NON-NLS-1$
 		}
@@ -236,11 +225,11 @@ public abstract class AbstractInterpreterInstallType
 
 	/**
 	 * filter out any undesirable entries from the system environment
-	 * 
+	 *
 	 * <p>
 	 * default implementation does nothing. subclasses are free to override.
 	 * </p>
-	 * 
+	 *
 	 * @param environment
 	 *            system environment
 	 */
@@ -251,7 +240,7 @@ public abstract class AbstractInterpreterInstallType
 	/**
 	 * Process should write one line into console with format 'path1 path2
 	 * path3'
-	 * 
+	 *
 	 * @param monitor
 	 * @param process
 	 * @return
@@ -264,7 +253,7 @@ public abstract class AbstractInterpreterInstallType
 		final BufferedReader dataIn = new BufferedReader(
 				new InputStreamReader(process.getInputStream()));
 
-		final List<String> result = new ArrayList<String>();
+		final List<String> result = new ArrayList<>();
 
 		// final Object lock = new Object();
 
@@ -363,7 +352,7 @@ public abstract class AbstractInterpreterInstallType
 
 	public static LibraryLocation[] correctLocations(
 			final List<LibraryLocation> locs, IProgressMonitor monitor) {
-		List<LibraryLocation> resolvedLocs = new ArrayList<LibraryLocation>();
+		List<LibraryLocation> resolvedLocs = new ArrayList<>();
 		if (monitor != null) {
 			monitor.beginTask(
 					LaunchingMessages.AbstractInterpreterInstallType_correctingLocations,
@@ -457,7 +446,7 @@ public abstract class AbstractInterpreterInstallType
 			res = res.substring(DLTK_PATH_PREFIX.length());
 		}
 		String[] paths = res.split(getBuildPathDelimeter());
-		List<String> filtered = new ArrayList<String>();
+		List<String> filtered = new ArrayList<>();
 		for (int i = 0; i < paths.length; ++i) {
 			if (!paths[i].equals(".")) { //$NON-NLS-1$
 				filtered.add(paths[i].trim());
@@ -471,12 +460,12 @@ public abstract class AbstractInterpreterInstallType
 	/**
 	 * Then multiple lines of output are provided, we parse only paths started
 	 * from "DLTK:" sequence.
-	 * 
+	 *
 	 * @param result
 	 * @return
 	 */
 	protected String[] parsePaths(String[] result) {
-		List<String> filtered = new ArrayList<String>();
+		List<String> filtered = new ArrayList<>();
 		for (int k = 0; k < result.length; ++k) {
 			String res = result[k];
 			if (res.startsWith(DLTK_PATH_PREFIX)) {
@@ -497,7 +486,7 @@ public abstract class AbstractInterpreterInstallType
 	 * Please override the following method instead
 	 * <b>validateInstallLocation</b>(iFileHandle, EnvironmentVariable[],
 	 * LibraryLocation[])
-	 * 
+	 *
 	 * @param installLocation
 	 * @return
 	 */
@@ -767,7 +756,7 @@ public abstract class AbstractInterpreterInstallType
 			return fCachedLocations.get(cacheKey);
 		}
 
-		final ArrayList<LibraryLocation> locations = new ArrayList<LibraryLocation>();
+		final ArrayList<LibraryLocation> locations = new ArrayList<>();
 
 		final ILookupRunnable runnable = createLookupRunnable(installLocation,
 				locations, variables);

@@ -15,7 +15,7 @@ import org.eclipse.dltk.launching.IScriptProcessHandler.ScriptResult;
 /**
  * Utility class which may be used to execute a script, or perform an
  * interpreter action on a script, such as compilation.
- * 
+ *
  * @see IScriptProcessHandler
  */
 public class InternalScriptExecutor {
@@ -32,8 +32,7 @@ public class InternalScriptExecutor {
 
 	public InternalScriptExecutor(IInterpreterInstall install,
 			IScriptProcessHandler handler) {
-		Assert.isNotNull(
-				install,
+		Assert.isNotNull(install,
 				Messages.InternalScriptExecutor_iInterpreterInstallMustNotBeNull);
 		Assert.isNotNull(handler,
 				Messages.InternalScriptExecutor_iProcessHandlerMustNotBeNull);
@@ -44,21 +43,21 @@ public class InternalScriptExecutor {
 
 	/**
 	 * Execute a script.
-	 * 
+	 *
 	 * @param deployer
 	 *            implementation of <code>IInternalScriptDeployer</code> to
 	 *            deploy the script being executed.
-	 * 
+	 *
 	 * @param interpreterArgs
 	 *            command line arguments for the interpreter, may be
 	 *            <code>null</code>
-	 * 
+	 *
 	 * @param scriptArgs
 	 *            command line arguments for the script, may be
 	 *            <code>null</code>
 	 * @param stdin
 	 *            stdin to pass to script, may be <code>null</code>
-	 * 
+	 *
 	 * @throws CoreException
 	 *             if there was an error handling the process
 	 * @throws IOException
@@ -94,16 +93,16 @@ public class InternalScriptExecutor {
 
 	/**
 	 * Execute an interpreter action.
-	 * 
+	 *
 	 * @param interpreterArgs
 	 *            command line arguments for the interpreter, may be
 	 *            <code>null</code>
 	 * @param stdin
 	 *            stdin to pass to script, may be <code>null</code>
-	 * 
+	 *
 	 * @throws CoreException
 	 *             if there was an error handling the process
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	public ScriptResult execute(String[] interpreterArgs, char[] stdin)
@@ -128,7 +127,7 @@ public class InternalScriptExecutor {
 
 	private String[] buildCommandLine(IFileHandle interpreter,
 			String[] interpreterArgs, IFileHandle script, String[] scriptArgs) {
-		List<String> cmdLine = new ArrayList<String>();
+		List<String> cmdLine = new ArrayList<>();
 
 		cmdLine.add(interpreter.getCanonicalPath());
 		addArgs(cmdLine, interpreterArgs);

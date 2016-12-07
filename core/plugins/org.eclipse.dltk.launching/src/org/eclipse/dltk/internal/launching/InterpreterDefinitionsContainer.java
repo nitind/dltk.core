@@ -119,21 +119,20 @@ public class InterpreterDefinitionsContainer {
 	 * Constructs an empty Interpreter container
 	 */
 	public InterpreterDefinitionsContainer() {
-		fInterTypeToInterMap = new HashMap<IInterpreterInstallType, List<IInterpreterInstall>>(
-				10);
+		fInterTypeToInterMap = new HashMap<>(10);
 		// fInvalidInterpreterList = new ArrayList(10);
-		fInterpreterList = new ArrayList<IInterpreterInstall>(10);
-		fDefaultInterpreterInstallCompositeID = new HashMap<DefaultInterpreterEntry, String>();
-		fDefaultInterpreterInstallConnectorTypeID = new HashMap<DefaultInterpreterEntry, String>();
+		fInterpreterList = new ArrayList<>(10);
+		fDefaultInterpreterInstallCompositeID = new HashMap<>();
+		fDefaultInterpreterInstallConnectorTypeID = new HashMap<>();
 	}
 
 	/**
 	 * Returns list of default interpreters natures TODO: rename
-	 * 
+	 *
 	 * @return
 	 */
 	public DefaultInterpreterEntry[] getInterpreterNatures() {
-		Set<DefaultInterpreterEntry> s = new HashSet<DefaultInterpreterEntry>(
+		Set<DefaultInterpreterEntry> s = new HashSet<>(
 				fDefaultInterpreterInstallCompositeID.keySet());
 		for (IInterpreterInstall install : fInterpreterList) {
 			s.add(new DefaultInterpreterEntry(install.getNatureId(),
@@ -150,7 +149,7 @@ public class InterpreterDefinitionsContainer {
 	 * specified Interpreter must have already had its install location set. An
 	 * invalid Interpreter is one whose install location doesn't exist.
 	 * </p>
-	 * 
+	 *
 	 * @param interpreter
 	 *            the Interpreter to be added to this container
 	 */
@@ -166,7 +165,7 @@ public class InterpreterDefinitionsContainer {
 	 * specified Interpreter must have already had its install location set. An
 	 * invalid Interpreter is one whose install location doesn't exist.
 	 * </p>
-	 * 
+	 *
 	 * @param interpreter
 	 *            the Interpreter to be added to this container
 	 * @param overwrite
@@ -183,7 +182,7 @@ public class InterpreterDefinitionsContainer {
 			List<IInterpreterInstall> interpreterList = fInterTypeToInterMap
 					.get(interpreterInstallType);
 			if (interpreterList == null) {
-				interpreterList = new ArrayList<IInterpreterInstall>(3);
+				interpreterList = new ArrayList<>(3);
 				fInterTypeToInterMap.put(interpreterInstallType,
 						interpreterList);
 			}
@@ -209,7 +208,7 @@ public class InterpreterDefinitionsContainer {
 	 * specified Interpreters must have already had their install locations set.
 	 * An invalid Interpreter is one whose install location doesn't exist.
 	 * </p>
-	 * 
+	 *
 	 * @param interpreterList
 	 *            a list of Interpreters to be added to this container
 	 */
@@ -227,7 +226,7 @@ public class InterpreterDefinitionsContainer {
 	 * <code>IInterpreterInstallType</code>. The values are instances of
 	 * <code>java.util.List</code> which contain instances of
 	 * <code>IInterpreterInstall</code>.
-	 * 
+	 *
 	 * @return Map the mapping of Interpreter install types to lists of
 	 *         Interpreters
 	 */
@@ -240,7 +239,7 @@ public class InterpreterDefinitionsContainer {
 	 * invalid Interpreters. An invalid Interpreter is one whose install
 	 * location does not exist on the file system. The order of the list is not
 	 * specified.
-	 * 
+	 *
 	 * @return List the data structure containing all Interpreters managed by
 	 *         this container
 	 */
@@ -253,13 +252,13 @@ public class InterpreterDefinitionsContainer {
 	 * invalid Interpreters. An invalid Interpreter is one whose install
 	 * location does not exist on the file system. The order of the list is not
 	 * specified.
-	 * 
+	 *
 	 * @return List the data structure containing all Interpreters managed by
 	 *         this container
 	 */
 	public List<IInterpreterInstall> getInterpreterList(
 			DefaultInterpreterEntry nature) {
-		List<IInterpreterInstall> res = new ArrayList<IInterpreterInstall>(
+		List<IInterpreterInstall> res = new ArrayList<>(
 				fInterpreterList.size());
 		for (IInterpreterInstall interpreter : fInterpreterList) {
 			final String environmentId = interpreter.getEnvironmentId();
@@ -276,12 +275,12 @@ public class InterpreterDefinitionsContainer {
 	 * Return a list of all valid Interpreters in this container. A valid
 	 * Interpreter is one whose install location exists on the file system. The
 	 * order of the list is not specified.
-	 * 
+	 *
 	 * @return List
 	 */
 	public List<IInterpreterInstall> getValidInterpreterList() {
 		List<IInterpreterInstall> Interpreters = getInterpreterList();
-		List<IInterpreterInstall> resultList = new ArrayList<IInterpreterInstall>(
+		List<IInterpreterInstall> resultList = new ArrayList<>(
 				Interpreters.size());
 		resultList.addAll(Interpreters);
 		// resultList.removeAll(fInvalidInterpreterList);
@@ -292,13 +291,13 @@ public class InterpreterDefinitionsContainer {
 	 * Return filtered list of valid Interpreters in this container. A valid
 	 * Interpreter is one whose install location exists on the file system. The
 	 * order of the list is not specified.
-	 * 
+	 *
 	 * @return List
 	 */
 	public List<IInterpreterInstall> getValidInterpreterList(
 			DefaultInterpreterEntry nature) {
 		List<IInterpreterInstall> interpreters = getInterpreterList(nature);
-		List<IInterpreterInstall> resultList = new ArrayList<IInterpreterInstall>(
+		List<IInterpreterInstall> resultList = new ArrayList<>(
 				interpreters.size());
 		resultList.addAll(interpreters);
 		// resultList.removeAll(fInvalidInterpreterList);
@@ -310,7 +309,7 @@ public class InterpreterDefinitionsContainer {
 	 * consists of an ID for the Interpreter install type together with an ID
 	 * for Interpreter. This is necessary because Interpreter ids by themselves
 	 * are not necessarily unique across Interpreter install types.
-	 * 
+	 *
 	 * @return String returns the composite ID of the current default
 	 *         Interpreter
 	 */
@@ -329,7 +328,7 @@ public class InterpreterDefinitionsContainer {
 	 * consists of an ID for the Interpreter install type together with an ID
 	 * for Interpreter. This is necessary because Interpreter ids by themselves
 	 * are not necessarily unique across Interpreter install types.
-	 * 
+	 *
 	 * @param id
 	 *            identifies the new default Interpreter using a composite ID
 	 */
@@ -343,7 +342,7 @@ public class InterpreterDefinitionsContainer {
 
 	/**
 	 * Return the default Interpreter's connector type ID.
-	 * 
+	 *
 	 * @return String the current value of the default Interpreter's connector
 	 *         type ID
 	 */
@@ -354,7 +353,7 @@ public class InterpreterDefinitionsContainer {
 
 	/**
 	 * Set the default Interpreter's connector type ID.
-	 * 
+	 *
 	 * @param id
 	 *            the new value of the default Interpreter's connector type ID
 	 */
@@ -370,7 +369,7 @@ public class InterpreterDefinitionsContainer {
 	 * The resulting XML is compatible with the static method
 	 * <code>parseXMLIntoContainer</code>.
 	 * </p>
-	 * 
+	 *
 	 * @return String the results of flattening this object into XML
 	 * @throws IOException
 	 *             if this method fails. Reasons include:
@@ -398,7 +397,7 @@ public class InterpreterDefinitionsContainer {
 		};
 
 		// Set the defaultInterpreter attribute on the top-level node
-		List<DefaultInterpreterEntry> keys = new ArrayList<DefaultInterpreterEntry>();
+		List<DefaultInterpreterEntry> keys = new ArrayList<>();
 		keys.addAll(fDefaultInterpreterInstallCompositeID.keySet());
 		Collections.sort(keys, comparator);
 
@@ -413,7 +412,7 @@ public class InterpreterDefinitionsContainer {
 					fDefaultInterpreterInstallCompositeID.get(entry));
 		}
 
-		List<DefaultInterpreterEntry> keys2 = new ArrayList<DefaultInterpreterEntry>();
+		List<DefaultInterpreterEntry> keys2 = new ArrayList<>();
 		keys2.addAll(fDefaultInterpreterInstallConnectorTypeID.keySet());
 		Collections.sort(keys2, comparator);
 
@@ -584,7 +583,7 @@ public class InterpreterDefinitionsContainer {
 	 * necessarily syntactically equivalent) as the XML contained in
 	 * <code>inputStream</code>.
 	 * </p>
-	 * 
+	 *
 	 * @param inputStream
 	 *            the <code>InputStream</code> containing XML that declares a
 	 *            set of Interpreters and a default Interpreter
@@ -599,17 +598,16 @@ public class InterpreterDefinitionsContainer {
 	 *             formatted</li>
 	 *             <li>the top-level node was not 'InterpreterSettings'</li>
 	 *             </ul>
-	 * 
+	 *
 	 */
 	public static void parseXMLIntoContainer(Reader inputStream,
 			InterpreterDefinitionsContainer container) throws IOException {
 
-		// Wrapper the stream for efficient parsing
-		BufferedReader stream = new BufferedReader(inputStream);
-
-		// Do the parsing and obtain the top-level node
 		Element config = null;
-		try {
+		// Wrapper the stream for efficient parsing
+		try (BufferedReader stream = new BufferedReader(inputStream)) {
+
+			// Do the parsing and obtain the top-level node
 			DocumentBuilder parser = DocumentBuilderFactory.newInstance()
 					.newDocumentBuilder();
 			parser.setErrorHandler(new DefaultHandler());
@@ -617,10 +615,7 @@ public class InterpreterDefinitionsContainer {
 		} catch (SAXException e) {
 			throw new IOException(LaunchingMessages.ScriptRuntime_badFormat);
 		} catch (ParserConfigurationException e) {
-			stream.close();
 			throw new IOException(LaunchingMessages.ScriptRuntime_badFormat);
-		} finally {
-			stream.close();
 		}
 
 		// If the top-level node wasn't what we expected, bail out
@@ -835,8 +830,7 @@ public class InterpreterDefinitionsContainer {
 			Element libLocationsElement) {
 		NodeList list = libLocationsElement.getChildNodes();
 		int length = list.getLength();
-		List<LibraryLocation> locations = new ArrayList<LibraryLocation>(
-				length);
+		List<LibraryLocation> locations = new ArrayList<>(length);
 		for (int i = 0; i < length; ++i) {
 			Node node = list.item(i);
 			short type = node.getNodeType();
@@ -856,8 +850,7 @@ public class InterpreterDefinitionsContainer {
 			Element environmentVariablesElement) {
 		NodeList list = environmentVariablesElement.getChildNodes();
 		int length = list.getLength();
-		List<EnvironmentVariable> variables = new ArrayList<EnvironmentVariable>(
-				length);
+		List<EnvironmentVariable> variables = new ArrayList<>(length);
 		for (int i = 0; i < length; ++i) {
 			Node node = list.item(i);
 			short type = node.getNodeType();
@@ -875,7 +868,7 @@ public class InterpreterDefinitionsContainer {
 
 	/**
 	 * Removes the Interpreter from this container.
-	 * 
+	 *
 	 * @param interpreter
 	 *            Interpreter intall
 	 */

@@ -43,9 +43,9 @@ import com.ibm.icu.text.DateFormat;
  * <p>
  * Clients implementing interpreter runners should subclass this class.
  * </p>
- * 
+ *
  * @see IInterpreterRunner
- * 
+ *
  */
 public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 	private IInterpreterInstall interpreterInstall;
@@ -64,7 +64,7 @@ public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 
 	/**
 	 * String representation of the command line
-	 * 
+	 *
 	 * @param commandLine
 	 * @return
 	 */
@@ -126,7 +126,7 @@ public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 
 	//
 	protected Map<String, String> getDefaultProcessMap() {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put(IProcess.ATTR_PROCESS_TYPE, getProcessType());
 		return map;
 	}
@@ -164,7 +164,7 @@ public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 
 	/**
 	 * Returns a new process aborting if the process could not be created.
-	 * 
+	 *
 	 * @param launch
 	 *            the launch the process is contained in
 	 * @param p
@@ -177,7 +177,7 @@ public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 	 * @throws CoreException
 	 *             problems occurred creating the process
 	 * @since 2.0
-	 * 
+	 *
 	 */
 	protected IProcess newProcess(ILaunch launch, Process p, String label,
 			Map<String, String> attributes) throws CoreException {

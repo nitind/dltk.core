@@ -96,14 +96,8 @@ public class EFSDeployment implements IDeployment {
 
 	private static void copy(URL url, IFileStore file)
 			throws IOException, CoreException {
-		InputStream input = null;
-		try {
-			input = url.openStream();
+		try (InputStream input = url.openStream();) {
 			copy(input, file);
-		} finally {
-			if (input != null) {
-				input.close();
-			}
 		}
 	}
 
