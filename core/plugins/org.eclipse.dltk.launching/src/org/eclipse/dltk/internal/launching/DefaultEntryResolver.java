@@ -33,7 +33,7 @@ public class DefaultEntryResolver implements IRuntimeBuildpathEntryResolver {
 		IRuntimeBuildpathEntry2 entry2 = (IRuntimeBuildpathEntry2) entry;
 		IRuntimeBuildpathEntry[] entries = entry2
 				.getRuntimeBuildpathEntries(configuration);
-		List resolved = new ArrayList();
+		List<IRuntimeBuildpathEntry> resolved = new ArrayList<>();
 		for (int i = 0; i < entries.length; i++) {
 			IRuntimeBuildpathEntry[] temp = ScriptRuntime
 					.resolveRuntimeBuildpathEntry(entries[i], configuration);
@@ -41,8 +41,7 @@ public class DefaultEntryResolver implements IRuntimeBuildpathEntryResolver {
 				resolved.add(temp[j]);
 			}
 		}
-		return (IRuntimeBuildpathEntry[]) resolved
-				.toArray(new IRuntimeBuildpathEntry[resolved.size()]);
+		return resolved.toArray(new IRuntimeBuildpathEntry[resolved.size()]);
 	}
 
 	@Override
@@ -52,7 +51,7 @@ public class DefaultEntryResolver implements IRuntimeBuildpathEntryResolver {
 		IRuntimeBuildpathEntry2 entry2 = (IRuntimeBuildpathEntry2) entry;
 		IRuntimeBuildpathEntry[] entries = entry2
 				.getRuntimeBuildpathEntries(null);
-		List resolved = new ArrayList();
+		List<IRuntimeBuildpathEntry> resolved = new ArrayList<>();
 		for (int i = 0; i < entries.length; i++) {
 			IRuntimeBuildpathEntry[] temp = ScriptRuntime
 					.resolveRuntimeBuildpathEntry(entries[i], project);
@@ -60,8 +59,7 @@ public class DefaultEntryResolver implements IRuntimeBuildpathEntryResolver {
 				resolved.add(temp[j]);
 			}
 		}
-		return (IRuntimeBuildpathEntry[]) resolved
-				.toArray(new IRuntimeBuildpathEntry[resolved.size()]);
+		return resolved.toArray(new IRuntimeBuildpathEntry[resolved.size()]);
 	}
 
 	@Override

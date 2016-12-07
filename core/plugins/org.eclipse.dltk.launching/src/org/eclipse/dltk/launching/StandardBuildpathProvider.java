@@ -99,7 +99,7 @@ public class StandardBuildpathProvider implements IRuntimeBuildpathProvider {
 			ILaunchConfiguration configuration, String attribute)
 			throws CoreException {
 		List<?> entries = configuration.getAttribute(attribute,
-				Collections.EMPTY_LIST);
+				Collections.emptyList());
 		IRuntimeBuildpathEntry[] rtes = new IRuntimeBuildpathEntry[entries
 				.size()];
 		int i = 0;

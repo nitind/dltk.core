@@ -36,12 +36,12 @@ public class EFSDeployment implements IDeployment {
 	public IPath add(Bundle bundle, String bundlePath) throws IOException {
 		try {
 			final IFileStore dest = root.getChild(new Path(bundlePath));
-			final Enumeration paths = bundle.getEntryPaths(bundlePath);
+			final Enumeration<String> paths = bundle.getEntryPaths(bundlePath);
 			if (paths != null) {
 				// result is a directory
 				dest.mkdir(EFS.NONE, null);
 				while (paths.hasMoreElements()) {
-					final String path = (String) paths.nextElement();
+					final String path = paths.nextElement();
 					if (path.endsWith("/")) { //$NON-NLS-1$
 						if (!path.endsWith("/CVS/") //$NON-NLS-1$
 								&& !path.endsWith("/.svn/")) { //$NON-NLS-1$

@@ -49,13 +49,13 @@ public class ScriptSourcePathComputer implements ISourcePathComputerDelegate {
 			FolderSourceContainer container = new FolderSourceContainer(project,
 					false);
 
-			ArrayList list = new ArrayList(Arrays.asList(containers));
+			ArrayList<ISourceContainer> list = new ArrayList<>(
+					Arrays.asList(containers));
 			if (!list.contains(container)) {
 				list.add(container);
 			}
 
-			return (ISourceContainer[]) list
-					.toArray(new ISourceContainer[list.size()]);
+			return list.toArray(new ISourceContainer[list.size()]);
 		}
 
 		return containers;

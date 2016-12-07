@@ -52,7 +52,7 @@ public class ScriptLaunchUtil {
 				scriptFile.getEnvironment(), new Path(scriptFile.toOSString()),
 				workingDirectoryPath);
 
-		Map envVars = exeEnv.getEnvironmentVariables(false);
+		Map<String, String> envVars = exeEnv.getEnvironmentVariables(false);
 		if (envVars != null) {
 			config.addEnvVars(envVars);
 			EnvironmentVariable[] resVars = EnvironmentResolver.resolve(envVars,

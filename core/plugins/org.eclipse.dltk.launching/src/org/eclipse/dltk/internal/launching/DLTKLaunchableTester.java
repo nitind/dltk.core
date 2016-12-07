@@ -94,17 +94,17 @@ public class DLTKLaunchableTester extends PropertyTester {
 	private boolean hasItemOnBuildPath(IModelElement element, Object[] args) {
 		if (element != null && args != null) {
 			IScriptProject project = element.getScriptProject();
-			Set searched = new HashSet();
+			Set<IScriptProject> searched = new HashSet<>();
 			searched.add(project);
 			return hasItemsOnBuildPath(project, searched, args);
 		}
 		return false;
 	}
 
-	private boolean hasItemsOnBuildPath(IScriptProject project, Set searched,
-			Object[] args) {
+	private boolean hasItemsOnBuildPath(IScriptProject project,
+			Set<IScriptProject> searched, Object[] args) {
 		try {
-			List projects = new ArrayList();
+			List<IScriptProject> projects = new ArrayList<>();
 			if (project != null && project.exists()) {
 				IBuildpathEntry[] entries = project.getResolvedBuildpath(true);
 				for (int i = 0; i < entries.length; i++) {
@@ -128,9 +128,9 @@ public class DLTKLaunchableTester extends PropertyTester {
 				}
 			}
 			// search referenced projects
-			Iterator iterator = projects.iterator();
+			Iterator<IScriptProject> iterator = projects.iterator();
 			while (iterator.hasNext()) {
-				IScriptProject jp = (IScriptProject) iterator.next();
+				IScriptProject jp = iterator.next();
 				searched.add(jp);
 				if (hasItemsOnBuildPath(jp, searched, args)) {
 					return true;

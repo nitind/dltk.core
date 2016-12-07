@@ -27,7 +27,7 @@ public class ScriptRuntimeProcess extends RuntimeProcess
 	 * @param attributes
 	 */
 	public ScriptRuntimeProcess(ILaunch launch, Process process, String name,
-			Map attributes) {
+			Map<String, String> attributes) {
 		super(new LaunchProxy(launch), process, name, attributes);
 		setLaunch(launch);
 	}

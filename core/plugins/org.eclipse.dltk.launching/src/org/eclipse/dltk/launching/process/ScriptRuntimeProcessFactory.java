@@ -67,9 +67,8 @@ public class ScriptRuntimeProcessFactory implements IProcessFactory {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public IProcess newProcess(ILaunch launch, Process process, String label,
-			Map attributes) {
+			Map<String, String> attributes) {
 		if (isSupported(launch)) {
 			return new ScriptRuntimeProcess(launch, process, label, attributes);
 		} else {

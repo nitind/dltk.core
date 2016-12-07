@@ -24,8 +24,8 @@ import org.eclipse.debug.core.ILaunchesListener2;
 import org.eclipse.dltk.core.environment.IDeployment;
 
 public class DeploymentManager implements ILaunchesListener2 {
-	private Map launchToDeployment = new HashMap();
-	private Set activeDeployments = new HashSet();
+	private Map<ILaunch, Set<IDeployment>> launchToDeployment = new HashMap<>();
+	private Set<IDeployment> activeDeployments = new HashSet<>();
 
 	private static DeploymentManager sInstance = null;
 
@@ -57,17 +57,19 @@ public class DeploymentManager implements ILaunchesListener2 {
 	public synchronized void launchesRemoved(ILaunch[] launches) {
 		for (int i = 0; i < launches.length; i++) {
 			if (launchToDeployment.containsKey(launches[i])) {
-				Set deployments = (Set) launchToDeployment.get(launches[i]);
+				Set<IDeployment> deployments = launchToDeployment
+						.get(launches[i]);
 				undeployAll(deployments);
 				launchToDeployment.remove(launches[i]);
 			}
 		}
 	}
 
-	private synchronized void undeployAll(Collection deployments) {
-		Set copy = new HashSet(deployments);
-		for (Iterator iterator = copy.iterator(); iterator.hasNext();) {
-			IDeployment deployment = (IDeployment) iterator.next();
+	private synchronized void undeployAll(Collection<IDeployment> deployments) {
+		Set<IDeployment> copy = new HashSet<>(deployments);
+		for (Iterator<IDeployment> iterator = copy.iterator(); iterator
+				.hasNext();) {
+			IDeployment deployment = iterator.next();
 			deployment.dispose();
 			activeDeployments.remove(deployment);
 		}
@@ -81,9 +83,9 @@ public class DeploymentManager implements ILaunchesListener2 {
 			IDeployment deployment) {
 		activeDeployments.add(deployment);
 		if (launchToDeployment.containsKey(launch)) {
-			((Set) launchToDeployment.get(launch)).add(deployment);
+			launchToDeployment.get(launch).add(deployment);
 		} else {
-			Set elements = new HashSet();
+			Set<IDeployment> elements = new HashSet<>();
 			elements.add(deployment);
 			launchToDeployment.put(launch, elements);
 		}

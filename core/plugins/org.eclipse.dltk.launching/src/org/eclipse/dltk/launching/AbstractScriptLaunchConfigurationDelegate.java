@@ -155,11 +155,9 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 		}
 		IFileHandle location = interpreter.getInstallLocation();
 		if (location == null) {
-			throw abort(
-					MessageFormat.format(
-							LaunchingMessages.AbstractScriptLaunchConfigurationDelegate_InterpreterEnvironment_home_directory_not_specified_for__0__5,
-							interpreter.getName()),
-					null,
+			throw abort(MessageFormat.format(
+					LaunchingMessages.AbstractScriptLaunchConfigurationDelegate_InterpreterEnvironment_home_directory_not_specified_for__0__5,
+					interpreter.getName()), null,
 					ScriptLaunchConfigurationConstants.ERR_INTERPRETER_INSTALL_DOES_NOT_EXIST);
 		}
 		if (!location.exists()) {
@@ -883,6 +881,7 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 		}
 	}
 
+	@Override
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		/*
@@ -905,11 +904,9 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 				monitor = new NullProgressMonitor();
 			}
 
-			monitor.beginTask(
-					MessageFormat.format(
-							LaunchingMessages.AbstractScriptLaunchConfigurationDelegate_startingLaunchConfiguration,
-							new Object[] { configuration.getName() }),
-					10);
+			monitor.beginTask(MessageFormat.format(
+					LaunchingMessages.AbstractScriptLaunchConfigurationDelegate_startingLaunchConfiguration,
+					new Object[] { configuration.getName() }), 10);
 			if (monitor.isCanceled()) {
 				return;
 			}
@@ -956,17 +953,15 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 		} catch (CoreException e) {
 			tryHandleStatus(e, this);
 		} catch (AssertionFailedException e) {
-			tryHandleStatus(new CoreException(
-					new Status(IStatus.ERROR, DLTKLaunchingPlugin.PLUGIN_ID,
-							ScriptLaunchConfigurationConstants.ERR_INTERNAL_ERROR,
-							e.getMessage(), e)),
-					this);
+			tryHandleStatus(new CoreException(new Status(IStatus.ERROR,
+					DLTKLaunchingPlugin.PLUGIN_ID,
+					ScriptLaunchConfigurationConstants.ERR_INTERNAL_ERROR,
+					e.getMessage(), e)), this);
 		} catch (IllegalArgumentException e) {
-			tryHandleStatus(new CoreException(
-					new Status(IStatus.ERROR, DLTKLaunchingPlugin.PLUGIN_ID,
-							ScriptLaunchConfigurationConstants.ERR_INTERNAL_ERROR,
-							e.getMessage(), e)),
-					this);
+			tryHandleStatus(new CoreException(new Status(IStatus.ERROR,
+					DLTKLaunchingPlugin.PLUGIN_ID,
+					ScriptLaunchConfigurationConstants.ERR_INTERNAL_ERROR,
+					e.getMessage(), e)), this);
 		} finally {
 			monitor.done();
 		}

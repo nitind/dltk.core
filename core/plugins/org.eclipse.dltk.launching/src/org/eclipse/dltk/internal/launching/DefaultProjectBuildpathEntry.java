@@ -127,7 +127,7 @@ public class DefaultProjectBuildpathEntry
 		IBuildpathEntry entry = DLTKCore
 				.newProjectEntry(getScriptProject().getProject().getFullPath());
 		List buildpathEntries = new ArrayList(5);
-		List expanding = new ArrayList(5);
+		List<IBuildpathEntry> expanding = new ArrayList<>(5);
 		expandProject(entry, buildpathEntries, expanding);
 		IRuntimeBuildpathEntry[] runtimeEntries = new IRuntimeBuildpathEntry[buildpathEntries
 				.size()];
@@ -141,15 +141,15 @@ public class DefaultProjectBuildpathEntry
 			}
 		}
 		// remove bootpath entries - this is a default user buildpath
-		List ordered = new ArrayList(runtimeEntries.length);
+		List<IRuntimeBuildpathEntry> ordered = new ArrayList<>(
+				runtimeEntries.length);
 		for (int i = 0; i < runtimeEntries.length; i++) {
 			if (runtimeEntries[i]
 					.getBuildpathProperty() == IRuntimeBuildpathEntry.USER_ENTRY) {
 				ordered.add(runtimeEntries[i]);
 			}
 		}
-		return (IRuntimeBuildpathEntry[]) ordered
-				.toArray(new IRuntimeBuildpathEntry[ordered.size()]);
+		return ordered.toArray(new IRuntimeBuildpathEntry[ordered.size()]);
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class DefaultProjectBuildpathEntry
 	 *                if unable to expand the buildpath
 	 */
 	private void expandProject(IBuildpathEntry projectEntry, List expandedPath,
-			List expanding) throws CoreException {
+			List<IBuildpathEntry> expanding) throws CoreException {
 		expanding.add(projectEntry);
 		// 1. Get the raw buildpath
 		// 2. Replace source folder entries with a project entry
@@ -189,7 +189,8 @@ public class DefaultProjectBuildpathEntry
 		}
 
 		IBuildpathEntry[] buildPath = project.getRawBuildpath();
-		List unexpandedPath = new ArrayList(buildPath.length);
+		List<IBuildpathEntry> unexpandedPath = new ArrayList<>(
+				buildPath.length);
 		// boolean projectAdded = false;
 		for (int i = 0; i < buildPath.length; i++) {
 			IBuildpathEntry buildpathEntry = buildPath[i];
@@ -213,9 +214,9 @@ public class DefaultProjectBuildpathEntry
 		// 3. expand each project entry (except for the root project)
 		// 4. replace each container entry with a runtime entry associated with
 		// the project
-		Iterator iter = unexpandedPath.iterator();
+		Iterator<IBuildpathEntry> iter = unexpandedPath.iterator();
 		while (iter.hasNext()) {
-			IBuildpathEntry entry = (IBuildpathEntry) iter.next();
+			IBuildpathEntry entry = iter.next();
 			if (entry == projectEntry) {
 				expandedPath.add(entry);
 			} else {

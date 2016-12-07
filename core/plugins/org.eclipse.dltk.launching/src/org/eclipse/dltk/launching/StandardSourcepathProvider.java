@@ -54,37 +54,37 @@ public class StandardSourcepathProvider extends StandardBuildpathProvider {
 				.toArray(new IRuntimeBuildpathEntry[all.size()]);
 	}
 
-	class UniqueList extends ArrayList {
+	class UniqueList<T> extends ArrayList<T> {
 		private static final long serialVersionUID = -7402160651027036270L;
-		HashSet set;
+		HashSet<T> set;
 
 		public UniqueList(int length) {
 			super(length);
-			set = new HashSet(length);
+			set = new HashSet<T>(length);
 		}
 
 		@Override
-		public void add(int index, Object element) {
+		public void add(int index, T element) {
 			if (set.add(element))
 				super.add(index, element);
 		}
 
 		@Override
-		public boolean add(Object o) {
+		public boolean add(T o) {
 			if (set.add(o))
 				return super.add(o);
 			return false;
 		}
 
 		@Override
-		public boolean addAll(Collection c) {
+		public boolean addAll(Collection<? extends T> c) {
 			if (set.addAll(c))
 				return super.addAll(c);
 			return false;
 		}
 
 		@Override
-		public boolean addAll(int index, Collection c) {
+		public boolean addAll(int index, Collection<? extends T> c) {
 			if (set.addAll(c))
 				return super.addAll(index, c);
 			return false;
@@ -107,8 +107,8 @@ public class StandardSourcepathProvider extends StandardBuildpathProvider {
 		}
 
 		@Override
-		public Object remove(int index) {
-			Object object = super.remove(index);
+		public T remove(int index) {
+			T object = super.remove(index);
 			set.remove(object);
 			return object;
 		}
@@ -120,7 +120,7 @@ public class StandardSourcepathProvider extends StandardBuildpathProvider {
 		}
 
 		@Override
-		public Object set(int index, Object element) {
+		public T set(int index, T element) {
 			set.remove(element);
 			if (set.add(element))
 				return super.set(index, element);

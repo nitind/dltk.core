@@ -423,14 +423,15 @@ public class DLTKLaunchingPlugin extends Plugin
 					newPrefString);
 
 			// Determine the deteled Interpreters
-			List deleted = oldResults.getInterpreterList();
-			List current = newResults.getValidInterpreterList();
+			List<IInterpreterInstall> deleted = oldResults.getInterpreterList();
+			List<IInterpreterInstall> current = newResults
+					.getValidInterpreterList();
 			deleted.removeAll(current);
 
 			// Dispose deleted Interpreters. The' disposeInterpreterInstall'
 			// method fires notification of the
 			// deletion.
-			Iterator deletedIterator = deleted.iterator();
+			Iterator<IInterpreterInstall> deletedIterator = deleted.iterator();
 			while (deletedIterator.hasNext()) {
 				InterpreterStandin deletedInterpreterStandin = (InterpreterStandin) deletedIterator
 						.next();
@@ -442,7 +443,7 @@ public class DLTKLaunchingPlugin extends Plugin
 			// Fire change notification for added and changed Interpreters. The
 			// ' convertToRealInterpreter'
 			// fires the appropriate notification.
-			Iterator iter = current.iterator();
+			Iterator<IInterpreterInstall> iter = current.iterator();
 			while (iter.hasNext()) {
 				InterpreterStandin standin = (InterpreterStandin) iter.next();
 				standin.convertToRealInterpreter();
@@ -557,7 +558,7 @@ public class DLTKLaunchingPlugin extends Plugin
 	 * @param monitor
 	 */
 	public void rebind(IProgressMonitor monitor, IScriptProject[] projects,
-			Map renamedContainerIds) throws CoreException {
+			Map<IPath, IPath> renamedContainerIds) throws CoreException {
 		monitor.worked(1);
 
 		// re-bind all container entries
@@ -575,8 +576,7 @@ public class DLTKLaunchingPlugin extends Plugin
 					if (ScriptRuntime.INTERPRETER_CONTAINER
 							.equals(firstSegment)) {
 						if (reference.segmentCount() > 1) {
-							IPath renamed = (IPath) renamedContainerIds
-									.get(reference);
+							IPath renamed = renamedContainerIds.get(reference);
 							if (renamed != null) {
 								// The interpreter was re-named. This
 								// changes the identifier of

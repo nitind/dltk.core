@@ -82,7 +82,7 @@ public class LocalExecEnvironment implements IExecutionEnvironment {
 	}
 
 	@Override
-	public Map getEnvironmentVariables(boolean value) {
+	public Map<String, String> getEnvironmentVariables(boolean value) {
 		return DebugPlugin.getDefault().getLaunchManager()
 				.getNativeEnvironmentCasePreserved();
 	}

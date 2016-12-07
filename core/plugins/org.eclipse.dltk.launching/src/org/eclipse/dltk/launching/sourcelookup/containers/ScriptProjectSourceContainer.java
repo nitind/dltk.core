@@ -41,7 +41,7 @@ public class ScriptProjectSourceContainer extends CompositeSourceContainer {
 	 */
 	@Override
 	protected ISourceContainer[] createSourceContainers() throws CoreException {
-		List containers = new ArrayList();
+		List<ISourceContainer> containers = new ArrayList<>();
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		if (project.getProject().isOpen()) {
 			IBuildpathEntry[] entries = project.getRawBuildpath();
@@ -67,7 +67,7 @@ public class ScriptProjectSourceContainer extends CompositeSourceContainer {
 		}
 
 		// cache the script source folders to search for script like files
-		sourceFolders = (ISourceContainer[]) containers
+		sourceFolders = containers
 				.toArray(new ISourceContainer[containers.size()]);
 		ISourceContainer theProject = new ProjectSourceContainer(
 				project.getProject(), false);
@@ -75,8 +75,7 @@ public class ScriptProjectSourceContainer extends CompositeSourceContainer {
 		others = new ISourceContainer[] { theProject };
 		containers.add(theProject);
 
-		return (ISourceContainer[]) containers
-				.toArray(new ISourceContainer[containers.size()]);
+		return containers.toArray(new ISourceContainer[containers.size()]);
 	}
 
 	public IScriptProject getScriptProject() {
