@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -17,8 +17,8 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IStreamsProxy;
 import org.eclipse.debug.core.model.RuntimeProcess;
 
-public class ScriptRuntimeProcess extends RuntimeProcess implements
-		IScriptProcess {
+public class ScriptRuntimeProcess extends RuntimeProcess
+		implements IScriptProcess {
 
 	/**
 	 * @param launch
@@ -32,10 +32,12 @@ public class ScriptRuntimeProcess extends RuntimeProcess implements
 		setLaunch(launch);
 	}
 
+	@Override
 	public IStreamsProxy getStreamsProxy() {
 		return null;
 	}
 
+	@Override
 	public IStreamsProxy getScriptStreamsProxy() {
 		return super.getStreamsProxy();
 	}

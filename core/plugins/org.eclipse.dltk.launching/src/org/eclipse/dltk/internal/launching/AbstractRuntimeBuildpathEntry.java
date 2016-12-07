@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.launching;
 
@@ -48,6 +47,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	 * Default implementation returns <code>null</code>. Subclasses should
 	 * override if required.
 	 */
+	@Override
 	public String getContainerName() {
 		return null;
 	}
@@ -61,6 +61,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	 * @see
 	 * org.eclipse.dltk.internal.launching.IRuntimeBuildpathEntry2#isComposite()
 	 */
+	@Override
 	public boolean isComposite() {
 		return false;
 	}
@@ -90,8 +91,8 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	 */
 	protected void abort(String message, Throwable exception)
 			throws CoreException {
-		IStatus status = new Status(IStatus.ERROR, DLTKLaunchingPlugin
-				.getUniqueIdentifier(),
+		IStatus status = new Status(IStatus.ERROR,
+				DLTKLaunchingPlugin.getUniqueIdentifier(),
 				ScriptLaunchConfigurationConstants.ERR_INTERNAL_ERROR, message,
 				exception);
 		throw new CoreException(status);
@@ -106,6 +107,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	 * 
 	 * @see org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getMemento()
 	 */
+	@Override
 	public String getMemento() throws CoreException {
 		Document doc = DebugPlugin.newDocument();
 		Element root = doc.createElement("runtimeBuildpathEntry"); //$NON-NLS-1$
@@ -139,6 +141,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	 * 
 	 * @see org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getPath()
 	 */
+	@Override
 	public IPath getPath() {
 		return null;
 	}
@@ -151,6 +154,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	 * 
 	 * @see org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getResource()
 	 */
+	@Override
 	public IResource getResource() {
 		return null;
 	}
@@ -161,6 +165,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	 * @see
 	 * org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getBuildpathProperty()
 	 */
+	@Override
 	public int getBuildpathProperty() {
 		return buildpathProperty;
 	}
@@ -172,6 +177,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	 * org.eclipse.dltk.launching.IRuntimeBuildpathEntry#setBuildpathProperty
 	 * (int)
 	 */
+	@Override
 	public void setBuildpathProperty(int property) {
 		buildpathProperty = property;
 	}
@@ -184,6 +190,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	 * 
 	 * @see org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getLocation()
 	 */
+	@Override
 	public String getLocation() {
 		return null;
 	}
@@ -191,6 +198,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	/*
 	 * @see org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getLocationURI()
 	 */
+	@Override
 	public URI getLocationURI() {
 		return null;
 	}
@@ -204,6 +212,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	 * @see
 	 * org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getBuildpathEntry()
 	 */
+	@Override
 	public IBuildpathEntry getBuildpathEntry() {
 		return null;
 	}
@@ -213,6 +222,7 @@ public abstract class AbstractRuntimeBuildpathEntry extends PlatformObject
 	 * 
 	 * @see org.eclipse.dltk.launching.IRuntimeBuildpathEntry#getScriptProject()
 	 */
+	@Override
 	public IScriptProject getScriptProject() {
 		return fProject;
 	}

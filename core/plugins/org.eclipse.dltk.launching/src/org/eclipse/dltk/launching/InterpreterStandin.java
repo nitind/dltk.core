@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.launching;
 
@@ -26,7 +25,8 @@ package org.eclipse.dltk.launching;
  * </p>
  * When <code>convertToRealInterpreter</code> is called, a corresponding 'real'
  * interpreter is created if one did not previously exist, or the corresponding
- * 'real' interpreter is updated. </p>
+ * 'real' interpreter is updated.
+ * </p>
  * <p>
  * Clients may instantiate this class; it is not intended to be subclassed.
  * </p>
@@ -46,7 +46,8 @@ public class InterpreterStandin extends AbstractInterpreterInstall {
 	 * @param id
 	 * 
 	 */
-	public InterpreterStandin(IInterpreterInstall sourceInterpreter, String id) {
+	public InterpreterStandin(IInterpreterInstall sourceInterpreter,
+			String id) {
 		super(sourceInterpreter.getInterpreterInstallType(), id);
 		setNotify(false);
 		init(sourceInterpreter);
@@ -63,8 +64,8 @@ public class InterpreterStandin extends AbstractInterpreterInstall {
 	 *            Interpreter
 	 */
 	public InterpreterStandin(IInterpreterInstall realInterpreter) {
-		this(realInterpreter.getInterpreterInstallType(), realInterpreter
-				.getId());
+		this(realInterpreter.getInterpreterInstallType(),
+				realInterpreter.getId());
 		init(realInterpreter);
 	}
 
@@ -127,10 +128,12 @@ public class InterpreterStandin extends AbstractInterpreterInstall {
 		return realInterpreter;
 	}
 
+	@Override
 	public IInterpreterRunner getInterpreterRunner(String mode) {
 		return null;
 	}
 
+	@Override
 	public String getNatureId() {
 		return getInterpreterInstallType().getNatureId();
 	}

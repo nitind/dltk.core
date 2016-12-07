@@ -8,8 +8,8 @@ import org.eclipse.dltk.launching.IInterpreterRunner;
 import org.eclipse.dltk.launching.IInterpreterRunnerFactory;
 import org.eclipse.dltk.launching.debug.IDebuggingEngine;
 
-public class DebuggingEngine extends DLTKContributedExtension implements
-		IDebuggingEngine {
+public class DebuggingEngine extends DLTKContributedExtension
+		implements IDebuggingEngine {
 
 	private IInterpreterRunnerFactory factory;
 
@@ -25,11 +25,13 @@ public class DebuggingEngine extends DLTKContributedExtension implements
 		setInitializationData(config, null, null);
 	}
 
+	@Override
 	public String getModelId() {
-		return ScriptDebugManager.getInstance().getDebugModelByNature(
-				getNatureId());
+		return ScriptDebugManager.getInstance()
+				.getDebugModelByNature(getNatureId());
 	}
 
+	@Override
 	public IInterpreterRunner getRunner(IInterpreterInstall install) {
 		return factory.createRunner(install);
 	}

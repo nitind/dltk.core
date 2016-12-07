@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.launching;
 
@@ -42,8 +41,8 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Interpreter Container - resolves a buildpath container to an interpreter
  */
-public class InterpreterContainer implements IBuildpathContainer,
-		IBuildpathContainerExtension {
+public class InterpreterContainer
+		implements IBuildpathContainer, IBuildpathContainerExtension {
 	/**
 	 * Corresponding interpreter
 	 */
@@ -66,13 +65,15 @@ public class InterpreterContainer implements IBuildpathContainer,
 
 	private static ChangeListener changeListener = null;
 
-	private static class ChangeListener implements
-			IInterpreterInstallChangedListener {
+	private static class ChangeListener
+			implements IInterpreterInstallChangedListener {
 
+		@Override
 		public void defaultInterpreterInstallChanged(
 				IInterpreterInstall previous, IInterpreterInstall current) {
 		}
 
+		@Override
 		public void interpreterChanged(PropertyChangeEvent event) {
 			if (event.getSource() != null
 					&& event.getSource() instanceof IInterpreterInstall) {
@@ -80,9 +81,11 @@ public class InterpreterContainer implements IBuildpathContainer,
 			}
 		}
 
+		@Override
 		public void interpreterAdded(IInterpreterInstall newInterpreter) {
 		}
 
+		@Override
 		public void interpreterRemoved(IInterpreterInstall removedInterpreter) {
 			remove(removedInterpreter);
 		}
@@ -165,8 +168,8 @@ public class InterpreterContainer implements IBuildpathContainer,
 
 				entries.add(DLTKCore.newLibraryEntry(entryPath,
 						IAccessRule.EMPTY_RULES, attributes,
-						BuildpathEntry.INCLUDE_ALL, excluded
-								.toArray(new IPath[excluded.size()]), false,
+						BuildpathEntry.INCLUDE_ALL,
+						excluded.toArray(new IPath[excluded.size()]), false,
 						true));
 				rawEntries.add(entryPath);
 			}
@@ -174,8 +177,8 @@ public class InterpreterContainer implements IBuildpathContainer,
 		// Add builtin entry.
 		{
 			entries.add(DLTKCore.newBuiltinEntry(
-					IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY.append(interpreter
-							.getInstallLocation().toOSString()),
+					IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY.append(
+							interpreter.getInstallLocation().toOSString()),
 					IAccessRule.EMPTY_RULES, new IBuildpathAttribute[0],
 					BuildpathEntry.INCLUDE_ALL, BuildpathEntry.EXCLUDE_NONE,
 					false, true));
@@ -185,8 +188,8 @@ public class InterpreterContainer implements IBuildpathContainer,
 		IInterpreterContainerExtension extension = DLTKInterpreterManager
 				.getInterpreterContainerExtension(interpreter.getNatureId());
 		if (extension instanceof IInterpreterContainerExtension2) {
-			((IInterpreterContainerExtension2) extension).preProcessEntries(
-					interpreter, entries);
+			((IInterpreterContainerExtension2) extension)
+					.preProcessEntries(interpreter, entries);
 		}
 		return entries.toArray(new IBuildpathEntry[entries.size()]);
 	}
@@ -210,6 +213,7 @@ public class InterpreterContainer implements IBuildpathContainer,
 	/**
 	 * @see IBuildpathContainer#getBuildpathEntries(IScriptProject)
 	 */
+	@Override
 	public IBuildpathEntry[] getBuildpathEntries() {
 		if (fEntries == null) {
 			fEntries = computeBuildpathEntries();
@@ -218,7 +222,8 @@ public class InterpreterContainer implements IBuildpathContainer,
 	}
 
 	private IBuildpathEntry[] computeBuildpathEntries() {
-		IBuildpathEntry[] buildpathEntries = getBuildpathEntries(fInterpreterInstall);
+		IBuildpathEntry[] buildpathEntries = getBuildpathEntries(
+				fInterpreterInstall);
 		List<IBuildpathEntry> entries = new ArrayList<IBuildpathEntry>(
 				buildpathEntries.length);
 		Collections.addAll(entries, buildpathEntries);
@@ -234,6 +239,7 @@ public class InterpreterContainer implements IBuildpathContainer,
 	/**
 	 * @see IBuildpathContainer#getDescription()
 	 */
+	@Override
 	public String getDescription() {
 		final IInterpreterContainerExtension extension = DLTKInterpreterManager
 				.getInterpreterContainerExtension(fProject);
@@ -242,16 +248,16 @@ public class InterpreterContainer implements IBuildpathContainer,
 					.getDescription(fInterpreterInstall);
 		} else {
 			String tag = fInterpreterInstall.getName();
-			return NLS
-					.bind(
-							LaunchingMessages.InterpreterEnvironmentContainer_InterpreterEnvironment_System_Library_1,
-							tag);
+			return NLS.bind(
+					LaunchingMessages.InterpreterEnvironmentContainer_InterpreterEnvironment_System_Library_1,
+					tag);
 		}
 	}
 
 	/**
 	 * @see IBuildpathContainer#getKind()
 	 */
+	@Override
 	public int getKind() {
 		return IBuildpathContainer.K_DEFAULT_SYSTEM;
 	}
@@ -259,10 +265,12 @@ public class InterpreterContainer implements IBuildpathContainer,
 	/**
 	 * @see IBuildpathContainer#getPath()
 	 */
+	@Override
 	public IPath getPath() {
 		return fPath;
 	}
 
+	@Override
 	public IBuiltinModuleProvider getBuiltinProvider() {
 		return fInterpreterInstall;
 	}

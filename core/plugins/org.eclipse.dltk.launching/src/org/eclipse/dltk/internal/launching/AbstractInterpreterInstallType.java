@@ -88,11 +88,13 @@ public abstract class AbstractInterpreterInstallType
 		fInterpreters = new ArrayList<IInterpreterInstall>();
 	}
 
+	@Override
 	public IInterpreterInstall[] getInterpreterInstalls() {
 		return fInterpreters
 				.toArray(new IInterpreterInstall[fInterpreters.size()]);
 	}
 
+	@Override
 	public void disposeInterpreterInstall(String id) {
 		Iterator<IInterpreterInstall> it = fInterpreters.iterator();
 		while (it.hasNext()) {
@@ -105,6 +107,7 @@ public abstract class AbstractInterpreterInstallType
 		}
 	}
 
+	@Override
 	public IInterpreterInstall findInterpreterInstall(String id) {
 		for (IInterpreterInstall install : fInterpreters) {
 			if (install.getId().equals(id)) {
@@ -115,6 +118,7 @@ public abstract class AbstractInterpreterInstallType
 		return null;
 	}
 
+	@Override
 	public IInterpreterInstall createInterpreterInstall(String id)
 			throws IllegalArgumentException {
 		if (findInterpreterInstall(id) != null) {
@@ -160,15 +164,18 @@ public abstract class AbstractInterpreterInstallType
 	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
 	 *      java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public void setInitializationData(IConfigurationElement config,
 			String propertyName, Object data) {
 		fId = config.getAttribute("id"); //$NON-NLS-1$
 	}
 
+	@Override
 	public String getId() {
 		return fId;
 	}
 
+	@Override
 	public IInterpreterInstall findInterpreterInstallByName(String name) {
 		for (IInterpreterInstall install : fInterpreters) {
 			if (install.getName().equals(name)) {
@@ -262,6 +269,7 @@ public abstract class AbstractInterpreterInstallType
 		// final Object lock = new Object();
 
 		Thread tReading = new Thread(new Runnable() {
+			@Override
 			public void run() {
 				boolean workReceived = false;
 				try {
@@ -506,6 +514,7 @@ public abstract class AbstractInterpreterInstallType
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public IStatus validateInstallLocation(IFileHandle installLocation,
 			EnvironmentVariable[] variables, LibraryLocation[] libraryLocations,
 			IProgressMonitor monitor) {
@@ -515,6 +524,7 @@ public abstract class AbstractInterpreterInstallType
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public IFileHandle[] detectInstallLocations() {
 		return null;
 	}
@@ -522,6 +532,7 @@ public abstract class AbstractInterpreterInstallType
 	/**
 	 * @since 3.0
 	 */
+	@Override
 	public String generateDetectedInterpreterName(IFileHandle install) {
 		String name = install.getName();
 		name = name.trim();
@@ -531,6 +542,7 @@ public abstract class AbstractInterpreterInstallType
 		return name;
 	}
 
+	@Override
 	public IStatus validatePossiblyName(IFileHandle installLocation) {
 		String possibleNames[] = getPossibleInterpreterNames();
 
@@ -674,6 +686,7 @@ public abstract class AbstractInterpreterInstallType
 			final List<LibraryLocation> locations,
 			final EnvironmentVariable[] variables) {
 		return new ILookupRunnable() {
+			@Override
 			public void run(IProgressMonitor monitor) {
 				try {
 					IEnvironment env = installLocation.getEnvironment();
@@ -727,17 +740,20 @@ public abstract class AbstractInterpreterInstallType
 		};
 	}
 
+	@Override
 	public synchronized LibraryLocation[] getDefaultLibraryLocations(
 			final IFileHandle installLocation) {
 		return getDefaultLibraryLocations(installLocation, null);
 	}
 
+	@Override
 	public synchronized LibraryLocation[] getDefaultLibraryLocations(
 			final IFileHandle installLocation,
 			EnvironmentVariable[] variables) {
 		return getDefaultLibraryLocations(installLocation, variables, null);
 	}
 
+	@Override
 	public synchronized LibraryLocation[] getDefaultLibraryLocations(
 			final IFileHandle installLocation, EnvironmentVariable[] variables,
 			IProgressMonitor monitor) {
@@ -757,8 +773,9 @@ public abstract class AbstractInterpreterInstallType
 				locations, variables);
 
 		try {
-			runLibraryLookup(runnable, monitor != null
-					? new SubProgressMonitor(monitor, 95) : null);
+			runLibraryLookup(runnable,
+					monitor != null ? new SubProgressMonitor(monitor, 95)
+							: null);
 		} catch (InvocationTargetException e) {
 			getLog().log(createStatus(IStatus.ERROR,
 					LaunchingMessages.AbstractInterpreterInstallType_errorResolvingDefaultLibraries,
@@ -797,6 +814,7 @@ public abstract class AbstractInterpreterInstallType
 		return new Status(severity, getPluginId(), 0, message, throwable);
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -804,6 +822,7 @@ public abstract class AbstractInterpreterInstallType
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

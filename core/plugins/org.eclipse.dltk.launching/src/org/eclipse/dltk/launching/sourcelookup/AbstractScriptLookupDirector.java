@@ -11,27 +11,30 @@ public class AbstractScriptLookupDirector implements IPersistableSourceLocator {
 
 	private static final String ATTR_PROJECT = "project"; //$NON-NLS-1$
 	private String project;
-	
+
+	@Override
 	public String getMemento() throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public void initializeDefaults(ILaunchConfiguration configuration)
 			throws CoreException {
-		project = configuration.getAttribute(ATTR_PROJECT, (String) null); 
+		project = configuration.getAttribute(ATTR_PROJECT, (String) null);
 	}
 
-	protected IProject getProject()
-	{
+	protected IProject getProject() {
 		return ResourcesPlugin.getWorkspace().getRoot().getProject(project);
 	}
-	
+
+	@Override
 	public void initializeFromMemento(String memento) throws CoreException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
+	@Override
 	public Object getSourceElement(IStackFrame stackFrame) {
 		// TODO Auto-generated method stub
 		return null;

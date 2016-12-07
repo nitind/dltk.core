@@ -11,10 +11,14 @@ import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
 public class ScriptSourceLookupDirector extends AbstractSourceLookupDirector {
 
 	/*
-	 * @see org.eclipse.debug.core.sourcelookup.ISourceLookupDirector#initializeParticipants()
+	 * @see org.eclipse.debug.core.sourcelookup.ISourceLookupDirector#
+	 * initializeParticipants()
 	 */
+	@Override
 	public void initializeParticipants() {
-		addParticipants(new ISourceLookupParticipant[] { new DBGPSourceLookupParticipant() });
-		addParticipants(new ISourceLookupParticipant[] { new ScriptSourceLookupParticipant() });
+		addParticipants(new ISourceLookupParticipant[] {
+				new DBGPSourceLookupParticipant() });
+		addParticipants(new ISourceLookupParticipant[] {
+				new ScriptSourceLookupParticipant() });
 	}
 }

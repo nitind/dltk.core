@@ -165,6 +165,7 @@ public class DLTKLaunchableTester extends PropertyTester {
 	 * @return true if the specified tests pass, or the context is a container,
 	 *         false otherwise
 	 */
+	@Override
 	public boolean test(Object receiver, String property, Object[] args,
 			Object expectedValue) {
 		if (PROPERTY_IS_CONTAINER.equals(property)) {

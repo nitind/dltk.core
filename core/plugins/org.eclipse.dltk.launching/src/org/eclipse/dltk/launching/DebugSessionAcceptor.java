@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.
+ * Copyright (c) 2009, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -27,24 +27,28 @@ import org.eclipse.dltk.debug.core.model.IScriptDebugTargetListener;
 import org.eclipse.dltk.internal.debug.core.model.ScriptDebugTarget;
 import org.eclipse.dltk.internal.launching.DLTKLaunchingPlugin;
 
-public class DebugSessionAcceptor implements IDbgpThreadAcceptor,
-		IScriptDebugTargetListener {
+public class DebugSessionAcceptor
+		implements IDbgpThreadAcceptor, IScriptDebugTargetListener {
 
-	private static class NopLaunchStatusHandler implements
-			ILaunchStatusHandler, ILaunchStatusHandlerExtension {
+	private static class NopLaunchStatusHandler
+			implements ILaunchStatusHandler, ILaunchStatusHandlerExtension {
 
+		@Override
 		public void initialize(IDebugTarget target, IProgressMonitor monitor) {
 			// empty
 		}
 
+		@Override
 		public void updateElapsedTime(long elapsedTime) {
 			// empty
 		}
 
+		@Override
 		public void dispose() {
 			// empty
 		}
 
+		@Override
 		public boolean isCanceled() {
 			return true;
 		}
@@ -68,6 +72,7 @@ public class DebugSessionAcceptor implements IDbgpThreadAcceptor,
 	/*
 	 * @see IScriptDebugTargetListener#targetInitialized()
 	 */
+	@Override
 	public void targetInitialized() {
 		synchronized (this) {
 			initialized = true;
@@ -75,6 +80,7 @@ public class DebugSessionAcceptor implements IDbgpThreadAcceptor,
 		}
 	}
 
+	@Override
 	public void targetTerminating() {
 		target.getDbgpService().unregisterAcceptor(target.getSessionId());
 		disposeStatusHandler();
@@ -136,13 +142,11 @@ public class DebugSessionAcceptor implements IDbgpThreadAcceptor,
 
 	private void abortIfProcessTerminated() throws CoreException {
 		if (target.getProcess() != null && target.getProcess().isTerminated()) {
-			throw new CoreException(
-					new Status(
-							IStatus.ERROR,
-							DLTKLaunchingPlugin.PLUGIN_ID,
-							ScriptLaunchConfigurationConstants.ERR_DEBUGGER_PROCESS_TERMINATED,
-							LaunchingMessages.DebugSessionAcceptor_DebuggerUnexpectedlyTerminated,
-							null));
+			throw new CoreException(new Status(IStatus.ERROR,
+					DLTKLaunchingPlugin.PLUGIN_ID,
+					ScriptLaunchConfigurationConstants.ERR_DEBUGGER_PROCESS_TERMINATED,
+					LaunchingMessages.DebugSessionAcceptor_DebuggerUnexpectedlyTerminated,
+					null));
 		}
 	}
 
@@ -152,9 +156,8 @@ public class DebugSessionAcceptor implements IDbgpThreadAcceptor,
 	private ILaunchStatusHandler createStatusHandler() {
 		final String extensionPointId = DLTKLaunchingPlugin.PLUGIN_ID
 				+ ".launchStatusHandler"; //$NON-NLS-1$
-		final IConfigurationElement[] elements = Platform
-				.getExtensionRegistry().getConfigurationElementsFor(
-						extensionPointId);
+		final IConfigurationElement[] elements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(extensionPointId);
 		for (int i = 0; i < elements.length; ++i) {
 			try {
 				final ILaunchStatusHandler handler = (ILaunchStatusHandler) elements[i]
@@ -170,7 +173,9 @@ public class DebugSessionAcceptor implements IDbgpThreadAcceptor,
 		return handler;
 	}
 
-	public void acceptDbgpThread(IDbgpSession session, IProgressMonitor monitor) {
+	@Override
+	public void acceptDbgpThread(IDbgpSession session,
+			IProgressMonitor monitor) {
 		final boolean isFirst;
 		synchronized (this) {
 			isFirst = !connected;
@@ -198,8 +203,8 @@ public class DebugSessionAcceptor implements IDbgpThreadAcceptor,
 		if (initializeMonitor == null) {
 			initializeMonitor = new SubProgressMonitor(parentMonitor, 1);
 			initializeMonitor.beginTask(Util.EMPTY_STRING, 100);
-			initializeMonitor
-					.setTaskName(Messages.DebugSessionAcceptor_waitInitialization);
+			initializeMonitor.setTaskName(
+					Messages.DebugSessionAcceptor_waitInitialization);
 		}
 		return initializeMonitor;
 	}

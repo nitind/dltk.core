@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -28,10 +28,9 @@ public class ScriptRuntimeProcessFactory implements IProcessFactory {
 
 	private static boolean isDebugConsole(ILaunchConfiguration config) {
 		try {
-			return config
-					.getAttribute(
-							ScriptLaunchConfigurationConstants.ATTR_DEBUG_CONSOLE,
-							true);
+			return config.getAttribute(
+					ScriptLaunchConfigurationConstants.ATTR_DEBUG_CONSOLE,
+					true);
 		} catch (CoreException e) {
 			return true;
 		}
@@ -39,10 +38,9 @@ public class ScriptRuntimeProcessFactory implements IProcessFactory {
 
 	private static boolean isInteractiveConsole(ILaunchConfiguration config) {
 		try {
-			return config
-					.getAttribute(
-							ScriptLaunchConfigurationConstants.ATTR_USE_INTERACTIVE_CONSOLE,
-							false);
+			return config.getAttribute(
+					ScriptLaunchConfigurationConstants.ATTR_USE_INTERACTIVE_CONSOLE,
+					false);
 		} catch (CoreException e) {
 			return false;
 		}
@@ -68,6 +66,7 @@ public class ScriptRuntimeProcessFactory implements IProcessFactory {
 		}
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public IProcess newProcess(ILaunch launch, Process process, String label,
 			Map attributes) {

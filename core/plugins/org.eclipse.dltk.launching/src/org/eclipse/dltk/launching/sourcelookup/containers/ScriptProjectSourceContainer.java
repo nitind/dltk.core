@@ -35,8 +35,11 @@ public class ScriptProjectSourceContainer extends CompositeSourceContainer {
 	}
 
 	/*
-	 * @see org.eclipse.debug.core.sourcelookup.containers.CompositeSourceContainer#createSourceContainers()
+	 * @see
+	 * org.eclipse.debug.core.sourcelookup.containers.CompositeSourceContainer#
+	 * createSourceContainers()
 	 */
+	@Override
 	protected ISourceContainer[] createSourceContainers() throws CoreException {
 		List containers = new ArrayList();
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -55,19 +58,19 @@ public class ScriptProjectSourceContainer extends CompositeSourceContainer {
 					break;
 				}
 			}
-			
+
 			// XXX: include project root for source lookup as well?
-//			IPath projectRoot = project.getProject().getFullPath();
-//			if (!containers.contains(projectRoot)) {				
-//				containers.add(projectRoot);
-//			}
+			// IPath projectRoot = project.getProject().getFullPath();
+			// if (!containers.contains(projectRoot)) {
+			// containers.add(projectRoot);
+			// }
 		}
-		
+
 		// cache the script source folders to search for script like files
 		sourceFolders = (ISourceContainer[]) containers
 				.toArray(new ISourceContainer[containers.size()]);
-		ISourceContainer theProject = new ProjectSourceContainer(project
-				.getProject(), false);
+		ISourceContainer theProject = new ProjectSourceContainer(
+				project.getProject(), false);
 
 		others = new ISourceContainer[] { theProject };
 		containers.add(theProject);
@@ -83,6 +86,7 @@ public class ScriptProjectSourceContainer extends CompositeSourceContainer {
 	/*
 	 * @see org.eclipse.debug.core.sourcelookup.ISourceContainer#getName()
 	 */
+	@Override
 	public String getName() {
 		return project.getElementName();
 	}
@@ -90,10 +94,12 @@ public class ScriptProjectSourceContainer extends CompositeSourceContainer {
 	/*
 	 * @see org.eclipse.debug.core.sourcelookup.ISourceContainer#getType()
 	 */
+	@Override
 	public ISourceContainerType getType() {
 		return getSourceContainerType(TYPE_ID);
 	}
 
+	@Override
 	public Object[] findSourceElements(String name) throws CoreException {
 		// force container initialization
 		getSourceContainers();
@@ -125,8 +131,11 @@ public class ScriptProjectSourceContainer extends CompositeSourceContainer {
 	}
 
 	/*
-	 * @see org.eclipse.debug.core.sourcelookup.containers.CompositeSourceContainer#dispose()
+	 * @see
+	 * org.eclipse.debug.core.sourcelookup.containers.CompositeSourceContainer#
+	 * dispose()
 	 */
+	@Override
 	public void dispose() {
 		others = null;
 		sourceFolders = null;
@@ -136,6 +145,7 @@ public class ScriptProjectSourceContainer extends CompositeSourceContainer {
 	/*
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		return project.hashCode();
 	}
@@ -143,20 +153,22 @@ public class ScriptProjectSourceContainer extends CompositeSourceContainer {
 	/*
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof ScriptProjectSourceContainer) {
-			return project.equals(((ScriptProjectSourceContainer) obj)
-					.getScriptProject());
+			return project.equals(
+					((ScriptProjectSourceContainer) obj).getScriptProject());
 		}
 		return super.equals(obj);
 	}
-	
-	private boolean isScriptLikeFile(String name)
-	{
-		IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(project);
-		if( toolkit != null ) {
+
+	private boolean isScriptLikeFile(String name) {
+		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
+				.getLanguageToolkit(project);
+		if (toolkit != null) {
 			return false;
 		}
-		return DLTKContentTypeManager.isValidFileNameForContentType(toolkit, name);
+		return DLTKContentTypeManager.isValidFileNameForContentType(toolkit,
+				name);
 	}
 }

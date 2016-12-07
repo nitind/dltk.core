@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.  
+ * Copyright (c) 2009, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -44,8 +44,8 @@ public class ProjectSourceLookup {
 		this.project = project;
 	}
 
-	private static final class ExternalSourceModuleFinder implements
-			IModelElementVisitor {
+	private static final class ExternalSourceModuleFinder
+			implements IModelElementVisitor {
 
 		private final IPath fileFullPath;
 
@@ -58,6 +58,7 @@ public class ProjectSourceLookup {
 
 		private final ISourceModule[] result = new ISourceModule[1];
 
+		@Override
 		public boolean visit(IModelElement element) {
 			if (element.getElementType() == IModelElement.PROJECT_FRAGMENT) {
 				IProjectFragment fragment = (IProjectFragment) element;
@@ -74,8 +75,8 @@ public class ProjectSourceLookup {
 					IExternalSourceModule mdl = (IExternalSourceModule) module;
 					modulePath = mdl.getFullPath();
 					if (!EnvironmentPathUtils.isFull(modulePath))
-						modulePath = EnvironmentPathUtils.getFullPath(
-								environment, modulePath);
+						modulePath = EnvironmentPathUtils
+								.getFullPath(environment, modulePath);
 				}
 				if (pathEquality.equals(fileFullPath, modulePath)) {
 					result[0] = module;
@@ -94,8 +95,8 @@ public class ProjectSourceLookup {
 		}
 	}
 
-	private static final class LocalSourceModuleFinder implements
-			IModelElementVisitor {
+	private static final class LocalSourceModuleFinder
+			implements IModelElementVisitor {
 
 		private final IPath fileFullPath;
 
@@ -108,6 +109,7 @@ public class ProjectSourceLookup {
 
 		private final IFile[] result = new IFile[1];
 
+		@Override
 		public boolean visit(IModelElement element) {
 			if (element.getElementType() == IModelElement.PROJECT_FRAGMENT) {
 				IProjectFragment fragment = (IProjectFragment) element;
@@ -121,8 +123,8 @@ public class ProjectSourceLookup {
 						.getEnvironment(element.getScriptProject());
 				final IResource resource = module.getResource();
 				if (resource != null) {
-					final IFileHandle file = environment.getFile(resource
-							.getLocationURI());
+					final IFileHandle file = environment
+							.getFile(resource.getLocationURI());
 					if (pathEquality.equals(fileFullPath, file.getPath())) {
 						result[0] = (IFile) resource;
 					}
@@ -141,8 +143,8 @@ public class ProjectSourceLookup {
 		}
 	}
 
-	private static final class WorkspaceLookupResult implements
-			IProjectLookupResult {
+	private static final class WorkspaceLookupResult
+			implements IProjectLookupResult {
 
 		private final IFile[] files;
 
@@ -150,18 +152,20 @@ public class ProjectSourceLookup {
 			this.files = files;
 		}
 
+		@Override
 		public Object[] toArray() {
 			return files;
 		}
 
+		@Override
 		public int size() {
 			return files.length;
 		}
 
 	}
 
-	private static final class SourceModuleLookupResult implements
-			IProjectLookupResult {
+	private static final class SourceModuleLookupResult
+			implements IProjectLookupResult {
 
 		private final ISourceModule[] modules;
 
@@ -169,10 +173,12 @@ public class ProjectSourceLookup {
 			this.modules = modules;
 		}
 
+		@Override
 		public Object[] toArray() {
 			return modules;
 		}
 
+		@Override
 		public int size() {
 			return modules.length;
 		}

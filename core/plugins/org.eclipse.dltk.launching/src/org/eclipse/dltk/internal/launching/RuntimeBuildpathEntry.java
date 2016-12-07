@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *     BEA - Daniel R Somerfield - Bug 88939
  *******************************************************************************/
 package org.eclipse.dltk.internal.launching;
@@ -90,10 +89,9 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 			setType(SOURCE);
 			break;
 		default:
-			throw new IllegalArgumentException(
-					NLS.bind(
-							LaunchingMessages.RuntimeBuildpathEntry_Illegal_classpath_entry__0__1,
-							entry.toString()));
+			throw new IllegalArgumentException(NLS.bind(
+					LaunchingMessages.RuntimeBuildpathEntry_Illegal_classpath_entry__0__1,
+					entry.toString()));
 		}
 		setBuildpathEntry(entry);
 		initializeBuildpathProperty();
@@ -113,10 +111,9 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 			setType(CONTAINER);
 			break;
 		default:
-			throw new IllegalArgumentException(
-					NLS.bind(
-							LaunchingMessages.RuntimeBuildpathEntry_Illegal_classpath_entry__0__1,
-							entry.toString()));
+			throw new IllegalArgumentException(NLS.bind(
+					LaunchingMessages.RuntimeBuildpathEntry_Illegal_classpath_entry__0__1,
+					entry.toString()));
 		}
 		setBuildpathEntry(entry);
 		setBuildpathProperty(buildpathProperty);
@@ -222,6 +219,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 	/**
 	 * @see IRuntimeBuildpathEntry#getType()
 	 */
+	@Override
 	public int getType() {
 		return fType;
 	}
@@ -251,6 +249,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 	/**
 	 * @see IRuntimeBuildpathEntry#getBuildpathEntry()
 	 */
+	@Override
 	public IBuildpathEntry getBuildpathEntry() {
 		return fBuildpathEntry;
 	}
@@ -258,14 +257,14 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 	/**
 	 * @see IRuntimeBuildpathEntry#getMemento()
 	 */
+	@Override
 	public String getMemento() throws CoreException {
 
 		Document doc;
 		try {
 			doc = DLTKLaunchingPlugin.getDocument();
 		} catch (ParserConfigurationException e) {
-			IStatus status = new Status(
-					IStatus.ERROR,
+			IStatus status = new Status(IStatus.ERROR,
 					DLTKLaunchingPlugin.getUniqueIdentifier(),
 					ScriptLaunchConfigurationConstants.ERR_INTERNAL_ERROR,
 					LaunchingMessages.RuntimeBuildpathEntry_An_exception_occurred_generating_runtime_classpath_memento_8,
@@ -275,8 +274,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 		Element node = doc.createElement("runtimeBuildpathEntry"); //$NON-NLS-1$
 		doc.appendChild(node);
 		node.setAttribute("type", Integer.toString(getType())); //$NON-NLS-1$
-		node.setAttribute(
-				"path", Integer.toString(getBuildpathProperty())); //$NON-NLS-1$
+		node.setAttribute("path", Integer.toString(getBuildpathProperty())); //$NON-NLS-1$
 		switch (getType()) {
 		case PROJECT:
 			node.setAttribute("projectName", getPath().lastSegment()); //$NON-NLS-1$
@@ -286,8 +284,8 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 			if (res == null) {
 				node.setAttribute("externalArchive", getPath().toString()); //$NON-NLS-1$
 			} else {
-				node.setAttribute(
-						"internalArchive", res.getFullPath().toString()); //$NON-NLS-1$
+				node.setAttribute("internalArchive", //$NON-NLS-1$
+						res.getFullPath().toString());
 			}
 			break;
 		case CONTAINER:
@@ -295,22 +293,20 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 			break;
 		}
 		if (getScriptProject() != null) {
-			node.setAttribute(
-					"scriptProject", getScriptProject().getElementName()); //$NON-NLS-1$
+			node.setAttribute("scriptProject", //$NON-NLS-1$
+					getScriptProject().getElementName());
 		}
 		try {
 			return DLTKLaunchingPlugin.serializeDocument(doc);
 		} catch (IOException e) {
-			IStatus status = new Status(
-					IStatus.ERROR,
+			IStatus status = new Status(IStatus.ERROR,
 					DLTKLaunchingPlugin.getUniqueIdentifier(),
 					ScriptLaunchConfigurationConstants.ERR_INTERNAL_ERROR,
 					LaunchingMessages.RuntimeBuildpathEntry_An_exception_occurred_generating_runtime_classpath_memento_8,
 					e);
 			throw new CoreException(status);
 		} catch (TransformerException e) {
-			IStatus status = new Status(
-					IStatus.ERROR,
+			IStatus status = new Status(IStatus.ERROR,
 					DLTKLaunchingPlugin.getUniqueIdentifier(),
 					ScriptLaunchConfigurationConstants.ERR_INTERNAL_ERROR,
 					LaunchingMessages.RuntimeBuildpathEntry_An_exception_occurred_generating_runtime_classpath_memento_8,
@@ -322,6 +318,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 	/**
 	 * @see IRuntimeBuildpathEntry#getPath()
 	 */
+	@Override
 	public IPath getPath() {
 		IBuildpathEntry entry = getBuildpathEntry();
 		return entry != null ? entry.getPath() : fInvalidPath;
@@ -330,6 +327,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 	/**
 	 * @see IRuntimeBuildpathEntry#getResource()
 	 */
+	@Override
 	public IResource getResource() {
 		switch (getType()) {
 		case CONTAINER:
@@ -385,6 +383,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 	/**
 	 * @see IRuntimeBuildpathEntry#setBuildpathProperty(int)
 	 */
+	@Override
 	public void setBuildpathProperty(int location) {
 		fBuildpathProperty = location;
 	}
@@ -392,6 +391,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 	/**
 	 * @see IRuntimeBuildpathEntry#setBuildpathProperty(int)
 	 */
+	@Override
 	public int getBuildpathProperty() {
 		return fBuildpathProperty;
 	}
@@ -399,6 +399,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 	/**
 	 * @see IRuntimeBuildpathEntry#getLocation()
 	 */
+	@Override
 	public String getLocation() {
 
 		IPath path = null;
@@ -428,6 +429,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 		return resolvePath(path).toPortableString();
 	}
 
+	@Override
 	public URI getLocationURI() {
 		switch (getType()) {
 		case PROJECT:
@@ -474,7 +476,8 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 		if (path != null) {
 			IResource res = null;
 			if (EnvironmentPathUtils.isFull(path) == true
-					&& EnvironmentPathUtils.getPathEnvironment(path).isLocal()) {
+					&& EnvironmentPathUtils.getPathEnvironment(path)
+							.isLocal()) {
 				path = EnvironmentPathUtils.getFile(path).getPath();
 			}
 			if (path.getDevice() == null) {
@@ -499,6 +502,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 	/**
 	 * @see Object#equals(Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof IRuntimeBuildpathEntry) {
 			IRuntimeBuildpathEntry r = (IRuntimeBuildpathEntry) obj;
@@ -515,10 +519,10 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 						// containers are equal if their ID is equal by default
 						return getPath().equals(r.getPath());
 					}
-					Object comparisonID1 = initializer.getComparisonID(
-							getPath(), scriptProject1);
-					Object comparisonID2 = initializer.getComparisonID(
-							r.getPath(), scriptProject2);
+					Object comparisonID1 = initializer
+							.getComparisonID(getPath(), scriptProject1);
+					Object comparisonID2 = initializer
+							.getComparisonID(r.getPath(), scriptProject2);
 					return comparisonID1.equals(comparisonID2);
 				}
 			}
@@ -539,6 +543,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 	/**
 	 * @see Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		if (getType() == CONTAINER) {
 			return getPath().segment(0).hashCode() + getType();
@@ -569,6 +574,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 		return string == null || string.length() == 0;
 	}
 
+	@Override
 	public String toString() {
 		if (fBuildpathEntry != null) {
 			return fBuildpathEntry.toString();
@@ -577,6 +583,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 
 	}
 
+	@Override
 	public IScriptProject getScriptProject() {
 		return fProject;
 	}
@@ -591,6 +598,7 @@ public class RuntimeBuildpathEntry implements IRuntimeBuildpathEntry {
 		fProject = project;
 	}
 
+	@Override
 	public String getContainerName() {
 		if (getType() == IRuntimeBuildpathEntry.CONTAINER) {
 			return getPath().segment(0);

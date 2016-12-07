@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.launching;
 
@@ -137,8 +136,8 @@ public class InterpreterDefinitionsContainer {
 		Set<DefaultInterpreterEntry> s = new HashSet<DefaultInterpreterEntry>(
 				fDefaultInterpreterInstallCompositeID.keySet());
 		for (IInterpreterInstall install : fInterpreterList) {
-			s.add(new DefaultInterpreterEntry(install.getNatureId(), install
-					.getEnvironmentId()));
+			s.add(new DefaultInterpreterEntry(install.getNatureId(),
+					install.getEnvironmentId()));
 		}
 		return s.toArray(new DefaultInterpreterEntry[s.size()]);
 	}
@@ -391,13 +390,11 @@ public class InterpreterDefinitionsContainer {
 		Element config = doc.createElement(INTERPRETER_SETTINGS_TAG);
 		doc.appendChild(config);
 
-		final Comparator<DefaultInterpreterEntry> comparator = new Comparator<DefaultInterpreterEntry>() {
-			public int compare(DefaultInterpreterEntry entry0,
-					DefaultInterpreterEntry entry1) {
-				String k0 = entry0.getEnvironment() + ":" + entry0.getNature(); //$NON-NLS-1$
-				String k1 = entry1.getEnvironment() + ":" + entry1.getNature(); //$NON-NLS-1$
-				return k0.compareTo(k1);
-			}
+		final Comparator<DefaultInterpreterEntry> comparator = (entry0,
+				entry1) -> {
+			String k0 = entry0.getEnvironment() + ":" + entry0.getNature(); //$NON-NLS-1$
+			String k1 = entry1.getEnvironment() + ":" + entry1.getNature(); //$NON-NLS-1$
+			return k0.compareTo(k1);
 		};
 
 		// Set the defaultInterpreter attribute on the top-level node
@@ -486,8 +483,8 @@ public class InterpreterDefinitionsContainer {
 		Element element = doc.createElement(INTERPRETER_TAG);
 		element.setAttribute(ID_ATTR, interpreter.getId());
 		element.setAttribute(INTERPRETER_NAME_ATTR, interpreter.getName());
-		element.setAttribute(ENVIRONMENT_ID, interpreter.getInstallLocation()
-				.getEnvironmentId());
+		element.setAttribute(ENVIRONMENT_ID,
+				interpreter.getInstallLocation().getEnvironmentId());
 
 		// Determine and set the 'path' attribute for the Interpreter
 		String installPath = ""; //$NON-NLS-1$
@@ -525,8 +522,8 @@ public class InterpreterDefinitionsContainer {
 			if (extensions != null && extensions.length() != 0) {
 				final Element extensionsElement = doc
 						.createElement(EXTENSIONS_TAG);
-				extensionsElement.appendChild(doc
-						.createCDATASection(extensions));
+				extensionsElement
+						.appendChild(doc.createCDATASection(extensions));
 				element.appendChild(extensionsElement);
 			}
 		}
@@ -543,8 +540,8 @@ public class InterpreterDefinitionsContainer {
 		Element root = doc.createElement(LIBRARY_LOCATIONS_TAG);
 		for (int i = 0; i < locations.length; i++) {
 			Element element = doc.createElement(LIBRARY_LOCATION_TAG);
-			element.setAttribute(LIBRARY_PATH_ATTR, locations[i]
-					.getLibraryPath().toString());
+			element.setAttribute(LIBRARY_PATH_ATTR,
+					locations[i].getLibraryPath().toString());
 			root.appendChild(element);
 		}
 		return root;
@@ -598,7 +595,8 @@ public class InterpreterDefinitionsContainer {
 	 * @throws IOException
 	 *             if this method fails. Reasons include:
 	 *             <ul>
-	 *             <li>the XML in <code>inputStream</code> was badly formatted</li>
+	 *             <li>the XML in <code>inputStream</code> was badly
+	 *             formatted</li>
 	 *             <li>the top-level node was not 'InterpreterSettings'</li>
 	 *             </ul>
 	 * 
@@ -639,12 +637,12 @@ public class InterpreterDefinitionsContainer {
 			short type = node.getNodeType();
 			if (type == Node.ELEMENT_NODE) {
 				Element interpreterTypeElement = (Element) node;
-				if (interpreterTypeElement.getNodeName().equalsIgnoreCase(
-						INTERPRETER_TYPE_TAG)) {
+				if (interpreterTypeElement.getNodeName()
+						.equalsIgnoreCase(INTERPRETER_TYPE_TAG)) {
 					populateInterpreterTypes(interpreterTypeElement, container);
 				}
-				if (interpreterTypeElement.getNodeName().equalsIgnoreCase(
-						DEFAULT_INTERPRETER_TAG)) {
+				if (interpreterTypeElement.getNodeName()
+						.equalsIgnoreCase(DEFAULT_INTERPRETER_TAG)) {
 					String nature = interpreterTypeElement
 							.getAttribute(NATURE_ATTR);
 					String id = interpreterTypeElement.getAttribute(ID_ATTR);
@@ -655,11 +653,11 @@ public class InterpreterDefinitionsContainer {
 					}
 					DefaultInterpreterEntry entry = new DefaultInterpreterEntry(
 							nature, environment);
-					container
-							.setDefaultInterpreterInstallCompositeID(entry, id);
+					container.setDefaultInterpreterInstallCompositeID(entry,
+							id);
 				}
-				if (interpreterTypeElement.getNodeName().equalsIgnoreCase(
-						"defaultInterpreterConnector")) { //$NON-NLS-1$
+				if (interpreterTypeElement.getNodeName()
+						.equalsIgnoreCase("defaultInterpreterConnector")) { //$NON-NLS-1$
 					String nature = interpreterTypeElement
 							.getAttribute(NATURE_ATTR);
 					String environment = interpreterTypeElement
@@ -667,8 +665,8 @@ public class InterpreterDefinitionsContainer {
 					String id = interpreterTypeElement.getAttribute(ID_ATTR);
 					DefaultInterpreterEntry entry = new DefaultInterpreterEntry(
 							nature, environment);
-					container.setDefaultInterpreterInstallConnectorTypeID(
-							entry, id);
+					container.setDefaultInterpreterInstallConnectorTypeID(entry,
+							id);
 				}
 			}
 		}
@@ -678,8 +676,7 @@ public class InterpreterDefinitionsContainer {
 	 * For the specified Interpreter type node, parse all subordinate
 	 * Interpreter definitions and add them to the specified container.
 	 */
-	private static void populateInterpreterTypes(
-			Element interpreterTypeElement,
+	private static void populateInterpreterTypes(Element interpreterTypeElement,
 			InterpreterDefinitionsContainer container) {
 
 		// Retrieve the 'id' attribute and the corresponding Interpreter type
@@ -698,8 +695,8 @@ public class InterpreterDefinitionsContainer {
 				short type = InterpreterNode.getNodeType();
 				if (type == Node.ELEMENT_NODE) {
 					Element InterpreterElement = (Element) InterpreterNode;
-					if (InterpreterElement.getNodeName().equalsIgnoreCase(
-							INTERPRETER_TAG)) {
+					if (InterpreterElement.getNodeName()
+							.equalsIgnoreCase(INTERPRETER_TAG)) {
 						populateInterpreterForType(InterpreterType,
 								InterpreterElement, container);
 					}
@@ -735,12 +732,13 @@ public class InterpreterDefinitionsContainer {
 
 			// Create a InterpreterStandin for the node and set its 'name' &
 			// 'installLocation' attributes
-			InterpreterStandin standin = new InterpreterStandin(installType, id);
+			InterpreterStandin standin = new InterpreterStandin(installType,
+					id);
 			standin.setName(element.getAttribute(INTERPRETER_NAME_ATTR));
 			// IFileHandle installLocation = env.getFile(new Path(installPath));
 			// standin.setInstallLocation(installLocation);
-			standin.setInstallLocation(new LazyFileHandle(envId, new Path(
-					installPath)));
+			standin.setInstallLocation(
+					new LazyFileHandle(envId, new Path(installPath)));
 
 			container.addInterpreter(standin, false);
 
@@ -756,20 +754,26 @@ public class InterpreterDefinitionsContainer {
 					String subElementName = subElement.getNodeName();
 					if (subElementName.equals(LIBRARY_LOCATION_TAG)) {
 						LibraryLocation loc = getLibraryLocation(subElement);
-						standin.setLibraryLocations(new LibraryLocation[] { loc });
+						standin.setLibraryLocations(
+								new LibraryLocation[] { loc });
 					} else if (subElementName.equals(LIBRARY_LOCATIONS_TAG)) {
 						setLibraryLocations(standin, subElement);
-					} else if (subElementName.equals(ENVIRONMENT_VARIABLE_TAG)) {
-						EnvironmentVariable var = getEnvironmentVariable(subElement);
-						standin.setEnvironmentVariables(new EnvironmentVariable[] { var });
-					} else if (subElementName.equals(ENVIRONMENT_VARIABLES_TAG)) {
+					} else if (subElementName
+							.equals(ENVIRONMENT_VARIABLE_TAG)) {
+						EnvironmentVariable var = getEnvironmentVariable(
+								subElement);
+						standin.setEnvironmentVariables(
+								new EnvironmentVariable[] { var });
+					} else if (subElementName
+							.equals(ENVIRONMENT_VARIABLES_TAG)) {
 						setEnvironmentVariables(standin, subElement);
 					} else if (subElementName.equals(EXTENSIONS_TAG)) {
 						StringBuffer body = null;
 						NodeList children = subElement.getChildNodes();
 						for (int j = 0; j < children.getLength(); ++j) {
 							Node child = children.item(j);
-							if (child.getNodeType() == Node.CDATA_SECTION_NODE) {
+							if (child
+									.getNodeType() == Node.CDATA_SECTION_NODE) {
 								if (body == null) {
 									body = new StringBuffer();
 								}
@@ -789,8 +793,8 @@ public class InterpreterDefinitionsContainer {
 				standin.setInterpreterArgs(args);
 			}
 		} else {
-			DLTKLaunchingPlugin
-					.log("id attribute missing from Interpreter element specification."); //$NON-NLS-1$
+			DLTKLaunchingPlugin.log(
+					"id attribute missing from Interpreter element specification."); //$NON-NLS-1$
 		}
 	}
 
@@ -798,7 +802,8 @@ public class InterpreterDefinitionsContainer {
 	 * Create & return a LibraryLocation object populated from the attribute
 	 * values in the specified node.
 	 */
-	private static LibraryLocation getLibraryLocation(Element libLocationElement) {
+	private static LibraryLocation getLibraryLocation(
+			Element libLocationElement) {
 		String interpreterEnvironmentArchive = libLocationElement
 				.getAttribute(LIBRARY_PATH_ATTR);
 		if (interpreterEnvironmentArchive != null) {
@@ -830,24 +835,25 @@ public class InterpreterDefinitionsContainer {
 			Element libLocationsElement) {
 		NodeList list = libLocationsElement.getChildNodes();
 		int length = list.getLength();
-		List<LibraryLocation> locations = new ArrayList<LibraryLocation>(length);
+		List<LibraryLocation> locations = new ArrayList<LibraryLocation>(
+				length);
 		for (int i = 0; i < length; ++i) {
 			Node node = list.item(i);
 			short type = node.getNodeType();
 			if (type == Node.ELEMENT_NODE) {
 				Element libraryLocationElement = (Element) node;
-				if (libraryLocationElement.getNodeName().equals(
-						LIBRARY_LOCATION_TAG)) {
+				if (libraryLocationElement.getNodeName()
+						.equals(LIBRARY_LOCATION_TAG)) {
 					locations.add(getLibraryLocation(libraryLocationElement));
 				}
 			}
 		}
-		interpreter.setLibraryLocations(locations
-				.toArray(new LibraryLocation[locations.size()]));
+		interpreter.setLibraryLocations(
+				locations.toArray(new LibraryLocation[locations.size()]));
 	}
 
-	private static void setEnvironmentVariables(
-			IInterpreterInstall interpreter, Element environmentVariablesElement) {
+	private static void setEnvironmentVariables(IInterpreterInstall interpreter,
+			Element environmentVariablesElement) {
 		NodeList list = environmentVariablesElement.getChildNodes();
 		int length = list.getLength();
 		List<EnvironmentVariable> variables = new ArrayList<EnvironmentVariable>(
@@ -863,8 +869,8 @@ public class InterpreterDefinitionsContainer {
 				}
 			}
 		}
-		interpreter.setEnvironmentVariables(variables
-				.toArray(new EnvironmentVariable[variables.size()]));
+		interpreter.setEnvironmentVariables(
+				variables.toArray(new EnvironmentVariable[variables.size()]));
 	}
 
 	/**
@@ -876,8 +882,8 @@ public class InterpreterDefinitionsContainer {
 	public void removeInterpreter(IInterpreterInstall interpreter) {
 		fInterpreterList.remove(interpreter);
 		// fInvalidInterpreterList.remove(Interpreter);
-		List<IInterpreterInstall> list = fInterTypeToInterMap.get(interpreter
-				.getInterpreterInstallType());
+		List<IInterpreterInstall> list = fInterTypeToInterMap
+				.get(interpreter.getInterpreterInstallType());
 		if (list != null) {
 			list.remove(interpreter);
 		}

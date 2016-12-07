@@ -86,18 +86,22 @@ public abstract class AbstractInterpreterInstall
 		fId = id;
 	}
 
+	@Override
 	public String getId() {
 		return fId;
 	}
 
+	@Override
 	public String getNatureId() {
 		return fType.getNatureId();
 	}
 
+	@Override
 	public String getName() {
 		return fName;
 	}
 
+	@Override
 	public void setName(String name) {
 		if (!name.equals(fName)) {
 			PropertyChangeEvent event = new PropertyChangeEvent(this,
@@ -109,16 +113,19 @@ public abstract class AbstractInterpreterInstall
 		}
 	}
 
+	@Override
 	public IFileHandle getInstallLocation() {
 		// return PlatformFileUtils
 		// .findAbsoluteOrEclipseRelativeFile(fInstallLocation);
 		return fInstallLocation;
 	}
 
+	@Override
 	public IFileHandle getRawInstallLocation() {
 		return fInstallLocation;
 	}
 
+	@Override
 	public IEnvironment getEnvironment() {
 		if (fInstallLocation != null)
 			return fInstallLocation.getEnvironment();
@@ -128,12 +135,14 @@ public abstract class AbstractInterpreterInstall
 	/*
 	 * @see org.eclipse.dltk.launching.IInterpreterInstall#getEnvironmentId()
 	 */
+	@Override
 	public String getEnvironmentId() {
 		if (fInstallLocation != null)
 			return fInstallLocation.getEnvironmentId();
 		return null;
 	}
 
+	@Override
 	public IExecutionEnvironment getExecEnvironment() {
 		IEnvironment environment = getEnvironment();
 		if (environment != null) {
@@ -142,6 +151,7 @@ public abstract class AbstractInterpreterInstall
 		return null;
 	}
 
+	@Override
 	public void setInstallLocation(IFileHandle installLocation) {
 		if (!installLocation.equals(fInstallLocation)) {
 			PropertyChangeEvent event = new PropertyChangeEvent(this,
@@ -152,14 +162,17 @@ public abstract class AbstractInterpreterInstall
 		}
 	}
 
+	@Override
 	public IInterpreterInstallType getInterpreterInstallType() {
 		return fType;
 	}
 
+	@Override
 	public LibraryLocation[] getLibraryLocations() {
 		return fSystemLibraryDescriptions;
 	}
 
+	@Override
 	public void setLibraryLocations(LibraryLocation[] locations) {
 		if (locations == fSystemLibraryDescriptions) {
 			return;
@@ -222,6 +235,7 @@ public abstract class AbstractInterpreterInstall
 		return getInterpreterInstallType().hashCode() + getId().hashCode();
 	}
 
+	@Override
 	public String[] getInterpreterArguments() {
 		String args = getInterpreterArgs();
 		if (args == null) {
@@ -231,6 +245,7 @@ public abstract class AbstractInterpreterInstall
 		return ex.getInterpreterArgumentsArray();
 	}
 
+	@Override
 	public void setInterpreterArguments(String[] args) {
 		if (args == null) {
 			setInterpreterArgs(null);
@@ -245,10 +260,12 @@ public abstract class AbstractInterpreterInstall
 		}
 	}
 
+	@Override
 	public String getInterpreterArgs() {
 		return fInterpreterArgs;
 	}
 
+	@Override
 	public void setInterpreterArgs(String args) {
 		if (fInterpreterArgs == null) {
 			if (args == null) {
@@ -288,14 +305,17 @@ public abstract class AbstractInterpreterInstall
 	}
 
 	// IBuiltinModuleProvider
+	@Override
 	public String[] getBuiltinModules() {
 		return null;
 	}
 
+	@Override
 	public String getBuiltinModuleContent(String name) {
 		return null;
 	}
 
+	@Override
 	public long lastModified() {
 		return 0;
 	}
@@ -304,6 +324,7 @@ public abstract class AbstractInterpreterInstall
 		return new DebugRunnerDelegate(this);
 	}
 
+	@Override
 	public IInterpreterRunner getInterpreterRunner(String mode) {
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 			return getDebugInterpreterRunner();
@@ -312,10 +333,12 @@ public abstract class AbstractInterpreterInstall
 		return null;
 	}
 
+	@Override
 	public EnvironmentVariable[] getEnvironmentVariables() {
 		return fEnvironmentVariables;
 	}
 
+	@Override
 	public void setEnvironmentVariables(EnvironmentVariable[] variables) {
 		PropertyChangeEvent event = new PropertyChangeEvent(this,
 				IInterpreterInstallChangedListener.PROPERTY_ENVIRONMENT_VARIABLES,
@@ -340,6 +363,7 @@ public abstract class AbstractInterpreterInstall
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public EObject findExtension(EClass clazz) {
 		if (resource != null) {
 			for (EObject object : resource.getContents()) {
@@ -354,6 +378,7 @@ public abstract class AbstractInterpreterInstall
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public EObject replaceExtension(EClass clazz, EObject value) {
 		if (value != null) {
 			Assert.isLegal(clazz.equals(value.eClass()));
@@ -372,8 +397,9 @@ public abstract class AbstractInterpreterInstall
 				}
 				firePropertyChangeEvent(new PropertyChangeEvent(this,
 						IInterpreterInstallChangedListener.PROPERTY_EXTENSIONS,
-						Collections.singletonList(object), value != null
-								? Collections.singletonList(value) : null));
+						Collections.singletonList(object),
+						value != null ? Collections.singletonList(value)
+								: null));
 				return object;
 			}
 		}
@@ -389,6 +415,7 @@ public abstract class AbstractInterpreterInstall
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public List<EObject> copyExtensions() {
 		if (resource != null && !resource.getContents().isEmpty()) {
 			Collection<EObject> copy = EcoreUtil
@@ -406,6 +433,7 @@ public abstract class AbstractInterpreterInstall
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public List<EObject> getExtensions() {
 		if (resource != null && !resource.getContents().isEmpty()) {
 			return new ArrayList<EObject>(resource.getContents());
@@ -417,6 +445,7 @@ public abstract class AbstractInterpreterInstall
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void setExtensions(List<EObject> value) {
 		final List<EObject> oldValue;
 		if (resource == null) {
@@ -435,6 +464,7 @@ public abstract class AbstractInterpreterInstall
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public String saveExtensions() {
 		if (resource != null && !resource.getContents().isEmpty()) {
 			StringWriter stringWriter = new StringWriter();
@@ -458,6 +488,7 @@ public abstract class AbstractInterpreterInstall
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public void loadExtensions(String value) {
 		if (value != null && value.length() != 0) {
 			if (resource == null) {

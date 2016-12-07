@@ -274,6 +274,7 @@ public class DLTKLaunchingPlugin extends Plugin
 	/**
 	 * @see Plugin#start(BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
@@ -320,6 +321,7 @@ public class DLTKLaunchingPlugin extends Plugin
 	 * 
 	 * @see Plugin#stop(BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		try {
 			DeploymentManager.getInstance().shutdown();
@@ -352,6 +354,7 @@ public class DLTKLaunchingPlugin extends Plugin
 	 * 
 	 * @see org.eclipse.core.runtime.Preferences.IPropertyChangeListener#propertyChange(PropertyChangeEvent)
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
 		if (property.equals(ScriptRuntime.PREF_CONNECT_TIMEOUT)) {
@@ -502,6 +505,7 @@ public class DLTKLaunchingPlugin extends Plugin
 		return new InterpreterDefinitionsContainer();
 	}
 
+	@Override
 	public void defaultInterpreterInstallChanged(IInterpreterInstall previous,
 			IInterpreterInstall current) {
 		if (!fBatchingChanges) {
@@ -515,9 +519,11 @@ public class DLTKLaunchingPlugin extends Plugin
 		}
 	}
 
+	@Override
 	public void interpreterAdded(IInterpreterInstall Interpreter) {
 	}
 
+	@Override
 	public void interpreterChanged(
 			org.eclipse.dltk.launching.PropertyChangeEvent event) {
 		if (!fBatchingChanges) {
@@ -531,6 +537,7 @@ public class DLTKLaunchingPlugin extends Plugin
 		}
 	}
 
+	@Override
 	public void interpreterRemoved(IInterpreterInstall Interpreter) {
 		if (!fBatchingChanges) {
 			try {
@@ -612,13 +619,16 @@ public class DLTKLaunchingPlugin extends Plugin
 		// old container ids to new
 		private HashMap<IPath, IPath> fRenamedContainerIds = new HashMap<IPath, IPath>();
 
+		@Override
 		public void defaultInterpreterInstallChanged(
 				IInterpreterInstall previous, IInterpreterInstall current) {
 		}
 
+		@Override
 		public void interpreterAdded(IInterpreterInstall Interpreter) {
 		}
 
+		@Override
 		public void interpreterChanged(
 				org.eclipse.dltk.launching.PropertyChangeEvent event) {
 			String property = event.getProperty();
@@ -640,6 +650,7 @@ public class DLTKLaunchingPlugin extends Plugin
 			}
 		}
 
+		@Override
 		public void interpreterRemoved(IInterpreterInstall Interpreter) {
 		}
 
@@ -654,6 +665,7 @@ public class DLTKLaunchingPlugin extends Plugin
 
 		protected void doit(IProgressMonitor monitor) throws CoreException {
 			IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+				@Override
 				public void run(IProgressMonitor monitor1)
 						throws CoreException {
 					IScriptProject[] projects = DLTKCore
@@ -680,6 +692,7 @@ public class DLTKLaunchingPlugin extends Plugin
 			setSystem(true);
 		}
 
+		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
 				fChanges.doit(monitor);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.
+ * Copyright (c) 2009, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -21,15 +21,17 @@ import org.eclipse.dltk.launching.process.ScriptRuntimeProcessFactory;
 /**
  * @since 2.0
  */
-public class ScriptLaunchConfigurationMigrationDelegate implements
-		ILaunchConfigurationMigrationDelegate {
+public class ScriptLaunchConfigurationMigrationDelegate
+		implements ILaunchConfigurationMigrationDelegate {
 
+	@Override
 	public boolean isCandidate(ILaunchConfiguration candidate)
 			throws CoreException {
 		return candidate.getAttribute(DebugPlugin.ATTR_PROCESS_FACTORY_ID,
 				(String) null) == null;
 	}
 
+	@Override
 	public void migrate(ILaunchConfiguration candidate) throws CoreException {
 		ILaunchConfigurationWorkingCopy wc = candidate.getWorkingCopy();
 		wc.setAttribute(DebugPlugin.ATTR_PROCESS_FACTORY_ID,

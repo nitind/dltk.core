@@ -13,20 +13,22 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public class ScriptProjectSourceContainerTypeDelegate extends
-		AbstractSourceContainerTypeDelegate {
+public class ScriptProjectSourceContainerTypeDelegate
+		extends AbstractSourceContainerTypeDelegate {
 
 	private static String SCRIPT_PROJECT = "scriptProject"; //$NON-NLS-1$
-	
+
+	@Override
 	public ISourceContainer createSourceContainer(String memento)
 			throws CoreException {
 		Node node = parseDocument(memento);
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
 			Element element = (Element) node;
-			if (SCRIPT_PROJECT.equals(element.getNodeName())) { //$NON-NLS-1$
+			if (SCRIPT_PROJECT.equals(element.getNodeName())) { // $NON-NLS-1$
 				String string = element.getAttribute("name"); //$NON-NLS-1$
 				if (string == null || string.length() == 0) {
-					abort(LaunchingMessages.ScriptProjectSourceContainerTypeDelegate_5, null);
+					abort(LaunchingMessages.ScriptProjectSourceContainerTypeDelegate_5,
+							null);
 				}
 				IWorkspace workspace = ResourcesPlugin.getWorkspace();
 				IProject project = workspace.getRoot().getProject(string);
@@ -34,12 +36,15 @@ public class ScriptProjectSourceContainerTypeDelegate extends
 				IScriptProject scriptProject = DLTKCore.create(project);
 				return new ScriptProjectSourceContainer(scriptProject);
 			}
-			abort(LaunchingMessages.ScriptProjectSourceContainerTypeDelegate_6, null);
+			abort(LaunchingMessages.ScriptProjectSourceContainerTypeDelegate_6,
+					null);
 		}
-		abort(LaunchingMessages.ScriptProjectSourceContainerTypeDelegate_7, null);
+		abort(LaunchingMessages.ScriptProjectSourceContainerTypeDelegate_7,
+				null);
 		return null;
 	}
 
+	@Override
 	public String getMemento(ISourceContainer container) throws CoreException {
 		ScriptProjectSourceContainer project = (ScriptProjectSourceContainer) container;
 		Document document = newDocument();

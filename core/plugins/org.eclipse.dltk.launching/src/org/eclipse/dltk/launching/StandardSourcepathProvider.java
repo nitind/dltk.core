@@ -10,102 +10,121 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 
 public class StandardSourcepathProvider extends StandardBuildpathProvider {
 
+	@Override
 	public IRuntimeBuildpathEntry[] computeUnresolvedBuildpath(
 			ILaunchConfiguration configuration) throws CoreException {
-		boolean useDefault = configuration.getAttribute(ScriptLaunchConfigurationConstants.ATTR_DEFAULT_SOURCEPATH, true);
+		boolean useDefault = configuration.getAttribute(
+				ScriptLaunchConfigurationConstants.ATTR_DEFAULT_SOURCEPATH,
+				true);
 		IRuntimeBuildpathEntry[] entries = null;
 		if (useDefault) {
 			// the default source lookup path is the same as the classpath
 			entries = super.computeUnresolvedBuildpath(configuration);
 		} else {
 			// recover persisted source path
-			entries = recoverRuntimePath(configuration, ScriptLaunchConfigurationConstants.ATTR_SOURCEPATH);
+			entries = recoverRuntimePath(configuration,
+					ScriptLaunchConfigurationConstants.ATTR_SOURCEPATH);
 		}
 		return entries;
 
 	}
 
+	@Override
 	public IRuntimeBuildpathEntry[] resolveBuildpath(
-			IRuntimeBuildpathEntry[] entries, ILaunchConfiguration configuration)
-			throws CoreException {
+			IRuntimeBuildpathEntry[] entries,
+			ILaunchConfiguration configuration) throws CoreException {
 		List all = new UniqueList(entries.length);
 		for (int i = 0; i < entries.length; i++) {
 			switch (entries[i].getType()) {
-				case IRuntimeBuildpathEntry.PROJECT:
-					// a project resolves to itself for source lookup (rather than the class file output locations)
-					all.add(entries[i]);
-					break;
-				default:
-					IRuntimeBuildpathEntry[] resolved = ScriptRuntime.resolveRuntimeBuildpathEntry(entries[1], configuration);
-					all.add(resolved);
-					break;
+			case IRuntimeBuildpathEntry.PROJECT:
+				// a project resolves to itself for source lookup (rather than
+				// the class file output locations)
+				all.add(entries[i]);
+				break;
+			default:
+				IRuntimeBuildpathEntry[] resolved = ScriptRuntime
+						.resolveRuntimeBuildpathEntry(entries[1],
+								configuration);
+				all.add(resolved);
+				break;
 			}
 		}
-		
-		return (IRuntimeBuildpathEntry[]) all.toArray(new IRuntimeBuildpathEntry[all.size()]);
+
+		return (IRuntimeBuildpathEntry[]) all
+				.toArray(new IRuntimeBuildpathEntry[all.size()]);
 	}
 
-    class UniqueList extends ArrayList {
-        private static final long serialVersionUID = -7402160651027036270L;
-        HashSet set;
-        
-        public UniqueList(int length) {
-            super(length);
-            set = new HashSet(length);
-        }
+	class UniqueList extends ArrayList {
+		private static final long serialVersionUID = -7402160651027036270L;
+		HashSet set;
 
-        public void add(int index, Object element) {
-            if (set.add(element))
-                super.add(index, element);
-        }
+		public UniqueList(int length) {
+			super(length);
+			set = new HashSet(length);
+		}
 
-        public boolean add(Object o) {
-            if (set.add(o))
-                return super.add(o);
-            return false;
-        }
+		@Override
+		public void add(int index, Object element) {
+			if (set.add(element))
+				super.add(index, element);
+		}
 
-        public boolean addAll(Collection c) {
-            if (set.addAll(c))
-                return super.addAll(c);
-            return false;
-        }
+		@Override
+		public boolean add(Object o) {
+			if (set.add(o))
+				return super.add(o);
+			return false;
+		}
 
-        public boolean addAll(int index, Collection c) {
-            if (set.addAll(c))
-                return super.addAll(index, c);
-            return false;
-        }
+		@Override
+		public boolean addAll(Collection c) {
+			if (set.addAll(c))
+				return super.addAll(c);
+			return false;
+		}
 
-        public void clear() {
-            set.clear();
-            super.clear();
-        }
+		@Override
+		public boolean addAll(int index, Collection c) {
+			if (set.addAll(c))
+				return super.addAll(index, c);
+			return false;
+		}
 
-        public boolean contains(Object elem) {
-            return set.contains(elem);
-        }
+		@Override
+		public void clear() {
+			set.clear();
+			super.clear();
+		}
 
-        public void ensureCapacity(int minCapacity) {
-            super.ensureCapacity(minCapacity);
-        }
+		@Override
+		public boolean contains(Object elem) {
+			return set.contains(elem);
+		}
 
-        public Object remove(int index) {
-            Object object = super.remove(index);
-            set.remove(object);
-            return object;
-        }
+		@Override
+		public void ensureCapacity(int minCapacity) {
+			super.ensureCapacity(minCapacity);
+		}
 
-        protected void removeRange(int fromIndex, int toIndex) {
-            for (int index = fromIndex; index<=toIndex; index++)
-                remove(index);
-        }
+		@Override
+		public Object remove(int index) {
+			Object object = super.remove(index);
+			set.remove(object);
+			return object;
+		}
 
-        public Object set(int index, Object element) {
-            set.remove(element);
-            if (set.add(element))
-                return super.set(index, element);
-            return null; //should not happen.
-        }        
-    }	
+		@Override
+		protected void removeRange(int fromIndex, int toIndex) {
+			for (int index = fromIndex; index <= toIndex; index++)
+				remove(index);
+		}
+
+		@Override
+		public Object set(int index, Object element) {
+			set.remove(element);
+			if (set.add(element))
+				return super.set(index, element);
+			return null; // should not happen.
+		}
+	}
 }

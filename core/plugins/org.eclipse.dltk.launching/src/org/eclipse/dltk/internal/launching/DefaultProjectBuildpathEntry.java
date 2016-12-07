@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.launching;
 
@@ -63,6 +62,7 @@ public class DefaultProjectBuildpathEntry
 		setScriptProject(project);
 	}
 
+	@Override
 	protected void buildMemento(Document document, Element memento)
 			throws CoreException {
 		memento.setAttribute("project", getScriptProject().getElementName()); //$NON-NLS-1$
@@ -70,6 +70,7 @@ public class DefaultProjectBuildpathEntry
 				Boolean.toString(fExportedEntriesOnly));
 	}
 
+	@Override
 	public void initializeFrom(Element memento) throws CoreException {
 		String name = memento.getAttribute("project"); //$NON-NLS-1$
 		if (name == null) {
@@ -86,10 +87,12 @@ public class DefaultProjectBuildpathEntry
 		}
 	}
 
+	@Override
 	public String getTypeId() {
 		return TYPE_ID;
 	}
 
+	@Override
 	public int getType() {
 		return OTHER;
 	}
@@ -98,22 +101,27 @@ public class DefaultProjectBuildpathEntry
 		return getScriptProject().getProject();
 	}
 
+	@Override
 	public String getLocation() {
 		return getProject().getLocation().toOSString();
 	}
 
+	@Override
 	public URI getLocationURI() {
 		return getProject().getLocationURI();
 	}
 
+	@Override
 	public IPath getPath() {
 		return getProject().getFullPath();
 	}
 
+	@Override
 	public IResource getResource() {
 		return getProject();
 	}
 
+	@Override
 	public IRuntimeBuildpathEntry[] getRuntimeBuildpathEntries(
 			ILaunchConfiguration configuration) throws CoreException {
 		IBuildpathEntry entry = DLTKCore
@@ -295,10 +303,12 @@ public class DefaultProjectBuildpathEntry
 		return;
 	}
 
+	@Override
 	public boolean isComposite() {
 		return true;
 	}
 
+	@Override
 	public String getName() {
 		if (isExportedEntriesOnly()) {
 			return MessageFormat.format(
@@ -315,6 +325,7 @@ public class DefaultProjectBuildpathEntry
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof DefaultProjectBuildpathEntry) {
 			DefaultProjectBuildpathEntry entry = (DefaultProjectBuildpathEntry) obj;
@@ -329,6 +340,7 @@ public class DefaultProjectBuildpathEntry
 	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		return getScriptProject().hashCode();
 	}

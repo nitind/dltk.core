@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -33,6 +33,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see ILaunch#addDebugTarget(IDebugTarget)
 	 */
+	@Override
 	public void addDebugTarget(IDebugTarget target) {
 		original.addDebugTarget(target);
 	}
@@ -40,6 +41,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see ILaunch#addProcess(IProcess)
 	 */
+	@Override
 	public void addProcess(IProcess process) {
 		original.addProcess(process);
 	}
@@ -47,6 +49,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see ILaunch#getAttribute(String)
 	 */
+	@Override
 	public String getAttribute(String key) {
 		if (DebugPlugin.ATTR_CAPTURE_OUTPUT.equals(key)) {
 			return Boolean.TRUE.toString();
@@ -58,6 +61,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see org.eclipse.debug.core.ILaunch#getChildren()
 	 */
+	@Override
 	public Object[] getChildren() {
 		return original.getChildren();
 	}
@@ -65,6 +69,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see org.eclipse.debug.core.ILaunch#getDebugTarget()
 	 */
+	@Override
 	public IDebugTarget getDebugTarget() {
 		return original.getDebugTarget();
 	}
@@ -72,6 +77,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see org.eclipse.debug.core.ILaunch#getDebugTargets()
 	 */
+	@Override
 	public IDebugTarget[] getDebugTargets() {
 		return original.getDebugTargets();
 	}
@@ -79,6 +85,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see org.eclipse.debug.core.ILaunch#getLaunchConfiguration()
 	 */
+	@Override
 	public ILaunchConfiguration getLaunchConfiguration() {
 		return original.getLaunchConfiguration();
 	}
@@ -86,6 +93,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see org.eclipse.debug.core.ILaunch#getLaunchMode()
 	 */
+	@Override
 	public String getLaunchMode() {
 		return original.getLaunchMode();
 	}
@@ -93,6 +101,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see org.eclipse.debug.core.ILaunch#getProcesses()
 	 */
+	@Override
 	public IProcess[] getProcesses() {
 		return original.getProcesses();
 	}
@@ -100,6 +109,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see org.eclipse.debug.core.ILaunch#getSourceLocator()
 	 */
+	@Override
 	public ISourceLocator getSourceLocator() {
 		return original.getSourceLocator();
 	}
@@ -107,6 +117,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see org.eclipse.debug.core.ILaunch#hasChildren()
 	 */
+	@Override
 	public boolean hasChildren() {
 		return original.hasChildren();
 	}
@@ -116,6 +127,7 @@ class LaunchProxy implements ILaunch {
 	 * org.eclipse.debug.core.ILaunch#removeDebugTarget(org.eclipse.debug.core
 	 * .model.IDebugTarget)
 	 */
+	@Override
 	public void removeDebugTarget(IDebugTarget target) {
 		original.removeDebugTarget(target);
 	}
@@ -123,6 +135,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see ILaunch#removeProcess(IProcess)
 	 */
+	@Override
 	public void removeProcess(IProcess process) {
 		original.removeProcess(process);
 	}
@@ -130,6 +143,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see ILaunch#setAttribute(String,String)
 	 */
+	@Override
 	public void setAttribute(String key, String value) {
 		original.setAttribute(key, value);
 	}
@@ -137,6 +151,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see ILaunch#setSourceLocator(ISourceLocator)
 	 */
+	@Override
 	public void setSourceLocator(ISourceLocator sourceLocator) {
 		original.setSourceLocator(sourceLocator);
 	}
@@ -144,6 +159,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
 	 */
+	@Override
 	public boolean canTerminate() {
 		return original.canTerminate();
 	}
@@ -151,6 +167,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
 	 */
+	@Override
 	public boolean isTerminated() {
 		return original.isTerminated();
 	}
@@ -158,6 +175,7 @@ class LaunchProxy implements ILaunch {
 	/*
 	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
 	 */
+	@Override
 	public void terminate() throws DebugException {
 		original.terminate();
 	}

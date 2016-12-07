@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.launching;
 
@@ -57,8 +56,9 @@ public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 
 	private static String renderProcessLabel(String[] commandLine) {
 		String format = LaunchingMessages.StandardInterpreterRunner;
-		String timestamp = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
-				DateFormat.MEDIUM).format(new Date(System.currentTimeMillis()));
+		String timestamp = DateFormat
+				.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM)
+				.format(new Date(System.currentTimeMillis()));
 		return NLS.bind(format, commandLine[0], timestamp);
 	}
 
@@ -106,10 +106,10 @@ public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 
 	protected void abort(String message, Throwable exception)
 			throws CoreException {
-		throw new CoreException(new Status(IStatus.ERROR,
-				DLTKLaunchingPlugin.PLUGIN_ID,
-				ScriptLaunchConfigurationConstants.ERR_INTERNAL_ERROR, message,
-				exception));
+		throw new CoreException(
+				new Status(IStatus.ERROR, DLTKLaunchingPlugin.PLUGIN_ID,
+						ScriptLaunchConfigurationConstants.ERR_INTERNAL_ERROR,
+						message, exception));
 	}
 
 	protected void abort(String message, Throwable exception, int code)
@@ -144,24 +144,20 @@ public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 		IPath workingDirectoryPath = config.getWorkingDirectoryPath();
 		IFileHandle dir = environment.getFile(workingDirectoryPath);
 		if (!dir.exists()) {
-			abort(
-					NLS
-							.bind(
-									InterpreterMessages.errDebuggingEngineWorkingDirectoryDoesntExist,
-									dir.toString()), null);
+			abort(NLS.bind(
+					InterpreterMessages.errDebuggingEngineWorkingDirectoryDoesntExist,
+					dir.toString()), null);
 		}
 		if (config.getScriptFilePath() == null) {
 			return;
 		}
 		if (!config.isNoFile()) {
-			final IFileHandle script = environment.getFile(config
-					.getScriptFilePath());
+			final IFileHandle script = environment
+					.getFile(config.getScriptFilePath());
 			if (!script.exists()) {
-				abort(
-						NLS
-								.bind(
-										InterpreterMessages.errDebuggingEngineScriptFileDoesntExist,
-										script.toString()), null);
+				abort(NLS.bind(
+						InterpreterMessages.errDebuggingEngineScriptFileDoesntExist,
+						script.toString()), null);
 			}
 		}
 	}
@@ -219,16 +215,16 @@ public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 				.isEnabled() ? new LaunchLogger() : null;
 		Process p = exeEnv.exec(cmdLine, workingDirectory, environment, logger);
 		if (p == null) {
-			abort(
-					LaunchingMessages.AbstractInterpreterRunner_executionWasCancelled,
+			abort(LaunchingMessages.AbstractInterpreterRunner_executionWasCancelled,
 					null);
 		}
 
 		launch.setAttribute(DLTKLaunchingPlugin.LAUNCH_COMMAND_LINE,
 				cmdLineLabel);
 		final IProcess process[] = new IProcess[] { null };
-		DebugPlugin.getDefault().addDebugEventListener(
-				new IDebugEventSetListener() {
+		DebugPlugin.getDefault()
+				.addDebugEventListener(new IDebugEventSetListener() {
+					@Override
 					public void handleDebugEvents(DebugEvent[] events) {
 						for (int i = 0; i < events.length; i++) {
 							DebugEvent event = events[i];
@@ -237,7 +233,8 @@ public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 										|| event.getKind() == DebugEvent.TERMINATE) {
 									updateProcessLabel(launch, cmdLineLabel,
 											process[0]);
-									if (event.getKind() == DebugEvent.TERMINATE) {
+									if (event
+											.getKind() == DebugEvent.TERMINATE) {
 										DebugPlugin.getDefault()
 												.removeDebugEventListener(this);
 									}
@@ -246,7 +243,8 @@ public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 						}
 					}
 				});
-		process[0] = newProcess(launch, p, processLabel, getDefaultProcessMap());
+		process[0] = newProcess(launch, p, processLabel,
+				getDefaultProcessMap());
 		process[0].setAttribute(IProcess.ATTR_CMDLINE, cmdLineLabel);
 		updateProcessLabel(launch, cmdLineLabel, process[0]);
 		return process[0];
@@ -292,9 +290,10 @@ public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 	/**
 	 * @since 2.0
 	 */
-	protected String[] getEnvironmentVariablesAsStrings(InterpreterConfig config) {
-		return config.getEnvironmentAsStringsIncluding(getInstall()
-				.getEnvironmentVariables());
+	protected String[] getEnvironmentVariablesAsStrings(
+			InterpreterConfig config) {
+		return config.getEnvironmentAsStringsIncluding(
+				getInstall().getEnvironmentVariables());
 	}
 
 	private void traceExecution(String processLabel, String cmdLineLabel,
@@ -312,6 +311,7 @@ public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 		System.out.println(sb);
 	}
 
+	@Override
 	public void run(InterpreterConfig config, ILaunch launch,
 			IProgressMonitor monitor) throws CoreException {
 		if (monitor == null) {
@@ -326,8 +326,8 @@ public abstract class AbstractInterpreterRunner implements IInterpreterRunner {
 			}
 			alterConfig(launch, config);
 			monitor.worked(1);
-			monitor
-					.subTask(LaunchingMessages.AbstractInterpreterRunner_running);
+			monitor.subTask(
+					LaunchingMessages.AbstractInterpreterRunner_running);
 			rawRun(launch, config);
 			monitor.worked(4);
 

@@ -23,10 +23,11 @@ public class LocalExecEnvironment implements IExecutionEnvironment {
 	private static IPath temp;
 	private static int counter = -1;
 
+	@Override
 	public IDeployment createDeployment() {
 		try {
-			IPath rootPath = getTempDirPath().append(
-					getTempName("dltk", ".tmp")); //$NON-NLS-1$ //$NON-NLS-2$
+			IPath rootPath = getTempDirPath()
+					.append(getTempName("dltk", ".tmp")); //$NON-NLS-1$ //$NON-NLS-2$
 			URI rootUri = createLocalURI(rootPath);
 			return new EFSDeployment(LocalEnvironment.getInstance(), rootUri);
 		} catch (CoreException e) {
@@ -63,8 +64,9 @@ public class LocalExecEnvironment implements IExecutionEnvironment {
 		return temp;
 	}
 
-	public Process exec(String[] cmdLine, IPath workingDir, String[] environment)
-			throws CoreException {
+	@Override
+	public Process exec(String[] cmdLine, IPath workingDir,
+			String[] environment) throws CoreException {
 		File workingDirFile = null;
 		if (workingDir != null) {
 			workingDirFile = workingDir.toFile();
@@ -72,27 +74,32 @@ public class LocalExecEnvironment implements IExecutionEnvironment {
 		return DebugPlugin.exec(cmdLine, workingDirFile, environment);
 	}
 
+	@Override
 	public Process exec(String[] cmdLine, IPath workingDir,
-			String[] environment, IExecutionLogger logger) throws CoreException {
+			String[] environment, IExecutionLogger logger)
+			throws CoreException {
 		return exec(cmdLine, workingDir, environment);
 	}
 
+	@Override
 	public Map getEnvironmentVariables(boolean value) {
 		return DebugPlugin.getDefault().getLaunchManager()
 				.getNativeEnvironmentCasePreserved();
 	}
 
+	@Override
 	public IEnvironment getEnvironment() {
 		return LocalEnvironment.getInstance();
 	}
 
+	@Override
 	public boolean isValidExecutableAndEquals(String possibleName, IPath path) {
 		if (Platform.getOS().equals(Platform.OS_WIN32)) {
 			possibleName = possibleName.toLowerCase();
 			String fName = path.removeFileExtension().toString().toLowerCase();
 			String ext = path.getFileExtension();
-			if (possibleName.equals(fName)
-					&& ("exe".equalsIgnoreCase(ext) || "bat".equalsIgnoreCase(ext))) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (possibleName.equals(fName) && ("exe".equalsIgnoreCase(ext) //$NON-NLS-1$
+					|| "bat".equalsIgnoreCase(ext))) { //$NON-NLS-1$
 				return true;
 			}
 		} else {
@@ -107,6 +114,7 @@ public class LocalExecEnvironment implements IExecutionEnvironment {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public boolean isSafeEnvironmentVariable(String envVarName) {
 		return true;
 	}

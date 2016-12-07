@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.  
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -45,12 +45,15 @@ public class DeploymentManager implements ILaunchesListener2 {
 		DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(this);
 	}
 
+	@Override
 	public void launchesAdded(ILaunch[] launches) {
 	}
 
+	@Override
 	public void launchesChanged(ILaunch[] launches) {
 	}
 
+	@Override
 	public synchronized void launchesRemoved(ILaunch[] launches) {
 		for (int i = 0; i < launches.length; i++) {
 			if (launchToDeployment.containsKey(launches[i])) {
@@ -90,6 +93,7 @@ public class DeploymentManager implements ILaunchesListener2 {
 		activeDeployments.remove(deployment);
 	}
 
+	@Override
 	public void launchesTerminated(ILaunch[] launches) {
 		launchesRemoved(launches);
 	}

@@ -25,6 +25,7 @@ public class BuildpathContainerSourceContainer extends AbstractSourceContainer {
 		libraryPath = location;
 	}
 
+	@Override
 	public Object[] findSourceElements(String name) throws CoreException {
 		if (name.indexOf(libraryPath) == -1) {
 			return new Object[0];
@@ -62,10 +63,12 @@ public class BuildpathContainerSourceContainer extends AbstractSourceContainer {
 		return new Object[0];
 	}
 
+	@Override
 	public String getName() {
 		return libraryPath;
 	}
 
+	@Override
 	public ISourceContainerType getType() {
 		// TODO Auto-generated method stub
 		return null;

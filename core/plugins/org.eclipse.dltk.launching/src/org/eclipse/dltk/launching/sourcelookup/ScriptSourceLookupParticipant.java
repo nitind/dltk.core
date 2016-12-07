@@ -16,15 +16,16 @@ import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.debug.core.model.ScriptStackFrame;
 import org.eclipse.dltk.internal.launching.LaunchConfigurationUtils;
 
-public class ScriptSourceLookupParticipant extends
-		AbstractSourceLookupParticipant {
+public class ScriptSourceLookupParticipant
+		extends AbstractSourceLookupParticipant {
 
+	@Override
 	public String getSourceName(Object object) throws CoreException {
 		if (object instanceof ScriptStackFrame) {
 			final ScriptStackFrame frame = (ScriptStackFrame) object;
 			final URI uri = frame.getSourceURI();
-			if (DLTKDebugConstants.UNKNOWN_SCHEME.equalsIgnoreCase(uri
-					.getScheme())) {
+			if (DLTKDebugConstants.UNKNOWN_SCHEME
+					.equalsIgnoreCase(uri.getScheme())) {
 				return null;
 			}
 
@@ -43,8 +44,8 @@ public class ScriptSourceLookupParticipant extends
 				return path.substring(root.length() + 1);
 			}
 
-			IFile[] files = getWorkspaceRoot().findFilesForLocation(
-					new Path(path));
+			IFile[] files = getWorkspaceRoot()
+					.findFilesForLocation(new Path(path));
 
 			IProject project = LaunchConfigurationUtils
 					.getProject(getDirector().getLaunchConfiguration());
@@ -62,11 +63,12 @@ public class ScriptSourceLookupParticipant extends
 	}
 
 	protected String getProjectRoot() throws CoreException {
-		IProject project = LaunchConfigurationUtils.getProject(getDirector()
-				.getLaunchConfiguration());
+		IProject project = LaunchConfigurationUtils
+				.getProject(getDirector().getLaunchConfiguration());
 		return project.getLocationURI().getPath();
 	}
 
+	@Override
 	public Object[] findSourceElements(Object object) throws CoreException {
 		final Object[] elements = super.findSourceElements(object);
 		if (elements != null && elements.length > 0) {
@@ -75,8 +77,8 @@ public class ScriptSourceLookupParticipant extends
 		if (object instanceof ScriptStackFrame) {
 			ScriptStackFrame frame = (ScriptStackFrame) object;
 			final URI uri = frame.getSourceURI();
-			if (DLTKDebugConstants.UNKNOWN_SCHEME.equalsIgnoreCase(uri
-					.getScheme())) {
+			if (DLTKDebugConstants.UNKNOWN_SCHEME
+					.equalsIgnoreCase(uri.getScheme())) {
 				return null;
 			}
 			final String path = uri.getPath();
@@ -92,15 +94,14 @@ public class ScriptSourceLookupParticipant extends
 
 			IProject project = LaunchConfigurationUtils
 					.getProject(launchConfiguration);
-			final ProjectSourceLookup lookup = new ProjectSourceLookup(
-					project);
+			final ProjectSourceLookup lookup = new ProjectSourceLookup(project);
 			final IProjectLookupResult result = lookup.find(pathObj);
 			if (result != null) {
 				return result.toArray();
 			}
-			return new Object[] { new DBGPSourceModule((ScriptProject) lookup
-					.getScriptProject(), path, DefaultWorkingCopyOwner.PRIMARY,
-					frame) };
+			return new Object[] { new DBGPSourceModule(
+					(ScriptProject) lookup.getScriptProject(), path,
+					DefaultWorkingCopyOwner.PRIMARY, frame) };
 		}
 		return null;
 	}

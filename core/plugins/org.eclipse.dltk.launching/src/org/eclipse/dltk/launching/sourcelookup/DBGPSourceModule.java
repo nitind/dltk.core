@@ -44,6 +44,7 @@ public class DBGPSourceModule extends AbstractExternalSourceModule {
 	/*
 	 * @see AbstractSourceModule#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof DBGPSourceModule)) {
 			return false;
@@ -52,6 +53,7 @@ public class DBGPSourceModule extends AbstractExternalSourceModule {
 		return super.equals(obj);
 	}
 
+	@Override
 	protected IStatus validateSourceModule(IResource resource) {
 		/*
 		 * XXX: is there a way to validate a remote resource?
@@ -62,20 +64,22 @@ public class DBGPSourceModule extends AbstractExternalSourceModule {
 	/*
 	 * @see org.eclipse.core.resources.IStorage#getContents()
 	 */
+	@Override
 	public InputStream getContents() throws CoreException {
 		try {
 			byte[] contents = lookupSource().getBytes();
 			return new ByteArrayInputStream(contents);
 		} catch (DbgpException e) {
-			throw new CoreException(new Status(IStatus.ERROR,
-					DLTKCore.PLUGIN_ID,
-					Messages.DBGPSourceModule_dbgpSourceLookup, e));
+			throw new CoreException(
+					new Status(IStatus.ERROR, DLTKCore.PLUGIN_ID,
+							Messages.DBGPSourceModule_dbgpSourceLookup, e));
 		}
 	}
 
 	/*
 	 * @see org.eclipse.dltk.compiler.env.IDependent#getFileName()
 	 */
+	@Override
 	public String getFileName() {
 		/*
 		 * XXX: remote source should not be touched by compiler
@@ -89,6 +93,7 @@ public class DBGPSourceModule extends AbstractExternalSourceModule {
 	/*
 	 * @see org.eclipse.dltk.internal.core.AbstractSourceModule#getPath()
 	 */
+	@Override
 	public IPath getPath() {
 		/*
 		 * return the path of the file on the remote host, allows remote
@@ -100,6 +105,7 @@ public class DBGPSourceModule extends AbstractExternalSourceModule {
 	/*
 	 * @see org.eclipse.core.resources.IStorage#getFullPath()
 	 */
+	@Override
 	public IPath getFullPath() {
 		return null;
 	}
@@ -107,6 +113,7 @@ public class DBGPSourceModule extends AbstractExternalSourceModule {
 	/*
 	 * @see org.eclipse.core.resources.IStorage#getName()
 	 */
+	@Override
 	public String getName() {
 		return "DBGP: " + getElementName(); //$NON-NLS-1$
 	}
@@ -114,6 +121,7 @@ public class DBGPSourceModule extends AbstractExternalSourceModule {
 	/*
 	 * @see AbstractSourceModule#getBufferContent()
 	 */
+	@Override
 	protected char[] getBufferContent() throws ModelException {
 		try {
 			return lookupSource().toCharArray();
@@ -143,6 +151,7 @@ public class DBGPSourceModule extends AbstractExternalSourceModule {
 	/*
 	 * @see AbstractExternalSourceModule#getModuleType()
 	 */
+	@Override
 	protected String getModuleType() {
 		return "DLTK Remote Source Module"; //$NON-NLS-1$
 	}
@@ -150,6 +159,7 @@ public class DBGPSourceModule extends AbstractExternalSourceModule {
 	/*
 	 * @see org.eclipse.dltk.internal.core.AbstractSourceModule#getNatureId()
 	 */
+	@Override
 	protected String getNatureId() {
 		IDLTKLanguageToolkit toolkit = lookupLanguageToolkit(getParent());
 		if (toolkit == null)
@@ -161,6 +171,7 @@ public class DBGPSourceModule extends AbstractExternalSourceModule {
 	/*
 	 * @see AbstractSourceModule#getOriginalSourceModule()
 	 */
+	@Override
 	protected ISourceModule getOriginalSourceModule() {
 		return new DBGPSourceModule((ScriptProject) getParent(),
 				getElementName(), DefaultWorkingCopyOwner.PRIMARY, frame);

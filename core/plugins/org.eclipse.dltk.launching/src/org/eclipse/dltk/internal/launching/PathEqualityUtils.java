@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2016 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -18,6 +18,7 @@ public class PathEqualityUtils {
 
 	private static final class Win32PathCompare implements IPathEquality {
 
+		@Override
 		public boolean equals(IPath path1, IPath path2) {
 			/*
 			 * the .equals method of IPath ignores trailing separators so we
@@ -28,13 +29,15 @@ public class PathEqualityUtils {
 							path2.removeTrailingSeparator().toOSString());
 		}
 
+		@Override
 		public boolean isPrefixOf(IPath path, IPath anotherPath) {
 			if (path.getDevice() == null) {
 				if (anotherPath.getDevice() != null) {
 					return false;
 				}
 			} else {
-				if (!path.getDevice().equalsIgnoreCase(anotherPath.getDevice())) {
+				if (!path.getDevice()
+						.equalsIgnoreCase(anotherPath.getDevice())) {
 					return false;
 				}
 			}
@@ -56,10 +59,12 @@ public class PathEqualityUtils {
 
 	private static final class GenericPathCompare implements IPathEquality {
 
+		@Override
 		public boolean equals(IPath path1, IPath path2) {
 			return path1.equals(path2);
 		}
 
+		@Override
 		public boolean isPrefixOf(IPath path, IPath anotherPath) {
 			return path.isPrefixOf(anotherPath);
 		}

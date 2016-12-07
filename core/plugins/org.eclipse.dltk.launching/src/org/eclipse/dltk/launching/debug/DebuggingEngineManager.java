@@ -54,7 +54,8 @@ public class DebuggingEngineManager extends DLTKContributionExtensionManager {
 	 * @return true if the nature has a selected debugging engine, false
 	 *         otherwise
 	 */
-	public boolean hasSelectedDebuggingEngine(IProject project, String natureId) {
+	public boolean hasSelectedDebuggingEngine(IProject project,
+			String natureId) {
 		return getSelectedDebuggingEngine(project, natureId) != null;
 	}
 
@@ -64,10 +65,11 @@ public class DebuggingEngineManager extends DLTKContributionExtensionManager {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.dltk.core.DLTKContributionExtensionManager#configureContribution
-	 * (java.lang.Object, org.eclipse.core.runtime.IConfigurationElement)
+	 * @see org.eclipse.dltk.core.DLTKContributionExtensionManager#
+	 * configureContribution (java.lang.Object,
+	 * org.eclipse.core.runtime.IConfigurationElement)
 	 */
+	@Override
 	protected Object configureContribution(Object object,
 			IConfigurationElement config) {
 		return new DebuggingEngine((IInterpreterRunnerFactory) object, config);
@@ -77,6 +79,7 @@ public class DebuggingEngineManager extends DLTKContributionExtensionManager {
 	 * @seeorg.eclipse.dltk.core.DLTKContributionExtensionManager#
 	 * getContributionElementName()
 	 */
+	@Override
 	protected String getContributionElementName() {
 		return ENGINE_TAG;
 	}
@@ -86,15 +89,16 @@ public class DebuggingEngineManager extends DLTKContributionExtensionManager {
 	 * org.eclipse.dltk.core.DLTKContributionExtensionManager#getExtensionPoint
 	 * ()
 	 */
+	@Override
 	protected String getExtensionPoint() {
 		return DEBUGGING_ENGINE_EXT_POINT;
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.dltk.core.DLTKContributionExtensionManager#isValidContribution
-	 * (java.lang.Object)
+	 * @see org.eclipse.dltk.core.DLTKContributionExtensionManager#
+	 * isValidContribution (java.lang.Object)
 	 */
+	@Override
 	protected boolean isValidContribution(Object object) {
 		return (object instanceof IInterpreterRunnerFactory);
 	}

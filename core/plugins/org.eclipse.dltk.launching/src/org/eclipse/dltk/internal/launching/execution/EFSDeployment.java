@@ -32,6 +32,7 @@ public class EFSDeployment implements IDeployment {
 		DeploymentManager.getInstance().addDeployment(this);
 	}
 
+	@Override
 	public IPath add(Bundle bundle, String bundlePath) throws IOException {
 		try {
 			final IFileStore dest = root.getChild(new Path(bundlePath));
@@ -42,7 +43,8 @@ public class EFSDeployment implements IDeployment {
 				while (paths.hasMoreElements()) {
 					final String path = (String) paths.nextElement();
 					if (path.endsWith("/")) { //$NON-NLS-1$
-						if (!path.endsWith("/CVS/") && !path.endsWith("/.svn/")) { //$NON-NLS-1$ //$NON-NLS-2$
+						if (!path.endsWith("/CVS/") //$NON-NLS-1$
+								&& !path.endsWith("/.svn/")) { //$NON-NLS-1$
 							add(bundle, path);
 						}
 					} else {
@@ -80,8 +82,8 @@ public class EFSDeployment implements IDeployment {
 			throws IOException, CoreException {
 		OutputStream output = null;
 		try {
-			output = new BufferedOutputStream(file.openOutputStream(EFS.NONE,
-					null), 4096);
+			output = new BufferedOutputStream(
+					file.openOutputStream(EFS.NONE, null), 4096);
 			copy(input, output);
 		} catch (IOException e) {
 			throw e;
@@ -92,8 +94,8 @@ public class EFSDeployment implements IDeployment {
 		}
 	}
 
-	private static void copy(URL url, IFileStore file) throws IOException,
-			CoreException {
+	private static void copy(URL url, IFileStore file)
+			throws IOException, CoreException {
 		InputStream input = null;
 		try {
 			input = url.openStream();
@@ -105,6 +107,7 @@ public class EFSDeployment implements IDeployment {
 		}
 	}
 
+	@Override
 	public void dispose() {
 		if (root == null) {
 			return;
@@ -120,14 +123,17 @@ public class EFSDeployment implements IDeployment {
 		root = null;
 	}
 
+	@Override
 	public IPath getAbsolutePath() {
 		return new Path(root.toURI().getPath());
 	}
 
+	@Override
 	public IFileHandle getFile(IPath deploymentPath) {
 		return new EFSFileHandle(environment, root.getChild(deploymentPath));
 	}
 
+	@Override
 	public void mkdirs(IPath path) {
 		try {
 			root.getChild(path).mkdir(EFS.NONE, null);
@@ -138,6 +144,7 @@ public class EFSDeployment implements IDeployment {
 		}
 	}
 
+	@Override
 	public IPath add(InputStream input, String filename) throws IOException {
 		final IFileStore dest = root.getChild(filename);
 		try {

@@ -19,9 +19,10 @@ import org.eclipse.dltk.internal.launching.LaunchConfigurationUtils;
  * 
  * @author haiodo
  */
-public class DBGPSourceLookupParticipant extends
-		AbstractSourceLookupParticipant {
+public class DBGPSourceLookupParticipant
+		extends AbstractSourceLookupParticipant {
 
+	@Override
 	public String getSourceName(Object object) throws CoreException {
 		if (object instanceof ScriptStackFrame) {
 			final ScriptStackFrame frame = (ScriptStackFrame) object;
@@ -34,6 +35,7 @@ public class DBGPSourceLookupParticipant extends
 		return null;
 	}
 
+	@Override
 	public Object[] findSourceElements(Object object) throws CoreException {
 		if (object instanceof ScriptStackFrame) {
 			final ScriptStackFrame frame = (ScriptStackFrame) object;
@@ -46,8 +48,9 @@ public class DBGPSourceLookupParticipant extends
 						.getProject(launchConfiguration);
 				final ScriptProject scriptProject = (ScriptProject) DLTKCore
 						.create(project);
-				return new Object[] { new DBGPSourceModule(scriptProject, uri
-						.getPath(), DefaultWorkingCopyOwner.PRIMARY, frame) };
+				return new Object[] {
+						new DBGPSourceModule(scriptProject, uri.getPath(),
+								DefaultWorkingCopyOwner.PRIMARY, frame) };
 			}
 		}
 		return null;

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.launching;
 
@@ -25,12 +24,12 @@ import org.eclipse.dltk.core.IScriptProject;
  * </p>
  */
 public class StandardBuildpathProvider implements IRuntimeBuildpathProvider {
+	@Override
 	public IRuntimeBuildpathEntry[] computeUnresolvedBuildpath(
 			ILaunchConfiguration configuration) throws CoreException {
-		boolean useDefault = configuration
-				.getAttribute(
-						ScriptLaunchConfigurationConstants.ATTR_DEFAULT_BUILDPATH,
-						true);
+		boolean useDefault = configuration.getAttribute(
+				ScriptLaunchConfigurationConstants.ATTR_DEFAULT_BUILDPATH,
+				true);
 		if (useDefault) {
 			IScriptProject proj = ScriptRuntime.getScriptProject(configuration);
 			IRuntimeBuildpathEntry InterpreterEnvironmentEntry = ScriptRuntime
@@ -40,7 +39,8 @@ public class StandardBuildpathProvider implements IRuntimeBuildpathProvider {
 				if (InterpreterEnvironmentEntry == null) {
 					return new IRuntimeBuildpathEntry[0];
 				}
-				return new IRuntimeBuildpathEntry[] { InterpreterEnvironmentEntry };
+				return new IRuntimeBuildpathEntry[] {
+						InterpreterEnvironmentEntry };
 			}
 			IRuntimeBuildpathEntry[] entries = ScriptRuntime
 					.computeUnresolvedRuntimeBuildpath(proj);
@@ -65,9 +65,10 @@ public class StandardBuildpathProvider implements IRuntimeBuildpathProvider {
 				ScriptLaunchConfigurationConstants.ATTR_BUILDPATH);
 	}
 
+	@Override
 	public IRuntimeBuildpathEntry[] resolveBuildpath(
-			IRuntimeBuildpathEntry[] entries, ILaunchConfiguration configuration)
-			throws CoreException {
+			IRuntimeBuildpathEntry[] entries,
+			ILaunchConfiguration configuration) throws CoreException {
 		List<IRuntimeBuildpathEntry> all = new ArrayList<IRuntimeBuildpathEntry>(
 				entries.length);
 		for (int i = 0; i < entries.length; i++) {
@@ -103,8 +104,8 @@ public class StandardBuildpathProvider implements IRuntimeBuildpathProvider {
 				.size()];
 		int i = 0;
 		for (Iterator<?> iter = entries.iterator(); iter.hasNext();) {
-			rtes[i] = ScriptRuntime.newRuntimeBuildpathEntry((String) iter
-					.next());
+			rtes[i] = ScriptRuntime
+					.newRuntimeBuildpathEntry((String) iter.next());
 			i++;
 		}
 		return rtes;

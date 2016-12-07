@@ -11,13 +11,16 @@ import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.debug.core.model.ScriptStackFrame;
 import org.eclipse.dltk.internal.launching.LaunchConfigurationUtils;
 
-public class RemoteScriptSourceLookupDirector extends
-		AbstractSourceLookupDirector {
+public class RemoteScriptSourceLookupDirector
+		extends AbstractSourceLookupDirector {
 
+	@Override
 	public void initializeParticipants() {
-		addParticipants(new ISourceLookupParticipant[] { new RemoteScriptSourceLookupParticipant() });
+		addParticipants(new ISourceLookupParticipant[] {
+				new RemoteScriptSourceLookupParticipant() });
 	}
 
+	@Override
 	public Object getSourceElement(Object element) {
 		// source element was found inside the project
 		Object o = super.getSourceElement(element);
