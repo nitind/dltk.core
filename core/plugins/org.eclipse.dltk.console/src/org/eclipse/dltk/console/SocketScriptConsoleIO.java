@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.console;
 
@@ -28,25 +27,30 @@ public class SocketScriptConsoleIO implements IScriptConsoleIO {
 		io = new ScriptConsoleIO(socket.getInputStream(), output);
 	}
 
+	@Override
 	public String getId() {
 		return io.getId();
 	}
 
+	@Override
 	public InterpreterResponse execInterpreter(String command)
 			throws IOException {
 		return io.execInterpreter(command);
 	}
 
+	@Override
 	public ShellResponse execShell(String command, String[] args)
 			throws IOException {
 		return io.execShell(command, args);
 	}
 
+	@Override
 	public void close() throws IOException {
 		io.close();
 		socket.close();
 	}
 
+	@Override
 	public InputStream getInitialResponseStream() {
 		return io.getInitialResponseStream();
 	}

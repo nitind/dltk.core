@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.console;
 
@@ -76,6 +75,7 @@ public class ScriptConsoleServer implements Runnable {
 		return port;
 	}
 
+	@Override
 	public void run() {
 		try {
 			ServerSocket server = new ServerSocket(port);
@@ -84,33 +84,31 @@ public class ScriptConsoleServer implements Runnable {
 				final Socket client = server.accept();
 				client.setSoTimeout(30000);
 
-				Thread clientHandler = new Thread(new Runnable() {
-					public void run() {
-						try {
-							SocketScriptConsoleIO proxy = new SocketScriptConsoleIO(client);
+				Thread clientHandler = new Thread(() -> {
+					try {
+						SocketScriptConsoleIO proxy = new SocketScriptConsoleIO(client);
 
-							String id = proxy.getId();
+						String id = proxy.getId();
 
-							ConsoleRequest request = null;
+						ConsoleRequest request = null;
 
-							synchronized (handlers) {
-								request = (ConsoleRequest) handlers.get(id);
-								while (request == null) {
-									try {
-										handlers.wait();
-									} catch (InterruptedException e) {
+						synchronized (handlers) {
+							request = (ConsoleRequest) handlers.get(id);
+							while (request == null) {
+								try {
+									handlers.wait();
+								} catch (InterruptedException e1) {
 
-									}
 								}
-
-								handlers.remove(id);
 							}
 
-							request.consoleConnected(proxy);
-						} catch (IOException e) {
-							if (DEBUG) {
-								e.printStackTrace();
-							}
+							handlers.remove(id);
+						}
+
+						request.consoleConnected(proxy);
+					} catch (IOException e2) {
+						if (DEBUG) {
+							e2.printStackTrace();
 						}
 					}
 				});

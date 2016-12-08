@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2016 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.console;
 
@@ -36,8 +35,7 @@ public class ScriptConsoleIO implements IScriptConsoleIO {
 		// System.out.println("shell: " + response);
 	}
 
-	protected static String readFixed(int len, InputStream input)
-			throws IOException {
+	protected static String readFixed(int len, InputStream input) throws IOException {
 		byte[] buffer = new byte[len];
 		int from = 0;
 		try {
@@ -86,8 +84,7 @@ public class ScriptConsoleIO implements IScriptConsoleIO {
 		return xml;
 	}
 
-	public ScriptConsoleIO(InputStream input, OutputStream output)
-			throws IOException {
+	public ScriptConsoleIO(InputStream input, OutputStream output) throws IOException {
 		if (input == null || output == null) {
 			throw new IllegalArgumentException();
 		}
@@ -98,10 +95,12 @@ public class ScriptConsoleIO implements IScriptConsoleIO {
 		this.id = ScriptConsoleXmlHelper.parseInfoXml(readResponse(input));
 	}
 
+	@Override
 	public InputStream getInitialResponseStream() {
 		return new InputStream() {
 			boolean finished = false;
 
+			@Override
 			public int read() throws IOException {
 				if (finished == true) {
 					return -1;
@@ -117,12 +116,13 @@ public class ScriptConsoleIO implements IScriptConsoleIO {
 		};
 	}
 
+	@Override
 	public String getId() {
 		return id;
 	}
 
-	public ShellResponse execShell(String command, String[] args)
-			throws IOException {
+	@Override
+	public ShellResponse execShell(String command, String[] args) throws IOException {
 
 		output.write((SHELL + "\n").getBytes("UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
 		output.write((command + "\n").getBytes("UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -137,8 +137,8 @@ public class ScriptConsoleIO implements IScriptConsoleIO {
 		return ScriptConsoleXmlHelper.parseShellXml(response);
 	}
 
-	public InterpreterResponse execInterpreter(String command)
-			throws IOException {
+	@Override
+	public InterpreterResponse execInterpreter(String command) throws IOException {
 		output.write((INTERPRETER + "\n").getBytes("UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
 		output.write((command + "\n").getBytes("UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
 		output.flush();
@@ -148,6 +148,7 @@ public class ScriptConsoleIO implements IScriptConsoleIO {
 		return ScriptConsoleXmlHelper.parseInterpreterXml(response);
 	}
 
+	@Override
 	public void close() throws IOException {
 		input.close();
 		output.close();
