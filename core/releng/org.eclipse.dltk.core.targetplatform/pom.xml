@@ -12,5 +12,34 @@
 
 	<artifactId>org.eclipse.dltk.core.targetplatform</artifactId>
 	<packaging>eclipse-target-definition</packaging>
+	<build>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>1.12</version>
+          <executions>
+            <execution>
+              <id>attach-artifacts</id>
+              <phase>package</phase>
+              <goals>
+                <goal>attach-artifact</goal>
+              </goals>
+              <configuration>
+                <artifacts>
+                  <artifact>
+                    <file>DLTK-Mars-4.5.target</file>
+                    <type>target</type>
+                    <classifier>DLTK-Mars-4.5</classifier>
+                  </artifact>
+                  <!-- More targets could be added here -->
+                </artifacts>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </build>
+
 
 </project>
