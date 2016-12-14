@@ -29,7 +29,7 @@ public class DLTKDebugLaunchConstants {
 			+ ".debugConsole"; //$NON-NLS-1$
 
 	public static boolean isDebugConsole(ILaunch launch) {
-		return getBoolean(launch, ATTR_DEBUG_CONSOLE, true);
+		return getBoolean(launch, ATTR_DEBUG_CONSOLE, false);
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class DLTKDebugLaunchConstants {
 	/**
 	 * Returns the 'break on first line' setting for the specified launch.
 	 * Default value is <code>false</code>.
-	 * 
+	 *
 	 * @param launch
 	 * @return <code>true</code> if the option is enabled, <code>false</code>
 	 *         otherwise
