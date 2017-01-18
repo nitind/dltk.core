@@ -10,7 +10,22 @@
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.index.lucene;
 
-import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.*;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.BDV_DOC;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.BDV_ELEMENT_NAME;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.BDV_METADATA;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.BDV_PARENT;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.BDV_PATH;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.BDV_QUALIFIER;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.F_CC_NAME;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.F_ELEMENT_NAME_LC;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.F_PARENT;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.F_PATH;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.F_QUALIFIER;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.NDV_FLAGS;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.NDV_LENGTH;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.NDV_NAME_LENGTH;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.NDV_NAME_OFFSET;
+import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.NDV_OFFSET;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -217,15 +232,15 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 			final String parent, final int trueFlags, final int falseFlags,
 			final boolean searchForRefs, MatchRule matchRule,
 			IDLTKSearchScope scope) {
-		BooleanQuery query = new BooleanQuery();
+		BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
 		List<String> scripts = SearchScope.getScripts(scope);
 		if (!scripts.isEmpty()) {
-			BooleanQuery scriptQuery = new BooleanQuery();
+			BooleanQuery.Builder scriptQueryBuilder = new BooleanQuery.Builder();
 			for (String script : scripts) {
-				scriptQuery.add(new TermQuery(new Term(F_PATH, script)),
+				scriptQueryBuilder.add(new TermQuery(new Term(F_PATH, script)),
 						Occur.FILTER);
 			}
-			query.add(scriptQuery, Occur.FILTER);
+			queryBuilder.add(scriptQueryBuilder.build(), Occur.FILTER);
 		}
 		if (elementName != null && !elementName.isEmpty()) {
 			String elementNameLC = elementName.toLowerCase();
@@ -244,19 +259,22 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 				throw new UnsupportedOperationException();
 			}
 			if (nameQuery != null) {
-				query.add(nameQuery, Occur.FILTER);
+				queryBuilder.add(nameQuery, Occur.FILTER);
 			}
 		}
 		if (qualifier != null && !qualifier.isEmpty()) {
-			query.add(new TermQuery(new Term(F_QUALIFIER, qualifier)),
+			queryBuilder.add(new TermQuery(new Term(F_QUALIFIER, qualifier)),
 					Occur.FILTER);
 		}
 		if (parent != null && !parent.isEmpty()) {
-			query.add(new TermQuery(new Term(F_PARENT, parent)), Occur.FILTER);
+			queryBuilder.add(new TermQuery(new Term(F_PARENT, parent)),
+					Occur.FILTER);
 		}
 		if (trueFlags != 0 || falseFlags != 0) {
-			query.add(new BitFlagsQuery(trueFlags, falseFlags), Occur.FILTER);
+			queryBuilder.add(new BitFlagsQuery(trueFlags, falseFlags),
+					Occur.FILTER);
 		}
+		BooleanQuery query = queryBuilder.build();
 		return query.clauses().isEmpty() ? null : query;
 	}
 

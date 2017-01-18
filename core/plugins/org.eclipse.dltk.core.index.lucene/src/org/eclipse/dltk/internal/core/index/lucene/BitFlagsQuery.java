@@ -49,7 +49,7 @@ public class BitFlagsQuery extends Query {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
+		int result = 1;
 		result = prime * result + fFalseFlags;
 		result = prime * result + fTrueFlags;
 		return result;
@@ -59,7 +59,7 @@ public class BitFlagsQuery extends Query {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
+		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -100,10 +100,9 @@ public class BitFlagsQuery extends Query {
 			@Override
 			public Explanation explain(LeafReaderContext context, int doc)
 					throws IOException {
-				final Scorer scorer = scorer(context,
-						context.reader().getLiveDocs());
+				final Scorer scorer = scorer(context);
 				final boolean match = (scorer != null
-						&& scorer.advance(doc) == doc);
+						&& scorer.iterator().advance(doc) == doc);
 				if (match) {
 					assert scorer.score() == 0;
 					return Explanation.match(0, "Match on id" + doc); //$NON-NLS-1$
@@ -113,9 +112,9 @@ public class BitFlagsQuery extends Query {
 			}
 
 			@Override
-			public Scorer scorer(LeafReaderContext context, Bits acceptDocs)
-					throws IOException {
-				final DocIdSet set = getDocIdSet(context, acceptDocs);
+			public Scorer scorer(LeafReaderContext context) throws IOException {
+				final DocIdSet set = getDocIdSet(context,
+						context.reader().getLiveDocs());
 				if (set == null) {
 					return null;
 				}

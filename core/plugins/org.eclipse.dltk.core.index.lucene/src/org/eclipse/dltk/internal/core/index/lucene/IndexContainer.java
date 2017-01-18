@@ -27,6 +27,7 @@ import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSLockFactory;
+import org.apache.lucene.store.SleepingLockWrapper;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -133,9 +134,9 @@ class IndexContainer {
 		mergeScheduler.setDefaultMaxMergesAndThreads(true);
 		config.setMergeScheduler(mergeScheduler);
 		config.setOpenMode(OpenMode.CREATE_OR_APPEND);
-		config.setWriteLockTimeout(WRITE_LOCK_TIMEOUT);
 		config.setCommitOnClose(false);
-		return new IndexWriter(indexDir, config);
+		return new IndexWriter(
+				new SleepingLockWrapper(indexDir, WRITE_LOCK_TIMEOUT), config);
 	}
 
 	private IndexWriter getWriter(Path path) {
@@ -171,7 +172,7 @@ class IndexContainer {
 		try {
 			if (fTimestampsSearcher == null) {
 				fTimestampsSearcher = new SearcherManager(getTimestampsWriter(),
-						true, new SearcherFactory());
+						true, false, new SearcherFactory());
 			}
 			// Try to achieve the up-to-date index state
 			fTimestampsSearcher.maybeRefresh();
@@ -200,7 +201,7 @@ class IndexContainer {
 		try {
 			if (searcher == null) {
 				searcher = new SearcherManager(
-						getIndexWriter(dataType, elementType), true,
+						getIndexWriter(dataType, elementType), true, false,
 						new SearcherFactory());
 				fIndexSearchers.get(dataType).put(elementType, searcher);
 			}

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.index.lucene;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -50,9 +49,10 @@ public class IndexDirectory extends RAFDirectory {
 
 		public RAFIndexOutput(String name) throws IOException {
 			super(MessageFormat.format(DESCRIPTION, directory.resolve(name)),
+					name,
 					new RAFOutputStream(
-							new FileOutputStream(new File(
-									directory.resolve(name).toString())),
+							new FileOutputStream(
+									directory.resolve(name).toFile()),
 							CHUNK_SIZE),
 					CHUNK_SIZE);
 		}
@@ -93,7 +93,6 @@ public class IndexDirectory extends RAFDirectory {
 	public IndexOutput createOutput(String name, IOContext context)
 			throws IOException {
 		ensureOpen();
-		ensureCanWrite(name);
 		return new RAFIndexOutput(name);
 	}
 
