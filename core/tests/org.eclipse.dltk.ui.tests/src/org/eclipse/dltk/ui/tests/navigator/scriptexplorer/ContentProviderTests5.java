@@ -8,14 +8,13 @@
  *******************************************************************************/
 package org.eclipse.dltk.ui.tests.navigator.scriptexplorer;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -184,23 +183,23 @@ public class ContentProviderTests5 {
 		ISourceModule Z = zPackage.createSourceModule("Z.txt",
 				"package z;public class Z{}", true, null);
 
-		assertEqualElements(new Object[] { defaultPackage, exclInclPackage,
+		assertArrayEquals(new Object[] { defaultPackage, exclInclPackage,
 				xPackage, zPackage, ab, excl, y, fDotBuildpath, fDotProject },
 				fProvider.getChildren(fJProject));
-		assertEqualElements(new Object[0], fProvider
+		assertArrayEquals(new Object[0], fProvider
 				.getChildren(defaultPackage));
-		assertEqualElements(new Object[] { In }, fProvider
+		assertArrayEquals(new Object[] { In }, fProvider
 				.getChildren(exclInclPackage));
-		assertEqualElements(new Object[] { Ex }, fProvider.getChildren(excl));
-		assertEqualElements(new Object[] { X, xhidden }, fProvider
+		assertArrayEquals(new Object[] { Ex }, fProvider.getChildren(excl));
+		assertArrayEquals(new Object[] { X, xhidden }, fProvider
 				.getChildren(xPackage));
 		assertEquals(xPackage, fProvider.getParent(X));
 		assertEquals(xPackage, fProvider.getParent(xhidden));
-		assertEqualElements(new Object[] { Z }, fProvider.getChildren(zPackage));
-		assertEqualElements(new Object[] { description }, fProvider
+		assertArrayEquals(new Object[] { Z }, fProvider.getChildren(zPackage));
+		assertArrayEquals(new Object[] { description }, fProvider
 				.getChildren(ab));
-		assertEqualElements(new Object[] { Ex }, fProvider.getChildren(excl));
-		assertEqualElements(new Object[] { yX, yhidden }, fProvider
+		assertArrayEquals(new Object[] { Ex }, fProvider.getChildren(excl));
+		assertArrayEquals(new Object[] { yX, yhidden }, fProvider
 				.getChildren(y));
 	}
 
@@ -231,18 +230,18 @@ public class ContentProviderTests5 {
 		ISourceModule b = defaultAbab.createSourceModule("B.txt",
 				"public class B {}", true, null);
 
-		assertEqualElements(new Object[] { src, srcabab, fDotBuildpath,
+		assertArrayEquals(new Object[] { src, srcabab, fDotBuildpath,
 				fDotProject }, fProvider.getChildren(fJProject));
-		assertEqualElements(new Object[] { defaultSrc, p, ab }, fProvider
+		assertArrayEquals(new Object[] { defaultSrc, p, ab }, fProvider
 				.getChildren(src));
-		assertEqualElements(new Object[] {}, fProvider.getChildren(defaultSrc));
-		assertEqualElements(new Object[] { file }, fProvider.getChildren(p));
-		assertEqualElements(new Object[] { aba }, fProvider.getChildren(ab));
-		assertEqualElements(new Object[] { abaTxt }, fProvider.getChildren(aba));
+		assertArrayEquals(new Object[] {}, fProvider.getChildren(defaultSrc));
+		assertArrayEquals(new Object[] { file }, fProvider.getChildren(p));
+		assertArrayEquals(new Object[] { aba }, fProvider.getChildren(ab));
+		assertArrayEquals(new Object[] { abaTxt }, fProvider.getChildren(aba));
 
-		assertEqualElements(new Object[] { defaultAbab }, fProvider
+		assertArrayEquals(new Object[] { defaultAbab }, fProvider
 				.getChildren(srcabab));
-		assertEqualElements(new Object[] { b }, fProvider
+		assertArrayEquals(new Object[] { b }, fProvider
 				.getChildren(defaultAbab));
 	}
 	@Test
@@ -264,25 +263,11 @@ public class ContentProviderTests5 {
 		IContainer b = d.getParent().getParent();
 		IContainer a = b.getParent();
 
-		assertEqualElements(new Object[] { src, fDotBuildpath, fDotProject },
+		assertArrayEquals(new Object[] { src, fDotBuildpath, fDotProject },
 				fProvider.getChildren(fJProject));
-		assertEqualElements(new Object[] { abc, a }, fProvider.getChildren(src));
-		assertEqualElements(new Object[] { x, d }, fProvider.getChildren(abc));
-		assertEqualElements(new Object[] { dTxt }, fProvider.getChildren(d));
-		assertEqualElements(new Object[] { b }, fProvider.getChildren(a));
-	}
-
-	private void assertEqualElements(Object[] expected, Object[] actual) {
-		assertEquals("array length", expected.length, actual.length);
-		exp: for (int i = 0; i < expected.length; i++) {
-			Object e = expected[i];
-			for (int j = 0; j < actual.length; j++) {
-				Object a = actual[j];
-				if (e.equals(a))
-					continue exp;
-			}
-			fail("expected[" + i + "] not found in actual:"
-					+ Arrays.asList(actual).toString());
-		}
+		assertArrayEquals(new Object[] { abc, a }, fProvider.getChildren(src));
+		assertArrayEquals(new Object[] { x, d }, fProvider.getChildren(abc));
+		assertArrayEquals(new Object[] { dTxt }, fProvider.getChildren(d));
+		assertArrayEquals(new Object[] { b }, fProvider.getChildren(a));
 	}
 }

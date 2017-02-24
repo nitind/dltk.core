@@ -12,7 +12,6 @@
 package org.eclipse.dltk.core.tests.util;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.EmptyStackException;
 
@@ -51,24 +50,14 @@ public class CharacterStackTests {
 		assertEquals('B', stack.peek());
 	}
 	
-	@Test
+	@Test(expected=EmptyStackException.class)
 	public void testEmptyPop() {
-		try {
-			stack.pop();
-			fail("should throw EmptyStackException");
-		} catch (EmptyStackException e) {
-			// ignore
-		}
+		stack.pop();
 	}
 	
-	@Test
+	@Test(expected=EmptyStackException.class)
 	public void testEmptyPeek() {
-		try {
-			stack.peek();
-			fail("should throw EmptyStackException");
-		} catch (EmptyStackException e) {
-			// ignore
-		}
+		stack.peek();
 	}
 
 }
