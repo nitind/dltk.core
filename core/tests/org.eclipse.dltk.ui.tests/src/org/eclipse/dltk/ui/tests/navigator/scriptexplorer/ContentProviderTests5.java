@@ -1,20 +1,21 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
-
 package org.eclipse.dltk.ui.tests.navigator.scriptexplorer;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -40,6 +41,9 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for the PackageExplorerContentProvider. Bugs:
@@ -53,7 +57,7 @@ import org.eclipse.ui.PlatformUI;
  * package explorer</li>
  * </ul>
  */
-public class ContentProviderTests5 extends TestCase {
+public class ContentProviderTests5 {
 	private boolean fEnableAutoBuildAfterTesting;
 	private ITreeContentProvider fProvider;
 
@@ -61,17 +65,8 @@ public class ContentProviderTests5 extends TestCase {
 	private IFile fDotBuildpath;
 	private IFile fDotProject;
 
-	public ContentProviderTests5(String name) {
-		super(name);
-	}
-
-	// public static Test suite() {
-	// return new TestSuite(ContentProviderTests5.class);
-	// }
-
-	protected void setUp() throws Exception {
-		super.setUp();
-
+	@Before
+	public void setUp() throws Exception {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		assertNotNull(workspace);
 		IWorkspaceDescription workspaceDesc = workspace.getDescription();
@@ -132,8 +127,8 @@ public class ContentProviderTests5 extends TestCase {
 						fold);
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception {
 		ScriptProjectHelper.delete(fJProject);
 
 		if (fEnableAutoBuildAfterTesting)
@@ -250,7 +245,7 @@ public class ContentProviderTests5 extends TestCase {
 		assertEqualElements(new Object[] { b }, fProvider
 				.getChildren(defaultAbab));
 	}
-
+	@Test
 	public void testInclExcl1() throws Exception { // bug 35851, 66694
 		// <BuildpathEntry including="a/b/c/" excluding="a/b/c/d/" kind="src"
 		// path="src2"/>
