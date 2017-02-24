@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,6 +73,7 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 		return null;
 	}
 
+	@Override
 	public String getText(Object element) {
 		String text = getSpecificText(element);
 		if (text != null) {
@@ -81,6 +82,7 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 		return super.getText(element);
 	}
 
+	@Override
 	public StyledString getStyledText(Object element) {
 		String text = getSpecificText(element);
 		if (text != null) {
@@ -119,6 +121,7 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 		return fragment.getElementName();
 	}
 
+	@Override
 	public Image getImage(Object element) {
 		if (element instanceof IWorkingSet) {
 			ImageDescriptor image = ((IWorkingSet) element)
@@ -142,6 +145,7 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 		fProblemDecorator.setIsFlatLayout(state);
 	}
 
+	@Override
 	public void dispose() {
 		if (fWorkingSetImages != null) {
 			for (Iterator iter = fWorkingSetImages.values().iterator(); iter

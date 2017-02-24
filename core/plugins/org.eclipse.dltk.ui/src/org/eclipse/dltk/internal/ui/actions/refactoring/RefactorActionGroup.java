@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,12 +62,12 @@ import org.eclipse.ui.part.Page;
 /**
  * Action group that adds refactor actions (for example 'Rename', 'Move') to a
  * context menu and the global menu bar.
- * 
+ *
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
- * 
- * 
+ *
+ *
  */
 public class RefactorActionGroup extends ActionGroup {
 
@@ -76,56 +76,56 @@ public class RefactorActionGroup extends ActionGroup {
 	/**
 	 * Pop-up menu: id of the refactor sub menu (value
 	 * <code>org.eclipse.dltk.ui.refactoring.menu</code>).
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public static final String MENU_ID = "org.eclipse.dltk.ui.refactoring.menu"; //$NON-NLS-1$
 
 	/**
 	 * Pop-up menu: id of the reorg group of the refactor sub menu (value
 	 * <code>reorgGroup</code>).
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public static final String GROUP_REORG = "reorgGroup"; //$NON-NLS-1$
 
 	/**
 	 * Pop-up menu: id of the type group of the refactor sub menu (value
 	 * <code>typeGroup</code>).
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public static final String GROUP_TYPE = "typeGroup"; //$NON-NLS-1$
 
 	/**
 	 * Pop-up menu: id of the coding group of the refactor sub menu (value
 	 * <code>codingGroup</code>).
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public static final String GROUP_CODING = "codingGroup"; //$NON-NLS-1$
 
 	/**
 	 * Pop-up menu: id of the coding group 2 of the refactor sub menu (value
 	 * <code>codingGroup2</code>).
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	public static final String GROUP_CODING2 = "codingGroup2"; //$NON-NLS-1$
 
 	/**
 	 * Pop-up menu: id of the reorg group 2 of the refactor sub menu (value
 	 * <code>reorgGroup2</code>).
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	private static final String GROUP_REORG2 = "reorgGroup2"; //$NON-NLS-1$ //TODO(3.3): make public
 
 	/**
 	 * Pop-up menu: id of the type group 2 of the refactor sub menu (value
 	 * <code>typeGroup2</code>).
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	private static final String GROUP_TYPE2 = "typeGroup2"; //$NON-NLS-1$ //TODO(3.3): make public
 
@@ -181,7 +181,7 @@ public class RefactorActionGroup extends ActionGroup {
 	 * Creates a new <code>RefactorActionGroup</code>. The group requires that
 	 * the selection provided by the part's selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
-	 * 
+	 *
 	 * @param part
 	 *            the view part that owns this action group
 	 * @param toolkit
@@ -206,12 +206,12 @@ public class RefactorActionGroup extends ActionGroup {
 	 * Creates a new <code>RefactorActionGroup</code>. The action requires that
 	 * the selection provided by the page's selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
-	 * 
+	 *
 	 * @param page
 	 *            the page that owns this action group
 	 * @param toolkit
 	 *            toolkit for language-specific refactorings
-	 * 
+	 *
 	 */
 	public RefactorActionGroup(Page page, IDLTKLanguageToolkit toolkit) {
 		this(page.getSite(), toolkit);
@@ -221,7 +221,7 @@ public class RefactorActionGroup extends ActionGroup {
 	/**
 	 * Note: This constructor is for internal use only. Clients should not call
 	 * this constructor.
-	 * 
+	 *
 	 * @param editor
 	 *            the compilation unit editor
 	 * @param groupName
@@ -250,6 +250,7 @@ public class RefactorActionGroup extends ActionGroup {
 		editor.setAction("MoveElement", fMoveAction); //$NON-NLS-1$
 		final Descriptor<IEditorActionDelegate>[] delegates = new LazyExtensionManager<IEditorActionDelegate>(
 				DLTKUIPlugin.PLUGIN_ID + ".refactoring") {
+			@Override
 			protected boolean isValidElement(IConfigurationElement element) {
 				return "action".equals(element.getName())
 						&& fEditor.getLanguageToolkit().getNatureId()
@@ -498,11 +499,13 @@ public class RefactorActionGroup extends ActionGroup {
 				.getService(IHandlerService.class);
 		if (fHandlerService != null) {
 			final QuickMenuCreator creator = new QuickMenuCreator() {
+				@Override
 				protected void fillMenu(IMenuManager menu) {
 					fillQuickMenu(menu);
 				}
 			};
 			IHandler handler = new AbstractHandler() {
+				@Override
 				public Object execute(ExecutionEvent event)
 						throws ExecutionException {
 					creator.createMenu();
@@ -522,7 +525,7 @@ public class RefactorActionGroup extends ActionGroup {
 	/**
 	 * Sets actionDefinitionId, updates enablement, adds to fActions, and adds
 	 * selection changed listener if provider is not <code>null</code>.
-	 * 
+	 *
 	 * @param action
 	 * @param provider
 	 *            can be <code>null</code>
@@ -539,9 +542,7 @@ public class RefactorActionGroup extends ActionGroup {
 		fActions.add(action);
 	}
 
-	/*
-	 * (non-Javadoc) Method declared in ActionGroup
-	 */
+	@Override
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
 		// actionBars.setGlobalActionHandler(DLTKActionConstants.SELF_ENCAPSULATE_FIELD,
@@ -598,7 +599,7 @@ public class RefactorActionGroup extends ActionGroup {
 
 	/**
 	 * Retargets the File actions with the corresponding refactoring actions.
-	 * 
+	 *
 	 * @param actionBars
 	 *            the action bar to register the move and rename action with
 	 */
@@ -609,17 +610,13 @@ public class RefactorActionGroup extends ActionGroup {
 				fMoveAction);
 	}
 
-	/*
-	 * (non-Javadoc) Method declared in ActionGroup
-	 */
+	@Override
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
 		addRefactorSubmenu(menu);
 	}
 
-	/*
-	 * @see ActionGroup#dispose()
-	 */
+	@Override
 	public void dispose() {
 		ISelectionProvider provider = fSite.getSelectionProvider();
 		// disposeAction(fSelfEncapsulateField, provider);
@@ -673,6 +670,7 @@ public class RefactorActionGroup extends ActionGroup {
 			IModelElement element = SelectionConverter.getInput(fEditor);
 			if (element != null && ActionUtil.isOnBuildPath(element)) {
 				refactorSubmenu.addMenuListener(new IMenuListener() {
+					@Override
 					public void menuAboutToShow(IMenuManager manager) {
 						refactorMenuShown(manager);
 					}
@@ -740,6 +738,7 @@ public class RefactorActionGroup extends ActionGroup {
 		// addRefactorSubmenu.
 		Menu menu = ((MenuManager) refactorSubmenu).getMenu();
 		menu.addMenuListener(new MenuAdapter() {
+			@Override
 			public void menuHidden(MenuEvent e) {
 				refactorMenuHidden(refactorSubmenu);
 			}

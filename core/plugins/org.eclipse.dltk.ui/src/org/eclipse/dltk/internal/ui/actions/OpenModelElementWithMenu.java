@@ -86,6 +86,7 @@ public class OpenModelElementWithMenu extends ContributionItem {
 	static final Comparator<IEditorDescriptor> comparer = new Comparator<IEditorDescriptor>() {
 		private Collator collator = Collator.getInstance();
 
+		@Override
 		public int compare(IEditorDescriptor arg0, IEditorDescriptor arg1) {
 			String s1 = arg0.getLabel();
 			String s2 = arg1.getLabel();

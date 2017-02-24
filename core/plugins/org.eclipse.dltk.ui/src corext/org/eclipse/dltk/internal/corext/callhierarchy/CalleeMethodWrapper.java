@@ -1,12 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
- *          (report 36180: Callers/Callees view)
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.callhierarchy;
 
@@ -31,11 +29,7 @@ class CalleeMethodWrapper extends MethodWrapper {
 	private Comparator fMethodWrapperComparator = new MethodWrapperComparator();
 
 	private static class MethodWrapperComparator implements Comparator {
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-		 */
+		@Override
 		public int compare(Object o1, Object o2) {
 			MethodWrapper m1 = (MethodWrapper) o1;
 			MethodWrapper m2 = (MethodWrapper) o2;
@@ -67,6 +61,7 @@ class CalleeMethodWrapper extends MethodWrapper {
 	/*
 	 * Returns the calls sorted after the call location
 	 */
+	@Override
 	public MethodWrapper[] getCalls(IProgressMonitor progressMonitor) {
 		MethodWrapper[] result = super.getCalls(progressMonitor);
 		Arrays.sort(result, fMethodWrapperComparator);
@@ -74,18 +69,21 @@ class CalleeMethodWrapper extends MethodWrapper {
 		return result;
 	}
 
+	@Override
 	protected String getTaskName() {
 		return CallHierarchyMessages.CalleeMethodWrapper_taskname;
 	}
 
+	@Override
 	protected MethodWrapper createMethodWrapper(MethodCall methodCall) {
 		return new CalleeMethodWrapper(this, methodCall);
 	}
 
 	/**
 	 * Find callees called from the current method.
-	 * 
+	 *
 	 */
+	@Override
 	protected Map findChildren(IProgressMonitor progressMonitor) {
 		if (getMember().exists()
 				&& getMember().getElementType() == IModelElement.METHOD) {
