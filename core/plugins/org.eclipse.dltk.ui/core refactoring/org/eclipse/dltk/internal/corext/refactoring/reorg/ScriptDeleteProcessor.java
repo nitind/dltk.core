@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,8 +63,8 @@ import org.eclipse.ltk.core.refactoring.participants.SharableParticipants;
 
 
 public final class ScriptDeleteProcessor extends DeleteProcessor implements ICommentProvider {
-	
-	private boolean fWasCanceled;	
+
+	private boolean fWasCanceled;
 	private Object[] fElements;
 	private IResource[] fResources;
 	private IModelElement[] fScriptElements;
@@ -74,9 +74,9 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 
 	private Change fDeleteChange;
 	private boolean fDeleteSubPackages;
-	
+
 	public static final String IDENTIFIER= "org.eclipse.dltk.ui.DeleteProcessor"; //$NON-NLS-1$
-	
+
 	public ScriptDeleteProcessor(Object[] elements) {
 		fElements= elements;
 		fResources= RefactoringAvailabilityTester.getResources(elements);
@@ -84,13 +84,15 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		fDeleteSubPackages= false;
 		fWasCanceled= false;
 	}
-	
+
 	//---- IRefactoringProcessor ---------------------------------------------------
 
+	@Override
 	public String getIdentifier() {
 		return IDENTIFIER;
 	}
-	
+
+	@Override
 	public boolean isApplicable() throws CoreException {
 		if (fElements.length == 0)
 			return false;
@@ -106,7 +108,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		}
 		return true;
 	}
-	
+
 	public boolean needsProgressMonitor() {
 		if (fResources != null && fResources.length > 0)
 			return true;
@@ -118,21 +120,24 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 			}
 		}
 		return false;
-		
+
 	}
 
+	@Override
 	public String getProcessorName() {
-		return RefactoringCoreMessages.DeleteRefactoring_7; 
+		return RefactoringCoreMessages.DeleteRefactoring_7;
 	}
-	
+
+	@Override
 	public Object[] getElements() {
 		return fElements;
 	}
-	
+
+	@Override
 	public RefactoringParticipant[] loadParticipants(RefactoringStatus status, SharableParticipants shared) throws CoreException {
 		return fDeleteModifications.loadParticipants(status, this, getAffectedProjectNatures(), shared);
 	}
-	
+
 	private String[] getAffectedProjectNatures() throws CoreException {
 		String[] jNatures= ScriptProcessors.computeAffectedNaturs(fScriptElements);
 		String[] rNatures= ResourceProcessors.computeAffectedNatures(fResources);
@@ -141,15 +146,15 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		result.addAll(Arrays.asList(rNatures));
 		return result.toArray(new String[result.size()]);
 	}
-	
+
 	public void setDeleteSubPackages(boolean selection) {
 		fDeleteSubPackages= selection;
 	}
-	
+
 	public boolean getDeleteSubPackages() {
 		return fDeleteSubPackages;
 	}
-	
+
 	public boolean hasSubPackagesToDelete() {
 		try {
 			for (int i= 0; i < fScriptElements.length; i++) {
@@ -171,7 +176,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		Assert.isNotNull(queries);
 		fDeleteQueries= queries;
 	}
-	
+
 	public IModelElement[] getScriptElementsToDelete(){
 		return fScriptElements;
 	}
@@ -179,14 +184,15 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	public boolean wasCanceled() {
 		return fWasCanceled;
 	}
-	
+
 	public IResource[] getResourcesToDelete(){
 		return fResources;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.corext.refactoring.base.Refactoring#checkActivation(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException {
 		Assert.isNotNull(fDeleteQueries);//must be set before checking activation
 		RefactoringStatus result= new RefactoringStatus();
@@ -207,8 +213,9 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	/* (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.corext.refactoring.base.Refactoring#checkInput(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context) throws CoreException {
-		pm.beginTask(RefactoringCoreMessages.DeleteRefactoring_1, 1); 
+		pm.beginTask(RefactoringCoreMessages.DeleteRefactoring_1, 1);
 		try{
 			fWasCanceled= false;
 			RefactoringStatus result= new RefactoringStatus();
@@ -223,7 +230,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 			fDeleteModifications.delete(fResources);
 			fDeleteModifications.delete(fScriptElements);
 			fDeleteModifications.postProcess();
-			
+
 			ResourceChangeChecker checker= (ResourceChangeChecker) context.getChecker(ResourceChangeChecker.class);
 			IResourceChangeDescriptionFactory deltaFactory= checker.getDeltaFactory();
 			fDeleteModifications.buildDelta(deltaFactory);
@@ -247,14 +254,14 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 			pm.done();
 		}
 	}
-	
+
 	private void checkDirtySourceModules(RefactoringStatus result) throws CoreException {
 		if (fScriptElements == null || fScriptElements.length == 0)
 			return;
 		for (int je= 0; je < fScriptElements.length; je++) {
 			IModelElement element= fScriptElements[je];
 			if (element instanceof ISourceModule) {
-				checkDirtySourceModule(result, (ISourceModule)element);	
+				checkDirtySourceModule(result, (ISourceModule)element);
 			} else if (element instanceof IScriptFolder) {
 				ISourceModule[] units= ((IScriptFolder)element).getSourceModules();
 				for (int u = 0; u < units.length; u++) {
@@ -263,7 +270,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 			}
 		}
 	}
-	
+
 	private void checkDirtySourceModule(RefactoringStatus result, ISourceModule cunit) {
 		IResource resource= cunit.getResource();
 		if (resource == null || resource.getType() != IResource.FILE)
@@ -275,6 +282,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		for (int i= 0; i < fResources.length; i++) {
 			IResource resource= fResources[i];
 			resource.accept(new IResourceVisitor() {
+				@Override
 				public boolean visit(IResource visitedResource) throws CoreException {
 					if (visitedResource instanceof IFile) {
 						checkDirtyFile(result, (IFile)visitedResource);
@@ -284,7 +292,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 			}, IResource.DEPTH_INFINITE, false);
 		}
 	}
-	
+
 	private void checkDirtyFile(RefactoringStatus result, IFile file) {
 		if (file == null || !file.exists())
 			return;
@@ -292,11 +300,11 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		if (buffer != null && buffer.isDirty()) {
 			if (buffer.isStateValidated() && buffer.isSynchronized()) {
 				result.addWarning(Messages.format(
-					RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes, 
+					RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
 					file.getFullPath().toString()));
 			} else {
 				result.addFatalError(Messages.format(
-					RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes, 
+					RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
 					file.getFullPath().toString()));
 			}
 		}
@@ -305,16 +313,16 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	/*
 	 * The set of elements that will eventually be deleted may be very different from the set
 	 * originally selected - there may be fewer, more or different elements.
-	 * This method is used to calculate the set of elements that will be deleted - if necessary, 
+	 * This method is used to calculate the set of elements that will be deleted - if necessary,
 	 * it asks the user.
 	 */
 	private void recalculateElementsToDelete() throws CoreException {
 		//the sequence is critical here
-		
+
 		if (fDeleteSubPackages) /* add subpackages first, to allow removing elements with parents in selection etc. */
 			addSubPackages();
-		
-		removeElementsWithParentsInSelection(); /*ask before adding empty cus - you don't want to ask if you, for example delete 
+
+		removeElementsWithParentsInSelection(); /*ask before adding empty cus - you don't want to ask if you, for example delete
 												 *the package, in which the cus live*/
 		removeUnconfirmedFoldersThatContainSourceFolders(); /* a selected folder may be a parent of a source folder
 															 * we must inform the user about it and ask if ok to delete the folder*/
@@ -323,16 +331,16 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		removeScriptElementsChildrenOfScriptElements();/*because adding cus may create elements (types in cus)
 												    *whose parents are in selection*/
 		confirmDeletingReadOnly();   /*after empty cus - you want to ask for all cus that are to be deleted*/
-	
-		
-		
+
+
+
 		addDeletableParentPackagesOnPackageDeletion(); /* do not change the sequence in fScriptElements after this method */
 	}
 
 	/**
 	 * Adds all subpackages of the selected packages to the list of items to be
 	 * deleted.
-	 * 
+	 *
 	 * @throws ModelException
 	 */
 	private void addSubPackages() throws ModelException {
@@ -352,7 +360,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 
 	/**
 	 * Add deletable parent packages to the list of items to delete.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
 	private void addDeletableParentPackagesOnPackageDeletion() throws CoreException {
@@ -364,6 +372,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 
 		// Move from inner to outer packages
 		Collections.sort(initialPackagesToDelete, new Comparator() {
+			@Override
 			public int compare(Object arg0, Object arg1) {
 				IScriptFolder one= (IScriptFolder) arg0;
 				IScriptFolder two= (IScriptFolder) arg1;
@@ -384,12 +393,12 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 
 		for (Iterator outerIter= initialPackagesToDelete.iterator(); outerIter.hasNext();) {
 			final IScriptFolder currentScriptFolder= (IScriptFolder) outerIter.next();
-			
+
 			// The package will at least be cleared
 			allFragmentsToDelete.add(currentScriptFolder);
 
 			if (canRemoveCompletely(currentScriptFolder, initialPackagesToDelete)) {
-				
+
 				final IScriptFolder parent= ModelElementUtil.getParentSubpackage(currentScriptFolder);
 				if (parent != null && !initialPackagesToDelete.contains(parent)) {
 
@@ -433,7 +442,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	/**
 	 * Returns true if this initially selected package is really deletable
 	 * (if it has non-selected subpackages, it may only be cleared).
-	 * 
+	 *
 	 */
 	private boolean canRemoveCompletely(IScriptFolder pack, List packagesToDelete) throws ModelException {
 		final IScriptFolder[] subPackages= ModelElementUtil.getPackageAndSubpackages(pack);
@@ -448,7 +457,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	 * Adds deletable parent packages of the fragment "frag" to the list
 	 * "deletableParentPackages"; also adds the resources of those packages to the
 	 * set "resourcesToDelete".
-	 * 
+	 *
 	 */
 	private void addDeletableParentPackages(IScriptFolder frag, List initialPackagesToDelete, Set resourcesToDelete, List deletableParentPackages)
 			throws CoreException {
@@ -458,7 +467,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 			if (!query.confirm(Messages.format(RefactoringCoreMessages.ScriptDeleteProcessor_delete_linked_folder_question, new String[] { frag.getResource().getName() })))
 					return;
 		}
-		
+
 		final IResource[] children= (((IContainer) frag.getResource())).members();
 		for (int i= 0; i < children.length; i++) {
 			// Child must be a package fragment already in the list,
@@ -477,7 +486,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	// ask for confirmation of deletion of all package fragment roots that are
 	// on buildpaths of other projects
 	private void removeUnconfirmedReferencedArchives() throws ModelException {
-		String queryTitle= RefactoringCoreMessages.DeleteRefactoring_2; 
+		String queryTitle= RefactoringCoreMessages.DeleteRefactoring_2;
 		IConfirmQuery query= fDeleteQueries.createYesYesToAllNoNoToAllQuery(queryTitle, true, IReorgQueries.CONFIRM_DELETE_REFERENCED_ARCHIVES);
 		removeUnconfirmedReferencedProjectFragments(query);
 		removeUnconfirmedReferencedArchiveFiles(query);
@@ -489,7 +498,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 			IResource resource= fResources[i];
 			if (! (resource instanceof IFile))
 				continue;
-		
+
 			IScriptProject project= DLTKCore.create(resource.getProject());
 			if (project == null || ! project.exists())
 				continue;
@@ -524,12 +533,12 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	private static boolean skipDeletingReferencedRoot(IConfirmQuery query, IProjectFragment root, List referencingProjects) throws OperationCanceledException {
 		if (referencingProjects.isEmpty() || root == null || ! root.exists() ||! root.isArchive())
 			return false;
-		String question= Messages.format(RefactoringCoreMessages.DeleteRefactoring_3, root.getElementName()); 
+		String question= Messages.format(RefactoringCoreMessages.DeleteRefactoring_3, root.getElementName());
 		return ! query.confirm(question, referencingProjects.toArray());
 	}
 
 	private void removeUnconfirmedFoldersThatContainSourceFolders() throws CoreException {
-		String queryTitle= RefactoringCoreMessages.DeleteRefactoring_4; 
+		String queryTitle= RefactoringCoreMessages.DeleteRefactoring_4;
 		IConfirmQuery query= fDeleteQueries.createYesYesToAllNoNoToAllQuery(queryTitle, true, IReorgQueries.CONFIRM_DELETE_FOLDERS_CONTAINING_SOURCE_FOLDERS);
 		List<IResource> foldersToSkip = new ArrayList<IResource>(0);
 		for (int i= 0; i < fResources.length; i++) {
@@ -537,7 +546,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 			if (resource instanceof IFolder){
 				IFolder folder= (IFolder)resource;
 				if (containsSourceFolder(folder)){
-					String question= Messages.format(RefactoringCoreMessages.DeleteRefactoring_5, folder.getName()); 
+					String question= Messages.format(RefactoringCoreMessages.DeleteRefactoring_5, folder.getName());
 					if (! query.confirm(question))
 						foldersToSkip.add(folder);
 				}
@@ -553,9 +562,9 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 			if (! (subFolders[i] instanceof IFolder))
 				continue;
 			IModelElement element= DLTKCore.create(folder);
-			if (element instanceof IProjectFragment)	
+			if (element instanceof IProjectFragment)
 				return true;
-			if (element instanceof IScriptFolder)	
+			if (element instanceof IScriptFolder)
 				continue;
 			if (containsSourceFolder((IFolder)subFolders[i]))
 				return true;
@@ -575,7 +584,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		parentUtil.removeElementsWithAncestorsOnList(true);
 		fScriptElements= parentUtil.getScriptElements();
 	}
-	
+
 	private IFile[] getBuildpathFiles() {
 		List result= new ArrayList();
 		for (int i= 0; i < fScriptElements.length; i++) {
@@ -589,7 +598,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		}
 		return (IFile[])result.toArray(new IFile[result.size()]);
 	}
-	
+
+	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException {
 		pm.beginTask("", 1); //$NON-NLS-1$
 		pm.done();
@@ -597,13 +607,13 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	}
 
 	private void addToSetToDelete(IModelElement[] newElements){
-		fScriptElements= ReorgUtils.union(fScriptElements, newElements);		
+		fScriptElements= ReorgUtils.union(fScriptElements, newElements);
 	}
-	
+
 	private void removeFromSetToDelete(IResource[] resourcesToNotDelete) {
 		fResources= ReorgUtils.setMinus(fResources, resourcesToNotDelete);
 	}
-	
+
 	private void removeFromSetToDelete(IModelElement[] elementsToNotDelete) {
 		fScriptElements= ReorgUtils.setMinus(fScriptElements, elementsToNotDelete);
 	}
@@ -659,14 +669,17 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		return true;
 	}
 
+	@Override
 	public boolean canEnableComment() {
 		return true;
 	}
 
+	@Override
 	public String getComment() {
 		return fComment;
 	}
 
+	@Override
 	public void setComment(String comment) {
 		fComment= comment;
 	}

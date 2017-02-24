@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
  package org.eclipse.dltk.internal.ui.dialogs;
 
@@ -41,12 +40,8 @@ import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ViewForm;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -71,16 +66,16 @@ import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.XMLMemento;
 
 public class TypeSelectionComponent extends Composite implements ITypeSelectionComponent {
-	
+
 	private IDialogSettings fSettings;
 	private boolean fMultipleSelection;
 	private ITitleLabel fTitleLabel;
-	
+
 	private ToolBar fToolBar;
 	private ToolItem fToolItem;
 	private MenuManager fMenuManager;
 	private WorkingSetFilterActionGroup fFilterActionGroup;
-	
+
 	private TypeSelectionExtension fTypeSelectionExtension;
 	private Text fFilter;
 	private String fInitialFilterText;
@@ -88,21 +83,22 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 	private TypeInfoViewer fViewer;
 	private ViewForm fForm;
 	private CLabel fLabel;
-	
+
 	public static final int NONE= 0;
 	public static final int CARET_BEGINNING= 1;
 	public static final int FULL_SELECTION= 2;
-	
+
 	private static final String DIALOG_SETTINGS= "org.eclipse.jdt.internal.ui.dialogs.TypeSelectionComponent"; //$NON-NLS-1$
 	private static final String SHOW_STATUS_LINE= "show_status_line"; //$NON-NLS-1$
 	private static final String WORKINGS_SET_SETTINGS= "workingset_settings"; //$NON-NLS-1$
-	
+
 	private IDLTKUILanguageToolkit fToolkit;
-	
+
 	private class ToggleStatusLineAction extends Action {
 		public ToggleStatusLineAction() {
 			super(DLTKUIMessages.TypeSelectionComponent_show_status_line_label, IAction.AS_CHECK_BOX);
 		}
+		@Override
 		public void run() {
 			if (fForm == null)
 				return;
@@ -114,21 +110,21 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 			TypeSelectionComponent.this.layout();
 		}
 	}
-	
+
 	/**
-	 * Special interface to access a title lable in 
+	 * Special interface to access a title lable in
 	 * a generic fashion.
 	 */
 	public interface ITitleLabel {
 		/**
 		 * Sets the title to the given text
-		 * 
+		 *
 		 * @param text the title text
 		 */
 		public void setText(String text);
 	}
-	
-	public TypeSelectionComponent(Composite parent, int style, String message, boolean multi, 
+
+	public TypeSelectionComponent(Composite parent, int style, String message, boolean multi,
 			IDLTKSearchScope scope, int elementKind, String initialFilter, ITitleLabel titleLabel,
 			TypeSelectionExtension extension, IDLTKUILanguageToolkit toolkit ) {
 		super(parent, style);
@@ -150,31 +146,32 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 		}
 		createContent(message, elementKind);
 	}
-	
+
+	@Override
 	public void triggerSearch() {
 		fViewer.forceSearch();
 	}
-	
+
 	public TypeNameMatch[] getSelection() {
 		return fViewer.getSelection();
 	}
-	
+
 	public IDLTKSearchScope getScope() {
 		return fScope;
 	}
-	
+
 	private void createContent(final String message, int elementKind) {
 		GridLayout layout= new GridLayout();
 		layout.numColumns= 2;
 		layout.marginWidth= 0; layout.marginHeight= 0;
 		setLayout(layout);
 		Font font= getFont();
-		
+
 		Control header= createHeader(this, font, message);
 		GridData gd= new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan= 2;
 		header.setLayoutData(gd);
-		
+
 		fFilter= new Text(this, SWT.BORDER | SWT.FLAT);
 		fFilter.setFont(font);
 		if (fInitialFilterText != null) {
@@ -183,14 +180,13 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 		gd= new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan= 2;
 		fFilter.setLayoutData(gd);
-		fFilter.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				patternChanged((Text)e.widget);
-			}
-		});
+		fFilter.addModifyListener(e -> patternChanged((Text) e.widget));
 		fFilter.addKeyListener(new KeyListener() {
+			@Override
 			public void keyReleased(KeyEvent e) {
 			}
+
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.ARROW_DOWN) {
 					fViewer.setFocus();
@@ -198,16 +194,18 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 			}
 		});
 		fFilter.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			@Override
 			public void getName(AccessibleEvent e) {
 				e.result= Strings.removeMnemonicIndicator(message);
 			}
 		});
 		TextFieldNavigationHandler.install(fFilter);
-		
+
 		Label label= new Label(this, SWT.NONE);
 		label.setFont(font);
 		label.setText(DLTKUIMessages.TypeSelectionComponent_label);
 		label.addTraverseListener(new TraverseListener() {
+			@Override
 			public void keyTraversed(TraverseEvent e) {
 				if (e.detail == SWT.TRAVERSE_MNEMONIC && e.doit) {
 					e.detail= SWT.TRAVERSE_NONE;
@@ -235,6 +233,7 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 		gd.horizontalSpan= 2;
 		table.setLayoutData(gd);
 		table.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			@Override
 			public void getName(AccessibleEvent e) {
 				if (table.getSelectionCount() == 0) {
 					e.result= Strings.removeMnemonicIndicator(DLTKUIMessages.TypeSelectionComponent_label);
@@ -262,6 +261,7 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 			table.addSelectionListener(new SelectionAdapter() {
 				private TypeNameMatchLabelProvider fLabelProvider= new TypeNameMatchLabelProvider(
 					TypeNameMatchLabelProvider.SHOW_TYPE_CONTAINER_ONLY + TypeNameMatchLabelProvider.SHOW_ROOT_POSTFIX, fToolkit);
+				@Override
 				public void widgetSelected(SelectionEvent event) {
 					TypeNameMatch[] selection= fViewer.getSelection();
 					if (selection.length != 1) {
@@ -275,11 +275,7 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 				}
 			});
 		}
-		addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent event) {
-				disposeComponent();
-			}
-		});
+		addDisposeListener(event -> disposeComponent());
 		if (fTypeSelectionExtension != null) {
 			fTypeSelectionExtension.initialize(this);
 		}
@@ -288,7 +284,7 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 	public void addSelectionListener(SelectionListener listener) {
 		fViewer.getTable().addSelectionListener(listener);
 	}
-	
+
 	public void populate(int selectionMode) {
 		if (fInitialFilterText != null) {
 			switch(selectionMode) {
@@ -299,15 +295,15 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 					fFilter.setSelection(0, fInitialFilterText.length());
 					break;
 			}
-		} 
+		}
 		fFilter.setFocus();
 		fViewer.startup();
 	}
-	
+
 	private void patternChanged(Text text) {
 		fViewer.setSearchPattern(text.getText());
 	}
-	
+
 	private Control createHeader(Composite parent, Font font, String message) {
 		Composite header= new Composite(parent, SWT.NONE);
 		GridLayout layout= new GridLayout();
@@ -319,6 +315,7 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 		label.setText(message);
 		label.setFont(font);
 		label.addTraverseListener(new TraverseListener() {
+			@Override
 			public void keyTraversed(TraverseEvent e) {
 				if (e.detail == SWT.TRAVERSE_MNEMONIC && e.doit) {
 					e.detail= SWT.TRAVERSE_NONE;
@@ -328,11 +325,11 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 		});
 		GridData gd= new GridData(GridData.FILL_HORIZONTAL);
 		label.setLayoutData(gd);
-		
+
 		createViewMenu(header);
 		return header;
 	}
-	
+
 	private void createViewMenu(Composite parent) {
 		fToolBar= new ToolBar(parent, SWT.FLAT);
 		fToolItem= new ToolItem(fToolBar, SWT.PUSH, 0);
@@ -347,18 +344,19 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 				.get(DLTKPluginImages.DESC_DLCL_VIEW_MENU));
 		fToolItem.setToolTipText(DLTKUIMessages.TypeSelectionComponent_menu);
 		fToolItem.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				showViewMenu();
 			}
 		});
-		
+
 		fMenuManager= new MenuManager();
 		fillViewMenu(fMenuManager);
 
 		// ICommandService commandService= (ICommandService)PlatformUI.getWorkbench().getAdapter(ICommandService.class);
 		// IHandlerService handlerService= (IHandlerService)PlatformUI.getWorkbench().getAdapter(IHandlerService.class);
 	}
-	
+
 	private void showViewMenu() {
 		Menu menu = fMenuManager.createContextMenu(getShell());
 		Rectangle bounds = fToolItem.getBounds();
@@ -367,7 +365,7 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 		menu.setLocation(topLeft.x, topLeft.y);
 		menu.setVisible(true);
 	}
-	
+
 	private void fillViewMenu(IMenuManager viewMenu) {
 		if (!fMultipleSelection) {
 			ToggleStatusLineAction showStatusLineAction= new ToggleStatusLineAction();
@@ -379,6 +377,7 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 			fFilterActionGroup= new WorkingSetFilterActionGroup(getShell(),
 				DLTKUIPlugin.getActivePage(),
 				new IPropertyChangeListener() {
+						@Override
 					public void propertyChange(PropertyChangeEvent event) {
 						IWorkingSet ws= (IWorkingSet)event.getNewValue();
 						if (ws == null || (ws.isAggregateWorkingSet() && ws.isEmpty())) {

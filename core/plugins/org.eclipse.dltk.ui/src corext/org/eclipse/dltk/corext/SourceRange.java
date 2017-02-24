@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.corext;
 
@@ -21,7 +20,7 @@ import org.eclipse.dltk.core.ISourceRange;
  */
 @Deprecated
 public class SourceRange implements ISourceRange{
-	
+
 	private final int fOffset;
 	private final int fLength;
 
@@ -29,7 +28,7 @@ public class SourceRange implements ISourceRange{
 		fLength= length;
 		fOffset= offset;
 	}
-	
+
 	public SourceRange(ASTNode node) {
 		this(node.sourceStart(), node.sourceEnd() - node.sourceStart());
 	}
@@ -37,31 +36,34 @@ public class SourceRange implements ISourceRange{
 	public SourceRange(IProblem problem) {
 		this(problem.getSourceStart(), problem.getSourceEnd() - problem.getSourceStart() + 1);
 	}
-	
+
 	public SourceRange(ISourceRange range) {
 		this(range.getOffset(), range.getLength());
 	}
 
+	@Override
 	public int getLength() {
 		return fLength;
 	}
 
+	@Override
 	public int getOffset() {
 		return fOffset;
 	}
-	
+
 	public int getEndExclusive() {
 		return getOffset() + getLength();
 	}
-	
+
 	public int getEndInclusive() {
-		return getEndExclusive() - 1;	
+		return getEndExclusive() - 1;
 	}
-	
+
+	@Override
 	public String toString(){
 		return "<offset: " + fOffset +" length: " + fLength + "/>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
-	
+
 	/**
 	 * Sorts the given ranges by offset (backwards).
 	 * Note: modifies the parameter.
@@ -70,6 +72,7 @@ public class SourceRange implements ISourceRange{
 	 */
 	public static ISourceRange[] reverseSortByOffset(ISourceRange[] ranges) {
 		Comparator<ISourceRange> comparator = new Comparator<ISourceRange>() {
+			@Override
 			public int compare(ISourceRange o1, ISourceRange o2) {
 				return o2.getOffset() - o1.getOffset();
 			}
@@ -78,29 +81,31 @@ public class SourceRange implements ISourceRange{
 		return ranges;
 	}
 
-    public boolean equals(Object obj) {
+	@Override
+	public boolean equals(Object obj) {
     	if (! (obj instanceof ISourceRange))
 	        return false;
 	    return ((ISourceRange)obj).getOffset() == fOffset && ((ISourceRange)obj).getLength() == fLength;
     }
 
-    public int hashCode() {
+	@Override
+	public int hashCode() {
         return fLength ^ fOffset;
     }
-    
+
     public boolean covers(ASTNode node) {
     	return covers(new SourceRange(node));
     }
-    
+
     public boolean covers(SourceRange range) {
     	return    getOffset() <= range.getOffset()
     	       	&& getEndInclusive() >= range.getEndInclusive();
     }
-    
+
     /**
      * Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=130161
      * (Script Model returns ISourceRanges [-1, 0] if source not available).
-     * 
+     *
      * @param range a source range, can be <code>null</code>
      * @return <code>true</code> iff range is not null and range.getOffset() is not -1
      */
