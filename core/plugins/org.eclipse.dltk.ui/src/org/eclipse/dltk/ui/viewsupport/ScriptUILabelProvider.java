@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ui.viewsupport;
 
@@ -95,7 +94,7 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 	/**
 	 * Evaluates the image flags for a element. Can be overwriten by super
 	 * classes.
-	 * 
+	 *
 	 * @return Returns a int
 	 */
 	protected int evaluateImageFlags(Object element) {
@@ -105,13 +104,14 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 	/**
 	 * Evaluates the text flags for a element. Can be overwriten by super
 	 * classes.
-	 * 
+	 *
 	 * @return Returns a int
 	 */
 	protected long evaluateTextFlags(Object element) {
 		return getTextFlags();
 	}
 
+	@Override
 	public Image getImage(Object element) {
 		ILabelProvider[] providers = getProviders(element);
 		final int flags = evaluateImageFlags(element);
@@ -202,6 +202,7 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 		return localRegistry;
 	}
 
+	@Override
 	public String getText(Object element) {
 		StyledString styledText = getStyledText(element);
 		if (styledText != null)
@@ -223,6 +224,7 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 		return providers;
 	}
 
+	@Override
 	public void addListener(ILabelProviderListener listener) {
 		if (fLabelDecorators != null) {
 			for (int i = 0; i < fLabelDecorators.size(); i++) {
@@ -234,6 +236,7 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 		fListeners.add(listener);
 	}
 
+	@Override
 	public void dispose() {
 		if (fLabelDecorators != null) {
 			for (int i = 0; i < fLabelDecorators.size(); i++) {
@@ -251,10 +254,12 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 		fImageLabelProvider.dispose();
 	}
 
+	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		return true;
 	}
 
+	@Override
 	public void removeListener(ILabelProviderListener listener) {
 		if (fLabelDecorators != null) {
 			for (int i = 0; i < fLabelDecorators.size(); i++) {
@@ -265,10 +270,12 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 		fListeners.remove(listener);
 	}
 
+	@Override
 	public Color getForeground(Object element) {
 		return null;
 	}
 
+	@Override
 	public Color getBackground(Object element) {
 		return null;
 	}
@@ -276,10 +283,10 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 	/**
 	 * Fires a label provider changed event to all registered listeners Only
 	 * listeners registered at the time this method is called are notified.
-	 * 
+	 *
 	 * @param event
 	 *            a label provider changed event
-	 * 
+	 *
 	 * @see ILabelProviderListener#labelProviderChanged
 	 */
 	protected void fireLabelProviderChanged(
@@ -290,6 +297,7 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 			final ILabelProviderListener l = (ILabelProviderListener) listeners[i];
 
 			SafeRunner.run(new SafeRunnable() {
+				@Override
 				public void run() {
 					l.labelProviderChanged(event);
 				}
@@ -323,10 +331,11 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 		}
 		return text;
 	}
-	
+
 	/**
 	 * @since 5.2
 	 */
+	@Override
 	public StyledString getStyledText(Object element) {
 		ILabelProvider[] providers = getProviders(element);
 		StyledString result = null;
