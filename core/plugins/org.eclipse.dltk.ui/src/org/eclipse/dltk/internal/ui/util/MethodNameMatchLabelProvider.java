@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.util;
 
@@ -58,11 +57,7 @@ public class MethodNameMatchLabelProvider extends LabelProvider {
 			return packName;
 	}
 
-	/*
-	 * non java-doc
-	 * 
-	 * @see ILabelProvider#getText
-	 */
+	@Override
 	public String getText(Object element) {
 		if (!(element instanceof TypeNameMatch))
 			return super.getText(element);
@@ -107,11 +102,7 @@ public class MethodNameMatchLabelProvider extends LabelProvider {
 		return buf.toString();
 	}
 
-	/*
-	 * non java-doc
-	 * 
-	 * @see ILabelProvider#getImage
-	 */
+	@Override
 	public Image getImage(Object element) {
 		if (!(element instanceof MethodNameMatch))
 			return super.getImage(element);

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath;
 
@@ -22,7 +21,6 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-
 /**
  * Viewer filter for archive selection dialogs. Archives are files with file extension 'zip'. The filter is not case sensitive.
  */
@@ -31,7 +29,7 @@ public class ArchiveFileFilter extends ViewerFilter
 
 	public static final String[] FILTER_EXTENSIONS = new String [] { "*.zip" }; //$NON-NLS-1$
 
-	private static final String[] fgArchiveExtensions = { "zip" }; //$NON-NLS-1$ 
+	private static final String[] fgArchiveExtensions = { "zip" }; //$NON-NLS-1$
 
 	private List fExcludes;
 
@@ -60,9 +58,7 @@ public class ArchiveFileFilter extends ViewerFilter
 		fRecursive = recusive;
 	}
 
-	/*
-	 * @see ViewerFilter#select
-	 */
+	@Override
 	public boolean select( Viewer viewer, Object parent, Object element ) {
 
 		if( element instanceof IFile ) {
