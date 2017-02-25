@@ -41,7 +41,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 
-
 /**
  * A list with a button bar.
  * Typical buttons are 'Add', 'Remove', 'Up' and 'Down'.
@@ -848,10 +847,6 @@ public class TreeListDialogField extends DialogField {
 		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			// will never happen
-		}
-
-		public boolean isDeleted(Object element) {
-			return false;
 		}
 
 		@Override

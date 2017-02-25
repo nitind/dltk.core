@@ -46,7 +46,6 @@ import org.eclipse.dltk.internal.ui.wizards.dialogfields.TreeListDialogField;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.util.ExceptionHandler;
 import org.eclipse.dltk.ui.util.PixelConverter;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -298,22 +297,6 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 	public void addElement(BPListElement element) {
 		fLibrariesList.addElement(element);
 		fLibrariesList.postSetSelection(new StructuredSelection(element));
-	}
-
-	private void askForAddingExclusionPatternsDialog(
-			List<BPListElement> newEntries) {
-		HashSet modified = new HashSet();
-		List existing = fBuildPathList.getElements();
-		fixNestingConflicts(
-				newEntries
-				.toArray(new BPListElement[newEntries.size()]),
-				(BPListElement[]) existing.toArray(new BPListElement[existing
-						.size()]), modified);
-		if (!modified.isEmpty()) {
-			String title = NewWizardMessages.LibrariesWorkbookPage_exclusion_added_title;
-			String message = NewWizardMessages.LibrariesWorkbookPage_exclusion_added_message;
-			MessageDialog.openInformation(getShell(), title, message);
-		}
 	}
 
 	protected void libaryPageDoubleClicked(TreeListDialogField field) {

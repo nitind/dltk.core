@@ -74,10 +74,6 @@ public class LinkFolderDialog extends StatusDialog {
             fNameDialogField.setDialogFieldListener(this);
         }
 
-        public StringDialogField getNameDialogField() {
-            return fNameDialogField;
-        }
-
         public void setText(String text) {
             fNameDialogField.setText(text);
             fNameDialogField.setFocus();
@@ -116,12 +112,7 @@ public class LinkFolderDialog extends StatusDialog {
 
             SelectionButtonDialogField variables= new SelectionButtonDialogField(SWT.PUSH);
             variables.setLabelText(NewWizardMessages.LinkFolderDialog_dependenciesGroup_variables_desc);
-            variables.setDialogFieldListener(new IDialogFieldListener() {
-                @Override
-				public void dialogFieldChanged(DialogField field) {
-                    handleVariablesButtonPressed();
-                }
-            });
+            variables.setDialogFieldListener(field -> handleVariablesButtonPressed());
 
             fLinkLocation.doFillIntoGrid(parent, numColumns);
 

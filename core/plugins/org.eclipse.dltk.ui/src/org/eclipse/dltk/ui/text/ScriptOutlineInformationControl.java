@@ -144,10 +144,6 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 			fShowDefiningType = showDefiningType;
 		}
 
-		public boolean isShowDefiningType() {
-			return fShowDefiningType;
-		}
-
 		private IType getDefiningType(Object element) throws ModelException {
 			int kind = ((IModelElement) element).getElementType();
 

@@ -753,10 +753,6 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 			fireLabelProviderChanged(new LabelProviderChangedEvent(this));
 		}
 
-		private boolean isInnerType(TypeNameMatch match) {
-			return match.getTypeQualifiedName().indexOf('.') != -1;
-		}
-
 		@Override
 		public Image getImage(Object element) {
 			if (!(element instanceof TypeNameMatch)) {
@@ -878,10 +874,6 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 
 		}
 
-		public void setFullyQualifyDuplicates(boolean value) {
-			fFullyQualifyDuplicates = value;
-		}
-
 		private void processInterpreterInstallType(
 				IInterpreterInstallType installType, List<String> locations,
 				List<String> labels) {
@@ -965,45 +957,12 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 			return result.toString();
 		}
 
-		public String getText(TypeNameMatch last, TypeNameMatch current,
-				TypeNameMatch next) {
-			StringBuffer result = new StringBuffer();
-			int qualifications = 0;
-			String currentTN = current.getSimpleTypeName();
-			result.append(currentTN);
-			return result.toString();
-		}
-
 		public String getQualificationText(TypeNameMatch type) {
 			StringBuffer result = new StringBuffer();
 			result.append(type.getType().getTypeQualifiedName(".")); //$NON-NLS-1$
 			result.append(ScriptElementLabels.CONCAT_STRING);
 			result.append(getContainerName(type));
 			return result.toString();
-		}
-
-		private boolean isInnerType(TypeNameMatch match) {
-			return match.getTypeQualifiedName().indexOf('.') != -1;
-		}
-
-		public ImageDescriptor getImageDescriptor(Object element) {
-			TypeNameMatch type = (TypeNameMatch) element;
-			if (fProviderExtension != null) {
-				fAdapter.setMatch(type);
-				ImageDescriptor descriptor = fProviderExtension
-						.getImageDescriptor(fAdapter);
-				if (descriptor != null)
-					return descriptor;
-			}
-			return ScriptElementImageProvider.getTypeImageDescriptor(type
-					.getModifiers(), false);
-		}
-
-		private String getTypeContainerName(TypeNameMatch info) {
-			String result = info.getTypeContainerName();
-			if (result.length() > 0)
-				return result;
-			return ""; //$NON-NLS-1$
 		}
 
 		private String getContainerName(TypeNameMatch type) {
@@ -1111,10 +1070,6 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 			return fElemKind;
 		}
 
-		public ITypeInfoFilterExtension getFilterExtension() {
-			return fFilterExt;
-		}
-
 		public IDLTKSearchScope getSearchScope() {
 			return fScope;
 		}
@@ -1139,19 +1094,6 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 		public boolean matchesRawNamePattern(TypeNameMatch type) {
 			return Strings.startsWithIgnoreCase(type.getSimpleTypeName(),
 					getPattern());
-		}
-
-		public boolean matchesCachedResult(TypeNameMatch type) {
-			if (!(matchesPackage(type) && matchesFilterExtension(type)))
-				return false;
-			return matchesName(type);
-		}
-
-		public boolean matchesHistoryElement(TypeNameMatch type) {
-			if (!(matchesPackage(type) && matchesModifiers(type)
-					&& matchesScope(type) && matchesFilterExtension(type)))
-				return false;
-			return matchesName(type);
 		}
 
 		public boolean matchesFilterExtension(TypeNameMatch type) {
@@ -1320,10 +1262,6 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 			super();
 			fContentProvider = contentProvider;
 			fTypeItemsFilter = typeItemsFilter;
-		}
-
-		public void cancel() {
-			fStop = true;
 		}
 
 		@Override

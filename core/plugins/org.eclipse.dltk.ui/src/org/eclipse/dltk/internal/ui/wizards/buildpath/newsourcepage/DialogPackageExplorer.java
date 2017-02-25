@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IScriptProjectFilenames;
@@ -32,7 +31,6 @@ import org.eclipse.dltk.internal.ui.filters.LibraryFilter;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElementAttribute;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.newsourcepage.DialogPackageExplorerActionGroup.DialogExplorerActionContext;
-import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
@@ -43,7 +41,6 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -205,14 +202,6 @@ public abstract class DialogPackageExplorer implements IMenuListener,
 			super.dispose();
 		}
 
-		protected ImageDescriptor getSourceModuleIcon(IModelElement element,
-				int renderFlags) {
-			if (DLTKCore.DEBUG) {
-				System.err
-						.println("Dialog package explorer label provider returns ghost for source modules..."); //$NON-NLS-1$
-			}
-			return DLTKPluginImages.DESC_OBJS_GHOST;
-		}
 	}
 
 	/**

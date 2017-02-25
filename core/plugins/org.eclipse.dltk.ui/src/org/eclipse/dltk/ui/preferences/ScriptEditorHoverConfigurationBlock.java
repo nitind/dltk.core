@@ -137,10 +137,6 @@ public class ScriptEditorHoverConfigurationBlock implements
 		public void dispose() {
 		}
 
-		public boolean isDeleted(Object element) {
-			return false;
-		}
-
 		@Override
 		public Object[] getElements(Object element) {
 			return (Object[]) element;

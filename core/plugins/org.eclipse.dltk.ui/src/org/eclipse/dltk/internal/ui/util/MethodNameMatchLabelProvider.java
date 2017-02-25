@@ -30,10 +30,6 @@ public class MethodNameMatchLabelProvider extends LabelProvider {
 
 	private static final Image METHOD_ICON = DLTKPluginImages
 			.get(DLTKPluginImages.IMG_METHOD_PUBLIC);
-	private static final Image ANNOTATION_ICON = DLTKPluginImages
-			.get(DLTKPluginImages.IMG_OBJS_ANNOTATION);
-	// private static final Image INTERFACE_ICON=
-	// DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_INTERFACE);
 	private static final Image PKG_ICON = DLTKPluginImages
 			.get(DLTKPluginImages.IMG_OBJS_PACKAGE);
 

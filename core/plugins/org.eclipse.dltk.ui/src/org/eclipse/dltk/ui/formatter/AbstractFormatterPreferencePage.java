@@ -91,10 +91,6 @@ public abstract class AbstractFormatterPreferencePage extends
 				return AbstractFormatterPreferencePage.this.getDialogSettings();
 			}
 
-			public IProfileManager getProfileManager() {
-				return FormatterSelectionBlock.this.getProfileManager();
-			}
-
 		}
 
 		/**

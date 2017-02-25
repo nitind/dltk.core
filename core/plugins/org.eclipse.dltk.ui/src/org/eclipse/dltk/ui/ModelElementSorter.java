@@ -8,10 +8,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.ui;
 
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -159,41 +156,6 @@ public class ModelElementSorter extends ViewerSorter implements
 		IModelCompareProvider[] providers = UIModelProviderManager
 				.getCompareProviders(toolkit);
 		return providers;
-	}
-
-	private IModelCompareProvider[] getCompareProviders(Object element,
-			Object element2) {
-		String toolkit1 = null;
-		String toolkit2 = null;
-		if (element instanceof IModelElement) {
-			IDLTKLanguageToolkit tk = DLTKLanguageManager
-					.getLanguageToolkit((IModelElement) element);
-			if (tk != null) {
-				toolkit1 = tk.getNatureId();
-			}
-		}
-		if (element2 instanceof IModelElement) {
-			IDLTKLanguageToolkit tk = DLTKLanguageManager
-					.getLanguageToolkit((IModelElement) element2);
-			if (tk != null) {
-				toolkit2 = tk.getNatureId();
-			}
-		}
-		if (toolkit1 == null || toolkit2 == null) {
-			return UIModelProviderManager.getCompareProviders(null);
-		}
-		if (toolkit1 != toolkit2) {
-			IModelCompareProvider[] tk1 = UIModelProviderManager
-					.getCompareProviders(toolkit1);
-			IModelCompareProvider[] tk2 = UIModelProviderManager
-					.getCompareProviders(toolkit1);
-			Set<IModelCompareProvider> result = new HashSet<IModelCompareProvider>();
-			result.addAll(Arrays.asList(tk1));
-			result.addAll(Arrays.asList(tk2));
-			return result.toArray(new IModelCompareProvider[result.size()]);
-		} else {
-			return UIModelProviderManager.getCompareProviders(toolkit1);
-		}
 	}
 
 	private int getMemberCategory(int kind) {

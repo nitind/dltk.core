@@ -416,14 +416,6 @@ public class EditTemplateDialog extends StatusDialog {
 		return label;
 	}
 
-	private static Button createCheckbox(Composite parent, String name) {
-		Button button = new Button(parent, SWT.CHECK);
-		button.setText(name);
-		button.setLayoutData(new GridData());
-
-		return button;
-	}
-
 	private static Text createText(Composite parent) {
 		Text text = new Text(parent, SWT.BORDER);
 		text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

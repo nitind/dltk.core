@@ -48,8 +48,6 @@ public class SelectionTransferDropAdapter extends DLTKViewerDropAdapter
 	private int fCanCopyElements;
 	private ISelection fSelection;
 
-	private static final long DROP_TIME_DIFF_TRESHOLD = 150;
-
 	public SelectionTransferDropAdapter(StructuredViewer viewer) {
 		super(viewer);
 

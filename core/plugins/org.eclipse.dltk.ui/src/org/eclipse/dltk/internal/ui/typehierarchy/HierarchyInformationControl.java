@@ -60,7 +60,6 @@ public abstract class HierarchyInformationControl extends AbstractInformationCon
 	private boolean fDoFilter;
 
 	private MethodOverrideTester fMethodOverrideTester;
-	private IPreferenceStore fPreferenceStore;
 
 	public HierarchyInformationControl(Shell parent, int shellStyle, int treeStyle) {
 		super(parent, shellStyle, treeStyle, IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, true);

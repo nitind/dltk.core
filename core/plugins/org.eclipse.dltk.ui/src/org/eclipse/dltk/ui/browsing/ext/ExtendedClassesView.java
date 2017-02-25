@@ -1,7 +1,6 @@
 package org.eclipse.dltk.ui.browsing.ext;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,7 +35,6 @@ import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.actions.OpenEditorActionGroup;
 import org.eclipse.dltk.ui.actions.OpenViewActionGroup;
 import org.eclipse.dltk.ui.actions.SearchActionGroup;
-import org.eclipse.dltk.ui.browsing.ScriptElementTypeComparator;
 import org.eclipse.dltk.ui.infoviews.AbstractInfoView;
 import org.eclipse.dltk.ui.viewsupport.IViewPartInputProvider;
 import org.eclipse.jface.action.IAction;
@@ -354,15 +352,6 @@ public class ExtendedClassesView extends ViewPart implements
 				return null;
 		}
 		return firstElement;
-	}
-
-	private ScriptElementTypeComparator fTypeComparator;
-
-	private Comparator getTypeComparator() {
-		if (fTypeComparator == null) {
-			fTypeComparator = new ScriptElementTypeComparator();
-		}
-		return fTypeComparator;
 	}
 
 	@Override
