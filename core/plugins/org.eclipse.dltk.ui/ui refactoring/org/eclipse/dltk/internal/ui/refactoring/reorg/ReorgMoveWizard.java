@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.refactoring.reorg;
 
@@ -43,11 +42,11 @@ public class ReorgMoveWizard extends RefactoringWizard {
 	public ReorgMoveWizard(MoveRefactoring ref) {
 		super(ref, DIALOG_BASED_USER_INTERFACE | computeHasPreviewPage(ref));
 		if (isTextualMove(ref))
-			setDefaultPageTitle(ReorgMessages.ReorgMoveWizard_textual_move); 
+			setDefaultPageTitle(ReorgMessages.ReorgMoveWizard_textual_move);
 		else
-			setDefaultPageTitle(ReorgMessages.ReorgMoveWizard_3); 
+			setDefaultPageTitle(ReorgMessages.ReorgMoveWizard_3);
 	}
-	
+
 	private static boolean isTextualMove(MoveRefactoring ref) {
 		ScriptMoveProcessor moveProcessor= (ScriptMoveProcessor) ref.getAdapter(ScriptMoveProcessor.class);
 		return moveProcessor.isTextualMove();
@@ -60,10 +59,11 @@ public class ReorgMoveWizard extends RefactoringWizard {
 		return NO_PREVIEW_PAGE;
 	}
 
+	@Override
 	protected void addUserInputPages() {
 		addPage(new MoveInputPage());
 	}
-	
+
 	private static class MoveInputPage extends ReorgUserInputPage{
 
 		private static final String PAGE_NAME= "MoveInputPage"; //$NON-NLS-1$
@@ -71,9 +71,9 @@ public class ReorgMoveWizard extends RefactoringWizard {
 		private Button fQualifiedNameCheckbox;
 		private QualifiedNameComponent fQualifiedNameComponent;
 		private ICreateTargetQuery fCreateTargetQuery;
-		
+
 		private Object fDestination;
-		
+
 		public MoveInputPage() {
 			super(PAGE_NAME);
 		}
@@ -82,26 +82,32 @@ public class ReorgMoveWizard extends RefactoringWizard {
 			return (ScriptMoveProcessor)getRefactoring().getAdapter(ScriptMoveProcessor.class);
 		}
 
+		@Override
 		protected Object getInitiallySelectedElement() {
 			return getScriptMoveProcessor().getCommonParentForInputElements();
 		}
-		
+
+		@Override
 		protected IModelElement[] getScriptElements() {
 			return getScriptMoveProcessor().getScriptElements();
 		}
 
+		@Override
 		protected IResource[] getResources() {
 			return getScriptMoveProcessor().getResources();
 		}
 
+		@Override
 		protected IReorgDestinationValidator getDestinationValidator() {
 			return getScriptMoveProcessor();
 		}
 
+		@Override
 		protected boolean performFinish() {
 			return super.performFinish() || getScriptMoveProcessor().wasCanceled(); //close the dialog if canceled
 		}
-		
+
+		@Override
 		protected RefactoringStatus verifyDestination(Object selected) throws ModelException{
 			ScriptMoveProcessor processor= getScriptMoveProcessor();
 			final RefactoringStatus refactoringStatus;
@@ -109,13 +115,13 @@ public class ReorgMoveWizard extends RefactoringWizard {
 				refactoringStatus= processor.setDestination((IModelElement)selected);
 			else if (selected instanceof IResource)
 				refactoringStatus= processor.setDestination((IResource)selected);
-			else refactoringStatus= RefactoringStatus.createFatalErrorStatus(ReorgMessages.ReorgMoveWizard_4); 
-			
+			else refactoringStatus= RefactoringStatus.createFatalErrorStatus(ReorgMessages.ReorgMoveWizard_4);
+
 			updateUIStatus();
 			fDestination= selected;
 			return refactoringStatus;
 		}
-	
+
 		private void updateUIStatus() {
 			getRefactoringWizard().setForcePreviewReview(false);
 			ScriptMoveProcessor processor= getScriptMoveProcessor();
@@ -142,11 +148,12 @@ public class ReorgMoveWizard extends RefactoringWizard {
 			if (! processor.canUpdateReferences())
 				return;
 			fReferenceCheckbox= new Button(result, SWT.CHECK);
-			fReferenceCheckbox.setText(ReorgMessages.ScriptMoveAction_update_references); 
+			fReferenceCheckbox.setText(ReorgMessages.ScriptMoveAction_update_references);
 			fReferenceCheckbox.setSelection(processor.getUpdateReferences());
 			fReferenceCheckbox.setEnabled(canUpdateReferences());
-			
+
 			fReferenceCheckbox.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					processor.setUpdateReferences(((Button)e.widget).getSelection());
 					updateUIStatus();
@@ -160,10 +167,10 @@ public class ReorgMoveWizard extends RefactoringWizard {
 				return;
 			fQualifiedNameCheckbox= new Button(parent, SWT.CHECK);
 			int indent= marginWidth + fQualifiedNameCheckbox.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
-			fQualifiedNameCheckbox.setText(RefactoringMessages.RenameInputWizardPage_update_qualified_names); 
+			fQualifiedNameCheckbox.setText(RefactoringMessages.RenameInputWizardPage_update_qualified_names);
 			fQualifiedNameCheckbox.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			fQualifiedNameCheckbox.setSelection(processor.getUpdateQualifiedNames());
-		
+
 			fQualifiedNameComponent= new QualifiedNameComponent(parent, SWT.NONE, processor, getRefactoringSettings());
 			fQualifiedNameComponent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			GridData gd= (GridData)fQualifiedNameComponent.getLayoutData();
@@ -172,6 +179,7 @@ public class ReorgMoveWizard extends RefactoringWizard {
 			updateQualifiedNameUpdating(processor, processor.getUpdateQualifiedNames());
 
 			fQualifiedNameCheckbox.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					boolean enabled= ((Button)e.widget).getSelection();
 					updateQualifiedNameUpdating(processor, enabled);
@@ -179,16 +187,17 @@ public class ReorgMoveWizard extends RefactoringWizard {
 
 			});
 		}
-		
+
 		private void updateQualifiedNameUpdating(final ScriptMoveProcessor processor, boolean enabled) {
 			fQualifiedNameComponent.setEnabled(enabled);
 			processor.setUpdateQualifiedNames(enabled);
 			updateUIStatus();
 		}
-		
+
+		@Override
 		public void createControl(Composite parent) {
 			Composite result;
-			
+
 			boolean showDestinationTree= ! getScriptMoveProcessor().hasDestinationSet();
 			if (showDestinationTree) {
 				fCreateTargetQuery= getScriptMoveProcessor().getCreateTargetQuery();
@@ -208,6 +217,7 @@ public class ReorgMoveWizard extends RefactoringWizard {
 			Dialog.applyDialogFont(result);
 		}
 
+		@Override
 		protected Control addLabel(Composite parent) {
 			if (fCreateTargetQuery != null) {
 				Composite firstLine= new Composite(parent, SWT.NONE);
@@ -215,9 +225,10 @@ public class ReorgMoveWizard extends RefactoringWizard {
 				layout.marginHeight= layout.marginWidth= 0;
 				firstLine.setLayout(layout);
 				firstLine.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-				
+
 				Control label= super.addLabel(firstLine);
 				label.addTraverseListener(new TraverseListener() {
+					@Override
 					public void keyTraversed(TraverseEvent e) {
 						if (e.detail == SWT.TRAVERSE_MNEMONIC && e.doit) {
 							e.detail= SWT.TRAVERSE_NONE;
@@ -225,25 +236,26 @@ public class ReorgMoveWizard extends RefactoringWizard {
 						}
 					}
 				});
-				
+
 				Button newButton= new Button(firstLine, SWT.PUSH);
 				newButton.setText(fCreateTargetQuery.getNewButtonLabel());
 				GridData gd= new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 				gd.widthHint = SWTUtil.getButtonWidthHint(newButton);
 				newButton.setLayoutData(gd);
 				newButton.addSelectionListener(new SelectionAdapter() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						doNewButtonPressed();
 					}
 				});
-				
+
 				return firstLine;
-				
+
 			} else {
 				return super.addLabel(parent);
 			}
 		}
-		
+
 		private boolean canUpdateReferences() {
 			return getScriptMoveProcessor().canUpdateReferences();
 		}

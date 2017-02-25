@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,9 +62,9 @@ public class PasteAction extends SelectionDispatchAction{
 		super(site);
 		Assert.isNotNull(clipboard);
 		fClipboard= clipboard;
-		
-		setText(ReorgMessages.PasteAction_4); 
-		setDescription(ReorgMessages.PasteAction_5); 
+
+		setText(ReorgMessages.PasteAction_4);
+		setDescription(ReorgMessages.PasteAction_5);
 
 		ISharedImages workbenchImages= DLTKUIPlugin.getDefault().getWorkbench().getSharedImages();
 		setDisabledImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
@@ -73,10 +73,11 @@ public class PasteAction extends SelectionDispatchAction{
 
 		if (DLTKCore.DEBUG) {
 			System.err.println("Add help support here..."); //$NON-NLS-1$
-		}		
+		}
 		//PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IScriptHelpContextIds.PASTE_ACTION);
 	}
-		
+
+	@Override
 	public void selectionChanged(IStructuredSelection selection) {
 		// Moved condition checking to run (see http://bugs.eclipse.org/bugs/show_bug.cgi?id=78450)
 	}
@@ -86,25 +87,25 @@ public class PasteAction extends SelectionDispatchAction{
 		Shell shell = getShell();
 		List<Paster> result = new ArrayList<Paster>(2);
 		paster= new ProjectPaster(shell, fClipboard);
-		if (paster.canEnable(availableDataTypes)) 
+		if (paster.canEnable(availableDataTypes))
 			result.add(paster);
-		
+
 		paster= new ModelElementAndResourcePaster(shell, fClipboard);
-		if (paster.canEnable(availableDataTypes)) 
+		if (paster.canEnable(availableDataTypes))
 			result.add(paster);
 
 //		paster= new TypedSourcePaster(shell, fClipboard);
-//		if (paster.canEnable(availableDataTypes)) 
+//		if (paster.canEnable(availableDataTypes))
 //			result.add(paster);
 
 		paster= new FilePaster(shell, fClipboard);
-		if (paster.canEnable(availableDataTypes)) 
+		if (paster.canEnable(availableDataTypes))
 			result.add(paster);
-		
+
 		paster= new WorkingSetPaster(shell, fClipboard);
 		if (paster.canEnable(availableDataTypes))
 			result.add(paster);
-		
+
 //		paster= new TextPaster(shell, fClipboard);
 //		if (paster.canEnable(availableDataTypes))
 //			result.add(paster);
@@ -114,14 +115,11 @@ public class PasteAction extends SelectionDispatchAction{
 	private static Object getContents(final Clipboard clipboard, final Transfer transfer, Shell shell) {
 		//see bug 33028 for explanation why we need this
 		final Object[] result= new Object[1];
-		shell.getDisplay().syncExec(new Runnable() {
-			public void run() {
-				result[0]= clipboard.getContents(transfer);
-			}
-		});
+		shell.getDisplay()
+				.syncExec(() -> result[0] = clipboard.getContents(transfer));
 		return result[0];
 	}
-	
+
 	private static boolean isAvailable(Transfer transfer, TransferData[] availableDataTypes) {
 		for (int i= 0; i < availableDataTypes.length; i++) {
 			if (transfer.isSupportedType(availableDataTypes[i])) return true;
@@ -129,6 +127,7 @@ public class PasteAction extends SelectionDispatchAction{
 		return false;
 	}
 
+	@Override
 	public void run(IStructuredSelection selection) {
 		try {
 			TransferData[] availableTypes= fClipboard.getAvailableTypes();
@@ -143,11 +142,11 @@ public class PasteAction extends SelectionDispatchAction{
 					return;// one is enough
 				}
 			}
-			MessageDialog.openError(DLTKUIPlugin.getActiveWorkbenchShell(), RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringMessages.OpenRefactoringWizardAction_disabled); 
-		} catch (ModelException e) {			
-			ExceptionHandler.handle(e, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringMessages.OpenRefactoringWizardAction_exception); 
+			MessageDialog.openError(DLTKUIPlugin.getActiveWorkbenchShell(), RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringMessages.OpenRefactoringWizardAction_disabled);
+		} catch (ModelException e) {
+			ExceptionHandler.handle(e, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringMessages.OpenRefactoringWizardAction_exception);
 		} catch (InvocationTargetException e) {
-			ExceptionHandler.handle(e, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringMessages.OpenRefactoringWizardAction_exception); 
+			ExceptionHandler.handle(e, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringMessages.OpenRefactoringWizardAction_exception);
 		} catch (InterruptedException e) {
 			// OK
 		}
@@ -182,7 +181,7 @@ public class PasteAction extends SelectionDispatchAction{
 			}
 			return null;
 		}
-	
+
 //		protected final TypedSource[] getClipboardTypedSources(TransferData[] availableDataTypes) {
 //			Transfer transfer= TypedSourceTransfer.getInstance();
 //			if (isAvailable(transfer, availableDataTypes)) {
@@ -190,7 +189,7 @@ public class PasteAction extends SelectionDispatchAction{
 //			}
 //			return null;
 //		}
-	
+
 		protected final String getClipboardText(TransferData[] availableDataTypes) {
 			Transfer transfer= TextTransfer.getInstance();
 			if (isAvailable(transfer, availableDataTypes)) {
@@ -203,13 +202,13 @@ public class PasteAction extends SelectionDispatchAction{
 		public abstract boolean canEnable(TransferData[] availableTypes)  throws ModelException;
 		public abstract boolean canPasteOn(IModelElement[] selectedScriptElements, IResource[] selectedResources, IWorkingSet[] selectedWorkingSets)  throws ModelException;
 	}
-    
+
 //    private static class TextPaster extends Paster {
 //
 //		private static class CuParser {
 //			private final IScriptProject fScriptProject;
 //			private final String fText;
-//			
+//
 //			private String fTypeName;
 //			private String fPackageName;
 //
@@ -221,7 +220,7 @@ public class PasteAction extends SelectionDispatchAction{
 //			private void parseText() {
 //				if (fPackageName != null)
 //					return;
-//				
+//
 //				fPackageName= IProjectFragment.DEFAULT_SCRIPT_FOLDER_NAME;
 //				if (DLTKCore.DEBUG) {
 //					System.err.println("Add language dependent code here.");
@@ -230,10 +229,10 @@ public class PasteAction extends SelectionDispatchAction{
 ////				parser.setProject(fScriptProject);
 ////				parser.setSource(fText.toCharArray());
 ////				SourceModule unit= (SourceModule) parser.createAST(null);
-////				
+////
 ////				if (unit == null)
 ////					return;
-////				
+////
 ////				int typesCount= unit.types().size();
 ////				if (typesCount > 0) {
 ////					// get first most visible type:
@@ -249,13 +248,13 @@ public class PasteAction extends SelectionDispatchAction{
 ////				}
 ////				if (fTypeName == null)
 ////					return;
-////				
+////
 ////				PackageDeclaration pack= unit.getPackage();
 ////				if (pack != null) {
 ////					fPackageName= pack.getName().getFullyQualifiedName();
 ////				}
 //			}
-//			
+//
 //			/**
 //			 * @return the type name, or <code>null</code> iff the text could not be parsed
 //			 */
@@ -273,15 +272,15 @@ public class PasteAction extends SelectionDispatchAction{
 //				return fText;
 //			}
 //		}
-//		
+//
 //		private IProjectFragment fDestinationPack;
 //		private CuParser fCuParser;
 //		private TransferData[] fAvailableTypes;
-//		
+//
 //		protected TextPaster(Shell shell, Clipboard clipboard) {
 //			super(shell, clipboard);
 //		}
-//		
+//
 //		public boolean canEnable(TransferData[] availableTypes) {
 //			fAvailableTypes= availableTypes;
 //			return PasteAction.isAvailable(TextTransfer.getInstance(), availableTypes);
@@ -294,14 +293,14 @@ public class PasteAction extends SelectionDispatchAction{
 //				return false; //alternative: create text file?
 //			if (modelElements.length != 1)
 //				return false;
-//			
+//
 //			IModelElement destination= modelElements[0];
 //			String text= getClipboardText(fAvailableTypes);
 //			fCuParser= new CuParser(destination.getScriptProject(), text);
-//			
+//
 //			if (fCuParser.getTypeName() == null)
 //				return false;
-//			
+//
 //			switch (destination.getElementType()) {
 //				case IModelElement.JAVA_PROJECT :
 //					IProjectFragment[] ProjectFragments= ((IScriptProject) destination).getProjectFragments();
@@ -314,7 +313,7 @@ public class PasteAction extends SelectionDispatchAction{
 //						}
 //					}
 //					return false;
-//					
+//
 //				case IModelElement.PACKAGE_FRAGMENT_ROOT :
 //					IProjectFragment ProjectFragment= (IProjectFragment) destination;
 //					if (ProjectFragment.getKind() == IProjectFragment.K_SOURCE) {
@@ -322,20 +321,20 @@ public class PasteAction extends SelectionDispatchAction{
 //						return isWritable(fDestinationPack);
 //					}
 //					return false;
-//					
+//
 //				case IModelElement.PACKAGE_FRAGMENT :
 //					fDestinationPack= (IProjectFragment) destination;
 //					return isWritable(fDestinationPack);
-//					
+//
 //				case IModelElement.COMPILATION_UNIT :
 //					fDestinationPack= (IProjectFragment) destination.getParent();
 //					return isWritable(fDestinationPack);
-//					
+//
 //				default:
 //					return false;
 //			}
 //		}
-//		
+//
 //		private boolean isWritable(IProjectFragment destinationPack) {
 //			if (destinationPack.exists() && destinationPack.isReadOnly()) {
 //				return false;
@@ -352,16 +351,16 @@ public class PasteAction extends SelectionDispatchAction{
 //
 //		public void paste(IModelElement[] modelElements, IResource[] resources, IWorkingSet[] selectedWorkingSets, TransferData[] availableTypes) throws ModelException, InterruptedException, InvocationTargetException{
 //			final IEditorPart[] editorPart= new IEditorPart[1];
-//			
+//
 //			IWorkspaceRunnable op= new IWorkspaceRunnable() {
 //				public void run(IProgressMonitor pm) throws CoreException {
 //					pm.beginTask("", 4); //$NON-NLS-1$
-//					
+//
 //					if (! fDestinationPack.exists())
 //						ScriptModelUtil.getProjectFragment(fDestinationPack).createScriptFolder(fCuParser.getPackageName(), true, new SubProgressMonitor(pm, 1));
 //					else
 //						pm.worked(1);
-//					
+//
 //					final String cuName= fCuParser.getTypeName() + ScriptModelUtil.DEFAULT_CU_SUFFIX;
 //					final ISourceModule cu= fDestinationPack.getSourceModule(cuName);
 //					boolean alreadyExists= cu.exists();
@@ -370,12 +369,12 @@ public class PasteAction extends SelectionDispatchAction{
 //						boolean overwrite= MessageDialog.openQuestion(getShell(), ReorgMessages.PasteAction_TextPaster_confirmOverwriting, msg);
 //						if (! overwrite)
 //							return;
-//						
+//
 //						editorPart[0]= openCu(cu); //Open editor before overwriting to allow undo.
 //					}
-//					
+//
 //					fDestinationPack.createSourceModule(cuName, fCuParser.getText(), true, new SubProgressMonitor(pm, 1));
-//					
+//
 //					if (!alreadyExists) {
 //						editorPart[0]= openCu(cu);
 //					}
@@ -412,13 +411,13 @@ public class PasteAction extends SelectionDispatchAction{
 //					}
 //				}
 //			};
-//			
+//
 //			IRunnableContext context= ScriptPlugin.getActiveWorkbenchWindow();
 //			if (context == null) {
 //				context= new BusyIndicatorRunnableContext();
 //			}
 //			PlatformUI.getWorkbench().getProgressService().runInUI(context, new WorkbenchRunnableAdapter(op), null);
-//			
+//
 //			if (editorPart[0] != null)
 //				editorPart[0].getEditorSite().getPage().activate(editorPart[0]); //activate editor again, since runInUI restores previous active part
 //		}
@@ -435,11 +434,12 @@ public class PasteAction extends SelectionDispatchAction{
 //			}
 //		}
 //    }
-    
+
 	private static class WorkingSetPaster extends Paster {
 		protected WorkingSetPaster(Shell shell, Clipboard clipboard) {
 			super(shell, clipboard);
 		}
+		@Override
 		public void paste(IModelElement[] selectedScriptElements, IResource[] selectedResources, IWorkingSet[] selectedWorkingSets, TransferData[] availableTypes) throws ModelException, InterruptedException, InvocationTargetException {
 			IWorkingSet workingSet= selectedWorkingSets[0];
 			Set<IAdaptable> elements = new HashSet<IAdaptable>(
@@ -470,10 +470,12 @@ public class PasteAction extends SelectionDispatchAction{
 			workingSet.setElements(
 					elements.toArray(new IAdaptable[elements.size()]));
 		}
+		@Override
 		public boolean canEnable(TransferData[] availableTypes) throws ModelException {
 			return isAvailable(ResourceTransfer.getInstance(), availableTypes) ||
 				isAvailable(ModelElementTransfer.getInstance(), availableTypes);
 		}
+		@Override
 		public boolean canPasteOn(IModelElement[] selectedScriptElements, IResource[] selectedResources, IWorkingSet[] selectedWorkingSets) throws ModelException {
 			if (selectedResources.length != 0 || selectedScriptElements.length != 0 || selectedWorkingSets.length != 1)
 				return false;
@@ -481,13 +483,14 @@ public class PasteAction extends SelectionDispatchAction{
 			return !WorkingSetIDs.OTHERS.equals(ws.getId());
 		}
 	}
-	
+
     private static class ProjectPaster extends Paster{
-    	
+
     	protected ProjectPaster(Shell shell, Clipboard clipboard) {
 			super(shell, clipboard);
 		}
 
+		@Override
 		public boolean canEnable(TransferData[] availableDataTypes) {
 			boolean resourceTransfer= isAvailable(ResourceTransfer.getInstance(), availableDataTypes);
 			boolean modelElementTransfer= isAvailable(ModelElementTransfer.getInstance(), availableDataTypes);
@@ -497,7 +500,8 @@ public class PasteAction extends SelectionDispatchAction{
 				return canPasteScriptProjects(availableDataTypes);
 			return canPasteScriptProjects(availableDataTypes) && canPasteSimpleProjects(availableDataTypes);
     	}
-    	
+
+		@Override
 		public void paste(IModelElement[] modelElements, IResource[] resources, IWorkingSet[] selectedWorkingSets, TransferData[] availableTypes) {
 			pasteProjects(availableTypes);
 		}
@@ -505,7 +509,7 @@ public class PasteAction extends SelectionDispatchAction{
 		private void pasteProjects(TransferData[] availableTypes) {
 			pasteProjects(getProjectsToPaste(availableTypes));
 		}
-		
+
 		private void pasteProjects(IProject[] projects){
 			Shell shell= getShell();
 			for (int i = 0; i < projects.length; i++) {
@@ -524,14 +528,15 @@ public class PasteAction extends SelectionDispatchAction{
 			return (IProject[]) result.toArray(new IProject[result.size()]);
 		}
 
+		@Override
 		public boolean canPasteOn(IModelElement[] modelElements, IResource[] resources, IWorkingSet[] selectedWorkingSets) {
 			return selectedWorkingSets.length == 0; // Can't paste on working sets here
 		}
-		
+
 		private boolean canPasteScriptProjects(TransferData[] availableDataTypes) {
 			IModelElement[] modelElements= getClipboardScriptElements(availableDataTypes);
-			return 	modelElements != null && 
-					modelElements.length != 0 && 
+			return 	modelElements != null &&
+					modelElements.length != 0 &&
 					! ReorgUtils.hasElementsNotOfType(modelElements, IModelElement.SCRIPT_PROJECT);
 		}
 
@@ -545,54 +550,57 @@ public class PasteAction extends SelectionDispatchAction{
 			return true;
 		}
     }
-    
+
     private static class FilePaster extends Paster{
 		protected FilePaster(Shell shell, Clipboard clipboard) {
 			super(shell, clipboard);
 		}
 
+		@Override
 		public void paste(IModelElement[] modelElements, IResource[] resources, IWorkingSet[] selectedWorkingSets, TransferData[] availableTypes) throws ModelException {
 			String[] fileData= getClipboardFiles(availableTypes);
 			if (fileData == null)
 				return;
-    		
+
 			IContainer container= getAsContainer(getTarget(modelElements, resources));
 			if (container == null)
 				return;
-				
+
 			new CopyFilesAndFoldersOperation(getShell()).copyFiles(fileData, container);
 		}
-		
+
 		private Object getTarget(IModelElement[] modelElements, IResource[] resources) {
 			if (modelElements.length + resources.length == 1){
 				if (modelElements.length == 1)
 					return modelElements[0];
 				else
 					return resources[0];
-			} else				
+			} else
 				return getCommonParent(modelElements, resources);
 		}
 
+		@Override
 		public boolean canPasteOn(IModelElement[] modelElements, IResource[] resources, IWorkingSet[] selectedWorkingSets) throws ModelException {
 			Object target= getTarget(modelElements, resources);
 			return target != null && canPasteFilesOn(getAsContainer(target)) && selectedWorkingSets.length == 0;
 		}
 
+		@Override
 		public boolean canEnable(TransferData[] availableDataTypes) throws ModelException {
 			return isAvailable(FileTransfer.getInstance(), availableDataTypes);
 		}
-				
+
 		private boolean canPasteFilesOn(Object target) {
 			boolean isScriptFolder= target instanceof IProjectFragment;
 			boolean isScriptProject= target instanceof IScriptProject;
 			boolean isProjectFragment= target instanceof IProjectFragment;
 			boolean isContainer= target instanceof IContainer;
-			
+
 			if( target instanceof ExternalProjectFragment || target instanceof ExternalScriptFolder || target instanceof ExternalSourceModule )  {
 				return false;
 			}
-		
-			if (!(isScriptFolder || isScriptProject || isProjectFragment || isContainer)) 
+
+			if (!(isScriptFolder || isScriptProject || isProjectFragment || isContainer))
 				return false;
 
 			if (isContainer) {
@@ -602,17 +610,17 @@ public class PasteAction extends SelectionDispatchAction{
 				return !element.isReadOnly();
 			}
 		}
-		
+
 		private IContainer getAsContainer(Object target) throws ModelException{
-			if (target == null) 
+			if (target == null)
 				return null;
-			if (target instanceof IContainer) 
+			if (target instanceof IContainer)
 				return (IContainer)target;
 			if (target instanceof IFile)
 				return ((IFile)target).getParent();
 			return getAsContainer(((IModelElement)target).getCorrespondingResource());
 		}
-		
+
 		private String[] getClipboardFiles(TransferData[] availableDataTypes) {
 			Transfer transfer= FileTransfer.getInstance();
 			if (isAvailable(transfer, availableDataTypes)) {
@@ -621,7 +629,7 @@ public class PasteAction extends SelectionDispatchAction{
 			return null;
 		}
 		private Object getCommonParent(IModelElement[] modelElements, IResource[] resources) {
-			return new ParentChecker(resources, modelElements).getCommonParent();		
+			return new ParentChecker(resources, modelElements).getCommonParent();
 		}
     }
     private static class ModelElementAndResourcePaster extends Paster {
@@ -632,19 +640,20 @@ public class PasteAction extends SelectionDispatchAction{
 
 		private TransferData[] fAvailableTypes;
 
+		@Override
 		public void paste(IModelElement[] modelElements, IResource[] resources, IWorkingSet[] selectedWorkingSets, TransferData[] availableTypes) throws ModelException, InterruptedException, InvocationTargetException{
 			IResource[] clipboardResources= getClipboardResources(availableTypes);
-			if (clipboardResources == null) 
+			if (clipboardResources == null)
 				clipboardResources= new IResource[0];
 			IModelElement[] clipboardScriptElements= getClipboardScriptElements(availableTypes);
-			if (clipboardScriptElements == null) 
+			if (clipboardScriptElements == null)
 				clipboardScriptElements= new IModelElement[0];
 
 			Object destination= getTarget(modelElements, resources);
 			if (destination instanceof IModelElement) {
 				ReorgCopyStarter.create(clipboardScriptElements, clipboardResources, (IModelElement)destination).run(getShell());
 			}
-			else if (destination instanceof IResource) {				
+			else if (destination instanceof IResource) {
 				ReorgCopyStarter.create(clipboardScriptElements, clipboardResources, (IResource)destination).run(getShell());
 			}
 		}
@@ -655,25 +664,26 @@ public class PasteAction extends SelectionDispatchAction{
 					return modelElements[0];
 				else
 					return resources[0];
-			} else				
+			} else
 				return getCommonParent(modelElements, resources);
 		}
-		
+
 		private Object getCommonParent(IModelElement[] modelElements, IResource[] resources) {
-			return new ParentChecker(resources, modelElements).getCommonParent();		
+			return new ParentChecker(resources, modelElements).getCommonParent();
 		}
 
+		@Override
 		public boolean canPasteOn(IModelElement[] modelElements, IResource[] resources, IWorkingSet[] selectedWorkingSets) throws ModelException {
 			if (selectedWorkingSets.length != 0)
 				return false;
 			IResource[] clipboardResources= getClipboardResources(fAvailableTypes);
-			if (clipboardResources == null) 
+			if (clipboardResources == null)
 				clipboardResources= new IResource[0];
 			IModelElement[] clipboardScriptElements= getClipboardScriptElements(fAvailableTypes);
-			if (clipboardScriptElements == null) 
+			if (clipboardScriptElements == null)
 				clipboardScriptElements= new IModelElement[0];
 			Object destination= getTarget(modelElements, resources);
-			if (destination instanceof IModelElement) {				
+			if (destination instanceof IModelElement) {
 				return ReorgCopyStarter.create(clipboardScriptElements, clipboardResources, (IModelElement)destination) != null;
 			}
 			if (destination instanceof IResource) {
@@ -681,13 +691,14 @@ public class PasteAction extends SelectionDispatchAction{
 			}
 			return false;
 		}
-		
+
+		@Override
 		public boolean canEnable(TransferData[] availableTypes) {
 			fAvailableTypes= availableTypes;
 			return isAvailable(ModelElementTransfer.getInstance(), availableTypes) || isAvailable(ResourceTransfer.getInstance(), availableTypes);
 		}
     }
-    
+
 //    private static class TypedSourcePaster extends Paster{
 //
 //		protected TypedSourcePaster(Shell shell, Clipboard clipboard) {
@@ -703,22 +714,22 @@ public class PasteAction extends SelectionDispatchAction{
 //		public boolean canPasteOn(IModelElement[] selectedScriptElements, IResource[] selectedResources, IWorkingSet[] selectedWorkingSets) throws ModelException {
 //			if (selectedResources.length != 0 || selectedWorkingSets.length != 0)
 //				return false;
-//			TypedSource[] typedSources= getClipboardTypedSources(fAvailableTypes);				
+//			TypedSource[] typedSources= getClipboardTypedSources(fAvailableTypes);
 //			Object destination= getTarget(selectedScriptElements, selectedResources);
 //			if (destination instanceof IScriptElement)
 //				return ReorgTypedSourcePasteStarter.create(typedSources, (IScriptElement)destination) != null;
 //			return false;
 //		}
-//		
+//
 //		public void paste(IModelElement[] selectedScriptElements, IResource[] selectedResources, IWorkingSet[] selectedWorkingSets, TransferData[] availableTypes) throws ModelException, InterruptedException, InvocationTargetException {
 //			TypedSource[] typedSources= getClipboardTypedSources(availableTypes);
 //			IScriptElement destination= getTarget(selectedScriptElements, selectedResources);
-//			ReorgTypedSourcePasteStarter.create(typedSources, destination).run(getShell());		
+//			ReorgTypedSourcePasteStarter.create(typedSources, destination).run(getShell());
 //		}
-//		
+//
 //		private static IModelElement getTarget(IModelElement[] selectedScriptElements, IResource[] selectedResources) {
 //			Assert.isTrue(selectedResources.length == 0);
-//			if (selectedScriptElements.length == 1) 
+//			if (selectedScriptElements.length == 1)
 //				return getAsTypeOrCu(selectedScriptElements[0]);
 //			Object parent= new ParentChecker(selectedResources, selectedScriptElements).getCommonParent();
 //			if (parent instanceof IModelElement)
@@ -735,14 +746,14 @@ public class PasteAction extends SelectionDispatchAction{
 //			return ReorgUtils.getSourceModule(element);
 //		}
 //		private static class ReorgTypedSourcePasteStarter {
-//	
+//
 //			private final PasteTypedSourcesRefactoring fPasteRefactoring;
 //
 //			private ReorgTypedSourcePasteStarter(PasteTypedSourcesRefactoring pasteRefactoring) {
 //				Assert.isNotNull(pasteRefactoring);
 //				fPasteRefactoring= pasteRefactoring;
 //			}
-//	
+//
 //			public static ReorgTypedSourcePasteStarter create(TypedSource[] typedSources, IModelElement destination) {
 //				Assert.isNotNull(typedSources);
 //				Assert.isNotNull(destination);
@@ -760,10 +771,10 @@ public class PasteAction extends SelectionDispatchAction{
 //			}
 //		}
 //		private static class PasteTypedSourcesRefactoring extends Refactoring {
-//			
+//
 //			private final TypedSource[] fSources;
 //			private IModelElement fDestination;
-//			
+//
 //			static PasteTypedSourcesRefactoring create(TypedSource[] sources){
 //				if (! isAvailable(sources))
 //					return null;
@@ -772,11 +783,11 @@ public class PasteAction extends SelectionDispatchAction{
 //			public RefactoringStatus setDestination(IModelElement destination) {
 //				fDestination= destination;
 //				if (ReorgUtils.getSourceModule(destination) == null)
-//					return RefactoringStatus.createFatalErrorStatus(ReorgMessages.PasteAction_wrong_destination); 
+//					return RefactoringStatus.createFatalErrorStatus(ReorgMessages.PasteAction_wrong_destination);
 //				if (! destination.exists())
-//					return RefactoringStatus.createFatalErrorStatus(ReorgMessages.PasteAction_element_doesnot_exist); 
+//					return RefactoringStatus.createFatalErrorStatus(ReorgMessages.PasteAction_element_doesnot_exist);
 //				if (! canPasteAll(destination))
-//					return RefactoringStatus.createFatalErrorStatus(ReorgMessages.PasteAction_invalid_destination); 
+//					return RefactoringStatus.createFatalErrorStatus(ReorgMessages.PasteAction_invalid_destination);
 //				return new RefactoringStatus();
 //			}
 //			private boolean canPasteAll(IModelElement destination) {
@@ -793,9 +804,9 @@ public class PasteAction extends SelectionDispatchAction{
 //				return canPasteToCu(elementType);
 //			}
 //			private static boolean canPasteToType(int elementType) {
-//				return 	elementType == IModelElement.TYPE || 
-//						elementType == IModelElement.FIELD || 
-//						elementType == IModelElement.INITIALIZER || 
+//				return 	elementType == IModelElement.TYPE ||
+//						elementType == IModelElement.FIELD ||
+//						elementType == IModelElement.INITIALIZER ||
 //						elementType == IModelElement.METHOD;
 //			}
 //			private static boolean canPasteToCu(int elementType) {
@@ -839,13 +850,13 @@ public class PasteAction extends SelectionDispatchAction{
 //							insertToType(rewrite, createNewNodeToInsertToType(source, rewrite), (AbstractTypeDeclaration) destination);
 //					}
 //				}
-//				final SourceModuleChange result= new SourceModuleChange(ReorgMessages.PasteAction_change_name, getDestinationCu()); 
+//				final SourceModuleChange result= new SourceModuleChange(ReorgMessages.PasteAction_change_name, getDestinationCu());
 //				try {
 //					ITextFileBuffer buffer= RefactoringFileBuffers.acquire(getDestinationCu());
 //					TextEdit rootEdit= rewrite.rewriteAST(buffer.getDocument(), fDestination.getScriptProject().getOptions(true));
 //					if (getDestinationCu().isWorkingCopy())
 //						result.setSaveMode(TextFileChange.LEAVE_DIRTY);
-//					TextChangeCompatibility.addTextEdit(result, ReorgMessages.PasteAction_edit_name, rootEdit); 
+//					TextChangeCompatibility.addTextEdit(result, ReorgMessages.PasteAction_edit_name, rootEdit);
 //				} finally {
 //					RefactoringFileBuffers.release(getDestinationCu());
 //				}
@@ -889,16 +900,16 @@ public class PasteAction extends SelectionDispatchAction{
 //
 //			/**
 //			 * @return an AbstractTypeDeclaration, a SourceModule, or null
-//			 */ 
+//			 */
 //			private ASTNode getDestinationNodeForSourceElement(IModelElement destination, int kind, SourceModule unit) throws ModelException {
 //				final IType ancestor= getAncestorType(destination);
 //				if (ancestor != null)
 //					return ASTNodeSearchUtil.getAbstractTypeDeclarationNode(ancestor, unit);
 //				if (kind == IScriptElement.TYPE || kind == IScriptElement.PACKAGE_DECLARATION || kind == IScriptElement.IMPORT_DECLARATION || kind == IScriptElement.IMPORT_CONTAINER)
 //					return unit;
-//				return null;	
+//				return null;
 //			}
-//			
+//
 //			private static IType getAncestorType(IModelElement destinationElement) {
 //				return destinationElement.getElementType() == IModelElement.TYPE ? (IType)destinationElement: (IType)destinationElement.getAncestor(IModelElement.TYPE);
 //			}
@@ -914,7 +925,7 @@ public class PasteAction extends SelectionDispatchAction{
 //						return null;
 //				}
 //			}
-//			
+//
 //			private ASTNode createNewNodeToInsertToType(TypedSource source, ASTRewrite rewrite) {
 //				switch(source.getType()){
 //					case IScriptElement.TYPE:
@@ -929,13 +940,13 @@ public class PasteAction extends SelectionDispatchAction{
 //						return null;
 //				}
 //			}
-//			
+//
 //			private ISourceModule getDestinationCu() {
 //				return ReorgUtils.getSourceModule(fDestination);
 //			}
 //
 //			public String getName() {
-//				return ReorgMessages.PasteAction_name; 
+//				return ReorgMessages.PasteAction_name;
 //			}
 //		}
 //    }

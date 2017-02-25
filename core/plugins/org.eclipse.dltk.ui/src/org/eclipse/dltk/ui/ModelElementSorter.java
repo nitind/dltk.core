@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,7 +45,7 @@ import com.ibm.icu.text.Collator;
 /**
  * Sorter for Script elements. Ordered by element category, then by element
  * name. Package fragment roots are sorted as ordered on the buildpath.
- * 
+ *
  */
 public class ModelElementSorter extends ViewerSorter implements
 		IModelCompareCategories {
@@ -74,9 +74,7 @@ public class ModelElementSorter extends ViewerSorter implements
 		this.innerElements = innerElements;
 	}
 
-	/*
-	 * @see ViewerSorter#category
-	 */
+	@Override
 	public int category(Object element) {
 
 		IModelCompareProvider[] providers = getCompareProviders(element);
@@ -203,9 +201,7 @@ public class ModelElementSorter extends ViewerSorter implements
 		return offset + MEMBERSOFFSET;
 	}
 
-	/*
-	 * @see ViewerSorter#compare
-	 */
+	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		int cat1 = category(e1);
 		int cat2 = category(e2);

@@ -1,13 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
- * 		Sebastian Davids <sdavids@gmx.de> - Fix for bug 19346 - Dialog font
- *   	should be activated and used by other components.
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.workingsets;
 
@@ -64,6 +61,8 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		public WorkingSetLabelProvider() {
 			fIcons= new Hashtable();
 		}
+
+		@Override
 		public void dispose() {
 			Iterator iterator= fIcons.values().iterator();
 			while (iterator.hasNext()) {
@@ -72,6 +71,8 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 			}
 			super.dispose();
 		}
+
+		@Override
 		public Image getImage(Object object) {
 			Assert.isTrue(object instanceof IWorkingSet);
 			IWorkingSet workingSet= (IWorkingSet)object;
@@ -85,14 +86,17 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 			}
 			return icon;
 		}
+
+		@Override
 		public String getText(Object object) {
 			Assert.isTrue(object instanceof IWorkingSet);
 			IWorkingSet workingSet= (IWorkingSet)object;
 			return workingSet.getName();
 		}
 	}
-	
+
 	private class Filter extends ViewerFilter {
+		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			IWorkingSet ws= (IWorkingSet)element;
 			String id= ws.getId();
@@ -142,8 +146,8 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 
 	public WorkingSetConfigurationDialog(Shell parentShell, IWorkingSet[] allWorkingSets, IWorkingSet[] activeWorkingSets) {
 		super(parentShell);
-		setTitle(WorkingSetMessages.WorkingSetConfigurationDialog_title); 
-		setMessage(WorkingSetMessages.WorkingSetConfigurationDialog_message); 
+		setTitle(WorkingSetMessages.WorkingSetConfigurationDialog_title);
+		setMessage(WorkingSetMessages.WorkingSetConfigurationDialog_message);
 		fAllWorkingSets= new ArrayList(allWorkingSets.length);
 		fActiveWorkingSets= Arrays.asList(activeWorkingSets);
 		Filter filter= new Filter();
@@ -156,7 +160,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 
 	/**
 	 * Returns the selected working sets
-	 * 
+	 *
 	 * @return the selected working sets
 	 */
 	public IWorkingSet[] getSelection() {
@@ -165,27 +169,29 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 
 	/**
 	 * Sets the initial selection
-	 * 
+	 *
 	 * @param workingSets the initial selection
 	 */
 	public void setSelection(IWorkingSet[] workingSets) {
 		fResult= workingSets;
 		setInitialSelections(workingSets);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected Control createContents(Composite parent) {
 		Control control= super.createContents(parent);
 		setInitialSelection();
 		updateButtonAvailability();
 		return control;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite= (Composite)super.createDialogArea(parent);
 		composite.setFont(parent.getFont());
@@ -210,6 +216,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	private void createTableViewer(Composite parent) {
 		fTableViewer= CheckboxTableViewer.newCheckList(parent, SWT.BORDER | SWT.MULTI);
 		fTableViewer.addCheckStateListener(new ICheckStateListener() {
+			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				updateButtonAvailability();
 			}
@@ -223,15 +230,21 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		fTableViewer.addFilter(new Filter());
 		fTableViewer.setLabelProvider(new WorkingSetLabelProvider());
 		fTableViewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public Object[] getElements(Object element) {
 				return ((List)element).toArray();
 			}
+
+			@Override
 			public void dispose() {
 			}
+
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		});
 		fTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+					@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				handleSelectionChanged();
 			}
@@ -247,28 +260,31 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		data.grabExcessHorizontalSpace= true;
 		composite.setData(data);
 
-		fNewButton= createButton(buttonComposite, nextButtonId++, 
-			WorkingSetMessages.WorkingSetConfigurationDialog_new_label, false); 
+		fNewButton= createButton(buttonComposite, nextButtonId++,
+			WorkingSetMessages.WorkingSetConfigurationDialog_new_label, false);
 		fNewButton.setFont(composite.getFont());
 		fNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				createWorkingSet();
 			}
 		});
 
-		fEditButton= createButton(buttonComposite, nextButtonId++, 
-			WorkingSetMessages.WorkingSetConfigurationDialog_edit_label, false); 
+		fEditButton= createButton(buttonComposite, nextButtonId++,
+			WorkingSetMessages.WorkingSetConfigurationDialog_edit_label, false);
 		fEditButton.setFont(composite.getFont());
 		fEditButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				editSelectedWorkingSet();
 			}
 		});
 
-		fRemoveButton= createButton(buttonComposite, nextButtonId++, 
-			WorkingSetMessages.WorkingSetConfigurationDialog_remove_label, false); 
+		fRemoveButton= createButton(buttonComposite, nextButtonId++,
+			WorkingSetMessages.WorkingSetConfigurationDialog_remove_label, false);
 		fRemoveButton.setFont(composite.getFont());
 		fRemoveButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				removeSelectedWorkingSets();
 			}
@@ -285,40 +301,44 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		buttons.setLayout(layout);
 
 		fUpButton= new Button(buttons, SWT.PUSH);
-		fUpButton.setText(WorkingSetMessages.WorkingSetConfigurationDialog_up_label); 
+		fUpButton.setText(WorkingSetMessages.WorkingSetConfigurationDialog_up_label);
 		fUpButton.setFont(parent.getFont());
 		setButtonLayoutData(fUpButton);
 		fUpButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				moveUp(((IStructuredSelection)fTableViewer.getSelection()).toList());
 			}
 		});
 
 		fDownButton= new Button(buttons, SWT.PUSH);
-		fDownButton.setText(WorkingSetMessages.WorkingSetConfigurationDialog_down_label); 
+		fDownButton.setText(WorkingSetMessages.WorkingSetConfigurationDialog_down_label);
 		fDownButton.setFont(parent.getFont());
 		setButtonLayoutData(fDownButton);
 		fDownButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				moveDown(((IStructuredSelection)fTableViewer.getSelection()).toList());
 			}
 		});
-		
+
 		fSelectAll= new Button(buttons, SWT.PUSH);
-		fSelectAll.setText(WorkingSetMessages.WorkingSetConfigurationDialog_selectAll_label); 
+		fSelectAll.setText(WorkingSetMessages.WorkingSetConfigurationDialog_selectAll_label);
 		fSelectAll.setFont(parent.getFont());
 		setButtonLayoutData(fSelectAll);
 		fSelectAll.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				selectAll();
 			}
 		});
-		
+
 		fDeselectAll= new Button(buttons, SWT.PUSH);
-		fDeselectAll.setText(WorkingSetMessages.WorkingSetConfigurationDialog_deselectAll_label); 
+		fDeselectAll.setText(WorkingSetMessages.WorkingSetConfigurationDialog_deselectAll_label);
 		fDeselectAll.setFont(parent.getFont());
 		setButtonLayoutData(fDeselectAll);
 		fDeselectAll.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				deselectAll();
 			}
@@ -328,6 +348,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void okPressed() {
 		List newResult= getResultWorkingSets();
 		fResult= (IWorkingSet[])newResult.toArray(new IWorkingSet[newResult.size()]);
@@ -343,6 +364,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void cancelPressed() {
 		restoreAddedWorkingSets();
 		restoreChangedWorkingSets();
@@ -388,7 +410,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		// save the original working set values for restoration when selection
 		// dialog is cancelled.
 		if (firstEdit) {
-			originalWorkingSet= 
+			originalWorkingSet=
 				PlatformUI.getWorkbench().getWorkingSetManager().
 				createWorkingSet(editWorkingSet.getName(), editWorkingSet.getElements());
 		} else {
@@ -414,9 +436,10 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 
 	/**
 	 * Overrides method in Dialog
-	 * 
+	 *
 	 * @see org.eclipse.jface.dialogs.Dialog#open()
 	 */
+	@Override
 	public int open() {
 		fAddedWorkingSets= new ArrayList();
 		fRemovedWorkingSets= new ArrayList();
@@ -518,7 +541,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 			fDownButton.setEnabled(canMoveDown());
 		}
 	}
-	
+
 	private boolean areAllGlobalWorkingSets(IStructuredSelection selection) {
 		Set globals= new HashSet(Arrays.asList(PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets()));
 		for (Iterator iter= selection.iterator(); iter.hasNext();) {
@@ -527,7 +550,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		}
 		return true;
 	}
-	
+
 	private void moveUp(List toMoveUp) {
 		if (toMoveUp.size() > 0) {
 			setElements(moveUp(fAllWorkingSets, toMoveUp));
@@ -597,13 +620,13 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		}
 		return false;
 	}
-	
+
 	//---- select / deselect --------------------------------------------------
-	
+
 	private void selectAll() {
 		fTableViewer.setAllChecked(true);
 	}
-	
+
 	private void deselectAll() {
 		fTableViewer.setAllChecked(false);
 	}
