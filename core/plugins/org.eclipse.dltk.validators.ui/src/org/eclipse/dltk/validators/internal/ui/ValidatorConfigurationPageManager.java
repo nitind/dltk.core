@@ -24,14 +24,14 @@ public class ValidatorConfigurationPageManager {
 
 	private final static String ID_ATTR = "id"; //$NON-NLS-1$
 
-	private static Map toolkits;
+	private static Map<String, Object> toolkits;
 
 	private static void initialize() {
 		if (toolkits != null) {
 			return;
 		}
 
-		toolkits = new HashMap(5);
+		toolkits = new HashMap<>(5);
 		IConfigurationElement[] cfg = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(LANGUAGE_EXTPOINT);
 

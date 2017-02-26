@@ -50,7 +50,7 @@ public class AddValidatorDialog extends StatusDialog implements IStatusHandler {
 	private IStatus[] fStati;
 	private int fPrevIndex = -1;
 
-	private Map createValidatorMap = new HashMap();
+	private Map<IValidatorType, IValidator> createValidatorMap = new HashMap<>();
 
 	private ValidatorConfigurationPage fConfigurationPage = null;
 
@@ -192,8 +192,7 @@ public class AddValidatorDialog extends StatusDialog implements IStatusHandler {
 			return this.fEditedValidator;
 		}
 		if (this.createValidatorMap.containsKey(fSelectedValidatorType)) {
-			return (IValidator) this.createValidatorMap
-					.get(fSelectedValidatorType);
+			return this.createValidatorMap.get(fSelectedValidatorType);
 		} else {
 			IValidator validator = fSelectedValidatorType
 					.createValidator(createUniqueId(fSelectedValidatorType));
@@ -329,12 +328,12 @@ public class AddValidatorDialog extends StatusDialog implements IStatusHandler {
 	}
 
 	public void removeValidators(boolean removeAll) {
-		Iterator iterator = this.createValidatorMap.keySet().iterator();
+		Iterator<IValidatorType> iterator = this.createValidatorMap.keySet()
+				.iterator();
 		while (iterator.hasNext()) {
-			Object next = iterator.next();
-			IValidatorType type = (IValidatorType) next;
+			IValidatorType type = iterator.next();
 			if (removeAll || !type.equals(fSelectedValidatorType)) {
-				IValidator v = (IValidator) createValidatorMap.get(type);
+				IValidator v = createValidatorMap.get(type);
 				type.disposeValidator(v.getID());
 			}
 		}
