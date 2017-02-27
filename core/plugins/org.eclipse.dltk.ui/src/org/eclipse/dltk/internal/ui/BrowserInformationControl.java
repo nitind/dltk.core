@@ -22,7 +22,6 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.AbstractInformationControl;
 import org.eclipse.jface.text.IDelayedInputChangeProvider;
-import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IInformationControlExtension2;
 import org.eclipse.jface.text.IInputChangedListener;
@@ -31,10 +30,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationListener;
-import org.eclipse.swt.browser.OpenWindowListener;
 import org.eclipse.swt.browser.ProgressAdapter;
 import org.eclipse.swt.browser.ProgressEvent;
-import org.eclipse.swt.browser.WindowEvent;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -110,9 +107,9 @@ public class BrowserInformationControl extends AbstractInformationControl
 		return fgIsAvailable;
 	}
 
-
 	/**
 	 * Minimal size constraints.
+	 * 
 	 * @since 3.2
 	 */
 	private static final int MIN_WIDTH = 80;
@@ -139,7 +136,9 @@ public class BrowserInformationControl extends AbstractInformationControl
 	/** Tells whether the browser has content */
 	private boolean fBrowserHasContent;
 
-	/** Text layout used to approximate size of content when rendered in browser */
+	/**
+	 * Text layout used to approximate size of content when rendered in browser
+	 */
 	private TextLayout fTextLayout;
 
 	/** Bold text style */
@@ -168,7 +167,7 @@ public class BrowserInformationControl extends AbstractInformationControl
 	 *
 	 * @since 3.4
 	 */
-	private ListenerList/* <IInputChangedListener> */fInputChangeListeners = new ListenerList(
+	private ListenerList/* <IInputChangedListener> */ fInputChangeListeners = new ListenerList(
 			ListenerList.IDENTITY);
 
 	/**
@@ -178,7 +177,6 @@ public class BrowserInformationControl extends AbstractInformationControl
 	 * @since 3.4
 	 */
 	private final String fSymbolicFontName;
-
 
 	/**
 	 * Creates a browser information control with the given shell as parent.
@@ -237,23 +235,13 @@ public class BrowserInformationControl extends AbstractInformationControl
 
 	@Override
 	public IInformationControlCreator getInformationPresenterControlCreator() {
-		return new IInformationControlCreator() {
-			/*
-			 * @see org.eclipse.jface.text.IInformationControlCreator#
-			 * createInformationControl(org.eclipse.swt.widgets.Shell)
-			 */
-			@Override
-			public IInformationControl createInformationControl(Shell parent) {
-				return new BrowserInformationControl(parent, fSymbolicFontName,
-						true);
-			}
-		};
+		return parent -> new BrowserInformationControl(parent,
+				fSymbolicFontName, true);
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.AbstractInformationControl#createContent(org.eclipse
-	 * .swt.widgets.Composite)
+	 * @see org.eclipse.jface.text.AbstractInformationControl#createContent(org.
+	 * eclipse .swt.widgets.Composite)
 	 */
 	@Override
 	protected void createContent(Composite parent) {
@@ -261,10 +249,10 @@ public class BrowserInformationControl extends AbstractInformationControl
 		fBrowser.setJavascriptEnabled(false);
 
 		Display display = getShell().getDisplay();
-		fBrowser.setForeground(display
-				.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-		fBrowser.setBackground(display
-				.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		fBrowser.setForeground(
+				display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+		fBrowser.setBackground(
+				display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 
 		fBrowser.addProgressListener(new ProgressAdapter() {
 			@Override
@@ -273,12 +261,7 @@ public class BrowserInformationControl extends AbstractInformationControl
 			}
 		});
 
-		fBrowser.addOpenWindowListener(new OpenWindowListener() {
-			@Override
-			public void open(WindowEvent event) {
-				event.required = true; // Cancel opening of new windows
-			}
-		});
+		fBrowser.addOpenWindowListener(event -> event.required = true);
 
 		// Replace browser's built-in context menu with none
 		fBrowser.setMenu(new Menu(getShell(), SWT.NONE));
@@ -345,17 +328,18 @@ public class BrowserInformationControl extends AbstractInformationControl
 		// and the re-wrapping would cause visual noise
 		String[] styles = null;
 		if (RTL && resizable)
-			styles = new String[] {
-					"direction:rtl;", "overflow:scroll;", "word-wrap:break-word;" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			styles = new String[] { "direction:rtl;", "overflow:scroll;", //$NON-NLS-1$ //$NON-NLS-2$
+					"word-wrap:break-word;" }; //$NON-NLS-1$
 		else if (RTL && !resizable)
-			styles = new String[] {
-					"direction:rtl;", "overflow:hidden;", "word-wrap:break-word;" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			styles = new String[] { "direction:rtl;", "overflow:hidden;", //$NON-NLS-1$ //$NON-NLS-2$
+					"word-wrap:break-word;" }; //$NON-NLS-1$
 		else if (!resizable)
 			// XXX: In IE, "word-wrap: break-word;" causes bogus wrapping even
 			// in non-broken words :-(see e.g. Javadoc of String).
 			// Re-check whether we really still need this now that the Javadoc
 			// Hover header already sets this style.
-			styles = new String[] { "overflow:hidden;"/*, "word-wrap: break-word;"*/}; //$NON-NLS-1$
+			styles = new String[] {
+					"overflow:hidden;"/* , "word-wrap: break-word;" */ }; //$NON-NLS-1$
 		else
 			styles = new String[] { "overflow:scroll;" }; //$NON-NLS-1$
 
@@ -444,7 +428,8 @@ public class BrowserInformationControl extends AbstractInformationControl
 		fTextLayout = new TextLayout(fBrowser.getDisplay());
 
 		// Initialize fonts
-		String symbolicFontName = fSymbolicFontName == null ? JFaceResources.DIALOG_FONT
+		String symbolicFontName = fSymbolicFontName == null
+				? JFaceResources.DIALOG_FONT
 				: fSymbolicFontName;
 		Font font = JFaceResources.getFont(symbolicFontName);
 		fTextLayout.setFont(font);
@@ -481,8 +466,8 @@ public class BrowserInformationControl extends AbstractInformationControl
 		// Furthermore, the indentation of <dl><dd> elements is too small (e.g
 		// with a long @see line)
 		TextPresentation presentation = new TextPresentation();
-		HTML2TextReader reader = new HTML2TextReader(new StringReader(
-				fInput.getHtml()), presentation);
+		HTML2TextReader reader = new HTML2TextReader(
+				new StringReader(fInput.getHtml()), presentation);
 		String text;
 		try {
 			text = reader.getString();
@@ -497,8 +482,8 @@ public class BrowserInformationControl extends AbstractInformationControl
 		while (iter.hasNext()) {
 			StyleRange sr = (StyleRange) iter.next();
 			if (sr.fontStyle == SWT.BOLD)
-				fTextLayout.setStyle(fBoldStyle, sr.start, sr.start + sr.length
-						- 1);
+				fTextLayout.setStyle(fBoldStyle, sr.start,
+						sr.start + sr.length - 1);
 		}
 
 		Rectangle bounds = fTextLayout.getBounds(); // does not return minimum
@@ -522,7 +507,6 @@ public class BrowserInformationControl extends AbstractInformationControl
 		// Add some air to accommodate for different browser renderings
 		minWidth += 15;
 		height += 15;
-
 
 		// Apply max size constraints
 		if (sizeConstraints != null) {
@@ -590,7 +574,8 @@ public class BrowserInformationControl extends AbstractInformationControl
 	 *            the listener to add
 	 * @since 3.4
 	 */
-	public void addInputChangeListener(IInputChangedListener inputChangeListener) {
+	public void addInputChangeListener(
+			IInputChangedListener inputChangeListener) {
 		Assert.isNotNull(inputChangeListener);
 		fInputChangeListeners.add(inputChangeListener);
 	}
@@ -644,7 +629,8 @@ public class BrowserInformationControl extends AbstractInformationControl
 	 */
 	@Override
 	public String toString() {
-		String style = (getShell().getStyle() & SWT.RESIZE) == 0 ? "fixed" : "resizeable"; //$NON-NLS-1$ //$NON-NLS-2$
+		String style = (getShell().getStyle() & SWT.RESIZE) == 0 ? "fixed" //$NON-NLS-1$
+				: "resizeable"; //$NON-NLS-1$
 		return super.toString() + " -  style: " + style; //$NON-NLS-1$
 	}
 
@@ -656,9 +642,8 @@ public class BrowserInformationControl extends AbstractInformationControl
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.IInformationControlExtension5#computeSizeConstraints
-	 * (int, int)
+	 * @see org.eclipse.jface.text.IInformationControlExtension5#
+	 * computeSizeConstraints (int, int)
 	 */
 	@Override
 	public Point computeSizeConstraints(int widthInChars, int heightInChars) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1946,14 +1946,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 		((IEclipsePreferences) eclipsePreferences.parent())
 				.addNodeChangeListener(nodeListener);
 		// Listen to preference changes
-		IEclipsePreferences.IPreferenceChangeListener preferenceListener = new IEclipsePreferences.IPreferenceChangeListener() {
-			@Override
-			public void preferenceChange(
-					IEclipsePreferences.PreferenceChangeEvent event) {
-				ModelManager.getModelManager().resetProjectOptions(
-						ScriptProject.this);
-			}
-		};
+		IEclipsePreferences.IPreferenceChangeListener preferenceListener = event -> ModelManager
+				.getModelManager().resetProjectOptions(ScriptProject.this);
 		eclipsePreferences.addPreferenceChangeListener(preferenceListener);
 		return eclipsePreferences;
 	}

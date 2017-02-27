@@ -54,8 +54,8 @@ import org.eclipse.ui.texteditor.MarkerAnnotation;
  * the <code>org.eclipse.ui.decorators</code> extension. Only use this class in
  * your own views and label providers.
  */
-public class ProblemsLabelDecorator implements ILabelDecorator,
-		ILightweightLabelDecorator {
+public class ProblemsLabelDecorator
+		implements ILabelDecorator, ILightweightLabelDecorator {
 
 	/**
 	 * This is a special <code>LabelProviderChangedEvent</code> carrying
@@ -65,8 +65,8 @@ public class ProblemsLabelDecorator implements ILabelDecorator,
 	 * ProblemsLabelDecorator</code>s.
 	 * </p>
 	 */
-	public static class ProblemsLabelChangedEvent extends
-			LabelProviderChangedEvent {
+	public static class ProblemsLabelChangedEvent
+			extends LabelProviderChangedEvent {
 
 		private static final long serialVersionUID = 1L;
 
@@ -153,9 +153,8 @@ public class ProblemsLabelDecorator implements ILabelDecorator,
 		if (adornmentFlags != 0) {
 			ImageDescriptor baseImage = new ImageImageDescriptor(image);
 			Rectangle bounds = image.getBounds();
-			return getRegistry().get(
-					new ScriptElementImageDescriptor(baseImage, adornmentFlags,
-							new Point(bounds.width, bounds.height)));
+			return getRegistry().get(new ScriptElementImageDescriptor(baseImage,
+					adornmentFlags, new Point(bounds.width, bounds.height)));
 		}
 		return image;
 	}
@@ -198,7 +197,8 @@ public class ProblemsLabelDecorator implements ILabelDecorator,
 					ISourceModule cu = (ISourceModule) element
 							.getAncestor(IModelElement.SOURCE_MODULE);
 					if (cu != null) {
-						ISourceReference ref = (type == IModelElement.SOURCE_MODULE) ? null
+						ISourceReference ref = (type == IModelElement.SOURCE_MODULE)
+								? null
 								: (ISourceReference) element;
 						// The assumption is that only source elements in
 						// compilation unit can have markers
@@ -246,7 +246,8 @@ public class ProblemsLabelDecorator implements ILabelDecorator,
 
 		IMarker[] markers = res.findMarkers(IMarker.PROBLEM, true, depth);
 		if (markers != null) {
-			for (int i = 0; i < markers.length && (info != ERRORTICK_ERROR); i++) {
+			for (int i = 0; i < markers.length
+					&& (info != ERRORTICK_ERROR); i++) {
 				IMarker curr = markers[i];
 				if (sourceElement == null
 						|| isMarkerInRange(curr, sourceElement)) {
@@ -349,7 +350,8 @@ public class ProblemsLabelDecorator implements ILabelDecorator,
 		ISourceRange range = fCachedRange;
 		if (range != null) {
 			int rangeOffset = range.getOffset();
-			return (rangeOffset <= pos && rangeOffset + range.getLength() > pos);
+			return (rangeOffset <= pos
+					&& rangeOffset + range.getLength() > pos);
 		}
 		return false;
 	}
@@ -378,13 +380,9 @@ public class ProblemsLabelDecorator implements ILabelDecorator,
 		}
 		fListeners.add(listener);
 		if (fProblemChangedListener == null) {
-			fProblemChangedListener = new IProblemChangedListener() {
-				@Override
-				public void problemsChanged(IResource[] changedResources,
-						boolean isMarkerChange) {
-					fireProblemsChanged(changedResources, isMarkerChange);
-				}
-			};
+			fProblemChangedListener = (changedResources,
+					isMarkerChange) -> fireProblemsChanged(changedResources,
+							isMarkerChange);
 			DLTKUIPlugin.getDefault().getProblemMarkerManager()
 					.addListener(fProblemChangedListener);
 		}

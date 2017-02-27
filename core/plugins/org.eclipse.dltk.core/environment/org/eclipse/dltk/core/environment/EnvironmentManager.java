@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -109,22 +109,18 @@ public final class EnvironmentManager {
 
 	private static final Map<IProject, IEnvironment> environmentCache = new HashMap<IProject, IEnvironment>();
 
-	private static IResourceChangeListener resourceListener = new IResourceChangeListener() {
+	private static IResourceChangeListener resourceListener = event -> {
+		int eventType = event.getType();
+		IResource resource = event.getResource();
 
-		@Override
-		public void resourceChanged(IResourceChangeEvent event) {
-			int eventType = event.getType();
-			IResource resource = event.getResource();
-
-			switch (eventType) {
-			case IResourceChangeEvent.PRE_DELETE:
-				if (resource.getType() == IResource.PROJECT) {
-					synchronized (environmentCache) {
-						environmentCache.remove(resource);
-					}
+		switch (eventType) {
+		case IResourceChangeEvent.PRE_DELETE:
+			if (resource.getType() == IResource.PROJECT) {
+				synchronized (environmentCache) {
+					environmentCache.remove(resource);
 				}
-				return;
 			}
+			return;
 		}
 	};
 
