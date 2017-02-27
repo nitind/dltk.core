@@ -38,7 +38,7 @@ import org.eclipse.ui.IWorkingSet;
 public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 
 	protected ScriptExplorerContentProvider fContentProvider;
-	private Map fWorkingSetImages;
+	private Map<ImageDescriptor, Image> fWorkingSetImages;
 
 	private boolean fIsFlatLayout;
 	private ScriptExplorerProblemsDecorator fProblemDecorator;
@@ -47,8 +47,9 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 			IPreferenceStore store) {
 		super(DEFAULT_TEXTFLAGS | ScriptElementLabels.P_COMPRESSED
 				| ScriptElementLabels.REFERENCED_ARCHIVE_POST_QUALIFIED
-				| ScriptElementLabels.ALL_CATEGORY, DEFAULT_IMAGEFLAGS
-				| ScriptElementImageProvider.SMALL_ICONS, store);
+				| ScriptElementLabels.ALL_CATEGORY,
+				DEFAULT_IMAGEFLAGS | ScriptElementImageProvider.SMALL_ICONS,
+				store);
 
 		fProblemDecorator = new ScriptExplorerProblemsDecorator();
 		addLabelDecorator(fProblemDecorator);
@@ -89,8 +90,8 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 			String decorated = decorateText(text, element);
 			if (decorated != null) {
 				return StyledCellLabelProvider.styleDecoratedString(decorated,
-								StyledString.DECORATIONS_STYLER,
-								new StyledString(text));
+						StyledString.DECORATIONS_STYLER,
+						new StyledString(text));
 			}
 		}
 		return super.getStyledText(element);
@@ -111,7 +112,8 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 		IPath fullPath = fragment.getPath();
 		if (prefix.isPrefixOf(fullPath)) {
 			StringBuffer buf = new StringBuffer();
-			for (int i = prefix.segmentCount(); i < fullPath.segmentCount(); i++) {
+			for (int i = prefix.segmentCount(); i < fullPath
+					.segmentCount(); i++) {
 				if (buf.length() > 0)
 					buf.append(IScriptFolder.PACKAGE_DELIMITER);
 				buf.append(fullPath.segment(i));
@@ -127,10 +129,10 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 			ImageDescriptor image = ((IWorkingSet) element)
 					.getImageDescriptor();
 			if (fWorkingSetImages == null) {
-				fWorkingSetImages = new HashMap();
+				fWorkingSetImages = new HashMap<>();
 			}
 
-			Image result = (Image) fWorkingSetImages.get(image);
+			Image result = fWorkingSetImages.get(image);
 			if (result == null) {
 				result = image.createImage();
 				fWorkingSetImages.put(image, result);
@@ -148,9 +150,9 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 	@Override
 	public void dispose() {
 		if (fWorkingSetImages != null) {
-			for (Iterator iter = fWorkingSetImages.values().iterator(); iter
-					.hasNext();) {
-				((Image) iter.next()).dispose();
+			for (Iterator<Image> iter = fWorkingSetImages.values()
+					.iterator(); iter.hasNext();) {
+				iter.next().dispose();
 			}
 		}
 		super.dispose();
