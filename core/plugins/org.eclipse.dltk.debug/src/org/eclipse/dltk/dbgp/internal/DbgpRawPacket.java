@@ -10,7 +10,7 @@ package org.eclipse.dltk.dbgp.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.dltk.dbgp.IDbgpRawPacket;
 import org.eclipse.dltk.dbgp.exceptions.DbgpException;
@@ -104,10 +104,6 @@ public class DbgpRawPacket implements IDbgpRawPacket {
 
 	@Override
 	public String getPacketAsString() {
-		try {
-			return new String(xml, "ASCII"); //$NON-NLS-1$
-		} catch (UnsupportedEncodingException e) {
-			return new String(xml);
-		}
+		return new String(xml, StandardCharsets.US_ASCII);
 	}
 }

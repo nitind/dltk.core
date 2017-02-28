@@ -12,7 +12,7 @@ package org.eclipse.dltk.internal.testing.ui;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareViewerPane;
@@ -168,11 +168,8 @@ public class CompareResultDialog extends TrayDialog {
 
 		@Override
 		public InputStream getContents() {
-			try {
-				return new ByteArrayInputStream(fContent.getBytes("UTF-8")); //$NON-NLS-1$
-			} catch (UnsupportedEncodingException e) {
-				return new ByteArrayInputStream(fContent.getBytes());
-			}
+			return new ByteArrayInputStream(
+					fContent.getBytes(StandardCharsets.UTF_8));
 		}
 
 		@Override
