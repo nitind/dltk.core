@@ -19,14 +19,14 @@ import org.eclipse.dltk.core.ISourceRange;
  * Use {@link org.eclipse.dltk.core.SourceRange}.
  */
 @Deprecated
-public class SourceRange implements ISourceRange{
+public class SourceRange implements ISourceRange {
 
 	private final int fOffset;
 	private final int fLength;
 
-	public SourceRange(int offset, int length){
-		fLength= length;
-		fOffset= offset;
+	public SourceRange(int offset, int length) {
+		fLength = length;
+		fOffset = offset;
 	}
 
 	public SourceRange(ASTNode node) {
@@ -34,7 +34,8 @@ public class SourceRange implements ISourceRange{
 	}
 
 	public SourceRange(IProblem problem) {
-		this(problem.getSourceStart(), problem.getSourceEnd() - problem.getSourceStart() + 1);
+		this(problem.getSourceStart(),
+				problem.getSourceEnd() - problem.getSourceStart() + 1);
 	}
 
 	public SourceRange(ISourceRange range) {
@@ -60,57 +61,57 @@ public class SourceRange implements ISourceRange{
 	}
 
 	@Override
-	public String toString(){
-		return "<offset: " + fOffset +" length: " + fLength + "/>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public String toString() {
+		return "<offset: " + fOffset + " length: " + fLength + "/>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**
-	 * Sorts the given ranges by offset (backwards).
-	 * Note: modifies the parameter.
-	 * @param ranges the ranges to sort
+	 * Sorts the given ranges by offset (backwards). Note: modifies the
+	 * parameter.
+	 * 
+	 * @param ranges
+	 *            the ranges to sort
 	 * @return the sorted ranges, which are identical to the parameter ranges
 	 */
 	public static ISourceRange[] reverseSortByOffset(ISourceRange[] ranges) {
-		Comparator<ISourceRange> comparator = new Comparator<ISourceRange>() {
-			@Override
-			public int compare(ISourceRange o1, ISourceRange o2) {
-				return o2.getOffset() - o1.getOffset();
-			}
-		};
+		Comparator<ISourceRange> comparator = (o1, o2) -> o2.getOffset()
+				- o1.getOffset();
 		Arrays.sort(ranges, comparator);
 		return ranges;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-    	if (! (obj instanceof ISourceRange))
-	        return false;
-	    return ((ISourceRange)obj).getOffset() == fOffset && ((ISourceRange)obj).getLength() == fLength;
-    }
+		if (!(obj instanceof ISourceRange))
+			return false;
+		return ((ISourceRange) obj).getOffset() == fOffset
+				&& ((ISourceRange) obj).getLength() == fLength;
+	}
 
 	@Override
 	public int hashCode() {
-        return fLength ^ fOffset;
-    }
+		return fLength ^ fOffset;
+	}
 
-    public boolean covers(ASTNode node) {
-    	return covers(new SourceRange(node));
-    }
+	public boolean covers(ASTNode node) {
+		return covers(new SourceRange(node));
+	}
 
-    public boolean covers(SourceRange range) {
-    	return    getOffset() <= range.getOffset()
-    	       	&& getEndInclusive() >= range.getEndInclusive();
-    }
+	public boolean covers(SourceRange range) {
+		return getOffset() <= range.getOffset()
+				&& getEndInclusive() >= range.getEndInclusive();
+	}
 
-    /**
-     * Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=130161
-     * (Script Model returns ISourceRanges [-1, 0] if source not available).
-     *
-     * @param range a source range, can be <code>null</code>
-     * @return <code>true</code> iff range is not null and range.getOffset() is not -1
-     */
-    public static boolean isAvailable(ISourceRange range) {
-    		return range != null && range.getOffset() != -1;
-    }
+	/**
+	 * Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=130161
+	 * (Script Model returns ISourceRanges [-1, 0] if source not available).
+	 *
+	 * @param range
+	 *            a source range, can be <code>null</code>
+	 * @return <code>true</code> iff range is not null and range.getOffset() is
+	 *         not -1
+	 */
+	public static boolean isAvailable(ISourceRange range) {
+		return range != null && range.getOffset() != -1;
+	}
 }
-

@@ -14,7 +14,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,15 +88,10 @@ public final class EnvironmentManager {
 		protected void initializeDescriptors(
 				List<Descriptor<IEnvironmentProvider>> descriptors) {
 			Collections.sort(descriptors,
-					new Comparator<Descriptor<IEnvironmentProvider>>() {
-						@Override
-						public int compare(
-								Descriptor<IEnvironmentProvider> arg0,
-								Descriptor<IEnvironmentProvider> arg1) {
-							EnvironmentProviderDesc d1 = (EnvironmentProviderDesc) arg0;
-							EnvironmentProviderDesc d2 = (EnvironmentProviderDesc) arg1;
-							return d1.priority - d2.priority;
-						}
+					(arg0, arg1) -> {
+						EnvironmentProviderDesc d1 = (EnvironmentProviderDesc) arg0;
+						EnvironmentProviderDesc d2 = (EnvironmentProviderDesc) arg1;
+						return d1.priority - d2.priority;
 					});
 		}
 
@@ -526,15 +520,10 @@ public final class EnvironmentManager {
 		protected void initializeDescriptors(
 				List<Descriptor<IEnvironmentLocationResolver>> descriptors) {
 			Collections.sort(descriptors,
-					new Comparator<Descriptor<IEnvironmentLocationResolver>>() {
-						@Override
-						public int compare(
-								Descriptor<IEnvironmentLocationResolver> arg0,
-								Descriptor<IEnvironmentLocationResolver> arg1) {
-							Desc d1 = (Desc) arg0;
-							Desc d2 = (Desc) arg1;
-							return d1.priority - d2.priority;
-						}
+					(arg0, arg1) -> {
+						Desc d1 = (Desc) arg0;
+						Desc d2 = (Desc) arg1;
+						return d1.priority - d2.priority;
 					});
 		}
 	}

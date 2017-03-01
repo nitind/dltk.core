@@ -26,30 +26,20 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 
 class CalleeMethodWrapper extends MethodWrapper {
-	private Comparator fMethodWrapperComparator = new MethodWrapperComparator();
+	private Comparator<MethodWrapper> fMethodWrapperComparator = (m1, m2) -> {
+		CallLocation callLocation1 = m1.getMethodCall().getFirstCallLocation();
+		CallLocation callLocation2 = m2.getMethodCall().getFirstCallLocation();
 
-	private static class MethodWrapperComparator implements Comparator {
-		@Override
-		public int compare(Object o1, Object o2) {
-			MethodWrapper m1 = (MethodWrapper) o1;
-			MethodWrapper m2 = (MethodWrapper) o2;
-
-			CallLocation callLocation1 = m1.getMethodCall()
-					.getFirstCallLocation();
-			CallLocation callLocation2 = m2.getMethodCall()
-					.getFirstCallLocation();
-
-			if ((callLocation1 != null) && (callLocation2 != null)) {
-				if (callLocation1.getStart() == callLocation2.getStart()) {
-					return callLocation1.getEnd() - callLocation2.getEnd();
-				}
-
-				return callLocation1.getStart() - callLocation2.getStart();
+		if ((callLocation1 != null) && (callLocation2 != null)) {
+			if (callLocation1.getStart() == callLocation2.getStart()) {
+				return callLocation1.getEnd() - callLocation2.getEnd();
 			}
 
-			return 0;
+			return callLocation1.getStart() - callLocation2.getStart();
 		}
-	}
+
+		return 0;
+	};
 
 	/**
 	 * Constructor for CalleeMethodWrapper.
@@ -106,8 +96,8 @@ class CalleeMethodWrapper extends MethodWrapper {
 							SimpleReference e = (SimpleReference) i.next();
 							IMethod[] calls = (IMethod[]) result.get(e);
 							for (int j = 0; j < calls.length; ++j) {
-								collector.addMember(getMember(), calls[j], e
-										.sourceStart(), e.sourceEnd());
+								collector.addMember(getMember(), calls[j],
+										e.sourceStart(), e.sourceEnd());
 							}
 						}
 						return collector.getCallers();
@@ -117,8 +107,8 @@ class CalleeMethodWrapper extends MethodWrapper {
 		}
 
 		if (DLTKCore.DEBUG) {
-			System.err
-					.println("TODO:CalleeMethodWrap findChildren not implemented..."); //$NON-NLS-1$
+			System.err.println(
+					"TODO:CalleeMethodWrap findChildren not implemented..."); //$NON-NLS-1$
 		}
 		return new HashMap(0);
 	}
