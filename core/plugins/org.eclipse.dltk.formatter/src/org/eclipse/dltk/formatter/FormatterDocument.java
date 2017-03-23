@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc. and others.
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -19,9 +19,9 @@ import org.eclipse.jface.text.IRegion;
 public class FormatterDocument implements IFormatterDocument {
 
 	private final String text;
-	private final Map booleans = new HashMap();
-	private final Map strings = new HashMap();
-	private final Map ints = new HashMap();
+	private final Map<String, Boolean> booleans = new HashMap<>();
+	private final Map<String, String> strings = new HashMap<>();
+	private final Map<String, Integer> ints = new HashMap<>();
 
 	/**
 	 * @param text
@@ -35,9 +35,6 @@ public class FormatterDocument implements IFormatterDocument {
 		return text;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.ruby.formatter.node.IFormatterDocument#getLength()
-	 */
 	@Override
 	public int getLength() {
 		return text.length();
@@ -59,7 +56,7 @@ public class FormatterDocument implements IFormatterDocument {
 
 	@Override
 	public boolean getBoolean(String key) {
-		final Boolean value = (Boolean) booleans.get(key);
+		final Boolean value = booleans.get(key);
 		return value != null && value.booleanValue();
 	}
 
@@ -69,7 +66,7 @@ public class FormatterDocument implements IFormatterDocument {
 
 	@Override
 	public String getString(String key) {
-		return (String) strings.get(key);
+		return strings.get(key);
 	}
 
 	public void setInt(String key, int value) {
@@ -78,7 +75,7 @@ public class FormatterDocument implements IFormatterDocument {
 
 	@Override
 	public int getInt(String key) {
-		final Integer value = (Integer) ints.get(key);
+		final Integer value = ints.get(key);
 		return value != null ? value.intValue() : 0;
 	}
 
