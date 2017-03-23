@@ -24,40 +24,40 @@ import org.eclipse.dltk.internal.ui.model.DLTKElementResourceMapping;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.participants.ReorgExecutionLog;
 
-
 public class CreateCopyOfSourceModuleChange extends CreateTextFileChange {
 
 	private ISourceModule fOldCu;
 	private INewNameQuery fNameQuery;
 
-	public CreateCopyOfSourceModuleChange(IPath path, String source, ISourceModule oldCu, INewNameQuery nameQuery) {
+	public CreateCopyOfSourceModuleChange(IPath path, String source,
+			ISourceModule oldCu, INewNameQuery nameQuery) {
 		super(path, source, null, "java"); //$NON-NLS-1$
-		fOldCu= oldCu;
-		fNameQuery= nameQuery;
+		fOldCu = oldCu;
+		fNameQuery = nameQuery;
 		setEncoding(oldCu);
 	}
 
 	@Override
 	public Change perform(IProgressMonitor pm) throws CoreException {
-		ISourceModule unit= fOldCu;
-		ResourceMapping mapping= DLTKElementResourceMapping.create(unit);
-		final Change result= super.perform(pm);
+		ISourceModule unit = fOldCu;
+		ResourceMapping mapping = DLTKElementResourceMapping.create(unit);
+		final Change result = super.perform(pm);
 		markAsExecuted(unit, mapping);
 		return result;
 	}
 
 	private void setEncoding(ISourceModule cunit) {
-		IResource resource= cunit.getResource();
+		IResource resource = cunit.getResource();
 		// no file so the encoding is taken from the target
 		if (!(resource instanceof IFile))
 			return;
-		IFile file= (IFile)resource;
+		IFile file = (IFile) resource;
 		try {
-			String encoding= file.getCharset(false);
+			String encoding = file.getCharset(false);
 			if (encoding != null) {
 				setEncoding(encoding, true);
 			} else {
-				encoding= file.getCharset(true);
+				encoding = file.getCharset(true);
 				if (encoding != null) {
 					setEncoding(encoding, false);
 				}
@@ -70,11 +70,12 @@ public class CreateCopyOfSourceModuleChange extends CreateTextFileChange {
 	@Override
 	protected IFile getOldFile(IProgressMonitor pm) {
 		pm.beginTask("", 10); //$NON-NLS-1$
-		String oldSource= super.getSource();
-		IPath oldPath= super.getPath();
-		String newTypeName= fNameQuery.getNewName();
+		String oldSource = super.getSource();
+		IPath oldPath = super.getPath();
+		String newTypeName = fNameQuery.getNewName();
 		try {
-			String newSource= getCopiedFileSource(new SubProgressMonitor(pm, 9), fOldCu, newTypeName);
+			String newSource = getCopiedFileSource(
+					new SubProgressMonitor(pm, 9), fOldCu, newTypeName);
 			setSource(newSource);
 			setPath(constructNewPath(newTypeName));
 			return super.getOldFile(new SubProgressMonitor(pm, 1));
@@ -86,26 +87,33 @@ public class CreateCopyOfSourceModuleChange extends CreateTextFileChange {
 	}
 
 	private IPath constructNewPath(String newTypeName) {
-		String newCUName= ScriptModelUtil.getRenamedCUName(fOldCu, newTypeName);
-		return ResourceUtil.getResource(fOldCu).getParent().getFullPath().append(newCUName);
+		String newCUName = ScriptModelUtil.getRenamedCUName(fOldCu,
+				newTypeName);
+		return ResourceUtil.getResource(fOldCu).getParent().getFullPath()
+				.append(newCUName);
 	}
 
-	private static String getCopiedFileSource(IProgressMonitor pm, ISourceModule cu, String newTypeName) throws CoreException {
-		ISourceModule wc= cu.getPrimary().getWorkingCopy(null);
+	private static String getCopiedFileSource(IProgressMonitor pm,
+			ISourceModule cu, String newTypeName) throws CoreException {
+		ISourceModule wc = cu.getPrimary().getWorkingCopy(null);
 		try {
 			if (DLTKCore.DEBUG) {
-				System.err.println("TODO: CreateCopyOfSourceModuleChange add content pewview..."); //$NON-NLS-1$
+				System.err.println(
+						"TODO: CreateCopyOfSourceModuleChange add content pewview..."); //$NON-NLS-1$
 			}
-//			TextChangeManager manager= createChangeManager(pm, wc, newTypeName);
-//			String result= manager.get(wc).getPreviewContent(new NullProgressMonitor());
-//			return result;
+			// TextChangeManager manager= createChangeManager(pm, wc,
+			// newTypeName);
+			// String result= manager.get(wc).getPreviewContent(new
+			// NullProgressMonitor());
+			// return result;
 			return wc.getSource();
 		} finally {
 			wc.discardWorkingCopy();
 		}
 	}
+
 	private void markAsExecuted(ISourceModule unit, ResourceMapping mapping) {
-		ReorgExecutionLog log= (ReorgExecutionLog)getAdapter(ReorgExecutionLog.class);
+		ReorgExecutionLog log = getAdapter(ReorgExecutionLog.class);
 		if (log != null) {
 			log.markAsProcessed(unit);
 			log.markAsProcessed(mapping);

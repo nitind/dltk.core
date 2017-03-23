@@ -22,17 +22,17 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.ReorgExecutionLog;
 
-
 abstract class ScriptFolderReorgChange extends DLTKChange {
 
 	private String fPackageHandle;
 	private String fDestinationHandle;
 	private INewNameQuery fNameQuery;
 
-	ScriptFolderReorgChange(IScriptFolder pack, IProjectFragment dest, INewNameQuery nameQuery) {
-		fPackageHandle= pack.getHandleIdentifier();
-		fDestinationHandle= dest.getHandleIdentifier();
-		fNameQuery= nameQuery;
+	ScriptFolderReorgChange(IScriptFolder pack, IProjectFragment dest,
+			INewNameQuery nameQuery) {
+		fPackageHandle = pack.getHandleIdentifier();
+		fDestinationHandle = dest.getHandleIdentifier();
+		fNameQuery = nameQuery;
 	}
 
 	abstract Change doPerformReorg(IProgressMonitor pm) throws ModelException;
@@ -51,9 +51,9 @@ abstract class ScriptFolderReorgChange extends DLTKChange {
 	public final Change perform(IProgressMonitor pm) throws CoreException {
 		pm.beginTask(getName(), 1);
 		try {
-			IScriptFolder pack= getPackage();
-			ResourceMapping mapping= DLTKElementResourceMapping.create(pack);
-			final Change result= doPerformReorg(pm);
+			IScriptFolder pack = getPackage();
+			ResourceMapping mapping = DLTKElementResourceMapping.create(pack);
+			final Change result = doPerformReorg(pm);
 			markAsExecuted(pack, mapping);
 			return result;
 		} finally {
@@ -67,11 +67,11 @@ abstract class ScriptFolderReorgChange extends DLTKChange {
 	}
 
 	IProjectFragment getDestination() {
-		return (IProjectFragment)DLTKCore.create(fDestinationHandle);
+		return (IProjectFragment) DLTKCore.create(fDestinationHandle);
 	}
 
 	IScriptFolder getPackage() {
-		return (IScriptFolder)DLTKCore.create(fPackageHandle);
+		return (IScriptFolder) DLTKCore.create(fPackageHandle);
 	}
 
 	String getNewName() {
@@ -81,7 +81,7 @@ abstract class ScriptFolderReorgChange extends DLTKChange {
 	}
 
 	private void markAsExecuted(IScriptFolder pack, ResourceMapping mapping) {
-		ReorgExecutionLog log= (ReorgExecutionLog)getAdapter(ReorgExecutionLog.class);
+		ReorgExecutionLog log = getAdapter(ReorgExecutionLog.class);
 		if (log != null) {
 			log.markAsProcessed(pack);
 			log.markAsProcessed(mapping);

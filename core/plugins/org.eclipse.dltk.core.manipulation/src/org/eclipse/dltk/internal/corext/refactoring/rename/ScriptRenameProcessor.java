@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.rename;
 
@@ -26,75 +25,85 @@ import org.eclipse.ltk.core.refactoring.participants.ResourceChangeChecker;
 import org.eclipse.ltk.core.refactoring.participants.SharableParticipants;
 import org.eclipse.ltk.core.refactoring.participants.ValidateEditChecker;
 
+public abstract class ScriptRenameProcessor extends RenameProcessor
+		implements IScriptableRefactoring, INameUpdating, ICommentProvider {
 
-public abstract class ScriptRenameProcessor extends RenameProcessor implements IScriptableRefactoring, INameUpdating, ICommentProvider {
-	
 	private String fNewElementName;
 	private String fComment;
 	private RenameModifications fRenameModifications;
-	
-	public final RefactoringParticipant[] loadParticipants(RefactoringStatus status, SharableParticipants shared) throws CoreException {
+
+	@Override
+	public final RefactoringParticipant[] loadParticipants(RefactoringStatus status, SharableParticipants shared)
+			throws CoreException {
 		return getRenameModifications().loadParticipants(status, this, getAffectedProjectNatures(), shared);
 	}
-	
-	public final RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context) throws CoreException, OperationCanceledException {
-		ResourceChangeChecker checker= (ResourceChangeChecker) context.getChecker(ResourceChangeChecker.class);
-		IResourceChangeDescriptionFactory deltaFactory= checker.getDeltaFactory();
-		RefactoringStatus result= doCheckFinalConditions(pm, context);
+
+	@Override
+	public final RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context)
+			throws CoreException, OperationCanceledException {
+		ResourceChangeChecker checker = context.getChecker(ResourceChangeChecker.class);
+		IResourceChangeDescriptionFactory deltaFactory = checker.getDeltaFactory();
+		RefactoringStatus result = doCheckFinalConditions(pm, context);
 		if (result.hasFatalError())
 			return result;
-		IFile[] changed= getChangedFiles();
-		for (int i= 0; i < changed.length; i++) {
+		IFile[] changed = getChangedFiles();
+		for (int i = 0; i < changed.length; i++) {
 			deltaFactory.change(changed[i]);
 		}
-		RenameModifications renameModifications= getRenameModifications();
+		RenameModifications renameModifications = getRenameModifications();
 		renameModifications.buildDelta(deltaFactory);
-		renameModifications.buildValidateEdits((ValidateEditChecker)context.getChecker(ValidateEditChecker.class));
+		renameModifications.buildValidateEdits(context.getChecker(ValidateEditChecker.class));
 		return result;
 	}
-	
+
 	private RenameModifications getRenameModifications() throws CoreException {
 		if (fRenameModifications == null)
-			fRenameModifications= computeRenameModifications();
+			fRenameModifications = computeRenameModifications();
 		return fRenameModifications;
 	}
-	
+
 	protected abstract RenameModifications computeRenameModifications() throws CoreException;
-	
-	protected abstract RefactoringStatus doCheckFinalConditions(IProgressMonitor pm, CheckConditionsContext context) throws CoreException, OperationCanceledException;
-	
+
+	protected abstract RefactoringStatus doCheckFinalConditions(IProgressMonitor pm, CheckConditionsContext context)
+			throws CoreException, OperationCanceledException;
+
 	protected abstract IFile[] getChangedFiles() throws CoreException;
 
 	protected abstract String[] getAffectedProjectNatures() throws CoreException;
 
+	@Override
 	public void setNewElementName(String newName) {
 		Assert.isNotNull(newName);
-		fNewElementName= newName;
+		fNewElementName = newName;
 	}
 
+	@Override
 	public String getNewElementName() {
 		return fNewElementName;
 	}
-	
+
 	/**
 	 * <code>true</code> by default, subclasses may override.
-	 * 
-	 * @return <code>true</code> iff this refactoring needs all editors to be saved,
-	 *  <code>false</code> otherwise
+	 *
+	 * @return <code>true</code> iff this refactoring needs all editors to be
+	 *         saved, <code>false</code> otherwise
 	 */
 	public boolean needsSavedEditors() {
 		return true;
 	}
 
+	@Override
 	public final boolean canEnableComment() {
 		return true;
 	}
 
+	@Override
 	public final String getComment() {
 		return fComment;
 	}
 
+	@Override
 	public final void setComment(String comment) {
-		fComment= comment;
+		fComment = comment;
 	}
 }

@@ -43,13 +43,13 @@ public class ReorgMoveWizard extends RefactoringWizard {
 	}
 
 	private static boolean isTextualMove(MoveRefactoring ref) {
-		ScriptMoveProcessor moveProcessor = (ScriptMoveProcessor) ref
+		ScriptMoveProcessor moveProcessor = ref
 				.getAdapter(ScriptMoveProcessor.class);
 		return moveProcessor.isTextualMove();
 	}
 
 	private static int computeHasPreviewPage(MoveRefactoring refactoring) {
-		ScriptMoveProcessor processor = (ScriptMoveProcessor) refactoring
+		ScriptMoveProcessor processor = refactoring
 				.getAdapter(ScriptMoveProcessor.class);
 		if (processor.canUpdateReferences()
 				|| processor.canEnableQualifiedNameUpdating())
@@ -77,8 +77,7 @@ public class ReorgMoveWizard extends RefactoringWizard {
 		}
 
 		private ScriptMoveProcessor getScriptMoveProcessor() {
-			return (ScriptMoveProcessor) getRefactoring()
-					.getAdapter(ScriptMoveProcessor.class);
+			return getRefactoring().getAdapter(ScriptMoveProcessor.class);
 		}
 
 		@Override

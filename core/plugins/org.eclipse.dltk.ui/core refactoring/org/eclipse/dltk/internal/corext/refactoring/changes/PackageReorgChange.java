@@ -82,7 +82,7 @@ abstract class PackageReorgChange extends DLTKChange {
 	}
 
 	private void markAsExecuted(IScriptFolder pack, ResourceMapping mapping) {
-		ReorgExecutionLog log = (ReorgExecutionLog) getAdapter(ReorgExecutionLog.class);
+		ReorgExecutionLog log = getAdapter(ReorgExecutionLog.class);
 		if (log != null) {
 			log.markAsProcessed(pack);
 			log.markAsProcessed(mapping);

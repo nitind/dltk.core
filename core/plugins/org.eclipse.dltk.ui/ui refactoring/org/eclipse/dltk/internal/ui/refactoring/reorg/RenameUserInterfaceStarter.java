@@ -32,7 +32,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.ISetSelectionTarget;
 
-
 public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 
 	private static class SelectionState {
@@ -40,84 +39,93 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 		private Object fElement;
 		private List fParts;
 		private List fSelections;
+
 		public SelectionState(Object element) {
-			fElement= element;
-			fParts= new ArrayList();
-			fSelections= new ArrayList();
+			fElement = element;
+			fParts = new ArrayList();
+			fSelections = new ArrayList();
 			init();
 		}
+
 		private void init() {
 			IWorkbenchWindow dw = DLTKUIPlugin.getActiveWorkbenchWindow();
-			if (dw ==  null)
+			if (dw == null)
 				return;
-			fDisplay= dw.getShell().getDisplay();
+			fDisplay = dw.getShell().getDisplay();
 			IWorkbenchPage page = dw.getActivePage();
 			if (page == null)
 				return;
-			IViewReference vrefs[]= page.getViewReferences();
-			for(int i= 0; i < vrefs.length; i++) {
+			IViewReference vrefs[] = page.getViewReferences();
+			for (int i = 0; i < vrefs.length; i++) {
 				consider(vrefs[i].getPart(false));
 			}
-			IEditorReference refs[]= page.getEditorReferences();
-			for(int i= 0; i < refs.length; i++) {
+			IEditorReference refs[] = page.getEditorReferences();
+			for (int i = 0; i < refs.length; i++) {
 				consider(refs[i].getPart(false));
 			}
 		}
+
 		private void consider(IWorkbenchPart part) {
 			if (part == null)
 				return;
-			ISetSelectionTarget target= null;
+			ISetSelectionTarget target = null;
 			if (!(part instanceof ISetSelectionTarget)) {
 				target = part.getAdapter(ISetSelectionTarget.class);
 				if (target == null)
 					return;
 			} else {
-				target= (ISetSelectionTarget)part;
+				target = (ISetSelectionTarget) part;
 			}
-			ISelectionProvider selectionProvider= part.getSite().getSelectionProvider();
+			ISelectionProvider selectionProvider = part.getSite()
+					.getSelectionProvider();
 			if (selectionProvider == null)
 				return;
-			ISelection s= selectionProvider.getSelection();
+			ISelection s = selectionProvider.getSelection();
 			if (!(s instanceof IStructuredSelection))
 				return;
-			IStructuredSelection selection= (IStructuredSelection)s;
+			IStructuredSelection selection = (IStructuredSelection) s;
 			if (!selection.toList().contains(fElement))
 				return;
 			fParts.add(part);
 			fSelections.add(selection);
 		}
+
 		public void restore(Object newElement) {
 			if (fDisplay == null)
 				return;
-			for (int i= 0; i < fParts.size(); i++) {
-				IStructuredSelection currentSelection= (IStructuredSelection)fSelections.get(i);
-				boolean changed= false;
-				final ISetSelectionTarget target= (ISetSelectionTarget)fParts.get(i);
-				final IStructuredSelection[] newSelection= new IStructuredSelection[1];
-				newSelection[0]= currentSelection;
+			for (int i = 0; i < fParts.size(); i++) {
+				IStructuredSelection currentSelection = (IStructuredSelection) fSelections
+						.get(i);
+				boolean changed = false;
+				final ISetSelectionTarget target = (ISetSelectionTarget) fParts
+						.get(i);
+				final IStructuredSelection[] newSelection = new IStructuredSelection[1];
+				newSelection[0] = currentSelection;
 				if (currentSelection instanceof TreeSelection) {
-					TreeSelection treeSelection= (TreeSelection)currentSelection;
-					TreePath[] paths= treeSelection.getPaths();
-					for (int p= 0; p < paths.length; p++) {
-						TreePath path= paths[p];
-						if (path.getSegmentCount() > 0 && path.getLastSegment().equals(fElement)) {
-							paths[p]= createTreePath(path, newElement);
-							changed= true;
+					TreeSelection treeSelection = (TreeSelection) currentSelection;
+					TreePath[] paths = treeSelection.getPaths();
+					for (int p = 0; p < paths.length; p++) {
+						TreePath path = paths[p];
+						if (path.getSegmentCount() > 0
+								&& path.getLastSegment().equals(fElement)) {
+							paths[p] = createTreePath(path, newElement);
+							changed = true;
 						}
 					}
 					if (changed) {
-						newSelection[0]= new TreeSelection(paths, treeSelection.getElementComparer());
+						newSelection[0] = new TreeSelection(paths,
+								treeSelection.getElementComparer());
 					}
 				} else {
-					Object[] elements= currentSelection.toArray();
-					for (int e= 0; e < elements.length; e++) {
+					Object[] elements = currentSelection.toArray();
+					for (int e = 0; e < elements.length; e++) {
 						if (elements[e].equals(fElement)) {
-							elements[e]= newElement;
-							changed= true;
+							elements[e] = newElement;
+							changed = true;
 						}
 					}
 					if (changed) {
-						newSelection[0]= new StructuredSelection(elements);
+						newSelection[0] = new StructuredSelection(elements);
 					}
 				}
 				if (changed) {
@@ -126,27 +134,33 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 				}
 			}
 		}
+
 		// Method assumes that segment count of path > 0.
 		private TreePath createTreePath(TreePath old, Object newElement) {
-			int count= old.getSegmentCount();
-			Object[] newObjects= new Object[count];
-			for (int i= 0; i < count - 1; i++) {
-				newObjects[i]= old.getSegment(i);
+			int count = old.getSegmentCount();
+			Object[] newObjects = new Object[count];
+			for (int i = 0; i < count - 1; i++) {
+				newObjects[i] = old.getSegment(i);
 			}
-			newObjects[count - 1]= newElement;
+			newObjects[count - 1] = newElement;
 			return new TreePath(newObjects);
 		}
 	}
 
 	@Override
-	public void activate(Refactoring refactoring, Shell parent, boolean save) throws CoreException {
-		RenameProcessor processor= (RenameProcessor)refactoring.getAdapter(RenameProcessor.class);
-		Object[] elements= processor.getElements();
-		SelectionState state= elements.length == 1 ? new SelectionState(elements[0]) : null;
+	public void activate(Refactoring refactoring, Shell parent, boolean save)
+			throws CoreException {
+		RenameProcessor processor = refactoring
+				.getAdapter(RenameProcessor.class);
+		Object[] elements = processor.getElements();
+		SelectionState state = elements.length == 1
+				? new SelectionState(elements[0])
+				: null;
 		super.activate(refactoring, parent, save);
-		INameUpdating nameUpdating= (INameUpdating)refactoring.getAdapter(INameUpdating.class);
+		INameUpdating nameUpdating = refactoring
+				.getAdapter(INameUpdating.class);
 		if (nameUpdating != null && state != null) {
-			Object newElement= nameUpdating.getNewElement();
+			Object newElement = nameUpdating.getNewElement();
 			if (newElement != null) {
 				state.restore(newElement);
 			}

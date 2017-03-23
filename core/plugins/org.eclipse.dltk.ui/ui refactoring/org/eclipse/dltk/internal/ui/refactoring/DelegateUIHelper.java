@@ -26,7 +26,7 @@ public class DelegateUIHelper {
 
 	public static Button generateDeprecateDelegateCheckbox(Composite parent,
 			Refactoring refactoring) {
-		final IDelegateUpdating updating = (IDelegateUpdating) refactoring
+		final IDelegateUpdating updating = refactoring
 				.getAdapter(IDelegateUpdating.class);
 		if (updating == null || !updating.canEnableDelegateUpdating())
 			return null;
@@ -46,12 +46,12 @@ public class DelegateUIHelper {
 
 	public static Button generateLeaveDelegateCheckbox(Composite parent,
 			Refactoring refactoring, boolean plural) {
-		final IDelegateUpdating updating = (IDelegateUpdating) refactoring
+		final IDelegateUpdating updating = refactoring
 				.getAdapter(IDelegateUpdating.class);
 		if (updating == null || !updating.canEnableDelegateUpdating())
 			return null;
-		final Button button = createCheckbox(parent, updating
-				.getDelegateUpdatingTitle(plural),
+		final Button button = createCheckbox(parent,
+				updating.getDelegateUpdatingTitle(plural),
 				loadLeaveDelegateSetting(updating));
 		updating.setDelegateUpdating(button.getSelection());
 		button.addSelectionListener(new SelectionAdapter() {
@@ -72,15 +72,16 @@ public class DelegateUIHelper {
 		saveBooleanSetting(DELEGATE_DEPRECATION, button);
 	}
 
-	public static boolean loadLeaveDelegateSetting(IDelegateUpdating refactoring) {
-		return getBooleanSetting(DELEGATE_UPDATING, refactoring
-				.getDelegateUpdating());
+	public static boolean loadLeaveDelegateSetting(
+			IDelegateUpdating refactoring) {
+		return getBooleanSetting(DELEGATE_UPDATING,
+				refactoring.getDelegateUpdating());
 	}
 
 	public static boolean loadDeprecateDelegateSetting(
 			IDelegateUpdating refactoring) {
-		return getBooleanSetting(DELEGATE_DEPRECATION, refactoring
-				.getDeprecateDelegates());
+		return getBooleanSetting(DELEGATE_DEPRECATION,
+				refactoring.getDeprecateDelegates());
 	}
 
 	public static String getDeprecateDelegateCheckBoxTitle() {

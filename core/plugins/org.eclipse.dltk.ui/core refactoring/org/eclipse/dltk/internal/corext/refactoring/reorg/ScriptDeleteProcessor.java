@@ -198,7 +198,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.dltk.internal.corext.refactoring.base.Refactoring#
 	 * checkActivation(org.eclipse.core.runtime.IProgressMonitor)
 	 */
@@ -227,7 +227,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.eclipse.dltk.internal.corext.refactoring.base.Refactoring#checkInput(
 	 * org.eclipse.core.runtime.IProgressMonitor)
@@ -252,7 +252,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor
 			fDeleteModifications.delete(fScriptElements);
 			fDeleteModifications.postProcess();
 
-			ResourceChangeChecker checker = (ResourceChangeChecker) context
+			ResourceChangeChecker checker = context
 					.getChecker(ResourceChangeChecker.class);
 			IResourceChangeDescriptionFactory deltaFactory = checker
 					.getDeltaFactory();

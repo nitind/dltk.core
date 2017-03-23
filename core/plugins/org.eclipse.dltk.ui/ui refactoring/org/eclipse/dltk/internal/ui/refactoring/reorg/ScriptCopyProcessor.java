@@ -46,8 +46,9 @@ import org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant;
 import org.eclipse.ltk.core.refactoring.participants.ReorgExecutionLog;
 import org.eclipse.ltk.core.refactoring.participants.SharableParticipants;
 
-public final class ScriptCopyProcessor extends CopyProcessor implements IReorgDestinationValidator, ICommentProvider {
-	//TODO: offer ICopyPolicy getCopyPolicy(); IReorgPolicy getReorgPolicy();
+public final class ScriptCopyProcessor extends CopyProcessor
+		implements IReorgDestinationValidator, ICommentProvider {
+	// TODO: offer ICopyPolicy getCopyPolicy(); IReorgPolicy getReorgPolicy();
 	// and remove delegate methods (also for ScriptMoveProcessor)?
 
 	private INewNameQueries fNewNameQueries;
@@ -56,15 +57,17 @@ public final class ScriptCopyProcessor extends CopyProcessor implements IReorgDe
 	private ReorgExecutionLog fExecutionLog;
 	private String fComment;
 
-	public static ScriptCopyProcessor create(IResource[] resources, IModelElement[] modelElements) throws ModelException{
-		ICopyPolicy copyPolicy= ReorgPolicyFactory.createCopyPolicy(resources, modelElements);
-		if (! copyPolicy.canEnable())
+	public static ScriptCopyProcessor create(IResource[] resources,
+			IModelElement[] modelElements) throws ModelException {
+		ICopyPolicy copyPolicy = ReorgPolicyFactory.createCopyPolicy(resources,
+				modelElements);
+		if (!copyPolicy.canEnable())
 			return null;
 		return new ScriptCopyProcessor(copyPolicy);
 	}
 
 	public ScriptCopyProcessor(ICopyPolicy copyPolicy) {
-		fCopyPolicy= copyPolicy;
+		fCopyPolicy = copyPolicy;
 	}
 
 	@Override
@@ -82,14 +85,14 @@ public final class ScriptCopyProcessor extends CopyProcessor implements IReorgDe
 		return fCopyPolicy.canEnable();
 	}
 
-	public void setNewNameQueries(INewNameQueries newNameQueries){
+	public void setNewNameQueries(INewNameQueries newNameQueries) {
 		Assert.isNotNull(newNameQueries);
-		fNewNameQueries= newNameQueries;
+		fNewNameQueries = newNameQueries;
 	}
 
-	public void setReorgQueries(IReorgQueries queries){
+	public void setReorgQueries(IReorgQueries queries) {
 		Assert.isNotNull(queries);
-		fReorgQueries= queries;
+		fReorgQueries = queries;
 	}
 
 	public IModelElement[] getScriptElements() {
@@ -102,32 +105,39 @@ public final class ScriptCopyProcessor extends CopyProcessor implements IReorgDe
 
 	@Override
 	public Object[] getElements() {
-		IModelElement[] jElements= fCopyPolicy.getScriptElements();
-		IResource[] resources= fCopyPolicy.getResources();
-		List result= new ArrayList(jElements.length + resources.length);
+		IModelElement[] jElements = fCopyPolicy.getScriptElements();
+		IResource[] resources = fCopyPolicy.getResources();
+		List result = new ArrayList(jElements.length + resources.length);
 		result.addAll(Arrays.asList(jElements));
 		result.addAll(Arrays.asList(resources));
 		return result.toArray();
 	}
 
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException {
-		RefactoringStatus result= new RefactoringStatus();
-		result.merge(RefactoringStatus.create(Resources.checkInSync(ReorgUtils.getNotNulls(fCopyPolicy.getResources()))));
-		IResource[] javaResources= ReorgUtils.getResources(fCopyPolicy.getScriptElements());
-		result.merge(RefactoringStatus.create(Resources.checkInSync(ReorgUtils.getNotNulls(javaResources))));
+	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
+			throws CoreException {
+		RefactoringStatus result = new RefactoringStatus();
+		result.merge(RefactoringStatus.create(Resources.checkInSync(
+				ReorgUtils.getNotNulls(fCopyPolicy.getResources()))));
+		IResource[] javaResources = ReorgUtils
+				.getResources(fCopyPolicy.getScriptElements());
+		result.merge(RefactoringStatus.create(
+				Resources.checkInSync(ReorgUtils.getNotNulls(javaResources))));
 		return result;
 	}
 
-	public Object getCommonParentForInputElements(){
-		return new ParentChecker(fCopyPolicy.getResources(), fCopyPolicy.getScriptElements()).getCommonParent();
+	public Object getCommonParentForInputElements() {
+		return new ParentChecker(fCopyPolicy.getResources(),
+				fCopyPolicy.getScriptElements()).getCommonParent();
 	}
 
-	public RefactoringStatus setDestination(IModelElement destination) throws ModelException{
+	public RefactoringStatus setDestination(IModelElement destination)
+			throws ModelException {
 		return fCopyPolicy.setDestination(destination);
 	}
 
-	public RefactoringStatus setDestination(IResource destination) throws ModelException{
+	public RefactoringStatus setDestination(IResource destination)
+			throws ModelException {
 		return fCopyPolicy.setDestination(destination);
 	}
 
@@ -135,25 +145,30 @@ public final class ScriptCopyProcessor extends CopyProcessor implements IReorgDe
 	public boolean canChildrenBeDestinations(IModelElement modelElement) {
 		return fCopyPolicy.canChildrenBeDestinations(modelElement);
 	}
+
 	@Override
 	public boolean canChildrenBeDestinations(IResource resource) {
 		return fCopyPolicy.canChildrenBeDestinations(resource);
 	}
+
 	@Override
 	public boolean canElementBeDestination(IModelElement modelElement) {
 		return fCopyPolicy.canElementBeDestination(modelElement);
 	}
+
 	@Override
 	public boolean canElementBeDestination(IResource resource) {
 		return fCopyPolicy.canElementBeDestination(resource);
 	}
 
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context) throws CoreException {
+	public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
+			CheckConditionsContext context) throws CoreException {
 		Assert.isNotNull(fNewNameQueries, "Missing new name queries"); //$NON-NLS-1$
 		Assert.isNotNull(fReorgQueries, "Missing reorg queries"); //$NON-NLS-1$
 		pm.beginTask("", 2); //$NON-NLS-1$
-		RefactoringStatus result= fCopyPolicy.checkFinalConditions(new SubProgressMonitor(pm, 1), context, fReorgQueries);
+		RefactoringStatus result = fCopyPolicy.checkFinalConditions(
+				new SubProgressMonitor(pm, 1), context, fReorgQueries);
 		result.merge(context.check(new SubProgressMonitor(pm, 1)));
 		return result;
 	}
@@ -161,33 +176,40 @@ public final class ScriptCopyProcessor extends CopyProcessor implements IReorgDe
 	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException {
 		Assert.isNotNull(fNewNameQueries);
-		Assert.isTrue(fCopyPolicy.getScriptElementDestination() == null || fCopyPolicy.getResourceDestination() == null);
-		Assert.isTrue(fCopyPolicy.getScriptElementDestination() != null || fCopyPolicy.getResourceDestination() != null);
+		Assert.isTrue(fCopyPolicy.getScriptElementDestination() == null
+				|| fCopyPolicy.getResourceDestination() == null);
+		Assert.isTrue(fCopyPolicy.getScriptElementDestination() != null
+				|| fCopyPolicy.getResourceDestination() != null);
 		try {
-			final DynamicValidationStateChange result= new DynamicValidationStateChange(getChangeName()) {
+			final DynamicValidationStateChange result = new DynamicValidationStateChange(
+					getChangeName()) {
 				@Override
-				public Change perform(IProgressMonitor pm2) throws CoreException {
+				public Change perform(IProgressMonitor pm2)
+						throws CoreException {
 					try {
 						super.perform(pm2);
-					} catch(OperationCanceledException e) {
+					} catch (OperationCanceledException e) {
 						fExecutionLog.markAsCanceled();
 						throw e;
 					}
 					return null;
 				}
 
+				@SuppressWarnings("unchecked")
 				@Override
-				public Object getAdapter(Class adapter) {
+				public <T> T getAdapter(Class<T> adapter) {
 					if (ReorgExecutionLog.class.equals(adapter))
-						return fExecutionLog;
+						return (T) fExecutionLog;
 					return super.getAdapter(adapter);
 				}
 			};
-			Change change= fCopyPolicy.createChange(pm, new MonitoringNewNameQueries(fNewNameQueries, fExecutionLog));
-			if (change instanceof CompositeChange){
-				CompositeChange subComposite= (CompositeChange)change;
+			Change change = fCopyPolicy.createChange(pm,
+					new MonitoringNewNameQueries(fNewNameQueries,
+							fExecutionLog));
+			if (change instanceof CompositeChange) {
+				CompositeChange subComposite = (CompositeChange) change;
 				result.merge(subComposite);
-			} else{
+			} else {
 				result.add(change);
 			}
 			return result;
@@ -201,15 +223,19 @@ public final class ScriptCopyProcessor extends CopyProcessor implements IReorgDe
 	}
 
 	@Override
-	public RefactoringParticipant[] loadParticipants(RefactoringStatus status, SharableParticipants sharedParticipants) throws CoreException {
-		RefactoringParticipant[] result= fCopyPolicy.loadParticipants(status, this, getAffectedProjectNatures(), sharedParticipants);
-		fExecutionLog= fCopyPolicy.getReorgExecutionLog();
+	public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
+			SharableParticipants sharedParticipants) throws CoreException {
+		RefactoringParticipant[] result = fCopyPolicy.loadParticipants(status,
+				this, getAffectedProjectNatures(), sharedParticipants);
+		fExecutionLog = fCopyPolicy.getReorgExecutionLog();
 		return result;
 	}
 
 	private String[] getAffectedProjectNatures() throws CoreException {
-		String[] jNatures= ScriptProcessors.computeAffectedNaturs(fCopyPolicy.getScriptElements());
-		String[] rNatures= ResourceProcessors.computeAffectedNatures(fCopyPolicy.getResources());
+		String[] jNatures = ScriptProcessors
+				.computeAffectedNaturs(fCopyPolicy.getScriptElements());
+		String[] rNatures = ResourceProcessors
+				.computeAffectedNatures(fCopyPolicy.getResources());
 		Set<String> result = new HashSet<String>();
 		result.addAll(Arrays.asList(jNatures));
 		result.addAll(Arrays.asList(rNatures));
@@ -228,6 +254,6 @@ public final class ScriptCopyProcessor extends CopyProcessor implements IReorgDe
 
 	@Override
 	public void setComment(String comment) {
-		fComment= comment;
+		fComment = comment;
 	}
 }

@@ -24,39 +24,42 @@ import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgUtils;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.participants.ReorgExecutionLog;
 
-
 abstract class ResourceReorgChange extends DLTKChange {
-	
+
 	private final IPath fResourcePath;
 	private final boolean fIsFile;
 	private final IPath fDestinationPath;
 	private final boolean fIsDestinationProject;
 	private final INewNameQuery fNewNameQuery;
 
-	ResourceReorgChange(IResource res, IContainer dest, INewNameQuery nameQuery){
+	ResourceReorgChange(IResource res, IContainer dest,
+			INewNameQuery nameQuery) {
 		Assert.isTrue(res instanceof IFile || res instanceof IFolder);
-		fIsFile= (res instanceof IFile);
-		fResourcePath= Utils.getResourcePath(res);
-	
+		fIsFile = (res instanceof IFile);
+		fResourcePath = Utils.getResourcePath(res);
+
 		Assert.isTrue(dest instanceof IProject || dest instanceof IFolder);
-		fIsDestinationProject= (dest instanceof IProject);
-		fDestinationPath= Utils.getResourcePath(dest);
-		fNewNameQuery= nameQuery;
+		fIsDestinationProject = (dest instanceof IProject);
+		fDestinationPath = Utils.getResourcePath(dest);
+		fNewNameQuery = nameQuery;
 	}
-	
-	protected abstract Change doPerformReorg(IPath path, IProgressMonitor pm) throws CoreException;
-	
+
+	protected abstract Change doPerformReorg(IPath path, IProgressMonitor pm)
+			throws CoreException;
+
 	@Override
 	public final Change perform(IProgressMonitor pm) throws CoreException {
-		try{
+		try {
 			pm.beginTask(getName(), 2);
-			
-			String newName= getNewResourceName();
-			IResource resource= getResource();
-			boolean performReorg= deleteIfAlreadyExists(new SubProgressMonitor(pm, 1), newName);
+
+			String newName = getNewResourceName();
+			IResource resource = getResource();
+			boolean performReorg = deleteIfAlreadyExists(
+					new SubProgressMonitor(pm, 1), newName);
 			if (!performReorg)
 				return null;
-			final Change result= doPerformReorg(getDestinationPath(newName), new SubProgressMonitor(pm, 1));
+			final Change result = doPerformReorg(getDestinationPath(newName),
+					new SubProgressMonitor(pm, 1));
 			markAsExecuted(resource);
 			return result;
 		} finally {
@@ -69,79 +72,80 @@ abstract class ResourceReorgChange extends DLTKChange {
 	}
 
 	/**
-	 * returns false if source and destination are the same (in workspace or on disk)
-	 * in such case, no action should be performed
+	 * returns false if source and destination are the same (in workspace or on
+	 * disk) in such case, no action should be performed
 	 */
-	private boolean deleteIfAlreadyExists(IProgressMonitor pm, String newName) throws CoreException {
+	private boolean deleteIfAlreadyExists(IProgressMonitor pm, String newName)
+			throws CoreException {
 		pm.beginTask("", 1); //$NON-NLS-1$
-		IResource current= getDestination().findMember(newName);
+		IResource current = getDestination().findMember(newName);
 		if (current == null)
 			return true;
-		if (! current.exists())
+		if (!current.exists())
 			return true;
 
-		IResource resource= getResource();
+		IResource resource = getResource();
 		Assert.isNotNull(resource);
-			
+
 		if (ReorgUtils.areEqualInWorkspaceOrOnDisk(resource, current))
 			return false;
-		
-		if (current instanceof IFile)
-			((IFile)current).delete(false, true, new SubProgressMonitor(pm, 1));
-		else if (current instanceof IFolder)
-			((IFolder)current).delete(false, true, new SubProgressMonitor(pm, 1));
-		else 
-			Assert.isTrue(false);
-			
-		return true;	
-	}
-	
 
-	private String getNewResourceName(){
+		if (current instanceof IFile)
+			((IFile) current).delete(false, true,
+					new SubProgressMonitor(pm, 1));
+		else if (current instanceof IFolder)
+			((IFolder) current).delete(false, true,
+					new SubProgressMonitor(pm, 1));
+		else
+			Assert.isTrue(false);
+
+		return true;
+	}
+
+	private String getNewResourceName() {
 		if (fNewNameQuery == null)
 			return getResource().getName();
-		String name= fNewNameQuery.getNewName();
+		String name = fNewNameQuery.getNewName();
 		if (name == null)
 			return getResource().getName();
 		return name;
 	}
-	
+
 	@Override
 	public Object getModifiedElement() {
 		return getResource();
 	}
 
-	private IFile getFile(){
+	private IFile getFile() {
 		return Utils.getFile(fResourcePath);
 	}
-	
-	private IFolder getFolder(){
+
+	private IFolder getFolder() {
 		return Utils.getFolder(fResourcePath);
 	}
-	
-	protected IResource getResource(){
+
+	protected IResource getResource() {
 		if (fIsFile)
 			return getFile();
 		else
 			return getFolder();
 	}
-	
-	IContainer getDestination(){
+
+	IContainer getDestination() {
 		if (fIsDestinationProject)
 			return Utils.getProject(fDestinationPath);
 		else
-			return Utils.getFolder(fDestinationPath);	
+			return Utils.getFolder(fDestinationPath);
 	}
 
 	protected int getReorgFlags() {
 		return IResource.KEEP_HISTORY | IResource.SHALLOW;
 	}
-	
+
 	private void markAsExecuted(IResource resource) {
-		ReorgExecutionLog log= (ReorgExecutionLog)getAdapter(ReorgExecutionLog.class);
+		ReorgExecutionLog log = getAdapter(ReorgExecutionLog.class);
 		if (log != null) {
 			log.markAsProcessed(resource);
 		}
 	}
 }
-

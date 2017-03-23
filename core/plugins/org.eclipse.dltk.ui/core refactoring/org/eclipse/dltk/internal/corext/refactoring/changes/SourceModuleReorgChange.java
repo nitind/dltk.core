@@ -22,7 +22,6 @@ import org.eclipse.dltk.internal.ui.model.DLTKElementResourceMapping;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.participants.ReorgExecutionLog;
 
-
 abstract class SourceModuleReorgChange extends DLTKChange {
 
 	private String fCuHandle;
@@ -31,30 +30,32 @@ abstract class SourceModuleReorgChange extends DLTKChange {
 
 	private INewNameQuery fNewNameQuery;
 
-	SourceModuleReorgChange(ISourceModule cu, IScriptFolder dest, INewNameQuery newNameQuery) {
-		fCuHandle= cu.getHandleIdentifier();
-		fNewPackageHandle= dest.getHandleIdentifier();
-		fNewNameQuery= newNameQuery;
-		fOldPackageHandle= cu.getParent().getHandleIdentifier();
+	SourceModuleReorgChange(ISourceModule cu, IScriptFolder dest,
+			INewNameQuery newNameQuery) {
+		fCuHandle = cu.getHandleIdentifier();
+		fNewPackageHandle = dest.getHandleIdentifier();
+		fNewNameQuery = newNameQuery;
+		fOldPackageHandle = cu.getParent().getHandleIdentifier();
 	}
 
 	SourceModuleReorgChange(ISourceModule cu, IScriptFolder dest) {
 		this(cu, dest, null);
 	}
 
-	SourceModuleReorgChange(String oldPackageHandle, String newPackageHandle, String cuHandle) {
-		fOldPackageHandle= oldPackageHandle;
-		fNewPackageHandle= newPackageHandle;
-		fCuHandle= cuHandle;
+	SourceModuleReorgChange(String oldPackageHandle, String newPackageHandle,
+			String cuHandle) {
+		fOldPackageHandle = oldPackageHandle;
+		fNewPackageHandle = newPackageHandle;
+		fCuHandle = cuHandle;
 	}
 
 	@Override
 	public final Change perform(IProgressMonitor pm) throws CoreException {
 		pm.beginTask(getName(), 1);
 		try {
-			ISourceModule unit= getCu();
-			ResourceMapping mapping= DLTKElementResourceMapping.create(unit);
-			Change result= doPerformReorg(new SubProgressMonitor(pm, 1));
+			ISourceModule unit = getCu();
+			ResourceMapping mapping = DLTKElementResourceMapping.create(unit);
+			Change result = doPerformReorg(new SubProgressMonitor(pm, 1));
 			markAsExecuted(unit, mapping);
 			return result;
 		} finally {
@@ -70,15 +71,15 @@ abstract class SourceModuleReorgChange extends DLTKChange {
 	}
 
 	ISourceModule getCu() {
-		return (ISourceModule)DLTKCore.create(fCuHandle);
+		return (ISourceModule) DLTKCore.create(fCuHandle);
 	}
 
 	IScriptFolder getOldPackage() {
-		return (IScriptFolder)DLTKCore.create(fOldPackageHandle);
+		return (IScriptFolder) DLTKCore.create(fOldPackageHandle);
 	}
 
 	IScriptFolder getDestinationPackage() {
-		return (IScriptFolder)DLTKCore.create(fNewPackageHandle);
+		return (IScriptFolder) DLTKCore.create(fNewPackageHandle);
 	}
 
 	String getNewName() {
@@ -89,13 +90,13 @@ abstract class SourceModuleReorgChange extends DLTKChange {
 
 	static String getPackageName(IScriptFolder pack) {
 		if (pack.isRootFolder())
-			return RefactoringCoreMessages.MoveSourceModuleChange_default_package; 
+			return RefactoringCoreMessages.MoveSourceModuleChange_default_package;
 		else
 			return pack.getElementName();
 	}
 
 	private void markAsExecuted(ISourceModule unit, ResourceMapping mapping) {
-		ReorgExecutionLog log= (ReorgExecutionLog)getAdapter(ReorgExecutionLog.class);
+		ReorgExecutionLog log = getAdapter(ReorgExecutionLog.class);
 		if (log != null) {
 			log.markAsProcessed(unit);
 			log.markAsProcessed(mapping);
