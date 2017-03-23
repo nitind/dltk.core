@@ -11,14 +11,18 @@
  *******************************************************************************/
 package org.eclipse.dltk.debug.dbgp.tests.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
 import org.eclipse.dltk.dbgp.DbgpServer;
 import org.eclipse.dltk.internal.debug.core.model.DbgpService;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class DbgpServiceTests extends AbstractDbgpServiceTests {
 	@Test
 	public void testConnect() throws IOException {
