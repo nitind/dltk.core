@@ -28,9 +28,9 @@
               <configuration>
                 <artifacts>
                   <artifact>
-                    <file>DLTK-Mars-4.5.target</file>
+                    <file>DLTK-Neon-4.6.target</file>
                     <type>target</type>
-                    <classifier>DLTK-Mars-4.5</classifier>
+                    <classifier>DLTK-Neon-4.6</classifier>
                   </artifact>
                   <!-- More targets could be added here -->
                 </artifacts>
