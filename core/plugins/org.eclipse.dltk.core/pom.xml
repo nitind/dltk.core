@@ -5,7 +5,7 @@
   <parent>
     <artifactId>core</artifactId>
     <groupId>org.eclipse.dltk.core</groupId>
-    <version>5.7.1-SNAPSHOT</version>
+    <version>5.7.2-SNAPSHOT</version>
     <relativePath>../..</relativePath>
   </parent>
   <artifactId>org.eclipse.dltk.core</artifactId>
