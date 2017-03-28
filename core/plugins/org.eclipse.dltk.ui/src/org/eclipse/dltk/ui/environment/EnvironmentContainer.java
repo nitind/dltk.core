@@ -57,8 +57,8 @@ public class EnvironmentContainer {
 		}
 	}
 
-	private static class EnvironmentComparator implements
-			Comparator<IEnvironment> {
+	private static class EnvironmentComparator
+			implements Comparator<IEnvironment> {
 
 		@Override
 		public int compare(final IEnvironment e1, final IEnvironment e2) {
@@ -90,7 +90,8 @@ public class EnvironmentContainer {
 					synchronized (environments) {
 						initEnvironments();
 					}
-					Display.getDefault().asyncExec(() -> fireChangeNotifications());
+					Display.getDefault()
+							.asyncExec(() -> fireChangeNotifications());
 				}
 
 			};
@@ -162,7 +163,7 @@ public class EnvironmentContainer {
 		initialized = false;
 	}
 
-	private final ListenerList changeListeners = new ListenerList();
+	private final ListenerList<Runnable> changeListeners = new ListenerList<>();
 
 	/**
 	 * Registers the specified change listener to be called when available
@@ -176,9 +177,8 @@ public class EnvironmentContainer {
 	}
 
 	protected void fireChangeNotifications() {
-		Object[] listeners = changeListeners.getListeners();
-		for (int i = 0; i < listeners.length; ++i) {
-			((Runnable) listeners[i]).run();
+		for (Runnable listener : changeListeners) {
+			listener.run();
 		}
 	}
 

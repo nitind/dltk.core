@@ -35,11 +35,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 
-public abstract class NewSourceModuleWizard extends NewElementWizard implements
-		ISourceModuleWizard {
+public abstract class NewSourceModuleWizard extends NewElementWizard
+		implements ISourceModuleWizard {
 
-	static class WizardExtensionManager extends
-			LazyExtensionManager<ISourceModuleWizardExtension> {
+	static class WizardExtensionManager
+			extends LazyExtensionManager<ISourceModuleWizardExtension> {
 
 		static final String EXTENSION_POINT = DLTKUIPlugin.PLUGIN_ID
 				+ ".sourceModuleWizardExtension"; //$NON-NLS-1$
@@ -85,8 +85,8 @@ public abstract class NewSourceModuleWizard extends NewElementWizard implements
 	}
 
 	private void createExtensions() {
-		final WizardExtensionManager manager = new WizardExtensionManager(page
-				.getRequiredNature());
+		final WizardExtensionManager manager = new WizardExtensionManager(
+				page.getRequiredNature());
 		for (Descriptor<ISourceModuleWizardExtension> descriptor : manager
 				.getDescriptors()) {
 			final ISourceModuleWizardExtension extension = descriptor.get();
@@ -246,7 +246,7 @@ public abstract class NewSourceModuleWizard extends NewElementWizard implements
 		return !disabledModes.contains(mode);
 	}
 
-	private Map<String, ListenerList> listeners = null;
+	private Map<String, ListenerList<IFieldChangeListener>> listeners = null;
 
 	/**
 	 * @since 2.0
@@ -255,11 +255,11 @@ public abstract class NewSourceModuleWizard extends NewElementWizard implements
 	public void addFieldChangeListener(String field,
 			IFieldChangeListener listener) {
 		if (listeners == null) {
-			listeners = new HashMap<String, ListenerList>();
+			listeners = new HashMap<String, ListenerList<IFieldChangeListener>>();
 		}
-		ListenerList list = listeners.get(field);
+		ListenerList<IFieldChangeListener> list = listeners.get(field);
 		if (list == null) {
-			list = new ListenerList();
+			list = new ListenerList<>();
 			listeners.put(field, list);
 		}
 		list.add(listener);
@@ -272,7 +272,8 @@ public abstract class NewSourceModuleWizard extends NewElementWizard implements
 	public void removeFieldChangeListener(String field,
 			IFieldChangeListener listener) {
 		if (listeners != null) {
-			final ListenerList list = listeners.get(field);
+			final ListenerList<IFieldChangeListener> list = listeners
+					.get(field);
 			if (list != null) {
 				list.remove(listener);
 				if (list.isEmpty()) {
@@ -284,11 +285,12 @@ public abstract class NewSourceModuleWizard extends NewElementWizard implements
 
 	void fireFieldChange(String field) {
 		if (listeners != null) {
-			final ListenerList list = listeners.get(field);
+			final ListenerList<IFieldChangeListener> list = listeners
+					.get(field);
 			if (list != null) {
-				for (Object listener : list.getListeners()) {
+				for (IFieldChangeListener listener : list) {
 					if (listener instanceof IFieldChangeListener) {
-						((IFieldChangeListener) listener).fieldChanged();
+						listener.fieldChanged();
 					}
 				}
 			}

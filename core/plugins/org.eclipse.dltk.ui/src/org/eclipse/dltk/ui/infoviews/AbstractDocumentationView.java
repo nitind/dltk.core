@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -81,8 +81,8 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 	/**
 	 * Preference key for the preference whether to show a dialog when the SWT
 	 * Browser widget is not available.
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	private static final String DO_NOT_WARN_PREFERENCE_KEY = "AbstractDocumentationView.error.doNotWarn"; //$NON-NLS-1$
 	// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=73558
@@ -122,7 +122,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 
 		/**
 		 * Creates the action.
-		 * 
+		 *
 		 * @param control
 		 *            the widget
 		 * @param selectionProvider
@@ -164,14 +164,14 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 	 */
 	private static class SelectionProvider implements ISelectionProvider {
 		/** The selection changed listeners. */
-		private ListenerList fListeners = new ListenerList(
+		private ListenerList<ISelectionChangedListener> fListeners = new ListenerList<>(
 				ListenerList.IDENTITY);
 		/** The widget. */
 		private Control fControl;
 
 		/**
 		 * Creates a new selection provider.
-		 * 
+		 *
 		 * @param control
 		 *            the widget
 		 */
@@ -204,10 +204,8 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 			ISelection selection = getSelection();
 			SelectionChangedEvent event = new SelectionChangedEvent(this,
 					selection);
-			Object[] selectionChangedListeners = fListeners.getListeners();
-			for (int i = 0; i < selectionChangedListeners.length; i++)
-				((ISelectionChangedListener) selectionChangedListeners[i])
-						.selectionChanged(event);
+			for (ISelectionChangedListener listener : fListeners)
+				listener.selectionChanged(event);
 		}
 
 		@Override
@@ -219,8 +217,8 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 		@Override
 		public ISelection getSelection() {
 			if (fControl instanceof StyledText) {
-				IDocument document = new Document(((StyledText) fControl)
-						.getSelectionText());
+				IDocument document = new Document(
+						((StyledText) fControl).getSelectionText());
 				return new TextSelection(document, 0, document.getLength());
 			} else {
 				// FIXME: see
@@ -264,8 +262,8 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 						.openError(parent.getShell(), title, message,
 								toggleMessage, false, null, null);
 				if (dialog.getReturnCode() == Window.OK)
-					store.setValue(DO_NOT_WARN_PREFERENCE_KEY, dialog
-							.getToggleState());
+					store.setValue(DO_NOT_WARN_PREFERENCE_KEY,
+							dialog.getToggleState());
 			}
 			fIsUsingBrowserWidget = false;
 		}
@@ -295,8 +293,8 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 			return;
 		try {
 			styleSheetURL = FileLocator.toFileURL(styleSheetURL);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					styleSheetURL.openStream()));
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(styleSheetURL.openStream()));
 			StringBuffer buffer = new StringBuffer(200);
 			String line = reader.readLine();
 			while (line != null) {
@@ -350,8 +348,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 		if (getInput() == null) {
 			StringBuffer buffer = new StringBuffer();
 			HTMLPrinter.insertPageProlog(buffer, 0, fBackgroundColorRGB,
-					fForegroundColorRGB,
-					fgStyleSheet);
+					fForegroundColorRGB, fgStyleSheet);
 			setInput(buffer.toString());
 		} else {
 			setInput(computeInput(getInput()));
@@ -405,7 +402,8 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 		String javadocHtml = (String) input;
 		if (fIsUsingBrowserWidget) {
 			if (javadocHtml != null && javadocHtml.length() > 0) {
-				boolean RTL = (getSite().getShell().getStyle() & SWT.RIGHT_TO_LEFT) != 0;
+				boolean RTL = (getSite().getShell().getStyle()
+						& SWT.RIGHT_TO_LEFT) != 0;
 				if (RTL) {
 					StringBuffer buffer = new StringBuffer(javadocHtml);
 					HTMLPrinter.insertStyles(buffer,
@@ -432,7 +430,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 
 	/**
 	 * Returns the doc in HTML format.
-	 * 
+	 *
 	 * @param result
 	 *            the Script elements for which to get the Javadoc
 	 * @return a string with the Javadoc in HTML format.
@@ -459,7 +457,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 
 	/**
 	 * Returns the Javadoc in HTML format.
-	 * 
+	 *
 	 * @param result
 	 *            the Script elements for which to get the Javadoc
 	 * @return a string with the Javadoc in HTML format.
@@ -469,8 +467,8 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 		final List<String> nodocs = new ArrayList<String>();
 		for (int i = 0; i < result.length; i++) {
 			final Object member = result[i];
-			Reader reader = ScriptDocumentationAccess.getHTMLContentReader(
-					getNature(), member, true, true);
+			Reader reader = ScriptDocumentationAccess
+					.getHTMLContentReader(getNature(), member, true, true);
 			if (reader != null) {
 				buffer.append("<b>"); //$NON-NLS-1$
 				buffer.append(getInfoText(member));
@@ -478,11 +476,9 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 				HTMLPrinter.addParagraph(buffer, reader);
 			} else {
 				if (member instanceof IModelElement) {
-					nodocs.add(ScriptElementLabels.getDefault()
-							.getElementLabel(
-									(IModelElement) member,
-									LABEL_FLAGS
-											| ScriptElementLabels.APPEND_FILE));
+					nodocs.add(ScriptElementLabels.getDefault().getElementLabel(
+							(IModelElement) member,
+							LABEL_FLAGS | ScriptElementLabels.APPEND_FILE));
 				} else {
 					// TODO
 				}
@@ -503,7 +499,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 
 	/**
 	 * Returns the Javadoc in HTML format.
-	 * 
+	 *
 	 * @param result
 	 *            the Script elements for which to get the Javadoc
 	 * @return a string with the Javadoc in HTML format.
@@ -524,7 +520,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 
 	/**
 	 * Returns the Javadoc in HTML format.
-	 * 
+	 *
 	 * @param result
 	 *            the Script elements for which to get the Javadoc
 	 * @return a string with the Javadoc in HTML format.
@@ -534,8 +530,8 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 		if (curr instanceof IMember) {
 			IMember member = (IMember) curr;
 			// HTMLPrinter.addSmallHeader(buffer, getInfoText(member));
-			Reader reader = ScriptDocumentationAccess.getHTMLContentReader(
-					getNature(), member, true, true);
+			Reader reader = ScriptDocumentationAccess
+					.getHTMLContentReader(getNature(), member, true, true);
 			if (reader != null) {
 				HTMLPrinter.addParagraph(buffer, reader);
 			} else {
@@ -550,8 +546,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 	private String addPrologeEpilog(StringBuffer buffer) {
 		if (buffer.length() > 0) {
 			HTMLPrinter.insertPageProlog(buffer, 0, fBackgroundColorRGB,
-					fForegroundColorRGB,
-					fgStyleSheet);
+					fForegroundColorRGB, fgStyleSheet);
 			HTMLPrinter.addPageEpilog(buffer);
 			return buffer.toString();
 		}
@@ -561,7 +556,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 	/**
 	 * The method is overridden to compare {@link ScriptEditor} nature with the
 	 * nature of this view.
-	 * 
+	 *
 	 * @see org.eclipse.dltk.ui.infoviews.AbstractInfoView#isValidWorkbenchPart(org.eclipse.ui.IWorkbenchPart)
 	 */
 	@Override
@@ -586,15 +581,15 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 
 	/**
 	 * Gets the label for the given member.
-	 * 
+	 *
 	 * @param member
 	 *            the Script member
 	 * @return a string containing the member's label
 	 */
 	private String getInfoText(Object member) {
 		if (member instanceof IModelElement) {
-			return ScriptElementLabels.getDefault().getElementLabel(
-					(IModelElement) member, LABEL_FLAGS);
+			return ScriptElementLabels.getDefault()
+					.getElementLabel((IModelElement) member, LABEL_FLAGS);
 		} else {
 			// TODO
 			return null;

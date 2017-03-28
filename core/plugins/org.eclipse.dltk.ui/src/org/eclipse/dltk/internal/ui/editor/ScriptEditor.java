@@ -2995,7 +2995,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		setTitleImage(image);
 	}
 
-	private ListenerList fReconcilingListeners = new ListenerList(
+	private ListenerList<IScriptReconcilingListener> fReconcilingListeners = new ListenerList<>(
 			ListenerList.IDENTITY);
 
 	/**
@@ -3017,9 +3017,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		// getInputJavaElement());
 
 		// Notify listeners
-		Object[] listeners = fReconcilingListeners.getListeners();
-		for (int i = 0, length = listeners.length; i < length; ++i)
-			((IScriptReconcilingListener) listeners[i]).aboutToBeReconciled();
+		for (IScriptReconcilingListener listener : fReconcilingListeners)
+			listener.aboutToBeReconciled();
 	}
 
 	/*
@@ -3043,10 +3042,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		// progressMonitor);
 
 		// Notify listeners
-		Object[] listeners = fReconcilingListeners.getListeners();
-		for (int i = 0, length = listeners.length; i < length; ++i)
-			((IScriptReconcilingListener) listeners[i]).reconciled(ast, forced,
-					progressMonitor);
+		for (IScriptReconcilingListener listener : fReconcilingListeners)
+			listener.reconciled(ast, forced, progressMonitor);
 
 		// Update Outline page selection
 		if (!forced && !progressMonitor.isCanceled()) {

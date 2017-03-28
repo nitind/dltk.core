@@ -36,9 +36,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 
-public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  IStyledLabelProvider {
+public class ScriptUILabelProvider
+		implements ILabelProvider, IColorProvider, IStyledLabelProvider {
 
-	protected ListenerList fListeners = new ListenerList(1);
+	protected ListenerList<ILabelProviderListener> fListeners = new ListenerList<>(
+			1);
 
 	protected ScriptElementImageProvider fImageLabelProvider;
 
@@ -123,9 +125,8 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 					if (ScriptElementImageProvider.useSmallSize(flags)) {
 						result = image;
 					} else {
-						result = getLocalRegistry().get(
-								new BigImageDescriptor(image,
-										ScriptElementImageProvider.BIG_SIZE));
+						result = getLocalRegistry().get(new BigImageDescriptor(
+								image, ScriptElementImageProvider.BIG_SIZE));
 					}
 					break;
 				}
@@ -134,16 +135,15 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 		if (result == null) {
 			result = fImageLabelProvider.getImageLabel(element, flags);
 		}
-		if (result == null
-				&& (element instanceof IStorage || element instanceof ISourceModule)) {
+		if (result == null && (element instanceof IStorage
+				|| element instanceof ISourceModule)) {
 			result = fStorageLabelProvider.getImage(element);
 			// StorageLabelProvider always returns 16x16 images
 			// resize if this provider returns big icons
 			if (result != null
 					&& !ScriptElementImageProvider.useSmallSize(flags)) {
-				result = getLocalRegistry().get(
-						new BigImageDescriptor(result,
-								ScriptElementImageProvider.BIG_SIZE));
+				result = getLocalRegistry().get(new BigImageDescriptor(result,
+						ScriptElementImageProvider.BIG_SIZE));
 			}
 		}
 		return decorateImage(result, element);
@@ -292,10 +292,7 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 	protected void fireLabelProviderChanged(
 			final LabelProviderChangedEvent event) {
 
-		Object[] listeners = fListeners.getListeners();
-		for (int i = 0; i < listeners.length; ++i) {
-			final ILabelProviderListener l = (ILabelProviderListener) listeners[i];
-
+		for (final ILabelProviderListener l : fListeners) {
 			SafeRunner.run(new SafeRunnable() {
 				@Override
 				public void run() {
@@ -342,7 +339,8 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 		if (providers != null) {
 			for (int i = 0; i < providers.length; i++) {
 				if (providers[i] instanceof IStyledLabelProvider) {
-					StyledString string = ((IStyledLabelProvider) providers[i]).getStyledText(element);
+					StyledString string = ((IStyledLabelProvider) providers[i])
+							.getStyledText(element);
 					if (string != null) {
 						result = string;
 						break;
@@ -357,7 +355,8 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 			}
 		}
 		if (result == null) {
-			result = new StyledString(ScriptElementLabels.getDefault().getTextLabel(element, evaluateTextFlags(element)));
+			result = new StyledString(ScriptElementLabels.getDefault()
+					.getTextLabel(element, evaluateTextFlags(element)));
 		}
 
 		if (result.length() == 0 && (element instanceof IStorage)) {
@@ -366,7 +365,8 @@ public class ScriptUILabelProvider implements ILabelProvider, IColorProvider,  I
 
 		String decorated = decorateText(result.getString(), element);
 		if (decorated != null) {
-			return StyledCellLabelProvider.styleDecoratedString(decorated, StyledString.DECORATIONS_STYLER, result);
+			return StyledCellLabelProvider.styleDecoratedString(decorated,
+					StyledString.DECORATIONS_STYLER, result);
 		}
 		return result;
 	}

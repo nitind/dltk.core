@@ -109,7 +109,7 @@ public class BrowserInformationControl extends AbstractInformationControl
 
 	/**
 	 * Minimal size constraints.
-	 * 
+	 *
 	 * @since 3.2
 	 */
 	private static final int MIN_WIDTH = 80;
@@ -167,7 +167,7 @@ public class BrowserInformationControl extends AbstractInformationControl
 	 *
 	 * @since 3.4
 	 */
-	private ListenerList/* <IInputChangedListener> */ fInputChangeListeners = new ListenerList(
+	private ListenerList<IInputChangedListener> fInputChangeListeners = new ListenerList<>(
 			ListenerList.IDENTITY);
 
 	/**
@@ -356,9 +356,8 @@ public class BrowserInformationControl extends AbstractInformationControl
 		fCompleted = false;
 		fBrowser.setText(content);
 
-		Object[] listeners = fInputChangeListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++)
-			((IInputChangedListener) listeners[i]).inputChanged(fInput);
+		for (IInputChangedListener listener : fInputChangeListeners)
+			listener.inputChanged(fInput);
 	}
 
 	/*

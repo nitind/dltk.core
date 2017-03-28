@@ -55,7 +55,7 @@ public class SelectionListenerWithASTManager {
 		private ISelectionListener fPostSelectionListener;
 		private ISelectionChangedListener fSelectionListener;
 		private Job fCurrentJob;
-		protected final ListenerList fAstListeners;
+		protected final ListenerList<ISelectionListenerWithAST> fAstListeners;
 		/**
 		 * Lock to avoid having more than one calculateAndInform job in
 		 * parallel. Only jobs may synchronize on this as otherwise deadlocks
@@ -66,7 +66,7 @@ public class SelectionListenerWithASTManager {
 		public PartListenerGroup(ITextEditor editorPart) {
 			fPart = editorPart;
 			fCurrentJob = null;
-			fAstListeners = new ListenerList(ListenerList.IDENTITY);
+			fAstListeners = new ListenerList<>(ListenerList.IDENTITY);
 
 			fSelectionListener = event -> {
 				ISelection selection = event.getSelection();
@@ -131,8 +131,8 @@ public class SelectionListenerWithASTManager {
 		 */
 		public void firePostSelectionChanged(final ITextSelection selection) {
 			cancelJob();
-			IModelElement input = EditorUtility.getEditorInputModelElement(
-					fPart, false);
+			IModelElement input = EditorUtility
+					.getEditorInputModelElement(fPart, false);
 			if (!(input instanceof ISourceModule)) {
 				return;
 			}
@@ -194,21 +194,20 @@ public class SelectionListenerWithASTManager {
 			}
 		}
 
-		protected final IStatus calculateASTandInform(IProgressMonitor monitor) {
+		protected final IStatus calculateASTandInform(
+				IProgressMonitor monitor) {
 			if (monitor.isCanceled()) {
 				return Status.CANCEL_STATUS;
 			}
 			// create AST
 			try {
-				IModuleDeclaration astRoot = SourceParserUtil
-						.parse(input, null);
+				IModuleDeclaration astRoot = SourceParserUtil.parse(input,
+						null);
 
 				if (astRoot != null && !monitor.isCanceled()) {
-					Object[] listeners = owner.fAstListeners.getListeners();
-					for (int i = 0; i < listeners.length; i++) {
-						((ISelectionListenerWithAST) listeners[i])
-								.selectionChanged(owner.fPart, selection,
-										input, astRoot);
+					for (ISelectionListenerWithAST listener : owner.fAstListeners) {
+						listener.selectionChanged(owner.fPart, selection, input,
+								astRoot);
 						if (monitor.isCanceled()) {
 							return Status.CANCEL_STATUS;
 						}
@@ -236,7 +235,8 @@ public class SelectionListenerWithASTManager {
 	 * @param listener
 	 *            The listener to register.
 	 */
-	public void addListener(ITextEditor part, ISelectionListenerWithAST listener) {
+	public void addListener(ITextEditor part,
+			ISelectionListenerWithAST listener) {
 		synchronized (this) {
 			PartListenerGroup partListener = fListenerGroups.get(part);
 			if (partListener == null) {

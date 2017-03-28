@@ -204,8 +204,8 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 		new InitializeJob().schedule();
 	}
 
-	static class ShutdownCloseRemoteEditorsListener implements
-			IWorkbenchListener {
+	static class ShutdownCloseRemoteEditorsListener
+			implements IWorkbenchListener {
 		@Override
 		public void postShutdown(IWorkbench workbench) {
 			// empty
@@ -256,8 +256,8 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	private static class UIExecutionContextManager implements
-			IExecutionContextManager {
+	private static class UIExecutionContextManager
+			implements IExecutionContextManager {
 
 		private boolean active = false;
 
@@ -301,7 +301,7 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 
 	}
 
-	private final ListenerList shutdownListeners = new ListenerList();
+	private final ListenerList<IShutdownListener> shutdownListeners = new ListenerList<>();
 
 	public void addShutdownListener(IShutdownListener listener) {
 		shutdownListeners.add(listener);
@@ -318,9 +318,8 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 			fMembersOrderPreferenceCache.dispose();
 			fMembersOrderPreferenceCache = null;
 		}
-		Object[] listeners = shutdownListeners.getListeners();
-		for (int i = 0; i < listeners.length; ++i) {
-			((IShutdownListener) listeners[i]).shutdown();
+		for (IShutdownListener listener : shutdownListeners) {
+			listener.shutdown();
 		}
 		shutdownListeners.clear();
 		super.stop(context);
@@ -376,8 +375,8 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin(
-				"org.eclipse.dltk.ui", path); //$NON-NLS-1$
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.dltk.ui", //$NON-NLS-1$
+				path);
 	}
 
 	private IWorkingCopyManager fWorkingCopyManager;
@@ -434,13 +433,13 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 		}
 
 		if (editorInput instanceof FileStoreEditorInput) {
-			ISourceModule module = resolveSourceModule((FileStoreEditorInput) editorInput);
+			ISourceModule module = resolveSourceModule(
+					(FileStoreEditorInput) editorInput);
 			if (module != null) {
 				return module;
 			}
 		}
-		IModelElement me = editorInput
-				.getAdapter(IModelElement.class);
+		IModelElement me = editorInput.getAdapter(IModelElement.class);
 		if (me instanceof ISourceModule) {
 			return (ISourceModule) me;
 		}
@@ -617,7 +616,8 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 			descriptors = editorTextHoverDescriptorsByNature.get(natureId);
 		}
 		if (descriptors == null) {
-			descriptors = initializeEditorTextHoverDescriprtors(store, natureId);
+			descriptors = initializeEditorTextHoverDescriprtors(store,
+					natureId);
 			if (descriptors != null && natureId != null) {
 				synchronized (editorTextHoverDescriptorsByNature) {
 					editorTextHoverDescriptorsByNature.put(natureId,
@@ -638,7 +638,8 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 			 * getConfigurationElement(java.lang.Object)
 			 */
 			@Override
-			public IConfigurationElement getConfigurationElement(Object object) {
+			public IConfigurationElement getConfigurationElement(
+					Object object) {
 				return ((EditorTextHoverDescriptor) object)
 						.getConfigurationElement();
 			}
@@ -646,8 +647,8 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 		sorter.sort(descriptors);
 		// Move Best Match hover to front
 		for (int i = 0; i < descriptors.length - 1; i++) {
-			if (PreferenceConstants.ID_BESTMATCH_HOVER.equals(descriptors[i]
-					.getId())) {
+			if (PreferenceConstants.ID_BESTMATCH_HOVER
+					.equals(descriptors[i].getId())) {
 				final EditorTextHoverDescriptor hoverDescriptor = descriptors[i];
 				for (int j = i; j > 0; j--)
 					descriptors[j] = descriptors[j - 1];
@@ -711,8 +712,8 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 	 * @since 3.3
 	 */
 	public static IEditorPart openInEditor(IModelElement element,
-			boolean activate, boolean reveal) throws ModelException,
-			PartInitException {
+			boolean activate, boolean reveal)
+			throws ModelException, PartInitException {
 		if (!(element instanceof ISourceReference)) {
 			return null;
 		}
@@ -741,11 +742,12 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 		return fBuildpathAttributeConfigurationDescriptors;
 	}
 
-	public static ISourceModule resolveSourceModule(FileStoreEditorInput input) {
+	public static ISourceModule resolveSourceModule(
+			FileStoreEditorInput input) {
 		final ISourceModule[] modules = new ISourceModule[1];
 		final IPath filePath = URIUtil.toPath(input.getURI());
-		IScriptModel scriptModel = DLTKCore.create(ResourcesPlugin
-				.getWorkspace().getRoot());
+		IScriptModel scriptModel = DLTKCore
+				.create(ResourcesPlugin.getWorkspace().getRoot());
 		try {
 			scriptModel.accept(element -> {
 				boolean shouldDescend = (modules[0] == null);
@@ -762,11 +764,10 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 								IPath folderPath = new Path(
 										filePath.removeLastSegments(1).toFile()
 												.getCanonicalPath());
-								folderPath = folderPath
-										.removeFirstSegments(new Path(
-												fragment.getPath().toFile()
-														.getCanonicalPath())
-																.segmentCount());
+								folderPath = folderPath.removeFirstSegments(
+										new Path(fragment.getPath().toFile()
+												.getCanonicalPath())
+														.segmentCount());
 								IScriptFolder folder = fragment
 										.getScriptFolder(folderPath);
 								if ((folder != null)
@@ -813,10 +814,8 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 	}
 
 	public static String getAdditionalInfoAffordanceString() {
-		if (!EditorsUI
-				.getPreferenceStore()
-				.getBoolean(
-						AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE))
+		if (!EditorsUI.getPreferenceStore().getBoolean(
+				AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE))
 			return null;
 		return Messages.DLTKUIPlugin_additionalInfo_affordance;
 	}

@@ -31,8 +31,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class FormatterControlManager implements IFormatterControlManager,
-		IStatusChangeListener {
+public class FormatterControlManager
+		implements IFormatterControlManager, IStatusChangeListener {
 
 	private final IPreferenceDelegate<String> delegate;
 	private final ControlBindingManager<String> bindingManager;
@@ -63,8 +63,8 @@ public class FormatterControlManager implements IFormatterControlManager,
 	public Combo createCombo(Composite parent, String key, String label,
 			String[] items) {
 		final Label labelControl = SWTFactory.createLabel(parent, label, 1);
-		Combo combo = SWTFactory.createCombo(parent,
-				SWT.READ_ONLY | SWT.BORDER, 1, items);
+		Combo combo = SWTFactory.createCombo(parent, SWT.READ_ONLY | SWT.BORDER,
+				1, items);
 		bindingManager.bindControl(combo, key);
 		registerAssociatedLabel(combo, labelControl);
 		return combo;
@@ -74,8 +74,8 @@ public class FormatterControlManager implements IFormatterControlManager,
 	public Combo createCombo(Composite parent, String key, String label,
 			String[] itemValues, String[] itemLabels) {
 		final Label labelControl = SWTFactory.createLabel(parent, label, 1);
-		Combo combo = SWTFactory.createCombo(parent,
-				SWT.READ_ONLY | SWT.BORDER, 1, itemLabels);
+		Combo combo = SWTFactory.createCombo(parent, SWT.READ_ONLY | SWT.BORDER,
+				1, itemLabels);
 		bindingManager.bindControl(combo, key, itemValues);
 		registerAssociatedLabel(combo, labelControl);
 		return combo;
@@ -111,7 +111,7 @@ public class FormatterControlManager implements IFormatterControlManager,
 		}
 	}
 
-	private final ListenerList initListeners = new ListenerList();
+	private final ListenerList<IInitializeListener> initListeners = new ListenerList<>();
 
 	@Override
 	public void addInitializeListener(IInitializeListener listener) {
@@ -129,9 +129,8 @@ public class FormatterControlManager implements IFormatterControlManager,
 		initialization = true;
 		try {
 			bindingManager.initialize();
-			final Object[] listeners = initListeners.getListeners();
-			for (int i = 0; i < listeners.length; ++i) {
-				((IInitializeListener) listeners[i]).initialize();
+			for (IInitializeListener listener : initListeners) {
+				listener.initialize();
 			}
 		} finally {
 			initialization = false;

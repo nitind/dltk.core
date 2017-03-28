@@ -66,12 +66,12 @@ import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.ViewPart;
 
-public class ExtendedClassesView extends ViewPart implements
-		IViewPartInputProvider, ISelectionListener, ISelectionProvider,
-		IExecutableExtension, IMenuListener {
+public class ExtendedClassesView extends ViewPart
+		implements IViewPartInputProvider, ISelectionListener,
+		ISelectionProvider, IExecutableExtension, IMenuListener {
 
-	private final class IElementChangedListenerImplementation implements
-			IElementChangedListener {
+	private final class IElementChangedListenerImplementation
+			implements IElementChangedListener {
 		@Override
 		public void elementChanged(ElementChangedEvent event) {
 			// We need to update
@@ -79,7 +79,8 @@ public class ExtendedClassesView extends ViewPart implements
 			IModelElementDelta delta = event.getDelta();
 			if (browsingPane != null && !browsingPane.isDisposed()
 					&& typesChanged(delta)) {
-				browsingPane.getDisplay().asyncExec(() -> browsingPane.refresh());
+				browsingPane.getDisplay()
+						.asyncExec(() -> browsingPane.refresh());
 			}
 			// }
 		}
@@ -87,7 +88,8 @@ public class ExtendedClassesView extends ViewPart implements
 		private boolean typesChanged(IModelElementDelta delta) {
 			IModelElementDelta[] affectedChildren = delta.getAffectedChildren();
 			for (int i = 0; i < affectedChildren.length; i++) {
-				if (affectedChildren[i].getElement().getElementType() == IModelElement.TYPE) {
+				if (affectedChildren[i].getElement()
+						.getElementType() == IModelElement.TYPE) {
 					return true;
 				} else {
 					if (typesChanged(affectedChildren[i])) {
@@ -116,8 +118,8 @@ public class ExtendedClassesView extends ViewPart implements
 
 	public ExtendedClassesView() {
 		elementChangedListenerImplementation = new IElementChangedListenerImplementation();
-		DLTKCore
-				.addElementChangedListener(elementChangedListenerImplementation);
+		DLTKCore.addElementChangedListener(
+				elementChangedListenerImplementation);
 	}
 
 	@Override
@@ -130,8 +132,8 @@ public class ExtendedClassesView extends ViewPart implements
 			}
 		}
 		super.dispose();
-		DLTKCore
-				.removeElementChangedListener(elementChangedListenerImplementation);
+		DLTKCore.removeElementChangedListener(
+				elementChangedListenerImplementation);
 	}
 
 	//
@@ -141,12 +143,10 @@ public class ExtendedClassesView extends ViewPart implements
 		browsingPane = new MultiSelectionListViewer(parent, SWT.NONE) {
 			@Override
 			public void elementSelectionChanged(ISelection selection) {
-				Object[] listeners = listenerList.getListeners();
 				SelectionChangedEvent event = new SelectionChangedEvent(
 						ExtendedClassesView.this, convertSelection(selection));
-				for (int i = 0; i < listeners.length; i++) {
-					((ISelectionChangedListener) (listeners[i]))
-							.selectionChanged(event);
+				for (ISelectionChangedListener listener : listenerList) {
+					listener.selectionChanged(event);
 				}
 			}
 
@@ -212,17 +212,17 @@ public class ExtendedClassesView extends ViewPart implements
 				SearchEngine.createWorkspaceScope(this.fToolkit), parent,
 				this.fToolkit));
 
-		browsingPane.setLabelProvider(new ExtendedClasesLabelProvider(
-				DLTKUILanguageManager.createLabelProvider(this.fToolkit
-						.getNatureId())));
+		browsingPane.setLabelProvider(
+				new ExtendedClasesLabelProvider(DLTKUILanguageManager
+						.createLabelProvider(this.fToolkit.getNatureId())));
 
 		getSite().setSelectionProvider(this);
 		getViewSite().getPage().addPostSelectionListener(this);
 		getViewSite().getPage().addPartListener(fPartListener);
 
 		createActions();
-		IContextService ctxService = getSite().getService(
-				IContextService.class);
+		IContextService ctxService = getSite()
+				.getService(IContextService.class);
 		if (ctxService != null) {
 			fContextActivation = ctxService
 					.activateContext(DLTKUIPlugin.CONTEXT_VIEWS);
@@ -299,8 +299,8 @@ public class ExtendedClassesView extends ViewPart implements
 
 	protected boolean needsToProcessSelectionChanged(IWorkbenchPart part,
 			ISelection selection) {
-		if (!fProcessSelectionEvents || part == this
-				|| isSearchResultView(part) || part instanceof AbstractInfoView) {
+		if (!fProcessSelectionEvents || part == this || isSearchResultView(part)
+				|| part instanceof AbstractInfoView) {
 			if (part == this)
 				fPreviousSelectionProvider = part;
 			return false;
@@ -334,8 +334,7 @@ public class ExtendedClassesView extends ViewPart implements
 		}
 		Object currentInput = browsingPane.getInput();
 		List elements = new ArrayList();
-		if (currentInput == null
-				|| !currentInput.equals(firstElement))
+		if (currentInput == null || !currentInput.equals(firstElement))
 			if (iter.hasNext() && selection instanceof StructuredSelection) {
 				// multi-selection and view is empty
 				return ((StructuredSelection) selection).toList();
@@ -388,7 +387,8 @@ public class ExtendedClassesView extends ViewPart implements
 		fPreviousSelectedElement = selectedElement;
 
 		if (selectedElement != null
-				&& (selectedElement instanceof IScriptProject || selectedElement instanceof IProjectFragment)) {
+				&& (selectedElement instanceof IScriptProject
+						|| selectedElement instanceof IProjectFragment)) {
 			browsingPane.setInput(selectedElement);
 		}
 
@@ -452,12 +452,13 @@ public class ExtendedClassesView extends ViewPart implements
 		}
 	};
 
-	ListenerList listenerList = new ListenerList();
+	ListenerList<ISelectionChangedListener> listenerList = new ListenerList<>();
 	private IDLTKLanguageToolkit fToolkit;
 	private IElementChangedListenerImplementation elementChangedListenerImplementation;
 
 	@Override
-	public void addSelectionChangedListener(ISelectionChangedListener listener) {
+	public void addSelectionChangedListener(
+			ISelectionChangedListener listener) {
 		listenerList.add(listener);
 	}
 

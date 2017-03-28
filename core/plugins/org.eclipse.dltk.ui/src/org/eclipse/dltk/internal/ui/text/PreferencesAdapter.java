@@ -24,23 +24,25 @@ public class PreferencesAdapter implements IPreferenceStore {
 
 	/**
 	 * Property change listener. Listens for events of type
-	 * {@link org.eclipse.core.runtime.Preferences.PropertyChangeEvent} and fires
-	 * a {@link org.eclipse.jface.util.PropertyChangeEvent} on the
-	 * adapter with arguments from the received event.
+	 * {@link org.eclipse.core.runtime.Preferences.PropertyChangeEvent} and
+	 * fires a {@link org.eclipse.jface.util.PropertyChangeEvent} on the adapter
+	 * with arguments from the received event.
 	 */
-	private class PropertyChangeListener implements Preferences.IPropertyChangeListener {
+	private class PropertyChangeListener
+			implements Preferences.IPropertyChangeListener {
 
 		@Override
 		public void propertyChange(Preferences.PropertyChangeEvent event) {
-			firePropertyChangeEvent(event.getProperty(), event.getOldValue(), event.getNewValue());
+			firePropertyChangeEvent(event.getProperty(), event.getOldValue(),
+					event.getNewValue());
 		}
 	}
 
 	/** Listeners on the adapter */
-	private ListenerList fListeners= new ListenerList();
+	private ListenerList<IPropertyChangeListener> fListeners = new ListenerList<>();
 
 	/** Listener on the adapted Preferences */
-	private PropertyChangeListener fListener= new PropertyChangeListener();
+	private PropertyChangeListener fListener = new PropertyChangeListener();
 
 	/** Adapted Preferences */
 	private Preferences fPreferences;
@@ -54,13 +56,15 @@ public class PreferencesAdapter implements IPreferenceStore {
 	public PreferencesAdapter() {
 		this(new Preferences());
 	}
+
 	/**
 	 * Initialize with the given Preferences.
 	 *
-	 * @param preferences The preferences to wrap.
+	 * @param preferences
+	 *            The preferences to wrap.
 	 */
 	public PreferencesAdapter(Preferences preferences) {
-		fPreferences= preferences;
+		fPreferences = preferences;
 	}
 
 	@Override
@@ -83,12 +87,13 @@ public class PreferencesAdapter implements IPreferenceStore {
 	}
 
 	@Override
-	public void firePropertyChangeEvent(String name, Object oldValue, Object newValue) {
+	public void firePropertyChangeEvent(String name, Object oldValue,
+			Object newValue) {
 		if (!fSilent) {
-			PropertyChangeEvent event= new PropertyChangeEvent(this, name, oldValue, newValue);
-			Object[] listeners= fListeners.getListeners();
-			for (int i= 0; i < listeners.length; i++)
-				((IPropertyChangeListener) listeners[i]).propertyChange(event);
+			PropertyChangeEvent event = new PropertyChangeEvent(this, name,
+					oldValue, newValue);
+			for (IPropertyChangeListener listener : fListeners)
+				listener.propertyChange(event);
 		}
 	}
 
@@ -165,10 +170,10 @@ public class PreferencesAdapter implements IPreferenceStore {
 	@Override
 	public void putValue(String name, String value) {
 		try {
-			fSilent= true;
+			fSilent = true;
 			fPreferences.setValue(name, value);
 		} finally {
-			fSilent= false;
+			fSilent = false;
 		}
 	}
 

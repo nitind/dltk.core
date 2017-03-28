@@ -224,7 +224,7 @@ public class CheckedListDialogField<E> extends ListDialogField<E> {
 		checkStateChanged();
 	}
 
-	private final ListenerList checkStateListeners = new ListenerList();
+	private final ListenerList<ICheckStateListener> checkStateListeners = new ListenerList<>();
 
 	public void addCheckStateListener(ICheckStateListener listener) {
 		checkStateListeners.add(listener);
@@ -238,9 +238,8 @@ public class CheckedListDialogField<E> extends ListDialogField<E> {
 		} else {
 			fCheckedElements.remove(e.getElement());
 		}
-		final Object[] listeners = checkStateListeners.getListeners();
-		for (int i = 0; i < listeners.length; ++i) {
-			((ICheckStateListener) listeners[i]).checkStateChanged(e);
+		for (ICheckStateListener listener : checkStateListeners) {
+			listener.checkStateChanged(e);
 		}
 		checkStateChanged();
 	}

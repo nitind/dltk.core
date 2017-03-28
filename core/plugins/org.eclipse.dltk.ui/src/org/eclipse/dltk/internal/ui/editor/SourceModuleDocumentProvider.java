@@ -987,10 +987,10 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 	protected static class GlobalAnnotationModelListener implements
 			IAnnotationModelListener, IAnnotationModelListenerExtension {
 
-		private ListenerList fListenerList;
+		private ListenerList<IAnnotationModelListener> fListenerList;
 
 		public GlobalAnnotationModelListener() {
-			fListenerList = new ListenerList(ListenerList.IDENTITY);
+			fListenerList = new ListenerList<>(ListenerList.IDENTITY);
 		}
 
 		/**
@@ -998,9 +998,8 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 		 */
 		@Override
 		public void modelChanged(IAnnotationModel model) {
-			Object[] listeners = fListenerList.getListeners();
-			for (int i = 0; i < listeners.length; i++) {
-				((IAnnotationModelListener) listeners[i]).modelChanged(model);
+			for (IAnnotationModelListener listener : fListenerList) {
+				listener.modelChanged(model);
 			}
 		}
 
@@ -1009,9 +1008,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 		 */
 		@Override
 		public void modelChanged(AnnotationModelEvent event) {
-			Object[] listeners = fListenerList.getListeners();
-			for (int i = 0; i < listeners.length; i++) {
-				Object curr = listeners[i];
+			for (IAnnotationModelListener curr : fListenerList) {
 				if (curr instanceof IAnnotationModelListenerExtension) {
 					((IAnnotationModelListenerExtension) curr)
 							.modelChanged(event);

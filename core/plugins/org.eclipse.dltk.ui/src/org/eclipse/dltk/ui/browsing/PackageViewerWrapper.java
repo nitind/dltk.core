@@ -33,30 +33,32 @@ import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * Wrapper who transfers listeners and filters and to which clients
- * can refer.
+ * Wrapper who transfers listeners and filters and to which clients can refer.
  *
- * @deprecated needs to be replaced by a manager who handles transfer of listeners and filters
+ * @deprecated needs to be replaced by a manager who handles transfer of
+ *             listeners and filters
  */
 @Deprecated
 class PackageViewerWrapper extends StructuredViewer {
 
 	private StructuredViewer fViewer;
 	private ListenerList fListenerList;
-	private ListenerList fSelectionChangedListenerList;
-	private ListenerList fPostSelectionChangedListenerList;
+	private ListenerList<ISelectionChangedListener> fSelectionChangedListenerList;
+	private ListenerList<ISelectionChangedListener> fPostSelectionChangedListenerList;
 
 	public PackageViewerWrapper() {
-		fListenerList= new ListenerList(ListenerList.IDENTITY);
-		fPostSelectionChangedListenerList= new ListenerList(ListenerList.IDENTITY);
-		fSelectionChangedListenerList= new ListenerList(ListenerList.IDENTITY);
+		fListenerList = new ListenerList(ListenerList.IDENTITY);
+		fPostSelectionChangedListenerList = new ListenerList<>(
+				ListenerList.IDENTITY);
+		fSelectionChangedListenerList = new ListenerList<>(
+				ListenerList.IDENTITY);
 	}
 
 	public void setViewer(StructuredViewer viewer) {
 		Assert.isNotNull(viewer);
 
-		StructuredViewer oldViewer= fViewer;
-		fViewer= viewer;
+		StructuredViewer oldViewer = fViewer;
+		fViewer = viewer;
 
 		if (fViewer.getContentProvider() != null)
 			super.setContentProvider(fViewer.getContentProvider());
@@ -64,16 +66,16 @@ class PackageViewerWrapper extends StructuredViewer {
 		transferListeners();
 	}
 
-	StructuredViewer getViewer(){
+	StructuredViewer getViewer() {
 		return fViewer;
 	}
 
 	private void transferFilters(StructuredViewer oldViewer) {
-		//set filters
+		// set filters
 		if (oldViewer != null) {
-			ViewerFilter[] filters= oldViewer.getFilters();
-			for (int i= 0; i < filters.length; i++) {
-				ViewerFilter filter= filters[i];
+			ViewerFilter[] filters = oldViewer.getFilters();
+			for (int i = 0; i < filters.length; i++) {
+				ViewerFilter filter = filters[i];
 				fViewer.addFilter(filter);
 			}
 		}
@@ -81,33 +83,27 @@ class PackageViewerWrapper extends StructuredViewer {
 
 	private void transferListeners() {
 
-		Object[] listeners= fPostSelectionChangedListenerList.getListeners();
-		for (int i= 0; i < listeners.length; i++) {
-			Object object= listeners[i];
-			ISelectionChangedListener listener= (ISelectionChangedListener)object;
+		for (ISelectionChangedListener listener : fPostSelectionChangedListenerList) {
 			fViewer.addPostSelectionChangedListener(listener);
 		}
 
-		listeners= fSelectionChangedListenerList.getListeners();
-		for (int i= 0; i < listeners.length; i++) {
-			Object object= listeners[i];
-			ISelectionChangedListener listener= (ISelectionChangedListener)object;
+		for (ISelectionChangedListener listener : fSelectionChangedListenerList) {
 			fViewer.addSelectionChangedListener(listener);
 		}
 
 		// Add all other listeners
-		listeners= fListenerList.getListeners();
-		for (int i= 0; i < listeners.length; i++) {
-			Object object= listeners[i];
+		Object[] listeners = fListenerList.getListeners();
+		for (int i = 0; i < listeners.length; i++) {
+			Object object = listeners[i];
 
 			if (object instanceof IOpenListener) {
-				IOpenListener listener= (IOpenListener) object;
+				IOpenListener listener = (IOpenListener) object;
 				addOpenListener(listener);
 			} else if (object instanceof HelpListener) {
-				HelpListener listener= (HelpListener) object;
+				HelpListener listener = (HelpListener) object;
 				addHelpListener(listener);
 			} else if (object instanceof IDoubleClickListener) {
-				IDoubleClickListener listener= (IDoubleClickListener) object;
+				IDoubleClickListener listener = (IDoubleClickListener) object;
 				addDoubleClickListener(listener);
 			}
 		}
@@ -116,24 +112,26 @@ class PackageViewerWrapper extends StructuredViewer {
 	@Override
 	public void setSelection(ISelection selection, boolean reveal) {
 		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection sel= (IStructuredSelection) selection;
+			IStructuredSelection sel = (IStructuredSelection) selection;
 
-			//try and give the two a common super class
-			IContentProvider provider= getContentProvider();
+			// try and give the two a common super class
+			IContentProvider provider = getContentProvider();
 			if (provider instanceof LogicalPackagesProvider) {
-				LogicalPackagesProvider fprovider= (LogicalPackagesProvider) provider;
+				LogicalPackagesProvider fprovider = (LogicalPackagesProvider) provider;
 
-				Object object= sel.getFirstElement();
+				Object object = sel.getFirstElement();
 				if (object instanceof IScriptFolder) {
-					IScriptFolder pkgFragment= (IScriptFolder)object;
-					LogicalPackage logicalPkg= fprovider.findLogicalPackage(pkgFragment);
+					IScriptFolder pkgFragment = (IScriptFolder) object;
+					LogicalPackage logicalPkg = fprovider
+							.findLogicalPackage(pkgFragment);
 					if (logicalPkg != null)
-						object= logicalPkg;
+						object = logicalPkg;
 					else
-						object= pkgFragment;
+						object = pkgFragment;
 				}
 				if (object != null)
-					fViewer.setSelection(new StructuredSelection(object), reveal);
+					fViewer.setSelection(new StructuredSelection(object),
+							reveal);
 				else
 					fViewer.setSelection(StructuredSelection.EMPTY, reveal);
 			}
@@ -142,13 +140,15 @@ class PackageViewerWrapper extends StructuredViewer {
 	}
 
 	@Override
-	public void addPostSelectionChangedListener(ISelectionChangedListener listener) {
+	public void addPostSelectionChangedListener(
+			ISelectionChangedListener listener) {
 		fPostSelectionChangedListenerList.add(listener);
 		fViewer.addPostSelectionChangedListener(listener);
 	}
 
 	@Override
-	public void addSelectionChangedListener(ISelectionChangedListener listener) {
+	public void addSelectionChangedListener(
+			ISelectionChangedListener listener) {
 		fSelectionChangedListenerList.add(listener);
 		fViewer.addSelectionChangedListener(listener);
 	}
@@ -172,13 +172,15 @@ class PackageViewerWrapper extends StructuredViewer {
 	}
 
 	@Override
-	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+	public void removeSelectionChangedListener(
+			ISelectionChangedListener listener) {
 		fViewer.removeSelectionChangedListener(listener);
 		fSelectionChangedListenerList.remove(listener);
 	}
 
 	@Override
-	public void removePostSelectionChangedListener(ISelectionChangedListener listener) {
+	public void removePostSelectionChangedListener(
+			ISelectionChangedListener listener) {
 		fViewer.removePostSelectionChangedListener(listener);
 		fPostSelectionChangedListenerList.remove(listener);
 	}
@@ -352,40 +354,39 @@ class PackageViewerWrapper extends StructuredViewer {
 		return fViewer.toString();
 	}
 
-	public void setViewerInput(Object input){
+	public void setViewerInput(Object input) {
 		fViewer.setInput(input);
 	}
 
 	// need to provide implementation for abstract methods
 	@Override
 	protected Widget doFindInputItem(Object element) {
-		return ((IPackagesViewViewer)fViewer).doFindInputItem(element);
+		return ((IPackagesViewViewer) fViewer).doFindInputItem(element);
 	}
 
 	@Override
 	protected Widget doFindItem(Object element) {
-		return ((IPackagesViewViewer)fViewer).doFindItem(element);
+		return ((IPackagesViewViewer) fViewer).doFindItem(element);
 	}
 
 	@Override
 	protected void doUpdateItem(Widget item, Object element, boolean fullMap) {
-		((IPackagesViewViewer)fViewer).doUpdateItem(item, element, fullMap);
+		((IPackagesViewViewer) fViewer).doUpdateItem(item, element, fullMap);
 	}
 
 	@Override
 	protected List getSelectionFromWidget() {
-		return ((IPackagesViewViewer)fViewer).getSelectionFromWidget();
+		return ((IPackagesViewViewer) fViewer).getSelectionFromWidget();
 	}
 
 	@Override
 	protected void internalRefresh(Object element) {
-		((IPackagesViewViewer)fViewer).internalRefresh(element);
+		((IPackagesViewViewer) fViewer).internalRefresh(element);
 	}
 
 	@Override
 	protected void setSelectionToWidget(List l, boolean reveal) {
-		((IPackagesViewViewer)fViewer).setSelectionToWidget(l, reveal);
+		((IPackagesViewViewer) fViewer).setSelectionToWidget(l, reveal);
 	}
-
 
 }

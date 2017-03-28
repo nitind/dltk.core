@@ -525,9 +525,9 @@ public class ScriptOutlinePage extends Page
 	protected IPreferenceStore fStore;
 	private MemberFilterActionGroup fMemberFilterActionGroup;
 
-	private ListenerList fSelectionChangedListeners = new ListenerList(
+	private ListenerList<ISelectionChangedListener> fSelectionChangedListeners = new ListenerList<>(
 			ListenerList.IDENTITY);
-	private ListenerList fPostSelectionChangedListeners = new ListenerList(
+	private ListenerList<ISelectionChangedListener> fPostSelectionChangedListeners = new ListenerList<>(
 			ListenerList.IDENTITY);
 	private Hashtable<String, IAction> fActions = new Hashtable<String, IAction>();
 
@@ -602,11 +602,6 @@ public class ScriptOutlinePage extends Page
 		}
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.IPostSelectionProvider#
-	 * addPostSelectionChangedListener
-	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
-	 */
 	@Override
 	public void addPostSelectionChangedListener(
 			ISelectionChangedListener listener) {
@@ -617,10 +612,6 @@ public class ScriptOutlinePage extends Page
 		}
 	}
 
-	/*
-	 * @see
-	 * ISelectionProvider#addSelectionChangedListener(ISelectionChangedListener)
-	 */
 	@Override
 	public void addSelectionChangedListener(
 			ISelectionChangedListener listener) {
@@ -682,18 +673,14 @@ public class ScriptOutlinePage extends Page
 		fOutlineViewer.setLabelProvider(
 				new StyledDecoratingModelLabelProvider(lprovider));
 
-		Object[] listeners = fSelectionChangedListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			fSelectionChangedListeners.remove(listeners[i]);
-			fOutlineViewer.addSelectionChangedListener(
-					(ISelectionChangedListener) listeners[i]);
+		for (ISelectionChangedListener listener : fSelectionChangedListeners) {
+			fSelectionChangedListeners.remove(listener);
+			fOutlineViewer.addSelectionChangedListener(listener);
 		}
 
-		listeners = fPostSelectionChangedListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			fPostSelectionChangedListeners.remove(listeners[i]);
-			fOutlineViewer.addPostSelectionChangedListener(
-					(ISelectionChangedListener) listeners[i]);
+		for (ISelectionChangedListener listener : fPostSelectionChangedListeners) {
+			fPostSelectionChangedListeners.remove(listener);
+			fOutlineViewer.addPostSelectionChangedListener(listener);
 		}
 
 		MenuManager manager = new MenuManager(
@@ -1000,11 +987,6 @@ public class ScriptOutlinePage extends Page
 		// fCategoryFilterActionGroup.contributeToViewMenu(viewMenuManager);
 	}
 
-	/*
-	 * @seeorg.eclipse.jface.text.IPostSelectionProvider#
-	 * removePostSelectionChangedListener
-	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
-	 */
 	@Override
 	public void removePostSelectionChangedListener(
 			ISelectionChangedListener listener) {
@@ -1015,10 +997,6 @@ public class ScriptOutlinePage extends Page
 		}
 	}
 
-	/*
-	 * @see ISelectionProvider#removeSelectionChangedListener(
-	 * ISelectionChangedListener )
-	 */
 	@Override
 	public void removeSelectionChangedListener(
 			ISelectionChangedListener listener) {

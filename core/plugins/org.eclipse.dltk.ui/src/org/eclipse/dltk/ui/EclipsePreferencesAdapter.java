@@ -24,8 +24,8 @@ public class EclipsePreferencesAdapter implements IPreferenceStore {
 	 * {@link org.eclipse.jface.util.PropertyChangeEvent} on this adapter with
 	 * arguments from the received event.
 	 */
-	private class PreferenceChangeListener implements
-			IEclipsePreferences.IPreferenceChangeListener {
+	private class PreferenceChangeListener
+			implements IEclipsePreferences.IPreferenceChangeListener {
 		@Override
 		public void preferenceChange(
 				final IEclipsePreferences.PreferenceChangeEvent event) {
@@ -41,7 +41,7 @@ public class EclipsePreferencesAdapter implements IPreferenceStore {
 	}
 
 	/** Listeners on on this adapter */
-	private ListenerList fListeners = new ListenerList();
+	private ListenerList<IPropertyChangeListener> fListeners = new ListenerList<>();
 
 	/** Listener on the node */
 	private IEclipsePreferences.IPreferenceChangeListener fListener = new PreferenceChangeListener();
@@ -95,9 +95,8 @@ public class EclipsePreferencesAdapter implements IPreferenceStore {
 			Object newValue) {
 		PropertyChangeEvent event = new PropertyChangeEvent(this, name,
 				oldValue, newValue);
-		Object[] listeners = fListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++)
-			((IPropertyChangeListener) listeners[i]).propertyChange(event);
+		for (IPropertyChangeListener listener : fListeners)
+			listener.propertyChange(event);
 	}
 
 	@Override

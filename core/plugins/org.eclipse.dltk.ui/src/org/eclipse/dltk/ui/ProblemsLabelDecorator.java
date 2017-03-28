@@ -110,7 +110,7 @@ public class ProblemsLabelDecorator
 	private boolean fUseNewRegistry = false;
 	private IProblemChangedListener fProblemChangedListener;
 
-	private ListenerList fListeners;
+	private ListenerList<ILabelProviderListener> fListeners;
 	private ISourceRange fCachedRange;
 
 	/**
@@ -376,7 +376,7 @@ public class ProblemsLabelDecorator
 	@Override
 	public void addListener(ILabelProviderListener listener) {
 		if (fListeners == null) {
-			fListeners = new ListenerList();
+			fListeners = new ListenerList<>();
 		}
 		fListeners.add(listener);
 		if (fProblemChangedListener == null) {
@@ -405,10 +405,8 @@ public class ProblemsLabelDecorator
 		if (fListeners != null && !fListeners.isEmpty()) {
 			LabelProviderChangedEvent event = new ProblemsLabelChangedEvent(
 					this, changedResources, isMarkerChange);
-			Object[] listeners = fListeners.getListeners();
-			for (int i = 0; i < listeners.length; i++) {
-				((ILabelProviderListener) listeners[i])
-						.labelProviderChanged(event);
+			for (ILabelProviderListener listener : fListeners) {
+				listener.labelProviderChanged(event);
 			}
 		}
 	}

@@ -40,7 +40,7 @@ public class EnvironmentPathBlock {
 	private Table pathTable;
 	private TableViewer pathViewer;
 
-	private ListenerList listeners = new ListenerList();
+	private ListenerList<IEnvironmentPathBlockListener> listeners = new ListenerList<>();
 
 	/**
 	 * Environment to path association.
@@ -56,8 +56,8 @@ public class EnvironmentPathBlock {
 		this.useFolders = useFolders;
 	}
 
-	protected class PathLabelProvider extends LabelProvider implements
-			ITableLabelProvider {
+	protected class PathLabelProvider extends LabelProvider
+			implements ITableLabelProvider {
 
 		private final int pathColumn;
 
@@ -102,8 +102,8 @@ public class EnvironmentPathBlock {
 			IEnvironment[] environments) {
 		PixelConverter conv = new PixelConverter(parent);
 
-		pathTable = new Table(parent, SWT.SINGLE | SWT.BORDER
-				| SWT.FULL_SELECTION);
+		pathTable = new Table(parent,
+				SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
 		pathTable.setHeaderVisible(true);
 		pathTable.setLinesVisible(true);
 		// GridData tableData = new GridData(SWT.FILL, SWT.DEFAULT, true,
@@ -153,13 +153,14 @@ public class EnvironmentPathBlock {
 		initPathColumn(viewer, conv);
 	}
 
-	protected void initEnvironmentColumn(TableViewer viewer, PixelConverter conv) {
-		TableViewerColumn environmentsColumn = new TableViewerColumn(
-				pathViewer, SWT.NULL);
-		environmentsColumn.getColumn().setText(
-				Messages.EnvironmentPathBlock_environment);
-		environmentsColumn.getColumn().setWidth(
-				conv.convertWidthInCharsToPixels(30));
+	protected void initEnvironmentColumn(TableViewer viewer,
+			PixelConverter conv) {
+		TableViewerColumn environmentsColumn = new TableViewerColumn(pathViewer,
+				SWT.NULL);
+		environmentsColumn.getColumn()
+				.setText(Messages.EnvironmentPathBlock_environment);
+		environmentsColumn.getColumn()
+				.setWidth(conv.convertWidthInCharsToPixels(30));
 	}
 
 	protected void initPathColumn(TableViewer viewer, PixelConverter conv) {
@@ -198,8 +199,8 @@ public class EnvironmentPathBlock {
 						Font font = new Font(compositeParent.getDisplay(),
 								"arial", 6, 0); //$NON-NLS-1$
 						browse.setFont(font);
-						browse.setLayoutData(new GridData(SWT.DEFAULT,
-								SWT.FILL, false, true));
+						browse.setLayoutData(new GridData(SWT.DEFAULT, SWT.FILL,
+								false, true));
 						browse.addSelectionListener(new SelectionAdapter() {
 							@Override
 							public void widgetSelected(SelectionEvent e) {
@@ -271,8 +272,7 @@ public class EnvironmentPathBlock {
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) selection;
 			IEnvironment environment = (IEnvironment) sel.getFirstElement();
-			IEnvironmentUI ui = environment
-					.getAdapter(IEnvironmentUI.class);
+			IEnvironmentUI ui = environment.getAdapter(IEnvironmentUI.class);
 			String file = null;
 			if (!useFolders) {
 				file = ui.selectFile(this.pathTable.getShell(),
@@ -305,9 +305,7 @@ public class EnvironmentPathBlock {
 	}
 
 	protected void fireValueChanged() {
-		Object[] array = listeners.getListeners();
-		for (int i = 0; i < array.length; i++) {
-			final IEnvironmentPathBlockListener listener = (IEnvironmentPathBlockListener) array[i];
+		for (final IEnvironmentPathBlockListener listener : listeners) {
 			SafeRunnable.run(new SafeRunnable() {
 				@Override
 				public void run() {
