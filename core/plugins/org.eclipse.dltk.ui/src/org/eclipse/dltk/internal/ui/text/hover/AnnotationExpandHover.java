@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,20 +44,22 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
-
 /**
- * This class got moved here form Platform Text since it was not used there
- * and caused discouraged access warnings. It will be moved down again once
+ * This class got moved here form Platform Text since it was not used there and
+ * caused discouraged access warnings. It will be moved down again once
  * annotation roll-over support is provided by Platform Text.
- *   
+ *
  */
-public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHoverExtension {
+public class AnnotationExpandHover
+		implements IAnnotationHover, IAnnotationHoverExtension {
 
-	private class InformationControlCreator implements IInformationControlCreator, IInformationControlCreatorExtension {
+	private class InformationControlCreator implements
+			IInformationControlCreator, IInformationControlCreatorExtension {
 
 		@Override
 		public IInformationControl createInformationControl(Shell parent) {
-			return new AnnotationExpansionControl(parent, SWT.NONE, fAnnotationAccess);
+			return new AnnotationExpansionControl(parent, SWT.NONE,
+					fAnnotationAccess);
 		}
 
 		@Override
@@ -84,14 +86,14 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 		}
 
 		@Override
-		public void annotationContextMenuAboutToShow(VerticalRulerEvent event, Menu menu) {
+		public void annotationContextMenuAboutToShow(VerticalRulerEvent event,
+				Menu menu) {
 			fCompositeRuler.fireAnnotationContextMenuAboutToShow(event, menu);
 		}
 	}
 
-
-	private final IInformationControlCreator fgCreator= new InformationControlCreator();
-	protected final IVerticalRulerListener fgListener= new VerticalRulerListener();
+	private final IInformationControlCreator fgCreator = new InformationControlCreator();
+	protected final IVerticalRulerListener fgListener = new VerticalRulerListener();
 	protected CompositeRuler fCompositeRuler;
 	protected IDoubleClickListener fDblClickListener;
 	protected IAnnotationAccess fAnnotationAccess;
@@ -103,15 +105,13 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 	 * @param access
 	 * @param doubleClickListener
 	 */
-	public AnnotationExpandHover(CompositeRuler ruler, IAnnotationAccess access, IDoubleClickListener doubleClickListener) {
-		fCompositeRuler= ruler;
-		fAnnotationAccess= access;
-		fDblClickListener= doubleClickListener;
+	public AnnotationExpandHover(CompositeRuler ruler, IAnnotationAccess access,
+			IDoubleClickListener doubleClickListener) {
+		fCompositeRuler = ruler;
+		fAnnotationAccess = access;
+		fDblClickListener = doubleClickListener;
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.source.IAnnotationHover#getHoverInfo(org.eclipse.jface.text.source.ISourceViewer, int)
-	 */
 	@Override
 	public String getHoverInfo(ISourceViewer sourceViewer, int line) {
 		// we don't have any sensible return value as text
@@ -119,24 +119,25 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 	}
 
 	protected Object getHoverInfoForLine(ISourceViewer viewer, int line) {
-		IAnnotationModel model= viewer.getAnnotationModel();
-		IDocument document= viewer.getDocument();
+		IAnnotationModel model = viewer.getAnnotationModel();
+		IDocument document = viewer.getDocument();
 
 		if (model == null)
 			return null;
 
 		List<Annotation> exact = new ArrayList<Annotation>();
-		HashMap messagesAtPosition= new HashMap();
+		HashMap messagesAtPosition = new HashMap();
 
-		Iterator e= model.getAnnotationIterator();
+		Iterator<Annotation> e = model.getAnnotationIterator();
 		while (e.hasNext()) {
-			Annotation annotation= (Annotation) e.next();
-			Position position= model.getPosition(annotation);
+			Annotation annotation = e.next();
+			Position position = model.getPosition(annotation);
 			if (position == null)
 				continue;
 
 			if (compareRulerLine(position, document, line) == 1) {
-				if (isDuplicateMessage(messagesAtPosition, position, annotation.getText()))
+				if (isDuplicateMessage(messagesAtPosition, position,
+						annotation.getText()))
 					continue;
 
 				exact.add(annotation);
@@ -151,13 +152,13 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 		if (exact.size() > 0)
 			setLastRulerMouseLocation(viewer, line);
 
-		AnnotationHoverInput input= new AnnotationHoverInput();
+		AnnotationHoverInput input = new AnnotationHoverInput();
 		input.fAnnotations = exact.toArray(new Annotation[0]);
-		input.fViewer= viewer;
-		input.fRulerInfo= fCompositeRuler;
-		input.fAnnotationListener= fgListener;
-		input.fDoubleClickListener= fDblClickListener;
-		input.model= model;
+		input.fViewer = viewer;
+		input.fRulerInfo = fCompositeRuler;
+		input.fAnnotationListener = fgListener;
+		input.fDoubleClickListener = fDblClickListener;
+		input.model = model;
 
 		return input;
 	}
@@ -167,11 +168,11 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 
 			@Override
 			public int compare(Object o1, Object o2) {
-				Annotation a1= (Annotation) o1;
-				Annotation a2= (Annotation) o2;
+				Annotation a1 = (Annotation) o1;
+				Annotation a2 = (Annotation) o2;
 
-				Position p1= model.getPosition(a1);
-				Position p2= model.getPosition(a2);
+				Position p1 = model.getPosition(a1);
+				Position p2 = model.getPosition(a2);
 
 				// annotation order:
 				// primary order: by position in line
@@ -188,28 +189,29 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 
 	protected int getOrder(Annotation annotation) {
 		if (fAnnotationAccess instanceof IAnnotationAccessExtension) {
-			IAnnotationAccessExtension extension= (IAnnotationAccessExtension) fAnnotationAccess;
+			IAnnotationAccessExtension extension = (IAnnotationAccessExtension) fAnnotationAccess;
 			return extension.getLayer(annotation);
 		}
 		return IAnnotationAccessExtension.DEFAULT_LAYER;
 	}
 
-	protected boolean isDuplicateMessage(Map messagesAtPosition, Position position, String message) {
+	protected boolean isDuplicateMessage(Map messagesAtPosition,
+			Position position, String message) {
 		if (message == null)
 			return false;
-		
+
 		if (messagesAtPosition.containsKey(position)) {
-			Object value= messagesAtPosition.get(position);
+			Object value = messagesAtPosition.get(position);
 			if (message == null || message.equals(value))
 				return true;
 
 			if (value instanceof List) {
-				List messages= (List)value;
-				if  (messages.contains(message))
+				List messages = (List) value;
+				if (messages.contains(message))
 					return true;
 				messages.add(message);
 			} else {
-				ArrayList messages= new ArrayList();
+				ArrayList messages = new ArrayList();
 				messages.add(value);
 				messages.add(message);
 				messagesAtPosition.put(position, messages);
@@ -222,17 +224,23 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 	protected void setLastRulerMouseLocation(ISourceViewer viewer, int line) {
 		// set last mouse activity in order to get the correct context menu
 		if (fCompositeRuler != null) {
-			StyledText st= viewer.getTextWidget();
+			StyledText st = viewer.getTextWidget();
 			if (st != null && !st.isDisposed()) {
 				if (viewer instanceof ITextViewerExtension5) {
-					int widgetLine= ((ITextViewerExtension5)viewer).modelLine2WidgetLine(line);
-					Point loc= st.getLocationAtOffset(st.getOffsetAtLine(widgetLine));
-					fCompositeRuler.setLocationOfLastMouseButtonActivity(0, loc.y);
+					int widgetLine = ((ITextViewerExtension5) viewer)
+							.modelLine2WidgetLine(line);
+					Point loc = st.getLocationAtOffset(
+							st.getOffsetAtLine(widgetLine));
+					fCompositeRuler.setLocationOfLastMouseButtonActivity(0,
+							loc.y);
 				} else if (viewer instanceof TextViewer) {
 					// TODO remove once TextViewer implements the extension
-					int widgetLine= ((TextViewer)viewer).modelLine2WidgetLine(line);
-					Point loc= st.getLocationAtOffset(st.getOffsetAtLine(widgetLine));
-					fCompositeRuler.setLocationOfLastMouseButtonActivity(0, loc.y);
+					int widgetLine = ((TextViewer) viewer)
+							.modelLine2WidgetLine(line);
+					Point loc = st.getLocationAtOffset(
+							st.getOffsetAtLine(widgetLine));
+					fCompositeRuler.setLocationOfLastMouseButtonActivity(0,
+							loc.y);
 				}
 			}
 		}
@@ -241,19 +249,24 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 	/**
 	 * Returns the distance to the ruler line.
 	 *
-	 * @param position the position
-	 * @param document the document
-	 * @param line the line number
+	 * @param position
+	 *            the position
+	 * @param document
+	 *            the document
+	 * @param line
+	 *            the line number
 	 * @return the distance to the ruler line
 	 */
-	protected int compareRulerLine(Position position, IDocument document, int line) {
+	protected int compareRulerLine(Position position, IDocument document,
+			int line) {
 
 		if (position.getOffset() > -1 && position.getLength() > -1) {
 			try {
-				int firstLine= document.getLineOfOffset(position.getOffset());
+				int firstLine = document.getLineOfOffset(position.getOffset());
 				if (line == firstLine)
 					return 1;
-				if (firstLine <= line && line <= document.getLineOfOffset(position.getOffset() + position.getLength()))
+				if (firstLine <= line && line <= document.getLineOfOffset(
+						position.getOffset() + position.getLength()))
 					return 2;
 			} catch (BadLocationException x) {
 			}
@@ -268,7 +281,8 @@ public class AnnotationExpandHover implements IAnnotationHover, IAnnotationHover
 	}
 
 	@Override
-	public Object getHoverInfo(ISourceViewer sourceViewer, ILineRange lineRange, int visibleLines) {
+	public Object getHoverInfo(ISourceViewer sourceViewer, ILineRange lineRange,
+			int visibleLines) {
 		return getHoverInfoForLine(sourceViewer, lineRange.getStartLine());
 	}
 

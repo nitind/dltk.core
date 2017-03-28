@@ -53,8 +53,8 @@ public class ScriptCorrectionAssistant extends QuickAssistAssistant {
 	 * @param editor
 	 *            the editor
 	 */
-	public ScriptCorrectionAssistant(ITextEditor editor,
-			IPreferenceStore store, IColorManager manager) {
+	public ScriptCorrectionAssistant(ITextEditor editor, IPreferenceStore store,
+			IColorManager manager) {
 		super();
 		Assert.isNotNull(editor);
 		fEditor = editor;
@@ -70,8 +70,8 @@ public class ScriptCorrectionAssistant extends QuickAssistAssistant {
 				PreferenceConstants.CODEASSIST_PROPOSALS_FOREGROUND, manager);
 		setProposalSelectorForeground(c);
 
-		c = getColor(store,
-				PreferenceConstants.CODEASSIST_PROPOSALS_BACKGROUND, manager);
+		c = getColor(store, PreferenceConstants.CODEASSIST_PROPOSALS_BACKGROUND,
+				manager);
 		setProposalSelectorBackground(c);
 	}
 
@@ -156,8 +156,8 @@ public class ScriptCorrectionAssistant extends QuickAssistAssistant {
 		if (documentProvider == null) {
 			return null;
 		}
-		IDocument document = documentProvider.getDocument(editor
-				.getEditorInput());
+		IDocument document = documentProvider
+				.getDocument(editor.getEditorInput());
 		if (document == null) {
 			return null;
 		}
@@ -175,7 +175,7 @@ public class ScriptCorrectionAssistant extends QuickAssistAssistant {
 
 		ensureUpdatedAnnotations(fEditor);
 
-		Iterator<?> iter = model.getAnnotationIterator();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
 		if (goToClosest) {
 			IRegion lineInfo = getRegionOfInterest(fEditor, invocationLocation);
 			if (lineInfo == null) {
@@ -188,7 +188,7 @@ public class ScriptCorrectionAssistant extends QuickAssistAssistant {
 			ArrayList<Position> allPositions = new ArrayList<Position>();
 			int bestOffset = Integer.MAX_VALUE;
 			while (iter.hasNext()) {
-				Annotation annot = (Annotation) iter.next();
+				Annotation annot = iter.next();
 				if (ScriptAnnotationUtils.isQuickFixableType(annot)) {
 					Position pos = model.getPosition(annot);
 					if (pos != null
@@ -213,12 +213,11 @@ public class ScriptCorrectionAssistant extends QuickAssistAssistant {
 			return bestOffset;
 		} else {
 			while (iter.hasNext()) {
-				Annotation annot = (Annotation) iter.next();
+				Annotation annot = iter.next();
 				if (ScriptAnnotationUtils.isQuickFixableType(annot)) {
 					Position pos = model.getPosition(annot);
-					if (pos != null
-							&& isInside(invocationLocation, pos.offset,
-									pos.offset + pos.length)) {
+					if (pos != null && isInside(invocationLocation, pos.offset,
+							pos.offset + pos.length)) {
 						resultingAnnotations.add(annot);
 					}
 				}

@@ -294,9 +294,9 @@ public class ProblemsLabelDecorator
 	private int getErrorTicksFromAnnotationModel(IAnnotationModel model,
 			ISourceReference sourceElement) throws CoreException {
 		int info = 0;
-		Iterator iter = model.getAnnotationIterator();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
 		while ((info != ERRORTICK_ERROR) && iter.hasNext()) {
-			Annotation annot = (Annotation) iter.next();
+			Annotation annot = iter.next();
 			IMarker marker = isAnnotationInRange(model, annot, sourceElement);
 			if (marker != null) {
 				int priority = marker.getAttribute(IMarker.SEVERITY, -1);

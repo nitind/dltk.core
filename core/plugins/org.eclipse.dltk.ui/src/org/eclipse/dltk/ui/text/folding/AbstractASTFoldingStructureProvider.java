@@ -213,8 +213,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	/**
 	 * A {@link ProjectionAnnotation} for code.
 	 */
-	protected static final class ScriptProjectionAnnotation extends
-			ProjectionAnnotation {
+	protected static final class ScriptProjectionAnnotation
+			extends ProjectionAnnotation {
 		private boolean fIsComment;
 		private SourceRangeStamp stamp;
 		private IModelElement element;
@@ -327,8 +327,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	 * away the region from after the '/**' to the beginning of the content, the
 	 * other from after the first content line until after the comment.
 	 */
-	private static final class CommentPosition extends Position implements
-			IProjectionPosition {
+	private static final class CommentPosition extends Position
+			implements IProjectionPosition {
 		CommentPosition(int offset, int length) {
 			super(offset, length);
 		}
@@ -361,8 +361,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 			}
 			if (captionLine < lastLine) {
 				int postOffset = document.getLineOffset(captionLine + 1);
-				IRegion postRegion = new Region(postOffset, offset + length
-						- postOffset);
+				IRegion postRegion = new Region(postOffset,
+						offset + length - postOffset);
 				if (preRegion == null)
 					return new IRegion[] { postRegion };
 				return new IRegion[] { preRegion, postRegion };
@@ -381,7 +381,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		 * @return the first index of a unicode identifier part, or zero if none
 		 *         can be found
 		 */
-		private int findFirstContent(final CharSequence content, int prefixEnd) {
+		private int findFirstContent(final CharSequence content,
+				int prefixEnd) {
 			int lenght = content.length();
 			for (int i = prefixEnd; i < lenght; i++) {
 				if (Character.isUnicodeIdentifierPart(content.charAt(i)))
@@ -407,8 +408,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	 * away the lines before the one containing the simple name of the script
 	 * element, one folding away any lines after the caption.
 	 */
-	private static final class ScriptElementPosition extends Position implements
-			IProjectionPosition {
+	private static final class ScriptElementPosition extends Position
+			implements IProjectionPosition {
 		public ScriptElementPosition(int offset, int length) {
 			super(offset, length);
 		}
@@ -445,8 +446,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 			}
 			if (captionLine < lastLine) {
 				int postOffset = document.getLineOffset(captionLine + 1);
-				IRegion postRegion = new Region(postOffset, offset + length
-						- postOffset);
+				IRegion postRegion = new Region(postOffset,
+						offset + length - postOffset);
 				if (preRegion == null)
 					return new IRegion[] { postRegion };
 				return new IRegion[] { preRegion, postRegion };
@@ -523,7 +524,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		public void elementChanged(ElementChangedEvent e) {
 			IModelElementDelta delta = findElement(fInput, e.getDelta());
 			if (delta != null
-					&& (delta.getFlags() & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_CHILDREN)) != 0)
+					&& (delta.getFlags() & (IModelElementDelta.F_CONTENT
+							| IModelElementDelta.F_CHILDREN)) != 0)
 				update(createContext(false));
 		}
 
@@ -711,7 +713,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		IDocument doc = getDocument();
 		if (doc == null)
 			return null;
-		return new FoldingStructureComputationContext(doc, model, allowCollapse);
+		return new FoldingStructureComputationContext(doc, model,
+				allowCollapse);
 	}
 
 	private IModelElement getInputElement() {
@@ -730,8 +733,10 @@ public abstract class AbstractASTFoldingStructureProvider implements
 			return;
 		}
 		Map<Annotation, Position> updated = ctx.fMap;
-		Map<SourceRangeStamp, List<Tuple>> previous = computeCurrentStructure(ctx);
-		for (Iterator<Annotation> e = updated.keySet().iterator(); e.hasNext();) {
+		Map<SourceRangeStamp, List<Tuple>> previous = computeCurrentStructure(
+				ctx);
+		for (Iterator<Annotation> e = updated.keySet().iterator(); e
+				.hasNext();) {
 			ScriptProjectionAnnotation newAnnotation = (ScriptProjectionAnnotation) e
 					.next();
 			SourceRangeStamp stamp = newAnnotation.getStamp();
@@ -748,15 +753,15 @@ public abstract class AbstractASTFoldingStructureProvider implements
 					Position existingPosition = tuple.position;
 					if (newAnnotation.isComment() == existingAnnotation
 							.isComment()) {
-						if (existingPosition != null
-								&& (!newPosition.equals(existingPosition) || ctx
-										.allowCollapsing()
-										&& existingAnnotation.isCollapsed() != newAnnotation
+						if (existingPosition != null && (!newPosition
+								.equals(existingPosition)
+								|| ctx.allowCollapsing() && existingAnnotation
+										.isCollapsed() != newAnnotation
 												.isCollapsed())) {
 							existingPosition.setOffset(newPosition.getOffset());
 							existingPosition.setLength(newPosition.getLength());
-							if (ctx.allowCollapsing()
-									&& existingAnnotation.isCollapsed() != newAnnotation
+							if (ctx.allowCollapsing() && existingAnnotation
+									.isCollapsed() != newAnnotation
 											.isCollapsed())
 								if (newAnnotation.isCollapsed())
 									existingAnnotation.markCollapsed();
@@ -853,16 +858,17 @@ public abstract class AbstractASTFoldingStructureProvider implements
 							len = len - 1;
 						}
 						if (contents.length() >= len) {
-							int hash = contents.substring(
-									normalized.getOffset(), len).hashCode();
+							int hash = contents
+									.substring(normalized.getOffset(), len)
+									.hashCode();
 							IModelElement element = null;
 
 							if (codeBlock.statement instanceof MethodDeclaration) {
 								MethodDeclaration meth = (MethodDeclaration) codeBlock.statement;
 								hash = meth.getName().hashCode();
-								element = methodCollector.get(meth
-										.getNameStart(), meth.getNameEnd()
-										- meth.getNameStart());
+								element = methodCollector.get(
+										meth.getNameStart(), meth.getNameEnd()
+												- meth.getNameStart());
 							}
 							SourceRangeStamp codeStamp = new SourceRangeStamp(
 									hash, normalized.getLength());
@@ -887,8 +893,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		if (commentRegions.length == 0) {
 			return;
 		}
-		final IElementCommentResolver commentResolver = fInput != null ? createElementCommentResolver(
-				fInput, contents)
+		final IElementCommentResolver commentResolver = fInput != null
+				? createElementCommentResolver(fInput, contents)
 				: null;
 		for (int i = 0; i < commentRegions.length; i++) {
 			IRegion normalized = alignRegion(commentRegions[i], ctx);
@@ -901,18 +907,21 @@ public abstract class AbstractASTFoldingStructureProvider implements
 				continue;
 			}
 
-			int hash = contents.substring(normalized.getOffset(),
-					normalized.getOffset() + normalized.getLength()).hashCode();
+			int hash = contents
+					.substring(normalized.getOffset(),
+							normalized.getOffset() + normalized.getLength())
+					.hashCode();
 			final IModelElement element;
 			if (commentResolver != null) {
-				element = commentResolver.getElementByCommentPosition(
-						position.offset, 0);
+				element = commentResolver
+						.getElementByCommentPosition(position.offset, 0);
 			} else {
 				element = null;
 			}
 
-			boolean initCollapse = (isDoc) ? initiallyCollapseDocs(normalized,
-					ctx) : initiallyCollapseComments(normalized, ctx);
+			boolean initCollapse = (isDoc)
+					? initiallyCollapseDocs(normalized, ctx)
+					: initiallyCollapseComments(normalized, ctx);
 
 			ctx.addProjectionRange(new ScriptProjectionAnnotation(initCollapse,
 					true, new SourceRangeStamp(hash, normalized.getLength()),
@@ -960,17 +969,17 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		fDocsFolding = store
 				.getBoolean(PreferenceConstants.EDITOR_DOCS_FOLDING_ENABLED);
 
-		fCommentsFolding = store
-				.getBoolean(PreferenceConstants.EDITOR_COMMENTS_FOLDING_ENABLED);
+		fCommentsFolding = store.getBoolean(
+				PreferenceConstants.EDITOR_COMMENTS_FOLDING_ENABLED);
 
-		fFoldNewLines = store
-				.getBoolean(PreferenceConstants.EDITOR_COMMENT_FOLDING_JOIN_NEWLINES);
+		fFoldNewLines = store.getBoolean(
+				PreferenceConstants.EDITOR_COMMENT_FOLDING_JOIN_NEWLINES);
 
 		fInitCollapseComments = store
 				.getBoolean(PreferenceConstants.EDITOR_FOLDING_INIT_COMMENTS);
 
-		fInitCollapseHeaderComments = store
-				.getBoolean(PreferenceConstants.EDITOR_FOLDING_INIT_HEADER_COMMENTS);
+		fInitCollapseHeaderComments = store.getBoolean(
+				PreferenceConstants.EDITOR_FOLDING_INIT_HEADER_COMMENTS);
 
 		fInitCollapseDocs = store
 				.getBoolean(PreferenceConstants.EDITOR_FOLDING_INIT_DOCS);
@@ -1072,8 +1081,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	 * @return a folding position corresponding to <code>aligned</code>
 	 */
 	protected final Position createMemberPosition(IRegion aligned) {
-		return new ScriptElementPosition(aligned.getOffset(), aligned
-				.getLength());
+		return new ScriptElementPosition(aligned.getOffset(),
+				aligned.getLength());
 	}
 
 	/**
@@ -1099,8 +1108,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		IDocument document = ctx.getDocument();
 		try {
 			int start = document.getLineOfOffset(region.getOffset());
-			int end = document.getLineOfOffset(region.getOffset()
-					+ region.getLength());
+			int end = document
+					.getLineOfOffset(region.getOffset() + region.getLength());
 			if (start >= end)
 				return null;
 			int offset = document.getLineOffset(start);
@@ -1119,8 +1128,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	}
 
 	private ProjectionAnnotationModel getModel() {
-		return fEditor
-				.getAdapter(ProjectionAnnotationModel.class);
+		return fEditor.getAdapter(ProjectionAnnotationModel.class);
 	}
 
 	private IDocument getDocument() {
@@ -1132,9 +1140,9 @@ public abstract class AbstractASTFoldingStructureProvider implements
 			FoldingStructureComputationContext ctx) {
 		Map<SourceRangeStamp, List<Tuple>> map = new HashMap<SourceRangeStamp, List<Tuple>>();
 		ProjectionAnnotationModel model = ctx.getModel();
-		Iterator<?> e = model.getAnnotationIterator();
+		Iterator<Annotation> e = model.getAnnotationIterator();
 		while (e.hasNext()) {
-			Object annotation = e.next();
+			Annotation annotation = e.next();
 			if (annotation instanceof ScriptProjectionAnnotation) {
 				ScriptProjectionAnnotation ann = (ScriptProjectionAnnotation) annotation;
 				Position position = model.getPosition(ann);
@@ -1148,24 +1156,19 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		}
 		Comparator<Tuple> comparator = (o1, o2) -> o1.position.getOffset()
 				- o2.position.getOffset();
-		for (Iterator<List<Tuple>> it = map.values().iterator(); it.hasNext();) {
+		for (Iterator<List<Tuple>> it = map.values().iterator(); it
+				.hasNext();) {
 			List<Tuple> list = it.next();
 			Collections.sort(list, comparator);
 		}
 		return map;
 	}
 
-	/*
-	 * @see IScriptFoldingStructureProviderExtension#collapseMembers()
-	 */
 	@Override
 	public final void collapseMembers() {
 		modifyFiltered(fMemberFilter, false);
 	}
 
-	/*
-	 * @see IScriptFoldingStructureProviderExtension#collapseComments()
-	 */
 	@Override
 	public final void collapseComments() {
 		modifyFiltered(fCommentFilter, false);
@@ -1187,9 +1190,9 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		if (model == null)
 			return;
 		List<Annotation> modified = new ArrayList<Annotation>();
-		Iterator<?> iter = model.getAnnotationIterator();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
 		while (iter.hasNext()) {
-			Object annotation = iter.next();
+			Annotation annotation = iter.next();
 			if (annotation instanceof ScriptProjectionAnnotation) {
 				ScriptProjectionAnnotation annot = (ScriptProjectionAnnotation) annotation;
 				if (expand == annot.isCollapsed() && filter.match(annot)) {
@@ -1201,8 +1204,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 				}
 			}
 		}
-		model.modifyAnnotations(null, null, modified
-				.toArray(new Annotation[modified.size()]));
+		model.modifyAnnotations(null, null,
+				modified.toArray(new Annotation[modified.size()]));
 	}
 
 	protected abstract String getPartition();
@@ -1263,8 +1266,9 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	}
 
 	protected final ISourceParser getSourceParser() {
-		final IProject project = fInput != null ? fInput.getScriptProject()
-				.getProject() : null;
+		final IProject project = fInput != null
+				? fInput.getScriptProject().getProject()
+				: null;
 		return DLTKLanguageManager.getSourceParser(project, getNatureId());
 	}
 
@@ -1298,13 +1302,12 @@ public abstract class AbstractASTFoldingStructureProvider implements
 					return SourceParserUtil.getModuleDeclaration(module);
 				}
 			} catch (ModelException e) {
-				getLog().log(
-						new Status(IStatus.WARNING, DLTKUIPlugin.PLUGIN_ID, e
-								.getMessage(), e));
+				getLog().log(new Status(IStatus.WARNING, DLTKUIPlugin.PLUGIN_ID,
+						e.getMessage(), e));
 			}
 		}
-		return (ModuleDeclaration) getSourceParser().parse(
-				new ModuleSource(code), null);
+		return (ModuleDeclaration) getSourceParser()
+				.parse(new ModuleSource(code), null);
 	}
 
 	protected CodeBlock[] buildCodeBlocks(ModuleDeclaration decl, int offset) {
@@ -1367,7 +1370,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	protected boolean initiallyCollapseComments(IRegion commentRegion,
 			FoldingStructureComputationContext ctx) {
 		if (ctx.allowCollapsing()) {
-			return isHeaderRegion(commentRegion, ctx) ? fInitCollapseHeaderComments
+			return isHeaderRegion(commentRegion, ctx)
+					? fInitCollapseHeaderComments
 					: fInitCollapseComments;
 		}
 		return false;
@@ -1461,7 +1465,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		return computeCommentsRanges(contents, getCommentPartition());
 	}
 
-	protected IRegion[] computeCommentsRanges(String contents, String partition) {
+	protected IRegion[] computeCommentsRanges(String contents,
+			String partition) {
 		try {
 			if (contents == null)
 				return new IRegion[0];
@@ -1486,9 +1491,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 						&& startsAtLineBegin(d, region)) {
 					if (start == null)
 						start = region;
-				} else if (start != null
-						&& (isBlankRegion(d, region) || isEmptyRegion(d, region)
-								&& collapseEmptyLines())) {
+				} else if (start != null && (isBlankRegion(d, region)
+						|| isEmptyRegion(d, region) && collapseEmptyLines())) {
 					// blanks or empty lines
 					// TODO introduce line limit for collapseEmptyLines() ?
 				} else {
@@ -1496,9 +1500,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 						int offset0 = start.getOffset();
 						int length0 = lastRegion.getOffset()
 								+ lastRegion.getLength() - offset0 - 1;
-						length0 = contents
-								.substring(offset0, offset0 + length0).trim()
-								.length();
+						length0 = contents.substring(offset0, offset0 + length0)
+								.trim().length();
 						IRegion fullRegion = new Region(offset0, length0);
 						if (isMultilineRegion(d, fullRegion)) {
 							regions.add(fullRegion);

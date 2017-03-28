@@ -158,8 +158,8 @@ public class DelegatingFoldingStructureProvider implements
 	/**
 	 * A {@link ProjectionAnnotation} for code.
 	 */
-	private static final class ScriptProjectionAnnotation extends
-			ProjectionAnnotation {
+	private static final class ScriptProjectionAnnotation
+			extends ProjectionAnnotation {
 
 		final AnnotationKey stamp;
 
@@ -261,8 +261,8 @@ public class DelegatingFoldingStructureProvider implements
 	 * away the region from after the '/**' to the beginning of the content, the
 	 * other from after the first content line until after the comment.
 	 */
-	private static final class CommentPosition extends Position implements
-			IProjectionPosition {
+	private static final class CommentPosition extends Position
+			implements IProjectionPosition {
 		CommentPosition(int offset, int length) {
 			super(offset, length);
 		}
@@ -295,8 +295,8 @@ public class DelegatingFoldingStructureProvider implements
 			}
 			if (captionLine < lastLine) {
 				int postOffset = document.getLineOffset(captionLine + 1);
-				IRegion postRegion = new Region(postOffset, offset + length
-						- postOffset);
+				IRegion postRegion = new Region(postOffset,
+						offset + length - postOffset);
 				if (preRegion == null)
 					return new IRegion[] { postRegion };
 				return new IRegion[] { preRegion, postRegion };
@@ -315,7 +315,8 @@ public class DelegatingFoldingStructureProvider implements
 		 * @return the first index of a unicode identifier part, or zero if none
 		 *         can be found
 		 */
-		private int findFirstContent(final CharSequence content, int prefixEnd) {
+		private int findFirstContent(final CharSequence content,
+				int prefixEnd) {
 			int lenght = content.length();
 			for (int i = prefixEnd; i < lenght; i++) {
 				if (Character.isUnicodeIdentifierPart(content.charAt(i)))
@@ -337,8 +338,8 @@ public class DelegatingFoldingStructureProvider implements
 	 * away the lines before the one containing the simple name of the script
 	 * element, one folding away any lines after the caption.
 	 */
-	private static final class ScriptElementPosition extends Position implements
-			IProjectionPosition {
+	private static final class ScriptElementPosition extends Position
+			implements IProjectionPosition {
 		public ScriptElementPosition(int offset, int length) {
 			super(offset, length);
 		}
@@ -371,8 +372,8 @@ public class DelegatingFoldingStructureProvider implements
 			}
 			if (captionLine < lastLine) {
 				int postOffset = document.getLineOffset(captionLine + 1);
-				IRegion postRegion = new Region(postOffset, offset + length
-						- postOffset);
+				IRegion postRegion = new Region(postOffset,
+						offset + length - postOffset);
 				if (preRegion == null)
 					return new IRegion[] { postRegion };
 				return new IRegion[] { preRegion, postRegion };
@@ -435,7 +436,8 @@ public class DelegatingFoldingStructureProvider implements
 		public void elementChanged(ElementChangedEvent e) {
 			IModelElementDelta delta = findElement(fInput, e.getDelta());
 			if (delta != null
-					&& (delta.getFlags() & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_CHILDREN)) != 0)
+					&& (delta.getFlags() & (IModelElementDelta.F_CONTENT
+							| IModelElementDelta.F_CHILDREN)) != 0)
 				update(createContext(false));
 		}
 
@@ -619,7 +621,8 @@ public class DelegatingFoldingStructureProvider implements
 		IDocument doc = getDocument();
 		if (doc == null)
 			return null;
-		return new FoldingStructureComputationContext(doc, model, allowCollapse);
+		return new FoldingStructureComputationContext(doc, model,
+				allowCollapse);
 	}
 
 	private IModelElement getInputElement() {
@@ -676,7 +679,8 @@ public class DelegatingFoldingStructureProvider implements
 		}
 		Map<Annotation, Position> updated = ctx.fMap;
 		Map<AnnotationKey, List<Tuple>> previous = computeCurrentStructure(ctx);
-		for (Iterator<Annotation> e = updated.keySet().iterator(); e.hasNext();) {
+		for (Iterator<Annotation> e = updated.keySet().iterator(); e
+				.hasNext();) {
 			ScriptProjectionAnnotation newAnnotation = (ScriptProjectionAnnotation) e
 					.next();
 			AnnotationKey stamp = newAnnotation.stamp;
@@ -691,16 +695,15 @@ public class DelegatingFoldingStructureProvider implements
 					Tuple tuple = x.next();
 					ScriptProjectionAnnotation existingAnnotation = tuple.annotation;
 					Position existingPosition = tuple.position;
-					if (existingPosition != null
-							&& (!newPosition.equals(existingPosition) || ctx
-									.allowCollapsing()
-									&& existingAnnotation.isCollapsed() != newAnnotation
+					if (existingPosition != null && (!newPosition
+							.equals(existingPosition)
+							|| ctx.allowCollapsing() && existingAnnotation
+									.isCollapsed() != newAnnotation
 											.isCollapsed())) {
 						existingPosition.setOffset(newPosition.getOffset());
 						existingPosition.setLength(newPosition.getLength());
-						if (ctx.allowCollapsing()
-								&& existingAnnotation.isCollapsed() != newAnnotation
-										.isCollapsed())
+						if (ctx.allowCollapsing() && existingAnnotation
+								.isCollapsed() != newAnnotation.isCollapsed())
 							if (newAnnotation.isCollapsed())
 								existingAnnotation.markCollapsed();
 							else
@@ -727,7 +730,8 @@ public class DelegatingFoldingStructureProvider implements
 					+ " additions=" + additions.size() + " deletions="
 					+ deletions.size() + " updates=" + updates.size());
 		}
-		if (!(deletions.isEmpty() && additions.isEmpty() && updated.isEmpty())) {
+		if (!(deletions.isEmpty() && additions.isEmpty()
+				&& updated.isEmpty())) {
 			ctx.getModel().modifyAnnotations(
 					deletions.toArray(new Annotation[deletions.size()]),
 					additions, updates.toArray(new Annotation[updates.size()]));
@@ -860,8 +864,8 @@ public class DelegatingFoldingStructureProvider implements
 		IDocument document = ctx.getDocument();
 		try {
 			int start = document.getLineOfOffset(region.getOffset());
-			int end = document.getLineOfOffset(region.getOffset()
-					+ region.getLength());
+			int end = document
+					.getLineOfOffset(region.getOffset() + region.getLength());
 			if (start + lineCountDelta > end)
 				return null;
 			int offset = document.getLineOffset(start);
@@ -880,8 +884,7 @@ public class DelegatingFoldingStructureProvider implements
 	}
 
 	private ProjectionAnnotationModel getModel() {
-		return fEditor
-				.getAdapter(ProjectionAnnotationModel.class);
+		return fEditor.getAdapter(ProjectionAnnotationModel.class);
 	}
 
 	private IDocument getDocument() {
@@ -893,9 +896,9 @@ public class DelegatingFoldingStructureProvider implements
 			FoldingStructureComputationContext ctx) {
 		Map<AnnotationKey, List<Tuple>> map = new HashMap<AnnotationKey, List<Tuple>>();
 		ProjectionAnnotationModel model = ctx.getModel();
-		Iterator<?> e = model.getAnnotationIterator();
+		Iterator<Annotation> e = model.getAnnotationIterator();
 		while (e.hasNext()) {
-			Object annotation = e.next();
+			Annotation annotation = e.next();
 			if (annotation instanceof ScriptProjectionAnnotation) {
 				ScriptProjectionAnnotation ann = (ScriptProjectionAnnotation) annotation;
 				Position position = model.getPosition(ann);
@@ -907,25 +910,21 @@ public class DelegatingFoldingStructureProvider implements
 				list.add(new Tuple(ann, position));
 			}
 		}
-		Comparator<Tuple> comparator = (o1, o2) -> o1.position.getOffset() - o2.position.getOffset();
-		for (Iterator<List<Tuple>> it = map.values().iterator(); it.hasNext();) {
+		Comparator<Tuple> comparator = (o1, o2) -> o1.position.getOffset()
+				- o2.position.getOffset();
+		for (Iterator<List<Tuple>> it = map.values().iterator(); it
+				.hasNext();) {
 			List<Tuple> list = it.next();
 			Collections.sort(list, comparator);
 		}
 		return map;
 	}
 
-	/*
-	 * @see IScriptFoldingStructureProviderExtension#collapseMembers()
-	 */
 	@Override
 	public final void collapseMembers() {
 		modifyFiltered(fMemberFilter, false);
 	}
 
-	/*
-	 * @see IScriptFoldingStructureProviderExtension#collapseComments()
-	 */
 	@Override
 	public final void collapseComments() {
 		modifyFiltered(fCommentFilter, false);
@@ -947,9 +946,9 @@ public class DelegatingFoldingStructureProvider implements
 		if (model == null)
 			return;
 		List<Annotation> modified = new ArrayList<Annotation>();
-		Iterator<?> iter = model.getAnnotationIterator();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
 		while (iter.hasNext()) {
-			Object annotation = iter.next();
+			Annotation annotation = iter.next();
 			if (annotation instanceof ScriptProjectionAnnotation) {
 				ScriptProjectionAnnotation annot = (ScriptProjectionAnnotation) annotation;
 				if (expand == annot.isCollapsed() && filter.match(annot)) {
@@ -1096,17 +1095,18 @@ public class DelegatingFoldingStructureProvider implements
 					return;
 				}
 				if (element == null) {
-					element = new SourceRangeStamp(region.getLength(), content
-							.get(region).hashCode());
+					element = new SourceRangeStamp(region.getLength(),
+							content.get(region).hashCode());
 				}
-				Position position = kind.isComment() ? createCommentPosition(normalized)
+				Position position = kind.isComment()
+						? createCommentPosition(normalized)
 						: createMemberPosition(normalized);
 				if (position == null) {
 					return;
 				}
-				ctx.addProjectionRange(
-						new ScriptProjectionAnnotation(ctx.allowCollapsing()
-								&& collapse, kind, element), position);
+				ctx.addProjectionRange(new ScriptProjectionAnnotation(
+						ctx.allowCollapsing() && collapse, kind, element),
+						position);
 			} catch (StringIndexOutOfBoundsException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();

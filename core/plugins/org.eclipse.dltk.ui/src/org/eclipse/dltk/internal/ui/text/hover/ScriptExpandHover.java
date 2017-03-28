@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,6 @@ import org.eclipse.dltk.ui.editor.IScriptAnnotation;
 import org.eclipse.dltk.ui.editor.ScriptMarkerAnnotation;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControlExtension2;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.CompositeRuler;
@@ -41,25 +40,25 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
 
-/**
- *
- *
- */
 public class ScriptExpandHover extends AnnotationExpandHover {
 
 	/** Id of the no breakpoint fake annotation */
-	public static final String NO_BREAKPOINT_ANNOTATION= "org.eclipse.jdt.internal.ui.NoBreakpointAnnotation"; //$NON-NLS-1$
+	public static final String NO_BREAKPOINT_ANNOTATION = "org.eclipse.jdt.internal.ui.NoBreakpointAnnotation"; //$NON-NLS-1$
 
-	private static class NoBreakpointAnnotation extends Annotation implements IAnnotationPresentation {
+	private static class NoBreakpointAnnotation extends Annotation
+			implements IAnnotationPresentation {
 
 		public NoBreakpointAnnotation() {
-			super(NO_BREAKPOINT_ANNOTATION, false, ScriptHoverMessages.NoBreakpointAnnotation_addBreakpoint);
+			super(NO_BREAKPOINT_ANNOTATION, false,
+					ScriptHoverMessages.NoBreakpointAnnotation_addBreakpoint);
 		}
 
 		@Override
 		public void paint(GC gc, Canvas canvas, Rectangle bounds) {
-			// draw affordance so the user know she can click here to get a breakpoint
-			Image fImage= DLTKPluginImages.get(DLTKPluginImages.IMG_FIELD_DEFAULT);
+			// draw affordance so the user know she can click here to get a
+			// breakpoint
+			Image fImage = DLTKPluginImages
+					.get(DLTKPluginImages.IMG_FIELD_DEFAULT);
 			ImageUtilities.drawImage(fImage, gc, canvas, bounds, SWT.CENTER);
 		}
 
@@ -69,50 +68,60 @@ public class ScriptExpandHover extends AnnotationExpandHover {
 		}
 	}
 
-	private AnnotationPreferenceLookup fLookup= new AnnotationPreferenceLookup();
-	private IPreferenceStore fStore= DLTKUIPlugin.getDefault().getPreferenceStore();
+	private AnnotationPreferenceLookup fLookup = new AnnotationPreferenceLookup();
+	private IPreferenceStore fStore = DLTKUIPlugin.getDefault()
+			.getPreferenceStore();
 
-	public ScriptExpandHover(CompositeRuler ruler, IAnnotationAccess access, IDoubleClickListener doubleClickListener) {
+	public ScriptExpandHover(CompositeRuler ruler, IAnnotationAccess access,
+			IDoubleClickListener doubleClickListener) {
 		super(ruler, access, doubleClickListener);
 	}
 
 	@Override
-	protected Object getHoverInfoForLine(final ISourceViewer viewer, final int line) {
-		final boolean showTemporaryProblems= DLTKUIPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_CORRECTION_INDICATION);
-		IAnnotationModel model= viewer.getAnnotationModel();
-		IDocument document= viewer.getDocument();
+	protected Object getHoverInfoForLine(final ISourceViewer viewer,
+			final int line) {
+		final boolean showTemporaryProblems = DLTKUIPlugin.getDefault()
+				.getPreferenceStore()
+				.getBoolean(PreferenceConstants.EDITOR_CORRECTION_INDICATION);
+		IAnnotationModel model = viewer.getAnnotationModel();
+		IDocument document = viewer.getDocument();
 
 		if (model == null)
 			return null;
 
 		List<Annotation> exact = new ArrayList<Annotation>();
-		HashMap messagesAtPosition= new HashMap();
+		HashMap messagesAtPosition = new HashMap();
 
-		Iterator e= model.getAnnotationIterator();
+		Iterator<Annotation> e = model.getAnnotationIterator();
 		while (e.hasNext()) {
-			Annotation annotation= (Annotation) e.next();
+			Annotation annotation = e.next();
 
 			if (fAnnotationAccess instanceof IAnnotationAccessExtension)
-				if (!((IAnnotationAccessExtension)fAnnotationAccess).isPaintable(annotation))
+				if (!((IAnnotationAccessExtension) fAnnotationAccess)
+						.isPaintable(annotation))
 					continue;
-			
-			if (annotation instanceof IScriptAnnotation && !isIncluded((IScriptAnnotation)annotation, showTemporaryProblems))
+
+			if (annotation instanceof IScriptAnnotation
+					&& !isIncluded((IScriptAnnotation) annotation,
+							showTemporaryProblems))
 				continue;
 
-			AnnotationPreference pref= fLookup.getAnnotationPreference(annotation);
+			AnnotationPreference pref = fLookup
+					.getAnnotationPreference(annotation);
 			if (pref != null) {
-				String key= pref.getVerticalRulerPreferenceKey();
+				String key = pref.getVerticalRulerPreferenceKey();
 				if (key != null && !fStore.getBoolean(key))
 					continue;
 			}
 
-			Position position= model.getPosition(annotation);
+			Position position = model.getPosition(annotation);
 			if (position == null)
 				continue;
 
 			if (compareRulerLine(position, document, line) == 1) {
 
-				if (isDuplicateMessage(messagesAtPosition, position, annotation.getText()))
+				if (isDuplicateMessage(messagesAtPosition, position,
+						annotation.getText()))
 					continue;
 
 				exact.add(annotation);
@@ -133,50 +142,51 @@ public class ScriptExpandHover extends AnnotationExpandHover {
 		if (exact.size() <= 1)
 			return null;
 
-		AnnotationHoverInput input= new AnnotationHoverInput();
+		AnnotationHoverInput input = new AnnotationHoverInput();
 		input.fAnnotations = exact.toArray(new Annotation[0]);
-		input.fViewer= viewer;
-		input.fRulerInfo= fCompositeRuler;
-		input.fAnnotationListener= fgListener;
-		input.fDoubleClickListener= fDblClickListener;
-		input.redoAction= new AnnotationExpansionControl.ICallback() {
-
-			@Override
-			public void run(IInformationControlExtension2 control) {
-				control.setInput(getHoverInfoForLine(viewer, line));
-			}
-
-		};
-		input.model= model;
+		input.fViewer = viewer;
+		input.fRulerInfo = fCompositeRuler;
+		input.fAnnotationListener = fgListener;
+		input.fDoubleClickListener = fDblClickListener;
+		input.redoAction = control -> control
+				.setInput(getHoverInfoForLine(viewer, line));
+		input.model = model;
 
 		return input;
 	}
 
-	private boolean isIncluded(IScriptAnnotation annotation, boolean showTemporaryProblems) {
-		
+	private boolean isIncluded(IScriptAnnotation annotation,
+			boolean showTemporaryProblems) {
+
 		// XXX: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=138601
-		if (annotation instanceof ProblemAnnotation && ScriptMarkerAnnotation.TASK_ANNOTATION_TYPE.equals(annotation.getType()))
+		if (annotation instanceof ProblemAnnotation
+				&& ScriptMarkerAnnotation.TASK_ANNOTATION_TYPE
+						.equals(annotation.getType()))
 			return false;
-		
+
 		if (!annotation.isProblem())
 			return true;
-		
+
 		if (annotation.isMarkedDeleted() && !annotation.hasOverlay())
 			return true;
-		
+
 		if (annotation.hasOverlay() && !annotation.isMarkedDeleted())
 			return true;
-		
-		
+
 		if (annotation.hasOverlay())
-			return (!isIncluded(annotation.getOverlay(), showTemporaryProblems));
-		
-		return showTemporaryProblems /*&& JavaCorrectionProcessor.hasCorrections((Annotation)annotation)*/;
+			return (!isIncluded(annotation.getOverlay(),
+					showTemporaryProblems));
+
+		return showTemporaryProblems /*
+										 * && JavaCorrectionProcessor.
+										 * hasCorrections((Annotation)
+										 * annotation)
+										 */;
 	}
 
 	@Override
 	protected int getOrder(Annotation annotation) {
-		if (isBreakpointAnnotation(annotation)) 
+		if (isBreakpointAnnotation(annotation))
 			return 1000;
 		else
 			return super.getOrder(annotation);
@@ -184,7 +194,7 @@ public class ScriptExpandHover extends AnnotationExpandHover {
 
 	private boolean isBreakpointAnnotation(Annotation a) {
 		if (a instanceof ScriptMarkerAnnotation) {
-			ScriptMarkerAnnotation jma= (ScriptMarkerAnnotation) a;
+			ScriptMarkerAnnotation jma = (ScriptMarkerAnnotation) a;
 			// HACK to get breakpoints to show up first
 			return jma.getType().equals("org.eclipse.debug.core.breakpoint"); //$NON-NLS-1$
 		}

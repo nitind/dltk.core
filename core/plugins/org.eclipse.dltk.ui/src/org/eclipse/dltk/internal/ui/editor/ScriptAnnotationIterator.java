@@ -23,7 +23,7 @@ import org.eclipse.ui.texteditor.MarkerAnnotation;
  */
 public class ScriptAnnotationIterator implements Iterator<Annotation> {
 
-	private Iterator<?> fIterator;
+	private Iterator<Annotation> fIterator;
 	private Annotation fNext;
 	private boolean fReturnAllAnnotations;
 
@@ -57,13 +57,13 @@ public class ScriptAnnotationIterator implements Iterator<Annotation> {
 		if (model != null)
 			fIterator = model.getAnnotationIterator();
 		else
-			fIterator = Collections.EMPTY_LIST.iterator();
+			fIterator = Collections.emptyIterator();
 		skip();
 	}
 
 	private void skip() {
 		while (fIterator.hasNext()) {
-			Annotation next = (Annotation) fIterator.next();
+			Annotation next = fIterator.next();
 			if (next.isMarkedDeleted())
 				continue;
 			if (fReturnAllAnnotations || next instanceof IScriptAnnotation

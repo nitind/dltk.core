@@ -107,8 +107,8 @@ public class ScriptSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 					.getAdapter(ITextOperationTarget.class);
 			final int opCode = ISourceViewer.QUICK_ASSIST;
 			if (operation != null && operation.canDoOperation(opCode)) {
-				fTextEditor.selectAndReveal(fPosition.getOffset(), fPosition
-						.getLength());
+				fTextEditor.selectAndReveal(fPosition.getOffset(),
+						fPosition.getLength());
 				operation.doOperation(opCode);
 			}
 			return;
@@ -138,7 +138,7 @@ public class ScriptSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 			return;
 		}
 
-		initialize(fBundle, "JavaSelectAnnotationRulerAction.GotoAnnotation."); //$NON-NLS-1$;
+		initialize(fBundle, "JavaSelectAnnotationRulerAction.GotoAnnotation."); //$NON-NLS-1$ ;
 		super.update();
 	}
 
@@ -157,11 +157,11 @@ public class ScriptSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 		boolean hasAssistLightbulb = false;
 		// fStore.getBoolean(TclPreferenceConstants.EDITOR_QUICKASSIST_LIGHTBULB);
 
-		Iterator iter = model.getAnnotationIterator();
+		Iterator<Annotation> iter = model.getAnnotationIterator();
 		int layer = Integer.MIN_VALUE;
 
 		while (iter.hasNext()) {
-			Annotation annotation = (Annotation) iter.next();
+			Annotation annotation = iter.next();
 			if (annotation.isMarkedDeleted())
 				continue;
 
