@@ -113,6 +113,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 		setUpScriptProject(BUILDPATH_PRJ_1);
 		setUpScriptProject("p1");
 		setUpScriptProject("p2");
+		deleteProject("P");
+
 	}
 
 	private void assertEncodeDecodeEntry(String projectName,
@@ -1193,7 +1195,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 * can be written. (regression test for bug
 	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=70193)
 	 */
-	public void testEncoding() throws CoreException {
+	public void testEncoding() throws CoreException, IOException {
 		try {
 			createScriptProject("P", TEST_NATURE, new String[] { "src\u3400" });
 			IFile file = getFile("/P/.buildpath");

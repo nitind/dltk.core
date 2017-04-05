@@ -14,6 +14,7 @@ import org.eclipse.dltk.debug.dbgp.tests.DbgpRequestTests;
 import org.eclipse.dltk.debug.dbgp.tests.DbgpStackCommandsTests;
 import org.eclipse.dltk.debug.dbgp.tests.DbgpStackLevelTests;
 import org.eclipse.dltk.debug.dbgp.tests.DbgpStatusTests;
+import org.eclipse.dltk.debug.dbgp.tests.ScriptBreakpointManagerTest;
 import org.eclipse.dltk.debug.dbgp.tests.service.DbgpServiceTests;
 import org.eclipse.dltk.debug.tests.breakpoints.BreakpointTests;
 import org.eclipse.dltk.internal.debug.tests.VariableNameComparatorTest;
@@ -22,8 +23,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ DbgpRequestTests.class, DbgpStackLevelTests.class, DbgpPropertyCommandsTests.class,
-		DbgpStackCommandsTests.class, DbgpBase64Tests.class, DbgpStatusTests.class,
-		DbgpServiceTests.class, BreakpointTests.class, VariableNameComparatorTest.class })
+		DbgpStackCommandsTests.class, DbgpBase64Tests.class, DbgpStatusTests.class, DbgpServiceTests.class,
+		BreakpointTests.class, VariableNameComparatorTest.class, ScriptBreakpointManagerTest.class })
 public class AllTests {
 
 }

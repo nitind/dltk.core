@@ -10,6 +10,8 @@ package org.eclipse.dltk.internal.debug.core.model;
 import java.net.URI;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
@@ -60,12 +62,7 @@ public class ScriptBreakpointManager
 
 	private IDbgpSession[] sessions;
 
-	// Utility methods
-	protected static IBreakpointManager getBreakpointManager() {
-		return DebugPlugin.getDefault().getBreakpointManager();
-	}
-
-	protected static DbgpBreakpointConfig createBreakpointConfig(
+	protected DbgpBreakpointConfig createBreakpointConfig(
 			IScriptBreakpoint breakpoint) throws CoreException {
 		// Enabled
 		boolean enabled = breakpoint.isEnabled()
@@ -92,10 +89,24 @@ public class ScriptBreakpointManager
 		return config;
 	}
 
+	/** Use makeExpression(IScriptWatchpoint) */
+	@Deprecated
 	protected static String makeWatchpointExpression(
 			IScriptWatchpoint watchpoint) throws CoreException {
 		final IDLTKDebugToolkit debugToolkit = ScriptDebugManager.getInstance()
 				.getDebugToolkitByDebugModel(watchpoint.getModelIdentifier());
+		return makeExpression(watchpoint, debugToolkit);
+	}
+
+	protected String makeExpression(
+			IScriptWatchpoint watchpoint) throws CoreException {
+		final IDLTKDebugToolkit debugToolkit = debugToolkitByModelId
+				.apply(watchpoint.getModelIdentifier());
+		return makeExpression(watchpoint, debugToolkit);
+	}
+
+	private static String makeExpression(IScriptWatchpoint watchpoint,
+			final IDLTKDebugToolkit debugToolkit) throws CoreException {
 		if (debugToolkit instanceof IDLTKDebugToolkit2) {
 			if (((IDLTKDebugToolkit2) debugToolkit)
 					.isWatchpointComplexSupported()) {
@@ -134,7 +145,7 @@ public class ScriptBreakpointManager
 		// Type specific
 		if (breakpoint instanceof IScriptWatchpoint) {
 			IScriptWatchpoint watchpoint = (IScriptWatchpoint) breakpoint;
-			config.setExpression(makeWatchpointExpression(watchpoint));
+			config.setExpression(makeExpression(watchpoint));
 			config.setLineNo(watchpoint.getLineNumber());
 			if (bpLineMapper != null) {
 				bpLineMapper.toDebuggerBreakpoint(bpUri, config.getLineNo(),
@@ -259,7 +270,7 @@ public class ScriptBreakpointManager
 				final DbgpBreakpointConfig config = createBreakpointConfig(
 						breakpoint);
 				if (breakpoint instanceof IScriptWatchpoint) {
-					config.setExpression(makeWatchpointExpression(
+					config.setExpression(makeExpression(
 							(IScriptWatchpoint) breakpoint));
 				}
 				commands.updateBreakpoint(id, config);
@@ -384,6 +395,8 @@ public class ScriptBreakpointManager
 
 	// DebugTarget
 	private final IScriptDebugTarget target;
+	private final IBreakpointManager breakpointManager;
+	private final Function<String, IDLTKDebugToolkit> debugToolkitByModelId;
 
 	private static void changeSpawnpoint(final IDbgpSession session,
 			IScriptSpawnpoint spawnpoint) throws DbgpException, CoreException {
@@ -412,11 +425,16 @@ public class ScriptBreakpointManager
 
 	public ScriptBreakpointManager(IScriptDebugTarget target,
 			IScriptBreakpointPathMapper pathMapper,
-			IScriptBreakpointLineMapper lineMapper) {
-		this.target = target;
-		this.bpPathMapper = pathMapper;
-		this.bpLineMapper = lineMapper;
+			IScriptBreakpointLineMapper lineMapper,
+			IBreakpointManager breakpointManager,
+			Function<String, IDLTKDebugToolkit> debugToolkitByModelId) {
+		this.target = Objects.requireNonNull(target);
+		this.debugToolkitByModelId = Objects
+				.requireNonNull(debugToolkitByModelId);
+		this.bpPathMapper = Objects.requireNonNull(pathMapper);
+		this.bpLineMapper = Objects.requireNonNull(lineMapper);
 		this.sessions = NO_SESSIONS;
+		this.breakpointManager = breakpointManager;
 	}
 
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
@@ -428,6 +446,10 @@ public class ScriptBreakpointManager
 
 		manager.addBreakpointListener(target);
 		manager.addBreakpointManagerListener(this);
+	}
+
+	private IBreakpointManager getBreakpointManager() {
+		return breakpointManager;
 	}
 
 	public void threadTerminated() {

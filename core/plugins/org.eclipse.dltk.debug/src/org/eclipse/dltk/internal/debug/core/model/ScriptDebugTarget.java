@@ -43,6 +43,7 @@ import org.eclipse.dltk.debug.core.DLTKDebugPlugin;
 import org.eclipse.dltk.debug.core.ExtendedDebugEventDetails;
 import org.eclipse.dltk.debug.core.IDbgpService;
 import org.eclipse.dltk.debug.core.IDebugOptions;
+import org.eclipse.dltk.debug.core.ScriptDebugManager;
 import org.eclipse.dltk.debug.core.model.DefaultDebugOptions;
 import org.eclipse.dltk.debug.core.model.IScriptBreakpoint;
 import org.eclipse.dltk.debug.core.model.IScriptBreakpointLineMapper;
@@ -136,7 +137,9 @@ public class ScriptDebugTarget extends ScriptDebugElement implements
 
 		lineMapper = createLineMapper();
 		this.breakpointManager = new ScriptBreakpointManager(this,
-				createPathMapper(), lineMapper);
+				createPathMapper(), lineMapper,
+				DebugPlugin.getDefault().getBreakpointManager(),
+				ScriptDebugManager.getInstance()::getDebugToolkitByDebugModel);
 
 		DebugEventHelper.fireCreateEvent(this);
 		synchronized (targets) {
