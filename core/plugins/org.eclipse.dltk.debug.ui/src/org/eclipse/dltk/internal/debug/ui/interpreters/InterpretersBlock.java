@@ -114,7 +114,7 @@ public abstract class InterpretersBlock
 	/**
 	 * Selection listeners (checked InterpreterEnvironment changes)
 	 */
-	private ListenerList fSelectionListeners = new ListenerList();
+	private ListenerList<ISelectionChangedListener> fSelectionListeners = new ListenerList<>();
 
 	/**
 	 * Previous selection
@@ -180,49 +180,23 @@ public abstract class InterpretersBlock
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener
-	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
-	 */
 	@Override
 	public void addSelectionChangedListener(
 			ISelectionChangedListener listener) {
 		fSelectionListeners.add(listener);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-	 */
 	@Override
 	public ISelection getSelection() {
 		return new StructuredSelection(fInterpreterList.getCheckedElements());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.jface.viewers.ISelectionProvider#
-	 * removeSelectionChangedListener
-	 * (org.eclipse.jface.viewers.ISelectionChangedListener)
-	 */
 	@Override
 	public void removeSelectionChangedListener(
 			ISelectionChangedListener listener) {
 		fSelectionListeners.remove(listener);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse
-	 * .jface.viewers.ISelection)
-	 */
 	@Override
 	public void setSelection(ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
@@ -450,9 +424,7 @@ public abstract class InterpretersBlock
 	private void fireSelectionChanged() {
 		SelectionChangedEvent event = new SelectionChangedEvent(this,
 				getSelection());
-		Object[] listeners = fSelectionListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			ISelectionChangedListener listener = (ISelectionChangedListener) listeners[i];
+		for (ISelectionChangedListener listener : fSelectionListeners) {
 			listener.selectionChanged(event);
 		}
 	}

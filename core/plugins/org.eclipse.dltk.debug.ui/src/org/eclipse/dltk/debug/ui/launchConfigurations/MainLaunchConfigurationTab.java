@@ -62,7 +62,7 @@ public abstract class MainLaunchConfigurationTab extends
 
 	private boolean useInteractiveConsoleGroup = false;
 
-	private final ListenerList listeners = new ListenerList();
+	private final ListenerList<IMainLaunchConfigurationTabListener> listeners = new ListenerList<>();
 
 	public MainLaunchConfigurationTab(String mode) {
 		super(mode);
@@ -99,18 +99,14 @@ public abstract class MainLaunchConfigurationTab extends
 			}
 		}
 		lastProjectNotification = project;
-		Object[] list = this.listeners.getListeners();
-		for (int i = 0; i < list.length; i++) {
-			((IMainLaunchConfigurationTabListener) list[i])
-					.projectChanged(project);
+		for (IMainLaunchConfigurationTabListener listener : this.listeners) {
+			listener.projectChanged(project);
 		}
 	}
 
 	private void notifyInteractiveChangedListeners(boolean value) {
-		Object[] list = this.listeners.getListeners();
-		for (int i = 0; i < list.length; i++) {
-			((IMainLaunchConfigurationTabListener) list[i])
-					.interactiveChanged(value);
+		for (IMainLaunchConfigurationTabListener listener : listeners) {
+			listener.interactiveChanged(value);
 		}
 	}
 

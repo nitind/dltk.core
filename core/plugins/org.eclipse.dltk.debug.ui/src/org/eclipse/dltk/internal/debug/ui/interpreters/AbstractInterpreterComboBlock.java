@@ -82,7 +82,7 @@ public class AbstractInterpreterComboBlock {
 	/**
 	 * InterpreterEnvironment change listeners
 	 */
-	private ListenerList fListeners = new ListenerList();
+	private ListenerList<IPropertyChangeListener> fListeners = new ListenerList<>();
 
 	/**
 	 * Default InterpreterEnvironment descriptor or <code>null</code> if none.
@@ -142,9 +142,7 @@ public class AbstractInterpreterComboBlock {
 	private void firePropertyChange() {
 		PropertyChangeEvent event = new PropertyChangeEvent(this,
 				PROPERTY_INTERPRETER, null, getInterpreterPath());
-		Object[] listeners = fListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			IPropertyChangeListener listener = (IPropertyChangeListener) listeners[i];
+		for (IPropertyChangeListener listener : fListeners) {
 			listener.propertyChange(event);
 		}
 	}

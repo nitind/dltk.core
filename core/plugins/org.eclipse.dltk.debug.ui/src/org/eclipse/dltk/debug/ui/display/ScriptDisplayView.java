@@ -90,7 +90,7 @@ public class ScriptDisplayView extends PageBookView
 	/**
 	 * Map of consoles to array of page participants
 	 */
-	private Map<IConsole, ListenerList> fConsoleToPageParticipants;
+	private Map<IConsole, ListenerList<IConsolePageParticipant>> fConsoleToPageParticipants;
 
 	/**
 	 * Map of parts to consoles
@@ -204,11 +204,10 @@ public class ScriptDisplayView extends PageBookView
 	private void activateParticipants(IConsole console) {
 		// activate
 		if (console != null && fActive) {
-			final ListenerList listeners = getParticipants(console);
+			final ListenerList<IConsolePageParticipant> listeners = getParticipants(
+					console);
 			if (listeners != null) {
-				Object[] participants = listeners.getListeners();
-				for (int i = 0; i < participants.length; i++) {
-					final IConsolePageParticipant participant = (IConsolePageParticipant) participants[i];
+				for (final IConsolePageParticipant participant : listeners) {
 					SafeRunner.run(new ISafeRunnable() {
 						@Override
 						public void run() throws Exception {
@@ -270,11 +269,10 @@ public class ScriptDisplayView extends PageBookView
 		IConsole console = fPartToConsole.get(part);
 
 		// dispose page participants
-		ListenerList listeners = fConsoleToPageParticipants.remove(console);
+		ListenerList<IConsolePageParticipant> listeners = fConsoleToPageParticipants
+				.remove(console);
 		if (listeners != null) {
-			Object[] participants = listeners.getListeners();
-			for (int i = 0; i < participants.length; i++) {
-				final IConsolePageParticipant participant = (IConsolePageParticipant) participants[i];
+			for (final IConsolePageParticipant participant : listeners) {
 				SafeRunner.run(new ISafeRunnable() {
 					@Override
 					public void run() throws Exception {
@@ -315,7 +313,8 @@ public class ScriptDisplayView extends PageBookView
 	 * @param console
 	 * @return registered page participants or <code>null</code>
 	 */
-	private ListenerList getParticipants(IConsole console) {
+	private ListenerList<IConsolePageParticipant> getParticipants(
+			IConsole console) {
 		return fConsoleToPageParticipants.get(console);
 	}
 
@@ -329,16 +328,14 @@ public class ScriptDisplayView extends PageBookView
 		console.addPropertyChangeListener(this);
 
 		// initialize page participants
-		final ListenerList participants = new ListenerList();
+		final ListenerList<IConsolePageParticipant> participants = new ListenerList<>();
 		IConsolePageParticipant[] consoleParticipants = getPageParticipants(
 				console);
 		for (int i = 0; i < consoleParticipants.length; i++) {
 			participants.add(consoleParticipants[i]);
 		}
 		fConsoleToPageParticipants.put(console, participants);
-		Object[] listeners = participants.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			final IConsolePageParticipant participant = (IConsolePageParticipant) listeners[i];
+		for (final IConsolePageParticipant participant : participants) {
 			SafeRunner.run(new ISafeRunnable() {
 				@Override
 				public void run() throws Exception {
@@ -384,13 +381,6 @@ public class ScriptDisplayView extends PageBookView
 		return page;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.ui.console.IConsoleListener#consolesAdded(org.eclipse.ui.
-	 * console.IConsole[])
-	 */
 	public void addConsole(final IEvaluateConsole console) {
 		if (isAvailable()) {
 			ConsoleWorkbenchPart part = new ConsoleWorkbenchPart(console,
@@ -398,19 +388,12 @@ public class ScriptDisplayView extends PageBookView
 			fConsoleToPart.put(console, part);
 			fPartToConsole.put(part, console);
 			partActivated(part);
-			for (Object listener : consoleListeners.getListeners()) {
-				((IEvaluateConsoleListener) listener).consoleAdded(console);
+			for (IEvaluateConsoleListener listener : consoleListeners) {
+				listener.consoleAdded(console);
 			}
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.ui.console.IConsoleListener#consolesRemoved(org.eclipse.ui
-	 * .console.IConsole[])
-	 */
 	public void consolesRemoved(final IConsole[] consoles) {
 		if (isAvailable()) {
 			Runnable r = () -> {
@@ -648,13 +631,12 @@ public class ScriptDisplayView extends PageBookView
 		if (adpater == null) {
 			IConsole console = getConsole();
 			if (console != null) {
-				ListenerList listeners = getParticipants(console);
+				ListenerList<IConsolePageParticipant> listeners = getParticipants(
+						console);
 				// an adapter can be asked for before the console participants
 				// are created
 				if (listeners != null) {
-					Object[] participants = listeners.getListeners();
-					for (int i = 0; i < participants.length; i++) {
-						IConsolePageParticipant participant = (IConsolePageParticipant) participants[i];
+					for (IConsolePageParticipant participant : listeners) {
 						adpater = participant.getAdapter(key);
 						if (adpater != null) {
 							return adpater;
@@ -736,11 +718,10 @@ public class ScriptDisplayView extends PageBookView
 	private void deactivateParticipants(IConsole console) {
 		// deactivate
 		if (console != null) {
-			final ListenerList listeners = getParticipants(console);
+			final ListenerList<IConsolePageParticipant> listeners = getParticipants(
+					console);
 			if (listeners != null) {
-				Object[] participants = listeners.getListeners();
-				for (int i = 0; i < participants.length; i++) {
-					final IConsolePageParticipant participant = (IConsolePageParticipant) participants[i];
+				for (final IConsolePageParticipant participant : listeners) {
 					SafeRunner.run(new ISafeRunnable() {
 						@Override
 						public void run() throws Exception {
@@ -802,7 +783,7 @@ public class ScriptDisplayView extends PageBookView
 		}
 	}
 
-	private final ListenerList consoleListeners = new ListenerList();
+	private final ListenerList<IEvaluateConsoleListener> consoleListeners = new ListenerList<>();
 
 	public void addConsoleListener(IEvaluateConsoleListener listener) {
 		consoleListeners.add(listener);
