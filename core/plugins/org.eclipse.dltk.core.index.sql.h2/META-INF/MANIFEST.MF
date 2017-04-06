@@ -10,7 +10,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.h2,
  org.eclipse.dltk.core;bundle-version="0.0.0",
  org.eclipse.dltk.core.index.sql;bundle-version="0.0.0"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dltk.core.index.sql.h2,
  org.eclipse.dltk.internal.core.index.sql.h2

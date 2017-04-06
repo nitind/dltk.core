@@ -12,6 +12,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.lucene.core;bundle-version="6.1.0",
  org.apache.lucene.misc;bundle-version="6.1.0",
  org.apache.lucene.analyzers-common;bundle-version="6.1.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dltk.core.index.lucene
