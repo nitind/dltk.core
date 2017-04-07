@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,6 +65,7 @@ public class File implements Serializable {
 		return containerId;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -72,6 +73,7 @@ public class File implements Serializable {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -85,6 +87,7 @@ public class File implements Serializable {
 		return true;
 	}
 
+	@Override
 	public String toString() {
 		return "File [containerId=" + containerId + ", path=" + path + "]";
 	}

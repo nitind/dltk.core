@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,8 +26,9 @@ public class SqlIndex extends Plugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.dltk.core.index.sql"; //$NON-NLS-1$
 
-	public static final boolean DEBUG = Boolean.valueOf(
-			Platform.getDebugOption(PLUGIN_ID + "/debug")).booleanValue(); //$NON-NLS-1$
+	public static final boolean DEBUG = Boolean
+			.valueOf(Platform.getDebugOption(PLUGIN_ID + "/debug")) //$NON-NLS-1$
+			.booleanValue();
 
 	private static SqlIndex plugin;
 
@@ -37,7 +38,7 @@ public class SqlIndex extends Plugin {
 		plugin = this;
 	}
 
-	private static final ListenerList shutdownListeners = new ListenerList();
+	private static final ListenerList<IShutdownListener> shutdownListeners = new ListenerList<>();
 
 	public static void addShutdownListener(IShutdownListener listener) {
 		shutdownListeners.add(listener);
@@ -45,9 +46,8 @@ public class SqlIndex extends Plugin {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		Object[] listeners = shutdownListeners.getListeners();
-		for (int i = 0; i < listeners.length; ++i) {
-			((IShutdownListener) listeners[i]).shutdown();
+		for (IShutdownListener listener : shutdownListeners) {
+			listener.shutdown();
 		}
 		shutdownListeners.clear();
 		plugin = null;
@@ -64,10 +64,8 @@ public class SqlIndex extends Plugin {
 	}
 
 	public static void error(String message) {
-		plugin.getLog()
-				.log(
-						new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK,
-								message, null));
+		plugin.getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK,
+				message, null));
 	}
 
 	public static void error(String message, Throwable t) {

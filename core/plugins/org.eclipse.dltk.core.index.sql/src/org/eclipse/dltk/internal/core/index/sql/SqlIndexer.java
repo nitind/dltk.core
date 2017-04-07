@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,6 +57,7 @@ public class SqlIndexer extends AbstractIndexer {
 		elementDao = db.getElementDao();
 	}
 
+	@Override
 	public void addDeclaration(DeclarationInfo info) {
 
 		try {
@@ -72,6 +73,7 @@ public class SqlIndexer extends AbstractIndexer {
 		}
 	}
 
+	@Override
 	public void addReference(ReferenceInfo info) {
 
 		try {
@@ -86,6 +88,7 @@ public class SqlIndexer extends AbstractIndexer {
 		}
 	}
 
+	@Override
 	public void indexDocument(ISourceModule sourceModule) {
 
 		final IFileHandle fileHandle = EnvironmentPathUtils
@@ -109,17 +112,18 @@ public class SqlIndexer extends AbstractIndexer {
 				if (sourceModule instanceof SourceModule) {
 					containerPath = sourceModule.getScriptProject().getPath();
 				} else {
-					containerPath = sourceModule.getAncestor(
-							IModelElement.PROJECT_FRAGMENT).getPath();
+					containerPath = sourceModule
+							.getAncestor(IModelElement.PROJECT_FRAGMENT)
+							.getPath();
 				}
-				Container container = dbFactory.getContainerDao().insert(
-						connection, containerPath.toString());
+				Container container = dbFactory.getContainerDao()
+						.insert(connection, containerPath.toString());
 
 				String relativePath;
 				if (toolkit instanceof IDLTKLanguageToolkitExtension
 						&& ((IDLTKLanguageToolkitExtension) toolkit)
-								.isArchiveFileName(sourceModule.getPath()
-										.toString())) {
+								.isArchiveFileName(
+										sourceModule.getPath().toString())) {
 					relativePath = ((ExternalSourceModule) sourceModule)
 							.getFullPath().toString();
 				} else {
@@ -127,8 +131,8 @@ public class SqlIndexer extends AbstractIndexer {
 							containerPath.segmentCount());
 				}
 
-				long lastModified = fileHandle == null ? 0 : fileHandle
-						.lastModified();
+				long lastModified = fileHandle == null ? 0
+						: fileHandle.lastModified();
 
 				File existing = dbFactory.getFileDao().select(connection,
 						relativePath, container.getId());
@@ -152,29 +156,29 @@ public class SqlIndexer extends AbstractIndexer {
 				connection.close();
 			}
 		} catch (Exception e) {
-			SqlIndex.error("An exception was thrown while indexing document", e);
+			SqlIndex.error("An exception was thrown while indexing document",
+					e);
 		}
 	}
 
+	@Override
 	public Map<String, Long> getDocuments(IPath containerPath) {
 		try {
 			DbFactory dbFactory = DbFactory.getInstance();
-			Connection connection = dbFactory.createConnection();
-			try {
+
+			try (Connection connection = dbFactory.createConnection()) {
 				Container containerDao = dbFactory.getContainerDao()
 						.selectByPath(connection, containerPath.toString());
 				if (containerDao != null) {
 
 					File[] files = dbFactory.getFileDao().selectByContainerId(
 							connection, containerDao.getId());
-					Map<String, Long> paths = new HashMap<String, Long>();
+					Map<String, Long> paths = new HashMap<>();
 					for (File fileDao : files) {
 						paths.put(fileDao.getPath(), fileDao.getTimestamp());
 					}
 					return paths;
 				}
-			} finally {
-				connection.close();
 			}
 		} catch (SQLException e) {
 			SqlIndex.error(
@@ -184,46 +188,41 @@ public class SqlIndexer extends AbstractIndexer {
 		return null;
 	}
 
+	@Override
 	public void removeContainer(IPath containerPath) {
 		try {
 			DbFactory dbFactory = DbFactory.getInstance();
-			Connection connection = dbFactory.createConnection();
-			try {
+			try (Connection connection = dbFactory.createConnection()) {
 				dbFactory.getContainerDao().deleteByPath(connection,
 						containerPath.toString());
-			} finally {
-				connection.close();
 			}
 		} catch (SQLException e) {
-			SqlIndex.error(
-					NLS.bind(
-							"An exception thrown while removing container ''{0}'' from index",
-							containerPath.toString()), e);
+			SqlIndex.error(NLS.bind(
+					"An exception thrown while removing container ''{0}'' from index",
+					containerPath.toString()), e);
 		}
 	}
 
+	@Override
 	public void removeDocument(IPath containerPath, String relativePath) {
 		try {
 			DbFactory dbFactory = DbFactory.getInstance();
-			Connection connection = dbFactory.createConnection();
-			try {
+			try (Connection connection = dbFactory.createConnection()) {
 				Container containerDao = dbFactory.getContainerDao()
 						.selectByPath(connection, containerPath.toString());
 				if (containerDao != null) {
 					dbFactory.getFileDao().delete(connection, relativePath,
 							containerDao.getId());
 				}
-			} finally {
-				connection.close();
 			}
 		} catch (SQLException e) {
-			SqlIndex.error(
-					NLS.bind(
-							"An exception thrown while removing file ''{0}'' from index",
-							containerPath.append(relativePath).toString()), e);
+			SqlIndex.error(NLS.bind(
+					"An exception thrown while removing file ''{0}'' from index",
+					containerPath.append(relativePath).toString()), e);
 		}
 	}
 
+	@Override
 	public ISearchEngine createSearchEngine() {
 		return new SqlSearchEngine();
 	}

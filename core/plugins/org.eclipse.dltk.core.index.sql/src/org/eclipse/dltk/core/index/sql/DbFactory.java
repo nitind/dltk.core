@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.dltk.core.IShutdownListener;
 
 /**
  * Abstract database access factory
@@ -59,29 +58,24 @@ public abstract class DbFactory {
 								 * We don't want static initialization code to
 								 * be executed during framework shutdown.
 								 */
-								SqlIndex
-										.addShutdownListener(new IShutdownListener() {
-											public void shutdown() {
-												if (instance != null) {
-													try {
-														instance.dispose();
-													} catch (SQLException e) {
-														SqlIndex
-																.error(
-																		"DbFactory.dispose() error",
-																		e);
-													}
-													instance = null;
-												}
-											}
-										});
+								SqlIndex.addShutdownListener(() -> {
+									if (instance != null) {
+										try {
+											instance.dispose();
+										} catch (SQLException e) {
+											SqlIndex.error(
+													"DbFactory.dispose() error",
+													e);
+										}
+										instance = null;
+									}
+								});
 							}
 						}
 					} catch (Exception e) {
-						SqlIndex
-								.error(
-										"An exception has occurred while creating database factory",
-										e);
+						SqlIndex.error(
+								"An exception has occurred while creating database factory",
+								e);
 					}
 				}
 			} finally {

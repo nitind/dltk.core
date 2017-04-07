@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,6 +34,7 @@ public class H2ContainerDao implements IContainerDao {
 	private static final String Q_DELETE_BY_PATH = "DELETE FROM CONTAINERS WHERE PATH=?;"; //$NON-NLS-1$
 	private static final String Q_DELETE_BY_ID = "DELETE FROM CONTAINERS WHERE ID=?;"; //$NON-NLS-1$
 
+	@Override
 	public Container insert(Connection connection, String path)
 			throws SQLException {
 
@@ -42,27 +43,22 @@ public class H2ContainerDao implements IContainerDao {
 			return container;
 		}
 
-		PreparedStatement statement = connection.prepareStatement(Q_INSERT,
-				Statement.RETURN_GENERATED_KEYS);
-		try {
+		try (PreparedStatement statement = connection.prepareStatement(Q_INSERT,
+				Statement.RETURN_GENERATED_KEYS)) {
 			int param = 0;
 			statement.setString(++param, path);
 			statement.executeUpdate();
 
-			ResultSet result = statement.getGeneratedKeys();
-			try {
+			try (ResultSet result = statement.getGeneratedKeys()) {
 				result.next();
 				container = new Container(result.getInt(1), path);
 				H2Cache.addContainer(container);
-			} finally {
-				result.close();
 			}
-		} finally {
-			statement.close();
 		}
 		return container;
 	}
 
+	@Override
 	public Container selectByPath(Connection connection, String path)
 			throws SQLException {
 
@@ -71,28 +67,23 @@ public class H2ContainerDao implements IContainerDao {
 			return container;
 		}
 
-		PreparedStatement statement = connection
-				.prepareStatement(Q_SELECT_BY_PATH);
-		try {
+		try (PreparedStatement statement = connection
+				.prepareStatement(Q_SELECT_BY_PATH)) {
 			int param = 0;
 			statement.setString(++param, path);
-			ResultSet result = statement.executeQuery();
-			try {
+			try (ResultSet result = statement.executeQuery()) {
 				if (result.next()) {
 					container = new Container(result.getInt(1),
 							result.getString(2));
 
 					H2Cache.addContainer(container);
 				}
-			} finally {
-				result.close();
 			}
-		} finally {
-			statement.close();
 		}
 		return container;
 	}
 
+	@Override
 	public Container selectById(Connection connection, int id)
 			throws SQLException {
 
@@ -101,52 +92,44 @@ public class H2ContainerDao implements IContainerDao {
 			return container;
 		}
 
-		PreparedStatement statement = connection
-				.prepareStatement(Q_SELECT_BY_ID);
-		try {
+		try (PreparedStatement statement = connection
+				.prepareStatement(Q_SELECT_BY_ID)) {
 			int param = 0;
 			statement.setInt(++param, id);
-			ResultSet result = statement.executeQuery();
-			try {
+
+			try (ResultSet result = statement.executeQuery()) {
 				if (result.next()) {
 					container = new Container(result.getInt(1),
 							result.getString(2));
 
 					H2Cache.addContainer(container);
 				}
-			} finally {
-				result.close();
 			}
-		} finally {
-			statement.close();
 		}
 		return container;
 	}
 
+	@Override
 	public void deleteById(Connection connection, int id) throws SQLException {
-		PreparedStatement statement = connection
-				.prepareStatement(Q_DELETE_BY_ID);
-		try {
+
+		try (PreparedStatement statement = connection
+				.prepareStatement(Q_DELETE_BY_ID)) {
 			int param = 0;
 			statement.setInt(++param, id);
 			statement.executeUpdate();
-		} finally {
-			statement.close();
 		}
 
 		H2Cache.deleteContainerById(id);
 	}
 
+	@Override
 	public void deleteByPath(Connection connection, String path)
 			throws SQLException {
-		PreparedStatement statement = connection
-				.prepareStatement(Q_DELETE_BY_PATH);
-		try {
+		try (PreparedStatement statement = connection
+				.prepareStatement(Q_DELETE_BY_PATH)) {
 			int param = 0;
 			statement.setString(++param, path);
 			statement.executeUpdate();
-		} finally {
-			statement.close();
 		}
 
 		H2Cache.deleteContainerByPath(path);

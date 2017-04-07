@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,75 +37,65 @@ public class H2FileDao implements IFileDao {
 	private static final String Q_DELETE = "DELETE FROM FILES WHERE PATH=? AND CONTAINER_ID=?;"; //$NON-NLS-1$
 	private static final String Q_DELETE_BY_ID = "DELETE FROM FILES WHERE ID=?;"; //$NON-NLS-1$
 
+	@Override
 	public File insert(Connection connection, String path, long timestamp,
 			int containerId) throws SQLException {
 
-		PreparedStatement statement = connection.prepareStatement(Q_INSERT,
-				Statement.RETURN_GENERATED_KEYS);
-		try {
+		try (PreparedStatement statement = connection.prepareStatement(Q_INSERT,
+				Statement.RETURN_GENERATED_KEYS)) {
 			int param = 0;
 			statement.setString(++param, path);
 			statement.setLong(++param, timestamp);
 			statement.setInt(++param, containerId);
 			statement.executeUpdate();
 
-			ResultSet result = statement.getGeneratedKeys();
-			try {
+			try (ResultSet result = statement.getGeneratedKeys()) {
 				result.next();
 				File file = new File(result.getInt(1), path, timestamp,
 						containerId);
 				H2Cache.addFile(file);
 				return file;
-			} finally {
-				result.close();
 			}
-		} finally {
-			statement.close();
 		}
 	}
 
+	@Override
 	public File select(Connection connection, String path, int containerId)
 			throws SQLException {
 
 		File file = H2Cache.selectFileByContainerIdAndPath(containerId, path);
 		if (file == null) {
-			PreparedStatement statement = connection.prepareStatement(Q_SELECT);
-			try {
+			try (PreparedStatement statement = connection
+					.prepareStatement(Q_SELECT)) {
 				int param = 0;
 				statement.setString(++param, path);
 				statement.setInt(++param, containerId);
-				ResultSet result = statement.executeQuery();
-				try {
+				try (ResultSet result = statement.executeQuery()) {
 					if (result.next()) {
 						file = new File(result.getInt(1), result.getString(2),
 								result.getLong(3), result.getInt(4));
 
 						H2Cache.addFile(file);
 					}
-				} finally {
-					result.close();
 				}
-			} finally {
-				statement.close();
 			}
 		}
 		return file;
 	}
 
+	@Override
 	public File[] selectByContainerId(Connection connection, int containerId)
 			throws SQLException {
 
 		File[] files = H2Cache.selectFilesByContainerIdAsArray(containerId);
 		if (files == null) {
-			List<File> containerFiles = new LinkedList<File>();
+			List<File> containerFiles = new LinkedList<>();
 
-			PreparedStatement statement = connection
-					.prepareStatement(Q_SELECT_BY_CONTAINER_ID);
-			try {
+			try (PreparedStatement statement = connection
+					.prepareStatement(Q_SELECT_BY_CONTAINER_ID)) {
 				int param = 0;
 				statement.setInt(++param, containerId);
-				ResultSet result = statement.executeQuery();
-				try {
+				try (ResultSet result = statement.executeQuery()) {
 					while (result.next()) {
 						File file = new File(result.getInt(1),
 								result.getString(2), result.getLong(3),
@@ -114,69 +104,57 @@ public class H2FileDao implements IFileDao {
 						containerFiles.add(file);
 						H2Cache.addFile(file);
 					}
-				} finally {
-					result.close();
 				}
-			} finally {
-				statement.close();
 			}
 			files = containerFiles.toArray(new File[containerFiles.size()]);
 		}
 		return files;
 	}
 
+	@Override
 	public File selectById(Connection connection, int id) throws SQLException {
 
 		File file = H2Cache.selectFileById(id);
 		if (file == null) {
-			PreparedStatement statement = connection
-					.prepareStatement(Q_SELECT_BY_ID);
-			try {
+			try (PreparedStatement statement = connection
+					.prepareStatement(Q_SELECT_BY_ID)) {
 				int param = 0;
 				statement.setInt(++param, id);
-				ResultSet result = statement.executeQuery();
-				try {
+				try (ResultSet result = statement.executeQuery()) {
 					if (result.next()) {
 						file = new File(result.getInt(1), result.getString(2),
 								result.getLong(3), result.getInt(4));
 
 						H2Cache.addFile(file);
 					}
-				} finally {
-					result.close();
 				}
-			} finally {
-				statement.close();
 			}
 		}
 		return file;
 	}
 
+	@Override
 	public void delete(Connection connection, String path, int containerId)
 			throws SQLException {
 
-		PreparedStatement statement = connection.prepareStatement(Q_DELETE);
-		try {
+		try (PreparedStatement statement = connection
+				.prepareStatement(Q_DELETE)) {
 			int param = 0;
 			statement.setString(++param, path);
 			statement.setInt(++param, containerId);
 			statement.executeUpdate();
-		} finally {
-			statement.close();
 		}
 
 		H2Cache.deleteFileByContainerIdAndPath(containerId, path);
 	}
 
+	@Override
 	public void deleteById(Connection connection, int id) throws SQLException {
-		PreparedStatement statement = connection
-				.prepareStatement(Q_DELETE_BY_ID);
-		try {
+		try (PreparedStatement statement = connection
+				.prepareStatement(Q_DELETE_BY_ID)) {
 			int param = 0;
 			statement.setInt(++param, id);
 			statement.executeUpdate();
-		} finally {
-			statement.close();
 		}
 
 		H2Cache.deleteFileById(id);

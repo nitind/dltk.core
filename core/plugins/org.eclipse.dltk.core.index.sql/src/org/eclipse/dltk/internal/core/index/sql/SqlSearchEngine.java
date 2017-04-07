@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,15 +53,16 @@ import org.eclipse.dltk.internal.core.search.DLTKWorkspaceScope;
  */
 public class SqlSearchEngine implements ISearchEngineExtension {
 
+	@Override
 	public void search(int elementType, String qualifier, String elementName,
 			int trueFlags, int falseFlags, int limit, SearchFor searchFor,
 			MatchRule matchRule, IDLTKSearchScope scope,
 			ISearchRequestor requestor, IProgressMonitor monitor) {
-		search(elementType, qualifier, elementName, null, trueFlags,
-				falseFlags, limit, searchFor, matchRule, scope, requestor,
-				monitor);
+		search(elementType, qualifier, elementName, null, trueFlags, falseFlags,
+				limit, searchFor, matchRule, scope, requestor, monitor);
 	}
 
+	@Override
 	public void search(int elementType, String qualifier, String elementName,
 			String parent, int trueFlags, int falseFlags, int limit,
 			SearchFor searchFor, MatchRule matchRule, IDLTKSearchScope scope,
@@ -87,7 +88,7 @@ public class SqlSearchEngine implements ISearchEngineExtension {
 				if (!(scope instanceof DLTKWorkspaceScope)) {
 					// Calculate container IDs:
 					IPath[] containerPaths = scope.enclosingProjectsAndZips();
-					List<Integer> containerIdsList = new LinkedList<Integer>();
+					List<Integer> containerIdsList = new LinkedList<>();
 					for (IPath containerPath : containerPaths) {
 						Container container = dbFactory.getContainerDao()
 								.selectByPath(connection,
@@ -105,7 +106,7 @@ public class SqlSearchEngine implements ISearchEngineExtension {
 
 					// Calculate file IDs:
 					if (scope instanceof DLTKSearchScope) {
-						List<Integer> fileIdsList = new LinkedList<Integer>();
+						List<Integer> fileIdsList = new LinkedList<>();
 						String[] relativePaths = ((DLTKSearchScope) scope)
 								.getRelativePaths();
 						String[] fileExtensions = ScriptModelUtil
@@ -147,9 +148,9 @@ public class SqlSearchEngine implements ISearchEngineExtension {
 				}
 
 				boolean searchForDecls = searchFor == SearchFor.DECLARATIONS
-						|| searchFor == SearchFor.ALL_OCCURENCES;
+						|| searchFor == SearchFor.ALL_OCCURRENCES;
 				boolean searchForRefs = searchFor == SearchFor.REFERENCES
-						|| searchFor == SearchFor.ALL_OCCURENCES;
+						|| searchFor == SearchFor.ALL_OCCURRENCES;
 
 				if (searchForDecls) {
 					dbFactory.getElementDao().search(connection, elementName,
@@ -195,10 +196,10 @@ public class SqlSearchEngine implements ISearchEngineExtension {
 
 	class ElementHandler implements IElementHandler, ISearchRequestor {
 
-		private Map<Integer, File> fileCache = new HashMap<Integer, File>();
-		private Map<Integer, Container> containerCache = new HashMap<Integer, Container>();
-		private Map<String, IProjectFragment> projectFragmentCache = new HashMap<String, IProjectFragment>();
-		private Map<String, ISourceModule> sourceModuleCache = new HashMap<String, ISourceModule>();
+		private Map<Integer, File> fileCache = new HashMap<>();
+		private Map<Integer, Container> containerCache = new HashMap<>();
+		private Map<String, IProjectFragment> projectFragmentCache = new HashMap<>();
+		private Map<String, ISourceModule> sourceModuleCache = new HashMap<>();
 		private Connection connection;
 		private ISearchRequestor searchRequestor;
 		private IDLTKSearchScope scope;
@@ -211,6 +212,7 @@ public class SqlSearchEngine implements ISearchEngineExtension {
 			this.searchRequestor = searchRequestor;
 		}
 
+		@Override
 		public void handle(Element element) {
 			try {
 				DbFactory dbFactory = DbFactory.getInstance();
@@ -218,8 +220,8 @@ public class SqlSearchEngine implements ISearchEngineExtension {
 				int fileId = element.getFileId();
 				File file = fileCache.get(fileId);
 				if (file == null) {
-					file = dbFactory.getFileDao()
-							.selectById(connection, fileId);
+					file = dbFactory.getFileDao().selectById(connection,
+							fileId);
 					if (file == null) {
 						return;
 					}
@@ -229,8 +231,8 @@ public class SqlSearchEngine implements ISearchEngineExtension {
 				int containerId = file.getContainerId();
 				Container container = containerCache.get(containerId);
 				if (container == null) {
-					container = dbFactory.getContainerDao().selectById(
-							connection, containerId);
+					container = dbFactory.getContainerDao()
+							.selectById(connection, containerId);
 					if (container == null) {
 						return;
 					}
@@ -246,8 +248,8 @@ public class SqlSearchEngine implements ISearchEngineExtension {
 					containerPath = containerPath
 							+ IDLTKSearchScope.FILE_ENTRY_SEPARATOR;
 				}
-				if (containerPath.length() != 0
-						&& containerPath.charAt(containerPath.length() - 1) != IPath.SEPARATOR) {
+				if (containerPath.length() != 0 && containerPath.charAt(
+						containerPath.length() - 1) != IPath.SEPARATOR) {
 					containerPath = containerPath + IPath.SEPARATOR;
 				}
 
@@ -324,6 +326,7 @@ public class SqlSearchEngine implements ISearchEngineExtension {
 			}
 		}
 
+		@Override
 		public void match(int elementType, int flags, int offset, int length,
 				int nameOffset, int nameLength, String elementName,
 				String metadata, String doc, String qualifier, String parent,

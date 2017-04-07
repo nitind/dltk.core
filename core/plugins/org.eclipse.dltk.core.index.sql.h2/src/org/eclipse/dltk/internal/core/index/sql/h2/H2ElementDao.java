@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,17 +46,17 @@ public class H2ElementDao implements IElementDao {
 			.readSqlFile("resources/insert_decl.sql"); //$NON-NLS-1$
 
 	/** Cache for insert element declaration queries */
-	private static final Map<String, String> R_INSERT_QUERY_CACHE = new HashMap<String, String>();
+	private static final Map<String, String> R_INSERT_QUERY_CACHE = new HashMap<>();
 
 	/** Cache for insert element reference queries */
-	private static final Map<String, String> D_INSERT_QUERY_CACHE = new HashMap<String, String>();
+	private static final Map<String, String> D_INSERT_QUERY_CACHE = new HashMap<>();
 
 	private final ModelManager modelManager;
 	private final Map<String, PreparedStatement> batchStatements;
 
 	public H2ElementDao() {
 		this.modelManager = ModelManager.getModelManager();
-		this.batchStatements = new HashMap<String, PreparedStatement>();
+		this.batchStatements = new HashMap<>();
 	}
 
 	private String getTableName(Connection connection, int elementType,
@@ -70,12 +70,11 @@ public class H2ElementDao implements IElementDao {
 		return tableName;
 	}
 
-	private void insertBatch(Connection connection,
-			PreparedStatement statement, int type, int flags, int offset,
-			int length, int nameOffset, int nameLength, String name,
-			String metadata, String doc, String qualifier, String parent,
-			int fileId, String natureId, boolean isReference)
-			throws SQLException {
+	private void insertBatch(Connection connection, PreparedStatement statement,
+			int type, int flags, int offset, int length, int nameOffset,
+			int nameLength, String name, String metadata, String doc,
+			String qualifier, String parent, int fileId, String natureId,
+			boolean isReference) throws SQLException {
 
 		int param = 0;
 		if (!isReference) {
@@ -100,8 +99,9 @@ public class H2ElementDao implements IElementDao {
 					break;
 				}
 			}
-			camelCaseName = camelCaseNameBuf.length() > 0 ? camelCaseNameBuf
-					.toString() : null;
+			camelCaseName = camelCaseNameBuf.length() > 0
+					? camelCaseNameBuf.toString()
+					: null;
 			statement.setString(++param, camelCaseName);
 		}
 		statement.setString(++param, metadata);
@@ -116,13 +116,15 @@ public class H2ElementDao implements IElementDao {
 		statement.addBatch();
 	}
 
+	@Override
 	public void insert(Connection connection, int type, int flags, int offset,
 			int length, int nameOffset, int nameLength, String name,
 			String metadata, String doc, String qualifier, String parent,
 			int fileId, String natureId, boolean isReference)
 			throws SQLException {
 
-		String tableName = getTableName(connection, type, natureId, isReference);
+		String tableName = getTableName(connection, type, natureId,
+				isReference);
 
 		String query;
 		if (isReference) {
@@ -150,6 +152,7 @@ public class H2ElementDao implements IElementDao {
 		}
 	}
 
+	@Override
 	public void commitInsertions() throws SQLException {
 		synchronized (batchStatements) {
 			try {
@@ -166,12 +169,13 @@ public class H2ElementDao implements IElementDao {
 		}
 	}
 
+	@Override
 	public void search(Connection connection, String pattern,
-			MatchRule matchRule, int elementType, int trueFlags,
-			int falseFlags, String qualifier, String parent, int[] filesId,
-			int containersId[], String natureId, int limit,
-			boolean isReference, IElementHandler handler,
-			IProgressMonitor monitor) throws SQLException {
+			MatchRule matchRule, int elementType, int trueFlags, int falseFlags,
+			String qualifier, String parent, int[] filesId, int containersId[],
+			String natureId, int limit, boolean isReference,
+			IElementHandler handler, IProgressMonitor monitor)
+			throws SQLException {
 
 		long timeStamp = System.currentTimeMillis();
 		int count = 0;
@@ -183,9 +187,10 @@ public class H2ElementDao implements IElementDao {
 				.append(tableName);
 
 		StringBuilder query = new StringBuilder();
-		final List<Object> parameters = new ArrayList<Object>();
+		final List<Object> parameters = new ArrayList<>();
 
-		if (filesId == null && containersId != null && containersId.length > 0) {
+		if (filesId == null && containersId != null
+				&& containersId.length > 0) {
 			begin.append("_TO_CONTAINER AS T");
 			query.append(" AND T.CONTAINER_ID IN(");
 			for (int i = 0; i < containersId.length; ++i) {
@@ -203,7 +208,8 @@ public class H2ElementDao implements IElementDao {
 		// Name patterns
 		if (pattern != null && pattern.length() > 0) {
 			if (isReference && matchRule == MatchRule.CAMEL_CASE) {
-				H2Index.warn("MatchRule.CAMEL_CASE is not supported by element references search."); //$NON-NLS-1$
+				H2Index.warn(
+						"MatchRule.CAMEL_CASE is not supported by element references search."); //$NON-NLS-1$
 				matchRule = MatchRule.EXACT;
 			}
 
@@ -294,9 +300,8 @@ public class H2ElementDao implements IElementDao {
 			System.out.println("Query: " + query.toString());
 		}
 
-		final PreparedStatement statement = connection.prepareStatement(query
-				.toString());
-		try {
+		try (final PreparedStatement statement = connection
+				.prepareStatement(query.toString())) {
 			for (int i = 0; i < parameters.size(); ++i) {
 				final Object param = parameters.get(i);
 				if (param instanceof Integer) {
@@ -306,8 +311,7 @@ public class H2ElementDao implements IElementDao {
 				}
 			}
 
-			final ResultSet result = statement.executeQuery();
-			try {
+			try (final ResultSet result = statement.executeQuery()) {
 				while (result.next()) {
 					++count;
 					if (monitor != null && monitor.isCanceled()) {
@@ -358,11 +362,7 @@ public class H2ElementDao implements IElementDao {
 
 					handler.handle(element);
 				}
-			} finally {
-				result.close();
 			}
-		} finally {
-			statement.close();
 		}
 
 		if (H2Index.DEBUG) {

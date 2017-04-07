@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,17 +62,14 @@ public class H2DbFactory extends DbFactory {
 			try {
 				connection = pool.getConnection();
 				try {
-					Statement statement = connection.createStatement();
-					try {
-						statement
-								.executeQuery("SELECT COUNT(*) FROM FILES WHERE 1=0;");
+					try (Statement statement = connection.createStatement()) {
+						statement.executeQuery(
+								"SELECT COUNT(*) FROM FILES WHERE 1=0;");
 						initializeSchema = !schema.isCompatible();
 
 					} catch (SQLException e) {
 						// Basic table doesn't exist
 						initializeSchema = true;
-					} finally {
-						statement.close();
 					}
 
 					if (initializeSchema) {
@@ -115,7 +112,8 @@ public class H2DbFactory extends DbFactory {
 				} catch (Exception e1) {
 					SqlIndex.error(
 							"An exception has occurred while removing corrupted DB: "
-									+ dbPath.toOSString(), e1);
+									+ dbPath.toOSString(),
+							e1);
 					throw e1;
 				}
 			}
@@ -134,40 +132,39 @@ public class H2DbFactory extends DbFactory {
 		IPreferencesService preferencesService = Platform
 				.getPreferencesService();
 
-		StringBuilder buf = new StringBuilder("jdbc:h2:").append(dbPath.append(
-				DB_NAME).toOSString());
+		StringBuilder buf = new StringBuilder("jdbc:h2:")
+				.append(dbPath.append(DB_NAME).toOSString());
 
 		buf.append(";UNDO_LOG=0");
-		buf.append(";LOCK_MODE=").append(
-				preferencesService.getInt(H2Index.PLUGIN_ID,
-						H2IndexPreferences.DB_LOCK_MODE, 0, null));
+		buf.append(";LOCK_MODE=").append(preferencesService.getInt(
+				H2Index.PLUGIN_ID, H2IndexPreferences.DB_LOCK_MODE, 0, null));
 
-		buf.append(";CACHE_TYPE=").append(
-				preferencesService.getString(H2Index.PLUGIN_ID,
+		buf.append(";CACHE_TYPE=")
+				.append(preferencesService.getString(H2Index.PLUGIN_ID,
 						H2IndexPreferences.DB_CACHE_TYPE, null, null));
 
-		buf.append(";CACHE_SIZE=").append(
-				preferencesService.getInt(H2Index.PLUGIN_ID,
-						H2IndexPreferences.DB_CACHE_SIZE, 0, null));
+		buf.append(";CACHE_SIZE=").append(preferencesService.getInt(
+				H2Index.PLUGIN_ID, H2IndexPreferences.DB_CACHE_SIZE, 0, null));
 
-		buf.append(";QUERY_CACHE_SIZE=").append(
-				preferencesService.getInt(H2Index.PLUGIN_ID,
+		buf.append(";QUERY_CACHE_SIZE=")
+				.append(preferencesService.getInt(H2Index.PLUGIN_ID,
 						H2IndexPreferences.DB_QUERY_CACHE_SIZE, 0, null));
 
-		buf.append(";LARGE_RESULT_BUFFER_SIZE=").append(
-				preferencesService
-						.getInt(H2Index.PLUGIN_ID,
-								H2IndexPreferences.DB_LARGE_RESULT_BUFFER_SIZE,
-								0, null));
+		buf.append(";LARGE_RESULT_BUFFER_SIZE=")
+				.append(preferencesService.getInt(H2Index.PLUGIN_ID,
+						H2IndexPreferences.DB_LARGE_RESULT_BUFFER_SIZE, 0,
+						null));
 		buf.append(";FILE_LOCK=NO");
 
 		return buf.toString();
 	}
 
+	@Override
 	public Connection createConnection() throws SQLException {
 		return pool == null ? null : pool.getConnection();
 	}
 
+	@Override
 	public void dispose() throws SQLException {
 		if (pool != null) {
 			pool.dispose();
@@ -175,14 +172,17 @@ public class H2DbFactory extends DbFactory {
 		}
 	}
 
+	@Override
 	public IContainerDao getContainerDao() {
 		return new H2ContainerDao();
 	}
 
+	@Override
 	public IElementDao getElementDao() {
 		return new H2ElementDao();
 	}
 
+	@Override
 	public IFileDao getFileDao() {
 		return new H2FileDao();
 	}

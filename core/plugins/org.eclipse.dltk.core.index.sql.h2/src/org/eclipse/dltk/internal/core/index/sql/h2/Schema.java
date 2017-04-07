@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,7 +42,7 @@ public class Schema {
 	public static final String VERSION = "0.8.1"; //$NON-NLS-1$
 
 	/** Contains already created tables names */
-	private static final Set<String> TABLES_CACHE = new HashSet<String>();
+	private static final Set<String> TABLES_CACHE = new HashSet<>();
 
 	/**
 	 * Creates the database schema using given connection.
@@ -53,19 +53,16 @@ public class Schema {
 	 */
 	public void initialize(Connection connection) throws SQLException {
 		try {
-			Statement statement = connection.createStatement();
-			try {
+			try (Statement statement = connection.createStatement()) {
 				statement.executeUpdate(readSqlFile("resources/basic.sql")); //$NON-NLS-1$
-			} finally {
-				statement.close();
 			}
 
 			// Store new schema version:
 			storeSchemaVersion(VERSION);
 
 		} catch (SQLException e) {
-			H2Index.error(
-					"An exception was thrown while initializing schema", e); //$NON-NLS-1$
+			H2Index.error("An exception was thrown while initializing schema", //$NON-NLS-1$
+					e);
 			throw e;
 		}
 	}
@@ -112,16 +109,14 @@ public class Schema {
 		synchronized (TABLES_CACHE) {
 			if (TABLES_CACHE.add(tableName)) {
 
-				String query = isReference ? readSqlFile("resources/element_ref.sql") //$NON-NLS-1$
+				String query = isReference
+						? readSqlFile("resources/element_ref.sql") //$NON-NLS-1$
 						: readSqlFile("resources/element_decl.sql"); //$NON-NLS-1$
 				query = NLS.bind(query, tableName);
 
 				try {
-					Statement statement = connection.createStatement();
-					try {
+					try (Statement statement = connection.createStatement()) {
 						statement.executeUpdate(query);
-					} finally {
-						statement.close();
 					}
 				} catch (SQLException e) {
 					H2Index.error(
@@ -166,15 +161,12 @@ public class Schema {
 			URL resolved = FileLocator.resolve(url);
 
 			StringBuilder buf = new StringBuilder();
-			BufferedReader r = new BufferedReader(new InputStreamReader(
-					resolved.openStream()));
-			try {
+			try (BufferedReader r = new BufferedReader(
+					new InputStreamReader(resolved.openStream()))) {
 				String line;
 				while ((line = r.readLine()) != null) {
 					buf.append(line).append('\n');
 				}
-			} finally {
-				r.close();
 			}
 			return buf.toString();
 		} catch (IOException e) {
