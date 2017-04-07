@@ -15,8 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IModelElement;
@@ -28,8 +26,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 /**
  * @since 2.0
  */
-public class ProjectAndSourceFolderContentProvider extends
-		ScriptBrowsingContentProvider {
+public class ProjectAndSourceFolderContentProvider
+		extends ScriptBrowsingContentProvider {
 
 	public ProjectAndSourceFolderContentProvider(
 			ScriptBrowsingPart browsingPart,
@@ -47,8 +45,8 @@ public class ProjectAndSourceFolderContentProvider extends
 			if (element instanceof IStructuredSelection) {
 				Assert.isLegal(false);
 				Object[] result = new Object[0];
-				Class clazz = null;
-				Iterator iter = ((IStructuredSelection) element).iterator();
+				Class<?> clazz = null;
+				Iterator<?> iter = ((IStructuredSelection) element).iterator();
 				while (iter.hasNext()) {
 					Object item = iter.next();
 					if (clazz == null)
@@ -63,7 +61,7 @@ public class ProjectAndSourceFolderContentProvider extends
 			if (element instanceof IStructuredSelection) {
 				Assert.isLegal(false);
 				Object[] result = new Object[0];
-				Iterator iter = ((IStructuredSelection) element).iterator();
+				Iterator<?> iter = ((IStructuredSelection) element).iterator();
 				while (iter.hasNext())
 					result = concatenate(result, getChildren(iter.next()));
 				return result;
@@ -76,7 +74,7 @@ public class ProjectAndSourceFolderContentProvider extends
 			Object[] children = super.getChildren(element);
 
 			// We need to filter all elements with different nature
-			List newObjs = new ArrayList();
+			List<Object> newObjs = new ArrayList<>();
 			for (int i = 0; i < children.length; i++) {
 				if (children[i] instanceof IModelElement) {
 					IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager
@@ -84,18 +82,12 @@ public class ProjectAndSourceFolderContentProvider extends
 					if (getToolkit().equals(languageToolkit)) {
 						newObjs.add(children[i]);
 					}
-				}
-				else {
+				} else {
 					newObjs.add(children[i]);
 				}
 			}
 			return newObjs.toArray();
 		} catch (ModelException e) {
-			return NO_CHILDREN;
-		} catch (CoreException e) {
-			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
-			}
 			return NO_CHILDREN;
 		} finally {
 			finishedReadInDisplayThread();
@@ -109,7 +101,7 @@ public class ProjectAndSourceFolderContentProvider extends
 			return NO_CHILDREN;
 
 		IProjectFragment[] roots = project.getProjectFragments();
-		List list = new ArrayList(roots.length);
+		List<IProjectFragment> list = new ArrayList<>(roots.length);
 		// filter out package fragments that correspond to projects and
 		// replace them with the package fragments directly
 		for (int i = 0; i < roots.length; i++) {
