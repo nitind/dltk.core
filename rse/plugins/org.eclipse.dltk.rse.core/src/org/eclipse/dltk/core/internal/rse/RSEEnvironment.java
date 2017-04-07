@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.filesystem.IFileStore;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
