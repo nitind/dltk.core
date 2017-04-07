@@ -136,7 +136,6 @@ public class SshConnection extends ChannelPool implements ISshConnection {
 			SftpATTRS attrs = channel.stat(path.toString());
 			boolean isRoot = (path.segmentCount() == 0);
 			String linkTarget = null;
-			String canonicalPath;
 			String parentPath = path.removeLastSegments(1).toString();
 			if (attrs.isLink() && !isRoot) {
 				try {
@@ -148,7 +147,6 @@ public class SshConnection extends ChannelPool implements ISshConnection {
 					} catch (Throwable t) {
 						channel.cd(fullPath);
 						linkTarget = channel.pwd();
-						canonicalPath = linkTarget;
 					}
 					if (linkTarget != null && !linkTarget.equals(fullPath)) {
 						if (readlinkDone) {
@@ -160,7 +158,6 @@ public class SshConnection extends ChannelPool implements ISshConnection {
 						SftpATTRS attrsTarget = channel.stat(linkTarget);
 						if (readlinkDone && attrsTarget.isDir()) {
 							channel.cd(fullPath);
-							canonicalPath = channel.pwd();
 						}
 					} else {
 						linkTarget = null;
@@ -220,10 +217,12 @@ public class SshConnection extends ChannelPool implements ISshConnection {
 			return stream;
 		}
 
+		@Override
 		public boolean isActiveCall() {
 			return stream != null && stream.activeCalls != 0;
 		}
 
+		@Override
 		public long getLastActivity() {
 			if (stream != null) {
 				return stream.lastActivity;
@@ -334,10 +333,12 @@ public class SshConnection extends ChannelPool implements ISshConnection {
 			return stream;
 		}
 
+		@Override
 		public boolean isActiveCall() {
 			return stream != null && stream.activeCalls != 0;
 		}
 
+		@Override
 		public long getLastActivity() {
 			if (stream != null) {
 				return stream.lastActivity;
@@ -435,7 +436,6 @@ public class SshConnection extends ChannelPool implements ISshConnection {
 		}
 
 		@Override
-		@SuppressWarnings("unchecked")
 		public void perform(ChannelSftp channel) throws SftpException {
 			v = channel.ls(path.toString());
 		}
@@ -470,6 +470,7 @@ public class SshConnection extends ChannelPool implements ISshConnection {
 		super(userName, hostName, port, DEFAULT_INACTIVITY_TIMEOUT);
 	}
 
+	@Override
 	public boolean connect() {
 		try {
 			final ChannelSftp channel = acquireChannel("connect()"); //$NON-NLS-1$
@@ -543,6 +544,7 @@ public class SshConnection extends ChannelPool implements ISshConnection {
 	 * @see org.eclipse.dltk.ssh.core.ISshConnection#getHandle(org.eclipse.core
 	 * .runtime .IPath)
 	 */
+	@Override
 	public ISshFileHandle getHandle(IPath path) throws Exception {
 		if (isDisabled()) {
 			return null;
@@ -555,10 +557,12 @@ public class SshConnection extends ChannelPool implements ISshConnection {
 		return new SshFileHandle(this, path, null);
 	}
 
+	@Override
 	public boolean isDisabled() {
 		return disabledTime > System.currentTimeMillis();
 	}
 
+	@Override
 	public void setDisabled(int timeout) {
 		disabledTime = System.currentTimeMillis() + timeout;
 	}

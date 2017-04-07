@@ -30,13 +30,13 @@ public class SshFileHandle implements ISshFileHandle,
 
 	}
 
-	private static final Map<SshFileHandle, CacheEntry> attrCache = new HashMap<SshFileHandle, CacheEntry>();
+	private static final Map<SshFileHandle, CacheEntry> attrCache = new HashMap<>();
 
 	private SshConnection connection = null;
 	private IPath path;
 	// private IPath linkTarget;
 	private SftpATTRS attrs;
-	private Map<String, SshFileHandle> children = new HashMap<String, SshFileHandle>();
+	private Map<String, SshFileHandle> children = new HashMap<>();
 	private boolean childrenFetched = false;
 
 	public SshFileHandle(SshConnection connection, IPath path, SftpATTRS attrs) {
@@ -45,13 +45,7 @@ public class SshFileHandle implements ISshFileHandle,
 		this.attrs = attrs;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.dltk.ssh.internal.core.ISshFileHandle#createFolder(java.lang
-	 * .String, org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public ISshFileHandle createFolder(String newEntryName,
 			IProgressMonitor monitor) throws CoreException {
 		ISshFileHandle child = getChild(newEntryName);
@@ -62,21 +56,13 @@ public class SshFileHandle implements ISshFileHandle,
 		return child;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.dltk.ssh.internal.core.ISshFileHandle#mkdir()
-	 */
+	@Override
 	public void mkdir() {
 		connection.mkdir(path);
 		cleanAttrs();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.dltk.ssh.internal.core.ISshFileHandle#delete()
-	 */
+	@Override
 	public void delete() throws CoreException {
 		fetchAttrs();
 		if (attrs != null) {
@@ -85,11 +71,7 @@ public class SshFileHandle implements ISshFileHandle,
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.dltk.ssh.internal.core.ISshFileHandle#exists()
-	 */
+	@Override
 	public boolean exists() {
 		fetchAttrs();
 		return attrs != null;
@@ -141,6 +123,7 @@ public class SshFileHandle implements ISshFileHandle,
 		return attrs;
 	}
 
+	@Override
 	public synchronized ISshFileHandle getChild(String newEntryName) {
 		if (children.containsKey(newEntryName)) {
 			return children.get(newEntryName);
@@ -150,13 +133,7 @@ public class SshFileHandle implements ISshFileHandle,
 		return child;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.dltk.ssh.internal.core.ISshFileHandle#getChildren(org.eclipse
-	 * .core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public synchronized ISshFileHandle[] getChildren(IProgressMonitor monitor)
 			throws CoreException {
 		if (!childrenFetched) {
@@ -195,13 +172,7 @@ public class SshFileHandle implements ISshFileHandle,
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.dltk.ssh.internal.core.ISshFileHandle#getInputStream(org.
-	 * eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public InputStream getInputStream(IProgressMonitor monitor)
 			throws CoreException {
 		// fetchAttrs();
@@ -217,56 +188,34 @@ public class SshFileHandle implements ISshFileHandle,
 		// return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.dltk.ssh.internal.core.ISshFileHandle#getName()
-	 */
+	@Override
 	public String getName() {
 		return path.lastSegment();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.dltk.ssh.core.ISshFileHandle#getPath()
-	 */
+	@Override
 	public IPath getPath() {
 		return path;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return path.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.dltk.ssh.internal.core.ISshFileHandle#getOutputStream(org
-	 * .eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public OutputStream getOutputStream(IProgressMonitor monitor)
 			throws CoreException {
 		final OutputStream stream = connection.put(this.path, this);
 		return stream;
 	}
 
+	@Override
 	public void streamClosed() {
 		cleanAttrs();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.dltk.ssh.internal.core.ISshFileHandle#isDirectory()
-	 */
+	@Override
 	public boolean isDirectory() {
 		fetchAttrs();
 		if (attrs != null) {
@@ -279,12 +228,7 @@ public class SshFileHandle implements ISshFileHandle,
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.dltk.ssh.internal.core.ISshFileHandle#lastModificationTime()
-	 */
+	@Override
 	public long lastModificationTime() {
 		fetchAttrs();
 		if (attrs != null) {
@@ -297,24 +241,14 @@ public class SshFileHandle implements ISshFileHandle,
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.dltk.ssh.internal.core.ISshFileHandle#setLastModified(long,
-	 * org.eclipse.core.runtime.IProgressMonitor)
-	 */
+	@Override
 	public void setLastModified(long timestamp, IProgressMonitor monitor)
 			throws CoreException {
 		connection.setLastModified(path, timestamp);
 		cleanAttrs();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.dltk.ssh.internal.core.ISshFileHandle#getSize()
-	 */
+	@Override
 	public long getSize() {
 		fetchAttrs();
 		if (attrs != null) {
@@ -323,6 +257,7 @@ public class SshFileHandle implements ISshFileHandle,
 		return 0;
 	}
 
+	@Override
 	public boolean isSymlink() {
 		final SftpATTRS attrs = connection.getLAttrs(path);
 		return attrs != null && attrs.isLink();
@@ -360,10 +295,12 @@ public class SshFileHandle implements ISshFileHandle,
 		return true;
 	}
 
+	@Override
 	public String readLink() {
 		return connection.readLink(path);
 	}
 
+	@Override
 	public void move(IPath destination) throws CoreException {
 		connection.move(path, destination);
 	}

@@ -19,7 +19,7 @@ public class Activator extends Plugin {
 	// The shared instance
 	private static Activator plugin;
 
-	private ServiceTracker tracker;
+	private ServiceTracker<IJSchService, IJSchService> tracker;
 
 	/**
 	 * The constructor
@@ -32,7 +32,7 @@ public class Activator extends Plugin {
 		super.start(context);
 		plugin = this;
 		tracker = new ServiceTracker(getBundle().getBundleContext(),
-				org.eclipse.jsch.core.IJSchService.class.getName(), null);
+				org.eclipse.jsch.core.IJSchService.class, null);
 		tracker.open();
 	}
 
@@ -54,7 +54,7 @@ public class Activator extends Plugin {
 	}
 
 	public IJSchService getJSch() {
-		return (IJSchService) tracker.getService();
+		return tracker.getService();
 	}
 
 	public static void log(IStatus status) {

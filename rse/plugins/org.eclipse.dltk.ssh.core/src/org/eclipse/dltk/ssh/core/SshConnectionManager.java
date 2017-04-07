@@ -14,7 +14,7 @@ public class SshConnectionManager {
 	/**
 	 * Contain path of location to connection.
 	 */
-	private static Map<String, SshConnection> connections = new HashMap<String, SshConnection>();
+	private static Map<String, SshConnection> connections = new HashMap<>();
 
 	/**
 	 * Return connection associated with specified location. Location should be

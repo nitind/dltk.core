@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.  
+ * Copyright (c) 2009, 2017 xored software, Inc.  
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -34,8 +34,8 @@ public class ChannelPool {
 	private String password;
 
 	private Session session;
-	private final List<ChannelSftp> freeChannels = new ArrayList<ChannelSftp>();
-	private final Map<ChannelSftp, ChannelUsageInfo> usedChannels = new IdentityHashMap<ChannelSftp, ChannelUsageInfo>();
+	private final List<ChannelSftp> freeChannels = new ArrayList<>();
+	private final Map<ChannelSftp, ChannelUsageInfo> usedChannels = new IdentityHashMap<>();
 
 	private static class ChannelUsageInfo {
 		final Object context;
@@ -71,29 +71,36 @@ public class ChannelPool {
 
 	private final class LocalUserInfo implements UserInfo,
 			UIKeyboardInteractive {
+		@Override
 		public void showMessage(String arg0) {
 		}
 
+		@Override
 		public boolean promptYesNo(String arg0) {
 			return false;
 		}
 
+		@Override
 		public boolean promptPassword(String arg0) {
 			return true;
 		}
 
+		@Override
 		public boolean promptPassphrase(String arg0) {
 			return false;
 		}
 
+		@Override
 		public String getPassword() {
 			return password;
 		}
 
+		@Override
 		public String getPassphrase() {
 			return ""; //$NON-NLS-1$
 		}
 
+		@Override
 		public String[] promptKeyboardInteractive(String destination,
 				String name, String instruction, String[] prompt, boolean[] echo) {
 			final String p = password;
