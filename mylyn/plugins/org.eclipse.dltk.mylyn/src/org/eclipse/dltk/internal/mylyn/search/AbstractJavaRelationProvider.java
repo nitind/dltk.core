@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,8 +56,7 @@ import org.eclipse.search2.internal.ui.InternalSearchUI;
 /**
  * @author Mik Kersten
  */
-public abstract class AbstractJavaRelationProvider extends
-		AbstractRelationProvider {
+public abstract class AbstractJavaRelationProvider extends AbstractRelationProvider {
 
 	public static final String ID_GENERIC = "org.eclipse.mylyn.java.relation"; //$NON-NLS-1$
 
@@ -65,7 +64,7 @@ public abstract class AbstractJavaRelationProvider extends
 
 	private static final int DEFAULT_DEGREE = 2;
 
-	private static final List<Job> runningJobs = new ArrayList<Job>();
+	private static final List<Job> runningJobs = new ArrayList<>();
 
 	@Override
 	public String getGenericId() {
@@ -78,7 +77,7 @@ public abstract class AbstractJavaRelationProvider extends
 
 	@Override
 	public List<IDegreeOfSeparation> getDegreesOfSeparation() {
-		List<IDegreeOfSeparation> separations = new ArrayList<IDegreeOfSeparation>();
+		List<IDegreeOfSeparation> separations = new ArrayList<>();
 		separations.add(new DegreeOfSeparation(DOS_0_LABEL, 0));
 		separations.add(new DegreeOfSeparation(DOS_1_LABEL, 1));
 		separations.add(new DegreeOfSeparation(DOS_2_LABEL, 2));
@@ -89,15 +88,13 @@ public abstract class AbstractJavaRelationProvider extends
 	}
 
 	@Override
-	protected void findRelated(final IInteractionElement node,
-			int degreeOfSeparation) {
+	protected void findRelated(final IInteractionElement node, int degreeOfSeparation) {
 		if (node == null) {
 			return;
 		}
 		if (node.getContentType() == null) {
-			StatusHandler.log(new Status(IStatus.WARNING,
-					DLTKUiBridgePlugin.ID_PLUGIN, "Null content type for: " //$NON-NLS-1$
-							+ node));
+			StatusHandler.log(new Status(IStatus.WARNING, DLTKUiBridgePlugin.ID_PLUGIN, "Null content type for: " //$NON-NLS-1$
+					+ node));
 			return;
 		}
 		if (!node.getContentType().equals(DLTKStructureBridge.CONTENT_TYPE)) {
@@ -113,36 +110,30 @@ public abstract class AbstractJavaRelationProvider extends
 			return;
 		}
 
-		IDLTKSearchScope scope = createJavaSearchScope(javaElement,
-				degreeOfSeparation);
+		IDLTKSearchScope scope = createJavaSearchScope(javaElement, degreeOfSeparation);
 		if (scope != null) {
 			runJob(node, degreeOfSeparation, getId());
 		}
 	}
 
-	private IDLTKSearchScope createJavaSearchScope(IModelElement element,
-			int degreeOfSeparation) {
-		Set<IInteractionElement> landmarks = ContextCore.getContextManager()
-				.getActiveLandmarks();
-		List<IInteractionElement> interestingElements = ContextCore
-				.getContextManager().getActiveContext().getInteresting();
+	private IDLTKSearchScope createJavaSearchScope(IModelElement element, int degreeOfSeparation) {
+		Set<IInteractionElement> landmarks = ContextCore.getContextManager().getActiveLandmarks();
+		List<IInteractionElement> interestingElements = ContextCore.getContextManager()
+				.getActiveContext()
+				.getInteresting();
 
-		Set<IModelElement> searchElements = new HashSet<IModelElement>();
+		Set<IModelElement> searchElements = new HashSet<>();
 		int includeMask = IDLTKSearchScope.SOURCES;
 		if (degreeOfSeparation == 1) {
 			for (IInteractionElement landmark : landmarks) {
-				AbstractContextStructureBridge bridge = ContextCore
-						.getStructureBridge(landmark.getContentType());
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(landmark.getContentType());
 				if (includeNodeInScope(landmark, bridge)) {
-					Object o = bridge.getObjectForHandle(landmark
-							.getHandleIdentifier());
+					Object o = bridge.getObjectForHandle(landmark.getHandleIdentifier());
 					if (o instanceof IModelElement) {
 						IModelElement landmarkElement = (IModelElement) o;
 						if (landmarkElement.exists()) {
-							if (landmarkElement instanceof IMember
-									&& !landmark.getInterest().isPropagated()) {
-								searchElements.add(((IMember) landmarkElement)
-										.getSourceModule());
+							if (landmarkElement instanceof IMember && !landmark.getInterest().isPropagated()) {
+								searchElements.add(((IMember) landmarkElement).getSourceModule());
 							} else if (landmarkElement instanceof ISourceModule) {
 								searchElements.add(landmarkElement);
 							}
@@ -152,20 +143,14 @@ public abstract class AbstractJavaRelationProvider extends
 			}
 		} else if (degreeOfSeparation == 2) {
 			for (IInteractionElement interesting : interestingElements) {
-				AbstractContextStructureBridge bridge = ContextCore
-						.getStructureBridge(interesting.getContentType());
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
-					Object object = bridge.getObjectForHandle(interesting
-							.getHandleIdentifier());
+					Object object = bridge.getObjectForHandle(interesting.getHandleIdentifier());
 					if (object instanceof IModelElement) {
 						IModelElement interestingElement = (IModelElement) object;
 						if (interestingElement.exists()) {
-							if (interestingElement instanceof IMember
-									&& !interesting.getInterest()
-											.isPropagated()) {
-								searchElements
-										.add(((IMember) interestingElement)
-												.getSourceModule());
+							if (interestingElement instanceof IMember && !interesting.getInterest().isPropagated()) {
+								searchElements.add(((IMember) interestingElement).getSourceModule());
 							} else if (interestingElement instanceof ISourceModule) {
 								searchElements.add(interestingElement);
 							}
@@ -175,20 +160,15 @@ public abstract class AbstractJavaRelationProvider extends
 			}
 		} else if (degreeOfSeparation == 3 || degreeOfSeparation == 4) {
 			for (IInteractionElement interesting : interestingElements) {
-				AbstractContextStructureBridge bridge = ContextCore
-						.getStructureBridge(interesting.getContentType());
+				AbstractContextStructureBridge bridge = ContextCore.getStructureBridge(interesting.getContentType());
 				if (includeNodeInScope(interesting, bridge)) {
 					// TODO what to do when the element is not a java element,
 					// how determine if a javaProject?
-					IResource resource = ResourcesUiBridgePlugin.getDefault()
-							.getResourceForElement(interesting, true);
+					IResource resource = ResourcesUiBridgePlugin.getDefault().getResourceForElement(interesting, true);
 					if (resource != null) {
 						IProject project = resource.getProject();
-						if (project != null
-								&& ScriptProject.hasScriptNature(project)
-								&& project.exists()) {
-							IScriptProject javaProject = DLTKCore
-									.create(project);// ((IModelElement)o).getJavaProject();
+						if (project != null && ScriptProject.hasScriptNature(project) && project.exists()) {
+							IScriptProject javaProject = DLTKCore.create(project);// ((IModelElement)o).getJavaProject();
 							if (javaProject != null && javaProject.exists()) {
 								searchElements.add(javaProject);
 							}
@@ -198,13 +178,11 @@ public abstract class AbstractJavaRelationProvider extends
 			}
 			if (degreeOfSeparation == 4) {
 
-				includeMask = IDLTKSearchScope.SOURCES
-						| IDLTKSearchScope.APPLICATION_LIBRARIES
+				includeMask = IDLTKSearchScope.SOURCES | IDLTKSearchScope.APPLICATION_LIBRARIES
 						| IDLTKSearchScope.SYSTEM_LIBRARIES;
 			}
 		} else if (degreeOfSeparation == 5) {
-			return SearchEngine.createWorkspaceScope(DLTKLanguageManager
-					.getLanguageToolkit(element));
+			return SearchEngine.createWorkspaceScope(DLTKLanguageManager.getLanguageToolkit(element));
 		}
 
 		if (searchElements.size() == 0) {
@@ -224,20 +202,17 @@ public abstract class AbstractJavaRelationProvider extends
 	/**
 	 * Only include Java elements and files.
 	 */
-	private boolean includeNodeInScope(IInteractionElement interesting,
-			AbstractContextStructureBridge bridge) {
+	private boolean includeNodeInScope(IInteractionElement interesting, AbstractContextStructureBridge bridge) {
 		if (interesting == null || bridge == null) {
 			return false;
 		} else {
 			if (interesting.getContentType() == null) {
 				// TODO: remove
-				StatusHandler.log(new Status(IStatus.WARNING,
-						DLTKUiBridgePlugin.ID_PLUGIN, "Null content type for: " //$NON-NLS-1$
-								+ interesting.getHandleIdentifier()));
+				StatusHandler.log(new Status(IStatus.WARNING, DLTKUiBridgePlugin.ID_PLUGIN, "Null content type for: " //$NON-NLS-1$
+						+ interesting.getHandleIdentifier()));
 				return false;
 			} else {
-				return interesting.getContentType().equals(
-						DLTKStructureBridge.CONTENT_TYPE)
+				return interesting.getContentType().equals(DLTKStructureBridge.CONTENT_TYPE)
 						|| bridge.isDocument(interesting.getHandleIdentifier());
 			}
 		}
@@ -248,12 +223,10 @@ public abstract class AbstractJavaRelationProvider extends
 	}
 
 	protected boolean acceptElement(IModelElement javaElement) {
-		return javaElement != null
-				&& (javaElement instanceof IMember || javaElement instanceof IType);
+		return javaElement != null && (javaElement instanceof IMember || javaElement instanceof IType);
 	}
 
-	private void runJob(final IInteractionElement node,
-			final int degreeOfSeparation, final String kind) {
+	private void runJob(final IInteractionElement node, final int degreeOfSeparation, final String kind) {
 
 		int limitTo = 0;
 		if (kind.equals(DLTKReferencesProvider.ID)) {
@@ -268,8 +241,7 @@ public abstract class AbstractJavaRelationProvider extends
 			limitTo = IDLTKSearchConstants.REFERENCES;
 		}
 
-		final JavaSearchOperation query = (JavaSearchOperation) getSearchOperation(
-				node, limitTo, degreeOfSeparation);
+		final JavaSearchOperation query = (JavaSearchOperation) getSearchOperation(node, limitTo, degreeOfSeparation);
 		if (query == null) {
 			return;
 		}
@@ -279,16 +251,17 @@ public abstract class AbstractJavaRelationProvider extends
 
 			private boolean gathered = false;
 
+			@Override
 			public boolean resultsGathered() {
 				return gathered;
 			}
 
-			@SuppressWarnings("unchecked")
-			public void searchCompleted(List l) {
+			@Override
+			public void searchCompleted(List<?> l) {
 				if (l == null) {
 					return;
 				}
-				List<IModelElement> relatedHandles = new ArrayList<IModelElement>();
+				List<IModelElement> relatedHandles = new ArrayList<>();
 				Object[] elements = l.toArray();
 				for (Object element : elements) {
 					if (element instanceof IModelElement) {
@@ -300,8 +273,8 @@ public abstract class AbstractJavaRelationProvider extends
 					if (!acceptResultElement(element)) {
 						continue;
 					}
-					incrementInterest(node, DLTKStructureBridge.CONTENT_TYPE,
-							element.getHandleIdentifier(), degreeOfSeparation);
+					incrementInterest(node, DLTKStructureBridge.CONTENT_TYPE, element.getHandleIdentifier(),
+							degreeOfSeparation);
 				}
 				gathered = true;
 				AbstractJavaRelationProvider.this.searchCompleted(node);
@@ -316,26 +289,20 @@ public abstract class AbstractJavaRelationProvider extends
 	}
 
 	@Override
-	public IActiveSearchOperation getSearchOperation(IInteractionElement node,
-			int limitTo, int degreeOfSeparation) {
+	public IActiveSearchOperation getSearchOperation(IInteractionElement node, int limitTo, int degreeOfSeparation) {
 		IModelElement javaElement = DLTKCore.create(node.getHandleIdentifier());
 		if (javaElement == null || !javaElement.exists()) {
 			return null;
 		}
 
-		IDLTKSearchScope scope = createJavaSearchScope(javaElement,
-				degreeOfSeparation);
+		IDLTKSearchScope scope = createJavaSearchScope(javaElement, degreeOfSeparation);
 
 		if (scope == null) {
 			return null;
 		}
 
-		QuerySpecification specs = new ElementQuerySpecification(
-				javaElement,
-				limitTo,
-				scope,
-				Messages.AbstractJavaRelationProvider_Mylyn_degree_of_separation
-						+ degreeOfSeparation);
+		QuerySpecification specs = new ElementQuerySpecification(javaElement, limitTo, scope,
+				Messages.AbstractJavaRelationProvider_Mylyn_degree_of_separation + degreeOfSeparation);
 
 		return new JavaSearchOperation(specs);
 	}
@@ -359,8 +326,7 @@ public abstract class AbstractJavaRelationProvider extends
 
 	}
 
-	protected static class JavaSearchOperation extends DLTKSearchQuery
-			implements IActiveSearchOperation {
+	protected static class JavaSearchOperation extends DLTKSearchQuery implements IActiveSearchOperation {
 		private ISearchResult result = null;
 
 		@Override
@@ -383,7 +349,7 @@ public abstract class AbstractJavaRelationProvider extends
 					if (objs == null) {
 						notifySearchCompleted(null);
 					} else {
-						List<Object> l = new ArrayList<Object>();
+						List<Object> l = new ArrayList<>();
 						for (Object obj : objs) {
 							l.add(obj);
 						}
@@ -392,23 +358,18 @@ public abstract class AbstractJavaRelationProvider extends
 				}
 				return runStatus;
 			} catch (Throwable t) {
-				StatusHandler.log(new Status(IStatus.ERROR,
-						DLTKUiBridgePlugin.ID_PLUGIN, "Java search failed", t)); //$NON-NLS-1$
+				StatusHandler.log(new Status(IStatus.ERROR, DLTKUiBridgePlugin.ID_PLUGIN, "Java search failed", t)); //$NON-NLS-1$
 			}
 
-			IStatus status = new Status(
-					IStatus.WARNING,
-					ContextCorePlugin.ID_PLUGIN,
-					IStatus.OK,
-					Messages.AbstractJavaRelationProvider_could_not_run_Java_search,
-					null);
+			IStatus status = new Status(IStatus.WARNING, ContextCorePlugin.ID_PLUGIN, IStatus.OK,
+					Messages.AbstractJavaRelationProvider_could_not_run_Java_search, null);
 			notifySearchCompleted(null);
 			return status;
 		}
 
 		/**
 		 * Constructor
-		 * 
+		 *
 		 * @param data
 		 */
 		public JavaSearchOperation(QuerySpecification data) {
@@ -417,14 +378,15 @@ public abstract class AbstractJavaRelationProvider extends
 		}
 
 		/** List of listeners wanting to know about the searches */
-		private final List<IActiveSearchListener> listeners = new ArrayList<IActiveSearchListener>();
+		private final List<IActiveSearchListener> listeners = new ArrayList<>();
 
 		/**
 		 * Add a listener for when the bugzilla search is completed
-		 * 
+		 *
 		 * @param l
 		 *            The listener to add
 		 */
+		@Override
 		public void addListener(IActiveSearchListener l) {
 			// add the listener to the list
 			listeners.add(l);
@@ -432,10 +394,11 @@ public abstract class AbstractJavaRelationProvider extends
 
 		/**
 		 * Remove a listener for when the bugzilla search is completed
-		 * 
+		 *
 		 * @param l
 		 *            The listener to remove
 		 */
+		@Override
 		public void removeListener(IActiveSearchListener l) {
 			// remove the listener from the list
 			listeners.remove(l);
@@ -443,7 +406,7 @@ public abstract class AbstractJavaRelationProvider extends
 
 		/**
 		 * Notify all of the listeners that the bugzilla search is completed
-		 * 
+		 *
 		 * @param doiList
 		 *            A list of BugzillaSearchHitDoiInfo
 		 * @param member

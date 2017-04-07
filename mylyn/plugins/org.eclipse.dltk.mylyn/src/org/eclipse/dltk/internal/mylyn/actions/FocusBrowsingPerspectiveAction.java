@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.internal.mylyn.DLTKUiBridgePlugin;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -32,7 +32,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
  * This class is a bit weird since it doesn't obey the same contract as the other subclasses
- * 
+ *
  * @author Shawn Minto
  * @author Mik Kersten
  */
@@ -51,6 +51,7 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 		globalPrefId = PREF_ID_PREFIX + "javaBrowsing"; //$NON-NLS-1$
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		initWindow = window;
 		IWorkbenchPage activePage = initWindow.getActivePage();
@@ -59,7 +60,7 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 
 	@Override
 	public List<StructuredViewer> getViewers() {
-		List<StructuredViewer> viewers = new ArrayList<StructuredViewer>();
+		List<StructuredViewer> viewers = new ArrayList<>();
 		for (int i = 0; i < viewNames.length; i++) {
 			StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
 			if (viewer != null) {

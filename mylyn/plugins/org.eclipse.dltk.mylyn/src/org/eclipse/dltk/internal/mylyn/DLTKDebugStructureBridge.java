@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,7 +41,7 @@ public class DLTKDebugStructureBridge extends AbstractContextStructureBridge {
 	 * Needed due to slowness in resolving type names. We expect the stack frame elements to disappear, they are never
 	 * explicitly removed. TODO: consider clearing on each re-launch
 	 */
-	private final Map<ScriptStackFrame, IModelElement> stackFrameMap = new WeakHashMap<ScriptStackFrame, IModelElement>();
+	private final Map<ScriptStackFrame, IModelElement> stackFrameMap = new WeakHashMap<>();
 
 	@Override
 	public boolean acceptsObject(Object object) {
@@ -69,8 +69,8 @@ public class DLTKDebugStructureBridge extends AbstractContextStructureBridge {
 						indexOfCurrentFrame = i;
 					}
 
-					IInteractionElement correspondingElement = ContextCore.getContextManager().getElement(
-							getHandleIdentifier(frame));
+					IInteractionElement correspondingElement = ContextCore.getContextManager()
+							.getElement(getHandleIdentifier(frame));
 					if (correspondingElement != null && correspondingElement.getInterest().isInteresting()) {
 						indexOfInterestingFrame = i;
 					}

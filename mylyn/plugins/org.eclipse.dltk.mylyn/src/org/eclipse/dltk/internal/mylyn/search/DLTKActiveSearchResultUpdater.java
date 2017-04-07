@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,11 +12,11 @@
 package org.eclipse.dltk.internal.mylyn.search;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ElementChangedEvent;
 import org.eclipse.dltk.core.IElementChangedListener;
@@ -30,16 +30,15 @@ import org.eclipse.search.ui.text.Match;
 
 /**
  * COPIED FROM: org.eclipse.jdt.internal.ui.search.SearchResultUpdater
- * 
+ *
  * @author Shawn Minto
  */
-@SuppressWarnings("unchecked")
 public class DLTKActiveSearchResultUpdater implements IElementChangedListener, IQueryListener {
 
 	private final DLTKSearchResult fResult;
 
-	private static final int REMOVED_FLAGS = IModelElementDelta.F_MOVED_TO
-			| IModelElementDelta.F_REMOVED_FROM_BUILDPATH | IModelElementDelta.F_CLOSED | IModelElementDelta.F_CONTENT;
+	private static final int REMOVED_FLAGS = IModelElementDelta.F_MOVED_TO | IModelElementDelta.F_REMOVED_FROM_BUILDPATH
+			| IModelElementDelta.F_CLOSED | IModelElementDelta.F_CONTENT;
 
 	public DLTKActiveSearchResultUpdater(DLTKSearchResult result) {
 		fResult = result;
@@ -48,11 +47,12 @@ public class DLTKActiveSearchResultUpdater implements IElementChangedListener, I
 		// TODO make this work with resources
 	}
 
+	@Override
 	public void elementChanged(ElementChangedEvent event) {
 		// long t0= System.currentTimeMillis();
 		IModelElementDelta delta = event.getDelta();
-		Set removedElements = new HashSet();
-		Set potentiallyRemovedElements = new HashSet();
+		Set<IAdaptable> removedElements = new HashSet<>();
+		Set<IAdaptable> potentiallyRemovedElements = new HashSet<>();
 		collectRemoved(potentiallyRemovedElements, removedElements, delta);
 		if (removedElements.size() > 0) {
 			handleRemoved(removedElements);
@@ -62,7 +62,7 @@ public class DLTKActiveSearchResultUpdater implements IElementChangedListener, I
 		}
 	}
 
-	private void handleRemoved(Set removedElements) {
+	private void handleRemoved(Set<IAdaptable> removedElements) {
 		Object[] elements = fResult.getElements();
 		for (Object element : elements) {
 			if (isContainedInRemoved(removedElements, element)) {
@@ -90,9 +90,9 @@ public class DLTKActiveSearchResultUpdater implements IElementChangedListener, I
 		}
 	}
 
-	private boolean isContainedInRemoved(Set removedElements, Object object) {
-		for (Iterator elements = removedElements.iterator(); elements.hasNext();) {
-			if (isParentOf(elements.next(), object)) {
+	private boolean isContainedInRemoved(Set<IAdaptable> removedElements, Object object) {
+		for (IAdaptable iAdaptable : removedElements) {
+			if (isParentOf(iAdaptable, object)) {
 				return true;
 			}
 		}
@@ -115,7 +115,8 @@ public class DLTKActiveSearchResultUpdater implements IElementChangedListener, I
 		return null;
 	}
 
-	private void collectRemoved(Set potentiallyRemovedSet, Set removedElements, IModelElementDelta delta) {
+	private void collectRemoved(Set<IAdaptable> potentiallyRemovedSet, Set<IAdaptable> removedElements,
+			IModelElementDelta delta) {
 		if (delta.getKind() == IModelElementDelta.REMOVED) {
 			removedElements.add(delta.getElement());
 		} else if (delta.getKind() == IModelElementDelta.CHANGED) {
@@ -137,10 +138,12 @@ public class DLTKActiveSearchResultUpdater implements IElementChangedListener, I
 		}
 	}
 
+	@Override
 	public void queryAdded(ISearchQuery query) {
 		// don't care
 	}
 
+	@Override
 	public void queryRemoved(ISearchQuery query) {
 		if (fResult.equals(query.getSearchResult())) {
 			DLTKCore.removeElementChangedListener(this);
@@ -148,7 +151,7 @@ public class DLTKActiveSearchResultUpdater implements IElementChangedListener, I
 		}
 	}
 
-	private void collectRemovals(Set removals, IResourceDelta delta) {
+	private void collectRemovals(Set<IAdaptable> removals, IResourceDelta delta) {
 		if (delta.getKind() == IResourceDelta.REMOVED) {
 			removals.add(delta.getResource());
 		} else {
@@ -159,10 +162,12 @@ public class DLTKActiveSearchResultUpdater implements IElementChangedListener, I
 		}
 	}
 
+	@Override
 	public void queryStarting(ISearchQuery query) {
 		// not interested
 	}
 
+	@Override
 	public void queryFinished(ISearchQuery query) {
 		// not interested
 	}

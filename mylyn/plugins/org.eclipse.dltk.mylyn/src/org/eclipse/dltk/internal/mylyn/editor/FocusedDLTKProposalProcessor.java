@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.dltk.internal.mylyn.DLTKUiBridgePlugin;
 import org.eclipse.dltk.ui.text.completion.AbstractScriptCompletionProposal;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposalComputer;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.commons.ui.CommonImages;
 import org.eclipse.mylyn.context.core.ContextCore;
@@ -28,7 +29,7 @@ import org.eclipse.mylyn.context.core.IInteractionElement;
 
 /**
  * TODO: parametrize relevance levels (requires JDT changes, bug 119063)
- * 
+ *
  * @author Mik Kersten
  */
 public class FocusedDLTKProposalProcessor {
@@ -59,13 +60,13 @@ public class FocusedDLTKProposalProcessor {
 
 	public static final FocusedProposalSeparator PROPOSAL_SEPARATOR = new FocusedProposalSeparator();
 
-	private final List<IScriptCompletionProposalComputer> monitoredProposalComputers = new ArrayList<IScriptCompletionProposalComputer>();
+	private final List<IScriptCompletionProposalComputer> monitoredProposalComputers = new ArrayList<>();
 
-	private final List<IScriptCompletionProposalComputer> alreadyComputedProposals = new ArrayList<IScriptCompletionProposalComputer>();
+	private final List<IScriptCompletionProposalComputer> alreadyComputedProposals = new ArrayList<>();
 
-	private final List<IScriptCompletionProposalComputer> alreadyContainSeparator = new ArrayList<IScriptCompletionProposalComputer>();
+	private final List<IScriptCompletionProposalComputer> alreadyContainSeparator = new ArrayList<>();
 
-	private final List<IScriptCompletionProposalComputer> containsSingleInterestingProposal = new ArrayList<IScriptCompletionProposalComputer>();
+	private final List<IScriptCompletionProposalComputer> containsSingleInterestingProposal = new ArrayList<>();
 
 	private static FocusedDLTKProposalProcessor INSTANCE = new FocusedDLTKProposalProcessor();
 
@@ -80,8 +81,8 @@ public class FocusedDLTKProposalProcessor {
 		monitoredProposalComputers.add(proposalComputer);
 	}
 
-	@SuppressWarnings("unchecked")
-	public List projectInterestModel(IScriptCompletionProposalComputer proposalComputer, List proposals) {
+	public List<ICompletionProposal> projectInterestModel(IScriptCompletionProposalComputer proposalComputer,
+			List<ICompletionProposal> proposals) {
 		try {
 			if (!ContextCore.getContextManager().isContextActive()) {
 				return proposals;
@@ -89,7 +90,8 @@ public class FocusedDLTKProposalProcessor {
 				boolean hasInterestingProposals = false;
 				for (Object object : proposals) {
 					if (object instanceof AbstractScriptCompletionProposal) {
-						boolean foundInteresting = boostRelevanceWithInterest((AbstractScriptCompletionProposal) object);
+						boolean foundInteresting = boostRelevanceWithInterest(
+								(AbstractScriptCompletionProposal) object);
 						if (!hasInterestingProposals && foundInteresting) {
 							hasInterestingProposals = true;
 						}
@@ -131,8 +133,8 @@ public class FocusedDLTKProposalProcessor {
 		boolean hasInteresting = false;
 		IModelElement javaElement = proposal.getModelElement();
 		if (javaElement != null) {
-			IInteractionElement interactionElement = ContextCore.getContextManager().getElement(
-					javaElement.getHandleIdentifier());
+			IInteractionElement interactionElement = ContextCore.getContextManager()
+					.getElement(javaElement.getHandleIdentifier());
 			float interest = interactionElement.getInterest().getValue();
 			if (interest > ContextCore.getCommonContextScaling().getInteresting()) {
 				// TODO: losing precision here, only going to one decimal place

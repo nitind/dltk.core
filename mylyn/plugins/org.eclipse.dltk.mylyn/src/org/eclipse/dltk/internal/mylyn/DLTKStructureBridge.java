@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,7 +89,7 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 				Object[] children;
 				try {
 					children = modelContentProvider.getExtendedChildren(element, parent.getChildren());
-					List<String> childHandles = new ArrayList<String>();
+					List<String> childHandles = new ArrayList<>();
 					for (Object element2 : children) {
 						String childHandle = getHandleIdentifier(element2);
 						if (childHandle != null) {
@@ -97,7 +97,8 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 						}
 					}
 					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(parentContentType);
-					if (parentBridge != null && ContextCore.CONTENT_TYPE_RESOURCE.equals(parentBridge.getContentType())) {
+					if (parentBridge != null
+							&& ContextCore.CONTENT_TYPE_RESOURCE.equals(parentBridge.getContentType())) {
 						if (element.getElementType() < IModelElement.TYPE) {
 							List<String> resourceChildren = parentBridge.getChildHandles(handle);
 							if (!resourceChildren.isEmpty()) {
@@ -109,7 +110,8 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 					return childHandles;
 				} catch (ModelException e) {
 					// NOTE: it would be better if this was not hard-wired but used the parent/child bridge mapping
-					AbstractContextStructureBridge parentBridge = ContextCore.getStructureBridge(ContextCore.CONTENT_TYPE_RESOURCE);
+					AbstractContextStructureBridge parentBridge = ContextCore
+							.getStructureBridge(ContextCore.CONTENT_TYPE_RESOURCE);
 					return parentBridge.getChildHandles(handle);
 				} catch (Exception e) {
 					StatusHandler.log(new Status(IStatus.ERROR, DLTKUiBridgePlugin.ID_PLUGIN, "Could not get children", //$NON-NLS-1$
@@ -242,8 +244,8 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 				WorkingSet workingSet = (WorkingSet) object;
 				IAdaptable[] elements = workingSet.getElements();
 				for (IAdaptable adaptable : elements) {
-					IInteractionElement interactionElement = ContextCore.getContextManager().getElement(
-							getHandleIdentifier(adaptable));
+					IInteractionElement interactionElement = ContextCore.getContextManager()
+							.getElement(getHandleIdentifier(adaptable));
 					if (interactionElement != null && interactionElement.getInterest().isInteresting()) {
 						return false;
 					}

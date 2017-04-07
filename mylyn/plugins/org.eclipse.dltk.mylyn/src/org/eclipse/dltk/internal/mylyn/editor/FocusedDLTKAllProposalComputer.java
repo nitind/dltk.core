@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2009 IBM Corporation and others.
+ * Copyright (c) 2008, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,11 +24,12 @@ import org.eclipse.dltk.ui.text.completion.ContentAssistInvocationContext;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalComputer;
 import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
 
 /**
  * Based on org.eclipse.jdt.internal.ui.text.java.JavaAllCompletionProposalComputer.
- * 
+ *
  * @author Mik Kersten
  * @author Steffen Pingel
  */
@@ -63,11 +64,11 @@ public class FocusedDLTKAllProposalComputer extends ScriptCompletionProposalComp
 		FocusedDLTKProposalProcessor.getDefault().addMonitoredComputer(this);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List computeCompletionProposals(ContentAssistInvocationContext context, IProgressMonitor monitor) {
+	public List<ICompletionProposal> computeCompletionProposals(ContentAssistInvocationContext context,
+			IProgressMonitor monitor) {
 		if (shouldReturnResults()) {
-			List proposals = super.computeCompletionProposals(context, monitor);
+			List<ICompletionProposal> proposals = super.computeCompletionProposals(context, monitor);
 			return FocusedDLTKProposalProcessor.getDefault().projectInterestModel(this, proposals);
 		} else {
 			return Collections.emptyList();
@@ -80,16 +81,14 @@ public class FocusedDLTKAllProposalComputer extends ScriptCompletionProposalComp
 			return false;
 		}
 		Set<String> disabledIds = DLTKUiUtil.getDisabledIds(DLTKUIPlugin.getDefault().getPreferenceStore());
-		if (!disabledIds.contains(DLTKUiUtil.ASSIST_DLTK_NOTYPE) && !disabledIds.contains(DLTKUiUtil.ASSIST_DLTK_TYPE)) {
+		if (!disabledIds.contains(DLTKUiUtil.ASSIST_DLTK_NOTYPE)
+				&& !disabledIds.contains(DLTKUiUtil.ASSIST_DLTK_TYPE)) {
 			// do not return duplicates if the default JDT processors are already enabled on on Eclipse 3.3 and 3.4
 			return false;
 		}
 		return true;
 	}
 
-	/**
-	 * @see org.eclipse.jdt.internal.ui.text.java.JavaAllCompletionProposalComputer#createCollector(JavaContentAssistInvocationContext)
-	 */
 	@Override
 	protected ScriptCompletionProposalCollector createCollector(ScriptContentAssistInvocationContext context) {
 		ScriptCompletionProposalCollector collector = null;
@@ -133,9 +132,6 @@ public class FocusedDLTKAllProposalComputer extends ScriptCompletionProposalComp
 		return collector;
 	}
 
-	/**
-	 * @see org.eclipse.jdt.internal.ui.text.java.JavaAllCompletionProposalComputer#guessContextInformationPosition(ContentAssistInvocationContext)
-	 */
 	@Override
 	protected int guessContextInformationPosition(ContentAssistInvocationContext context) {
 		int invocationOffset = context.getInvocationOffset();

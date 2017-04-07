@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,7 +55,7 @@ public class DLTKUiBridge extends AbstractContextUiBridge {
 			IEditorPart part = DLTKUIPlugin.openInEditor(javaElement);
 			EditorUtility.revealInEditor(part, javaElement);
 		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, DLTKUiBridgePlugin.ID_PLUGIN, "Could not open editor for: " //$NON-NLS-1$
+			StatusHandler.log(new Status(IStatus.ERROR, DLTKUiBridgePlugin.ID_PLUGIN, "Could not open editor for: " //$NON-NLS-1$
 					+ node, t));
 		}
 	}
@@ -65,11 +65,10 @@ public class DLTKUiBridge extends AbstractContextUiBridge {
 		try {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (page != null) {
-				List<IEditorReference> toClose = new ArrayList<IEditorReference>(4);
+				List<IEditorReference> toClose = new ArrayList<>(4);
 				for (IEditorReference reference : page.getEditorReferences()) {
 					try {
-						IModelElement input = (IModelElement) reference.getEditorInput()
-								.getAdapter(IModelElement.class);
+						IModelElement input = reference.getEditorInput().getAdapter(IModelElement.class);
 						if (input != null && node.getHandleIdentifier().equals(input.getHandleIdentifier())) {
 							toClose.add(reference);
 						}
@@ -82,7 +81,8 @@ public class DLTKUiBridge extends AbstractContextUiBridge {
 				}
 			}
 		} catch (Throwable t) {
-			StatusHandler.log(new Status(IStatus.ERROR, DLTKUiBridgePlugin.ID_PLUGIN, "Could not auto close editor", t)); //$NON-NLS-1$
+			StatusHandler
+					.log(new Status(IStatus.ERROR, DLTKUiBridgePlugin.ID_PLUGIN, "Could not auto close editor", t)); //$NON-NLS-1$
 		}
 	}
 
@@ -108,7 +108,7 @@ public class DLTKUiBridge extends AbstractContextUiBridge {
 		if (editorPart == null) {
 			return null;
 		}
-		List<TreeViewer> viewers = new ArrayList<TreeViewer>();
+		List<TreeViewer> viewers = new ArrayList<>();
 		Object out = editorPart.getAdapter(IContentOutlinePage.class);
 		if (out instanceof Page) {
 			Page page = (Page) out;

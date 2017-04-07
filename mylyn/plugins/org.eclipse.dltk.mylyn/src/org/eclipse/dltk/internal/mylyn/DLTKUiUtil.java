@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,18 +44,14 @@ public class DLTKUiUtil {
 	public static boolean isDefaultAssistActive(String computerId) {
 		if (DLTKUiUtil.ASSIST_DLTK_ALL.equals(computerId)) {
 			CompletionProposalCategory category = getProposalCategory(computerId);
-			return (category != null) ? category.isEnabled()
-					&& category.isIncluded() : false;
+			return (category != null) ? category.isEnabled() && category.isIncluded() : false;
 		}
-		Set<String> disabledIds = getDisabledIds(DLTKUIPlugin.getDefault()
-				.getPreferenceStore());
+		Set<String> disabledIds = getDisabledIds(DLTKUIPlugin.getDefault().getPreferenceStore());
 		return !disabledIds.contains(computerId);
 	}
 
-	public static CompletionProposalCategory getProposalCategory(
-			String computerId) {
-		List<?> computers = CompletionProposalComputerRegistry.getDefault()
-				.getProposalCategories();
+	public static CompletionProposalCategory getProposalCategory(String computerId) {
+		List<?> computers = CompletionProposalComputerRegistry.getDefault().getProposalCategories();
 		for (Object object : computers) {
 			CompletionProposalCategory proposalCategory = (CompletionProposalCategory) object;
 			if (computerId.equals((proposalCategory).getId())) {
@@ -65,8 +61,7 @@ public class DLTKUiUtil {
 		return null;
 	}
 
-	public static void installContentAssist(IPreferenceStore javaPrefs,
-			boolean mylynContentAssist) {
+	public static void installContentAssist(IPreferenceStore javaPrefs, boolean mylynContentAssist) {
 		Set<String> disabledIds = getDisabledIds(javaPrefs);
 		if (!mylynContentAssist) {
 			disabledIds.remove(ASSIST_DLTK_ALL);
@@ -88,18 +83,15 @@ public class DLTKUiUtil {
 			sb.append(id);
 			sb.append(SEPARATOR_CODEASSIST);
 		}
-		javaPrefs.setValue(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES,
-				sb.toString());
+		javaPrefs.setValue(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES, sb.toString());
 
 		CompletionProposalComputerRegistry.getDefault().reload();
 	}
 
 	public static Set<String> getDisabledIds(IPreferenceStore javaPrefs) {
-		String oldValue = javaPrefs
-				.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
-		StringTokenizer tokenizer = new StringTokenizer(oldValue,
-				SEPARATOR_CODEASSIST);
-		Set<String> disabledIds = new HashSet<String>();
+		String oldValue = javaPrefs.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
+		StringTokenizer tokenizer = new StringTokenizer(oldValue, SEPARATOR_CODEASSIST);
+		Set<String> disabledIds = new HashSet<>();
 		while (tokenizer.hasMoreTokens()) {
 			disabledIds.add((String) tokenizer.nextElement());
 		}

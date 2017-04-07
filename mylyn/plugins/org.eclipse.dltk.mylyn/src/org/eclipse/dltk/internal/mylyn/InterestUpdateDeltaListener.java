@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,9 @@
  *******************************************************************************/
 
 package org.eclipse.dltk.internal.mylyn;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -31,6 +34,7 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 
 	private static boolean asyncExecMode = true;
 
+	@Override
 	public void elementChanged(ElementChangedEvent event) {
 		IModelElementDelta delta = event.getDelta();
 		handleDelta(delta.getAffectedChildren());
@@ -86,26 +90,21 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
-				workbench.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						ContextCore.getContextManager().updateHandle(element, newHandle);
-					}
-				});
+				workbench.getDisplay()
+						.asyncExec(() -> ContextCore.getContextManager().updateHandle(element, newHandle));
 			}
 		}
 	}
 
 	private void delete(final IInteractionElement element) {
+		List<IInteractionElement> elements = new ArrayList<>();
+		elements.add(element);
 		if (!asyncExecMode) {
-			ContextCore.getContextManager().deleteElement(element);
+			ContextCore.getContextManager().deleteElements(elements);
 		} else {
 			IWorkbench workbench = PlatformUI.getWorkbench();
 			if (workbench != null) {
-				workbench.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						ContextCore.getContextManager().deleteElement(element);
-					}
-				});
+				workbench.getDisplay().asyncExec(() -> ContextCore.getContextManager().deleteElements(elements));
 			}
 		}
 	}

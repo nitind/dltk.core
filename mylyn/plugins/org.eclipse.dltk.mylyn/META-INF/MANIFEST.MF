@@ -35,4 +35,4 @@ Export-Package: org.eclipse.dltk.internal.mylyn,
  org.eclipse.dltk.internal.mylyn.actions,
  org.eclipse.dltk.internal.mylyn.editor,
  org.eclipse.dltk.internal.mylyn.search
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

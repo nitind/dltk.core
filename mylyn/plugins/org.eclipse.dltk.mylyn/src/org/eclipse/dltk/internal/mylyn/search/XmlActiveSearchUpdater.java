@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.mylyn.commons.core.StatusHandler;
@@ -28,9 +27,8 @@ import org.eclipse.search.ui.text.Match;
 
 /**
  * COPIED FROM: org.eclipse.search.internal.ui.text.SearchResultUpdater
- * 
+ *
  * @author Shawn Minto
- * 
  */
 public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryListener {
 	private final FileSearchResult fResult;
@@ -41,6 +39,7 @@ public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryLi
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 
+	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		IResourceDelta delta = event.getDelta();
 		if (delta != null) {
@@ -50,16 +49,15 @@ public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryLi
 
 	private void handleDelta(IResourceDelta d) {
 		try {
-			d.accept(new IResourceDeltaVisitor() {
-				public boolean visit(IResourceDelta delta) throws CoreException {
-					switch (delta.getKind()) {
-					case IResourceDelta.ADDED:
-						return false;
-					case IResourceDelta.REMOVED:
-						IResource res = delta.getResource();
-						if (res instanceof IFile) {
-							Match[] matches = fResult.getMatches(res);
-							fResult.removeMatches(matches);
+			d.accept(delta -> {
+				switch (delta.getKind()) {
+				case IResourceDelta.ADDED:
+					return false;
+				case IResourceDelta.REMOVED:
+					IResource res = delta.getResource();
+					if (res instanceof IFile) {
+						Match[] matches = fResult.getMatches(res);
+						fResult.removeMatches(matches);
 
 //							for (Match matche : matches) {
 //							 Match m = matches[j];
@@ -69,25 +67,26 @@ public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryLi
 //							 xnode.getHandle());
 //							 System.out.println(XmlJavaReferencesProvider.nodeMap);
 //							}
-						}
-						break;
-					case IResourceDelta.CHANGED:
-						// TODO want to do something on chages to invalidate
-						// handle changed resource
-						break;
 					}
-					return true;
+					break;
+				case IResourceDelta.CHANGED:
+					// TODO want to do something on chages to invalidate
+					// handle changed resource
+					break;
 				}
+				return true;
 			});
 		} catch (CoreException e) {
 			StatusHandler.log(e.getStatus());
 		}
 	}
 
+	@Override
 	public void queryAdded(ISearchQuery query) {
 		// don't care
 	}
 
+	@Override
 	public void queryRemoved(ISearchQuery query) {
 		if (fResult.equals(query.getSearchResult())) {
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
@@ -95,10 +94,12 @@ public class XmlActiveSearchUpdater implements IResourceChangeListener, IQueryLi
 		}
 	}
 
+	@Override
 	public void queryStarting(ISearchQuery query) {
 		// don't care
 	}
 
+	@Override
 	public void queryFinished(ISearchQuery query) {
 		// don't care
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,7 @@ public class AutoFoldPreferenceBlock implements IFoldingPreferenceBlock {
 		// never used
 	}
 
+	@Override
 	public Control createControl(Composite parent) {
 		try {
 			Composite inner = new Composite(parent, SWT.NONE);
@@ -59,7 +60,7 @@ public class AutoFoldPreferenceBlock implements IFoldingPreferenceBlock {
 			// FoldingKeys.COLLAPSE_INNER_TYPES, 0); //$NON-NLS-1$
 			// addCheckBox(inner, "collapse.static_initializers",
 			// FoldingKeys.COLLAPSE_STATICS, 0); //$NON-NLS-1$
-			//				
+			//
 			// addCheckBox(inner, "collapse.comment_blocks",
 			// FoldingKeys.COLLAPSE_COMMENT_BLOCKS, 0); //$NON-NLS-1$
 			// addCheckBox(inner, "collapse.javadocs",
@@ -67,7 +68,7 @@ public class AutoFoldPreferenceBlock implements IFoldingPreferenceBlock {
 
 			// Label label2 = new Label(inner, SWT.LEFT);
 			// label2.setText( "minSize.title");
-			//		
+			//
 			// minimumLines = new Text(inner, SWT.BORDER | SWT.SINGLE);
 			// GridData gd= new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 			// gd.horizontalSpan= 1;
@@ -76,17 +77,13 @@ public class AutoFoldPreferenceBlock implements IFoldingPreferenceBlock {
 
 			return inner;
 		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, DLTKUiBridgePlugin.ID_PLUGIN,
+			StatusHandler.log(new Status(IStatus.ERROR, DLTKUiBridgePlugin.ID_PLUGIN,
 					"Could not create folding preferences page", t)); //$NON-NLS-1$
 		}
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jdt.ui.text.folding.IJavaFoldingPreferenceBlock#initialize()
-	 */
+	@Override
 	public void initialize() {
 
 		// Iterator it= checkBoxes.keySet().iterator();
@@ -100,11 +97,7 @@ public class AutoFoldPreferenceBlock implements IFoldingPreferenceBlock {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jdt.ui.text.folding.IJavaFoldingPreferenceBlock#performOk()
-	 */
+	@Override
 	public void performOk() {
 		// Iterator it = checkBoxes.keySet().iterator();
 		// while(it.hasNext()) {
@@ -112,7 +105,7 @@ public class AutoFoldPreferenceBlock implements IFoldingPreferenceBlock {
 		// String key = (String) checkBoxes.get(b);
 		// preferences.setValue(key, b.getSelection());
 		// }
-		//		
+		//
 		// int minLines = Integer.parseInt(minimumLines.getText());
 		// preferences.setValue(FoldingKeys.MINIMUM_SIZE, minLines);
 
@@ -122,22 +115,24 @@ public class AutoFoldPreferenceBlock implements IFoldingPreferenceBlock {
 	// int indentation) {
 	// Button checkBox= new Button(parent, SWT.CHECK);
 	// checkBox.setText(label);
-	//		
+	//
 	// GridData gd= new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 	// gd.horizontalIndent= indentation;
 	// gd.horizontalSpan= 1;
 	// gd.grabExcessVerticalSpace= false;
 	// checkBox.setLayoutData(gd);
-	//				
+	//
 	// checkBoxes.put(checkBox, key);
-	//		
+	//
 	// return checkBox;
 	// }
 
+	@Override
 	public void performDefaults() {
 		initialize();
 	}
 
+	@Override
 	public void dispose() {
 		// don't care if we are disposed
 

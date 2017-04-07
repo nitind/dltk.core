@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,6 +49,7 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 		}
 	}
 
+	@Override
 	public void run(IAction action) {
 		valueChanged(action, action.isChecked());
 	}
@@ -62,8 +63,8 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 			action.setChecked(on);
 			DLTKUiBridgePlugin.getDefault().getPreferenceStore().setValue(DLTKUiBridgePlugin.AUTO_FOLDING_ENABLED, on);
 		} catch (Throwable t) {
-			StatusHandler.fail(new Status(IStatus.ERROR, DLTKUiBridgePlugin.ID_PLUGIN,
-					"Could not enable editor management", t)); //$NON-NLS-1$
+			StatusHandler.log(
+					new Status(IStatus.ERROR, DLTKUiBridgePlugin.ID_PLUGIN, "Could not enable editor management", t)); //$NON-NLS-1$
 		}
 	}
 
@@ -71,25 +72,30 @@ public class ToggleActiveFoldingAction extends Action implements IWorkbenchWindo
 		// don't care when the active editor changes
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// don't care when the selection changes
 	}
 
+	@Override
 	public void init(IAction action) {
 		this.parentAction = action;
 		valueChanged(action, DLTKUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
 				DLTKUiBridgePlugin.AUTO_FOLDING_ENABLED));
 	}
 
+	@Override
 	public void dispose() {
 		// don't need to do anything
 
 	}
 
+	@Override
 	public void runWithEvent(IAction action, Event event) {
 		run(action);
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 	}
 }

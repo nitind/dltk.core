@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -106,8 +106,8 @@ public class DLTKUiBridgePlugin extends AbstractUIPlugin {
 		// the Task-Focused category should be disabled if the user reverts to
 		// the default
 		String defaultValue = dltkPrefs.getDefaultString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
-		dltkPrefs.setDefault(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES, defaultValue
-				+ DLTKUiUtil.ASSIST_MYLYN_ALL + DLTKUiUtil.SEPARATOR_CODEASSIST);
+		dltkPrefs.setDefault(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES,
+				defaultValue + DLTKUiUtil.ASSIST_MYLYN_ALL + DLTKUiUtil.SEPARATOR_CODEASSIST);
 	}
 
 	private void lazyStart() {
@@ -194,7 +194,7 @@ public class DLTKUiBridgePlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns an image descriptor for the image file at the given plug-in relative path.
-	 * 
+	 *
 	 * @param path
 	 *            the path
 	 * @return the image descriptor
@@ -212,6 +212,7 @@ public class DLTKUiBridgePlugin extends AbstractUIPlugin {
 
 	public static class DLTKUiBridgeStartup implements IContextUiStartup {
 
+		@Override
 		public void lazyStartup() {
 			DLTKUiBridgePlugin.getDefault().lazyStart();
 		}

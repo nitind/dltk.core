@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,9 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IParent;
@@ -45,20 +44,19 @@ public class ActiveFoldingListener extends AbstractContextListener {
 
 	private IFoldingStructureProviderExtension updater;
 
-	private static DLTKStructureBridge bridge = (DLTKStructureBridge) ContextCore.getStructureBridge(DLTKStructureBridge.CONTENT_TYPE);
+	private static DLTKStructureBridge bridge = (DLTKStructureBridge) ContextCore
+			.getStructureBridge(DLTKStructureBridge.CONTENT_TYPE);
 
 	private boolean enabled = false;
 
-	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(DLTKUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
-				if (event.getNewValue().equals(Boolean.TRUE.toString())) {
-					enabled = true;
-				} else {
-					enabled = false;
-				}
-				updateFolding();
+	private final IPropertyChangeListener PREFERENCE_LISTENER = event -> {
+		if (event.getProperty().equals(DLTKUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
+			if (event.getNewValue().equals(Boolean.TRUE.toString())) {
+				enabled = true;
+			} else {
+				enabled = false;
 			}
+			updateFolding();
 		}
 	};
 
@@ -103,16 +101,16 @@ public class ActiveFoldingListener extends AbstractContextListener {
 			return;
 		} else {
 			try {
-				List<IModelElement> toExpand = new ArrayList<IModelElement>();
-				List<IModelElement> toCollapse = new ArrayList<IModelElement>();
+				List<IModelElement> toExpand = new ArrayList<>();
+				List<IModelElement> toCollapse = new ArrayList<>();
 
 				IModelElement element = DLTKUIPlugin.getEditorInputModelElement(editor.getEditorInput());
 				if (element instanceof ISourceModule) {
 					ISourceModule compilationUnit = (ISourceModule) element;
 					List<IModelElement> allChildren = getAllChildren(compilationUnit);
 					for (IModelElement child : allChildren) {
-						IInteractionElement interactionElement = ContextCore.getContextManager().getElement(
-								bridge.getHandleIdentifier(child));
+						IInteractionElement interactionElement = ContextCore.getContextManager()
+								.getElement(bridge.getHandleIdentifier(child));
 						if (interactionElement != null && interactionElement.getInterest().isInteresting()) {
 							toExpand.add(child);
 						} else {
@@ -126,13 +124,14 @@ public class ActiveFoldingListener extends AbstractContextListener {
 					updater.expandElements(toExpand.toArray(new IModelElement[toExpand.size()]));
 				}
 			} catch (Exception e) {
-				StatusHandler.log(new Status(IStatus.ERROR, DLTKUiBridgePlugin.ID_PLUGIN, "Could not update folding", e)); //$NON-NLS-1$
+				StatusHandler
+						.log(new Status(IStatus.ERROR, DLTKUiBridgePlugin.ID_PLUGIN, "Could not update folding", e)); //$NON-NLS-1$
 			}
 		}
 	}
 
 	private static List<IModelElement> getAllChildren(IParent parentElement) {
-		List<IModelElement> allChildren = new ArrayList<IModelElement>();
+		List<IModelElement> allChildren = new ArrayList<>();
 		try {
 			for (IModelElement child : parentElement.getChildren()) {
 				allChildren.add(child);
@@ -184,9 +183,8 @@ public class ActiveFoldingListener extends AbstractContextListener {
 		switch (event.getEventKind()) {
 		case ACTIVATED:
 		case DEACTIVATED:
-			if (DLTKUiBridgePlugin.getDefault()
-					.getPreferenceStore()
-					.getBoolean(DLTKUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
+			if (DLTKUiBridgePlugin.getDefault().getPreferenceStore().getBoolean(
+					DLTKUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
 				updateFolding();
 			}
 			break;

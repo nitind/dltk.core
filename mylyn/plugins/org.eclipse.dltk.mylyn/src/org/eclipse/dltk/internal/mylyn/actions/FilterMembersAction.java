@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,10 +36,11 @@ public class FilterMembersAction extends Action implements IViewActionDelegate {
 		// ContextCore.getPreferenceStore().getBoolean(PREF_ID);
 		// valueChanged(true, true);
 		// } catch (Exception e) {
-		//            
+		//
 		// }
 	}
 
+	@Override
 	public void run(IAction action) {
 		valueChanged(isChecked(), true);
 
@@ -47,13 +48,11 @@ public class FilterMembersAction extends Action implements IViewActionDelegate {
 
 	private void valueChanged(final boolean on, boolean store) {
 		if (store) {
-			DLTKUiBridgePlugin.getDefault().getPreferenceStore().setValue(
-					PREF_ID, on);
+			DLTKUiBridgePlugin.getDefault().getPreferenceStore().setValue(PREF_ID, on);
 		}
 
 		setChecked(true);
-		ScriptExplorerPart packageExplorer = ScriptExplorerPart
-				.getFromActivePerspective();
+		ScriptExplorerPart packageExplorer = ScriptExplorerPart.getFromActivePerspective();
 		ViewerFilter existingFilter = null;
 		for (int i = 0; i < packageExplorer.getTreeViewer().getFilters().length; i++) {
 			ViewerFilter filter = packageExplorer.getTreeViewer().getFilters()[i];
@@ -64,15 +63,16 @@ public class FilterMembersAction extends Action implements IViewActionDelegate {
 		if (existingFilter != null) {
 			packageExplorer.getTreeViewer().removeFilter(existingFilter);
 		} else {
-			packageExplorer.getTreeViewer().addFilter(
-					new DLTKDeclarationsFilter());
+			packageExplorer.getTreeViewer().addFilter(new DLTKDeclarationsFilter());
 		}
 	}
 
+	@Override
 	public void init(IViewPart view) {
 		// don't need to do anything on init
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// don't care when the selection changes
 	}
