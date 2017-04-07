@@ -35,65 +35,65 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.OpenResourceAction;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 
-
 /**
  * Action to open a closed project. Action either opens the closed projects
- * provided by the structured selection or presents a dialog from which the
- * user can select the projects to be opened.
+ * provided by the structured selection or presents a dialog from which the user
+ * can select the projects to be opened.
  *
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
  *
-	 *
+ *
  */
-public class OpenProjectAction extends SelectionDispatchAction implements IResourceChangeListener {
+public class OpenProjectAction extends SelectionDispatchAction
+		implements IResourceChangeListener {
 
-	private static final int EMPTY_SELECTION= 1;
-	private static final int ELEMENT_SELECTION= 2;
+	private static final int EMPTY_SELECTION = 1;
+	private static final int ELEMENT_SELECTION = 2;
 
 	private int fMode;
 	private OpenResourceAction fWorkbenchAction;
 
 	/**
-	 * Creates a new <code>OpenProjectAction</code>. The action requires
-	 * that the selection provided by the site's selection provider is of type <code>
+	 * Creates a new <code>OpenProjectAction</code>. The action requires that
+	 * the selection provided by the site's selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 *
-	 * @param site the site providing context information for this action
+	 * @param site
+	 *            the site providing context information for this action
 	 */
 	public OpenProjectAction(IWorkbenchSite site) {
 		super(site);
-		fWorkbenchAction= new OpenResourceAction(site.getShell());
+		fWorkbenchAction = new OpenResourceAction(site);
 		setText(fWorkbenchAction.getText());
 		setToolTipText(fWorkbenchAction.getToolTipText());
 		if (DLTKCore.DEBUG) {
 			System.err.println("Add help support here..."); //$NON-NLS-1$
 		}
 
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IScriptHelpContextIds.OPEN_PROJECT_ACTION);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+		// IScriptHelpContextIds.OPEN_PROJECT_ACTION);
 	}
 
-	/*
-	 * @see IResourceChangeListener#resourceChanged(IResourceChangeEvent)
-	 */
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		fWorkbenchAction.resourceChanged(event);
 		switch (fMode) {
-			case ELEMENT_SELECTION:
-				setEnabled(fWorkbenchAction.isEnabled());
-				break;
-			case EMPTY_SELECTION:
-				internalResourceChanged(event);
-				break;
+		case ELEMENT_SELECTION:
+			setEnabled(fWorkbenchAction.isEnabled());
+			break;
+		case EMPTY_SELECTION:
+			internalResourceChanged(event);
+			break;
 		}
 	}
 
 	private void internalResourceChanged(IResourceChangeEvent event) {
 		IResourceDelta delta = event.getDelta();
 		if (delta != null) {
-			IResourceDelta[] projDeltas = delta.getAffectedChildren(IResourceDelta.CHANGED);
+			IResourceDelta[] projDeltas = delta
+					.getAffectedChildren(IResourceDelta.CHANGED);
 			for (int i = 0; i < projDeltas.length; ++i) {
 				IResourceDelta projDelta = projDeltas[i];
 				if ((projDelta.getFlags() & IResourceDelta.OPEN) != 0) {
@@ -104,12 +104,12 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 		}
 	}
 
-	//---- normal selection -------------------------------------
+	// ---- normal selection -------------------------------------
 
 	@Override
 	public void selectionChanged(ISelection selection) {
 		setEnabled(hasCloseProjects());
-		fMode= EMPTY_SELECTION;
+		fMode = EMPTY_SELECTION;
 	}
 
 	@Override
@@ -117,13 +117,13 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 		internalRun();
 	}
 
-	//---- structured selection ---------------------------------------
+	// ---- structured selection ---------------------------------------
 
 	@Override
 	public void selectionChanged(IStructuredSelection selection) {
 		if (selection.isEmpty()) {
 			setEnabled(hasCloseProjects());
-			fMode= EMPTY_SELECTION;
+			fMode = EMPTY_SELECTION;
 			return;
 		}
 		if (!hasCloseProjects()) {
@@ -132,7 +132,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 		}
 		fWorkbenchAction.selectionChanged(selection);
 		setEnabled(fWorkbenchAction.isEnabled());
-		fMode= ELEMENT_SELECTION;
+		fMode = ELEMENT_SELECTION;
 	}
 
 	@Override
@@ -145,22 +145,24 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 	}
 
 	private void internalRun() {
-		ElementListSelectionDialog dialog= new ElementListSelectionDialog(getShell(), new ModelElementLabelProvider());
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
+				getShell(), new ModelElementLabelProvider());
 		dialog.setTitle(ActionMessages.OpenProjectAction_dialog_title);
 		dialog.setMessage(ActionMessages.OpenProjectAction_dialog_message);
 		dialog.setElements(getClosedProjects());
 		dialog.setMultipleSelection(true);
-		int result= dialog.open();
+		int result = dialog.open();
 		if (result != Window.OK)
 			return;
-		final Object[] projects= dialog.getResult();
-		IWorkspaceRunnable runnable= createRunnable(projects);
+		final Object[] projects = dialog.getResult();
+		IWorkspaceRunnable runnable = createRunnable(projects);
 		try {
-			PlatformUI.getWorkbench().getProgressService().run(true, true, new WorkbenchRunnableAdapter(runnable));
+			PlatformUI.getWorkbench().getProgressService().run(true, true,
+					new WorkbenchRunnableAdapter(runnable));
 		} catch (InvocationTargetException e) {
 			ExceptionHandler.handle(e, getShell(),
-				ActionMessages.OpenProjectAction_dialog_title,
-				ActionMessages.OpenProjectAction_error_message);
+					ActionMessages.OpenProjectAction_dialog_title,
+					ActionMessages.OpenProjectAction_error_message);
 		} catch (InterruptedException e) {
 		}
 	}
@@ -189,10 +191,11 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 	}
 
 	private Object[] getClosedProjects() {
-		IProject[] projects= ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		List result= new ArrayList(5);
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
+				.getProjects();
+		List<IProject> result = new ArrayList<>(5);
 		for (int i = 0; i < projects.length; i++) {
-			IProject project= projects[i];
+			IProject project = projects[i];
 			if (!project.isOpen())
 				result.add(project);
 		}
@@ -200,7 +203,8 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 	}
 
 	private boolean hasCloseProjects() {
-		IProject[] projects= ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
+				.getProjects();
 		for (int i = 0; i < projects.length; i++) {
 			if (!projects[i].isOpen())
 				return true;

@@ -28,13 +28,15 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.MoveProjectAction;
 
-
 public class ReorgMoveAction extends SelectionDispatchAction {
 	public ReorgMoveAction(IWorkbenchSite site) {
 		super(site);
 		setText(ReorgMessages.ReorgMoveAction_3);
 		setDescription(ReorgMessages.ReorgMoveAction_4);
-		/*PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IScriptHelpContextIds.MOVE_ACTION);*/
+		/*
+		 * PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+		 * IScriptHelpContextIds.MOVE_ACTION);
+		 */
 		if (DLTKCore.DEBUG) {
 			System.err.println("Add help support here..."); //$NON-NLS-1$
 		}
@@ -48,13 +50,15 @@ public class ReorgMoveAction extends SelectionDispatchAction {
 				return;
 			}
 			try {
-				List elements= selection.toList();
-				IResource[] resources= ReorgUtils.getResources(elements);
-				IModelElement[] modelElements= ReorgUtils.getModelElements(elements);
+				List elements = selection.toList();
+				IResource[] resources = ReorgUtils.getResources(elements);
+				IModelElement[] modelElements = ReorgUtils
+						.getModelElements(elements);
 				if (elements.size() != resources.length + modelElements.length)
 					setEnabled(false);
 				else
-					setEnabled(RefactoringAvailabilityTester.isMoveAvailable(resources, modelElements));
+					setEnabled(RefactoringAvailabilityTester
+							.isMoveAvailable(resources, modelElements));
 			} catch (ModelException e) {
 				// no ui here - this happens on selection changes
 				// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
@@ -72,19 +76,22 @@ public class ReorgMoveAction extends SelectionDispatchAction {
 	}
 
 	/**
-	 * Note: This method is for internal use only. Clients should not call this method.
+	 * Note: This method is for internal use only. Clients should not call this
+	 * method.
 	 */
 	@Override
 	public void selectionChanged(ModelTextSelection selection) {
 		try {
-			setEnabled(RefactoringAvailabilityTester.isMoveAvailable(selection));
+			setEnabled(
+					RefactoringAvailabilityTester.isMoveAvailable(selection));
 		} catch (ModelException e) {
 			setEnabled(false);
 		}
 	}
 
-	private MoveProjectAction createWorkbenchAction(IStructuredSelection selection) {
-		MoveProjectAction action= new MoveProjectAction(getShell());
+	private MoveProjectAction createWorkbenchAction(
+			IStructuredSelection selection) {
+		MoveProjectAction action = new MoveProjectAction(getSite());
 		action.selectionChanged(selection);
 		return action;
 	}
@@ -96,13 +103,18 @@ public class ReorgMoveAction extends SelectionDispatchAction {
 			return;
 		}
 		try {
-			List elements= selection.toList();
-			IResource[] resources= ReorgUtils.getResources(elements);
-			IModelElement[] modelElements= ReorgUtils.getModelElements(elements);
-			if (RefactoringAvailabilityTester.isMoveAvailable(resources, modelElements))
-				RefactoringExecutionStarter.startRefactoring(resources, modelElements, getShell());
+			List elements = selection.toList();
+			IResource[] resources = ReorgUtils.getResources(elements);
+			IModelElement[] modelElements = ReorgUtils
+					.getModelElements(elements);
+			if (RefactoringAvailabilityTester.isMoveAvailable(resources,
+					modelElements))
+				RefactoringExecutionStarter.startRefactoring(resources,
+						modelElements, getShell());
 		} catch (ModelException e) {
-			ExceptionHandler.handle(e, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringMessages.OpenRefactoringWizardAction_exception);
+			ExceptionHandler.handle(e,
+					RefactoringMessages.OpenRefactoringWizardAction_refactoring,
+					RefactoringMessages.OpenRefactoringWizardAction_exception);
 		}
 	}
 }

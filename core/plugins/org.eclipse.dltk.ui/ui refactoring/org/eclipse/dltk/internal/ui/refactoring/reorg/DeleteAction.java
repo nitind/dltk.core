@@ -30,16 +30,21 @@ public class DeleteAction extends SelectionDispatchAction {
 		super(site);
 		setText(ReorgMessages.DeleteAction_3);
 		setDescription(ReorgMessages.DeleteAction_4);
-		ISharedImages workbenchImages= DLTKUIPlugin.getDefault().getWorkbench().getSharedImages();
-		setDisabledImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_DISABLED));
-		setImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
-		setHoverImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+		ISharedImages workbenchImages = DLTKUIPlugin.getDefault().getWorkbench()
+				.getSharedImages();
+		setDisabledImageDescriptor(workbenchImages
+				.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_DISABLED));
+		setImageDescriptor(workbenchImages
+				.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+		setHoverImageDescriptor(workbenchImages
+				.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 
 		if (DLTKCore.DEBUG) {
 			System.err.println("Add help support here..."); //$NON-NLS-1$
 		}
 
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IScriptHelpContextIds.DELETE_ACTION);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+		// IScriptHelpContextIds.DELETE_ACTION);
 	}
 
 	@Override
@@ -49,9 +54,10 @@ public class DeleteAction extends SelectionDispatchAction {
 			return;
 		}
 		try {
-			setEnabled(RefactoringAvailabilityTester.isDeleteAvailable(selection.toArray()));
+			setEnabled(RefactoringAvailabilityTester
+					.isDeleteAvailable(selection.toArray()));
 		} catch (CoreException e) {
-			//no ui here - this happens on selection changes
+			// no ui here - this happens on selection changes
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 			if (ScriptModelUtil.isExceptionToBeLogged(e))
 				DLTKUIPlugin.log(e);
@@ -60,7 +66,7 @@ public class DeleteAction extends SelectionDispatchAction {
 	}
 
 	private IAction createWorkbenchAction(IStructuredSelection selection) {
-		DeleteResourceAction action= new DeleteResourceAction(getShell());
+		DeleteResourceAction action = new DeleteResourceAction(getSite());
 		action.selectionChanged(selection);
 		return action;
 	}
@@ -72,9 +78,12 @@ public class DeleteAction extends SelectionDispatchAction {
 			return;
 		}
 		try {
-			RefactoringExecutionStarter.startDeleteRefactoring(selection.toArray(), getShell());
+			RefactoringExecutionStarter
+					.startDeleteRefactoring(selection.toArray(), getShell());
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringMessages.OpenRefactoringWizardAction_exception);
+			ExceptionHandler.handle(e,
+					RefactoringMessages.OpenRefactoringWizardAction_refactoring,
+					RefactoringMessages.OpenRefactoringWizardAction_exception);
 		}
 	}
 }
