@@ -27,8 +27,9 @@ import org.eclipse.jface.text.templates.TemplateVariableResolver;
 
 public class TemplateVariableProcessor implements IContentAssistProcessor {
 
-	private static Comparator<TemplateVariableProposal> fgTemplateVariableProposalComparator = (proposal0, proposal1) -> proposal0.getDisplayString().compareTo(
-			proposal1.getDisplayString());
+	private static Comparator<TemplateVariableProposal> fgTemplateVariableProposalComparator = (
+			proposal0, proposal1) -> proposal0.getDisplayString()
+					.compareTo(proposal1.getDisplayString());
 
 	/** the context type */
 	private TemplateContextType fContextType;
@@ -87,11 +88,9 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 
 		int length = end - offset;
 
-		for (@SuppressWarnings("unchecked")
-		Iterator<TemplateVariableResolver> iterator = fContextType.resolvers(); iterator
-				.hasNext();) {
-			TemplateVariableResolver variable = iterator
-					.next();
+		for (Iterator<TemplateVariableResolver> iterator = fContextType
+				.resolvers(); iterator.hasNext();) {
+			TemplateVariableResolver variable = iterator.next();
 
 			if (variable.getType().startsWith(prefix))
 				proposals.add(new TemplateVariableProposal(variable, offset,
@@ -115,9 +114,8 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 
 		if (start >= 1 && string.charAt(start - 1) == ':') {
 			start--;
-			while ((start != 0)
-					&& Character.isUnicodeIdentifierPart(string
-							.charAt(start - 1)))
+			while ((start != 0) && Character
+					.isUnicodeIdentifierPart(string.charAt(start - 1)))
 				start--;
 		}
 

@@ -35,15 +35,16 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * Abstract options block that can be used by an
  * {@link AbstractConfigurationBlockPropertyAndPreferencePage} implementation to
  * create a preferences/property page for task tags.
- * 
+ *
  * <p>
  * It is recommended to instantiate {@link TodoTaskOptionsBlock} instead.
  * </p>
  */
-public abstract class AbstractTodoTaskOptionsBlock extends AbstractOptionsBlock {
+public abstract class AbstractTodoTaskOptionsBlock
+		extends AbstractOptionsBlock {
 
-	private static class TodoTaskLabelProvider extends LabelProvider implements
-			ITableLabelProvider {
+	private static class TodoTaskLabelProvider extends LabelProvider
+			implements ITableLabelProvider {
 
 		@Override
 		public Image getImage(Object element) {
@@ -86,7 +87,6 @@ public abstract class AbstractTodoTaskOptionsBlock extends AbstractOptionsBlock 
 
 	private static class TodoTaskSorter extends ViewerSorter {
 		@Override
-		@SuppressWarnings("unchecked")
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			return getComparator().compare(((TodoTask) e1).name,
 					((TodoTask) e2).name);
@@ -179,8 +179,8 @@ public abstract class AbstractTodoTaskOptionsBlock extends AbstractOptionsBlock 
 		final String[] columnsHeaders = new String[] {
 				PreferencesMessages.TodoTaskConfigurationBlock_markers_tasks_name_column,
 				PreferencesMessages.TodoTaskConfigurationBlock_markers_tasks_priority_column, };
-		fTodoTasksList.setTableColumns(new ListDialogField.ColumnsDescription(
-				columnsHeaders, true));
+		fTodoTasksList.setTableColumns(
+				new ListDialogField.ColumnsDescription(columnsHeaders, true));
 		fTodoTasksList.setViewerSorter(new TodoTaskSorter());
 
 		final GridLayout layout = new GridLayout();
@@ -200,11 +200,9 @@ public abstract class AbstractTodoTaskOptionsBlock extends AbstractOptionsBlock 
 				null, false, 2);
 		bindControl(enableCheckbox, getEnabledKey(), null);
 
-		fCaseSensitiveCheckbox = SWTFactory
-				.createCheckButton(
-						markersComposite,
-						PreferencesMessages.TodoTaskConfigurationBlock_casesensitive_label,
-						null, false, 2);
+		fCaseSensitiveCheckbox = SWTFactory.createCheckButton(markersComposite,
+				PreferencesMessages.TodoTaskConfigurationBlock_casesensitive_label,
+				null, false, 2);
 
 		bindControl(fCaseSensitiveCheckbox, getCaseSensitiveKey(), null);
 
@@ -212,8 +210,8 @@ public abstract class AbstractTodoTaskOptionsBlock extends AbstractOptionsBlock 
 		data.widthHint = conv.convertWidthInCharsToPixels(50);
 		fTodoTasksList.getListControl(markersComposite).setLayoutData(data);
 
-		fTodoTasksList.getButtonBox(markersComposite).setLayoutData(
-				new GridData(GridData.HORIZONTAL_ALIGN_FILL
+		fTodoTasksList.getButtonBox(markersComposite)
+				.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
 						| GridData.VERTICAL_ALIGN_BEGINNING));
 
 		enableCheckbox.addSelectionListener(new SelectionAdapter() {
@@ -232,7 +230,7 @@ public abstract class AbstractTodoTaskOptionsBlock extends AbstractOptionsBlock 
 	/**
 	 * Returns the preference key that will be used to store the 'case
 	 * sensitive' preference
-	 * 
+	 *
 	 * @see #createCaseSensitiveKey(String)
 	 */
 	protected abstract PreferenceKey getCaseSensitiveKey();
@@ -240,14 +238,14 @@ public abstract class AbstractTodoTaskOptionsBlock extends AbstractOptionsBlock 
 	/**
 	 * Returns the preference key that will be used to store the 'enabled'
 	 * preference
-	 * 
+	 *
 	 * @see #createEnabledKey(String)
 	 */
 	protected abstract PreferenceKey getEnabledKey();
 
 	/**
 	 * Returns the preference key that will be used to store the task tags
-	 * 
+	 *
 	 * @see #createTagKey(String)
 	 */
 	protected abstract PreferenceKey getTags();
@@ -274,18 +272,17 @@ public abstract class AbstractTodoTaskOptionsBlock extends AbstractOptionsBlock 
 
 	@SuppressWarnings("unchecked")
 	protected final void updateModel(DialogField field) {
-		setValue(getTags(), TaskTagUtils.encodeTaskTags(fTodoTasksList
-				.getElements()));
+		setValue(getTags(),
+				TaskTagUtils.encodeTaskTags(fTodoTasksList.getElements()));
 	}
 
 	@Override
 	protected IPreferenceChangeRebuildPrompt getPreferenceChangeRebuildPrompt(
-			boolean workspaceSettings, Collection<PreferenceKey> changedOptions) {
-		return PreferenceChangeRebuildPrompt
-				.create(
-						workspaceSettings,
-						PreferencesMessages.TodoTaskConfigurationBlock_needsbuild_title,
-						PreferencesMessages.TodoTaskConfigurationBlock_needsbuild_message);
+			boolean workspaceSettings,
+			Collection<PreferenceKey> changedOptions) {
+		return PreferenceChangeRebuildPrompt.create(workspaceSettings,
+				PreferencesMessages.TodoTaskConfigurationBlock_needsbuild_title,
+				PreferencesMessages.TodoTaskConfigurationBlock_needsbuild_message);
 	}
 
 	private void doTodoButtonPressed(int index) {

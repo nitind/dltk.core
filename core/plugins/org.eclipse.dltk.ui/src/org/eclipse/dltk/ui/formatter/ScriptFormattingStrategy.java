@@ -94,11 +94,11 @@ public class ScriptFormattingStrategy extends ContextBasedFormattingStrategy {
 			try {
 				int offset = partition.getOffset();
 
-				final IScriptFormatterFactory formatterFactory = selectFormatterFactory(job);
+				final IScriptFormatterFactory formatterFactory = selectFormatterFactory(
+						job);
 				if (formatterFactory != null) {
 					final String lineDelimiter = TextUtilities
 							.getDefaultLineDelimiter(document);
-					@SuppressWarnings("unchecked")
 					final Map<String, String> prefs = getPreferences();
 					final IScriptFormatter formatter = formatterFactory
 							.createFormatter(lineDelimiter, prefs);
@@ -124,26 +124,26 @@ public class ScriptFormattingStrategy extends ContextBasedFormattingStrategy {
 					}
 				}
 			} catch (FormatterSyntaxProblemException e) {
-				reportFormatError(NLS
-						.bind(FormatterMessages.ScriptFormattingStrategy_unableToFormatSourceContainingSyntaxError,
-								e.getMessage()));
+				reportFormatError(NLS.bind(
+						FormatterMessages.ScriptFormattingStrategy_unableToFormatSourceContainingSyntaxError,
+						e.getMessage()));
 			} catch (FormatterException e) {
-				reportFormatError(NLS
-						.bind(FormatterMessages.ScriptFormattingStrategy_unableToFormat,
-								e.getMessage()));
+				reportFormatError(NLS.bind(
+						FormatterMessages.ScriptFormattingStrategy_unableToFormat,
+						e.getMessage()));
 			} catch (MalformedTreeException e) {
-				DLTKUIPlugin
-						.warn(FormatterMessages.ScriptFormattingStrategy_formattingError,
-								e);
+				DLTKUIPlugin.warn(
+						FormatterMessages.ScriptFormattingStrategy_formattingError,
+						e);
 			} catch (BadLocationException e) {
 				// Can only happen on concurrent document modification
-				DLTKUIPlugin
-						.warn(FormatterMessages.ScriptFormattingStrategy_formattingError,
-								e);
+				DLTKUIPlugin.warn(
+						FormatterMessages.ScriptFormattingStrategy_formattingError,
+						e);
 			} catch (Exception e) {
-				final String msg = NLS
-						.bind(FormatterMessages.ScriptFormattingStrategy_unexpectedFormatterError,
-								e.toString());
+				final String msg = NLS.bind(
+						FormatterMessages.ScriptFormattingStrategy_unexpectedFormatterError,
+						e.toString());
 				DLTKUIPlugin.logErrorMessage(msg, e);
 			} finally {
 				if (partitioners != null)
@@ -183,8 +183,8 @@ public class ScriptFormattingStrategy extends ContextBasedFormattingStrategy {
 				.getProperty(ScriptFormattingContextProperties.MODULE);
 		final IProject project = (IProject) context
 				.getProperty(ScriptFormattingContextProperties.CONTEXT_PROJECT);
-		final String formatterId = (String) context
-				.getProperty(ScriptFormattingContextProperties.CONTEXT_FORMATTER_ID);
+		final String formatterId = (String) context.getProperty(
+				ScriptFormattingContextProperties.CONTEXT_FORMATTER_ID);
 		fJobs.addLast(new FormatJob(document, partition, module, project,
 				formatterId));
 	}

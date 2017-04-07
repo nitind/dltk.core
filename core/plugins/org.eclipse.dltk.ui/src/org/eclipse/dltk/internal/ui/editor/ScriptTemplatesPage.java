@@ -109,8 +109,9 @@ public class ScriptTemplatesPage extends AbstractTemplatesPage {
 					return;
 				}
 				if (prefix.length() > 0) {
-					contextViewer.setSelectedRange(textSelection.getOffset()
-							- prefix.length(), prefix.length());
+					contextViewer.setSelectedRange(
+							textSelection.getOffset() - prefix.length(),
+							prefix.length());
 					textSelection = (ITextSelection) contextViewer
 							.getSelectionProvider().getSelection();
 				}
@@ -124,13 +125,13 @@ public class ScriptTemplatesPage extends AbstractTemplatesPage {
 		}
 		Position position = new Position(textSelection.getOffset() + 1, 0);
 		Region region = new Region(textSelection.getOffset() + 1, 0);
-		contextViewer.getSelectionProvider().setSelection(
-				new TextSelection(textSelection.getOffset(), 1));
+		contextViewer.getSelectionProvider()
+				.setSelection(new TextSelection(textSelection.getOffset(), 1));
 		ISourceModule compilationUnit = EditorUtility
 				.getEditorInputModelElement(fScriptEditor, true);
 
-		TemplateContextType type = getContextTypeRegistry().getContextType(
-				template.getContextTypeId());
+		TemplateContextType type = getContextTypeRegistry()
+				.getContextType(template.getContextTypeId());
 		DocumentTemplateContext context = ((ScriptTemplateContextType) type)
 				.createContext(document, position, compilationUnit);
 		context.setVariable("selection", savedText); //$NON-NLS-1$
@@ -170,8 +171,8 @@ public class ScriptTemplatesPage extends AbstractTemplatesPage {
 		String[] contextIds = getContextTypeIds(document, offset);
 		for (int i = 0; i < contextIds.length; i++) {
 			if (contextIds[i].equals(template.getContextTypeId())) {
-				DocumentTemplateContext context = getContext(document,
-						template, offset, length);
+				DocumentTemplateContext context = getContext(document, template,
+						offset, length);
 				return context.canEvaluate(template)
 						|| isTemplateAllowed(context, template);
 			}
@@ -199,8 +200,8 @@ public class ScriptTemplatesPage extends AbstractTemplatesPage {
 		new ScriptSourcePreviewerUpdater(viewer, configuration, store);
 
 		Control control = viewer.getControl();
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.FILL_VERTICAL);
+		GridData data = new GridData(
+				GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL);
 		control.setLayoutData(data);
 
 		viewer.setEditable(false);
@@ -224,8 +225,8 @@ public class ScriptTemplatesPage extends AbstractTemplatesPage {
 	}
 
 	protected IDLTKUILanguageToolkit uiToolkit() {
-		return DLTKUILanguageManager.getLanguageToolkit(fScriptEditor
-				.getLanguageToolkit());
+		return DLTKUILanguageManager
+				.getLanguageToolkit(fScriptEditor.getLanguageToolkit());
 	}
 
 	@Override
@@ -235,8 +236,8 @@ public class ScriptTemplatesPage extends AbstractTemplatesPage {
 			return;
 		}
 		String contextId = template.getContextTypeId();
-		TemplateContextType type = getContextTypeRegistry().getContextType(
-				contextId);
+		TemplateContextType type = getContextTypeRegistry()
+				.getContextType(contextId);
 		fTemplateProcessor.setContextType(type);
 
 		IDocument doc = getPatternViewer().getDocument();
@@ -302,8 +303,9 @@ public class ScriptTemplatesPage extends AbstractTemplatesPage {
 			// && Character.isWhitespace(context.getDocument()
 			// .getChar(offset - 1));
 			// } else {
-			return ((offset = context.getCompletionOffset()) > 0 && !isTemplateNamePart(context
-					.getDocument().getChar(offset - 1)));
+			return ((offset = context.getCompletionOffset()) > 0
+					&& !isTemplateNamePart(
+							context.getDocument().getChar(offset - 1)));
 			// }
 		} catch (BadLocationException e) {
 		}
@@ -359,7 +361,6 @@ public class ScriptTemplatesPage extends AbstractTemplatesPage {
 	@Override
 	protected String[] getContextTypeIds(IDocument document, int offset) {
 		final Set<String> ids = new HashSet<String>();
-		@SuppressWarnings("unchecked")
 		final Iterator<TemplateContextType> i = getContextTypeRegistry()
 				.contextTypes();
 		while (i.hasNext()) {
