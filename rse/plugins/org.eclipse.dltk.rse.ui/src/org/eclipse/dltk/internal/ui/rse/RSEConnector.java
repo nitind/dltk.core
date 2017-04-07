@@ -23,6 +23,7 @@ public class RSEConnector implements IConnector {
 
 	private Thread createProcessingThread() {
 		return new Thread("RSE connection resolver") {
+			@Override
 			public void run() {
 				while (running) {
 					if (RSEConnectionQueryManager.getInstance().hasHosts()) {
@@ -36,15 +37,13 @@ public class RSEConnector implements IConnector {
 										.markHostAsFinished(host);
 							}
 						} else {
-							display.syncExec(new Runnable() {
-								public void run() {
-									IHost host = RSEConnectionQueryManager
-											.getInstance().getNextHost(false);
-									if (host != null) {
-										connect(host);
-										RSEConnectionQueryManager.getInstance()
-												.markHostAsFinished(host);
-									}
+							display.syncExec(() -> {
+								IHost host = RSEConnectionQueryManager
+										.getInstance().getNextHost(false);
+								if (host != null) {
+									connect(host);
+									RSEConnectionQueryManager.getInstance()
+											.markHostAsFinished(host);
 								}
 							});
 						}
@@ -59,7 +58,7 @@ public class RSEConnector implements IConnector {
 		};
 	}
 
-	private final Set<IHost> activeConnects = new HashSet<IHost>();
+	private final Set<IHost> activeConnects = new HashSet<>();
 
 	private void connect(IHost host) {
 		ISubSystem[] subSystems = host.getSubSystems();
@@ -89,6 +88,7 @@ public class RSEConnector implements IConnector {
 	public RSEConnector() {
 	}
 
+	@Override
 	public boolean isDirectProcessingRequired() {
 		// Process direct connection request.
 		Display current = Display.getCurrent();
@@ -99,6 +99,7 @@ public class RSEConnector implements IConnector {
 		return false;
 	}
 
+	@Override
 	public void register() {
 		if (processingThread == null) {
 			processingThread = createProcessingThread();
@@ -106,6 +107,7 @@ public class RSEConnector implements IConnector {
 		}
 	}
 
+	@Override
 	public void runDisplayRunnables(long timeout) {
 		long end = System.currentTimeMillis() + timeout;
 		// We need to interrupt processingThread if it is no executing.

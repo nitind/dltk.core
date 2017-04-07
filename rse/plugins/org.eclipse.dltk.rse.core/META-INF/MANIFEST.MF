@@ -23,4 +23,4 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dltk.core.internal.rse;x-friends:=org.eclipse.dltk.rse.ui,
  org.eclipse.dltk.core.internal.rse.perfomance;x-internal:=true
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

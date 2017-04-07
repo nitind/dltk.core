@@ -18,23 +18,22 @@ import org.eclipse.rse.internal.efs.RSEFileSystem;
 import org.eclipse.rse.subsystems.files.core.subsystems.IRemoteFileSubSystem;
 
 @SuppressWarnings("restriction")
-public class RSEEnvironment implements IEnvironment, IAdaptable {
+public class RSEEnvironment implements IEnvironment {
 	private IRemoteFileSubSystem fs;
 	private IHost host;
-	private static final Map<IRemoteFileSubSystem, Boolean> tryToConnect = new HashMap<IRemoteFileSubSystem, Boolean>();
+	private static final Map<IRemoteFileSubSystem, Boolean> tryToConnect = new HashMap<>();
 
 	public RSEEnvironment(IRemoteFileSubSystem fs) {
 		this.fs = fs;
 		this.host = fs.getConnectorService().getHost();
 	}
 
-	/*
-	 * @see org.eclipse.dltk.core.environment.IEnvironment#isLocal()
-	 */
+	@Override
 	public boolean isLocal() {
 		return false;
 	}
 
+	@Override
 	public IFileHandle getFile(IPath path) {
 		if (path == null || Path.EMPTY.equals(path)) {
 			throw new IllegalArgumentException(
@@ -43,15 +42,18 @@ public class RSEEnvironment implements IEnvironment, IAdaptable {
 		return new RSEFileHandle(this, getURIFor(host, path.toString()));
 	}
 
+	@Override
 	public String getId() {
 		return RSEEnvironmentProvider.RSE_ENVIRONMENT_PREFIX
 				+ host.getAliasName();
 	}
 
+	@Override
 	public String getSeparator() {
 		return fs.getSeparator();
 	}
 
+	@Override
 	public char getSeparatorChar() {
 		return fs.getSeparatorChar();
 	}
@@ -70,6 +72,7 @@ public class RSEEnvironment implements IEnvironment, IAdaptable {
 		return getId().hashCode();
 	}
 
+	@Override
 	public String getName() {
 		return host.getAliasName()
 				+ Messages.RSEEnvironment_EnvironmentNameSuffix;
@@ -79,16 +82,19 @@ public class RSEEnvironment implements IEnvironment, IAdaptable {
 		return host;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	public Object getAdapter(Class adapter) {
-		return Platform.getAdapterManager()
+	public <T> T getAdapter(Class<T> adapter) {
+		return (T) Platform.getAdapterManager()
 				.loadAdapter(this, adapter.getName());
 	}
 
+	@Override
 	public URI getURI(IPath location) {
 		return getURIFor(host, location.toString());
 	}
 
+	@Override
 	public String convertPathToString(IPath path) {
 		if (host.getSystemType().isWindows()) {
 			return path.toString().replace('/', '\\');
@@ -97,6 +103,7 @@ public class RSEEnvironment implements IEnvironment, IAdaptable {
 		}
 	}
 
+	@Override
 	public IFileHandle getFile(URI locationURI) {
 		if (RSEEnvironmentProvider.RSE_SCHEME.equalsIgnoreCase(locationURI
 				.getScheme())
@@ -116,14 +123,17 @@ public class RSEEnvironment implements IEnvironment, IAdaptable {
 		}
 	}
 
+	@Override
 	public String getPathsSeparator() {
 		return Character.toString(getPathsSeparatorChar());
 	}
 
+	@Override
 	public char getPathsSeparatorChar() {
 		return host.getSystemType().isWindows() ? ';' : ':';
 	}
 
+	@Override
 	public String getCanonicalPath(IPath path) {
 		IFileHandle file = getFile(path);
 		if (file instanceof RSEFileHandle) {
@@ -144,6 +154,7 @@ public class RSEEnvironment implements IEnvironment, IAdaptable {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public boolean isConnected() {
 		// IConnectorService[] services = host.getConnectorServices();
 		// int connected = 0;
@@ -165,6 +176,7 @@ public class RSEEnvironment implements IEnvironment, IAdaptable {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public boolean connect() {
 		return connect(false);
 	}

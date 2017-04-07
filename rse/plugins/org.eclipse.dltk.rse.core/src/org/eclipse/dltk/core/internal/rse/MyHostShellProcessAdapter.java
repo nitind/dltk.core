@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 PalmSource, Inc.
+ * Copyright (c) 2006, 2017 PalmSource, Inc. and others.
  * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License v1.0 
  * which accompanies this distribution, and is available at 
@@ -87,6 +87,7 @@ public class MyHostShellProcessAdapter extends Process implements
 	 * 
 	 * @see java.lang.Process#destroy()
 	 */
+	@Override
 	public synchronized void destroy() {
 		if (!done && hostShell.isActive()) {
 			hostShell.writeToShell(CTRL_C);
@@ -139,6 +140,7 @@ public class MyHostShellProcessAdapter extends Process implements
 	 * There is no relevant exit value to return when the shell exits. This
 	 * always returns 0.
 	 */
+	@Override
 	public synchronized int exitValue() {
 		if (!done && hostShell.isActive())
 			throw new IllegalThreadStateException();
@@ -156,6 +158,7 @@ public class MyHostShellProcessAdapter extends Process implements
 	 * 
 	 * @see java.lang.Process#getErrorStream()
 	 */
+	@Override
 	public InputStream getErrorStream() {
 		return errorStream;
 	}
@@ -165,6 +168,7 @@ public class MyHostShellProcessAdapter extends Process implements
 	 * 
 	 * @see java.lang.Process#getInputStream()
 	 */
+	@Override
 	public InputStream getInputStream() {
 		return inputStream;
 	}
@@ -174,6 +178,7 @@ public class MyHostShellProcessAdapter extends Process implements
 	 * 
 	 * @see java.lang.Process#getOutputStream()
 	 */
+	@Override
 	public OutputStream getOutputStream() {
 		return outputStream;
 	}
@@ -183,6 +188,7 @@ public class MyHostShellProcessAdapter extends Process implements
 	 * 
 	 * @see java.lang.Process#waitFor()
 	 */
+	@Override
 	public synchronized int waitFor() throws InterruptedException {
 
 		while (!done && hostShell.isActive()) {
@@ -224,6 +230,7 @@ public class MyHostShellProcessAdapter extends Process implements
 	 */
 	private int prefixCounter = 0;
 
+	@Override
 	public void shellOutputChanged(IHostShellChangeEvent event) {
 		IHostOutput[] input = event.getLines();
 		OutputStream outputStream = event.isError() ? hostShellError

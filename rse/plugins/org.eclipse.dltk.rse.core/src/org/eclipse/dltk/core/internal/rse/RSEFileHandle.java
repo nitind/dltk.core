@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.  
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -59,7 +59,7 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 
 	}
 
-	private static final Map<IFileStore, CacheEntry> cache = new HashMap<IFileStore, CacheEntry>();
+	private static final Map<IFileStore, CacheEntry> cache = new HashMap<>();
 
 	private final IFileStore file;
 	private final IEnvironment environment;
@@ -107,6 +107,7 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 		this(env, RSEEnvironment.getStoreFor(locationURI));
 	}
 
+	@Override
 	public boolean exists() {
 		if (!environment.connect()) {
 			return false;
@@ -163,14 +164,17 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 		return file;
 	}
 
+	@Override
 	public String toOSString() {
 		return this.environment.convertPathToString(getPath());
 	}
 
+	@Override
 	public String getCanonicalPath() {
 		return this.environment.getCanonicalPath(getPath());
 	}
 
+	@Override
 	public IFileHandle getChild(final String childname) {
 		if (!environment.connect()) {
 			URI childURI;
@@ -190,6 +194,7 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 		return new RSEFileHandle(environment, childStore);
 	}
 
+	@Override
 	public IFileHandle[] getChildren() {
 		if (!environment.connect()) {
 			return null;
@@ -240,18 +245,22 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 		}
 	}
 
+	@Override
 	public IEnvironment getEnvironment() {
 		return environment;
 	}
 
+	@Override
 	public URI toURI() {
 		return file.toURI();
 	}
 
+	@Override
 	public String getName() {
 		return file.getName();
 	}
 
+	@Override
 	public IFileHandle getParent() {
 		IFileStore parent = file.getParent();
 		if (parent == null)
@@ -259,6 +268,7 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 		return new RSEFileHandle(environment, parent);
 	}
 
+	@Override
 	public IPath getPath() {
 		return new Path(getPathString());
 	}
@@ -267,6 +277,7 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 		return file.toURI().getPath();
 	}
 
+	@Override
 	public boolean isDirectory() {
 		if (!environment.connect()) {
 			return false;
@@ -278,6 +289,7 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 		return fetchInfo(false).isDirectory();
 	}
 
+	@Override
 	public boolean isFile() {
 		if (!environment.connect()) {
 			return false;
@@ -290,6 +302,7 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 		return info.exists() && !info.isDirectory();
 	}
 
+	@Override
 	public boolean isSymlink() {
 		if (!environment.connect()) {
 			return false;
@@ -338,6 +351,7 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 		}
 	}
 
+	@Override
 	public InputStream openInputStream(IProgressMonitor monitor)
 			throws IOException {
 		if (!environment.connect()) {
@@ -349,6 +363,7 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 		return this.internalOpenInputStream(monitor);
 	}
 
+	@Override
 	public OutputStream openOutputStream(IProgressMonitor monitor)
 			throws IOException {
 		if (!environment.connect()) {
@@ -400,6 +415,7 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 		return toOSString();
 	}
 
+	@Override
 	public long lastModified() {
 		if (!environment.connect()) {
 			return 0;
@@ -417,6 +433,7 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 
 	}
 
+	@Override
 	public long length() {
 		if (!environment.connect()) {
 			return 0;
@@ -428,10 +445,12 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 		return fetchInfo(false).getLength();
 	}
 
+	@Override
 	public IPath getFullPath() {
 		return EnvironmentPathUtils.getFullPath(environment, getPath());
 	}
 
+	@Override
 	public String getEnvironmentId() {
 		return environment.getId();
 	}
@@ -477,6 +496,7 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public IFileStore getFileStore() {
 		return this.file;
 	}
@@ -537,6 +557,7 @@ public class RSEFileHandle implements IFileHandle, IFileStoreProvider {
 		return currentPath;
 	}
 
+	@Override
 	public void move(IFileHandle destination) throws CoreException {
 		fetchSshFile();
 		if (sshFile != null) {

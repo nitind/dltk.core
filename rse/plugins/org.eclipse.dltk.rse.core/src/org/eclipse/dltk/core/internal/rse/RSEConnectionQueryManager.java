@@ -35,12 +35,10 @@ public class RSEConnectionQueryManager {
 
 	private static class ConnectionRequest {
 		private IHost host;
-		private long id;
 		private boolean finished = false;
 
 		public ConnectionRequest(IHost host, long id) {
 			this.host = host;
-			this.id = id;
 		}
 
 		public synchronized boolean isFinished() {
@@ -99,7 +97,7 @@ public class RSEConnectionQueryManager {
 
 	public void markHostAsFinished(IHost host) {
 		synchronized (requests) {
-			List<ConnectionRequest> toRemove = new ArrayList<ConnectionRequest>();
+			List<ConnectionRequest> toRemove = new ArrayList<>();
 			for (ConnectionRequest request : requests) {
 				if (request.host.equals(host)) {
 					toRemove.add(request);
@@ -139,10 +137,10 @@ public class RSEConnectionQueryManager {
 		}
 	}
 
-	private LazyExtensionManager<IConnector> connectors = new LazyExtensionManager<IConnector>(
+	private LazyExtensionManager<IConnector> connectors = new LazyExtensionManager<>(
 			DLTKRSEPlugin.PLUGIN_ID + ".rseConnector");
 
-	private List<ConnectionRequest> requests = new ArrayList<ConnectionRequest>();
+	private List<ConnectionRequest> requests = new ArrayList<>();
 	private boolean isConnecting = false;
 	private long currentId;
 

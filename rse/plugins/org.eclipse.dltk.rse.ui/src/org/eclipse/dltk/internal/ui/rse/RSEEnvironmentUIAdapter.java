@@ -5,20 +5,23 @@ import org.eclipse.dltk.core.internal.rse.RSEEnvironment;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
 
 public class RSEEnvironmentUIAdapter implements IAdapterFactory {
-	private final static Class[] ADAPTABLES = new Class[] { IEnvironmentUI.class };
+	private final static Class<?>[] ADAPTABLES = new Class[] { IEnvironmentUI.class };
 
 	public RSEEnvironmentUIAdapter() {
 	}
 
-	public Object getAdapter(Object adaptableObject, Class adapterType) {
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
 		if (adaptableObject instanceof RSEEnvironment
 				&& adapterType == IEnvironmentUI.class) {
-			return new RSEEnvironmentUI((RSEEnvironment) adaptableObject);
+			return (T) new RSEEnvironmentUI((RSEEnvironment) adaptableObject);
 		}
 		return null;
 	}
 
-	public Class[] getAdapterList() {
+	@Override
+	public Class<?>[] getAdapterList() {
 		return ADAPTABLES;
 	}
 }

@@ -49,12 +49,13 @@ public class RSEExecEnvironment implements IExecutionEnvironment {
 	private final RSEEnvironment environment;
 	private static int counter = -1;
 
-	private static final Map<IHost, Map<String, String>> hostToEnvironment = new HashMap<IHost, Map<String, String>>();
+	private static final Map<IHost, Map<String, String>> hostToEnvironment = new HashMap<>();
 
 	public RSEExecEnvironment(RSEEnvironment env) {
 		this.environment = env;
 	}
 
+	@Override
 	public IDeployment createDeployment() {
 		if (RSEPerfomanceStatistics.PERFOMANCE_TRACING) {
 			RSEPerfomanceStatistics
@@ -127,11 +128,13 @@ public class RSEExecEnvironment implements IExecutionEnvironment {
 		return null;
 	}
 
+	@Override
 	public Process exec(String[] cmdLine, IPath workingDir, String[] environment)
 			throws CoreException {
 		return exec(cmdLine, workingDir, environment, null);
 	}
 
+	@Override
 	public Process exec(String[] cmdLine, IPath workingDir,
 			String[] environment, IExecutionLogger logger) throws CoreException {
 		if (RSEPerfomanceStatistics.PERFOMANCE_TRACING) {
@@ -165,7 +168,7 @@ public class RSEExecEnvironment implements IExecutionEnvironment {
 				+ fileService.getSeparatorChar() + tmpLauncher;
 
 		// build commands
-		final List<String> commands = new ArrayList<String>();
+		final List<String> commands = new ArrayList<>();
 		if (workingDir != null) {
 			final String p = this.environment.convertPathToString(workingDir);
 			commands.add("cd " + p); //$NON-NLS-1$
@@ -201,39 +204,23 @@ public class RSEExecEnvironment implements IExecutionEnvironment {
 
 		// save launcher to the remote location
 		try {
-			final OutputStream os = fileService.getFileService()
-					.getOutputStream(tmpLauncherDir, tmpLauncher,
-							IFileService.TEXT_MODE, new NullProgressMonitor());
-			try {
-				final Writer writer = new OutputStreamWriter(
-						new BufferedOutputStream(os, 4096), fileService
-								.getRemoteEncoding());
-				try {
+
+			try (final OutputStream os = fileService.getFileService().getOutputStream(tmpLauncherDir, tmpLauncher,
+					IFileService.TEXT_MODE, new NullProgressMonitor())) {
+
+				try (final Writer writer = new OutputStreamWriter(new BufferedOutputStream(os, 4096),
+						fileService.getRemoteEncoding())) {
 					for (String command : commands) {
 						writer.write(command);
 						writer.write('\n');
 					}
 					writer.flush();
-				} finally {
-					try {
-						writer.close();
-					} catch (IOException e) {
-						// ignore
-					}
-				}
-			} finally {
-				try {
-					os.close();
-				} catch (IOException e) {
-					// ignore
 				}
 			}
 		} catch (Exception e) {
-			final String msg = NLS.bind(
-					Messages.RSEExecEnvironment_LauncherUploadError, host
-							.getAliasName(), e.getMessage());
-			throw new CoreException(newStatus(
-					RSEStatusConstants.LAUNCHER_UPLOAD_ERROR, msg, e));
+			final String msg = NLS.bind(Messages.RSEExecEnvironment_LauncherUploadError, host.getAliasName(),
+					e.getMessage());
+			throw new CoreException(newStatus(RSEStatusConstants.LAUNCHER_UPLOAD_ERROR, msg, e));
 		}
 
 		// execute uploaded launcher in remote shell
@@ -302,6 +289,7 @@ public class RSEExecEnvironment implements IExecutionEnvironment {
 	 * @param envVarName
 	 * @return
 	 */
+	@Override
 	public boolean isSafeEnvironmentVariable(String envVarName) {
 		return !UNSAFE_ENV_VARS.contains(envVarName);
 	}
@@ -393,23 +381,23 @@ public class RSEExecEnvironment implements IExecutionEnvironment {
 		return cmd.toString();
 	}
 
-	@SuppressWarnings("unchecked")
-	public Map getEnvironmentVariables(boolean realyNeed) {
+	@Override
+	public Map<String, String> getEnvironmentVariables(boolean realyNeed) {
 		if (!getEnvironment().connect()) {
 			return null;
 		}
 		if (!realyNeed) {
-			return new HashMap<String, String>();
+			return new HashMap<>();
 		}
 		final long start = System.currentTimeMillis();
 		synchronized (hostToEnvironment) {
 			final Map<String, String> result = hostToEnvironment
 					.get(environment.getHost());
 			if (result != null) {
-				return new HashMap<String, String>(result);
+				return new HashMap<>(result);
 			}
 		}
-		final Map<String, String> result = new HashMap<String, String>();
+		final Map<String, String> result = new HashMap<>();
 		try {
 			Process process = exec(new String[] { "set" }, Path.EMPTY, null); //$NON-NLS-1$
 			if (process != null) {
@@ -474,10 +462,12 @@ public class RSEExecEnvironment implements IExecutionEnvironment {
 		return result;
 	}
 
+	@Override
 	public IEnvironment getEnvironment() {
 		return environment;
 	}
 
+	@Override
 	public boolean isValidExecutableAndEquals(String possibleName, IPath path) {
 		if (environment.getHost().getSystemType().isWindows()) {
 			possibleName = possibleName.toLowerCase();

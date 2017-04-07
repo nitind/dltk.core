@@ -22,10 +22,12 @@ public class RSEEnvironmentUI implements IEnvironmentUI {
 		this.environment = environment;
 	}
 
+	@Override
 	public String selectFolder(Shell shell) {
 		return selectFolder(shell, null);
 	}
 
+	@Override
 	public String selectFolder(Shell shell, String initialFolder) {
 		if (!environment.connect(true)) {
 			return null;
@@ -85,6 +87,7 @@ public class RSEEnvironmentUI implements IEnvironmentUI {
 
 	private static final String FILTER_STD_SUFFIX = "/*"; //$NON-NLS-1$
 
+	@Override
 	public String selectFile(Shell shell, int fileType) {
 		return selectFile(shell, fileType, null);
 	}
@@ -92,6 +95,7 @@ public class RSEEnvironmentUI implements IEnvironmentUI {
 	/**
 	 * @since 2.0
 	 */
+	@Override
 	public String selectFile(Shell shell, int fileType, String initialSelection) {
 		if (!environment.connect(true)) {
 			return null;

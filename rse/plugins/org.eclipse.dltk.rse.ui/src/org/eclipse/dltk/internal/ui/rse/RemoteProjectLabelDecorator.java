@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.
+ * Copyright (c) 2009, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -33,6 +33,7 @@ public class RemoteProjectLabelDecorator extends BaseLabelProvider implements
 	 */
 	public static final String ID = "org.eclipse.dltk.rse.decorators.projectdecorator"; //$NON-NLS-1$
 
+	@Override
 	public void decorate(Object element, IDecoration decoration) {
 		if (element instanceof IProject) {
 			decorateProjectText((IProject) element, decoration);

@@ -62,7 +62,7 @@ public class RSEConnectionMonitor implements Runnable {
 					"Checking projects consistency", 100);
 			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
 					.getProjects();
-			List<IScriptProject> projectsToProcess = new ArrayList<IScriptProject>();
+			List<IScriptProject> projectsToProcess = new ArrayList<>();
 			SubMonitor m = monitor.newChild(10);
 			m.beginTask("Locate projects for environment", projects.length);
 			for (IProject project : projects) {
@@ -123,6 +123,7 @@ public class RSEConnectionMonitor implements Runnable {
 			return;
 		}
 		display.asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				if (updatingDecorators) {
 					return;
@@ -148,9 +149,10 @@ public class RSEConnectionMonitor implements Runnable {
 		t.start();
 	}
 
+	@Override
 	public void run() {
 		EnvironmentManager.waitInitialized();
-		final Set<String> eventListenerAdded = new HashSet<String>();
+		final Set<String> eventListenerAdded = new HashSet<>();
 		while (Platform.isRunning()) {
 
 			IEnvironment[] environments = EnvironmentManager.getEnvironments();
@@ -165,10 +167,12 @@ public class RSEConnectionMonitor implements Runnable {
 						for (IConnectorService service : services) {
 							service
 									.addCommunicationsListener(new ICommunicationsListener() {
+										@Override
 										public boolean isPassiveCommunicationsListener() {
 											return false;
 										}
 
+										@Override
 										public void communicationsStateChange(
 												CommunicationsEvent e) {
 											if (e.getState() == CommunicationsEvent.AFTER_CONNECT) {

@@ -39,10 +39,12 @@ public class RSEEnvironmentProvider implements IEnvironmentProvider {
 	public RSEEnvironmentProvider() {
 	}
 
+	@Override
 	public String getProviderName() {
 		return Messages.RSEEnvironmentProvider_providerName;
 	}
 
+	@Override
 	public IEnvironment getEnvironment(String envId) {
 		return getEnvironment(envId, true);
 	}
@@ -147,7 +149,7 @@ public class RSEEnvironmentProvider implements IEnvironmentProvider {
 
 	}
 
-	private final Set<String> firedEnvironmentIds = new HashSet<String>();
+	private final Set<String> firedEnvironmentIds = new HashSet<>();
 
 	/**
 	 * @since 2.0
@@ -165,6 +167,7 @@ public class RSEEnvironmentProvider implements IEnvironmentProvider {
 		}
 	}
 
+	@Override
 	public boolean isInitialized() {
 		return isReady(false);
 	}
@@ -218,11 +221,12 @@ public class RSEEnvironmentProvider implements IEnvironmentProvider {
 		return true;
 	}
 
+	@Override
 	public IEnvironment[] getEnvironments() {
 		if (isReady()) {
 			final IHost[] connections = SystemStartHere.getConnections();
 			if (connections != null && connections.length != 0) {
-				final List<IEnvironment> environments = new ArrayList<IEnvironment>(
+				final List<IEnvironment> environments = new ArrayList<>(
 						connections.length);
 				for (int i = 0; i < connections.length; i++) {
 					final IHost connection = connections[i];
@@ -240,6 +244,7 @@ public class RSEEnvironmentProvider implements IEnvironmentProvider {
 		return new IEnvironment[0];
 	}
 
+	@Override
 	public void waitInitialized() {
 		try {
 			int waitCount = 0;
@@ -265,6 +270,7 @@ public class RSEEnvironmentProvider implements IEnvironmentProvider {
 		}
 	}
 
+	@Override
 	public IEnvironment getProjectEnvironment(IProject project) {
 		if (RSEPerfomanceStatistics.PERFOMANCE_TRACING) {
 			RSEPerfomanceStatistics
@@ -313,9 +319,7 @@ public class RSEEnvironmentProvider implements IEnvironmentProvider {
 		}
 	}
 
-	/*
-	 * @see IEnvironmentProvider#getEnvironment(java.net.URI)
-	 */
+	@Override
 	public IEnvironment getEnvironment(URI locationURI) {
 		if (RSE_SCHEME.equalsIgnoreCase(locationURI.getScheme()) && isReady()) {
 			final IHost[] connections = SystemStartHere.getConnections();

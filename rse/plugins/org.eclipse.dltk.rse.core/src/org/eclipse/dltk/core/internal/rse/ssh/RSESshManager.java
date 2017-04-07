@@ -27,7 +27,7 @@ public class RSESshManager {
 	 * Right now support only stored ssh passwords retrieval.
 	 * 
 	 */
-	private static Set<IHost> hostsInInitialization = new HashSet<IHost>();
+	private static Set<IHost> hostsInInitialization = new HashSet<>();
 
 	public static ISshConnection getConnection(final IHost host) {
 		synchronized (hostsInInitialization) {
