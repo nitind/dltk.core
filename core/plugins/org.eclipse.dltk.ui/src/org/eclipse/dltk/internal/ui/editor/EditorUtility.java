@@ -98,8 +98,7 @@ public class EditorUtility {
 					dProject = null;
 			}
 		} else if (input instanceof ExternalStorageEditorInput) {
-			IModelElement element = input
-					.getAdapter(IModelElement.class);
+			IModelElement element = input.getAdapter(IModelElement.class);
 			if (element != null) {
 				IScriptProject project = element.getScriptProject();
 				if (project != null && project.exists()) {
@@ -150,8 +149,8 @@ public class EditorUtility {
 	 *
 	 * @return the IEditorPart or null if wrong element type or opening failed
 	 */
-	public static IEditorPart openInEditor(Object inputElement, boolean activate)
-			throws ModelException, PartInitException {
+	public static IEditorPart openInEditor(Object inputElement,
+			boolean activate) throws ModelException, PartInitException {
 		if (inputElement instanceof IFile) {
 			return openInEditor((IFile) inputElement, activate);
 		} else if (inputElement instanceof DelegatedOpen) {
@@ -209,13 +208,14 @@ public class EditorUtility {
 		IEditorDescriptor editorDescriptor;
 		try {
 			if (input instanceof IFileEditorInput) {
-				editorDescriptor = IDE
-						.getEditorDescriptor(((IFileEditorInput) input)
-								.getFile());
+				editorDescriptor = IDE.getEditorDescriptor(
+						((IFileEditorInput) input).getFile(), true, false);
 			} else if (input instanceof ExternalStorageEditorInput) {
-				editorDescriptor = IDE.getEditorDescriptor(input.getName());
+				editorDescriptor = IDE.getEditorDescriptor(input.getName(),
+						true, false);
 			} else {
-				editorDescriptor = IDE.getEditorDescriptor(input.getName());
+				editorDescriptor = IDE.getEditorDescriptor(input.getName(),
+						true, false);
 			}
 
 		} catch (PartInitException e) {
@@ -251,8 +251,8 @@ public class EditorUtility {
 		if (input instanceof IFile)
 			return new FileEditorInput((IFile) input);
 		if (DLTKCore.DEBUG) {
-			System.err
-					.println("Add archive entry and external source folder editor input.."); //$NON-NLS-1$
+			System.err.println(
+					"Add archive entry and external source folder editor input.."); //$NON-NLS-1$
 		}
 		if (input instanceof IStorage) {
 			return new ExternalStorageEditorInput((IStorage) input);
@@ -351,8 +351,8 @@ public class EditorUtility {
 							marker = ((IFileEditorInput) input).getFile()
 									.createMarker(IMarker.TEXT);
 							marker.setAttribute(IMarker.CHAR_START, offset);
-							marker.setAttribute(IMarker.CHAR_END, offset
-									+ length);
+							marker.setAttribute(IMarker.CHAR_END,
+									offset + length);
 							gotoMarkerTarget.gotoMarker(marker);
 						} finally {
 							if (marker != null)
@@ -369,8 +369,8 @@ public class EditorUtility {
 					// canceled"); //$NON-NLS-1$
 				}
 			} else if (input instanceof ExternalStorageEditorInput) {
-				System.err
-						.println("TODO: Add external storage editor input reveal..."); //$NON-NLS-1$
+				System.err.println(
+						"TODO: Add external storage editor input reveal..."); //$NON-NLS-1$
 			}
 			return;
 		}
@@ -404,13 +404,13 @@ public class EditorUtility {
 		return null;
 	}
 
-	private static IEditorPart openInEditor(IEditorInput input,
-			String editorID, boolean activate) throws PartInitException {
+	private static IEditorPart openInEditor(IEditorInput input, String editorID,
+			boolean activate) throws PartInitException {
 		if (input != null) {
 			IWorkbenchPage p = DLTKUIPlugin.getActivePage();
 			if (p != null) {
-				IEditorPart editorPart = p
-						.openEditor(input, editorID, activate);
+				IEditorPart editorPart = p.openEditor(input, editorID,
+						activate);
 				initializeHighlightRange(editorPart);
 				return editorPart;
 			}
@@ -420,9 +420,7 @@ public class EditorUtility {
 
 	private static void initializeHighlightRange(IEditorPart editorPart) {
 		if (editorPart instanceof ITextEditor) {
-			IAction toggleAction = editorPart
-					.getEditorSite()
-					.getActionBars()
+			IAction toggleAction = editorPart.getEditorSite().getActionBars()
 					.getGlobalActionHandler(
 							ITextEditorActionDefinitionIds.TOGGLE_SHOW_SELECTED_ELEMENT_ONLY);
 			boolean enable = toggleAction != null;
@@ -432,8 +430,8 @@ public class EditorUtility {
 			// PreferenceConstants.EDITOR_SHOW_SEGMENTS);
 			// else
 			if (DLTKCore.DEBUG) {
-				System.err
-						.println("Add initializeHighlightRange support of preferences."); //$NON-NLS-1$
+				System.err.println(
+						"Add initializeHighlightRange support of preferences."); //$NON-NLS-1$
 			}
 			enable = enable && toggleAction.isEnabled()
 					&& toggleAction.isChecked();
@@ -577,8 +575,8 @@ public class EditorUtility {
 			return SWT.SHIFT;
 		if (modifierName.equalsIgnoreCase(Action.findModifierString(SWT.ALT)))
 			return SWT.ALT;
-		if (modifierName.equalsIgnoreCase(Action
-				.findModifierString(SWT.COMMAND)))
+		if (modifierName
+				.equalsIgnoreCase(Action.findModifierString(SWT.COMMAND)))
 			return SWT.COMMAND;
 
 		return 0;
@@ -611,15 +609,12 @@ public class EditorUtility {
 
 				@Override
 				public void handleException(Throwable exception) {
-					DLTKUIPlugin
-							.log(new Status(
-									IStatus.ERROR,
-									DLTKUIPlugin.PLUGIN_ID,
-									IDLTKStatusConstants.EDITOR_CHANGED_REGION_CALCULATION,
-									exception.getLocalizedMessage(), exception));
+					DLTKUIPlugin.log(new Status(IStatus.ERROR,
+							DLTKUIPlugin.PLUGIN_ID,
+							IDLTKStatusConstants.EDITOR_CHANGED_REGION_CALCULATION,
+							exception.getLocalizedMessage(), exception));
 					String msg = DLTKEditorMessages.CompilationUnitDocumentProvider_error_calculatingChangedRegions;
-					errorStatus[0] = new Status(
-							IStatus.ERROR,
+					errorStatus[0] = new Status(IStatus.ERROR,
 							DLTKUIPlugin.PLUGIN_ID,
 							IDLTKStatusConstants.EDITOR_CHANGED_REGION_CALCULATION,
 							msg, exception);
@@ -641,7 +636,7 @@ public class EditorUtility {
 						IDocument currentDocument = buffer.getDocument();
 						IDocument oldDocument = ((ITextFileBuffer) fileBufferManager
 								.getFileStoreFileBuffer(fileStore))
-								.getDocument();
+										.getDocument();
 
 						result[0] = getChangedLineRegions(oldDocument,
 								currentDocument);
@@ -708,8 +703,8 @@ public class EditorUtility {
 								int startOffset = startLineRegion.getOffset();
 								int endOffset = endLineRegion.getOffset()
 										+ endLineRegion.getLength();
-								regions.add(new Region(startOffset, endOffset
-										- startOffset));
+								regions.add(new Region(startOffset,
+										endOffset - startOffset));
 							}
 						}
 					}

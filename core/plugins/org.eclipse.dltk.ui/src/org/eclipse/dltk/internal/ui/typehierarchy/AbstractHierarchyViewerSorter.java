@@ -16,9 +16,9 @@ import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.viewsupport.SourcePositionSorter;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 
-public abstract class AbstractHierarchyViewerSorter extends ViewerSorter {
+public abstract class AbstractHierarchyViewerSorter extends ViewerComparator {
 
 	private static final int OTHER = 10;
 	private static final int CLASS = 20;
@@ -80,9 +80,11 @@ public abstract class AbstractHierarchyViewerSorter extends ViewerSorter {
 		if (cat1 == OTHER) { // method or field
 			if (isSortByDefiningType()) {
 				try {
-					IType def1 = (e1 instanceof IMethod) ? getDefiningType((IMethod) e1)
+					IType def1 = (e1 instanceof IMethod)
+							? getDefiningType((IMethod) e1)
 							: null;
-					IType def2 = (e2 instanceof IMethod) ? getDefiningType((IMethod) e2)
+					IType def2 = (e2 instanceof IMethod)
+							? getDefiningType((IMethod) e2)
 							: null;
 					if (def1 != null) {
 						if (def2 != null) {
@@ -151,14 +153,15 @@ public abstract class AbstractHierarchyViewerSorter extends ViewerSorter {
 	private int compareInHierarchy(IType def1, IType def2) {
 		if (ScriptModelUtil.isSuperType(getHierarchy(def1), def2, def1)) {
 			return 1;
-		} else if (ScriptModelUtil.isSuperType(getHierarchy(def2), def1, def2)) {
+		} else if (ScriptModelUtil.isSuperType(getHierarchy(def2), def1,
+				def2)) {
 			return -1;
 		}
 
 		String name1 = def1.getElementName();
 		String name2 = def2.getElementName();
 
-		return getCollator().compare(name1, name2);
+		return getComparator().compare(name1, name2);
 	}
 
 }

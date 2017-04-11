@@ -181,7 +181,7 @@ public abstract class AbstractTodoTaskOptionsBlock
 				PreferencesMessages.TodoTaskConfigurationBlock_markers_tasks_priority_column, };
 		fTodoTasksList.setTableColumns(
 				new ListDialogField.ColumnsDescription(columnsHeaders, true));
-		fTodoTasksList.setViewerSorter(new TodoTaskSorter());
+		fTodoTasksList.setViewerComparator(new TodoTaskSorter());
 
 		final GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;

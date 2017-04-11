@@ -78,12 +78,12 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 
 		protected void finishWizard() {
 			List insertedElements = fWizard.getInsertedElements();
-			refresh(insertedElements, fWizard.getRemovedElements(), fWizard
-					.getModifiedElements());
+			refresh(insertedElements, fWizard.getRemovedElements(),
+					fWizard.getModifiedElements());
 
 			if (insertedElements.isEmpty()) {
-				fFoldersList.postSetSelection(new StructuredSelection(
-						fSelectedElements));
+				fFoldersList.postSetSelection(
+						new StructuredSelection(fSelectedElements));
 			}
 		}
 
@@ -95,9 +95,10 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 		BPListElement[] existing = existingElements
 				.toArray(new BPListElement[existingElements.size()]);
 		AddSourceFolderWizard wizard = new AddSourceFolderWizard(existing,
-				element, false, newFolder, newFolder, newFolder ? BPListElement
-						.isProjectSourceFolder(existing, element
-								.getScriptProject()) : false, newFolder);
+				element, false, newFolder, newFolder,
+				newFolder ? BPListElement.isProjectSourceFolder(existing,
+						element.getScriptProject()) : false,
+				newFolder);
 		wizard.setDoFlushChange(false);
 		return wizard;
 	}
@@ -108,9 +109,10 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 		BPListElement[] existing = existingElements
 				.toArray(new BPListElement[existingElements.size()]);
 		AddSourceFolderWizard wizard = new AddSourceFolderWizard(existing,
-				element, true, newFolder, newFolder, newFolder ? BPListElement
-						.isProjectSourceFolder(existing, element
-								.getScriptProject()) : false, newFolder);
+				element, true, newFolder, newFolder,
+				newFolder ? BPListElement.isProjectSourceFolder(existing,
+						element.getScriptProject()) : false,
+				newFolder);
 		wizard.setDoFlushChange(false);
 		return wizard;
 	}
@@ -175,10 +177,10 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 		fFoldersList = new TreeListDialogField(adapter, buttonLabels,
 				new BPListLabelProvider());
 		fFoldersList.setDialogFieldListener(adapter);
-		fFoldersList
-				.setLabelText(NewWizardMessages.SourceContainerWorkbookPage_folders_label);
+		fFoldersList.setLabelText(
+				NewWizardMessages.SourceContainerWorkbookPage_folders_label);
 
-		fFoldersList.setViewerSorter(new BPListElementSorter());
+		fFoldersList.setViewerComparator(new BPListElementSorter());
 		fFoldersList.enableButton(getIDX_EDIT(), false);
 	}
 
@@ -261,8 +263,8 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 		return DLTKUIPlugin.getActiveWorkbenchShell();
 	}
 
-	public class SourceContainerAdapter implements ITreeListAdapter,
-			IDialogFieldListener {
+	public class SourceContainerAdapter
+			implements ITreeListAdapter, IDialogFieldListener {
 
 		private final Object[] EMPTY_ARR = new Object[0];
 
@@ -344,13 +346,14 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 				if (project.isAccessible() && hasFolders(project)) {
 					List existingElements = fFoldersList.getElements();
 					BPListElement[] existing = (BPListElement[]) existingElements
-							.toArray(new BPListElement[existingElements.size()]);
+							.toArray(
+									new BPListElement[existingElements.size()]);
 					CreateMultipleSourceFoldersDialog dialog = new CreateMultipleSourceFoldersDialog(
 							fCurrJProject, existing, getShell());
 					if (dialog.open() == Window.OK) {
-						refresh(dialog.getInsertedElements(), dialog
-								.getRemovedElements(), dialog
-								.getModifiedElements());
+						refresh(dialog.getInsertedElements(),
+								dialog.getRemovedElements(),
+								dialog.getModifiedElements());
 					}
 				} else {
 					BPListElement newElement = new BPListElement(fCurrJProject,
@@ -491,9 +494,9 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 			for (Iterator iter = selElements.iterator(); iter.hasNext();) {
 				BPListElement element = (BPListElement) iter.next();
 				if (element.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-					List list = BuildpathModifier.removeFilters(element
-							.getPath(), fCurrJProject, fFoldersList
-							.getElements());
+					List list = BuildpathModifier.removeFilters(
+							element.getPath(), fCurrJProject,
+							fFoldersList.getElements());
 					for (Iterator iterator = list.iterator(); iterator
 							.hasNext();) {
 						BPListElement modified = (BPListElement) iterator
@@ -635,8 +638,8 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 
 		fFoldersList.refresh(); // does enforce the order of the entries.
 		if (!insertedElements.isEmpty()) {
-			fFoldersList.postSetSelection(new StructuredSelection(
-					insertedElements));
+			fFoldersList.postSetSelection(
+					new StructuredSelection(insertedElements));
 		}
 	}
 

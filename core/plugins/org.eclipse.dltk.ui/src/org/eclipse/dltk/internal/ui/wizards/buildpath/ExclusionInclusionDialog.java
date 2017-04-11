@@ -32,7 +32,7 @@ import org.eclipse.dltk.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -42,7 +42,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-
 public class ExclusionInclusionDialog extends StatusDialog {
 
 	private static class ExclusionInclusionLabelProvider extends LabelProvider {
@@ -50,8 +49,9 @@ public class ExclusionInclusionDialog extends StatusDialog {
 		private Image fElementImage;
 
 		public ExclusionInclusionLabelProvider(ImageDescriptor descriptor) {
-			ImageDescriptorRegistry registry= DLTKUIPlugin.getImageDescriptorRegistry();
-			fElementImage= registry.get(descriptor);
+			ImageDescriptorRegistry registry = DLTKUIPlugin
+					.getImageDescriptorRegistry();
+			fElementImage = registry.get(descriptor);
 		}
 
 		@Override
@@ -73,107 +73,116 @@ public class ExclusionInclusionDialog extends StatusDialog {
 
 	private IContainer fCurrSourceFolder;
 
-	private static final int IDX_ADD= 0;
-	private static final int IDX_ADD_MULTIPLE= 1;
-	private static final int IDX_EDIT= 2;
-	private static final int IDX_REMOVE= 4;
+	private static final int IDX_ADD = 0;
+	private static final int IDX_ADD_MULTIPLE = 1;
+	private static final int IDX_EDIT = 2;
+	private static final int IDX_REMOVE = 4;
 
-
-	public ExclusionInclusionDialog(Shell parent, BPListElement entryToEdit, boolean focusOnExcluded) {
+	public ExclusionInclusionDialog(Shell parent, BPListElement entryToEdit,
+			boolean focusOnExcluded) {
 		super(parent);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 
-		fCurrElement= entryToEdit;
+		fCurrElement = entryToEdit;
 
 		setTitle(NewWizardMessages.ExclusionInclusionDialog_title);
 
-		fCurrProject= entryToEdit.getScriptProject().getProject();
-		IWorkspaceRoot root= fCurrProject.getWorkspace().getRoot();
-		IResource res= root.findMember(entryToEdit.getPath());
+		fCurrProject = entryToEdit.getScriptProject().getProject();
+		IWorkspaceRoot root = fCurrProject.getWorkspace().getRoot();
+		IResource res = root.findMember(entryToEdit.getPath());
 		if (res instanceof IContainer) {
-			fCurrSourceFolder= (IContainer) res;
+			fCurrSourceFolder = (IContainer) res;
 		}
 
-		String excLabel= NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_label;
-		ImageDescriptor excDescriptor= DLTKPluginImages.DESC_OBJS_EXCLUSION_FILTER_ATTRIB;
-		String[] excButtonLabels= new String[] {
+		String excLabel = NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_label;
+		ImageDescriptor excDescriptor = DLTKPluginImages.DESC_OBJS_EXCLUSION_FILTER_ATTRIB;
+		String[] excButtonLabels = new String[] {
 				NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_add,
 				NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_add_multiple,
 				NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_edit,
 				null,
-				NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_remove
-			};
+				NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_remove };
 
-
-		String incLabel= NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_label;
-		ImageDescriptor incDescriptor= DLTKPluginImages.DESC_OBJS_INCLUSION_FILTER_ATTRIB;
-		String[] incButtonLabels= new String[] {
+		String incLabel = NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_label;
+		ImageDescriptor incDescriptor = DLTKPluginImages.DESC_OBJS_INCLUSION_FILTER_ATTRIB;
+		String[] incButtonLabels = new String[] {
 				NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_add,
 				NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_add_multiple,
 				NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_edit,
 				null,
-				NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_remove
-			};
+				NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_remove };
 
-		fExclusionPatternList= createListContents(entryToEdit, BPListElement.EXCLUSION, excLabel, excDescriptor, excButtonLabels);
-		fInclusionPatternList= createListContents(entryToEdit, BPListElement.INCLUSION, incLabel, incDescriptor, incButtonLabels);
+		fExclusionPatternList = createListContents(entryToEdit,
+				BPListElement.EXCLUSION, excLabel, excDescriptor,
+				excButtonLabels);
+		fInclusionPatternList = createListContents(entryToEdit,
+				BPListElement.INCLUSION, incLabel, incDescriptor,
+				incButtonLabels);
 		if (focusOnExcluded) {
-			fExclusionPatternList.postSetFocusOnDialogField(parent.getDisplay());
+			fExclusionPatternList
+					.postSetFocusOnDialogField(parent.getDisplay());
 		} else {
-			fInclusionPatternList.postSetFocusOnDialogField(parent.getDisplay());
+			fInclusionPatternList
+					.postSetFocusOnDialogField(parent.getDisplay());
 		}
 	}
 
+	private ListDialogField createListContents(BPListElement entryToEdit,
+			String key, String label, ImageDescriptor descriptor,
+			String[] buttonLabels) {
+		ExclusionPatternAdapter adapter = new ExclusionPatternAdapter();
 
-	private ListDialogField createListContents(BPListElement entryToEdit, String key, String label, ImageDescriptor descriptor, String[] buttonLabels) {
-		ExclusionPatternAdapter adapter= new ExclusionPatternAdapter();
-
-		ListDialogField patternList= new ListDialogField(adapter, buttonLabels, new ExclusionInclusionLabelProvider(descriptor));
+		ListDialogField patternList = new ListDialogField(adapter, buttonLabels,
+				new ExclusionInclusionLabelProvider(descriptor));
 		patternList.setDialogFieldListener(adapter);
 		patternList.setLabelText(label);
 		patternList.setRemoveButtonIndex(IDX_REMOVE);
 		patternList.enableButton(IDX_EDIT, false);
 
-		IPath[] pattern= (IPath[]) entryToEdit.getAttribute(key);
+		IPath[] pattern = (IPath[]) entryToEdit.getAttribute(key);
 
-		ArrayList elements= new ArrayList(pattern.length);
-		for (int i= 0; i < pattern.length; i++) {
+		ArrayList elements = new ArrayList(pattern.length);
+		for (int i = 0; i < pattern.length; i++) {
 			elements.add(pattern[i].toString());
 		}
 		patternList.setElements(elements);
 		patternList.selectFirstElement();
 		patternList.enableButton(IDX_ADD_MULTIPLE, fCurrSourceFolder != null);
-		patternList.setViewerSorter(new ViewerSorter());
+		patternList.setViewerComparator(new ViewerComparator());
 		return patternList;
 	}
 
-
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite composite= (Composite) super.createDialogArea(parent);
+		Composite composite = (Composite) super.createDialogArea(parent);
 
-		Composite inner= new Composite(composite, SWT.NONE);
+		Composite inner = new Composite(composite, SWT.NONE);
 		inner.setFont(parent.getFont());
 
-		GridLayout layout= new GridLayout();
-		layout.marginHeight= 0;
-		layout.marginWidth= 0;
-		layout.numColumns= 2;
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.numColumns = 2;
 		inner.setLayout(layout);
 		inner.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		DialogField labelField= new DialogField();
-		String name= fCurrElement.getPath().makeRelative().toString();
-		labelField.setLabelText(Messages.format(NewWizardMessages.ExclusionInclusionDialog_description, name));
+		DialogField labelField = new DialogField();
+		String name = fCurrElement.getPath().makeRelative().toString();
+		labelField.setLabelText(Messages.format(
+				NewWizardMessages.ExclusionInclusionDialog_description, name));
 		labelField.doFillIntoGrid(inner, 2);
 
 		fInclusionPatternList.doFillIntoGrid(inner, 3);
-		LayoutUtil.setHorizontalSpan(fInclusionPatternList.getLabelControl(null), 2);
-		LayoutUtil.setHorizontalGrabbing(fInclusionPatternList.getListControl(null));
+		LayoutUtil.setHorizontalSpan(
+				fInclusionPatternList.getLabelControl(null), 2);
+		LayoutUtil.setHorizontalGrabbing(
+				fInclusionPatternList.getListControl(null));
 
 		fExclusionPatternList.doFillIntoGrid(inner, 3);
-		LayoutUtil.setHorizontalSpan(fExclusionPatternList.getLabelControl(null), 2);
-		LayoutUtil.setHorizontalGrabbing(fExclusionPatternList.getListControl(null));
+		LayoutUtil.setHorizontalSpan(
+				fExclusionPatternList.getLabelControl(null), 2);
+		LayoutUtil.setHorizontalGrabbing(
+				fExclusionPatternList.getListControl(null));
 
 		applyDialogFont(composite);
 		return composite;
@@ -194,7 +203,7 @@ public class ExclusionInclusionDialog extends StatusDialog {
 	}
 
 	protected void doSelectionChanged(ListDialogField field) {
-		List selected= field.getSelectedElements();
+		List selected = field.getSelectedElements();
 		field.enableButton(IDX_EDIT, canEdit(selected));
 	}
 
@@ -203,13 +212,14 @@ public class ExclusionInclusionDialog extends StatusDialog {
 	}
 
 	private void editEntry(ListDialogField field) {
-		List selElements= field.getSelectedElements();
+		List selElements = field.getSelectedElements();
 		if (selElements.size() != 1) {
 			return;
 		}
-		List existing= field.getElements();
-		String entry= (String) selElements.get(0);
-		ExclusionInclusionEntryDialog dialog= new ExclusionInclusionEntryDialog(getShell(), isExclusion(field), entry, existing, fCurrElement);
+		List existing = field.getElements();
+		String entry = (String) selElements.get(0);
+		ExclusionInclusionEntryDialog dialog = new ExclusionInclusionEntryDialog(
+				getShell(), isExclusion(field), entry, existing, fCurrElement);
 		if (dialog.open() == Window.OK) {
 			field.replaceElement(entry, dialog.getExclusionPattern());
 		}
@@ -219,20 +229,19 @@ public class ExclusionInclusionDialog extends StatusDialog {
 		return field == fExclusionPatternList;
 	}
 
-
 	private void addEntry(ListDialogField field) {
-		List existing= field.getElements();
-		ExclusionInclusionEntryDialog dialog= new ExclusionInclusionEntryDialog(getShell(), isExclusion(field), null, existing, fCurrElement);
+		List existing = field.getElements();
+		ExclusionInclusionEntryDialog dialog = new ExclusionInclusionEntryDialog(
+				getShell(), isExclusion(field), null, existing, fCurrElement);
 		if (dialog.open() == Window.OK) {
 			field.addElement(dialog.getExclusionPattern());
 		}
 	}
 
-
-
 	// -------- ExclusionPatternAdapter --------
 
-	private class ExclusionPatternAdapter implements IListAdapter, IDialogFieldListener {
+	private class ExclusionPatternAdapter
+			implements IListAdapter, IDialogFieldListener {
 		@Override
 		public void customButtonPressed(ListDialogField field, int index) {
 			doCustomButtonPressed(field, index);
@@ -260,13 +269,12 @@ public class ExclusionInclusionDialog extends StatusDialog {
 	protected void checkIfPatternValid() {
 	}
 
-
 	private IPath[] getPattern(ListDialogField field) {
-		Object[] arr= field.getElements().toArray();
+		Object[] arr = field.getElements().toArray();
 		Arrays.sort(arr);
-		IPath[] res= new IPath[arr.length];
-		for (int i= 0; i < res.length; i++) {
-			res[i]= new Path((String) arr[i]);
+		IPath[] res = new IPath[arr.length];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = new Path((String) arr[i]);
 		}
 		return res;
 	}
@@ -283,24 +291,27 @@ public class ExclusionInclusionDialog extends StatusDialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		if (DLTKCore.DEBUG) {
-			System.err.println("ExclusionInclusionDialog add help support here"); //$NON-NLS-1$
+			System.err
+					.println("ExclusionInclusionDialog add help support here"); //$NON-NLS-1$
 		}
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IDLTKHelpContextIds.EXCLUSION_PATTERN_DIALOG);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell,
+		// IDLTKHelpContextIds.EXCLUSION_PATTERN_DIALOG);
 	}
 
 	private void addMultipleEntries(ListDialogField field) {
 		String title, message;
 		if (isExclusion(field)) {
-			title= NewWizardMessages.ExclusionInclusionDialog_ChooseExclusionPattern_title;
-			message= NewWizardMessages.ExclusionInclusionDialog_ChooseExclusionPattern_description;
+			title = NewWizardMessages.ExclusionInclusionDialog_ChooseExclusionPattern_title;
+			message = NewWizardMessages.ExclusionInclusionDialog_ChooseExclusionPattern_description;
 		} else {
-			title= NewWizardMessages.ExclusionInclusionDialog_ChooseInclusionPattern_title;
-			message= NewWizardMessages.ExclusionInclusionDialog_ChooseInclusionPattern_description;
+			title = NewWizardMessages.ExclusionInclusionDialog_ChooseInclusionPattern_title;
+			message = NewWizardMessages.ExclusionInclusionDialog_ChooseInclusionPattern_description;
 		}
 
-		IPath[] res= ExclusionInclusionEntryDialog.chooseExclusionPattern(getShell(), fCurrSourceFolder, title, message, null, true);
+		IPath[] res = ExclusionInclusionEntryDialog.chooseExclusionPattern(
+				getShell(), fCurrSourceFolder, title, message, null, true);
 		if (res != null) {
-			for (int i= 0; i < res.length; i++) {
+			for (int i = 0; i < res.length; i++) {
 				field.addElement(res[i].toString());
 			}
 		}

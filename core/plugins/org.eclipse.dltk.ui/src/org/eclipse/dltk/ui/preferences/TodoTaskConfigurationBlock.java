@@ -45,8 +45,8 @@ import org.eclipse.swt.widgets.Control;
 @Deprecated
 public class TodoTaskConfigurationBlock extends AbstractConfigurationBlock {
 
-	private class TodoTaskLabelProvider extends LabelProvider implements
-			ITableLabelProvider {
+	private class TodoTaskLabelProvider extends LabelProvider
+			implements ITableLabelProvider {
 
 		@Override
 		public Image getImage(Object element) {
@@ -109,7 +109,8 @@ public class TodoTaskConfigurationBlock extends AbstractConfigurationBlock {
 	private OverlayKey[] createKeys() {
 		return new OverlayPreferenceStore.OverlayKey[] {
 				new OverlayPreferenceStore.OverlayKey(
-						OverlayPreferenceStore.STRING, TodoTaskPreferences.TAGS),
+						OverlayPreferenceStore.STRING,
+						TodoTaskPreferences.TAGS),
 				new OverlayPreferenceStore.OverlayKey(
 						OverlayPreferenceStore.BOOLEAN,
 						TodoTaskPreferences.ENABLED),
@@ -186,9 +187,9 @@ public class TodoTaskConfigurationBlock extends AbstractConfigurationBlock {
 		final String[] columnsHeaders = new String[] {
 				PreferencesMessages.TodoTaskConfigurationBlock_markers_tasks_name_column,
 				PreferencesMessages.TodoTaskConfigurationBlock_markers_tasks_priority_column, };
-		fTodoTasksList.setTableColumns(new ListDialogField.ColumnsDescription(
-				columnsHeaders, true));
-		fTodoTasksList.setViewerSorter(new TodoTaskSorter());
+		fTodoTasksList.setTableColumns(
+				new ListDialogField.ColumnsDescription(columnsHeaders, true));
+		fTodoTasksList.setViewerComparator(new TodoTaskSorter());
 
 		final GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
@@ -205,8 +206,7 @@ public class TodoTaskConfigurationBlock extends AbstractConfigurationBlock {
 				PreferencesMessages.TodoTaskConfigurationBlock_enableTaskTags,
 				TodoTaskPreferences.ENABLED, 0);
 
-		fCaseSensitiveCheckbox = addCheckBox(
-				markersComposite,
+		fCaseSensitiveCheckbox = addCheckBox(markersComposite,
 				PreferencesMessages.TodoTaskConfigurationBlock_casesensitive_label,
 				TodoTaskPreferences.CASE_SENSITIVE, 0);
 
@@ -214,8 +214,8 @@ public class TodoTaskConfigurationBlock extends AbstractConfigurationBlock {
 		data.widthHint = conv.convertWidthInCharsToPixels(50);
 		fTodoTasksList.getListControl(markersComposite).setLayoutData(data);
 
-		fTodoTasksList.getButtonBox(markersComposite).setLayoutData(
-				new GridData(GridData.HORIZONTAL_ALIGN_FILL
+		fTodoTasksList.getButtonBox(markersComposite)
+				.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
 						| GridData.VERTICAL_ALIGN_BEGINNING));
 
 		enableCheckbox.addSelectionListener(new SelectionAdapter() {

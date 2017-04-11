@@ -114,18 +114,18 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 				new BPListLabelProvider());
 		fLibrariesList.setDialogFieldListener(adapter);
 		if (this.fWithZip) {
-			fLibrariesList
-					.setLabelText(NewWizardMessages.LibrariesWorkbookPage_libraries_label);
+			fLibrariesList.setLabelText(
+					NewWizardMessages.LibrariesWorkbookPage_libraries_label);
 		} else {
-			fLibrariesList
-					.setLabelText(NewWizardMessages.LibrariesWorkbookPage_libraries_without_label);
+			fLibrariesList.setLabelText(
+					NewWizardMessages.LibrariesWorkbookPage_libraries_without_label);
 		}
 		fLibrariesList.enableButton(IDX_REMOVE + IDX_ADD, false);
 		fLibrariesList.enableButton(IDX_EDIT + IDX_ADD, false);
 		if (fWithZip) {
 			fLibrariesList.enableButton(IDX_REPLACE + IDX_ADD, false);
 		}
-		fLibrariesList.setViewerSorter(new BPListElementSorter());
+		fLibrariesList.setViewerComparator(new BPListElementSorter());
 	}
 
 	@Override
@@ -167,7 +167,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 		LayoutUtil.setHorizontalGrabbing(fLibrariesList.getTreeControl(null));
 		int buttonBarWidth = converter.convertWidthInCharsToPixels(24);
 		fLibrariesList.setButtonsMinWidth(buttonBarWidth);
-		fLibrariesList.getTreeViewer().setSorter(new BPListElementSorter());
+		fLibrariesList.getTreeViewer().setComparator(new BPListElementSorter());
 		fSWTControl = composite;
 		return composite;
 	}
@@ -179,8 +179,8 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 		return DLTKUIPlugin.getActiveWorkbenchShell();
 	}
 
-	private class LibrariesAdapter implements IDialogFieldListener,
-			ITreeListAdapter {
+	private class LibrariesAdapter
+			implements IDialogFieldListener, ITreeListAdapter {
 		private final Object[] EMPTY_ARR = new Object[0];
 
 		// -------- IListAdapter --------
@@ -363,7 +363,8 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 				}
 				attrib.getParent().setAttribute(key, value);
 				selElements.remove(i);
-				if (attrib.getParent().getParentContainer() instanceof BPListElement) { // inside
+				if (attrib.getParent()
+						.getParentContainer() instanceof BPListElement) { // inside
 					// a
 					// container:
 					// apply
@@ -389,17 +390,16 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 		} else {
 			fLibrariesList.removeElements(selElements);
 		}
-		for (Iterator iter = containerEntriesToUpdate.entrySet().iterator(); iter
-				.hasNext();) {
+		for (Iterator iter = containerEntriesToUpdate.entrySet()
+				.iterator(); iter.hasNext();) {
 			Map.Entry entry = (Entry) iter.next();
 			BPListElement curr = (BPListElement) entry.getKey();
 			HashSet attribs = (HashSet) entry.getValue();
 			String[] changedAttributes = (String[]) attribs
 					.toArray(new String[attribs.size()]);
 			IBuildpathEntry changedEntry = curr.getBuildpathEntry();
-			updateContainerEntry(changedEntry, changedAttributes,
-					fCurrJProject, ((BPListElement) curr.getParentContainer())
-							.getPath());
+			updateContainerEntry(changedEntry, changedAttributes, fCurrJProject,
+					((BPListElement) curr.getParentContainer()).getPath());
 		}
 	}
 
@@ -456,8 +456,8 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 					selElement, fCurrJProject, fPageContainer != null);
 			int res = dialog.open();
 			if (res == Window.OK || res == AccessRulesDialog.SWITCH_PAGE) {
-				selElement.setAttribute(BPListElement.ACCESSRULES, dialog
-						.getAccessRules());
+				selElement.setAttribute(BPListElement.ACCESSRULES,
+						dialog.getAccessRules());
 				String[] changedAttributes = { BPListElement.ACCESSRULES };
 				attributeUpdated(selElement, changedAttributes);
 				fLibrariesList.refresh(elem);
@@ -493,8 +493,8 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 			// apply changes right
 			// away
 			IBuildpathEntry updatedEntry = selElement.getBuildpathEntry();
-			updateContainerEntry(updatedEntry, changedAttributes,
-					fCurrJProject, ((BPListElement) parentContainer).getPath());
+			updateContainerEntry(updatedEntry, changedAttributes, fCurrJProject,
+					((BPListElement) parentContainer).getPath());
 		}
 	}
 
@@ -526,9 +526,10 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 			IEnvironment environment = getEnvironment();
 			IResource resource = elem.getResource();
 			if (resource == null) {
-				if (Util.isArchiveFileName(DLTKLanguageManager
-						.getLanguageToolkit(elem.getScriptProject()), elem
-						.getPath().toOSString())) {
+				if (Util.isArchiveFileName(
+						DLTKLanguageManager
+								.getLanguageToolkit(elem.getScriptProject()),
+						elem.getPath().toOSString())) {
 					res = openExtZipFileDialog(elem, environment);
 				} else {
 					res = opensExtSourceFolderDialog(elem, environment);
@@ -578,8 +579,8 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 		Object elem = selElements.get(0);
 		if (elem instanceof BPListElement) {
 			BPListElement curr = (BPListElement) elem;
-			return !(curr.getResource() instanceof IFolder || curr
-					.isExternalFolder())
+			return !(curr.getResource() instanceof IFolder
+					|| curr.isExternalFolder())
 					&& curr.getParentContainer() == null;
 		}
 		if (elem instanceof BPListElementAttribute) {
@@ -622,17 +623,16 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 	}
 
 	private BPListElement[] openNewClassFolderDialog(BPListElement existing) {
-		String title = (existing == null) ? NewWizardMessages.LibrariesWorkbookPage_NewClassFolderDialog_new_title
+		String title = (existing == null)
+				? NewWizardMessages.LibrariesWorkbookPage_NewClassFolderDialog_new_title
 				: NewWizardMessages.LibrariesWorkbookPage_NewClassFolderDialog_edit_title;
 		IProject currProject = fCurrJProject.getProject();
 		NewContainerDialog dialog = new NewContainerDialog(getShell(), title,
 				currProject, getUsedContainers(existing), existing);
 		IPath projpath = currProject.getFullPath();
-		dialog
-				.setMessage(Messages
-						.format(
-								NewWizardMessages.LibrariesWorkbookPage_NewClassFolderDialog_description,
-								projpath.toString()));
+		dialog.setMessage(Messages.format(
+				NewWizardMessages.LibrariesWorkbookPage_NewClassFolderDialog_description,
+				projpath.toString()));
 		if (dialog.open() == Window.OK) {
 			IFolder folder = dialog.getFolder();
 			return new BPListElement[] { newBPLibraryElement(folder, false) };
@@ -644,9 +644,9 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 			IEnvironment environment) {
 		if (existing == null) {
 			IPath[] selected = BuildpathDialogAccess
-					.chooseExtSourceFolderEntries(getShell(), fCurrJProject
-							.getPath(), getUsedContainers(existing),
-							environment);
+					.chooseExtSourceFolderEntries(getShell(),
+							fCurrJProject.getPath(),
+							getUsedContainers(existing), environment);
 			if (selected != null) {
 				// IWorkspaceRoot root =
 				// fCurrJProject.getProject().getWorkspace().getRoot();
@@ -714,8 +714,8 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 			if (configured != null) {
 				IResource resource = root.findMember(configured);
 				if (resource instanceof IFile) {
-					return new BPListElement[] { newBPLibraryElement(resource,
-							false) };
+					return new BPListElement[] {
+							newBPLibraryElement(resource, false) };
 				}
 			}
 		}
@@ -776,8 +776,8 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 			}
 		} else {
 			IPath configured = BuildpathDialogAccess
-					.configureExternalArchiveEntry(getShell(), existing
-							.getPath());
+					.configureExternalArchiveEntry(getShell(),
+							existing.getPath());
 			if (configured != null) {
 				return new BPListElement[] { new BPListElement(fCurrJProject,
 						IBuildpathEntry.BPE_LIBRARY, configured, null, true) };
@@ -786,7 +786,8 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 		return null;
 	}
 
-	private BPListElement[] openContainerSelectionDialog(BPListElement existing) {
+	private BPListElement[] openContainerSelectionDialog(
+			BPListElement existing) {
 		if (existing == null) {
 			IBuildpathEntry[] created = BuildpathDialogAccess
 					.chooseContainerEntries(getShell(), fCurrJProject,
@@ -795,15 +796,15 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 				BPListElement[] res = new BPListElement[created.length];
 				for (int i = 0; i < res.length; i++) {
 					res[i] = new BPListElement(fCurrJProject,
-							IBuildpathEntry.BPE_CONTAINER,
-							created[i].getPath(), null, false);
+							IBuildpathEntry.BPE_CONTAINER, created[i].getPath(),
+							null, false);
 				}
 				return res;
 			}
 		} else {
 			IBuildpathEntry created = BuildpathDialogAccess
-					.configureContainerEntry(getShell(), existing
-							.getBuildpathEntry(), fCurrJProject,
+					.configureContainerEntry(getShell(),
+							existing.getBuildpathEntry(), fCurrJProject,
 							getRawBuildpath());
 			if (created != null) {
 				BPListElement elem = BPListElement.createFromExisting(created,

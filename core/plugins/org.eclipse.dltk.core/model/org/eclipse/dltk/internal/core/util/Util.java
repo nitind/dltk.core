@@ -686,7 +686,7 @@ public class Util {
 			return DLTKContentTypeManager.isValidResourceForContentType(
 					toolkit, resource);
 		} else {
-			toolkit = DLTKLanguageManager.findToolkit(resource);
+			toolkit = DLTKLanguageManager.findToolkitForResource(resource);
 			if (toolkit != null) {
 				return DLTKContentTypeManager.isValidResourceForContentType(
 						toolkit, resource);
@@ -745,7 +745,8 @@ public class Util {
 	 */
 	@Deprecated
 	public static boolean isValidSourceModule(IResource res) {
-		IDLTKLanguageToolkit toolkit = DLTKLanguageManager.findToolkit(res);
+		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
+				.findToolkitForResource(res);
 		if (toolkit != null) {
 			return DLTKContentTypeManager.isValidResourceForContentType(
 					toolkit, res);

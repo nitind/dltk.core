@@ -60,14 +60,14 @@ import org.eclipse.swt.widgets.Menu;
  * content provider, label provider, element sorter and filter to display
  * elements that are not shown usually in the package explorer of the workspace.
  */
-public abstract class DialogPackageExplorer implements IMenuListener,
-		ISelectionChangedListener {
+public abstract class DialogPackageExplorer
+		implements IMenuListener, ISelectionChangedListener {
 	/**
 	 * A extended content provider for the package explorer which can
 	 * additionally display an output folder item.
 	 */
-	private final class PackageContentProvider extends
-			StandardModelElementContentProvider {
+	private final class PackageContentProvider
+			extends StandardModelElementContentProvider {
 		public PackageContentProvider() {
 			super();
 		}
@@ -92,8 +92,8 @@ public abstract class DialogPackageExplorer implements IMenuListener,
 	 * A extended label provider for the package explorer which can additionally
 	 * display an output folder item.
 	 */
-	private final class PackageLabelProvider extends
-			AppearanceAwareLabelProvider {
+	private final class PackageLabelProvider
+			extends AppearanceAwareLabelProvider {
 
 		public PackageLabelProvider(long textFlags, int imageFlags,
 				IPreferenceStore store) {
@@ -110,14 +110,12 @@ public abstract class DialogPackageExplorer implements IMenuListener,
 						IBuildpathEntry entry = root.getRawBuildpathEntry();
 						int excluded = entry.getExclusionPatterns().length;
 						if (excluded == 1)
-							return Messages
-									.format(
-											NewWizardMessages.DialogPackageExplorer_LabelProvider_SingleExcluded,
-											text);
+							return Messages.format(
+									NewWizardMessages.DialogPackageExplorer_LabelProvider_SingleExcluded,
+									text);
 						else if (excluded > 1)
-							return Messages
-									.format(
-											NewWizardMessages.DialogPackageExplorer_LabelProvider_MultiExcluded,
+							return Messages.format(
+									NewWizardMessages.DialogPackageExplorer_LabelProvider_MultiExcluded,
 									new Object[] { text, excluded });
 					}
 				}
@@ -130,27 +128,23 @@ public abstract class DialogPackageExplorer implements IMenuListener,
 							IBuildpathEntry entry = root.getRawBuildpathEntry();
 							int excluded = entry.getExclusionPatterns().length;
 							if (excluded == 1)
-								return Messages
-										.format(
-												NewWizardMessages.DialogPackageExplorer_LabelProvider_SingleExcluded,
-												text);
+								return Messages.format(
+										NewWizardMessages.DialogPackageExplorer_LabelProvider_SingleExcluded,
+										text);
 							else if (excluded > 1)
-								return Messages
-										.format(
-												NewWizardMessages.DialogPackageExplorer_LabelProvider_MultiExcluded,
+								return Messages.format(
+										NewWizardMessages.DialogPackageExplorer_LabelProvider_MultiExcluded,
 										new Object[] { text, excluded });
 						}
 					}
 				}
 				if (element instanceof IFile || element instanceof IFolder) {
 					IResource resource = (IResource) element;
-					if (resource.exists()
-							&& BuildpathModifier.isExcluded(resource,
-									fCurrJProject))
-						return Messages
-								.format(
-										NewWizardMessages.DialogPackageExplorer_LabelProvider_Excluded,
-										text);
+					if (resource.exists() && BuildpathModifier
+							.isExcluded(resource, fCurrJProject))
+						return Messages.format(
+								NewWizardMessages.DialogPackageExplorer_LabelProvider_Excluded,
+								text);
 				}
 			} catch (ModelException e) {
 				DLTKUIPlugin.log(e);
@@ -177,9 +171,8 @@ public abstract class DialogPackageExplorer implements IMenuListener,
 				}
 				if (element instanceof IFile || element instanceof IFolder) {
 					IResource resource = (IResource) element;
-					if (resource.exists()
-							&& BuildpathModifier.isExcluded(resource,
-									fCurrJProject))
+					if (resource.exists() && BuildpathModifier
+							.isExcluded(resource, fCurrJProject))
 						return getBlueColor();
 				}
 			} catch (ModelException e) {
@@ -235,8 +228,8 @@ public abstract class DialogPackageExplorer implements IMenuListener,
 			try {
 				if (element instanceof IFile) {
 					IFile file = (IFile) element;
-					if (file.getName().equals(
-							IScriptProjectFilenames.BUILDPATH_FILENAME)
+					if (file.getName()
+							.equals(IScriptProjectFilenames.BUILDPATH_FILENAME)
 							|| file.getName().equals(
 									IScriptProjectFilenames.PROJECT_FILENAME))
 						return false;
@@ -244,8 +237,8 @@ public abstract class DialogPackageExplorer implements IMenuListener,
 				if (element instanceof IProjectFragment) {
 					IBuildpathEntry cpe = ((IProjectFragment) element)
 							.getRawBuildpathEntry();
-					if (cpe == null
-							|| cpe.getEntryKind() == IBuildpathEntry.BPE_CONTAINER)
+					if (cpe == null || cpe
+							.getEntryKind() == IBuildpathEntry.BPE_CONTAINER)
 						return false;
 				}
 			} catch (ModelException e) {
@@ -253,7 +246,8 @@ public abstract class DialogPackageExplorer implements IMenuListener,
 			}
 			// if (element instanceof IProjectFragment) {
 			// IProjectFragment root= (IProjectFragment)element;
-			//                if (root.getElementName().endsWith(".zip") ) //$NON-NLS-1$ //$NON-NLS-2$
+			// if (root.getElementName().endsWith(".zip") ) //$NON-NLS-1$
+			// //$NON-NLS-2$
 			// return false;
 			// }
 			// return super.select(viewer, parentElement, element);// &&*/
@@ -299,7 +293,7 @@ public abstract class DialogPackageExplorer implements IMenuListener,
 		}
 		// fPackageViewer.setComparer(WorkingSetModel.COMPARER);
 		fPackageViewer.addFilter(new PackageFilter());
-		fPackageViewer.setSorter(new ExtendedModelElementSorter());
+		fPackageViewer.setComparator(new ExtendedModelElementSorter());
 		fPackageViewer.addDoubleClickListener(event -> {
 			Object element = ((IStructuredSelection) event.getSelection())
 					.getFirstElement();
@@ -364,8 +358,8 @@ public abstract class DialogPackageExplorer implements IMenuListener,
 						| ScriptElementImageProvider.SMALL_ICONS,
 				getPreferenceStore());
 		fPackageViewer.setContentProvider(contentProvider);
-		fPackageViewer.setLabelProvider(new StyledDecoratingModelLabelProvider(
-				labelProvider, false));
+		fPackageViewer.setLabelProvider(
+				new StyledDecoratingModelLabelProvider(labelProvider, false));
 	}
 
 	protected abstract IPreferenceStore getPreferenceStore();
@@ -400,22 +394,20 @@ public abstract class DialogPackageExplorer implements IMenuListener,
 		if (elements == null || elements.size() == 0)
 			return;
 		try {
-			ResourcesPlugin.getWorkspace().run(
-					monitor -> {
-						fPackageViewer.refresh();
-						final IStructuredSelection selection = new StructuredSelection(
-								elements);
-						fPackageViewer.setSelection(selection, true);
-						fPackageViewer.getTree().setFocus();
-						if (fActionGroup != null)
-							fActionGroup.refresh(
-									new DialogExplorerActionContext(selection,
-											fCurrJProject));
+			ResourcesPlugin.getWorkspace().run(monitor -> {
+				fPackageViewer.refresh();
+				final IStructuredSelection selection = new StructuredSelection(
+						elements);
+				fPackageViewer.setSelection(selection, true);
+				fPackageViewer.getTree().setFocus();
+				if (fActionGroup != null)
+					fActionGroup.refresh(new DialogExplorerActionContext(
+							selection, fCurrJProject));
 
-						if (elements.size() == 1
-								&& elements.get(0) instanceof IScriptProject)
-							fPackageViewer.expandToLevel(elements.get(0), 1);
-					}, ResourcesPlugin.getWorkspace().getRoot(),
+				if (elements.size() == 1
+						&& elements.get(0) instanceof IScriptProject)
+					fPackageViewer.expandToLevel(elements.get(0), 1);
+			}, ResourcesPlugin.getWorkspace().getRoot(),
 					IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
 		} catch (CoreException e) {
 			DLTKUIPlugin.log(e);

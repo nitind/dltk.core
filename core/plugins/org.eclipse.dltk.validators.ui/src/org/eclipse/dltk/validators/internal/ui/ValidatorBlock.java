@@ -30,7 +30,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -299,7 +299,7 @@ public class ValidatorBlock implements IAddValidatorDialogRequestor {
 	 * Sorts by Interpreter type, and name within type.
 	 */
 	private void sortByType() {
-		fValidatorList.setSorter(new ViewerSorter() {
+		fValidatorList.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				if ((e1 instanceof IValidator) && (e2 instanceof IValidator)) {
@@ -328,7 +328,7 @@ public class ValidatorBlock implements IAddValidatorDialogRequestor {
 	 * Sorts by Interpreter name.
 	 */
 	private void sortByName() {
-		fValidatorList.setSorter(new ViewerSorter() {
+		fValidatorList.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				if ((e1 instanceof IValidator) && (e2 instanceof IValidator)) {

@@ -161,11 +161,10 @@ public class OpenModelElementWithMenu extends ContributionItem {
 			imageDesc = editorDesc.getImageDescriptor();
 		}
 		if (imageDesc == null) {
-			if (editorDesc.getId().equals(
-					IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID)) {
-				imageDesc = registry
-						.getSystemExternalEditorImageDescriptor(getFileResource()
-								.getName());
+			if (editorDesc.getId()
+					.equals(IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID)) {
+				imageDesc = registry.getSystemExternalEditorImageDescriptor(
+						getFileResource().getName());
 			}
 		}
 		return imageDesc;
@@ -243,8 +242,8 @@ public class OpenModelElementWithMenu extends ContributionItem {
 				.findEditor(DEFAULT_TEXT_EDITOR_ID); // may be null
 		IEditorDescriptor preferredEditor = getDefaultEditor(); // may be null
 
-		IEditorDescriptor[] editors = registry.getEditors(file.getName(), IDE
-				.getContentType(file));
+		IEditorDescriptor[] editors = registry.getEditors(file.getName(),
+				IDE.getContentType(file));
 		Arrays.sort(editors, comparer);
 
 		boolean defaultFound = false;
@@ -346,8 +345,7 @@ public class OpenModelElementWithMenu extends ContributionItem {
 	 * Converts the IAdaptable file to IFile or null.
 	 */
 	private IFile getFileResource() {
-		IResource resource = this.element
-				.getAdapter(IResource.class);
+		IResource resource = this.element.getAdapter(IResource.class);
 		if (resource instanceof IFile) {
 			return (IFile) resource;
 		}
@@ -377,15 +375,16 @@ public class OpenModelElementWithMenu extends ContributionItem {
 		}
 		try {
 			if (openUsingDescriptor) {
-				((WorkbenchPage) page)
-						.openEditorFromDescriptor(new FileEditorInput(file),
-								editorDescriptor, true, null);
+				((WorkbenchPage) page).openEditorFromDescriptor(
+						new FileEditorInput(file), editorDescriptor, true,
+						null);
 			} else {
 
-				String editorId = editorDescriptor == null ? IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID
+				String editorId = editorDescriptor == null
+						? IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID
 						: editorDescriptor.getId();
-				page.openEditor(new FileEditorInput(file),
-						editorId, true, MATCH_BOTH);
+				page.openEditor(new FileEditorInput(file), editorId, true,
+						MATCH_BOTH);
 				// only remember the default editor if the open succeeds
 				IDE.setDefaultEditor(file, editorId);
 			}
@@ -422,7 +421,8 @@ public class OpenModelElementWithMenu extends ContributionItem {
 				if (menuItem.getSelection()) {
 					IDE.setDefaultEditor(file, null);
 					try {
-						IEditorDescriptor desc1 = IDE.getEditorDescriptor(file);
+						IEditorDescriptor desc1 = IDE.getEditorDescriptor(file,
+								true, false);
 						page.openEditor(new FileEditorInput(file),
 								desc1.getId(), true, MATCH_BOTH);
 					} catch (PartInitException e) {

@@ -37,13 +37,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
@@ -75,8 +75,8 @@ import org.eclipse.ui.keys.KeySequence;
  *
  *
  */
-public abstract class AbstractInformationControl extends PopupDialog implements
-		IInformationControl, IInformationControlExtension,
+public abstract class AbstractInformationControl extends PopupDialog
+		implements IInformationControl, IInformationControlExtension,
 		IInformationControlExtension2, DisposeListener {
 
 	/**
@@ -165,7 +165,7 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 	 */
 	public AbstractInformationControl(Shell parent, int shellStyle,
 			int treeStyle, String invokingCommandId, boolean showStatusField) {
-		super(parent, shellStyle, true, true, true, true, null, null);
+		super(parent, shellStyle, true, true, true, true, true, null, null);
 		if (invokingCommandId != null) {
 			ICommandManager commandManager = PlatformUI.getWorkbench()
 					.getCommandSupport().getCommandManager();
@@ -182,7 +182,7 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 		// force empty values here.
 		if (hasHeader())
 			setTitleText(""); //$NON-NLS-1$
-		setInfoText(""); //  //$NON-NLS-1$
+		setInfoText(""); // //$NON-NLS-1$
 
 		// Create all controls early to preserve the life cycle of the original
 		// implementation.
@@ -219,25 +219,15 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 				fTreeViewer);
 
 		final Tree tree = fTreeViewer.getTree();
-		tree.addKeyListener(new KeyListener() {
+		tree.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.character == 0x1B) // ESC
 					dispose();
 			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// do nothing
-			}
 		});
 
-		tree.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				// do nothing
-			}
-
+		tree.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				gotoSelectedElement();
@@ -364,7 +354,7 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 		data.verticalAlignment = GridData.CENTER;
 		fFilterText.setLayoutData(data);
 
-		fFilterText.addKeyListener(new KeyListener() {
+		fFilterText.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == 0x0D) // return
@@ -376,19 +366,14 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 				if (e.character == 0x1B) // ESC
 					dispose();
 			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// do nothing
-			}
 		});
 
 		return fFilterText;
 	}
 
 	protected void createHorizontalSeparator(Composite parent) {
-		Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL
-				| SWT.LINE_DOT);
+		Label separator = new Label(parent,
+				SWT.SEPARATOR | SWT.HORIZONTAL | SWT.LINE_DOT);
 		separator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	}
 
@@ -522,17 +507,11 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setInformation(String information) {
 		// this method is ignored, see IInformationControlExtension2
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public abstract void setInput(Object information);
 
@@ -566,9 +545,6 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
@@ -582,9 +558,6 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public final void dispose() {
 		close();
@@ -616,18 +589,18 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 		// Remember current scope and then set window context.
 		if (fKeyBindingScopes == null && fKeyBindingService != null) {
 			fKeyBindingScopes = fKeyBindingService.getScopes();
-			fKeyBindingService
-					.setScopes(new String[] { IWorkbenchContextSupport.CONTEXT_ID_WINDOW });
+			fKeyBindingService.setScopes(new String[] {
+					IWorkbenchContextSupport.CONTEXT_ID_WINDOW });
 		}
 
 		// Register action with command support
 		if (fShowViewMenuHandlerSubmission == null) {
 			fShowViewMenuHandlerSubmission = new HandlerSubmission(null,
-					getShell(), null, fShowViewMenuAction
-							.getActionDefinitionId(), new ActionHandler(
-							fShowViewMenuAction), Priority.MEDIUM);
-			PlatformUI.getWorkbench().getCommandSupport().addHandlerSubmission(
-					fShowViewMenuHandlerSubmission);
+					getShell(), null,
+					fShowViewMenuAction.getActionDefinitionId(),
+					new ActionHandler(fShowViewMenuAction), Priority.MEDIUM);
+			PlatformUI.getWorkbench().getCommandSupport()
+					.addHandlerSubmission(fShowViewMenuHandlerSubmission);
 		}
 	}
 
@@ -649,25 +622,16 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean hasContents() {
 		return fTreeViewer != null && fTreeViewer.getInput() != null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setSizeConstraints(int maxWidth, int maxHeight) {
 		// ignore
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Point computeSizeHint() {
 		// return the shell's size - note that it already has the persisted size
@@ -676,9 +640,6 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 		return getShell().getSize();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void setLocation(Point location) {
 		/*
@@ -770,8 +731,8 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 	protected IDialogSettings getDialogSettings() {
 		String sectionName = getId();
 
-		IDialogSettings settings = DLTKUIPlugin.getDefault()
-				.getDialogSettings().getSection(sectionName);
+		IDialogSettings settings = DLTKUIPlugin.getDefault().getDialogSettings()
+				.getSection(sectionName);
 		if (settings == null)
 			settings = DLTKUIPlugin.getDefault().getDialogSettings()
 					.addNewSection(sectionName);
@@ -784,8 +745,8 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 	 */
 	@Override
 	protected Control createTitleMenuArea(Composite parent) {
-		fViewMenuButtonComposite = (Composite) super
-				.createTitleMenuArea(parent);
+		fViewMenuButtonComposite = (Composite) super.createTitleMenuArea(
+				parent);
 
 		// If there is a header, then the filter text must be created
 		// underneath the title and menu area.
@@ -835,8 +796,8 @@ public abstract class AbstractInformationControl extends PopupDialog implements
 	@Override
 	protected void setTabOrder(Composite composite) {
 		if (hasHeader()) {
-			composite.setTabList(new Control[] { fFilterText,
-					fTreeViewer.getTree() });
+			composite.setTabList(
+					new Control[] { fFilterText, fTreeViewer.getTree() });
 		} else {
 			fViewMenuButtonComposite.setTabList(new Control[] { fFilterText });
 			composite.setTabList(new Control[] { fViewMenuButtonComposite,

@@ -75,13 +75,13 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 		fProjectsList = new TreeListDialogField(adapter, buttonLabels,
 				new BPListLabelProvider());
 		fProjectsList.setDialogFieldListener(adapter);
-		fProjectsList
-				.setLabelText(NewWizardMessages.ProjectsWorkbookPage_projects_label);
+		fProjectsList.setLabelText(
+				NewWizardMessages.ProjectsWorkbookPage_projects_label);
 
 		fProjectsList.enableButton(IDX_REMOVE, false);
 		fProjectsList.enableButton(IDX_EDIT, false);
 
-		fProjectsList.setViewerSorter(new BPListElementSorter());
+		fProjectsList.setViewerComparator(new BPListElementSorter());
 	}
 
 	@Override
@@ -179,8 +179,8 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 		return kind == IBuildpathEntry.BPE_PROJECT;
 	}
 
-	private class ProjectsAdapter implements IDialogFieldListener,
-			ITreeListAdapter {
+	private class ProjectsAdapter
+			implements IDialogFieldListener, ITreeListAdapter {
 
 		private final Object[] EMPTY_ARR = new Object[0];
 
@@ -364,12 +364,12 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 	}
 
 	private void showAccessRestrictionDialog(BPListElement selElement) {
-		AccessRulesDialog dialog = new AccessRulesDialog(getShell(),
-				selElement, fCurrJProject, fPageContainer != null);
+		AccessRulesDialog dialog = new AccessRulesDialog(getShell(), selElement,
+				fCurrJProject, fPageContainer != null);
 		int res = dialog.open();
 		if (res == Window.OK || res == AccessRulesDialog.SWITCH_PAGE) {
-			selElement.setAttribute(BPListElement.ACCESSRULES, dialog
-					.getAccessRules());
+			selElement.setAttribute(BPListElement.ACCESSRULES,
+					dialog.getAccessRules());
 			selElement.setAttribute(BPListElement.COMBINE_ACCESSRULES,
 					dialog.doCombineAccessRules());
 			fProjectsList.refresh();
@@ -405,30 +405,28 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 			final IScriptModel model = fCurrJProject.getModel();
 			final IDLTKLanguageToolkit toolkit = fCurrJProject
 					.getLanguageToolkit();
-			selectable.addAll(Arrays.asList(toolkit != null ? model
-					.getScriptProjects(toolkit.getNatureId()) : model
-					.getScriptProjects()));
+			selectable.addAll(Arrays.asList(toolkit != null
+					? model.getScriptProjects(toolkit.getNatureId())
+					: model.getScriptProjects()));
 			selectable.remove(fCurrJProject);
 
 			List elements = fProjectsList.getElements();
 			for (int i = 0; i < elements.size(); i++) {
 				BPListElement curr = (BPListElement) elements.get(0);
-				IScriptProject proj = (IScriptProject) DLTKCore.create(curr
-						.getResource());
+				IScriptProject proj = (IScriptProject) DLTKCore
+						.create(curr.getResource());
 				selectable.remove(proj);
 			}
 			Object[] selectArr = selectable.toArray();
 			new ModelElementSorter().sort(null, selectArr);
 			// IScriptProject project = elem.getScriptProject();
 			ScriptUILabelProvider labelProvider = new ScriptUILabelProvider();
-			ListSelectionDialog dialog = new ListSelectionDialog(
-					getShell(),
-					Arrays.asList(selectArr),
-					new ArrayContentProvider(),
+			ListSelectionDialog dialog = new ListSelectionDialog(getShell(),
+					Arrays.asList(selectArr), new ArrayContentProvider(),
 					labelProvider,
 					NewWizardMessages.ProjectsWorkbookPage_chooseProjects_message);
-			dialog
-					.setTitle(NewWizardMessages.ProjectsWorkbookPage_chooseProjects_title);
+			dialog.setTitle(
+					NewWizardMessages.ProjectsWorkbookPage_chooseProjects_title);
 			dialog.setHelpAvailable(false);
 			if (dialog.open() == Window.OK) {
 				Object[] result = dialog.getResult();
@@ -436,8 +434,8 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 				for (int i = 0; i < result.length; i++) {
 					IScriptProject curr = (IScriptProject) result[i];
 					cpElements[i] = new BPListElement(fCurrJProject,
-							IBuildpathEntry.BPE_PROJECT, curr.getPath(), curr
-									.getResource(), false);
+							IBuildpathEntry.BPE_PROJECT, curr.getPath(),
+							curr.getResource(), false);
 				}
 				return cpElements;
 			}

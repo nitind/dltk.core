@@ -56,7 +56,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -200,8 +200,8 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 		}
 	}
 
-	private static class SemanticHighlightingColorListItem extends
-			HighlightingColorListItem {
+	private static class SemanticHighlightingColorListItem
+			extends HighlightingColorListItem {
 
 		/** Enablement preference key */
 		private final String fEnableKey;
@@ -295,7 +295,8 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 		}
 
 		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer viewer, Object oldInput,
+				Object newInput) {
 		}
 
 		@Override
@@ -408,7 +409,8 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 
 	protected abstract ProjectionViewer createPreviewViewer(Composite parent,
 			IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
-			boolean showAnnotationsOverview, int styles, IPreferenceStore store);
+			boolean showAnnotationsOverview, int styles,
+			IPreferenceStore store);
 
 	protected abstract ScriptSourceViewerConfiguration createSimpleSourceViewerConfiguration(
 			IColorManager colorManager, IPreferenceStore preferenceStore,
@@ -444,17 +446,11 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 							colorKey + STRIKETHROUGH, colorKey + UNDERLINE,
 							model[i][2]));
 				} else {
-					fListModel
-							.add(new SemanticHighlightingColorListItem(
-									model[i][0],
-									colorKey,
-									colorKey + BOLD,
-									colorKey + ITALIC,
-									colorKey + STRIKETHROUGH,
-									colorKey + UNDERLINE,
-									model[i][2],
-									colorKey
-											+ EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED_SUFFIX));
+					fListModel.add(new SemanticHighlightingColorListItem(
+							model[i][0], colorKey, colorKey + BOLD,
+							colorKey + ITALIC, colorKey + STRIKETHROUGH,
+							colorKey + UNDERLINE, model[i][2], colorKey
+									+ EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED_SUFFIX));
 				}
 			}
 		}
@@ -464,11 +460,11 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 			if (h.isSemanticOnly()) {
 				final String colorKey = h.getPreferenceKey();
 				if (colorKeys.add(colorKey)) {
-					fListModel.add(new SemanticHighlightingColorListItem(h
-							.getDisplayName(), colorKey, colorKey + BOLD,
+					fListModel.add(new SemanticHighlightingColorListItem(
+							h.getDisplayName(), colorKey, colorKey + BOLD,
 							colorKey + ITALIC, colorKey + STRIKETHROUGH,
-							colorKey + UNDERLINE, sCoreCategory, h
-									.getEnabledPreferenceKey()));
+							colorKey + UNDERLINE, sCoreCategory,
+							h.getEnabledPreferenceKey()));
 				}
 			} else if (!colorKeys.contains(h.getPreferenceKey())) {
 				final String msgText = PreferencesMessages.DLTKEditorPreferencePage_coloring_semantic_not_configurable;
@@ -491,10 +487,9 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 					OverlayPreferenceStore.BOOLEAN, item.getBoldKey()));
 			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
 					OverlayPreferenceStore.BOOLEAN, item.getItalicKey()));
-			overlayKeys
-					.add(new OverlayPreferenceStore.OverlayKey(
-							OverlayPreferenceStore.BOOLEAN, item
-									.getStrikethroughKey()));
+			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+					OverlayPreferenceStore.BOOLEAN,
+					item.getStrikethroughKey()));
 			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
 					OverlayPreferenceStore.BOOLEAN, item.getUnderlineKey()));
 
@@ -568,14 +563,14 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 		RGB rgb = PreferenceConverter.getColor(getPreferenceStore(),
 				item.getColorKey());
 		fSyntaxForegroundColorEditor.setColorValue(rgb);
-		fBoldCheckBox.setSelection(getPreferenceStore().getBoolean(
-				item.getBoldKey()));
-		fItalicCheckBox.setSelection(getPreferenceStore().getBoolean(
-				item.getItalicKey()));
-		fStrikethroughCheckBox.setSelection(getPreferenceStore().getBoolean(
-				item.getStrikethroughKey()));
-		fUnderlineCheckBox.setSelection(getPreferenceStore().getBoolean(
-				item.getUnderlineKey()));
+		fBoldCheckBox.setSelection(
+				getPreferenceStore().getBoolean(item.getBoldKey()));
+		fItalicCheckBox.setSelection(
+				getPreferenceStore().getBoolean(item.getItalicKey()));
+		fStrikethroughCheckBox.setSelection(
+				getPreferenceStore().getBoolean(item.getStrikethroughKey()));
+		fUnderlineCheckBox.setSelection(
+				getPreferenceStore().getBoolean(item.getUnderlineKey()));
 		if (item instanceof SemanticHighlightingColorListItem) {
 			fEnableCheckbox.setEnabled(true);
 			boolean enable = getPreferenceStore().getBoolean(
@@ -608,7 +603,8 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 		colorComposite.setLayout(layout);
 
 		Link link = new Link(colorComposite, SWT.NONE);
-		link.setText(PreferencesMessages.DLTKEditorColoringConfigurationBlock_link);
+		link.setText(
+				PreferencesMessages.DLTKEditorColoringConfigurationBlock_link);
 		link.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -631,7 +627,8 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 
 		Label label;
 		label = new Label(colorComposite, SWT.LEFT);
-		label.setText(PreferencesMessages.DLTKEditorPreferencePage_coloring_element);
+		label.setText(
+				PreferencesMessages.DLTKEditorPreferencePage_coloring_element);
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Composite editorComposite = new Composite(colorComposite, SWT.NONE);
@@ -646,7 +643,7 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 		fListViewer = new TreeViewer(editorComposite, SWT.SINGLE | SWT.BORDER);
 		fListViewer.setLabelProvider(new ColorListLabelProvider());
 		fListViewer.setContentProvider(getColorListContentProvider());
-		fListViewer.setSorter(new ViewerSorter() {
+		fListViewer.setComparator(new ViewerComparator() {
 			@Override
 			public int category(Object element) {
 				// don't sort the top level categories
@@ -669,8 +666,8 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 		gd.heightHint = convertHeightInCharsToPixels(9);
 		int maxWidth = 0;
 		for (HighlightingColorListItem item : fListModel) {
-			maxWidth = Math.max(maxWidth, convertWidthInCharsToPixels(item
-					.getDisplayName().length()));
+			maxWidth = Math.max(maxWidth, convertWidthInCharsToPixels(
+					item.getDisplayName().length()));
 		}
 		ScrollBar vBar = ((Scrollable) fListViewer.getControl())
 				.getVerticalBar();
@@ -726,16 +723,16 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 		fItalicCheckBox.setLayoutData(gd);
 
 		fStrikethroughCheckBox = new Button(stylesComposite, SWT.CHECK);
-		fStrikethroughCheckBox
-				.setText(PreferencesMessages.DLTKEditorPreferencePage_strikethrough);
+		fStrikethroughCheckBox.setText(
+				PreferencesMessages.DLTKEditorPreferencePage_strikethrough);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.horizontalIndent = 20;
 		gd.horizontalSpan = 2;
 		fStrikethroughCheckBox.setLayoutData(gd);
 
 		fUnderlineCheckBox = new Button(stylesComposite, SWT.CHECK);
-		fUnderlineCheckBox
-				.setText(PreferencesMessages.DLTKEditorPreferencePage_underline);
+		fUnderlineCheckBox.setText(
+				PreferencesMessages.DLTKEditorPreferencePage_underline);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.horizontalIndent = 20;
 		gd.horizontalSpan = 2;
@@ -755,8 +752,8 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 			label.dispose();
 		}
 
-		fListViewer
-				.addSelectionChangedListener(event -> handleSyntaxColorListSelection());
+		fListViewer.addSelectionChangedListener(
+				event -> handleSyntaxColorListSelection());
 
 		foregroundColorButton.addSelectionListener(new SelectionListener() {
 			@Override
@@ -839,8 +836,8 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 				HighlightingColorListItem item = getHighlightingColorListItem();
 				if (item instanceof SemanticHighlightingColorListItem) {
 					boolean enable = fEnableCheckbox.getSelection();
-					getPreferenceStore().setValue(
-							((SemanticHighlightingColorListItem) item)
+					getPreferenceStore()
+							.setValue(((SemanticHighlightingColorListItem) item)
 									.getEnableKey(), enable);
 					fEnableCheckbox.setSelection(enable);
 					fSyntaxForegroundColorEditor.getButton().setEnabled(enable);
@@ -880,8 +877,7 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 
 		IPreferenceStore generalTextStore = EditorsUI.getPreferenceStore();
 		IPreferenceStore store = new ChainedPreferenceStore(
-				new IPreferenceStore[] {
-						getPreferenceStore(),
+				new IPreferenceStore[] { getPreferenceStore(),
 						new PreferencesAdapter(
 								createTemporaryCorePreferenceStore()),
 						generalTextStore });
@@ -988,8 +984,8 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new InputStreamReader(
-					getPreviewContentReader()));
+			reader = new BufferedReader(
+					new InputStreamReader(getPreviewContentReader()));
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				if (buffer.length() != 0) {

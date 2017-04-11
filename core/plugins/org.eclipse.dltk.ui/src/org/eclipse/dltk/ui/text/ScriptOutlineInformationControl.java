@@ -66,7 +66,8 @@ import org.eclipse.ui.keys.SWTKeySupport;
 /**
  * Show outline in light-weight control.
  */
-public class ScriptOutlineInformationControl extends AbstractInformationControl {
+public class ScriptOutlineInformationControl
+		extends AbstractInformationControl {
 
 	private KeyAdapter fKeyAdapter;
 	private OutlineContentProvider fOutlineContentProvider;
@@ -114,7 +115,8 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 				try {
 					IType type = getDefiningType(element);
 					if (type != null) {
-						StringBuffer buf = new StringBuffer(super.getText(type));
+						StringBuffer buf = new StringBuffer(
+								super.getText(type));
 						buf.append(ScriptElementLabels.CONCAT_STRING);
 						buf.append(text);
 						return buf.toString();
@@ -198,7 +200,8 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 				if (i.getData() instanceof IModelElement) {
 					IModelElement je = (IModelElement) i.getData();
 					if (je.getElementType() == IModelElement.IMPORT_CONTAINER
-							|| (je.getElementType() == ModelElement.METHOD && !expandMethodChildren((IMethod) je))
+							|| (je.getElementType() == ModelElement.METHOD
+									&& !expandMethodChildren((IMethod) je))
 							|| isInnerType(je)) {
 						setExpanded(i, false);
 						return;
@@ -223,8 +226,8 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 
 	}
 
-	private class OutlineContentProvider extends
-			StandardModelElementContentProvider {
+	private class OutlineContentProvider
+			extends StandardModelElementContentProvider {
 
 		private boolean fShowInheritedMembers;
 
@@ -282,7 +285,8 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 		}
 
 		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer viewer, Object oldInput,
+				Object newInput) {
 			super.inputChanged(viewer, oldInput, newInput);
 			fTypeHierarchies.clear();
 		}
@@ -319,19 +323,20 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 		private TreeViewer fOutlineViewer;
 
 		private LexicalSortingAction(TreeViewer outlineViewer) {
-			super(
-					TextMessages.ScriptOutlineInformationControl_LexicalSortingAction_label,
+			super(TextMessages.ScriptOutlineInformationControl_LexicalSortingAction_label,
 					IAction.AS_CHECK_BOX);
-			setToolTipText(TextMessages.ScriptOutlineInformationControl_LexicalSortingAction_tooltip);
-			setDescription(TextMessages.ScriptOutlineInformationControl_LexicalSortingAction_description);
+			setToolTipText(
+					TextMessages.ScriptOutlineInformationControl_LexicalSortingAction_tooltip);
+			setDescription(
+					TextMessages.ScriptOutlineInformationControl_LexicalSortingAction_description);
 
 			DLTKPluginImages.setLocalImageDescriptors(this,
 					"alphab_sort_co.png"); //$NON-NLS-1$
 
 			fOutlineViewer = outlineViewer;
 
-			boolean checked = getDialogSettings().getBoolean(
-					STORE_LEXICAL_SORTING_CHECKED);
+			boolean checked = getDialogSettings()
+					.getBoolean(STORE_LEXICAL_SORTING_CHECKED);
 			setChecked(checked);
 			// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
 			// IJavaHelpContextIds.LEXICAL_SORTING_BROWSING_ACTION);
@@ -368,10 +373,11 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 		 *            the outline viewer
 		 */
 		private SortByDefiningTypeAction(TreeViewer outlineViewer) {
-			super(
-					TextMessages.ScriptOutlineInformationControl_SortByDefiningTypeAction_label);
-			setDescription(TextMessages.ScriptOutlineInformationControl_SortByDefiningTypeAction_description);
-			setToolTipText(TextMessages.ScriptOutlineInformationControl_SortByDefiningTypeAction_tooltip);
+			super(TextMessages.ScriptOutlineInformationControl_SortByDefiningTypeAction_label);
+			setDescription(
+					TextMessages.ScriptOutlineInformationControl_SortByDefiningTypeAction_description);
+			setToolTipText(
+					TextMessages.ScriptOutlineInformationControl_SortByDefiningTypeAction_tooltip);
 
 			DLTKPluginImages.setLocalImageDescriptors(this,
 					"definingtype_sort_co.png"); //$NON-NLS-1$
@@ -384,8 +390,8 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 				System.err.println("TODO: add help support here"); //$NON-NLS-1$
 			}
 
-			boolean state = getDialogSettings().getBoolean(
-					STORE_SORT_BY_DEFINING_TYPE_CHECKED);
+			boolean state = getDialogSettings()
+					.getBoolean(STORE_SORT_BY_DEFINING_TYPE_CHECKED);
 			setChecked(state);
 			fInnerLabelProvider.setShowDefiningType(state);
 		}
@@ -394,8 +400,7 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 		public void run() {
 			BusyIndicator.showWhile(fOutlineViewer.getControl().getDisplay(),
 					() -> {
-						fInnerLabelProvider
-								.setShowDefiningType(isChecked());
+						fInnerLabelProvider.setShowDefiningType(isChecked());
 						getDialogSettings().put(
 								STORE_SORT_BY_DEFINING_TYPE_CHECKED,
 								isChecked());
@@ -444,8 +449,8 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 	@Deprecated
 	public ScriptOutlineInformationControl(Shell parent, int shellStyle,
 			int treeStyle, String commandId) {
-		this(parent, shellStyle, treeStyle, commandId, DLTKUIPlugin
-				.getDefault().getPreferenceStore());
+		this(parent, shellStyle, treeStyle, commandId,
+				DLTKUIPlugin.getDefault().getPreferenceStore());
 	}
 
 	/**
@@ -493,8 +498,8 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 		treeViewer.addFilter(new NamePatternFilter());
 		treeViewer.addFilter(new MemberFilter());
 
-		fForegroundColor = parent.getDisplay().getSystemColor(
-				SWT.COLOR_DARK_GRAY);
+		fForegroundColor = parent.getDisplay()
+				.getSystemColor(SWT.COLOR_DARK_GRAY);
 
 		fInnerLabelProvider = new OutlineLabelProvider();
 		fInnerLabelProvider.addLabelDecorator(new ProblemsLabelDecorator(null));
@@ -507,8 +512,8 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 		 * OverrideIndicatorLabelDecorator(null));
 		 */
 
-		treeViewer.setLabelProvider(new StyledDecoratingModelLabelProvider(
-				fInnerLabelProvider));
+		treeViewer.setLabelProvider(
+				new StyledDecoratingModelLabelProvider(fInnerLabelProvider));
 
 		fLexicalSortingAction = new LexicalSortingAction(treeViewer);
 		fSortByDefiningTypeAction = new SortByDefiningTypeAction(treeViewer);
@@ -519,7 +524,7 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 		fOutlineContentProvider = new OutlineContentProvider(false);
 		treeViewer.setContentProvider(fOutlineContentProvider);
 		fOutlineSorter = new OutlineSorter();
-		treeViewer.setSorter(fOutlineSorter);
+		treeViewer.setComparator(fOutlineSorter);
 		treeViewer.setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
 
 		treeViewer.getTree().addKeyListener(getKeyAdapter());
@@ -536,13 +541,13 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 		String keySequence = sequences[0].format();
 
 		if (fOutlineContentProvider.isShowingInheritedMembers())
-			return Messages
-					.format(TextMessages.ScriptOutlineInformationControl_pressToHideInheritedMembers,
-							keySequence);
+			return Messages.format(
+					TextMessages.ScriptOutlineInformationControl_pressToHideInheritedMembers,
+					keySequence);
 		else
-			return Messages
-					.format(TextMessages.ScriptOutlineInformationControl_pressToShowInheritedMembers,
-							keySequence);
+			return Messages.format(
+					TextMessages.ScriptOutlineInformationControl_pressToShowInheritedMembers,
+					keySequence);
 	}
 
 	@Override
@@ -574,9 +579,9 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 				public void keyPressed(KeyEvent e) {
 					int accelerator = SWTKeySupport
 							.convertEventToUnmodifiedAccelerator(e);
-					KeySequence keySequence = KeySequence
-							.getInstance(SWTKeySupport
-									.convertAcceleratorToKeyStroke(accelerator));
+					KeySequence keySequence = KeySequence.getInstance(
+							SWTKeySupport.convertAcceleratorToKeyStroke(
+									accelerator));
 					KeySequence[] sequences = getInvokingCommandKeySequences();
 					if (sequences == null)
 						return;

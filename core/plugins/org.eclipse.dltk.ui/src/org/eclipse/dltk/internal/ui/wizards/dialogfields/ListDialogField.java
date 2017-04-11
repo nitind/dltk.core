@@ -30,7 +30,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -87,7 +87,7 @@ public class ListDialogField<E> extends DialogField {
 	protected ILabelProvider fLabelProvider;
 	protected ListViewerAdapter fListViewerAdapter;
 	protected List<E> fElements;
-	protected ViewerSorter fViewerSorter;
+	protected ViewerComparator fViewerSorter;
 
 	protected String[] fButtonLabels;
 	private Button[] fButtonControls;
@@ -188,7 +188,7 @@ public class ListDialogField<E> extends DialogField {
 	 * @param viewerSorter
 	 *            The viewerSorter to set
 	 */
-	public void setViewerSorter(ViewerSorter viewerSorter) {
+	public void setViewerComparator(ViewerComparator viewerSorter) {
 		fViewerSorter = viewerSorter;
 	}
 
@@ -343,7 +343,8 @@ public class ListDialogField<E> extends DialogField {
 				ColumnLayoutData[] columns = fTableColumns.columns;
 				for (int i = 0; i < columns.length; i++) {
 					composite.addColumnData(columns[i]);
-					TableColumn column = new TableColumn(tableControl, SWT.NONE);
+					TableColumn column = new TableColumn(tableControl,
+							SWT.NONE);
 					// tableLayout.addColumnData(columns[i]);
 					if (fTableColumns.headers != null) {
 						column.setText(fTableColumns.headers[i]);
@@ -368,7 +369,7 @@ public class ListDialogField<E> extends DialogField {
 			fTable.setInput(fParentElement);
 
 			if (fViewerSorter != null) {
-				fTable.setSorter(fViewerSorter);
+				fTable.setComparator(fViewerSorter);
 			}
 
 			fTableControl.setEnabled(isEnabled());
@@ -470,8 +471,8 @@ public class ListDialogField<E> extends DialogField {
 					if (currLabel != null) {
 						fButtonControls[i] = createButton(contents, currLabel,
 								listener);
-						fButtonControls[i].setEnabled(isEnabled()
-								&& fButtonsEnabled[i]);
+						fButtonControls[i]
+								.setEnabled(isEnabled() && fButtonsEnabled[i]);
 					} else {
 						fButtonControls[i] = null;
 						createSeparator(contents);
@@ -505,9 +506,8 @@ public class ListDialogField<E> extends DialogField {
 	 */
 	protected void handleKeyPressed(KeyEvent event) {
 		if (event.character == SWT.DEL && event.stateMask == 0) {
-			if (fRemoveButtonIndex != -1
-					&& isButtonEnabled(fTable.getSelection(),
-							fRemoveButtonIndex)) {
+			if (fRemoveButtonIndex != -1 && isButtonEnabled(
+					fTable.getSelection(), fRemoveButtonIndex)) {
 				managedButtonPressed(fRemoveButtonIndex);
 			}
 		}
@@ -925,7 +925,8 @@ public class ListDialogField<E> extends DialogField {
 		// ------- ITableContentProvider Interface ------------
 
 		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer viewer, Object oldInput,
+				Object newInput) {
 			// will never happen
 		}
 
@@ -948,9 +949,8 @@ public class ListDialogField<E> extends DialogField {
 		/*
 		 * (non-Javadoc)
 		 *
-		 * @see
-		 * org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse
-		 * .jface.viewers.DoubleClickEvent)
+		 * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.
+		 * eclipse .jface.viewers.DoubleClickEvent)
 		 */
 		@Override
 		public void doubleClick(DoubleClickEvent event) {

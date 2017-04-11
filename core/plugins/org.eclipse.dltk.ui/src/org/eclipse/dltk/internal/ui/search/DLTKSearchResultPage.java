@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,7 +43,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.search.ui.ISearchResultViewPart;
 import org.eclipse.search.ui.NewSearchUI;
@@ -70,64 +70,60 @@ import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements IAdaptable {
-	
-	public static class DecoratorIgnoringViewerSorter extends ViewerSorter {
+public class DLTKSearchResultPage extends AbstractTextSearchViewPage
+		implements IAdaptable {
+
+	public static class DecoratorIgnoringViewerSorter extends ViewerComparator {
 
 		private final ILabelProvider fLabelProvider;
 
 		public DecoratorIgnoringViewerSorter(ILabelProvider labelProvider) {
 			super(null); // lazy initialization
-			fLabelProvider= labelProvider;
+			fLabelProvider = labelProvider;
 		}
-		
+
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
-	        String name1= fLabelProvider.getText(e1);
-	        String name2= fLabelProvider.getText(e2);
-	        if (name1 == null)
-	            name1 = "";//$NON-NLS-1$
-	        if (name2 == null)
-	            name2 = "";//$NON-NLS-1$
+			String name1 = fLabelProvider.getText(e1);
+			String name2 = fLabelProvider.getText(e2);
+			if (name1 == null)
+				name1 = "";//$NON-NLS-1$
+			if (name2 == null)
+				name2 = "";//$NON-NLS-1$
 			return getComparator().compare(name1, name2);
-	    }
-		
+		}
+
 	}
-		
+
 	private static final int DEFAULT_ELEMENT_LIMIT = 1000;
 	private static final String FALSE = "FALSE"; //$NON-NLS-1$
 	private static final String TRUE = "TRUE"; //$NON-NLS-1$
-	private static final String KEY_GROUPING= "org.eclipse.dltk.search.resultpage.grouping"; //$NON-NLS-1$
-	private static final String KEY_SORTING= "org.eclipse.dltk.search.resultpage.sorting"; //$NON-NLS-1$
-	private static final String KEY_LIMIT_ENABLED= "org.eclipse.dltk.search.resultpage.limit_enabled"; //$NON-NLS-1$
-	private static final String KEY_LIMIT= "org.eclipse.dltk.search.resultpage.limit"; //$NON-NLS-1$
-	
-	private static final String GROUP_GROUPING= "org.eclipse.dltk.search.resultpage.grouping"; //$NON-NLS-1$
+	private static final String KEY_GROUPING = "org.eclipse.dltk.search.resultpage.grouping"; //$NON-NLS-1$
+	private static final String KEY_SORTING = "org.eclipse.dltk.search.resultpage.sorting"; //$NON-NLS-1$
+	private static final String KEY_LIMIT_ENABLED = "org.eclipse.dltk.search.resultpage.limit_enabled"; //$NON-NLS-1$
+	private static final String KEY_LIMIT = "org.eclipse.dltk.search.resultpage.limit"; //$NON-NLS-1$
+
+	private static final String GROUP_GROUPING = "org.eclipse.dltk.search.resultpage.grouping"; //$NON-NLS-1$
 	private static final String GROUP_FILTERING = "org.eclipse.dltk.search.resultpage.filtering"; //$NON-NLS-1$
-	
+
 	private NewSearchViewActionGroup fActionGroup;
 	private DLTKSearchContentProvider fContentProvider;
 	private int fCurrentSortOrder;
 	private SortAction fSortByNameAction;
 	private SortAction fSortByParentName;
 	private SortAction fSortByPathAction;
-	
+
 	private GroupAction fGroupTypeAction;
 	private GroupAction fGroupFileAction;
 	private GroupAction fGroupPackageAction;
 	private GroupAction fGroupProjectAction;
 	private int fCurrentGrouping;
-	
+
 	private static final String[] SHOW_IN_TARGETS = new String[] {
 			DLTKUIPlugin.ID_SCRIPT_EXPLORER, IPageLayout.ID_RES_NAV };
-	public static final IShowInTargetList SHOW_IN_TARGET_LIST= new IShowInTargetList() {
-		@Override
-		public String[] getShowInTargetIds() {
-			return SHOW_IN_TARGETS;
-		}
-	};
-	
-	private DLTKSearchEditorOpener fEditorOpener= new DLTKSearchEditorOpener();
+	public static final IShowInTargetList SHOW_IN_TARGET_LIST = () -> SHOW_IN_TARGETS;
+
+	private DLTKSearchEditorOpener fEditorOpener = new DLTKSearchEditorOpener();
 
 	public DLTKSearchResultPage() {
 		initSortActions();
@@ -135,69 +131,96 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		// initFilterActions();
 		setElementLimit(Integer.valueOf(DEFAULT_ELEMENT_LIMIT));
 	}
-	
+
 	private void initSortActions() {
-		fSortByNameAction= new SortAction(SearchMessages.DLTKSearchResultPage_sortByName, this, SortingLabelProvider.SHOW_ELEMENT_CONTAINER); 
-		fSortByPathAction= new SortAction(SearchMessages.DLTKSearchResultPage_sortByPath, this, SortingLabelProvider.SHOW_PATH); 
-		fSortByParentName= new SortAction(SearchMessages.DLTKSearchResultPage_sortByParentName, this, SortingLabelProvider.SHOW_CONTAINER_ELEMENT); 
+		fSortByNameAction = new SortAction(
+				SearchMessages.DLTKSearchResultPage_sortByName, this,
+				SortingLabelProvider.SHOW_ELEMENT_CONTAINER);
+		fSortByPathAction = new SortAction(
+				SearchMessages.DLTKSearchResultPage_sortByPath, this,
+				SortingLabelProvider.SHOW_PATH);
+		fSortByParentName = new SortAction(
+				SearchMessages.DLTKSearchResultPage_sortByParentName, this,
+				SortingLabelProvider.SHOW_CONTAINER_ELEMENT);
 	}
 
 	private void initGroupingActions() {
-		fGroupProjectAction= new GroupAction(SearchMessages.DLTKSearchResultPage_groupby_project, SearchMessages.DLTKSearchResultPage_groupby_project_tooltip, this, LevelTreeContentProvider.LEVEL_PROJECT); 
-		DLTKPluginImages.setLocalImageDescriptors(fGroupProjectAction, "prj_mode.png"); //$NON-NLS-1$
-		fGroupPackageAction= new GroupAction(SearchMessages.DLTKSearchResultPage_groupby_package, SearchMessages.DLTKSearchResultPage_groupby_package_tooltip, this, LevelTreeContentProvider.LEVEL_PACKAGE); 
-		DLTKPluginImages.setLocalImageDescriptors(fGroupPackageAction, "package_mode.png"); //$NON-NLS-1$
-		fGroupFileAction= new GroupAction(SearchMessages.DLTKSearchResultPage_groupby_file, SearchMessages.DLTKSearchResultPage_groupby_file_tooltip, this, LevelTreeContentProvider.LEVEL_FILE); 
-		DLTKPluginImages.setLocalImageDescriptors(fGroupFileAction, "file_mode.png"); //$NON-NLS-1$
-		fGroupTypeAction= new GroupAction(SearchMessages.DLTKSearchResultPage_groupby_type, SearchMessages.DLTKSearchResultPage_groupby_type_tooltip, this, LevelTreeContentProvider.LEVEL_TYPE); 
-		DLTKPluginImages.setLocalImageDescriptors(fGroupTypeAction, "type_mode.png"); //$NON-NLS-1$
+		fGroupProjectAction = new GroupAction(
+				SearchMessages.DLTKSearchResultPage_groupby_project,
+				SearchMessages.DLTKSearchResultPage_groupby_project_tooltip,
+				this, LevelTreeContentProvider.LEVEL_PROJECT);
+		DLTKPluginImages.setLocalImageDescriptors(fGroupProjectAction,
+				"prj_mode.png"); //$NON-NLS-1$
+		fGroupPackageAction = new GroupAction(
+				SearchMessages.DLTKSearchResultPage_groupby_package,
+				SearchMessages.DLTKSearchResultPage_groupby_package_tooltip,
+				this, LevelTreeContentProvider.LEVEL_PACKAGE);
+		DLTKPluginImages.setLocalImageDescriptors(fGroupPackageAction,
+				"package_mode.png"); //$NON-NLS-1$
+		fGroupFileAction = new GroupAction(
+				SearchMessages.DLTKSearchResultPage_groupby_file,
+				SearchMessages.DLTKSearchResultPage_groupby_file_tooltip, this,
+				LevelTreeContentProvider.LEVEL_FILE);
+		DLTKPluginImages.setLocalImageDescriptors(fGroupFileAction,
+				"file_mode.png"); //$NON-NLS-1$
+		fGroupTypeAction = new GroupAction(
+				SearchMessages.DLTKSearchResultPage_groupby_type,
+				SearchMessages.DLTKSearchResultPage_groupby_type_tooltip, this,
+				LevelTreeContentProvider.LEVEL_TYPE);
+		DLTKPluginImages.setLocalImageDescriptors(fGroupTypeAction,
+				"type_mode.png"); //$NON-NLS-1$
 	}
 
 	@Override
 	public void setViewPart(ISearchResultViewPart part) {
 		super.setViewPart(part);
-		fActionGroup= new NewSearchViewActionGroup(part);
+		fActionGroup = new NewSearchViewActionGroup(part);
 	}
-	
+
 	@Override
-	public void showMatch(Match match, int offset, int length, boolean activate) throws PartInitException {
+	public void showMatch(Match match, int offset, int length, boolean activate)
+			throws PartInitException {
 		IEditorPart editor;
 		try {
-			editor= fEditorOpener.openMatch(match);
+			editor = fEditorOpener.openMatch(match);
 		} catch (ModelException e) {
 			throw new PartInitException(e.getStatus());
 		}
-		
+
 		if (editor != null && activate)
 			editor.getEditorSite().getPage().activate(editor);
-		Object element= match.getElement();
+		Object element = match.getElement();
 		if (editor instanceof ITextEditor) {
-			ITextEditor textEditor= (ITextEditor) editor;
+			ITextEditor textEditor = (ITextEditor) editor;
 			textEditor.selectAndReveal(offset, length);
-		} else if (editor != null){
+		} else if (editor != null) {
 			if (element instanceof IFile) {
-				IFile file= (IFile) element;
+				IFile file = (IFile) element;
 				showWithMarker(editor, file, offset, length);
 			}
 		} else {
-			DLTKSearchResult result= (DLTKSearchResult) getInput();
-			IMatchPresentation participant= result.getSearchParticpant(element);
+			DLTKSearchResult result = (DLTKSearchResult) getInput();
+			IMatchPresentation participant = result
+					.getSearchParticpant(element);
 			if (participant != null)
 				participant.showMatch(match, offset, length, activate);
 		}
 	}
-	
-	private void showWithMarker(IEditorPart editor, IFile file, int offset, int length) throws PartInitException {
+
+	private void showWithMarker(IEditorPart editor, IFile file, int offset,
+			int length) throws PartInitException {
 		try {
-			IMarker marker= file.createMarker(NewSearchUI.SEARCH_MARKER);
-			HashMap<String, Integer> attributes= new HashMap<String, Integer>(4);
+			IMarker marker = file.createMarker(NewSearchUI.SEARCH_MARKER);
+			HashMap<String, Integer> attributes = new HashMap<String, Integer>(
+					4);
 			attributes.put(IMarker.CHAR_START, Integer.valueOf(offset));
 			attributes.put(IMarker.CHAR_END, Integer.valueOf(offset + length));
 			marker.setAttributes(attributes);
 			IDE.gotoMarker(editor, marker);
 			marker.delete();
 		} catch (CoreException e) {
-			throw new PartInitException(SearchMessages.DLTKSearchResultPage_error_marker, e); 
+			throw new PartInitException(
+					SearchMessages.DLTKSearchResultPage_error_marker, e);
 		}
 	}
 
@@ -206,47 +229,57 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		super.fillContextMenu(mgr);
 		addSortActions(mgr);
 
-		fActionGroup.setContext(new ActionContext(getSite().getSelectionProvider().getSelection()));
+		fActionGroup.setContext(new ActionContext(
+				getSite().getSelectionProvider().getSelection()));
 		fActionGroup.fillContextMenu(mgr);
 	}
-	
+
 	private void addSortActions(IMenuManager mgr) {
 		if (getLayout() != FLAG_LAYOUT_FLAT)
 			return;
-		MenuManager sortMenu= new MenuManager(SearchMessages.DLTKSearchResultPage_sortBylabel); 
+		MenuManager sortMenu = new MenuManager(
+				SearchMessages.DLTKSearchResultPage_sortBylabel);
 		sortMenu.add(fSortByNameAction);
 		sortMenu.add(fSortByPathAction);
 		sortMenu.add(fSortByParentName);
-		
-		fSortByNameAction.setChecked(fCurrentSortOrder == fSortByNameAction.getSortOrder());
-		fSortByPathAction.setChecked(fCurrentSortOrder == fSortByPathAction.getSortOrder());
-		fSortByParentName.setChecked(fCurrentSortOrder == fSortByParentName.getSortOrder());
-		
+
+		fSortByNameAction.setChecked(
+				fCurrentSortOrder == fSortByNameAction.getSortOrder());
+		fSortByPathAction.setChecked(
+				fCurrentSortOrder == fSortByPathAction.getSortOrder());
+		fSortByParentName.setChecked(
+				fCurrentSortOrder == fSortByParentName.getSortOrder());
+
 		mgr.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, sortMenu);
 	}
-	
+
 	@Override
 	protected void fillToolbar(IToolBarManager tbm) {
 		super.fillToolbar(tbm);
 		if (getLayout() != FLAG_LAYOUT_FLAT)
 			addGroupActions(tbm);
 	}
-		
+
 	private void addGroupActions(IToolBarManager mgr) {
-		mgr.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP, new Separator(GROUP_GROUPING));
+		mgr.appendToGroup(IContextMenuConstants.GROUP_VIEWER_SETUP,
+				new Separator(GROUP_GROUPING));
 		mgr.appendToGroup(GROUP_GROUPING, fGroupProjectAction);
 		mgr.appendToGroup(GROUP_GROUPING, fGroupPackageAction);
 		mgr.appendToGroup(GROUP_GROUPING, fGroupFileAction);
 		mgr.appendToGroup(GROUP_GROUPING, fGroupTypeAction);
-		
+
 		updateGroupingActions();
 	}
 
 	private void updateGroupingActions() {
-		fGroupProjectAction.setChecked(fCurrentGrouping == LevelTreeContentProvider.LEVEL_PROJECT);
-		fGroupPackageAction.setChecked(fCurrentGrouping == LevelTreeContentProvider.LEVEL_PACKAGE);
-		fGroupFileAction.setChecked(fCurrentGrouping == LevelTreeContentProvider.LEVEL_FILE);
-		fGroupTypeAction.setChecked(fCurrentGrouping == LevelTreeContentProvider.LEVEL_TYPE);
+		fGroupProjectAction.setChecked(
+				fCurrentGrouping == LevelTreeContentProvider.LEVEL_PROJECT);
+		fGroupPackageAction.setChecked(
+				fCurrentGrouping == LevelTreeContentProvider.LEVEL_PACKAGE);
+		fGroupFileAction.setChecked(
+				fCurrentGrouping == LevelTreeContentProvider.LEVEL_FILE);
+		fGroupTypeAction.setChecked(
+				fCurrentGrouping == LevelTreeContentProvider.LEVEL_TYPE);
 	}
 
 	@Override
@@ -254,7 +287,7 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		fActionGroup.dispose();
 		super.dispose();
 	}
-	
+
 	@Override
 	protected void elementsChanged(Object[] objects) {
 		if (fContentProvider != null)
@@ -266,61 +299,73 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		if (fContentProvider != null)
 			fContentProvider.clear();
 	}
-	
+
 	private void addDragAdapters(StructuredViewer viewer) {
 		Transfer[] transfers = new Transfer[] {
 				LocalSelectionTransfer.getTransfer(),
 				ResourceTransfer.getInstance() };
-		int ops= DND.DROP_COPY | DND.DROP_LINK;
-		
-		DLTKViewerDragAdapter dragAdapter= new DLTKViewerDragAdapter(viewer);
-		dragAdapter.addDragSourceListener(new SelectionTransferDragAdapter(viewer));
-		dragAdapter.addDragSourceListener(new EditorInputTransferDragAdapter(viewer));
-		dragAdapter.addDragSourceListener(new ResourceTransferDragAdapter(viewer));
+		int ops = DND.DROP_COPY | DND.DROP_LINK;
+
+		DLTKViewerDragAdapter dragAdapter = new DLTKViewerDragAdapter(viewer);
+		dragAdapter.addDragSourceListener(
+				new SelectionTransferDragAdapter(viewer));
+		dragAdapter.addDragSourceListener(
+				new EditorInputTransferDragAdapter(viewer));
+		dragAdapter
+				.addDragSourceListener(new ResourceTransferDragAdapter(viewer));
 		viewer.addDragSupport(ops, transfers, dragAdapter);
-	}	
+	}
 
 	@Override
 	protected void configureTableViewer(TableViewer viewer) {
 		viewer.setUseHashlookup(true);
-		SortingLabelProvider sortingLabelProvider= new SortingLabelProvider(this);
-		viewer.setLabelProvider(new ColorDecoratingLabelProvider(sortingLabelProvider, PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
-		fContentProvider=new DLTKSearchTableContentProvider(this);
+		SortingLabelProvider sortingLabelProvider = new SortingLabelProvider(
+				this);
+		viewer.setLabelProvider(new ColorDecoratingLabelProvider(
+				sortingLabelProvider, PlatformUI.getWorkbench()
+						.getDecoratorManager().getLabelDecorator()));
+		fContentProvider = new DLTKSearchTableContentProvider(this);
 		viewer.setContentProvider(fContentProvider);
-		viewer.setSorter(new DecoratorIgnoringViewerSorter(sortingLabelProvider));
+		viewer.setComparator(
+				new DecoratorIgnoringViewerSorter(sortingLabelProvider));
 		setSortOrder(fCurrentSortOrder);
 		addDragAdapters(viewer);
 	}
 
 	@Override
 	protected void configureTreeViewer(TreeViewer viewer) {
-		PostfixLabelProvider postfixLabelProvider= new PostfixLabelProvider(this);
+		PostfixLabelProvider postfixLabelProvider = new PostfixLabelProvider(
+				this);
 		viewer.setUseHashlookup(true);
-		viewer.setSorter(new DecoratorIgnoringViewerSorter(postfixLabelProvider));
-		viewer.setLabelProvider(new ColorDecoratingLabelProvider(postfixLabelProvider, PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
-		fContentProvider= new LevelTreeContentProvider(this, fCurrentGrouping);
+		viewer.setComparator(
+				new DecoratorIgnoringViewerSorter(postfixLabelProvider));
+		viewer.setLabelProvider(new ColorDecoratingLabelProvider(
+				postfixLabelProvider, PlatformUI.getWorkbench()
+						.getDecoratorManager().getLabelDecorator()));
+		fContentProvider = new LevelTreeContentProvider(this, fCurrentGrouping);
 		viewer.setContentProvider(fContentProvider);
 		addDragAdapters(viewer);
 	}
-	
+
 	@Override
 	protected TreeViewer createTreeViewer(Composite parent) {
-		return new ProblemTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL
-				| SWT.V_SCROLL);
+		return new ProblemTreeViewer(parent,
+				SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 	}
-	
+
 	@Override
 	protected TableViewer createTableViewer(Composite parent) {
-		return new ProblemTableViewer(parent, SWT.MULTI | SWT.H_SCROLL
-				| SWT.V_SCROLL);
+		return new ProblemTableViewer(parent,
+				SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 	}
-	
+
 	void setSortOrder(int order) {
-		fCurrentSortOrder= order;
-		StructuredViewer viewer= getViewer();
+		fCurrentSortOrder = order;
+		StructuredViewer viewer = getViewer();
 		viewer.getControl().setRedraw(false);
-		DecoratingLabelProvider dlp= (DecoratingLabelProvider) viewer.getLabelProvider();
-		((SortingLabelProvider)dlp.getLabelProvider()).setOrder(order);
+		DecoratingLabelProvider dlp = (DecoratingLabelProvider) viewer
+				.getLabelProvider();
+		((SortingLabelProvider) dlp.getLabelProvider()).setOrder(order);
 		viewer.getControl().setRedraw(true);
 		viewer.refresh();
 		getSettings().put(KEY_SORTING, fCurrentSortOrder);
@@ -330,52 +375,64 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 	public void init(IPageSite site) {
 		super.init(site);
 		IMenuManager menuManager = site.getActionBars().getMenuManager();
-		menuManager.insertBefore(IContextMenuConstants.GROUP_PROPERTIES, new Separator(GROUP_FILTERING));
+		menuManager.insertBefore(IContextMenuConstants.GROUP_PROPERTIES,
+				new Separator(GROUP_FILTERING));
 		fActionGroup.fillActionBars(site.getActionBars());
-		menuManager.appendToGroup(IContextMenuConstants.GROUP_PROPERTIES, new Action(SearchMessages.DLTKSearchResultPage_preferences_label) {
+		menuManager.appendToGroup(IContextMenuConstants.GROUP_PROPERTIES,
+				new Action(
+						SearchMessages.DLTKSearchResultPage_preferences_label) {
 					@Override
-			public void run() {
-				String pageId= "org.eclipse.search.preferences.SearchPreferencePage"; //$NON-NLS-1$
-				PreferencesUtil.createPreferenceDialogOn(DLTKUIPlugin.getActiveWorkbenchShell(), pageId, null, null).open();
-			}
-		});
+					public void run() {
+						String pageId = "org.eclipse.search.preferences.SearchPreferencePage"; //$NON-NLS-1$
+						PreferencesUtil.createPreferenceDialogOn(
+								DLTKUIPlugin.getActiveWorkbenchShell(), pageId,
+								null, null).open();
+					}
+				});
 	}
 
 	/**
-	 * Precondition here: the viewer must be showing a tree with a LevelContentProvider.
+	 * Precondition here: the viewer must be showing a tree with a
+	 * LevelContentProvider.
+	 *
 	 * @param grouping
 	 */
 	void setGrouping(int grouping) {
-		fCurrentGrouping= grouping;
-		StructuredViewer viewer= getViewer();
-		LevelTreeContentProvider cp= (LevelTreeContentProvider) viewer.getContentProvider();
+		fCurrentGrouping = grouping;
+		StructuredViewer viewer = getViewer();
+		LevelTreeContentProvider cp = (LevelTreeContentProvider) viewer
+				.getContentProvider();
 		cp.setLevel(grouping);
 		updateGroupingActions();
 		getSettings().put(KEY_GROUPING, fCurrentGrouping);
 		getViewPart().updateLabel();
 	}
-	
+
 	@Override
 	protected StructuredViewer getViewer() {
 		// override so that it's visible in the package.
 		return super.getViewer();
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage#restoreState(org.eclipse.ui.IMemento)
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.eclipse.search.ui.text.AbstractTextSearchViewPage#restoreState(org.
+	 * eclipse.ui.IMemento)
 	 */
 	@Override
 	public void restoreState(IMemento memento) {
 		super.restoreState(memento);
 		try {
-			fCurrentSortOrder= getSettings().getInt(KEY_SORTING);
+			fCurrentSortOrder = getSettings().getInt(KEY_SORTING);
 		} catch (NumberFormatException e) {
-			fCurrentSortOrder=  SortingLabelProvider.SHOW_ELEMENT_CONTAINER;
+			fCurrentSortOrder = SortingLabelProvider.SHOW_ELEMENT_CONTAINER;
 		}
 		try {
-			fCurrentGrouping= getSettings().getInt(KEY_GROUPING);
+			fCurrentGrouping = getSettings().getInt(KEY_GROUPING);
 		} catch (NumberFormatException e) {
-			fCurrentGrouping= LevelTreeContentProvider.LEVEL_PACKAGE;
+			fCurrentGrouping = LevelTreeContentProvider.LEVEL_PACKAGE;
 		}
 		int elementLimit = DEFAULT_ELEMENT_LIMIT;
 		if (FALSE.equals(getSettings().get(KEY_LIMIT_ENABLED))) {
@@ -387,14 +444,14 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 			}
 		}
 		if (memento != null) {
-			Integer value= memento.getInteger(KEY_GROUPING);
+			Integer value = memento.getInteger(KEY_GROUPING);
 			if (value != null)
-				fCurrentGrouping= value.intValue();
-			value= memento.getInteger(KEY_SORTING);
+				fCurrentGrouping = value.intValue();
+			value = memento.getInteger(KEY_SORTING);
 			if (value != null)
-				fCurrentSortOrder= value.intValue();
-			boolean limitElements = !FALSE.equals(memento
-					.getString(KEY_LIMIT_ENABLED));
+				fCurrentSortOrder = value.intValue();
+			boolean limitElements = !FALSE
+					.equals(memento.getString(KEY_LIMIT_ENABLED));
 			value = memento.getInteger(KEY_LIMIT);
 			if (value != null)
 				elementLimit = limitElements ? value.intValue() : -1;
@@ -402,9 +459,6 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		setElementLimit(Integer.valueOf(elementLimit));
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage#saveState(org.eclipse.ui.IMemento)
-	 */
 	@Override
 	public void saveState(IMemento memento) {
 		super.saveState(memento);
@@ -417,9 +471,9 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 			memento.putString(KEY_LIMIT_ENABLED, FALSE);
 		memento.putInteger(KEY_LIMIT, getElementLimit().intValue());
 	}
-	
+
 	private boolean isQueryRunning() {
-		AbstractTextSearchResult result= getInput();
+		AbstractTextSearchResult result = getInput();
 		if (result != null) {
 			return NewSearchUI.isQueryRunning(result.getQuery());
 		}
@@ -428,7 +482,7 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 
 	@Override
 	public String getLabel() {
-		String label= super.getLabel();
+		String label = super.getLabel();
 		AbstractTextSearchResult input = getInput();
 		if (input != null && input.getActiveMatchFilters() != null
 				&& input.getActiveMatchFilters().length > 0) {
@@ -440,58 +494,59 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 				int filteredOut = input.getMatchCount()
 						- getFilteredMatchCount();
 				String message = SearchMessages.DLTKSearchResultPage_filteredWithCount_message;
-				return Messages.format(message, new Object[] { label,
-						String.valueOf(filteredOut) });
+				return Messages.format(message,
+						new Object[] { label, String.valueOf(filteredOut) });
 			}
 		}
 		return label;
 	}
 
 	private int getFilteredMatchCount() {
-		StructuredViewer viewer= getViewer();
+		StructuredViewer viewer = getViewer();
 		if (viewer instanceof TreeViewer) {
-			ITreeContentProvider tp= (ITreeContentProvider) viewer.getContentProvider();
+			ITreeContentProvider tp = (ITreeContentProvider) viewer
+					.getContentProvider();
 			return getMatchCount(tp, getRootElements((TreeViewer) getViewer()));
 		} else {
 			return getMatchCount((TableViewer) viewer);
 		}
 	}
-	
+
 	private Object[] getRootElements(TreeViewer viewer) {
-		Tree t= viewer.getTree();
-		Item[] roots= t.getItems();
-		Object[] elements= new Object[roots.length];
+		Tree t = viewer.getTree();
+		Item[] roots = t.getItems();
+		Object[] elements = new Object[roots.length];
 		for (int i = 0; i < elements.length; i++) {
-			elements[i]= roots[i].getData();
+			elements[i] = roots[i].getData();
 		}
 		return elements;
 	}
-	
+
 	private Object[] getRootElements(TableViewer viewer) {
-		Table t= viewer.getTable();
-		Item[] roots= t.getItems();
-		Object[] elements= new Object[roots.length];
+		Table t = viewer.getTable();
+		Item[] roots = t.getItems();
+		Object[] elements = new Object[roots.length];
 		for (int i = 0; i < elements.length; i++) {
-			elements[i]= roots[i].getData();
+			elements[i] = roots[i].getData();
 		}
 		return elements;
 	}
 
 	private int getMatchCount(ITreeContentProvider cp, Object[] elements) {
-		int count= 0;
+		int count = 0;
 		for (int j = 0; j < elements.length; j++) {
-			count+= getDisplayedMatchCount(elements[j]);
+			count += getDisplayedMatchCount(elements[j]);
 			Object[] children = cp.getChildren(elements[j]);
-			count+= getMatchCount(cp, children);
+			count += getMatchCount(cp, children);
 		}
 		return count;
 	}
-	
+
 	private int getMatchCount(TableViewer viewer) {
-		Object[] elements=	getRootElements(viewer);
-		int count= 0;
+		Object[] elements = getRootElements(viewer);
+		int count = 0;
 		for (int i = 0; i < elements.length; i++) {
-			count+= getDisplayedMatchCount(elements[i]);
+			count += getDisplayedMatchCount(elements[i]);
 		}
 		return count;
 	}
@@ -504,17 +559,20 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		}
 		return null;
 	}
-	
+
 	@Override
 	protected void handleOpen(OpenEvent event) {
-		Object firstElement= ((IStructuredSelection)event.getSelection()).getFirstElement();
-		if (firstElement instanceof ISourceModule || 				
-				firstElement instanceof IMember) {
+		Object firstElement = ((IStructuredSelection) event.getSelection())
+				.getFirstElement();
+		if (firstElement instanceof ISourceModule
+				|| firstElement instanceof IMember) {
 			if (getDisplayedMatchCount(firstElement) == 0) {
 				try {
 					fEditorOpener.openElement(firstElement);
 				} catch (CoreException e) {
-					ExceptionHandler.handle(e, getSite().getShell(), SearchMessages.DLTKSearchResultPage_open_editor_error_title, SearchMessages.DLTKSearchResultPage_open_editor_error_message); 
+					ExceptionHandler.handle(e, getSite().getShell(),
+							SearchMessages.DLTKSearchResultPage_open_editor_error_title,
+							SearchMessages.DLTKSearchResultPage_open_editor_error_message);
 				}
 				return;
 			}
@@ -528,5 +586,5 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		int limit = elementLimit.intValue();
 		getSettings().put(KEY_LIMIT, limit);
 		getSettings().put(KEY_LIMIT_ENABLED, limit != -1 ? TRUE : FALSE);
-	}	
+	}
 }

@@ -58,20 +58,20 @@ import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.IWorkingSetPage;
 
-
 /**
- * The Script working set page allows the user to create
- * and edit a Script working set.
+ * The Script working set page allows the user to create and edit a Script
+ * working set.
  * <p>
  * Working set elements are presented as a Script element tree.
  * </p>
  *
-	 *
+ *
  */
-public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage {
+public class ScriptWorkingSetPage extends WizardPage
+		implements IWorkingSetPage {
 
-	final private static String PAGE_TITLE= WorkingSetMessages.ScriptWorkingSetPage_title;
-	final private static String PAGE_ID= "ScriptWorkingSetPage"; //$NON-NLS-1$
+	final private static String PAGE_TITLE = WorkingSetMessages.ScriptWorkingSetPage_title;
+	final private static String PAGE_ID = "ScriptWorkingSetPage"; //$NON-NLS-1$
 
 	private Text fWorkingSetName;
 	private CheckboxTreeViewer fTree;
@@ -84,65 +84,75 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 	 * Default constructor.
 	 */
 	public ScriptWorkingSetPage() {
-		super(PAGE_ID, PAGE_TITLE, DLTKPluginImages.DESC_WIZBAN_SCRIPT_WORKINGSET);
-		setDescription(WorkingSetMessages.ScriptWorkingSetPage_workingSet_description);
-		fFirstCheck= true;
+		super(PAGE_ID, PAGE_TITLE,
+				DLTKPluginImages.DESC_WIZBAN_SCRIPT_WORKINGSET);
+		setDescription(
+				WorkingSetMessages.ScriptWorkingSetPage_workingSet_description);
+		fFirstCheck = true;
 	}
 
 	/*
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+	 * widgets.Composite)
 	 */
 	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 
-		Composite composite= new Composite(parent, SWT.NONE);
+		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
 		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		setControl(composite);
 
-		Label label= new Label(composite, SWT.WRAP);
+		Label label = new Label(composite, SWT.WRAP);
 		label.setText(WorkingSetMessages.ScriptWorkingSetPage_workingSet_name);
-		GridData gd= new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
+		GridData gd = new GridData(
+				GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
+						| GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 
-		fWorkingSetName= new Text(composite, SWT.SINGLE | SWT.BORDER);
-		fWorkingSetName.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
-		fWorkingSetName.addModifyListener(
-				e -> validateInput()
-		);
+		fWorkingSetName = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		fWorkingSetName.setLayoutData(new GridData(
+				GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
+		fWorkingSetName.addModifyListener(e -> validateInput());
 		fWorkingSetName.setFocus();
 
-		label= new Label(composite, SWT.WRAP);
-		label.setText(WorkingSetMessages.ScriptWorkingSetPage_workingSet_content);
-		gd= new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
+		label = new Label(composite, SWT.WRAP);
+		label.setText(
+				WorkingSetMessages.ScriptWorkingSetPage_workingSet_content);
+		gd = new GridData(
+				GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
+						| GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 
-		fTree= new CheckboxTreeViewer(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		gd= new GridData(GridData.FILL_BOTH | GridData.GRAB_VERTICAL);
-		gd.heightHint= convertHeightInCharsToPixels(15);
+		fTree = new CheckboxTreeViewer(composite,
+				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		gd = new GridData(GridData.FILL_BOTH | GridData.GRAB_VERTICAL);
+		gd.heightHint = convertHeightInCharsToPixels(15);
 		fTree.getControl().setLayoutData(gd);
 
-		fTreeContentProvider= new ScriptWorkingSetPageContentProvider();
+		fTreeContentProvider = new ScriptWorkingSetPageContentProvider();
 		fTree.setContentProvider(fTreeContentProvider);
 
-		AppearanceAwareLabelProvider fScriptElementLabelProvider=
-			new AppearanceAwareLabelProvider(
-				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | ScriptElementLabels.P_COMPRESSED,
-				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | ScriptElementImageProvider.SMALL_ICONS,
-				DLTKUIPlugin.getDefault().getPreferenceStore()
-			);
+		AppearanceAwareLabelProvider fScriptElementLabelProvider = new AppearanceAwareLabelProvider(
+				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
+						| ScriptElementLabels.P_COMPRESSED,
+				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS
+						| ScriptElementImageProvider.SMALL_ICONS,
+				DLTKUIPlugin.getDefault().getPreferenceStore());
 
 		fTree.setLabelProvider(new StyledDecoratingModelLabelProvider(
 				fScriptElementLabelProvider));
-		fTree.setSorter(new ModelElementSorter());
+		fTree.setComparator(new ModelElementSorter());
 		if (DLTKCore.DEBUG) {
-			System.err.println("Add empty inner package filter support here..."); //$NON-NLS-1$
+			System.err
+					.println("Add empty inner package filter support here..."); //$NON-NLS-1$
 		}
-		//fTree.addFilter(new EmptyInnerPackageFilter());
+		// fTree.addFilter(new EmptyInnerPackageFilter());
 		fTree.setUseHashlookup(true);
 
-		fTree.setInput(DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot()));
+		fTree.setInput(
+				DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot()));
 
 		fTree.addCheckStateListener(event -> handleCheckStateChange(event));
 
@@ -150,9 +160,10 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 			@Override
 			public void treeCollapsed(TreeExpansionEvent event) {
 			}
+
 			@Override
 			public void treeExpanded(TreeExpansionEvent event) {
-				final Object element= event.getElement();
+				final Object element = event.getElement();
 				if (fTree.getGrayed(element) == false)
 					BusyIndicator.showWhile(getShell().getDisplay(),
 							() -> setSubtreeChecked(element,
@@ -162,18 +173,23 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 
 		// Add select / deselect all buttons for bug 46669
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
-		GridLayout layout= new GridLayout(2, false);
-		layout.marginWidth= 0; layout.marginHeight= 0;
+		GridLayout layout = new GridLayout(2, false);
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
 		buttonComposite.setLayout(layout);
-		buttonComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		buttonComposite
+				.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 
 		Button selectAllButton = new Button(buttonComposite, SWT.PUSH);
-		selectAllButton.setText(WorkingSetMessages.ScriptWorkingSetPage_selectAll_label);
-		selectAllButton.setToolTipText(WorkingSetMessages.ScriptWorkingSetPage_selectAll_toolTip);
+		selectAllButton.setText(
+				WorkingSetMessages.ScriptWorkingSetPage_selectAll_label);
+		selectAllButton.setToolTipText(
+				WorkingSetMessages.ScriptWorkingSetPage_selectAll_toolTip);
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
-				fTree.setCheckedElements(fTreeContentProvider.getElements(fTree.getInput()));
+				fTree.setCheckedElements(
+						fTreeContentProvider.getElements(fTree.getInput()));
 				validateInput();
 			}
 		});
@@ -181,8 +197,10 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 		SWTUtil.setButtonDimensionHint(selectAllButton);
 
 		Button deselectAllButton = new Button(buttonComposite, SWT.PUSH);
-		deselectAllButton.setText(WorkingSetMessages.ScriptWorkingSetPage_deselectAll_label);
-		deselectAllButton.setToolTipText(WorkingSetMessages.ScriptWorkingSetPage_deselectAll_toolTip);
+		deselectAllButton.setText(
+				WorkingSetMessages.ScriptWorkingSetPage_deselectAll_label);
+		deselectAllButton.setToolTipText(
+				WorkingSetMessages.ScriptWorkingSetPage_deselectAll_toolTip);
 		deselectAllButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
@@ -203,7 +221,8 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 		if (DLTKCore.DEBUG) {
 			System.err.println("Add help support here..."); //$NON-NLS-1$
 		}
-		//ScriptUIHelp.setHelp(fTree, IScriptHelpContextIds.Script_WORKING_SET_PAGE);
+		// ScriptUIHelp.setHelp(fTree,
+		// IScriptHelpContextIds.Script_WORKING_SET_PAGE);
 	}
 
 	/*
@@ -220,9 +239,10 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 	@Override
 	public void setSelection(IWorkingSet workingSet) {
 		Assert.isNotNull(workingSet, "Working set must not be null"); //$NON-NLS-1$
-		fWorkingSet= workingSet;
-		if (getContainer() != null && getShell() != null && fWorkingSetName != null) {
-			fFirstCheck= false;
+		fWorkingSet = workingSet;
+		if (getContainer() != null && getShell() != null
+				&& fWorkingSetName != null) {
+			fFirstCheck = false;
 			fWorkingSetName.setText(fWorkingSet.getName());
 			initializeCheckedState();
 			validateInput();
@@ -234,27 +254,30 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 	 */
 	@Override
 	public void finish() {
-		String workingSetName= fWorkingSetName.getText();
+		String workingSetName = fWorkingSetName.getText();
 		ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(10);
 		findCheckedElements(elements, fTree.getInput());
 		if (fWorkingSet == null) {
-			IWorkingSetManager workingSetManager= PlatformUI.getWorkbench().getWorkingSetManager();
+			IWorkingSetManager workingSetManager = PlatformUI.getWorkbench()
+					.getWorkingSetManager();
 			fWorkingSet = workingSetManager.createWorkingSet(workingSetName,
 					elements.toArray(new IAdaptable[elements.size()]));
 		} else {
 			// Add inaccessible resources
-			IAdaptable[] oldItems= fWorkingSet.getElements();
-			ArrayList closedWithChildren= new ArrayList(elements.size());
-			for (int i= 0; i < oldItems.length; i++) {
-				IResource oldResource= null;
+			IAdaptable[] oldItems = fWorkingSet.getElements();
+			ArrayList closedWithChildren = new ArrayList(elements.size());
+			for (int i = 0; i < oldItems.length; i++) {
+				IResource oldResource = null;
 				if (oldItems[i] instanceof IResource) {
-					oldResource= (IResource)oldItems[i];
+					oldResource = (IResource) oldItems[i];
 				} else {
 					oldResource = oldItems[i].getAdapter(IResource.class);
 				}
-				if (oldResource != null && oldResource.isAccessible() == false) {
-					IProject project= oldResource.getProject();
-					if (elements.contains(project) || closedWithChildren.contains(project)) {
+				if (oldResource != null
+						&& oldResource.isAccessible() == false) {
+					IProject project = oldResource.getProject();
+					if (elements.contains(project)
+							|| closedWithChildren.contains(project)) {
 						elements.add(oldItems[i]);
 						elements.remove(project);
 						closedWithChildren.add(project);
@@ -268,35 +291,36 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 	}
 
 	private void validateInput() {
-		String errorMessage= null;
-		String infoMessage= null;
-		String newText= fWorkingSetName.getText();
+		String errorMessage = null;
+		String infoMessage = null;
+		String newText = fWorkingSetName.getText();
 
 		if (newText.equals(newText.trim()) == false)
 			errorMessage = WorkingSetMessages.ScriptWorkingSetPage_warning_nameWhitespace;
 		if (newText.equals("")) { //$NON-NLS-1$
 			if (fFirstCheck) {
 				setPageComplete(false);
-				fFirstCheck= false;
+				fFirstCheck = false;
 				return;
-			}
-			else
-				errorMessage= WorkingSetMessages.ScriptWorkingSetPage_warning_nameMustNotBeEmpty;
+			} else
+				errorMessage = WorkingSetMessages.ScriptWorkingSetPage_warning_nameMustNotBeEmpty;
 		}
 
-		fFirstCheck= false;
+		fFirstCheck = false;
 
-		if (errorMessage == null && (fWorkingSet == null || newText.equals(fWorkingSet.getName()) == false)) {
-			IWorkingSet[] workingSets= PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
-			for (int i= 0; i < workingSets.length; i++) {
+		if (errorMessage == null && (fWorkingSet == null
+				|| newText.equals(fWorkingSet.getName()) == false)) {
+			IWorkingSet[] workingSets = PlatformUI.getWorkbench()
+					.getWorkingSetManager().getWorkingSets();
+			for (int i = 0; i < workingSets.length; i++) {
 				if (newText.equals(workingSets[i].getName())) {
-					errorMessage= WorkingSetMessages.ScriptWorkingSetPage_warning_workingSetExists;
+					errorMessage = WorkingSetMessages.ScriptWorkingSetPage_warning_workingSetExists;
 				}
 			}
 		}
 
 		if (!hasCheckedElement())
-			infoMessage= WorkingSetMessages.ScriptWorkingSetPage_warning_resourceMustBeChecked;
+			infoMessage = WorkingSetMessages.ScriptWorkingSetPage_warning_resourceMustBeChecked;
 
 		setMessage(infoMessage, INFORMATION);
 		setErrorMessage(errorMessage);
@@ -304,8 +328,8 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 	}
 
 	private boolean hasCheckedElement() {
-		TreeItem[] items= fTree.getTree().getItems();
-		for (int i= 0; i < items.length; i++) {
+		TreeItem[] items = fTree.getTree().getItems();
+		for (int i = 0; i < items.length; i++) {
 			if (items[i].getChecked())
 				return true;
 		}
@@ -313,8 +337,8 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 	}
 
 	private void findCheckedElements(List checkedResources, Object parent) {
-		Object[] children= fTreeContentProvider.getChildren(parent);
-		for (int i= 0; i < children.length; i++) {
+		Object[] children = fTreeContentProvider.getChildren(parent);
+		for (int i = 0; i < children.length; i++) {
 			if (fTree.getGrayed(children[i]))
 				findCheckedElements(checkedResources, children[i]);
 			else if (fTree.getChecked(children[i]))
@@ -337,22 +361,23 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 		});
 	}
 
-	private void setSubtreeChecked(Object parent, boolean state, boolean checkExpandedState) {
+	private void setSubtreeChecked(Object parent, boolean state,
+			boolean checkExpandedState) {
 		if (!(parent instanceof IAdaptable))
 			return;
 		IContainer container = ((IAdaptable) parent)
 				.getAdapter(IContainer.class);
-		if ((!fTree.getExpandedState(parent) && checkExpandedState) || (container != null && !container.isAccessible()))
+		if ((!fTree.getExpandedState(parent) && checkExpandedState)
+				|| (container != null && !container.isAccessible()))
 			return;
 
-		Object[] children= fTreeContentProvider.getChildren(parent);
-		for (int i= children.length - 1; i >= 0; i--) {
-			Object element= children[i];
+		Object[] children = fTreeContentProvider.getChildren(parent);
+		for (int i = children.length - 1; i >= 0; i--) {
+			Object element = children[i];
 			if (state) {
 				fTree.setChecked(element, true);
 				fTree.setGrayed(element, false);
-			}
-			else
+			} else
 				fTree.setGrayChecked(element, false);
 			if (isExpandable(element))
 				setSubtreeChecked(element, state, true);
@@ -368,17 +393,18 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 			if (resource != null && !resource.isAccessible())
 				return;
 		}
-		Object parent= fTreeContentProvider.getParent(child);
+		Object parent = fTreeContentProvider.getParent(child);
 		if (parent == null)
 			return;
 
-		boolean allSameState= true;
-		Object[] children= null;
-		children= fTreeContentProvider.getChildren(parent);
+		boolean allSameState = true;
+		Object[] children = null;
+		children = fTreeContentProvider.getChildren(parent);
 
-		for (int i= children.length -1; i >= 0; i--) {
-			if (fTree.getChecked(children[i]) != baseChildState || fTree.getGrayed(children[i])) {
-				allSameState= false;
+		for (int i = children.length - 1; i >= 0; i--) {
+			if (fTree.getChecked(children[i]) != baseChildState
+					|| fTree.getGrayed(children[i])) {
+				allSameState = false;
 				break;
 			}
 		}
@@ -452,15 +478,10 @@ public class ScriptWorkingSetPage extends WizardPage implements IWorkingSetPage 
 	}
 
 	private boolean isExpandable(Object element) {
-		return (
-			element instanceof IScriptProject
-			||
-			element instanceof IProjectFragment
-			||
-			element instanceof IScriptFolder
-			||
-			element instanceof IScriptModel
-			||
-			element instanceof IContainer);
+		return (element instanceof IScriptProject
+				|| element instanceof IProjectFragment
+				|| element instanceof IScriptFolder
+				|| element instanceof IScriptModel
+				|| element instanceof IContainer);
 	}
 }

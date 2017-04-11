@@ -154,7 +154,7 @@ public class ExtendedClassesView extends ViewPart
 			protected void configureViewer(TreeViewer viewer) {
 				// viewer.setCom
 				viewer.setUseHashlookup(true);
-				viewer.setSorter(new ModelElementSorter() {
+				viewer.setComparator(new ModelElementSorter() {
 					@Override
 					public int compare(Viewer viewer, Object e1, Object e2) {
 						e1 = unWrap(e1);

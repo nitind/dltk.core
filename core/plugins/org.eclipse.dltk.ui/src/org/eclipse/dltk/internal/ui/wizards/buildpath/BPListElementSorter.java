@@ -14,24 +14,24 @@ import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 
-public class BPListElementSorter extends ViewerSorter {
+public class BPListElementSorter extends ViewerComparator {
 
-	private static final int SOURCE= 0;
-	private static final int PROJECT= 1;
-	private static final int LIBRARY= 2;
-	private static final int CONTAINER= 3;
+	private static final int SOURCE = 0;
+	private static final int PROJECT = 1;
+	private static final int LIBRARY = 2;
+	private static final int CONTAINER = 3;
 
-	private static final int ATTRIBUTE= 5;
-	private static final int CONTAINER_ENTRY= 6;
+	private static final int ATTRIBUTE = 5;
+	private static final int CONTAINER_ENTRY = 6;
 
-	private static final int OTHER= 7;
+	private static final int OTHER = 7;
 
 	@Override
 	public int category(Object obj) {
 		if (obj instanceof BPListElement) {
-			BPListElement element= (BPListElement) obj;
+			BPListElement element = (BPListElement) obj;
 			if (element.getParentContainer() != null) {
 				return CONTAINER_ENTRY;
 			}
@@ -56,27 +56,27 @@ public class BPListElementSorter extends ViewerSorter {
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 
-        int cat1 = category(e1);
-        int cat2 = category(e2);
+		int cat1 = category(e1);
+		int cat2 = category(e2);
 
-        if (cat1 != cat2)
-            return cat1 - cat2;
+		if (cat1 != cat2)
+			return cat1 - cat2;
 
-        if (cat1 == ATTRIBUTE || cat1 == CONTAINER_ENTRY) {
-        	return 0; // do not sort attributes or container entries
-        }
+		if (cat1 == ATTRIBUTE || cat1 == CONTAINER_ENTRY) {
+			return 0; // do not sort attributes or container entries
+		}
 
 		if (viewer instanceof ContentViewer) {
-			IBaseLabelProvider prov = ((ContentViewer) viewer).getLabelProvider();
-            if (prov instanceof ILabelProvider) {
-                ILabelProvider lprov = (ILabelProvider) prov;
-                String name1 = lprov.getText(e1);
-                String name2 = lprov.getText(e2);
-                return getComparator().compare(name1, name2);
-            }
+			IBaseLabelProvider prov = ((ContentViewer) viewer)
+					.getLabelProvider();
+			if (prov instanceof ILabelProvider) {
+				ILabelProvider lprov = (ILabelProvider) prov;
+				String name1 = lprov.getText(e1);
+				String name2 = lprov.getText(e2);
+				return getComparator().compare(name1, name2);
+			}
 		}
 		return 0;
 	}
-
 
 }

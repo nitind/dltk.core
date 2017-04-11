@@ -113,7 +113,7 @@ public abstract class ScriptDebugConsoleGenericHyperlink implements IHyperlink {
 	public String getEditorId(IEditorInput input, Object inputObject) {
 		try {
 			IEditorDescriptor descriptor = IDE
-					.getEditorDescriptor(input.getName());
+					.getEditorDescriptor(input.getName(), true, false);
 			return descriptor.getId();
 		} catch (PartInitException e) {
 			return null;

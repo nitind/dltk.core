@@ -52,7 +52,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.dnd.Clipboard;
@@ -1022,18 +1022,18 @@ public class CallHierarchyViewPart extends ViewPart
 				setContentDescription(Messages.format(
 						CallHierarchyMessages.CallHierarchyViewPart_callsToMethod,
 						args));
-				fCallHierarchyViewer.setSorter(new ViewerSorter()); // bug
-																	// 111423:
-																	// sort
-																	// caller
-																	// hierarchy
-																	// alphabetically
+				fCallHierarchyViewer.setComparator(new ViewerComparator()); // bug
+				// 111423:
+				// sort
+				// caller
+				// hierarchy
+				// alphabetically
 				fCallHierarchyViewer.setMethodWrapper(getCallerRoot());
 			} else {
 				setContentDescription(Messages.format(
 						CallHierarchyMessages.CallHierarchyViewPart_callsFromMethod,
 						args));
-				fCallHierarchyViewer.setSorter(null);
+				fCallHierarchyViewer.setComparator(null);
 				fCallHierarchyViewer.setMethodWrapper(getCalleeRoot());
 			}
 		}

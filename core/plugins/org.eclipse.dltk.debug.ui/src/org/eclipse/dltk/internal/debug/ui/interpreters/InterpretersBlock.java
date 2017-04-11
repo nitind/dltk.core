@@ -47,7 +47,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -433,7 +433,7 @@ public abstract class InterpretersBlock
 	 * Sorts by Interpreter type, and name within type.
 	 */
 	private void sortByType() {
-		fInterpreterList.setSorter(new ViewerSorter() {
+		fInterpreterList.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				if ((e1 instanceof IInterpreterInstall)
@@ -465,7 +465,7 @@ public abstract class InterpretersBlock
 	 * Sorts by Interpreter name.
 	 */
 	private void sortByName() {
-		fInterpreterList.setSorter(new ViewerSorter() {
+		fInterpreterList.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				if ((e1 instanceof IInterpreterInstall)
@@ -489,7 +489,7 @@ public abstract class InterpretersBlock
 	 * Sorts by Interpreter location.
 	 */
 	private void sortByLocation() {
-		fInterpreterList.setSorter(new ViewerSorter() {
+		fInterpreterList.setComparator(new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				if ((e1 instanceof IInterpreterInstall)
