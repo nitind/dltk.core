@@ -19,14 +19,13 @@ import org.eclipse.dltk.dbgp.internal.packets.DbgpNotifyPacket;
 
 public class DbgpNotificationManager extends DbgpWorkingThread
 		implements IDbgpNotificationManager {
-	private final ListenerList listeners = new ListenerList();
+	private final ListenerList<IDbgpNotificationListener> listeners = new ListenerList<>();
 
 	private final IDbgpDebugingEngine engine;
 
 	protected void fireDbgpNotify(IDbgpNotification notification) {
-		Object[] list = listeners.getListeners();
-		for (int i = 0; i < list.length; ++i) {
-			((IDbgpNotificationListener) list[i]).dbgpNotify(notification);
+		for (IDbgpNotificationListener listener : listeners) {
+			listener.dbgpNotify(notification);
 		}
 	}
 

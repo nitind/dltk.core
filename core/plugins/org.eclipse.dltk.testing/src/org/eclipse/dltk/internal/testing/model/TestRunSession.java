@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,8 +55,8 @@ import org.eclipse.dltk.testing.model.ITestRunSession;
 import com.ibm.icu.text.SimpleDateFormat;
 
 /**
- * A test run session holds all information about a test run, i.e.
- * launch configuration, launch, test tree (including results). 
+ * A test run session holds all information about a test run, i.e. launch
+ * configuration, launch, test tree (including results).
  */
 public class TestRunSession implements ITestRunSession, ITestSession {
 
@@ -73,47 +73,48 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	private final ITestingEngine fTestingEngine;
 	private final ITestRunnerUI testRunnerUI;
 	private final ITestCategoryEngine[] categoryEngines;
-	
+
 	/**
 	 * Test runner client or <code>null</code>.
 	 */
 	private ITestRunnerClient fTestRunnerClient;
 
-	private final ListenerList/*<ITestSessionListener>*/ fSessionListeners;
-	
+	private final ListenerList<ITestSessionListener> fSessionListeners;
+
 	/**
 	 * The model root, or <code>null</code> if swapped to disk.
 	 */
 	private TestRoot fTestRoot;
-	
+
 	/**
-	 * The test run session's cached result, or <code>null</code> if <code>fTestRoot != null</code>.
+	 * The test run session's cached result, or <code>null</code> if
+	 * <code>fTestRoot != null</code>.
 	 */
 	private Result fTestResult;
-	
+
 	/**
 	 * Map from testId to testElement.
 	 */
 	private Map<String, TestElement> fIdToTest;
-	
+
 	/**
 	 * test categories
 	 */
 	private Map<String, TestCategoryElement> fCategoryMap;
 
 	/**
-	 * The TestSuites for which additional children are expected. 
+	 * The TestSuites for which additional children are expected.
 	 */
 	private List<IncompleteTestSuite> fIncompleteTestSuites;
-	
+
 	/**
 	 * Suite for unrooted test case elements, or <code>null</code>.
 	 */
 	private TestSuiteElement fUnrootedSuite;
-	
- 	/**
- 	 * Number of tests started during this test run.
- 	 */
+
+	/**
+	 * Number of tests started during this test run.
+	 */
 	volatile int fStartedCount;
 	/**
 	 * Number of tests ignored during this test run.
@@ -140,66 +141,69 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	 */
 	volatile long fStartTime;
 	volatile boolean fIsRunning;
-	
+
 	volatile boolean fIsStopped;
-	
 
 	/**
 	 * @param testRunName
-	 * @param project may be <code>null</code>
+	 * @param project
+	 *            may be <code>null</code>
 	 */
 	public TestRunSession(String testRunName, IScriptProject project) {
-		//TODO: check assumptions about non-null fields
+		// TODO: check assumptions about non-null fields
 
-		fLaunch= null;
-		fProject= null; //TODO
-		
+		fLaunch = null;
+		fProject = null; // TODO
+
 		Assert.isNotNull(testRunName);
-		fTestRunName= testRunName;
-		fTestingEngine= NullTestingEngine.getInstance();
-		testRunnerUI= NullTestRunnerUI.getInstance();
+		fTestRunName = testRunName;
+		fTestingEngine = NullTestingEngine.getInstance();
+		testRunnerUI = NullTestRunnerUI.getInstance();
 		categoryEngines = null;
-		
-		fTestRoot= new TestRoot(this);
-		fIdToTest = new HashMap<String, TestElement>();
-		fCategoryMap = new HashMap<String, TestCategoryElement>();
-		
-		fTestRunnerClient= null;
 
-		fSessionListeners= new ListenerList();
+		fTestRoot = new TestRoot(this);
+		fIdToTest = new HashMap<>();
+		fCategoryMap = new HashMap<>();
+
+		fTestRunnerClient = null;
+
+		fSessionListeners = new ListenerList<>();
 	}
-	
-	
+
 	public TestRunSession(ILaunch launch, IScriptProject project,
 			ITestRunnerClient runnerClient) {
 		Assert.isNotNull(launch);
 		Assert.isNotNull(runnerClient);
-		
-		fLaunch= launch;
-		fProject= project;
-		
-		ILaunchConfiguration launchConfiguration= launch.getLaunchConfiguration();
+
+		fLaunch = launch;
+		fProject = project;
+
+		ILaunchConfiguration launchConfiguration = launch
+				.getLaunchConfiguration();
 		if (launchConfiguration != null) {
-			fTestRunName= launchConfiguration.getName();
-			fTestingEngine= DLTKTestingConstants.getTestingEngine(launchConfiguration);
-			testRunnerUI= fTestingEngine.getTestRunnerUI(project, launchConfiguration);
+			fTestRunName = launchConfiguration.getName();
+			fTestingEngine = DLTKTestingConstants
+					.getTestingEngine(launchConfiguration);
+			testRunnerUI = fTestingEngine.getTestRunnerUI(project,
+					launchConfiguration);
 			categoryEngines = TestCategoryEngineManager
 					.getCategoryEngines(testRunnerUI);
 		} else {
-			fTestRunName= project.getElementName();
-			fTestingEngine= NullTestingEngine.getInstance();
-			testRunnerUI= NullTestRunnerUI.getInstance();
+			fTestRunName = project.getElementName();
+			fTestingEngine = NullTestingEngine.getInstance();
+			testRunnerUI = NullTestRunnerUI.getInstance();
 			categoryEngines = null;
 		}
-		
-		fTestRoot= new TestRoot(this);
-		fIdToTest = new HashMap<String, TestElement>();
-		fCategoryMap = new HashMap<String, TestCategoryElement>();
-		
-		fTestRunnerClient= runnerClient;
+
+		fTestRoot = new TestRoot(this);
+		fIdToTest = new HashMap<>();
+		fCategoryMap = new HashMap<>();
+
+		fTestRunnerClient = runnerClient;
 		fTestRunnerClient.startListening(new TestSessionNotifier());
-		
-		final ILaunchManager launchManager= DebugPlugin.getDefault().getLaunchManager();
+
+		final ILaunchManager launchManager = DebugPlugin.getDefault()
+				.getLaunchManager();
 		launchManager.addLaunchListener(new ILaunchesListener2() {
 			@Override
 			public void launchesTerminated(ILaunch[] launches) {
@@ -211,6 +215,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 					scheduleTestRunTerminated();
 				}
 			}
+
 			@Override
 			public void launchesRemoved(ILaunch[] launches) {
 				if (Arrays.asList(launches).contains(fLaunch)) {
@@ -221,9 +226,11 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 					scheduleTestRunTerminated();
 				}
 			}
+
 			@Override
 			public void launchesChanged(ILaunch[] launches) {
 			}
+
 			@Override
 			public void launchesAdded(ILaunch[] launches) {
 			}
@@ -246,35 +253,29 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			}
 		});
 
-		fSessionListeners= new ListenerList();
+		fSessionListeners = new ListenerList<>();
 		addTestSessionListener(new TestRunListenerAdapter(this));
 	}
-	
+
 	void reset() {
-		fStartedCount= 0; 
-		fFailureCount= 0; 
-		fErrorCount= 0; 
-		fIgnoredCount= 0; 
-		fTotalCount= 0;
-		fCreatedTestCaseCount=0;
-		
-		fTestRoot= new TestRoot(this);
-		fTestResult= null;
-		fIdToTest = new HashMap<String, TestElement>();
-		fCategoryMap = new HashMap<String, TestCategoryElement>();
+		fStartedCount = 0;
+		fFailureCount = 0;
+		fErrorCount = 0;
+		fIgnoredCount = 0;
+		fTotalCount = 0;
+		fCreatedTestCaseCount = 0;
+
+		fTestRoot = new TestRoot(this);
+		fTestResult = null;
+		fIdToTest = new HashMap<>();
+		fCategoryMap = new HashMap<>();
 	}
 
-	/*
-	 * @see org.eclipse.dltk.testing.model.ITestElement#getId()
-	 */
 	@Override
 	public String getId() {
 		return fTestRunName;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.junit.ITestRunSession#getProgressState()
-	 */
 	@Override
 	public ProgressState getProgressState() {
 		if (isRunning()) {
@@ -285,10 +286,7 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 		}
 		return ProgressState.COMPLETED;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.junit.model.ITestElement#getTestResult(boolean)
-	 */
+
 	@Override
 	public Result getTestResult(boolean includeChildren) {
 		if (fTestRoot != null) {
@@ -297,45 +295,30 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			return fTestResult;
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.junit.model.ITestElementContainer#getChildren()
-	 */
+
 	@Override
 	public ITestElement[] getChildren() {
 		return getTestRoot().getChildren();
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.junit.model.ITestElement#getFailureTrace()
-	 */
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getFailureTrace()
-	 */
+
 	@Override
 	public FailureTrace getFailureTrace() {
 		return null;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.junit.model.ITestElement#getParentContainer()
-	 */
+
 	@Override
 	public ITestElementContainer getParentContainer() {
 		return null;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.junit.model.ITestElement#getTestRunSession()
-	 */
+
 	@Override
 	public ITestRunSession getTestRunSession() {
 		return this;
 	}
-	
-	
+
 	public TestRoot getTestRoot() {
-		swapIn(); //TODO: TestRoot should stay (e.g. for getTestRoot().getStatus())
+		swapIn(); // TODO: TestRoot should stay (e.g. for
+					// getTestRoot().getStatus())
 		return fTestRoot;
 	}
 
@@ -345,66 +328,49 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	public IScriptProject getLaunchedProject() {
 		return fProject;
 	}
-	
+
 	public ITestingEngine getTestingEngine() {
 		return fTestingEngine;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getLaunch()
-	 */
 	@Override
 	public ILaunch getLaunch() {
 		return fLaunch;
 	}
-	
+
 	@Override
 	public String getTestRunName() {
 		return fTestRunName;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getErrorCount()
-	 */
+
 	@Override
 	public int getErrorCount() {
 		return fErrorCount;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getFailureCount()
-	 */
 	@Override
 	public int getFailureCount() {
 		return fFailureCount;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getStartedCount()
-	 */
 	@Override
 	public int getStartedCount() {
 		return fStartedCount;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getIgnoredCount()
-	 */
 	@Override
 	public int getIgnoredCount() {
 		return fIgnoredCount;
 	}
-	
+
 	public int getTotalCount() {
 		return fTotalCount;
 	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#setTotalCount(int)
-	 */
+
 	@Override
 	public void setTotalCount(int count) {
 		this.fTotalCount = count;
-//		System.out.println("COUNT:" + count);
+		// System.out.println("COUNT:" + count);
 	}
 
 	/**
@@ -416,17 +382,11 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#getStartTime()
-	 */
 	@Override
 	public long getStartTime() {
 		return fStartTime;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#isStopped()
-	 */
+
 	@Override
 	public boolean isStopped() {
 		return fIsStopped;
@@ -436,65 +396,65 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 		swapIn();
 		fSessionListeners.add(listener);
 	}
-	
+
 	public void removeTestSessionListener(ITestSessionListener listener) {
 		fSessionListeners.remove(listener);
 	}
-	
+
 	public void swapOut() {
 		if (fTestRoot == null)
 			return;
 		if (isRunning() || isStarting() || isKeptAlive())
 			return;
-		
-		Object[] listeners= fSessionListeners.getListeners();
-		for (int i= 0; i < listeners.length; ++i) {
-			ITestSessionListener registered= (ITestSessionListener) listeners[i];
-			if (! registered.acceptsSwapToDisk())
+
+		for (ITestSessionListener registered : fSessionListeners) {
+			if (!registered.acceptsSwapToDisk())
 				return;
 		}
-		
+
 		try {
-			File swapFile= getSwapFile();
-			
+			File swapFile = getSwapFile();
+
 			DLTKTestingModel.exportTestRunSession(this, swapFile);
-			fTestResult= fTestRoot.getTestResult(true);
-			fTestRoot= null;
-			fTestRunnerClient= null;
-			fIdToTest = new HashMap<String, TestElement>();
-			fCategoryMap = new HashMap<String, TestCategoryElement>();
-			fIncompleteTestSuites= null;
-			fUnrootedSuite= null;
-			
+			fTestResult = fTestRoot.getTestResult(true);
+			fTestRoot = null;
+			fTestRunnerClient = null;
+			fIdToTest = new HashMap<>();
+			fCategoryMap = new HashMap<>();
+			fIncompleteTestSuites = null;
+			fUnrootedSuite = null;
+
 		} catch (IllegalStateException e) {
 			DLTKTestingPlugin.log(e);
 		} catch (CoreException e) {
 			DLTKTestingPlugin.log(e);
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#isStarting()
 	 */
 	@Override
 	public boolean isStarting() {
-		return getStartTime() == 0 && fLaunch != null && ! fLaunch.isTerminated();
+		return getStartTime() == 0 && fLaunch != null
+				&& !fLaunch.isTerminated();
 	}
 
-
 	public void removeSwapFile() {
-		File swapFile= getSwapFile();
+		File swapFile = getSwapFile();
 		if (swapFile.exists())
 			swapFile.delete();
 	}
 
 	private File getSwapFile() throws IllegalStateException {
-		File historyDir= DLTKTestingPlugin.getHistoryDirectory();
-		String isoTime= new SimpleDateFormat("yyyyMMdd-HHmmss.SSS").format(new Date(getStartTime())); //$NON-NLS-1$
-		String swapFileName= isoTime + ".xml"; //$NON-NLS-1$
+		File historyDir = DLTKTestingPlugin.getHistoryDirectory();
+		String isoTime = new SimpleDateFormat("yyyyMMdd-HHmmss.SSS") //$NON-NLS-1$
+				.format(new Date(getStartTime()));
+		String swapFileName = isoTime + ".xml"; //$NON-NLS-1$
 		return new File(historyDir, swapFileName);
 	}
-
 
 	public void swapIn() {
 		if (fTestRoot != null)
@@ -504,60 +464,64 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			DLTKTestingModel.importIntoTestRunSession(getSwapFile(), this);
 		} catch (IllegalStateException e) {
 			DLTKTestingPlugin.log(e);
-			fTestRoot= new TestRoot(this);
-			fTestResult= null;
+			fTestRoot = new TestRoot(this);
+			fTestResult = null;
 		} catch (CoreException e) {
 			DLTKTestingPlugin.log(e);
-			fTestRoot= new TestRoot(this);
-			fTestResult= null;
+			fTestRoot = new TestRoot(this);
+			fTestResult = null;
 		}
 	}
 
 	public void stopTestRun() {
-		if (isRunning() || ! isKeptAlive())
-			fIsStopped= true;
+		if (isRunning() || !isKeptAlive())
+			fIsStopped = true;
 		if (fTestRunnerClient != null)
 			fTestRunnerClient.stopTest();
 	}
 
 	/**
-	 * @return <code>true</code> iff the runtime VM of this test session is still alive 
+	 * @return <code>true</code> iff the runtime VM of this test session is
+	 *         still alive
 	 */
 	public boolean isKeptAlive() {
-		if (fTestRunnerClient != null
-				&& fLaunch != null
+		if (fTestRunnerClient != null && fLaunch != null
 				&& fTestRunnerClient.isRunning()
 				&& ILaunchManager.DEBUG_MODE.equals(fLaunch.getLaunchMode())) {
-			ILaunchConfiguration config= fLaunch.getLaunchConfiguration();
+			ILaunchConfiguration config = fLaunch.getLaunchConfiguration();
 			try {
-				return config != null
-				&& config.getAttribute(DLTKTestingConstants.ATTR_KEEPRUNNING, false);
+				return config != null && config.getAttribute(
+						DLTKTestingConstants.ATTR_KEEPRUNNING, false);
 			} catch (CoreException e) {
 				return false;
 			}
-			
+
 		} else {
 			return false;
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.dltk.internal.testing.model.ITestSession#isRunning()
 	 */
 	@Override
 	public boolean isRunning() {
 		return fIsRunning;
 	}
-	
+
 	/**
 	 * @param testElement
-	 * @param launchMode 
+	 * @param launchMode
 	 * @return <code>false</code> iff the rerun could not be started
-	 * @throws CoreException 
+	 * @throws CoreException
 	 */
-	public boolean rerunTest(ITestElement testElement, String launchMode) throws CoreException {
+	public boolean rerunTest(ITestElement testElement, String launchMode)
+			throws CoreException {
 		if (isKeptAlive()) {
-			Status status= ((TestCaseElement) getTestElement(testElement.getId())).getStatus();
+			Status status = ((TestCaseElement) getTestElement(
+					testElement.getId())).getStatus();
 			if (status == Status.ERROR) {
 				fErrorCount--;
 			} else if (status == Status.FAILURE) {
@@ -565,38 +529,47 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			}
 			/* TODO fTestRunnerClient.rerunTest(testId, className, testName); */
 			return true;
-			
+
 		} else if (fLaunch != null) {
 			if (testRunnerUI instanceof ITestRunnerUIExtension) {
-				return ((ITestRunnerUIExtension) testRunnerUI).rerunTest(
-						fLaunch, testElement, launchMode);
+				return ((ITestRunnerUIExtension) testRunnerUI)
+						.rerunTest(fLaunch, testElement, launchMode);
 			}
 			// run the selected test using the previous launch configuration
-			ILaunchConfiguration launchConfiguration= fLaunch.getLaunchConfiguration();
+			ILaunchConfiguration launchConfiguration = fLaunch
+					.getLaunchConfiguration();
 			if (launchConfiguration != null) {
 
-				//String name= className;
-				//if (testName != null) 
-					//name+= "."+testName; //$NON-NLS-1$
-				//String configName= Messages.format(DLTKTestingMessages.TestRunnerViewPart_configName, name); 
-				//ILaunchConfigurationWorkingCopy tmp= launchConfiguration.copy(configName); 
-				// fix for bug: 64838  junit view run single test does not use correct class [JUnit] 
-//				tmp.setAttribute(ScriptLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, className);
+				// String name= className;
+				// if (testName != null)
+				// name+= "."+testName; //$NON-NLS-1$
+				// String configName=
+				// Messages.format(DLTKTestingMessages.TestRunnerViewPart_configName,
+				// name);
+				// ILaunchConfigurationWorkingCopy tmp=
+				// launchConfiguration.copy(configName);
+				// fix for bug: 64838 junit view run single test does not use
+				// correct class [JUnit]
+				// tmp.setAttribute(ScriptLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
+				// className);
 				// reset the container
-				//tmp.setAttribute(DLTKTestingConstants.ATTR_TEST_CONTAINER, ""); //$NON-NLS-1$
-				//if (testName != null) {
-					//tmp.setAttribute(DLTKTestingConstants.ATTR_TEST_METHOD_NAME, testName);
-					//	String args= "-rerun "+testId;
-					//	tmp.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args);
-				//}
-				//tmp.launch(launchMode, null);	
+				// tmp.setAttribute(DLTKTestingConstants.ATTR_TEST_CONTAINER,
+				// ""); //$NON-NLS-1$
+				// if (testName != null) {
+				// tmp.setAttribute(DLTKTestingConstants.ATTR_TEST_METHOD_NAME,
+				// testName);
+				// String args= "-rerun "+testId;
+				// tmp.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+				// args);
+				// }
+				// tmp.launch(launchMode, null);
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public TestElement getTestElement(String id) {
 		return fIdToTest.get(id);
 	}
@@ -624,18 +597,19 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 
 	private TestElement addTreeEntry(String treeEntry) {
 		// format: testId","testName","isSuite","testcount
-		int index0= treeEntry.indexOf(',');
-		String id= treeEntry.substring(0, index0);
-		
-		StringBuffer testNameBuffer= new StringBuffer(100);
+		int index0 = treeEntry.indexOf(',');
+		String id = treeEntry.substring(0, index0);
+
+		StringBuffer testNameBuffer = new StringBuffer(100);
 		int index1 = scanTestName(treeEntry, index0 + 1, testNameBuffer, true);
-		String testName= testNameBuffer.toString().trim();
-		
-		int index2= treeEntry.indexOf(',', index1 + 1);
-		boolean isSuite= treeEntry.substring(index1 + 1, index2).equals("true"); //$NON-NLS-1$
-		
-		int testCount= Integer.parseInt(treeEntry.substring(index2 + 1));
-		
+		String testName = testNameBuffer.toString().trim();
+
+		int index2 = treeEntry.indexOf(',', index1 + 1);
+		boolean isSuite = treeEntry.substring(index1 + 1, index2)
+				.equals("true"); //$NON-NLS-1$
+
+		int testCount = Integer.parseInt(treeEntry.substring(index2 + 1));
+
 		return addTreeEntry(id, testName, isSuite, testCount);
 	}
 
@@ -647,53 +621,62 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			if (category == null) {
 				category = fTestRoot;
 			}
-			return createTestElement(category, id, testName, isSuite, testCount);
+			return createTestElement(category, id, testName, isSuite,
+					testCount);
 		} else {
-			int suiteIndex= fIncompleteTestSuites.size() - 1;
-			IncompleteTestSuite openSuite= fIncompleteTestSuites.get(suiteIndex);
+			int suiteIndex = fIncompleteTestSuites.size() - 1;
+			IncompleteTestSuite openSuite = fIncompleteTestSuites
+					.get(suiteIndex);
 			openSuite.fOutstandingChildren--;
 			if (openSuite.fOutstandingChildren <= 0)
 				fIncompleteTestSuites.remove(suiteIndex);
-			return createTestElement(openSuite.fTestSuiteElement, id, testName, isSuite, testCount);
+			return createTestElement(openSuite.fTestSuiteElement, id, testName,
+					isSuite, testCount);
 		}
 	}
 
-	public TestElement createTestElement(TestContainerElement parent, String id, String testName, boolean isSuite, int testCount) {
+	public TestElement createTestElement(TestContainerElement parent, String id,
+			String testName, boolean isSuite, int testCount) {
 		TestElement testElement;
 		if (isSuite) {
-			TestSuiteElement testSuiteElement= new TestSuiteElement(parent, id, testName, testCount);
-			testElement= testSuiteElement;
+			TestSuiteElement testSuiteElement = new TestSuiteElement(parent, id,
+					testName, testCount);
+			testElement = testSuiteElement;
 			if (testCount > 0)
-				fIncompleteTestSuites.add(new IncompleteTestSuite(testSuiteElement, testCount));
+				fIncompleteTestSuites.add(
+						new IncompleteTestSuite(testSuiteElement, testCount));
 		} else {
-			testElement= new TestCaseElement(parent, id, testName);
+			testElement = new TestCaseElement(parent, id, testName);
 			++fCreatedTestCaseCount;
 			adjustTotalCount(fCreatedTestCaseCount);
 		}
 		fIdToTest.put(id, testElement);
 		return testElement;
 	}
-	
+
 	/**
 	 * Append the test name from <code>s</code> to <code>testName</code>.
-	 *  
-	 * @param s the string to scan
-	 * @param start the offset of the first character in <code>s</code> 
-	 * @param testName the result
-	 * 
+	 *
+	 * @param s
+	 *            the string to scan
+	 * @param start
+	 *            the offset of the first character in <code>s</code>
+	 * @param testName
+	 *            the result
+	 *
 	 * @return the index of the next ','
 	 */
 	static int scanTestName(String s, int start, StringBuffer testName,
 			boolean breakOnComma) {
-		boolean inQuote= false;
-		int i= start;
+		boolean inQuote = false;
+		int i = start;
 		for (; i < s.length(); i++) {
-			char c= s.charAt(i);
+			char c = s.charAt(i);
 			if (c == '\\' && !inQuote) {
-				inQuote= true;
+				inQuote = true;
 				continue;
 			} else if (inQuote) {
-				inQuote= false;
+				inQuote = false;
 				testName.append(c);
 			} else if (breakOnComma && c == ',')
 				break;
@@ -709,63 +692,56 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	 * events (broadcasted to {@link ITestSessionListener}s).
 	 */
 	private class TestSessionNotifier implements ITestRunListener2 {
-		
+
 		@Override
 		public void testRunStarted(int testCount) {
-			fIncompleteTestSuites= new ArrayList<IncompleteTestSuite>();
-			
-			fStartedCount= 0;
-			fIgnoredCount= 0;
-			fFailureCount= 0;
-			fErrorCount= 0;
-			fTotalCount= testCount;
+			fIncompleteTestSuites = new ArrayList<>();
+
+			fStartedCount = 0;
+			fIgnoredCount = 0;
+			fFailureCount = 0;
+			fErrorCount = 0;
+			fTotalCount = testCount;
 			fCreatedTestCaseCount = 0;
-			
-			fStartTime= System.currentTimeMillis();
-			fIsRunning= true;
-			
-			Object[] listeners= fSessionListeners.getListeners();
-			for (int i= 0; i < listeners.length; ++i) {
-				((ITestSessionListener) listeners[i]).sessionStarted();
+
+			fStartTime = System.currentTimeMillis();
+			fIsRunning = true;
+
+			for (ITestSessionListener listener : fSessionListeners) {
+				listener.sessionStarted();
 			}
 		}
-	
+
 		@Override
 		public void testRunEnded(long elapsedTime) {
-			fIsRunning= false;
-			
-			Object[] listeners= fSessionListeners.getListeners();
-			for (int i= 0; i < listeners.length; ++i) {
-				((ITestSessionListener) listeners[i]).sessionEnded(elapsedTime);
+			fIsRunning = false;
+
+			for (ITestSessionListener listener : fSessionListeners) {
+				listener.sessionEnded(elapsedTime);
 			}
 		}
-	
+
 		@Override
 		public void testRunStopped(long elapsedTime) {
-			fIsRunning= false;
-			fIsStopped= true;
-			
-			Object[] listeners= fSessionListeners.getListeners();
-			for (int i= 0; i < listeners.length; ++i) {
-				((ITestSessionListener) listeners[i]).sessionStopped(elapsedTime);
+			fIsRunning = false;
+			fIsStopped = true;
+
+			for (ITestSessionListener listener : fSessionListeners) {
+				listener.sessionStopped(elapsedTime);
 			}
 		}
-	
+
 		@Override
 		public void testRunTerminated() {
 			TestRunSession.this.testRunTerminated();
 		}
-	
-		/* (non-Javadoc)
-		 * @see org.eclipse.jdt.internal.junit.model.ITestRunListener2#testTreeEntry(java.lang.String)
-		 */
+
 		@Override
 		public void testTreeEntry(String description) {
-			TestElement testElement= addTreeEntry(description);
-			
-			Object[] listeners= fSessionListeners.getListeners();
-			for (int i= 0; i < listeners.length; ++i) {
-				((ITestSessionListener) listeners[i]).testAdded(testElement);
+			TestElement testElement = addTreeEntry(description);
+
+			for (ITestSessionListener listener : fSessionListeners) {
+				listener.testAdded(testElement);
 			}
 		}
 
@@ -775,27 +751,29 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			TestElement testElement = addTreeEntry(testId, testName, isSuite,
 					testCount);
 
-			Object[] listeners = fSessionListeners.getListeners();
-			for (int i = 0; i < listeners.length; ++i) {
-				((ITestSessionListener) listeners[i]).testAdded(testElement);
+			for (ITestSessionListener listener : fSessionListeners) {
+				listener.testAdded(testElement);
 			}
 		}
-	
-		private TestElement createUnrootedTestElement(String testId, String testName) {
-			TestSuiteElement unrootedSuite= getUnrootedSuite();
-			TestElement testElement= createTestElement(unrootedSuite, testId, testName, false, 1);
-			
-			Object[] listeners= fSessionListeners.getListeners();
-			for (int i= 0; i < listeners.length; ++i) {
-				((ITestSessionListener) listeners[i]).testAdded(testElement);
+
+		private TestElement createUnrootedTestElement(String testId,
+				String testName) {
+			TestSuiteElement unrootedSuite = getUnrootedSuite();
+			TestElement testElement = createTestElement(unrootedSuite, testId,
+					testName, false, 1);
+
+			for (ITestSessionListener listener : fSessionListeners) {
+				listener.testAdded(testElement);
 			}
-			
+
 			return testElement;
 		}
 
 		private TestSuiteElement getUnrootedSuite() {
 			if (fUnrootedSuite == null) {
-				fUnrootedSuite= (TestSuiteElement) createTestElement(fTestRoot, "-2", DLTKTestingMessages.TestRunSession_unrootedTests, true, 0);  //$NON-NLS-1$
+				fUnrootedSuite = (TestSuiteElement) createTestElement(fTestRoot,
+						"-2", DLTKTestingMessages.TestRunSession_unrootedTests, //$NON-NLS-1$
+						true, 0);
 			}
 			return fUnrootedSuite;
 		}
@@ -803,39 +781,37 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 		@Override
 		public void testStarted(String testId, String testName) {
 			if (fStartedCount == 0) {
-				Object[] listeners= fSessionListeners.getListeners();
-				for (int i= 0; i < listeners.length; ++i) {
-					((ITestSessionListener) listeners[i]).runningBegins();
+				for (ITestSessionListener listener : fSessionListeners) {
+					listener.runningBegins();
 				}
 			}
-			TestElement testElement= getTestElement(testId);
+			TestElement testElement = getTestElement(testId);
 			if (testElement == null) {
-				testElement= createUnrootedTestElement(testId, testName);
-			} else if (! (testElement instanceof TestCaseElement)) {
+				testElement = createUnrootedTestElement(testId, testName);
+			} else if (!(testElement instanceof TestCaseElement)) {
 				logUnexpectedTest(testId, testElement);
 				return;
 			}
-			TestCaseElement testCaseElement= (TestCaseElement) testElement;
+			TestCaseElement testCaseElement = (TestCaseElement) testElement;
 			setStatus(testCaseElement, Status.RUNNING);
-			
+
 			fStartedCount++;
-			
-			Object[] listeners= fSessionListeners.getListeners();
-			for (int i= 0; i < listeners.length; ++i) {
-				((ITestSessionListener) listeners[i]).testStarted(testCaseElement);
+
+			for (ITestSessionListener listener : fSessionListeners) {
+				listener.testStarted(testCaseElement);
 			}
 		}
-	
+
 		@Override
 		public void testEnded(String testId, String testName) {
-			TestElement testElement= getTestElement(testId);
+			TestElement testElement = getTestElement(testId);
 			if (testElement == null) {
-				testElement= createUnrootedTestElement(testId, testName);
-			} else if (! (testElement instanceof TestCaseElement)) {
+				testElement = createUnrootedTestElement(testId, testName);
+			} else if (!(testElement instanceof TestCaseElement)) {
 				logUnexpectedTest(testId, testElement);
 				return;
 			}
-			TestCaseElement testCaseElement= (TestCaseElement) testElement;
+			TestCaseElement testCaseElement = (TestCaseElement) testElement;
 			if (testName.startsWith(MessageIds.IGNORED_TEST_PREFIX)) {
 				testCaseElement.setIgnored(true);
 				fIgnoredCount++;
@@ -846,35 +822,41 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 
 			if (testCaseElement.getStatus() == Status.RUNNING)
 				setStatus(testCaseElement, Status.OK);
-			
-			Object[] listeners= fSessionListeners.getListeners();
-			for (int i= 0; i < listeners.length; ++i) {
-				((ITestSessionListener) listeners[i]).testEnded(testCaseElement);
+
+			for (ITestSessionListener listener : fSessionListeners) {
+				listener.testEnded(testCaseElement);
 			}
 		}
-		
-		
-		public void testFailed(int status, String testId, String testName, String trace) {
+
+		public void testFailed(int status, String testId, String testName,
+				String trace) {
 			testFailed(status, testId, testName, trace, null, null, -1);
 		}
-		
-		/* (non-Javadoc)
-		 * @see org.eclipse.jdt.internal.junit.model.ITestRunListener2#testFailed(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see
+		 * org.eclipse.jdt.internal.junit.model.ITestRunListener2#testFailed(
+		 * int, java.lang.String, java.lang.String, java.lang.String,
+		 * java.lang.String, java.lang.String)
 		 */
 		@Override
-		public void testFailed(int statusCode, String testId, String testName, String trace, String expected, String actual, int code) {
-			TestElement testElement= getTestElement(testId);
+		public void testFailed(int statusCode, String testId, String testName,
+				String trace, String expected, String actual, int code) {
+			TestElement testElement = getTestElement(testId);
 			if (testElement == null) {
-				testElement= createUnrootedTestElement(testId, testName);
+				testElement = createUnrootedTestElement(testId, testName);
 				return;
 			}
 
-			Status status= Status.convert(statusCode, code);
-			registerTestFailureStatus(testElement, status, trace, nullifyEmpty(expected), nullifyEmpty(actual));
-			
-			Object[] listeners= fSessionListeners.getListeners();
-			for (int i= 0; i < listeners.length; ++i) {
-				((ITestSessionListener) listeners[i]).testFailed(testElement, status, trace, expected, actual, code);
+			Status status = Status.convert(statusCode, code);
+			registerTestFailureStatus(testElement, status, trace,
+					nullifyEmpty(expected), nullifyEmpty(actual));
+
+			for (ITestSessionListener listener : fSessionListeners) {
+				listener.testFailed(testElement, status, trace, expected,
+						actual, code);
 			}
 		}
 
@@ -888,37 +870,48 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			}
 			return string;
 		}
-	
-		public void testReran(String testId, String testClass, String testName, int status, String trace) {
+
+		public void testReran(String testId, String testClass, String testName,
+				int status, String trace) {
 			testReran(testId, testClass, testName, status, trace, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		
-		/* (non-Javadoc)
-		 * @see org.eclipse.jdt.internal.junit.model.ITestRunListener2#testReran(java.lang.String, java.lang.String, java.lang.String, int, java.lang.String, java.lang.String, java.lang.String)
+
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see
+		 * org.eclipse.jdt.internal.junit.model.ITestRunListener2#testReran(java
+		 * .lang.String, java.lang.String, java.lang.String, int,
+		 * java.lang.String, java.lang.String, java.lang.String)
 		 */
 		@Override
-		public void testReran(String testId, String className, String testName, int statusCode, String trace, String expectedResult, String actualResult) {
-			TestElement testElement= getTestElement(testId);
+		public void testReran(String testId, String className, String testName,
+				int statusCode, String trace, String expectedResult,
+				String actualResult) {
+			TestElement testElement = getTestElement(testId);
 			if (testElement == null) {
-				testElement= createUnrootedTestElement(testId, testName);
-			} else if (! (testElement instanceof TestCaseElement)) {
+				testElement = createUnrootedTestElement(testId, testName);
+			} else if (!(testElement instanceof TestCaseElement)) {
 				logUnexpectedTest(testId, testElement);
 				return;
 			}
-			TestCaseElement testCaseElement= (TestCaseElement) testElement;
-			
-			Status status= Status.convert(statusCode, ITestingClient.PASSED);
-			registerTestFailureStatus(testElement, status, trace, nullifyEmpty(expectedResult), nullifyEmpty(actualResult));
-			
-			Object[] listeners= fSessionListeners.getListeners();
-			for (int i= 0; i < listeners.length; ++i) {
-				//TODO: post old & new status?
-				((ITestSessionListener) listeners[i]).testReran(testCaseElement, status, trace, expectedResult, actualResult);
+			TestCaseElement testCaseElement = (TestCaseElement) testElement;
+
+			Status status = Status.convert(statusCode, ITestingClient.PASSED);
+			registerTestFailureStatus(testElement, status, trace,
+					nullifyEmpty(expectedResult), nullifyEmpty(actualResult));
+
+			for (ITestSessionListener listener : fSessionListeners) {
+				// TODO: post old & new status?
+				listener.testReran(testCaseElement, status, trace,
+						expectedResult, actualResult);
 			}
 		}
-	
+
 		private void logUnexpectedTest(String testId, TestElement testElement) {
-//			DLTKTestingPlugin.log(new Exception("Unexpected TestElement type for testId '" + testId + "': " + testElement)); //$NON-NLS-1$ //$NON-NLS-2$
+			// DLTKTestingPlugin.log(new Exception("Unexpected TestElement type
+			// for testId '" + testId + "': " + testElement)); //$NON-NLS-1$
+			// //$NON-NLS-2$
 		}
 	}
 
@@ -928,23 +921,24 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			return;
 		fIsRunning = false;
 		fIsStopped = true;
-		Object[] listeners = fSessionListeners.getListeners();
-		for (int i = 0; i < listeners.length; ++i) {
-			((ITestSessionListener) listeners[i]).sessionTerminated();
+		for (ITestSessionListener listener : fSessionListeners) {
+			listener.sessionTerminated();
 		}
 	}
 
 	private static class IncompleteTestSuite {
 		public TestSuiteElement fTestSuiteElement;
 		public int fOutstandingChildren;
-		
-		public IncompleteTestSuite(TestSuiteElement testSuiteElement, int outstandingChildren) {
-			fTestSuiteElement= testSuiteElement;
-			fOutstandingChildren= outstandingChildren;
+
+		public IncompleteTestSuite(TestSuiteElement testSuiteElement,
+				int outstandingChildren) {
+			fTestSuiteElement = testSuiteElement;
+			fOutstandingChildren = outstandingChildren;
 		}
 	}
-	
-	public void registerTestFailureStatus(TestElement testElement, Status status, String trace, String expected, String actual) {
+
+	public void registerTestFailureStatus(TestElement testElement,
+			Status status, String trace, String expected, String actual) {
 		testElement.setStatus(status, trace, expected, actual);
 		if (status.isError()) {
 			fErrorCount++;
@@ -955,31 +949,32 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 
 	public void registerTestEnded(TestElement testElement, boolean completed) {
 		if (testElement instanceof TestCaseElement) {
-			if (! completed) {
+			if (!completed) {
 				return;
 			}
 			fStartedCount++;
 			if (((TestCaseElement) testElement).isIgnored()) {
 				fIgnoredCount++;
 			}
-			if (! testElement.getStatus().isErrorOrFailure())
+			if (!testElement.getStatus().isErrorOrFailure())
 				setStatus(testElement, Status.OK);
 		}
 	}
-	
+
 	private void setStatus(TestElement testElement, Status status) {
 		testElement.setStatus(status);
 	}
-	
+
 	@Override
-	public ITestElement[] getFailedTestElements(ITestElementPredicate predicate) {
-		List<ITestElement> failures = new ArrayList<ITestElement>();
+	public ITestElement[] getFailedTestElements(
+			ITestElementPredicate predicate) {
+		List<ITestElement> failures = new ArrayList<>();
 		addFailures(failures, getTestRoot(), predicate);
 		return failures.toArray(new TestElement[failures.size()]);
 	}
 
-	private void addFailures(List<ITestElement> failures, ITestElement testElement,
-			ITestElementPredicate predicate) {
+	private void addFailures(List<ITestElement> failures,
+			ITestElement testElement, ITestElementPredicate predicate) {
 		Result testResult = testElement.getTestResult(true);
 		if ((testResult == Result.ERROR || testResult == Result.FAILURE)
 				&& predicate.matches(testElement)) {
@@ -1009,8 +1004,10 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 	public final ITestRunnerUI getTestRunnerUI() {
 		return testRunnerUI;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see org.eclipse.jdt.junit.model.ITestElement#getElapsedTimeInSeconds()
 	 */
 	@Override

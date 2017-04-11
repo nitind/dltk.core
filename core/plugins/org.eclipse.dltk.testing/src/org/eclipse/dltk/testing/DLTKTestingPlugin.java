@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,32 +50,32 @@ public class DLTKTestingPlugin extends AbstractUIPlugin {
 	/**
 	 * The single instance of this plug-in runtime class.
 	 */
-	private static DLTKTestingPlugin fgPlugin= null;
+	private static DLTKTestingPlugin fgPlugin = null;
 
-	public static final String PLUGIN_ID= "org.eclipse.dltk.testing"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.dltk.testing"; //$NON-NLS-1$
 
 	/**
 	 * The class path variable referring to the junit home location
 	 */
-	public final static String JUNIT_HOME= "JUNIT_HOME"; //$NON-NLS-1$
+	public final static String JUNIT_HOME = "JUNIT_HOME"; //$NON-NLS-1$
 
-	private static final IPath ICONS_PATH= new Path("$nl$/icons/full"); //$NON-NLS-1$
-	private static final String HISTORY_DIR_NAME= "history"; //$NON-NLS-1$
+	private static final IPath ICONS_PATH = new Path("$nl$/icons/full"); //$NON-NLS-1$
+	private static final String HISTORY_DIR_NAME = "history"; //$NON-NLS-1$
 
-	private final DLTKTestingModel fTestingModel= new DLTKTestingModel();
+	private final DLTKTestingModel fTestingModel = new DLTKTestingModel();
 
 	/**
 	 * List storing the registered test run listeners
 	 */
-	private ListenerList/*<TestRunListener>*/fNewTestRunListeners;
+	private ListenerList<TestRunListener> fNewTestRunListeners;
 
 	private BundleContext fBundleContext;
 
-	private static boolean fIsStopped= false;
+	private static boolean fIsStopped = false;
 
 	public DLTKTestingPlugin() {
-		fgPlugin= this;
-		fNewTestRunListeners= new ListenerList();
+		fgPlugin = this;
+		fNewTestRunListeners = new ListenerList<>();
 	}
 
 	public static DLTKTestingPlugin getDefault() {
@@ -83,7 +83,7 @@ public class DLTKTestingPlugin extends AbstractUIPlugin {
 	}
 
 	public static Shell getActiveWorkbenchShell() {
-		IWorkbenchWindow workBenchWindow= getActiveWorkbenchWindow();
+		IWorkbenchWindow workBenchWindow = getActiveWorkbenchWindow();
 		if (workBenchWindow == null)
 			return null;
 		return workBenchWindow.getShell();
@@ -91,20 +91,20 @@ public class DLTKTestingPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the active workbench window
-	 * 
+	 *
 	 * @return the active workbench window
 	 */
 	public static IWorkbenchWindow getActiveWorkbenchWindow() {
 		if (fgPlugin == null)
 			return null;
-		IWorkbench workBench= fgPlugin.getWorkbench();
+		IWorkbench workBench = fgPlugin.getWorkbench();
 		if (workBench == null)
 			return null;
 		return workBench.getActiveWorkbenchWindow();
 	}
 
 	public static IWorkbenchPage getActivePage() {
-		IWorkbenchWindow activeWorkbenchWindow= getActiveWorkbenchWindow();
+		IWorkbenchWindow activeWorkbenchWindow = getActiveWorkbenchWindow();
 		if (activeWorkbenchWindow == null)
 			return null;
 		return activeWorkbenchWindow.getActivePage();
@@ -119,7 +119,8 @@ public class DLTKTestingPlugin extends AbstractUIPlugin {
 	}
 
 	public static void log(String message, Throwable e) {
-		log(new Status(IStatus.ERROR, getPluginId(), IStatus.ERROR, message, e));
+		log(new Status(IStatus.ERROR, getPluginId(), IStatus.ERROR, message,
+				e));
 	}
 
 	public static void log(IStatus status) {
@@ -127,41 +128,48 @@ public class DLTKTestingPlugin extends AbstractUIPlugin {
 	}
 
 	public static ImageDescriptor getImageDescriptor(String relativePath) {
-		IPath path= ICONS_PATH.append(relativePath);
+		IPath path = ICONS_PATH.append(relativePath);
 		return createImageDescriptor(getDefault().getBundle(), path, true);
 	}
 
 	/**
-	 * Sets the three image descriptors for enabled, disabled, and hovered to an action. The actions
-	 * are retrieved from the *lcl16 folders.
-	 * 
-	 * @param action the action
-	 * @param iconName the icon name
+	 * Sets the three image descriptors for enabled, disabled, and hovered to an
+	 * action. The actions are retrieved from the *lcl16 folders.
+	 *
+	 * @param action
+	 *            the action
+	 * @param iconName
+	 *            the icon name
 	 */
-	public static void setLocalImageDescriptors(IAction action, String iconName) {
+	public static void setLocalImageDescriptors(IAction action,
+			String iconName) {
 		setImageDescriptors(action, "lcl16", iconName); //$NON-NLS-1$
 	}
 
-	private static void setImageDescriptors(IAction action, String type, String relPath) {
-		ImageDescriptor id= createImageDescriptor("d" + type, relPath, false); //$NON-NLS-1$
+	private static void setImageDescriptors(IAction action, String type,
+			String relPath) {
+		ImageDescriptor id = createImageDescriptor("d" + type, relPath, false); //$NON-NLS-1$
 		if (id != null)
 			action.setDisabledImageDescriptor(id);
 
-		ImageDescriptor descriptor= createImageDescriptor("e" + type, relPath, true); //$NON-NLS-1$
+		ImageDescriptor descriptor = createImageDescriptor("e" + type, relPath, //$NON-NLS-1$
+				true);
 		action.setHoverImageDescriptor(descriptor);
 		action.setImageDescriptor(descriptor);
 	}
 
 	/*
-	 * Creates an image descriptor for the given prefix and name in the JDT UI bundle. The path can
-	 * contain variables like $NL$.
-	 * If no image could be found, <code>useMissingImageDescriptor</code> decides if either
-	 * the 'missing image descriptor' is returned or <code>null</code>.
-	 * or <code>null</code>.
+	 * Creates an image descriptor for the given prefix and name in the JDT UI
+	 * bundle. The path can contain variables like $NL$. If no image could be
+	 * found, <code>useMissingImageDescriptor</code> decides if either the
+	 * 'missing image descriptor' is returned or <code>null</code>. or
+	 * <code>null</code>.
 	 */
-	private static ImageDescriptor createImageDescriptor(String pathPrefix, String imageName, boolean useMissingImageDescriptor) {
-		IPath path= ICONS_PATH.append(pathPrefix).append(imageName);
-		return createImageDescriptor(DLTKTestingPlugin.getDefault().getBundle(), path, useMissingImageDescriptor);
+	private static ImageDescriptor createImageDescriptor(String pathPrefix,
+			String imageName, boolean useMissingImageDescriptor) {
+		IPath path = ICONS_PATH.append(pathPrefix).append(imageName);
+		return createImageDescriptor(DLTKTestingPlugin.getDefault().getBundle(),
+				path, useMissingImageDescriptor);
 	}
 
 	/**
@@ -169,16 +177,17 @@ public class DLTKTestingPlugin extends AbstractUIPlugin {
 	 * contain variables like $NL$. If no image could be found,
 	 * <code>useMissingImageDescriptor</code> decides if either the 'missing
 	 * image descriptor' is returned or <code>null</code>.
-	 * 
+	 *
 	 * @param bundle
 	 * @param path
 	 * @param useMissingImageDescriptor
-	 * @return an {@link ImageDescriptor}, or <code>null</code> iff there's
-	 *         no image at the given location and
+	 * @return an {@link ImageDescriptor}, or <code>null</code> iff there's no
+	 *         image at the given location and
 	 *         <code>useMissingImageDescriptor</code> is <code>true</code>
 	 */
-	private static ImageDescriptor createImageDescriptor(Bundle bundle, IPath path, boolean useMissingImageDescriptor) {
-		URL url= FileLocator.find(bundle, path, null);
+	private static ImageDescriptor createImageDescriptor(Bundle bundle,
+			IPath path, boolean useMissingImageDescriptor) {
+		URL url = FileLocator.find(bundle, path, null);
 		if (url != null) {
 			return ImageDescriptor.createFromURL(url);
 		}
@@ -191,19 +200,19 @@ public class DLTKTestingPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		fBundleContext= context;
+		fBundleContext = context;
 		fTestingModel.start();
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		fIsStopped= true;
+		fIsStopped = true;
 		try {
 			fTestingModel.stop();
 		} finally {
 			super.stop(context);
 		}
-		fBundleContext= null;
+		fBundleContext = null;
 	}
 
 	public static ITestingModel getModel() {
@@ -211,15 +220,16 @@ public class DLTKTestingPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the bundle for a given bundle name,
-	 * regardless whether the bundle is resolved or not.
-	 * 
-	 * @param bundleName the bundle name
+	 * Returns the bundle for a given bundle name, regardless whether the bundle
+	 * is resolved or not.
+	 *
+	 * @param bundleName
+	 *            the bundle name
 	 * @return the bundle
 	 * @since 3.2
 	 */
 	public Bundle getBundle(String bundleName) {
-		Bundle[] bundles= getBundles(bundleName, null);
+		Bundle[] bundles = getBundles(bundleName, null);
 		if (bundles != null && bundles.length > 0)
 			return bundles[0];
 		return null;
@@ -227,19 +237,21 @@ public class DLTKTestingPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the bundles for a given bundle name,
-	 * 
-	 * @param bundleName the bundle name
+	 *
+	 * @param bundleName
+	 *            the bundle name
 	 * @return the bundles of the given name
 	 */
 	public Bundle[] getBundles(String bundleName, String version) {
-		Bundle[] bundles= Platform.getBundles(bundleName, version);
+		Bundle[] bundles = Platform.getBundles(bundleName, version);
 		if (bundles != null)
 			return bundles;
 
 		// Accessing unresolved bundle
-		ServiceReference<PackageAdmin> serviceRef= fBundleContext.getServiceReference(PackageAdmin.class);
-		PackageAdmin admin= fBundleContext.getService(serviceRef);
-		bundles= admin.getBundles(bundleName, version);
+		ServiceReference<PackageAdmin> serviceRef = fBundleContext
+				.getServiceReference(PackageAdmin.class);
+		PackageAdmin admin = fBundleContext.getService(serviceRef);
+		bundles = admin.getBundles(bundleName, version);
 		if (bundles != null && bundles.length > 0)
 			return bundles;
 		return null;
@@ -248,7 +260,7 @@ public class DLTKTestingPlugin extends AbstractUIPlugin {
 	/**
 	 * @return a <code>ListenerList</code> of all <code>TestRunListener</code>s
 	 */
-	public ListenerList/*<TestRunListener>*/getNewTestRunListeners() {
+	public ListenerList<TestRunListener> getNewTestRunListeners() {
 		return fNewTestRunListeners;
 	}
 
@@ -257,16 +269,17 @@ public class DLTKTestingPlugin extends AbstractUIPlugin {
 	}
 
 	public IDialogSettings getDialogSettingsSection(String name) {
-		IDialogSettings dialogSettings= getDialogSettings();
-		IDialogSettings section= dialogSettings.getSection(name);
+		IDialogSettings dialogSettings = getDialogSettings();
+		IDialogSettings section = dialogSettings.getSection(name);
 		if (section == null) {
-			section= dialogSettings.addNewSection(name);
+			section = dialogSettings.addNewSection(name);
 		}
 		return section;
 	}
 
 	public static File getHistoryDirectory() throws IllegalStateException {
-		File historyDir= getDefault().getStateLocation().append(HISTORY_DIR_NAME).toFile();
+		File historyDir = getDefault().getStateLocation()
+				.append(HISTORY_DIR_NAME).toFile();
 		if (!historyDir.isDirectory()) {
 			historyDir.mkdir();
 		}

@@ -175,7 +175,7 @@ public class ScriptConsole extends TextConsole implements ICommandHandler, IScri
 
 	private ScriptConsoleSession session;
 
-	private ListenerList consoleListeners;
+	private ListenerList<IScriptConsoleListener> consoleListeners;
 
 	private ScriptConsolePrompt prompt;
 
@@ -195,7 +195,7 @@ public class ScriptConsole extends TextConsole implements ICommandHandler, IScri
 	public ScriptConsole(String consoleName, String consoleType, ImageDescriptor image) {
 		super(consoleName, consoleType, image, true);
 
-		this.consoleListeners = new ListenerList(ListenerList.IDENTITY);
+		this.consoleListeners = new ListenerList<>(ListenerList.IDENTITY);
 		this.prompt = new ScriptConsolePrompt("=>", "->"); //$NON-NLS-1$ //$NON-NLS-2$
 		this.history = new ScriptConsoleHistory();
 
@@ -293,9 +293,8 @@ public class ScriptConsole extends TextConsole implements ICommandHandler, IScri
 		if (this.interpreter == null || !this.interpreter.isValid()) {
 			return new ScriptExecResult(Util.EMPTY_STRING);
 		}
-		Object[] listeners = consoleListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			((IScriptConsoleListener) listeners[i]).userRequest(userInput);
+		for (IScriptConsoleListener listener : consoleListeners) {
+			listener.userRequest(userInput);
 		}
 
 		IScriptExecResult output = interpreter.exec(userInput);
@@ -306,8 +305,8 @@ public class ScriptConsole extends TextConsole implements ICommandHandler, IScri
 			prompt.setMode(false);
 		}
 
-		for (int i = 0; i < listeners.length; i++) {
-			((IScriptConsoleListener) listeners[i]).interpreterResponse(output);
+		for (IScriptConsoleListener listener : consoleListeners) {
+			listener.interpreterResponse(output);
 		}
 
 		return output;
@@ -417,8 +416,7 @@ public class ScriptConsole extends TextConsole implements ICommandHandler, IScri
 	}
 
 	/**
-	 * disposes of the listeners for each of the stream associated with this
-	 * console
+	 * disposes of the listeners for each of the stream associated with this console
 	 */
 	private synchronized void disposeStreams() {
 		for (StreamListener listener : fStreamListeners) {

@@ -40,7 +40,7 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 
 	private ArrayList fHotSwapTargets = new ArrayList();
 	private ArrayList fNoHotSwapTargets = new ArrayList();
-	private ListenerList fHotCodeReplaceListeners = new ListenerList();
+	private ListenerList<IHotCodeReplaceListener> fHotCodeReplaceListeners = new ListenerList<>();
 
 	public static synchronized HotCodeReplaceManager getDefault() {
 		if (instance == null) {
@@ -86,10 +86,8 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 	 * Notifies listeners that a hot code replace attempt succeeded
 	 */
 	private void fireHCRSucceeded(IScriptDebugTarget target) {
-		Object[] listeners = fHotCodeReplaceListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			((IHotCodeReplaceListener) listeners[i])
-					.hotCodeReplaceSucceeded(target);
+		for (IHotCodeReplaceListener listener : fHotCodeReplaceListeners) {
+			listener.hotCodeReplaceSucceeded(target);
 		}
 	}
 
@@ -99,10 +97,8 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 	 */
 	private void fireHCRFailed(IScriptDebugTarget target,
 			DebugException exception) {
-		Object[] listeners = fHotCodeReplaceListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			((IHotCodeReplaceListener) listeners[i])
-					.hotCodeReplaceFailed(target, exception);
+		for (IHotCodeReplaceListener listener : fHotCodeReplaceListeners) {
+			listener.hotCodeReplaceFailed(target, exception);
 		}
 	}
 

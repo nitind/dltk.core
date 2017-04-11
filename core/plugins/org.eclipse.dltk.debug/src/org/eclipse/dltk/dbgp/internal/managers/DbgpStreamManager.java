@@ -16,25 +16,23 @@ import org.eclipse.dltk.dbgp.internal.packets.DbgpStreamPacket;
 
 public class DbgpStreamManager extends DbgpWorkingThread
 		implements IDbgpStreamManager {
-	private final ListenerList listeners = new ListenerList();
+	private final ListenerList<IDbgpStreamListener> listeners = new ListenerList<>();
 
 	private final IDbgpDebugingEngine engine;
 
 	protected void fireStderrReceived(String data) {
 		if (data == null || data.length() == 0)
 			return;
-		Object[] list = listeners.getListeners();
-		for (int i = 0; i < list.length; ++i) {
-			((IDbgpStreamListener) list[i]).stderrReceived(data);
+		for (IDbgpStreamListener listener : listeners) {
+			listener.stderrReceived(data);
 		}
 	}
 
 	protected void fireStdoutReceived(String data) {
 		if (data == null || data.length() == 0)
 			return;
-		Object[] list = listeners.getListeners();
-		for (int i = 0; i < list.length; ++i) {
-			((IDbgpStreamListener) list[i]).stdoutReceived(data);
+		for (IDbgpStreamListener listener : listeners) {
+			listener.stdoutReceived(data);
 		}
 	}
 

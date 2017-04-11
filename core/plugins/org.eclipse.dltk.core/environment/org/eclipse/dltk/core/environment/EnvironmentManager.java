@@ -98,7 +98,7 @@ public final class EnvironmentManager {
 
 	private static final EnvironmentProviderManager manager = new EnvironmentProviderManager();
 
-	private static ListenerList listeners = new ListenerList();
+	private static ListenerList<IEnvironmentChangedListener> listeners = new ListenerList<>();
 
 	private static final Map<IProject, IEnvironment> environmentCache = new HashMap<>();
 
@@ -389,36 +389,28 @@ public final class EnvironmentManager {
 	}
 
 	public static void environmentAdded(IEnvironment environment) {
-		Object[] environmentListeners = listeners.getListeners();
-		for (int i = 0; i < environmentListeners.length; i++) {
-			IEnvironmentChangedListener listener = (IEnvironmentChangedListener) environmentListeners[i];
+		for (IEnvironmentChangedListener listener : listeners) {
 			listener.environmentAdded(environment);
 		}
 		fireEnvirontmentChange();
 	}
 
 	public static void environmentRemoved(IEnvironment environment) {
-		Object[] environmentListeners = listeners.getListeners();
-		for (int i = 0; i < environmentListeners.length; i++) {
-			IEnvironmentChangedListener listener = (IEnvironmentChangedListener) environmentListeners[i];
+		for (IEnvironmentChangedListener listener : listeners) {
 			listener.environmentRemoved(environment);
 		}
 		fireEnvirontmentChange();
 	}
 
 	public static void environmentChanged(IEnvironment environment) {
-		Object[] environmentListeners = listeners.getListeners();
-		for (int i = 0; i < environmentListeners.length; i++) {
-			IEnvironmentChangedListener listener = (IEnvironmentChangedListener) environmentListeners[i];
+		for (IEnvironmentChangedListener listener : listeners) {
 			listener.environmentChanged(environment);
 		}
 		fireEnvirontmentChange();
 	}
 
 	public static void fireEnvirontmentChange() {
-		Object[] environmentListeners = listeners.getListeners();
-		for (int i = 0; i < environmentListeners.length; i++) {
-			IEnvironmentChangedListener listener = (IEnvironmentChangedListener) environmentListeners[i];
+		for (IEnvironmentChangedListener listener : listeners) {
 			listener.environmentsModified();
 		}
 	}

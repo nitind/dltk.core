@@ -135,21 +135,17 @@ public class DbgpDebugingEngine extends DbgpTermination
 		fireObjectTerminated(e);
 	}
 
-	private final ListenerList listeners = new ListenerList();
+	private final ListenerList<IDbgpRawListener> listeners = new ListenerList<>();
 
 	protected void firePacketReceived(IDbgpRawPacket content) {
-		Object[] list = listeners.getListeners();
-
-		for (int i = 0; i < list.length; ++i) {
-			((IDbgpRawListener) list[i]).dbgpPacketReceived(id, content);
+		for (IDbgpRawListener listener : listeners) {
+			listener.dbgpPacketReceived(id, content);
 		}
 	}
 
 	protected void firePacketSent(IDbgpRawPacket content) {
-		Object[] list = listeners.getListeners();
-
-		for (int i = 0; i < list.length; ++i) {
-			((IDbgpRawListener) list[i]).dbgpPacketSent(id, content);
+		for (IDbgpRawListener listener : listeners) {
+			listener.dbgpPacketSent(id, content);
 		}
 	}
 

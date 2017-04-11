@@ -53,7 +53,8 @@ public final class ValidatorRuntime {
 	private static boolean fgInitializingValidators = false;
 	private static boolean isInitialized = false;
 	//
-	private static final ListenerList fgValidatorListeners = new ListenerList(ListenerList.IDENTITY);
+	private static final ListenerList<IValidatorChangedListener> fgValidatorListeners = new ListenerList<>(
+			ListenerList.IDENTITY);
 
 	public static final String ANY_NATURE = "#"; //$NON-NLS-1$
 
@@ -232,8 +233,7 @@ public final class ValidatorRuntime {
 	}
 
 	public static void fireValidatorChanged(IValidator validator) {
-		Object[] listeners = fgValidatorListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
+		for (IValidatorChangedListener listener : fgValidatorListeners) {
 			// IValidatorChangedListener listener = (IValidatorChangedListener)
 			// listeners[i];
 			// listener.validatorChanged(validator);
@@ -242,8 +242,7 @@ public final class ValidatorRuntime {
 
 	public static void fireValidatorAdded(IValidator Interpreter) {
 		if (!fgInitializingValidators) {
-			Object[] listeners = fgValidatorListeners.getListeners();
-			for (int i = 0; i < listeners.length; i++) {
+			for (IValidatorChangedListener listener : fgValidatorListeners) {
 				// IValidatorChangedListener listener =
 				// (IValidatorChangedListener) listeners[i];
 				// listener.validatorAdded(Interpreter);
@@ -252,8 +251,7 @@ public final class ValidatorRuntime {
 	}
 
 	public static void fireValidatorRemoved(IValidator Interpreter) {
-		Object[] listeners = fgValidatorListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
+		for (IValidatorChangedListener listener : fgValidatorListeners) {
 			// IValidatorChangedListener listener = (IValidatorChangedListener)
 			// listeners[i];
 			// listener.validatorRemoved(Interpreter);
@@ -261,8 +259,8 @@ public final class ValidatorRuntime {
 	}
 
 	/**
-	 * Returns array of validator types which are not built-in, i.e. new
-	 * instances of that types could be added by the user.
+	 * Returns array of validator types which are not built-in, i.e. new instances
+	 * of that types could be added by the user.
 	 *
 	 * @return
 	 */

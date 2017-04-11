@@ -67,7 +67,7 @@ public class ScriptThreadManager
 		}
 	}
 
-	private final ListenerList listeners = new ListenerList(
+	private final ListenerList<IScriptThreadManagerListener> listeners = new ListenerList<>(
 			ListenerList.IDENTITY);
 
 	private final List<IScriptThread> threads = new ArrayList<>();
@@ -77,17 +77,14 @@ public class ScriptThreadManager
 	private final ScriptDebugTarget target;
 
 	protected void fireThreadAccepted(IScriptThread thread, boolean first) {
-		Object[] list = listeners.getListeners();
-		for (int i = 0; i < list.length; ++i) {
-			((IScriptThreadManagerListener) list[i]).threadAccepted(thread,
-					first);
+		for (IScriptThreadManagerListener listener : listeners) {
+			listener.threadAccepted(thread, first);
 		}
 	}
 
 	protected void fireAllThreadsTerminated() {
-		Object[] list = listeners.getListeners();
-		for (int i = 0; i < list.length; ++i) {
-			((IScriptThreadManagerListener) list[i]).allThreadsTerminated();
+		for (IScriptThreadManagerListener listener : listeners) {
+			listener.allThreadsTerminated();
 		}
 	}
 

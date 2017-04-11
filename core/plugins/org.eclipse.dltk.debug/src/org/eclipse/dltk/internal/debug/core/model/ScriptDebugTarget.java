@@ -65,7 +65,7 @@ public class ScriptDebugTarget extends ScriptDebugElement implements
 
 	private static final int THREAD_TERMINATION_TIMEOUT = 5000; // 5 seconds
 
-	private final ListenerList listeners;
+	private final ListenerList<IScriptDebugTargetListener> listeners;
 
 	private IScriptStreamProxy streamProxy;
 
@@ -121,7 +121,7 @@ public class ScriptDebugTarget extends ScriptDebugElement implements
 
 		this.modelId = modelId;
 
-		this.listeners = new ListenerList();
+		this.listeners = new ListenerList<>();
 
 		this.process = process;
 		this.launch = launch;
@@ -411,16 +411,14 @@ public class ScriptDebugTarget extends ScriptDebugElement implements
 	}
 
 	protected void fireTargetInitialized() {
-		Object[] list = listeners.getListeners();
-		for (int i = 0; i < list.length; ++i) {
-			((IScriptDebugTargetListener) list[i]).targetInitialized();
+		for (IScriptDebugTargetListener listener : listeners) {
+			listener.targetInitialized();
 		}
 	}
 
 	protected void fireTargetTerminating() {
-		Object[] list = listeners.getListeners();
-		for (int i = 0; i < list.length; ++i) {
-			((IScriptDebugTargetListener) list[i]).targetTerminating();
+		for (IScriptDebugTargetListener listener : listeners) {
+			listener.targetTerminating();
 		}
 	}
 

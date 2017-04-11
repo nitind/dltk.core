@@ -8,7 +8,6 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.dltk.internal.testing.model;
 
 import java.io.File;
@@ -226,7 +225,7 @@ public final class DLTKTestingModel implements ITestingModel {
 		return null;
 	}
 
-	private final ListenerList fTestRunSessionListeners = new ListenerList();
+	private final ListenerList<ITestRunSessionListener> fTestRunSessionListeners = new ListenerList<>();
 	/**
 	 * Active test run sessions, youngest first.
 	 */
@@ -512,18 +511,14 @@ public final class DLTKTestingModel implements ITestingModel {
 			launchManager.removeLaunch(launch);
 		}
 
-		Object[] listeners = fTestRunSessionListeners.getListeners();
-		for (int i = 0; i < listeners.length; ++i) {
-			((ITestRunSessionListener) listeners[i])
-					.sessionRemoved(testRunSession);
+		for (ITestRunSessionListener listener : fTestRunSessionListeners) {
+			listener.sessionRemoved(testRunSession);
 		}
 	}
 
 	private void notifyTestRunSessionAdded(TestRunSession testRunSession) {
-		Object[] listeners = fTestRunSessionListeners.getListeners();
-		for (int i = 0; i < listeners.length; ++i) {
-			((ITestRunSessionListener) listeners[i])
-					.sessionAdded(testRunSession);
+		for (ITestRunSessionListener listener : fTestRunSessionListeners) {
+			listener.sessionAdded(testRunSession);
 		}
 	}
 

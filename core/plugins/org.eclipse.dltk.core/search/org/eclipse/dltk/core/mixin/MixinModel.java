@@ -289,8 +289,7 @@ public class MixinModel {
 		}
 		entry.expireTime = System.currentTimeMillis()
 				+ REQUEST_CACHE_EXPIRE_TIME;
-		entry.modules = new HashSet<>(
-				Arrays.asList(containedModules));
+		entry.modules = new HashSet<>(Arrays.asList(containedModules));
 		entry.prefix = pattern;
 		entry.keys = new HashSet<>();
 		for (Set<String> strs : keys.values()) {
@@ -693,7 +692,7 @@ public class MixinModel {
 				ISourceModule module);
 	}
 
-	private final ListenerList mixinObjectInitializeListeners = new ListenerList();
+	private final ListenerList<IMixinObjectInitializeListener> mixinObjectInitializeListeners = new ListenerList<>();
 
 	private static final Object[] NO_OBJECTS = new Object[0];
 
@@ -999,10 +998,8 @@ public class MixinModel {
 	// called with lock being help
 	private void notifyInitializeListener(IMixinElement element,
 			ISourceModule module, Object o) {
-		Object[] listeners = mixinObjectInitializeListeners.getListeners();
-		for (int i = 0; i < listeners.length; i++) {
-			((IMixinObjectInitializeListener) (listeners[i]))
-					.initialize(element, o, module);
+		for (IMixinObjectInitializeListener listener : mixinObjectInitializeListeners) {
+			listener.initialize(element, o, module);
 		}
 	}
 
