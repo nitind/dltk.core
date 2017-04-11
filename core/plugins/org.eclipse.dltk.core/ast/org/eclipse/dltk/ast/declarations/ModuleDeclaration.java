@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2016 IBM Corporation and others.
+ * Copyright (c) 2002, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -71,7 +71,7 @@ public class ModuleDeclaration extends ASTNode implements IModuleDeclaration {
 		}
 	}
 
-	public void setStatements(List statements) {
+	public void setStatements(List<ASTNode> statements) {
 		this.body = new Block(this.sourceStart(), this.sourceEnd(), statements);
 	}
 
@@ -79,7 +79,7 @@ public class ModuleDeclaration extends ASTNode implements IModuleDeclaration {
 		this.body.addStatement(statement);
 	}
 
-	public List getStatements() {
+	public List<ASTNode> getStatements() {
 		return this.body.getStatements();
 	}
 
@@ -133,19 +133,19 @@ public class ModuleDeclaration extends ASTNode implements IModuleDeclaration {
 	}
 
 	public ASTNode[] getNonTypeOrMethodNode() {
-		List statements = this.getStatements();
-		List results = new ArrayList();
+		List<ASTNode> statements = this.getStatements();
+		List<ASTNode> results = new ArrayList<>();
 		if (statements != null) {
-			Iterator it = statements.iterator();
+			Iterator<ASTNode> it = statements.iterator();
 			while (it.hasNext()) {
-				ASTNode node = (ASTNode) it.next();
+				ASTNode node = it.next();
 				if (!(node instanceof TypeDeclaration)
 						&& !(node instanceof MethodDeclaration)) {
 					results.add(node);
 				}
 			}
 		}
-		return (ASTNode[]) results.toArray(new ASTNode[results.size()]);
+		return results.toArray(new ASTNode[results.size()]);
 	}
 
 	@Override
