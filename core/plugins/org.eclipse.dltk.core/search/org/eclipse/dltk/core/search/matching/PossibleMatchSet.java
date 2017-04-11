@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.search.matching;
 
@@ -21,7 +20,7 @@ import org.eclipse.dltk.core.IProjectFragment;
  * A set of PossibleMatches that is sorted by package fragment roots.
  */
 public class PossibleMatchSet {
-	private Map<IPath, List<PossibleMatch>> rootsToMatches = new HashMap<IPath, List<PossibleMatch>>(
+	private Map<IPath, List<PossibleMatch>> rootsToMatches = new HashMap<>(
 			5);
 	private int elementCount = 0;
 
@@ -33,7 +32,7 @@ public class PossibleMatchSet {
 				return;
 		} else {
 			rootsToMatches.put(path,
-					possibleMatches = new ArrayList<PossibleMatch>());
+					possibleMatches = new ArrayList<>());
 		}
 		possibleMatches.add(possibleMatch);
 		elementCount++;
@@ -43,8 +42,8 @@ public class PossibleMatchSet {
 		PossibleMatch[] result = new PossibleMatch[elementCount];
 		int index = 0;
 		for (int i = 0, length = roots.length; i < length; i++) {
-			List<PossibleMatch> possibleMatches = rootsToMatches.get(roots[i]
-					.getPath());
+			List<PossibleMatch> possibleMatches = rootsToMatches
+					.get(roots[i].getPath());
 			if (possibleMatches != null) {
 				for (int j = 0, size = possibleMatches.size(); j < size; ++j)
 					result[index++] = possibleMatches.get(j);

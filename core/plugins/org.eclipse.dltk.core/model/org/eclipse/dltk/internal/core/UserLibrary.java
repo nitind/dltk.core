@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,7 +64,7 @@ public class UserLibrary {
 		Assert.isNotNull(entries);
 		this.entries = entries;
 		this.isSystemLibrary = isSystemLibrary;
-		this.attributes = new HashMap<String, String>();
+		this.attributes = new HashMap<>();
 		if (attributes != null) {
 			this.attributes.putAll(attributes);
 		}
@@ -127,15 +127,14 @@ public class UserLibrary {
 			throws IOException {
 		ByteArrayOutputStream s = new ByteArrayOutputStream();
 		OutputStreamWriter writer = new OutputStreamWriter(s, "UTF8"); //$NON-NLS-1$
-		XMLWriter xmlWriter = new XMLWriter(writer, null/*
-														 * use the workspace
-														 * line delimiter
-														 */, true/*
-																 * print XML
-																 * version
-																 */);
+		XMLWriter xmlWriter = new XMLWriter(writer,
+				null/*
+					 * use the workspace line delimiter
+					 */, true/*
+								 * print XML version
+								 */);
 
-		HashMap<String, String> library = new HashMap<String, String>();
+		HashMap<String, String> library = new HashMap<>();
 		library.put(TAG_VERSION, String.valueOf(CURRENT_VERSION));
 		library.put(TAG_SYSTEMLIBRARY, String.valueOf(isSystemLibrary));
 		if (attributes != null) {
@@ -148,7 +147,7 @@ public class UserLibrary {
 		for (int i = 0, length = entries.length; i < length; ++i) {
 			BuildpathEntry cpEntry = (BuildpathEntry) entries[i];
 
-			HashMap<String, String> archive = new HashMap<String, String>();
+			HashMap<String, String> archive = new HashMap<>();
 			archive.put(TAG_PATH, cpEntry.getPath().toString());
 
 			boolean hasExtraAttributes = cpEntry.extraAttributes != null
@@ -177,16 +176,16 @@ public class UserLibrary {
 
 			// write archive end tag if necessary
 			if (hasExtraAttributes || hasRestrictions) {
-				xmlWriter.endTag(TAG_ARCHIVE, true/* insert tab */, true/*
-																	 * insert
-																	 * new line
-																	 */);
+				xmlWriter.endTag(TAG_ARCHIVE, true/* insert tab */,
+						true/*
+							 * insert new line
+							 */);
 			}
 		}
-		xmlWriter.endTag(TAG_USERLIBRARY, true/* insert tab */, true/*
-																 * insert new
-																 * line
-																 */);
+		xmlWriter.endTag(TAG_USERLIBRARY, true/* insert tab */,
+				true/*
+					 * insert new line
+					 */);
 		writer.flush();
 		writer.close();
 		return s.toString("UTF8");//$NON-NLS-1$
@@ -214,15 +213,16 @@ public class UserLibrary {
 		// String version= cpElement.getAttribute(TAG_VERSION);
 		// in case we update the format: add code to read older versions
 
-		boolean isSystem = Boolean.valueOf(
-				cpElement.getAttribute(TAG_SYSTEMLIBRARY)).booleanValue();
+		boolean isSystem = Boolean
+				.valueOf(cpElement.getAttribute(TAG_SYSTEMLIBRARY))
+				.booleanValue();
 
-		Map<String, String> attributes = new HashMap<String, String>();
+		Map<String, String> attributes = new HashMap<>();
 		for (int i = 0; i < cpElement.getAttributes().getLength(); i++) {
 			Node node = cpElement.getAttributes().item(i);
 			if (node.getNodeName().startsWith(ATTRIBUTE_PREFIX)) {
-				String name = node.getNodeName().substring(
-						ATTRIBUTE_PREFIX.length());
+				String name = node.getNodeName()
+						.substring(ATTRIBUTE_PREFIX.length());
 				attributes.put(name, node.getNodeValue());
 			}
 		}
@@ -230,7 +230,7 @@ public class UserLibrary {
 		NodeList list = cpElement.getChildNodes();
 		int length = list.getLength();
 
-		ArrayList<IBuildpathEntry> res = new ArrayList<IBuildpathEntry>(length);
+		ArrayList<IBuildpathEntry> res = new ArrayList<>(length);
 		for (int i = 0; i < length; ++i) {
 			Node node = list.item(i);
 

@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 xored software, Inc. and others.
+ * Copyright (c) 2009, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html  
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
@@ -133,8 +133,8 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 
 	}
 
-	private static class DescriptorIterator<E> implements
-			Iterator<Descriptor<E>> {
+	private static class DescriptorIterator<E>
+			implements Iterator<Descriptor<E>> {
 
 		private final Descriptor<E>[] descriptors;
 
@@ -182,8 +182,8 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 
 	}
 
-	private static class DescriptorCollection<E> extends
-			AbstractCollection<Descriptor<E>> {
+	private static class DescriptorCollection<E>
+			extends AbstractCollection<Descriptor<E>> {
 
 		private final Descriptor<E>[] descriptors;
 
@@ -193,7 +193,7 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 
 		@Override
 		public Iterator<Descriptor<E>> iterator() {
-			return new DescriptorIterator<E>(descriptors);
+			return new DescriptorIterator<>(descriptors);
 		}
 
 		@Override
@@ -220,7 +220,7 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 	/**
 	 * Return array of descriptors. If there are no contributed instances the
 	 * empty array is returned.
-	 * 
+	 *
 	 * @param natureId
 	 * @return
 	 * @throws CoreException
@@ -241,23 +241,23 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 
 	/**
 	 * Returns instance iterator
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
 	public Iterator<E> iterator() {
-		return new InstanceIterator<E>(internalGetInstances());
+		return new InstanceIterator<>(internalGetInstances());
 	}
 
 	public Iterator<Descriptor<E>> descriptorIterator() {
-		return new DescriptorIterator<E>(internalGetInstances());
+		return new DescriptorIterator<>(internalGetInstances());
 	}
 
 	/**
 	 * @since 2.0
 	 */
 	public Collection<Descriptor<E>> descriptors() {
-		return new DescriptorCollection<E>(internalGetInstances());
+		return new DescriptorCollection<>(internalGetInstances());
 	}
 
 	synchronized void remove(Descriptor<E> descriptor) {
@@ -267,7 +267,7 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 	}
 
 	private void initialize() {
-		extensions = new ArrayList<Descriptor<E>>(5);
+		extensions = new ArrayList<>(5);
 		registerConfigurationElements();
 		initializeDescriptors(extensions);
 	}
@@ -301,8 +301,9 @@ public class LazyExtensionManager<E> implements Iterable<E> {
 	 * @param confElement
 	 * @return
 	 */
-	protected Descriptor<E> createDescriptor(IConfigurationElement confElement) {
-		return new Descriptor<E>(this, confElement);
+	protected Descriptor<E> createDescriptor(
+			IConfigurationElement confElement) {
+		return new Descriptor<>(this, confElement);
 	}
 
 	protected boolean isValidDescriptor(Descriptor<E> descriptor) {

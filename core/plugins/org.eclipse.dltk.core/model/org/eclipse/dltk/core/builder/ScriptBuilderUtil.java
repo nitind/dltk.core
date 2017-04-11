@@ -56,19 +56,20 @@ public class ScriptBuilderUtil {
 				IProgressMonitor monitor) throws CoreException {
 			this.currentProject = project;
 			this.scriptProject = (ScriptProject) DLTKCore.create(project);
-			final IBuildState buildState = new BuildStateStub(project.getName());
+			final IBuildState buildState = new BuildStateStub(
+					project.getName());
 			IScriptBuilder[] builders = null;
 			try {
-				monitor.setTaskName(NLS.bind(
-						Messages.ScriptBuilder_buildingScriptsIn,
-						currentProject.getName()));
+				monitor.setTaskName(
+						NLS.bind(Messages.ScriptBuilder_buildingScriptsIn,
+								currentProject.getName()));
 				monitor.beginTask(NONAME, 100);
 				builders = getScriptBuilders();
 				if (builders == null || builders.length == 0) {
 					return;
 				}
-				IBuildChange buildChange = new BuildChange(project, null,
-						files, monitor);
+				IBuildChange buildChange = new BuildChange(project, null, files,
+						monitor);
 				for (IScriptBuilder builder : builders) {
 					if (monitor.isCanceled()) {
 						throw new OperationCanceledException();
@@ -96,26 +97,26 @@ public class ScriptBuilderUtil {
 
 	/**
 	 * Executes all the {@link IScriptBuilder}s for the specified files.
-	 * 
+	 *
 	 * @param files
 	 * @param monitor
 	 * @throws CoreException
 	 */
 	public static void build(List<IFile> files, IProgressMonitor monitor)
 			throws CoreException {
-		final Map<IProject, Set<IFile>> byProject = new HashMap<IProject, Set<IFile>>();
+		final Map<IProject, Set<IFile>> byProject = new HashMap<>();
 		for (IFile file : files) {
 			Set<IFile> projectFiles = byProject.get(file.getProject());
 			if (projectFiles == null) {
-				projectFiles = new LinkedHashSet<IFile>();
+				projectFiles = new LinkedHashSet<>();
 				byProject.put(file.getProject(), projectFiles);
 			}
 			projectFiles.add(file);
 		}
 		final LocalScriptBuilder builder = new LocalScriptBuilder();
 		for (Map.Entry<IProject, Set<IFile>> entry : byProject.entrySet()) {
-			builder.build(entry.getKey(),
-					new ArrayList<IFile>(entry.getValue()), monitorFor(monitor));
+			builder.build(entry.getKey(), new ArrayList<>(entry.getValue()),
+					monitorFor(monitor));
 		}
 	}
 
@@ -123,7 +124,8 @@ public class ScriptBuilderUtil {
 
 		private final Class<? extends IScriptBuilder> builderClass;
 
-		public SingleBuilderRunner(Class<? extends IScriptBuilder> builderClass) {
+		public SingleBuilderRunner(
+				Class<? extends IScriptBuilder> builderClass) {
 			this.builderClass = builderClass;
 		}
 
@@ -138,20 +140,21 @@ public class ScriptBuilderUtil {
 					}
 				}
 			}
-			throw new IllegalArgumentException("IScriptBuilder of class "
-					+ builderClass + " not found");
+			throw new IllegalArgumentException(
+					"IScriptBuilder of class " + builderClass + " not found");
 		}
 
 		public void build(IProject project, IProgressMonitor monitor)
 				throws CoreException {
 			this.currentProject = project;
 			this.scriptProject = (ScriptProject) DLTKCore.create(project);
-			final IBuildState buildState = new BuildStateStub(project.getName());
+			final IBuildState buildState = new BuildStateStub(
+					project.getName());
 			IScriptBuilder[] builders = null;
 			try {
-				monitor.setTaskName(NLS.bind(
-						Messages.ScriptBuilder_buildingScriptsIn,
-						currentProject.getName()));
+				monitor.setTaskName(
+						NLS.bind(Messages.ScriptBuilder_buildingScriptsIn,
+								currentProject.getName()));
 				monitor.beginTask(NONAME, 100);
 				builders = getScriptBuilders();
 				if (builders == null || builders.length == 0) {
@@ -181,7 +184,7 @@ public class ScriptBuilderUtil {
 
 	/**
 	 * Executes the specified {@link IScriptBuilder} for the specified project.
-	 * 
+	 *
 	 * @param project
 	 * @param builderClass
 	 * @throws CoreException
@@ -219,8 +222,8 @@ public class ScriptBuilderUtil {
 			try {
 				if (isBuilderVersionChange(builders)) {
 					if (ScriptBuilder.DEBUG) {
-						System.out.println("Touching "
-								+ project.getElementName());
+						System.out.println(
+								"Touching " + project.getElementName());
 					}
 					new BuildpathValidation(scriptProject).validate();
 					project.getProject().touch(monitor);
@@ -230,7 +233,8 @@ public class ScriptBuilderUtil {
 			}
 		}
 
-		private boolean hasScriptBuilder(IProject project) throws CoreException {
+		private boolean hasScriptBuilder(IProject project)
+				throws CoreException {
 			final IProjectDescription description = project.getDescription();
 			for (ICommand command : description.getBuildSpec()) {
 				if (DLTKCore.BUILDER_ID.equals(command.getBuilderName())) {

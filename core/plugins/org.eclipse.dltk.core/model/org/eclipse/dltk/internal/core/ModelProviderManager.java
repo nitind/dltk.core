@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc. and others.
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html  
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
@@ -39,7 +39,7 @@ public class ModelProviderManager {
 
 	public synchronized static IModelProvider[] getProviders(String lang) {
 		if (providers == null) {
-			providers = new HashMap<String, IModelProvider[]>();
+			providers = new HashMap<>();
 
 			final SimpleClassDLTKExtensionManager manager = new SimpleClassDLTKExtensionManager(
 					EXT_POINT) {
@@ -50,7 +50,7 @@ public class ModelProviderManager {
 				}
 			};
 			ElementInfo[] infos = manager.getElementInfos();
-			Map<String, List<ElementInfo>> langToElementList = new HashMap<String, List<ElementInfo>>();
+			Map<String, List<ElementInfo>> langToElementList = new HashMap<>();
 			// Fill element names and sort elements by language
 			for (int i = 0; i < infos.length; i++) {
 				String langauge = infos[i].getConfig().getAttribute(LANGUAGE);
@@ -59,7 +59,7 @@ public class ModelProviderManager {
 							.get(langauge);
 					elements.add(infos[i]);
 				} else {
-					List<ElementInfo> elements = new ArrayList<ElementInfo>();
+					List<ElementInfo> elements = new ArrayList<>();
 					elements.add(infos[i]);
 					langToElementList.put(langauge, elements);
 				}
@@ -69,7 +69,7 @@ public class ModelProviderManager {
 				String language = entry.getKey();
 				List<ElementInfo> elements = entry.getValue();
 
-				Map<String, ElementInfo> names = new HashMap<String, ElementInfo>(); // Contains
+				Map<String, ElementInfo> names = new HashMap<>(); // Contains
 																						// map
 																						// for
 																						// all
@@ -79,19 +79,20 @@ public class ModelProviderManager {
 					String name = info.getConfig().getAttribute(ID);
 					names.put(name, info);
 				}
-				List<IModelProvider> result = new ArrayList<IModelProvider>(); // Final
+				List<IModelProvider> result = new ArrayList<>(); // Final
 																				// IModelProvider
 																				// elements
-				Set<String> added = new HashSet<String>(); // Contain names for
+				Set<String> added = new HashSet<>(); // Contain names for
 															// added elements
 				// Process elements and keep dependencies
-				List<ElementInfo> toProcess = new ArrayList<ElementInfo>();
+				List<ElementInfo> toProcess = new ArrayList<>();
 				toProcess.addAll(elements);
 				while (!toProcess.isEmpty()) {
 					ElementInfo info = toProcess.remove(0);
 					String requires = info.getConfig().getAttribute(REQUIRES);
 					if (requires == null) {
-						result.add((IModelProvider) manager.getInitObject(info));
+						result.add(
+								(IModelProvider) manager.getInitObject(info));
 					} else {
 						String req = requires.trim();
 						if (added.contains(req)) { // Dependency

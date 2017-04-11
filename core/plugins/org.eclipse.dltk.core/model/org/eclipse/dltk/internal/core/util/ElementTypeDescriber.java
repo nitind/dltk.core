@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -20,7 +20,7 @@ import java.util.StringTokenizer;
 import org.eclipse.dltk.core.IModelElement;
 
 public class ElementTypeDescriber {
-	private final Map<Integer, String> names = new HashMap<Integer, String>();
+	private final Map<Integer, String> names = new HashMap<>();
 
 	public ElementTypeDescriber() {
 		for (Field field : IModelElement.class.getFields()) {

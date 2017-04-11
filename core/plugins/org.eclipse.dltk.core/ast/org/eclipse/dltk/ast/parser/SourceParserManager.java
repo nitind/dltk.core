@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,8 +24,8 @@ import org.eclipse.dltk.core.DLTKContributionExtensionManager;
 import org.eclipse.dltk.core.DLTKCore;
 
 /**
- * Manager responsible for all contributed <code>ISourceParser</code>
- * extension implementations.
+ * Manager responsible for all contributed <code>ISourceParser</code> extension
+ * implementations.
  */
 public class SourceParserManager extends DLTKContributionExtensionManager {
 
@@ -56,9 +56,9 @@ public class SourceParserManager extends DLTKContributionExtensionManager {
 
 	@Override
 	protected boolean isNatureContribution(IConfigurationElement main) {
-		return PARSER_CONTRIBUTION_TAG.equals(main.getName()); //$NON-NLS-1$
+		return PARSER_CONTRIBUTION_TAG.equals(main.getName()); // $NON-NLS-1$
 	}
-	
+
 	@Override
 	protected String getContributionElementName() {
 		return PARSER_TAG;
@@ -73,18 +73,19 @@ public class SourceParserManager extends DLTKContributionExtensionManager {
 	protected boolean isValidContribution(Object object) {
 		return (object instanceof ISourceParserFactory);
 	}
-	
+
 	@Override
 	protected Object configureContribution(Object object,
 			IConfigurationElement config) {
 		/*
 		 * using the following delegate class allows for integration with the
 		 * generic managed contribution preference page.
-		 * 
-		 * not all source parsers are thread safe, so the factory allows us
-		 * to create a new instance each time one is requested
-		 */		
-		return new SourceParserContribution((ISourceParserFactory) object, config);
+		 *
+		 * not all source parsers are thread safe, so the factory allows us to
+		 * create a new instance each time one is requested
+		 */
+		return new SourceParserContribution((ISourceParserFactory) object,
+				config);
 	}
 
 	public ISourceParser getSourceParser(IProject project, String natureId) {
@@ -95,22 +96,23 @@ public class SourceParserManager extends DLTKContributionExtensionManager {
 		}
 		return null;
 	}
-	
-	static class SourceParserContribution extends DLTKContributedExtension {		
+
+	static class SourceParserContribution extends DLTKContributedExtension {
 
 		private final ISourceParserFactory factory;
 		private final IConfigurationElement config;
 		@Nullable
 		final ISourceParserConfigurator[] configurators;
-		
-		SourceParserContribution(ISourceParserFactory factory, IConfigurationElement config) {
+
+		SourceParserContribution(ISourceParserFactory factory,
+				IConfigurationElement config) {
 			this.factory = factory;
 			this.config = config;
-			
+
 			/*
-			 * this is a cheat - this class contains all the attributes of the 
-			 * configured extension, so leverage the code DLTKContributedExtension
-			 * already provides
+			 * this is a cheat - this class contains all the attributes of the
+			 * configured extension, so leverage the code
+			 * DLTKContributedExtension already provides
 			 */
 			setInitializationData(config, null, null);
 			this.configurators = getId() != null ? createConfigurators(getId())
@@ -120,17 +122,17 @@ public class SourceParserManager extends DLTKContributionExtensionManager {
 		ISourceParser createSourceParser(@Nullable IProject project) {
 			final ISourceParser parser = factory.createSourceParser();
 			/*
-			 * another cheat - not all source parsers are thread safe, so
-			 * we need to create a new instance each time one is requested (hence
-			 * the factory). 
+			 * another cheat - not all source parsers are thread safe, so we
+			 * need to create a new instance each time one is requested (hence
+			 * the factory).
 			 *
 			 * the parser instance should be initialized with all it's attribute
 			 * data
 			 */
 			if (parser instanceof IExecutableExtension) {
 				try {
-					((IExecutableExtension) parser).setInitializationData(
-							config, null, null);
+					((IExecutableExtension) parser)
+							.setInitializationData(config, null, null);
 				} catch (CoreException e) {
 					DLTKCore.error(e);
 				}
@@ -140,34 +142,36 @@ public class SourceParserManager extends DLTKContributionExtensionManager {
 					configurator.configure(parser, project);
 				}
 			}
-			
+
 			return parser;
 		}
 
 		private static ISourceParserConfigurator[] createConfigurators(
 				String parserId) {
 			List<ISourceParserConfigurator> result = null;
-			for (IConfigurationElement element : Platform
-					.getExtensionRegistry().getConfigurationElementsFor(
-							SOURCE_PARSER_EXT_POINT)) {
+			for (IConfigurationElement element : Platform.getExtensionRegistry()
+					.getConfigurationElementsFor(SOURCE_PARSER_EXT_POINT)) {
 				if (PARSER_CONFIGURATOR_TAG.equals(element.getName())
 						&& parserId.equals(element.getAttribute("id"))) { //$NON-NLS-1$
 					try {
 						final Object configurator = element
-								.createExecutableExtension(PARSER_CONFIGURATOR_CLASS);
+								.createExecutableExtension(
+										PARSER_CONFIGURATOR_CLASS);
 						if (configurator instanceof ISourceParserConfigurator) {
 							if (result == null) {
-								result = new ArrayList<ISourceParserConfigurator>();
+								result = new ArrayList<>();
 							}
-							result.add((ISourceParserConfigurator) configurator);
+							result.add(
+									(ISourceParserConfigurator) configurator);
 						}
 					} catch (CoreException e) {
 						DLTKCore.error(e);
 					}
 				}
 			}
-			return result != null ? result
-					.toArray(new ISourceParserConfigurator[result.size()])
+			return result != null
+					? result.toArray(
+							new ISourceParserConfigurator[result.size()])
 					: null;
 		}
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc.
+ * Copyright (c) 2008, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -50,12 +50,13 @@ public abstract class IndexRequest extends AbstractJob {
 
 	/**
 	 * Returns all the document names. Read lock is acquired automatically.
-	 * 
+	 *
 	 * @param index
 	 * @return
 	 * @throws IOException
 	 */
-	protected String[] queryDocumentNames(final Index index) throws IOException {
+	protected String[] queryDocumentNames(final Index index)
+			throws IOException {
 		final ReadWriteMonitor monitor = index.monitor;
 		monitor.enterRead();
 		try {
@@ -67,7 +68,7 @@ public abstract class IndexRequest extends AbstractJob {
 
 	protected Map<String, ISourceModule> collectSourceModulePaths(
 			Collection<ISourceModule> modules, IPath containerPath) {
-		final Map<String, ISourceModule> paths = new HashMap<String, ISourceModule>();
+		final Map<String, ISourceModule> paths = new HashMap<>();
 		for (Iterator<ISourceModule> i = modules.iterator(); i.hasNext();) {
 			final ISourceModule module = i.next();
 			paths.put(SourceIndexUtil.containerRelativePath(containerPath,
@@ -84,7 +85,7 @@ public abstract class IndexRequest extends AbstractJob {
 	 * returned. If <code>environment</code> is specified then it is used to
 	 * retrieve the modification time of the files to compare with the
 	 * modification time of the index.
-	 * 
+	 *
 	 * @param index
 	 * @param modules
 	 * @param containerPath
@@ -106,7 +107,7 @@ public abstract class IndexRequest extends AbstractJob {
 		if (documents != null && documents.length != 0) {
 			// final long indexLastModified =
 			// index.getIndexFile().lastModified();
-			final List<Object> changes = new ArrayList<Object>();
+			final List<Object> changes = new ArrayList<>();
 			final Map<String, ISourceModule> m = collectSourceModulePaths(
 					modules, containerPath);
 			if (DEBUG) {
@@ -127,9 +128,8 @@ public abstract class IndexRequest extends AbstractJob {
 							false);
 					if (handle != null) {
 						// Check content cache for file changes
-						String indexed = coreCache
-								.getCacheEntryAttributeString(handle,
-										"indexed", true);
+						String indexed = coreCache.getCacheEntryAttributeString(
+								handle, "indexed", true);
 						if (indexed == null) {
 							IFileHandle parent = handle.getParent();
 							if (parentFolders.add(parent)
@@ -148,7 +148,7 @@ public abstract class IndexRequest extends AbstractJob {
 			}
 			return changes;
 		} else {
-			return new ArrayList<Object>(modules);
+			return new ArrayList<>(modules);
 		}
 	}
 

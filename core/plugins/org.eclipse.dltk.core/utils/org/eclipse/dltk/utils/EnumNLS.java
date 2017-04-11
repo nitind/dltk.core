@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2016 xored software, Inc. and others.
+ * Copyright (c) 2011, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -49,7 +49,7 @@ import java.util.Properties;
  * <p>
  * Clients may subclass this type.
  * </p>
- * 
+ *
  * @since 3.0
  */
 public class EnumNLS {
@@ -91,7 +91,7 @@ public class EnumNLS {
 	/**
 	 * Initialize the given class with the values from the specified message
 	 * bundle.
-	 * 
+	 *
 	 * @param values
 	 *            the list of enum values use expression like
 	 *            <code>MyEnum.values()</code>
@@ -121,7 +121,7 @@ public class EnumNLS {
 		if (nlSuffixes == null) {
 			// build list of suffixes for loading resource bundles
 			String nl = Locale.getDefault().toString();
-			ArrayList<String> result = new ArrayList<String>(4);
+			ArrayList<String> result = new ArrayList<>(4);
 			int lastSeparator;
 			while (true) {
 				result.add('_' + nl + EXTENSION);
@@ -161,12 +161,15 @@ public class EnumNLS {
 				// likely) be un-initialized and
 				// will fail later in the code and if so then we will see both
 				// the NPE and this error.
-				String value = "NLS missing message: " + item.name() + " in: " + bundleName; //$NON-NLS-1$ //$NON-NLS-2$
+				String value = "NLS missing message: " + item.name() + " in: " //$NON-NLS-1$ //$NON-NLS-2$
+						+ bundleName;
 				log(SEVERITY_WARNING, value, null);
 				field.set(item, value);
 			} catch (Exception e) {
 				log(SEVERITY_ERROR,
-						"Error setting the missing message value for: " + field.getName(), e); //$NON-NLS-1$
+						"Error setting the missing message value for: " //$NON-NLS-1$
+								+ field.getName(),
+						e);
 			}
 		}
 	}
@@ -191,7 +194,7 @@ public class EnumNLS {
 
 		// build a map of field names to Field objects
 		final int len = values.length;
-		Map<String, Enum<?>> fields = new HashMap<String, Enum<?>>(len * 2);
+		Map<String, Enum<?>> fields = new HashMap<>(len * 2);
 		for (int i = 0; i < len; i++)
 			fields.put(values[i].name(), values[i]);
 
@@ -201,9 +204,9 @@ public class EnumNLS {
 		final String[] variants = buildVariants(bundleName);
 		for (int i = 0; i < variants.length; i++) {
 			// loader==null if we're launched off the Java boot classpath
-			final InputStream input = loader == null ? ClassLoader
-					.getSystemResourceAsStream(variants[i]) : loader
-					.getResourceAsStream(variants[i]);
+			final InputStream input = loader == null
+					? ClassLoader.getSystemResourceAsStream(variants[i])
+					: loader.getResourceAsStream(variants[i]);
 			if (input == null)
 				continue;
 			try {
@@ -223,23 +226,23 @@ public class EnumNLS {
 		}
 		computeMissingMessages(bundleName, clazz, field, fields, values);
 		if (DEBUG)
-			System.out
-					.println("Time to load message bundle: " + bundleName + " was " + (System.currentTimeMillis() - start) + "ms."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			System.out.println("Time to load message bundle: " + bundleName //$NON-NLS-1$
+					+ " was " + (System.currentTimeMillis() - start) + "ms."); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/*
 	 * The method adds a log entry based on the error message and exception. The
 	 * output is written to the System.err.
-	 * 
+	 *
 	 * This method is only expected to be called if there is a problem in the
 	 * NLS mechanism. As a result, translation facility is not available here
 	 * and messages coming out of this log are generally not translated.
-	 * 
+	 *
 	 * @param severity - severity of the message (SEVERITY_ERROR or
 	 * SEVERITY_WARNING)
-	 * 
+	 *
 	 * @param message - message to log
-	 * 
+	 *
 	 * @param e - exception to log
 	 */
 	static void log(int severity, String message, Exception e) {
@@ -292,7 +295,8 @@ public class EnumNLS {
 			if (fieldObject == Assigned.ASSIGNED)
 				return null;
 			if (fieldObject == null) {
-				final String msg = "NLS unused message: " + key + " in: " + bundleName;//$NON-NLS-1$ //$NON-NLS-2$
+				final String msg = "NLS unused message: " + key + " in: " //$NON-NLS-1$ //$NON-NLS-2$
+						+ bundleName;
 				log(SEVERITY_WARNING, msg, null);
 				return null;
 			}

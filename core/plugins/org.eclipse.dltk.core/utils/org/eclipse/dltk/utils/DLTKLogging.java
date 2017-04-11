@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.  
+ * Copyright (c) 2009, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html  
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
@@ -44,8 +44,9 @@ public class DLTKLogging {
 	private static synchronized DLTKDebugOptions getDebugOptions() {
 		if (debugOptions == null) {
 			debugOptions = new DLTKDebugOptions();
-			final String loggingOptions = InstanceScope.INSTANCE.getNode(
-					DLTKCore.PLUGIN_ID).get(DLTKCore.LOGGING_OPTIONS, null);
+			final String loggingOptions = InstanceScope.INSTANCE
+					.getNode(DLTKCore.PLUGIN_ID)
+					.get(DLTKCore.LOGGING_OPTIONS, null);
 			if (loggingOptions != null) {
 				for (String option : TextUtils.split(loggingOptions,
 						DLTKCore.LOGGING_OPTION_SEPARATOR)) {
@@ -86,7 +87,7 @@ public class DLTKLogging {
 	 */
 	public static Map<String, Boolean> getState(Collection<String> options) {
 		final DLTKDebugOptions debugOptions = getDebugOptions();
-		final Map<String, Boolean> result = new HashMap<String, Boolean>();
+		final Map<String, Boolean> result = new HashMap<>();
 		for (String option : options) {
 			boolean value = debugOptions.contains(option);
 			result.put(option, Boolean.valueOf(value));

@@ -19,8 +19,8 @@ public class RuntimePerformanceMonitor {
 	@Deprecated
 	public static boolean RUNTIME_PERFORMANCE = true;
 
-	private static volatile boolean active = Boolean.valueOf(
-			getDebugOption("org.eclipse.dltk.core/performanceMonitor")) //$NON-NLS-1$
+	private static volatile boolean active = Boolean
+			.valueOf(getDebugOption("org.eclipse.dltk.core/performanceMonitor")) //$NON-NLS-1$
 			.booleanValue();
 
 	/**
@@ -55,7 +55,7 @@ public class RuntimePerformanceMonitor {
 		}
 	}
 
-	private static final Map<String, Map<String, DataEntry>> entries = new HashMap<String, Map<String, DataEntry>>();
+	private static final Map<String, Map<String, DataEntry>> entries = new HashMap<>();
 
 	/**
 	 * @noreference This method is not intended to be referenced by clients.
@@ -88,14 +88,14 @@ public class RuntimePerformanceMonitor {
 			String language) {
 		Map<String, DataEntry> attrs = entries.get(language);
 		if (attrs == null) {
-			attrs = new HashMap<String, DataEntry>();
+			attrs = new HashMap<>();
 			entries.put(language, attrs);
 		}
 		return attrs;
 	}
 
 	public static Map<String, DataEntry> getEntries(String language) {
-		Map<String, DataEntry> copy = new HashMap<String, DataEntry>();
+		Map<String, DataEntry> copy = new HashMap<>();
 		Map<String, DataEntry> map = internalGetEntries(language);
 		for (Map.Entry<String, DataEntry> i : map.entrySet()) {
 			DataEntry value = i.getValue();
@@ -111,9 +111,9 @@ public class RuntimePerformanceMonitor {
 	public static Map<String, Map<String, DataEntry>> getAllEntries() {
 		final Set<String> keySet;
 		synchronized (RuntimePerformanceMonitor.class) {
-			keySet = new HashSet<String>(entries.keySet());
+			keySet = new HashSet<>(entries.keySet());
 		}
-		Map<String, Map<String, DataEntry>> result = new HashMap<String, Map<String, DataEntry>>();
+		Map<String, Map<String, DataEntry>> result = new HashMap<>();
 		for (String key : keySet) {
 			result.put(key, getEntries(key));
 		}

@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -46,7 +46,8 @@ public class ExternalFoldersManager {
 	 * given buildpath. Returns null if none.
 	 */
 	@Nullable
-	public static HashSet<IPath> getExternalFolders(IBuildpathEntry[] buildpath) {
+	public static HashSet<IPath> getExternalFolders(
+			IBuildpathEntry[] buildpath) {
 		if (buildpath == null)
 			return null;
 		HashSet<IPath> folders = null;
@@ -59,7 +60,7 @@ public class ExternalFoldersManager {
 							.getLocalPath(entryPath);
 					if (isExternalFolderPath(local)) {
 						if (folders == null)
-							folders = new HashSet<IPath>();
+							folders = new HashSet<>();
 						folders.add(local);
 					}
 				}
@@ -71,9 +72,8 @@ public class ExternalFoldersManager {
 	public static boolean isExternalFolderPath(IPath externalPath) {
 		if (externalPath == null)
 			return false;
-		if (externalPath.segmentCount() > 0
-				&& ResourcesPlugin.getWorkspace().getRoot()
-				.getProject(externalPath.segment(0)).exists())
+		if (externalPath.segmentCount() > 0 && ResourcesPlugin.getWorkspace()
+				.getRoot().getProject(externalPath.segment(0)).exists())
 			return false;
 		File externalFolder = externalPath.toFile();
 		if (externalFolder.isFile())
@@ -110,8 +110,8 @@ public class ExternalFoldersManager {
 		}
 		IFolder result;
 		do {
-			result = externalFoldersProject.getFolder(LINKED_FOLDER_NAME
-					+ this.counter++);
+			result = externalFoldersProject
+					.getFolder(LINKED_FOLDER_NAME + this.counter++);
 		} while (result.exists());
 		knownFolders.put(externalFolderPath, result);
 		return result;
@@ -131,8 +131,8 @@ public class ExternalFoldersManager {
 		// resource
 		IFolder result = addFolder(externalFolderPath, externalFoldersProject);
 		if (!result.exists())
-			result.createLink(externalFolderPath,
-					IResource.ALLOW_MISSING_LOCAL, monitor);
+			result.createLink(externalFolderPath, IResource.ALLOW_MISSING_LOCAL,
+					monitor);
 		else if (refreshIfExistAlready)
 			result.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 		return result;
@@ -160,11 +160,10 @@ public class ExternalFoldersManager {
 			}
 		}
 		IProject project = getExternalFoldersProject();
-		if (project.isAccessible() && project.members().length == 1/*
-																	 * remaining
-																	 * member is
-																	 * .project
-																	 */)
+		if (project.isAccessible()
+				&& project.members().length == 1/*
+												 * remaining member is .project
+												 */)
 			project.delete(true, monitor);
 	}
 
@@ -182,8 +181,8 @@ public class ExternalFoldersManager {
 							.newProjectDescription(project.getName());
 					IPath stateLocation = DLTKCore.getPlugin()
 							.getStateLocation();
-					desc.setLocation(stateLocation
-							.append(EXTERNAL_PROJECT_NAME));
+					desc.setLocation(
+							stateLocation.append(EXTERNAL_PROJECT_NAME));
 					project.create(desc, IResource.HIDDEN, monitor);
 				}
 				try {
@@ -200,18 +199,18 @@ public class ExternalFoldersManager {
 							.append(IScriptProjectFilenames.PROJECT_FILENAME)
 							.toOSString());
 					try {
-						output.write(("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + //$NON-NLS-1$
-								"<projectDescription>\n" //$NON-NLS-1$
-								+ "	<name>" //$NON-NLS-1$
-								+ EXTERNAL_PROJECT_NAME + "</name>\n" + //$NON-NLS-1$
-								"	<comment></comment>\n" + //$NON-NLS-1$
-								"	<projects>\n" + //$NON-NLS-1$
-								"	</projects>\n" + //$NON-NLS-1$
-								"	<buildSpec>\n" + //$NON-NLS-1$
-								"	</buildSpec>\n" + //$NON-NLS-1$
-								"	<natures>\n" + //$NON-NLS-1$
-								"	</natures>\n" + //$NON-NLS-1$
-						"</projectDescription>").getBytes()); //$NON-NLS-1$
+						output.write(
+								("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" //$NON-NLS-1$
+										+ "<projectDescription>\n" + "	<name>" //$NON-NLS-2$
+										+ EXTERNAL_PROJECT_NAME + "</name>\n" + //$NON-NLS-1$
+										"	<comment></comment>\n" + //$NON-NLS-1$
+										"	<projects>\n" + //$NON-NLS-1$
+										"	</projects>\n" + //$NON-NLS-1$
+										"	<buildSpec>\n" + //$NON-NLS-1$
+										"	</buildSpec>\n" + //$NON-NLS-1$
+										"	<natures>\n" + //$NON-NLS-1$
+										"	</natures>\n" + //$NON-NLS-1$
+										"</projectDescription>").getBytes()); //$NON-NLS-1$
 					} finally {
 						output.close();
 					}
@@ -244,15 +243,15 @@ public class ExternalFoldersManager {
 					for (int i = 0, length = members.length; i < length; i++) {
 						IResource member = members[i];
 						if (member.getType() == IResource.FOLDER
-								&& member.isLinked()
-								&& member.getName().startsWith(
-										LINKED_FOLDER_NAME)) {
+								&& member.isLinked() && member.getName()
+										.startsWith(LINKED_FOLDER_NAME)) {
 							IPath externalFolderPath = member.getLocation();
 							this.folders.put(externalFolderPath, member);
 						}
 					}
 				} catch (CoreException e) {
-					Util.log(e, "Exception while initializing external folders"); //$NON-NLS-1$
+					Util.log(e,
+							"Exception while initializing external folders"); //$NON-NLS-1$
 				}
 			}
 		}
@@ -270,8 +269,9 @@ public class ExternalFoldersManager {
 		if (!ScriptProject.hasScriptNature(source))
 			return;
 		try {
-			HashSet externalFolders = getExternalFolders(((ScriptProject) DLTKCore
-					.create(source)).getResolvedBuildpath());
+			HashSet externalFolders = getExternalFolders(
+					((ScriptProject) DLTKCore.create(source))
+							.getResolvedBuildpath());
 			if (externalFolders == null)
 				return;
 			final Iterator iterator = externalFolders.iterator();

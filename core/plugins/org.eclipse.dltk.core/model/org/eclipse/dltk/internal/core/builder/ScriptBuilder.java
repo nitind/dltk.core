@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -94,9 +94,8 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 	private static final String CURRENT_VERSION = "200810012003-2123"; //$NON-NLS-1$
 
 	@Override
-	protected IProject[] build(int kind,
-			@SuppressWarnings("rawtypes") Map args, IProgressMonitor monitor)
-			throws CoreException {
+	protected IProject[] build(int kind, @SuppressWarnings("rawtypes") Map args,
+			IProgressMonitor monitor) throws CoreException {
 		this.currentProject = getProject();
 		if (currentProject == null || !currentProject.isAccessible())
 			return new IProject[0];
@@ -154,7 +153,8 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 					log("Performing full build as requested by user"); //$NON-NLS-1$
 				fullBuild(monitor);
 			} else {
-				if ((this.lastState = getLastState(currentProject, monitor)) == null) {
+				if ((this.lastState = getLastState(currentProject,
+						monitor)) == null) {
 					if (DEBUG)
 						log("Performing full build since last saved state was not found"); //$NON-NLS-1$
 					fullBuild(monitor);
@@ -185,11 +185,12 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 			final long endTime = System.currentTimeMillis();
 			if (DEBUG) {
 				log("Finished build of " + currentProject.getName() //$NON-NLS-1$
-						+ " @ " + new Date(endTime) + ", elapsed " + (endTime - startTime) + " ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						+ " @ " + new Date(endTime) + ", elapsed " //$NON-NLS-1$ //$NON-NLS-2$
+						+ (endTime - startTime) + " ms"); //$NON-NLS-1$
 			}
 			if (TRACE) {
-				System.out
-						.println("-----SCRIPT-BUILDER-INFORMATION-TRACE----------------------------"); //$NON-NLS-1$
+				System.out.println(
+						"-----SCRIPT-BUILDER-INFORMATION-TRACE----------------------------"); //$NON-NLS-1$
 				System.out.println("Finished build of project:" //$NON-NLS-1$
 						+ currentProject.getName() + "\n" //$NON-NLS-1$
 						+ "Building time:" //$NON-NLS-1$
@@ -197,8 +198,8 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 						+ "Build type:" //$NON-NLS-1$
 						+ (kind == FULL_BUILD ? "Full build" //$NON-NLS-1$
 								: "Incremental build")); //$NON-NLS-1$
-				System.out
-						.println("-----------------------------------------------------------------"); //$NON-NLS-1$
+				System.out.println(
+						"-----------------------------------------------------------------"); //$NON-NLS-1$
 			}
 		}
 		monitor.done();
@@ -213,19 +214,19 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 	}
 
 	private static boolean isProjectConfigChange(IResourceDelta projectDelta) {
-		final String[] filenames = {
-				IScriptProjectFilenames.BUILDPATH_FILENAME,
+		final String[] filenames = { IScriptProjectFilenames.BUILDPATH_FILENAME,
 				IScriptProjectFilenames.PROJECT_FILENAME };
 		for (String filename : filenames) {
-			final IResourceDelta delta = projectDelta.findMember(new Path(
-					filename));
+			final IResourceDelta delta = projectDelta
+					.findMember(new Path(filename));
 			if (delta != null) {
 				switch (delta.getKind()) {
 				case IResourceDelta.ADDED:
 				case IResourceDelta.REMOVED:
 					return true;
 				case IResourceDelta.CHANGED:
-					return (delta.getFlags() & (IResourceDelta.CONTENT | IResourceDelta.ENCODING)) != 0;
+					return (delta.getFlags() & (IResourceDelta.CONTENT
+							| IResourceDelta.ENCODING)) != 0;
 				}
 			}
 		}
@@ -234,10 +235,10 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 
 	/**
 	 * Remove incorrect task markers.
-	 * 
+	 *
 	 * DLTK 0.95 were creating wrong task markers, so this function is here to
 	 * remove them. New markers will be created by the builder later.
-	 * 
+	 *
 	 * @param project
 	 * @throws CoreException
 	 */
@@ -309,8 +310,7 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 			return;
 
 		try {
-			monitor.beginTask(NLS.bind(
-					Messages.ScriptBuilder_cleaningScriptsIn,
+			monitor.beginTask(NLS.bind(Messages.ScriptBuilder_cleaningScriptsIn,
 					currentProject.getName()), 66);
 			if (monitor.isCanceled()) {
 				return;
@@ -339,14 +339,14 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 		}
 
 		if (TRACE) {
-			System.out
-					.println("-----SCRIPT-BUILDER-INFORMATION-TRACE----------------------------"); //$NON-NLS-1$
+			System.out.println(
+					"-----SCRIPT-BUILDER-INFORMATION-TRACE----------------------------"); //$NON-NLS-1$
 			System.out.println("Finished clean of project:" //$NON-NLS-1$
 					+ currentProject.getName() + "\n" //$NON-NLS-1$
 					+ "Building time:" //$NON-NLS-1$
 					+ Long.toString(System.currentTimeMillis() - start));
-			System.out
-					.println("-----------------------------------------------------------------"); //$NON-NLS-1$
+			System.out.println(
+					"-----------------------------------------------------------------"); //$NON-NLS-1$
 		}
 		monitor.done();
 	}
@@ -355,7 +355,7 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 		if (scriptProject == null)
 			return new IProject[0];
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		ArrayList<IProject> projects = new ArrayList<IProject>();
+		ArrayList<IProject> projects = new ArrayList<>();
 		try {
 			IBuildpathEntry[] entries = scriptProject.getExpandedBuildpath();
 			for (int i = 0, l = entries.length; i < l; i++) {
@@ -378,8 +378,8 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 						 * projects that are not included in the project
 						 * references
 						 */
-						IResource resource = workspaceRoot.findMember(path
-								.segment(0));
+						IResource resource = workspaceRoot
+								.findMember(path.segment(0));
 						if (resource instanceof IProject)
 							p = (IProject) resource;
 					}
@@ -394,8 +394,8 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 	}
 
 	public State getLastState(IProject project, IProgressMonitor monitor) {
-		return (State) ModelManager.getModelManager().getLastBuiltState(
-				project, monitor);
+		return (State) ModelManager.getModelManager().getLastBuiltState(project,
+				monitor);
 	}
 
 	private State clearLastState() {
@@ -424,17 +424,17 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 		final IBuildState buildState = new BuildState(newState);
 		IScriptBuilder[] builders = null;
 		try {
-			monitor.setTaskName(NLS.bind(
-					Messages.ScriptBuilder_buildingScriptsIn,
-					currentProject.getName()));
-			monitor.beginTask(NONAME, WORK_RESOURCES + WORK_EXTERNAL
-					+ WORK_SOURCES + WORK_BUILD);
+			monitor.setTaskName(
+					NLS.bind(Messages.ScriptBuilder_buildingScriptsIn,
+							currentProject.getName()));
+			monitor.beginTask(NONAME,
+					WORK_RESOURCES + WORK_EXTERNAL + WORK_SOURCES + WORK_BUILD);
 			builders = getScriptBuilders();
 			if (builders == null || builders.length == 0) {
 				return;
 			}
-			final IBuildChange buildChange = new FullBuildChange(
-					currentProject, monitor);
+			final IBuildChange buildChange = new FullBuildChange(currentProject,
+					monitor);
 			for (IScriptBuilder builder : builders) {
 				if (monitor.isCanceled()) {
 					throw new OperationCanceledException();
@@ -496,17 +496,17 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 			throws CoreException {
 		final State newState = new State(this);
 		newState.copyFrom(this.lastState);
-		final Set<IPath> externalFoldersBefore = new HashSet<IPath>(
+		final Set<IPath> externalFoldersBefore = new HashSet<>(
 				newState.getExternalFolders());
 
 		final BuildState buildState = new BuildState(newState);
 		IScriptBuilder[] builders = null;
 		try {
-			monitor.setTaskName(NLS.bind(
-					Messages.ScriptBuilder_buildingScriptsIn,
-					currentProject.getName()));
-			monitor.beginTask(NONAME, WORK_RESOURCES + WORK_EXTERNAL
-					+ WORK_SOURCES + WORK_BUILD);
+			monitor.setTaskName(
+					NLS.bind(Messages.ScriptBuilder_buildingScriptsIn,
+							currentProject.getName()));
+			monitor.beginTask(NONAME,
+					WORK_RESOURCES + WORK_EXTERNAL + WORK_SOURCES + WORK_BUILD);
 			builders = getScriptBuilders();
 			if (builders == null || builders.length == 0) {
 				return;
@@ -559,12 +559,12 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 			}
 			newState.recordStructuralChanges(buildState.getStructuralChanges());
 			if (buildChange instanceof IncrementalBuildChange) {
-				final Set<IPath> processed = new HashSet<IPath>();
+				final Set<IPath> processed = new HashSet<>();
 				final Set<IPath> changes = ((IncrementalBuildChange) buildChange)
 						.getChangedPaths();
 				processed.addAll(changes);
-				final Set<IPath> queue = new HashSet<IPath>();
-				final Set<IPath> newStructuralChanges = new HashSet<IPath>();
+				final Set<IPath> queue = new HashSet<>();
+				final Set<IPath> newStructuralChanges = new HashSet<>();
 				// TODO review cross-project dependency handling
 				for (IProjectChange projectChange : buildChange
 						.getRequiredProjectChanges()) {
@@ -582,11 +582,11 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 				}
 				final IWorkspaceRoot root = ResourcesPlugin.getWorkspace()
 						.getRoot();
-				buildState
-						.recordStructuralChanges(((IncrementalProjectChange) buildChange)
+				buildState.recordStructuralChanges(
+						((IncrementalProjectChange) buildChange)
 								.getAddedPaths());
-				buildState
-						.recordStructuralChanges(((IncrementalProjectChange) buildChange)
+				buildState.recordStructuralChanges(
+						((IncrementalProjectChange) buildChange)
 								.getDeletedPaths());
 				for (int iterationNumber = 0;; ++iterationNumber) {
 					this.lastState.findDependenciesOf(changes,
@@ -600,7 +600,7 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 						System.out.println("  Queue: " + queue);
 					}
 					newState.removeDependenciesFor(queue);
-					final List<IFile> files = new ArrayList<IFile>();
+					final List<IFile> files = new ArrayList<>();
 					for (IPath path : queue) {
 						files.add(root.getFile(path));
 					}
@@ -684,9 +684,9 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 	}
 
 	private IBuildChange createBuildChange(IResourceDelta delta,
-			IProject[] requiredProjects,
-			final Set<IPath> externalFoldersBefore, IProgressMonitor monitor) {
-		final List<IProjectChange> projectChanges = new ArrayList<IProjectChange>();
+			IProject[] requiredProjects, final Set<IPath> externalFoldersBefore,
+			IProgressMonitor monitor) {
+		final List<IProjectChange> projectChanges = new ArrayList<>();
 		for (IProject project : requiredProjects) {
 			final IResourceDelta projectDelta = getDelta(project);
 			if (projectDelta == null) {
@@ -697,25 +697,25 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 						project, monitor));
 			}
 		}
-		return new IncrementalBuildChange(
-				delta,
-				projectChanges.toArray(new IProjectChange[projectChanges.size()]),
-				currentProject, monitor, new ArrayList<IPath>(
-						externalFoldersBefore));
+		return new IncrementalBuildChange(delta,
+				projectChanges
+						.toArray(new IProjectChange[projectChanges.size()]),
+				currentProject, monitor,
+				new ArrayList<>(externalFoldersBefore));
 	}
 
 	private static void updateExternalFolderLocations(State state,
 			IBuildChange buildChange) throws CoreException {
 		state.externalFolderLocations.clear();
-		state.externalFolderLocations.addAll(buildChange
-				.getExternalPaths(IProjectChange.DEFAULT));
+		state.externalFolderLocations
+				.addAll(buildChange.getExternalPaths(IProjectChange.DEFAULT));
 	}
 
 	/**
 	 * Return script builders for the current project. ScriptBuilders are
 	 * initialized here so this method should be called only once during build
 	 * operation.
-	 * 
+	 *
 	 * @return
 	 * @throws CoreException
 	 */
@@ -725,7 +725,7 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 		if (toolkit != null) {
 			IScriptBuilder[] builders = getScriptBuilders(toolkit);
 			if (builders != null) {
-				final List<IScriptBuilder> result = new ArrayList<IScriptBuilder>(
+				final List<IScriptBuilder> result = new ArrayList<>(
 						builders.length);
 				for (int k = 0; k < builders.length; k++) {
 					if (builders[k].initialize(scriptProject)) {
@@ -747,9 +747,8 @@ public class ScriptBuilder extends IncrementalProjectBuilder {
 	public static void removeProblemsAndTasksFor(IResource resource) {
 		try {
 			if (resource != null && resource.exists()) {
-				resource.deleteMarkers(
-						IModelMarker.SCRIPT_MODEL_PROBLEM_MARKER, false,
-						IResource.DEPTH_INFINITE);
+				resource.deleteMarkers(IModelMarker.SCRIPT_MODEL_PROBLEM_MARKER,
+						false, IResource.DEPTH_INFINITE);
 				resource.deleteMarkers(IModelMarker.TASK_MARKER, false,
 						IResource.DEPTH_INFINITE);
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 xored software, Inc.
+ * Copyright (c) 2016, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -53,8 +53,8 @@ import org.eclipse.dltk.internal.core.util.Messages;
 import org.eclipse.dltk.internal.core.util.Util;
 import org.eclipse.dltk.utils.CorePrinter;
 
-public abstract class AbstractSourceModule extends Openable implements
-		ISourceModule, org.eclipse.dltk.compiler.env.ISourceModule {
+public abstract class AbstractSourceModule extends Openable
+		implements ISourceModule, org.eclipse.dltk.compiler.env.ISourceModule {
 	private static final int DEFAULT_COMPLETION_TIMEOUT = 5000;
 
 	// ~ Static fields/initializers
@@ -99,8 +99,7 @@ public abstract class AbstractSourceModule extends Openable implements
 
 	@Override
 	public CodeSelection codeSelectAll(int offset, int length,
-			WorkingCopyOwner owner)
-			throws ModelException {
+			WorkingCopyOwner owner) throws ModelException {
 		return super.codeSelectAll(this, offset, length, owner);
 	}
 
@@ -109,7 +108,8 @@ public abstract class AbstractSourceModule extends Openable implements
 			String rename, boolean replace, IProgressMonitor monitor)
 			throws ModelException {
 		if (container == null) {
-			throw new IllegalArgumentException(Messages.operation_nullContainer);
+			throw new IllegalArgumentException(
+					Messages.operation_nullContainer);
 		}
 
 		IModelElement[] elements = new IModelElement[] { this };
@@ -119,8 +119,8 @@ public abstract class AbstractSourceModule extends Openable implements
 			renamings = new String[] { rename };
 		}
 
-		getModel()
-				.copy(elements, containers, null, renamings, replace, monitor);
+		getModel().copy(elements, containers, null, renamings, replace,
+				monitor);
 
 	}
 
@@ -146,8 +146,8 @@ public abstract class AbstractSourceModule extends Openable implements
 	public IType[] getAllTypes() throws ModelException {
 		IType[] types = getTypes();
 		int i;
-		ArrayList<IType> allTypes = new ArrayList<IType>(types.length);
-		ArrayList<IType> typesToTraverse = new ArrayList<IType>(types.length);
+		ArrayList<IType> allTypes = new ArrayList<>(types.length);
+		ArrayList<IType> typesToTraverse = new ArrayList<>(types.length);
 		for (i = 0; i < types.length; i++) {
 			typesToTraverse.add(types[i]);
 		}
@@ -205,8 +205,8 @@ public abstract class AbstractSourceModule extends Openable implements
 		switch (token.charAt(0)) {
 		case JEM_IMPORTDECLARATION: {
 			if (DLTKCore.DEBUG) {
-				System.err
-						.println("Add import support in SourceModule getHandleFromMemento"); //$NON-NLS-1$
+				System.err.println(
+						"Add import support in SourceModule getHandleFromMemento"); //$NON-NLS-1$
 			}
 			// ModelElement container = (ModelElement)getImportContainer();
 			// return container.getHandleFromMemento(token, memento,
@@ -219,7 +219,8 @@ public abstract class AbstractSourceModule extends Openable implements
 			}
 
 			String pkgName = memento.nextToken();
-			ModelElement pkgDecl = (ModelElement) getPackageDeclaration(pkgName);
+			ModelElement pkgDecl = (ModelElement) getPackageDeclaration(
+					pkgName);
 			return pkgDecl.getHandleFromMemento(memento, workingCopyOwner);
 		}
 		case JEM_TYPE: {
@@ -285,7 +286,8 @@ public abstract class AbstractSourceModule extends Openable implements
 	}
 
 	@Override
-	public IPackageDeclaration[] getPackageDeclarations() throws ModelException {
+	public IPackageDeclaration[] getPackageDeclarations()
+			throws ModelException {
 		List<IModelElement> list = getChildrenOfType(PACKAGE_DECLARATION);
 		IPackageDeclaration[] array = new IPackageDeclaration[list.size()];
 		list.toArray(array);
@@ -395,11 +397,12 @@ public abstract class AbstractSourceModule extends Openable implements
 	public ISourceModule getWorkingCopy(IProgressMonitor monitor)
 			throws ModelException {
 
-		return getWorkingCopy(new WorkingCopyOwner() /*
-													 * non shared working copy
-													 */
-		{
-		}, null /* no problem requestor */, monitor);
+		return getWorkingCopy(
+				new WorkingCopyOwner() /*
+										 * non shared working copy
+										 */
+				{
+				}, null /* no problem requestor */, monitor);
 	}
 
 	@Override
@@ -468,7 +471,7 @@ public abstract class AbstractSourceModule extends Openable implements
 
 	/**
 	 * Returns {@link AccumulatingProblemReporter} or <code>null</code>
-	 * 
+	 *
 	 * @return
 	 */
 	private AccumulatingProblemReporter getAccumulatingProblemReporter() {
@@ -562,7 +565,7 @@ public abstract class AbstractSourceModule extends Openable implements
 		final IModelProvider[] providers = ModelProviderManager
 				.getProviders(toolkit.getNatureId());
 		if (providers != null) {
-			final List<IModelElement> childrenSet = new ArrayList<IModelElement>(
+			final List<IModelElement> childrenSet = new ArrayList<>(
 					moduleInfo.getChildrenAsList());
 			for (int i = 0; i < providers.length; i++) {
 				providers[i].provideModelChanges(this, childrenSet);
@@ -611,9 +614,8 @@ public abstract class AbstractSourceModule extends Openable implements
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.dltk.internal.core.Openable#openBuffer(org.eclipse.core.runtime
-	 * .IProgressMonitor, java.lang.Object)
+	 * @see org.eclipse.dltk.internal.core.Openable#openBuffer(org.eclipse.core.
+	 * runtime .IProgressMonitor, java.lang.Object)
 	 */
 	@Override
 	protected IBuffer openBuffer(IProgressMonitor pm, Object info)
@@ -773,7 +775,8 @@ public abstract class AbstractSourceModule extends Openable implements
 	@Override
 	public void codeComplete(int offset, CompletionRequestor requestor,
 			WorkingCopyOwner owner) throws ModelException {
-		codeComplete(this, offset, requestor, owner, DEFAULT_COMPLETION_TIMEOUT);
+		codeComplete(this, offset, requestor, owner,
+				DEFAULT_COMPLETION_TIMEOUT);
 	}
 
 	@Override

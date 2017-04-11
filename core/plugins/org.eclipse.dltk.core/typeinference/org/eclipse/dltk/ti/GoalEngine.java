@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,16 +24,16 @@ import org.eclipse.dltk.ti.statistics.IEvaluationStatisticsRequestor;
  * evaluate goals and manage their dependencies of subgoals. Also this class
  * allows pruning: before evaluating every goal(except root goal) could be
  * pruned by provided prunner.
- * 
+ *
  * This class isn't thread safe.
  */
 public class GoalEngine {
 
 	private final IGoalEvaluatorFactory evaluatorFactory;
 
-	private final LinkedList<WorkingPair> workingQueue = new LinkedList<WorkingPair>();
-	private final HashMap<IGoal, GoalEvaluationState> goalStates = new HashMap<IGoal, GoalEvaluationState>();
-	private final HashMap<GoalEvaluator, EvaluatorState> evaluatorStates = new HashMap<GoalEvaluator, EvaluatorState>();
+	private final LinkedList<WorkingPair> workingQueue = new LinkedList<>();
+	private final HashMap<IGoal, GoalEvaluationState> goalStates = new HashMap<>();
+	private final HashMap<GoalEvaluator, EvaluatorState> evaluatorStates = new HashMap<>();
 
 	private IEvaluationStatisticsRequestor statisticsRequestor;
 
@@ -42,7 +42,7 @@ public class GoalEngine {
 		public int totalSubgoals;
 		public int successfulSubgoals;
 		public int subgoalsLeft;
-		public List<IGoal> subgoals = new ArrayList<IGoal>();
+		public List<IGoal> subgoals = new ArrayList<>();
 
 		public EvaluatorState(int subgoalsLeft) {
 			this.subgoalsLeft = subgoalsLeft;
@@ -88,7 +88,8 @@ public class GoalEngine {
 		return evaluatorStates.get(evaluator);
 	}
 
-	private void putEvaluatorState(GoalEvaluator evaluator, EvaluatorState state) {
+	private void putEvaluatorState(GoalEvaluator evaluator,
+			EvaluatorState state) {
 		evaluatorStates.put(evaluator, state);
 	}
 
@@ -136,15 +137,16 @@ public class GoalEngine {
 		}
 	}
 
-	private EvaluatorStatistics getEvaluatorStatistics(GoalEvaluator evaluator) {
+	private EvaluatorStatistics getEvaluatorStatistics(
+			GoalEvaluator evaluator) {
 		EvaluatorState ev = getEvaluatorState(evaluator);
 		if (ev == null) {
 			return null;
 		}
 		long currentTime = System.currentTimeMillis();
-		return new EvaluatorStatistics(ev.totalSubgoals, currentTime
-				- ev.timeCreated, ev.totalSubgoals - ev.subgoalsLeft,
-				ev.successfulSubgoals);
+		return new EvaluatorStatistics(ev.totalSubgoals,
+				currentTime - ev.timeCreated,
+				ev.totalSubgoals - ev.subgoalsLeft, ev.successfulSubgoals);
 	}
 
 	public Object evaluateGoal(IGoal rootGoal, IPruner pruner) {
@@ -235,8 +237,8 @@ public class GoalEngine {
 							newGoals, System.currentTimeMillis() - time);
 					if (newGoals.length > 0) {
 						for (int i = 0; i < newGoals.length; i++) {
-							workingQueue.add(new WorkingPair(newGoals[i],
-									evaluator));
+							workingQueue.add(
+									new WorkingPair(newGoals[i], evaluator));
 						}
 						EvaluatorState evaluatorState = new EvaluatorState(
 								newGoals.length);

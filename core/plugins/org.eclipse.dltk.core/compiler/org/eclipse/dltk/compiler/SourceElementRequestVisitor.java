@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,7 +34,7 @@ public class SourceElementRequestVisitor extends ASTVisitor {
 	protected MethodDeclaration fCurrentMethod = null;
 
 	// Used to hold visited nodes in depth
-	protected Stack<ASTNode> fNodes = new Stack<ASTNode>();
+	protected Stack<ASTNode> fNodes = new Stack<>();
 
 	/**
 	 * @since 2.0
@@ -93,7 +93,7 @@ public class SourceElementRequestVisitor extends ASTVisitor {
 	/**
 	 * Called before method info is propagated to the source element requestor.
 	 * This is a last chance to modify the method info
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	protected void modifyMethodInfo(MethodDeclaration methodDeclaration,
@@ -103,18 +103,19 @@ public class SourceElementRequestVisitor extends ASTVisitor {
 	/**
 	 * Called before method info is propagated to the source element requestor.
 	 * This is a last chance to modify the class info
-	 * 
+	 *
 	 * @since 2.0
 	 */
-	protected void modifyClassInfo(TypeDeclaration typeDeclaration, TypeInfo ti) {
+	protected void modifyClassInfo(TypeDeclaration typeDeclaration,
+			TypeInfo ti) {
 	}
 
 	/**
 	 * Creates correct string value from expression. For example for
 	 * StringLiteral returns "value". And so on.
-	 * 
+	 *
 	 * Return "" if it is imposible to make value from expression.
-	 * 
+	 *
 	 * @param expr
 	 * @return
 	 */
@@ -127,7 +128,7 @@ public class SourceElementRequestVisitor extends ASTVisitor {
 			value = "\"" + ((StringLiteral) stmt).getValue() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 		} else if (stmt instanceof Literal) {
 			value = ((Literal) stmt).getValue();
-		} else /* if (stmt instanceof ExtendedVariableReference) */{
+		} else /* if (stmt instanceof ExtendedVariableReference) */ {
 			// If it is Dot.
 			// Lets make recursive value parsing in this case.
 			value += this.makeLanguageDependentValue(stmt);
@@ -170,7 +171,7 @@ public class SourceElementRequestVisitor extends ASTVisitor {
 		for (int a = 0; a < args.size(); a++) {
 			Argument arg = (Argument) args.get(a);
 			parameter[a] = arg.getName();
-			if(arg.getInitialization() != null){
+			if (arg.getInitialization() != null) {
 				if (arg.getInitialization() instanceof Literal) {
 					Literal scalar = (Literal) arg.getInitialization();
 					initializers[a] = scalar.getValue();

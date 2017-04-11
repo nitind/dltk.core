@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,11 +28,13 @@ import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.dltk.internal.core.util.Messages;
 import org.eclipse.dltk.internal.core.util.Util;
 
-public class SourceModule extends AbstractSourceModule implements ISourceModule {
+public class SourceModule extends AbstractSourceModule
+		implements ISourceModule {
 
 	// ~ Constructors
 
-	public SourceModule(ModelElement parent, String name, WorkingCopyOwner owner) {
+	public SourceModule(ModelElement parent, String name,
+			WorkingCopyOwner owner) {
 		super(parent, name, owner);
 	}
 
@@ -141,8 +143,8 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 	public ModelManager.PerWorkingCopyInfo getPerWorkingCopyInfo() {
 		// XXX: should be an interface method that allows a null
 		// don't create or record usage - no problem requestor required
-		return ModelManager.getModelManager().getPerWorkingCopyInfo(this,
-				false, false, null);
+		return ModelManager.getModelManager().getPerWorkingCopyInfo(this, false,
+				false, null);
 	}
 
 	@Override
@@ -152,8 +154,8 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 			return root.getResource();
 		}
 
-		return ((IContainer) this.getParent().getResource()).getFile(new Path(
-				this.getElementName()));
+		return ((IContainer) this.getParent().getResource())
+				.getFile(new Path(this.getElementName()));
 	}
 
 	@Override
@@ -170,10 +172,10 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 				getElementName(), workingCopyOwner);
 		ModelManager.PerWorkingCopyInfo perWorkingCopyInfo = manager
 				.getPerWorkingCopyInfo(workingCopy, false /* don't create */,
-						true /* record usage */, null /*
-													 * not used since don't
-													 * create
-													 */);
+						true /* record usage */,
+						null /*
+								 * not used since don't create
+								 */);
 		if (perWorkingCopyInfo != null) {
 			return perWorkingCopyInfo.getWorkingCopy(); // return existing
 			// handle instead of the
@@ -214,7 +216,7 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 		return !isPrimary() || (getPerWorkingCopyInfo() != null);
 	}
 
-	private static final Set<SourceModule> locks = new HashSet<SourceModule>();
+	private static final Set<SourceModule> locks = new HashSet<>();
 
 	private boolean acquire() {
 		final long stop = System.currentTimeMillis() + 10000;
@@ -260,7 +262,8 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 			String rename, boolean replace, IProgressMonitor monitor)
 			throws ModelException {
 		if (container == null) {
-			throw new IllegalArgumentException(Messages.operation_nullContainer);
+			throw new IllegalArgumentException(
+					Messages.operation_nullContainer);
 		}
 
 		IModelElement[] elements = new IModelElement[] { this };
@@ -271,8 +274,8 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 			renamings = new String[] { rename };
 		}
 
-		getModel()
-				.move(elements, containers, null, renamings, replace, monitor);
+		getModel().move(elements, containers, null, renamings, replace,
+				monitor);
 	}
 
 	@Override
@@ -302,8 +305,8 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 	}
 
 	@Override
-	public void rename(String newName, boolean replace, IProgressMonitor monitor)
-			throws ModelException {
+	public void rename(String newName, boolean replace,
+			IProgressMonitor monitor) throws ModelException {
 		if (newName == null) {
 			throw new IllegalArgumentException(Messages.operation_nullName);
 		}
@@ -318,7 +321,8 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 	public void save(IProgressMonitor pm, boolean force) throws ModelException {
 		if (isWorkingCopy()) {
 			// no need to save the buffer for a working copy (this is a noop)
-			throw new RuntimeException("not implemented"); //$NON-NLS-1$ // not simply
+			throw new RuntimeException("not implemented"); //$NON-NLS-1$ // not
+															// simply
 			// makeConsistent,
 			// also computes
 			// fine-grain deltas
@@ -340,7 +344,8 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 		IResource resource = this.getResource();
 		Object lookup = (resource == null) ? (Object) getPath() : resource;
 
-		IDLTKLanguageToolkit lookupLanguageToolkit = lookupLanguageToolkit(lookup);
+		IDLTKLanguageToolkit lookupLanguageToolkit = lookupLanguageToolkit(
+				lookup);
 		if (lookupLanguageToolkit == null) {
 			return null;
 		}
@@ -384,13 +389,14 @@ public class SourceModule extends AbstractSourceModule implements ISourceModule 
 	/*
 	 * Assume that this is a working copy
 	 */
-	protected void updateTimeStamp(SourceModule original) throws ModelException {
+	protected void updateTimeStamp(SourceModule original)
+			throws ModelException {
 		// XXX: should be an interface method
 		long timeStamp = ((IFile) original.getResource())
 				.getModificationStamp();
 		if (timeStamp == IResource.NULL_STAMP) {
-			throw new ModelException(new ModelStatus(
-					IModelStatusConstants.INVALID_RESOURCE));
+			throw new ModelException(
+					new ModelStatus(IModelStatusConstants.INVALID_RESOURCE));
 		}
 
 		((SourceModuleElementInfo) getElementInfo()).timestamp = timeStamp;

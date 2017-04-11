@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,9 +24,9 @@ import org.eclipse.dltk.core.index2.IIndexerParticipant;
 
 /**
  * Indexer instances manager
- * 
+ *
  * @author michael
- * 
+ *
  */
 public class IndexerManager {
 
@@ -41,7 +41,7 @@ public class IndexerManager {
 
 	private static IConfigurationElement indexerElement;
 	private static AbstractIndexer indexer;
-	private static Map<String, IConfigurationElement> indexerParticipants = new HashMap<String, IConfigurationElement>();
+	private static Map<String, IConfigurationElement> indexerParticipants = new HashMap<>();
 
 	static {
 		String indexerdId = getIndexerID();

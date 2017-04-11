@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,10 +54,10 @@ import org.eclipse.dltk.internal.core.util.Messages;
 
 /**
  * This is an implementation of search engine using new indexing infrastructure.
- * 
+ *
  * @author michael
  * @since 2.0
- * 
+ *
  */
 public class NewSearchEngine {
 
@@ -78,7 +78,7 @@ public class NewSearchEngine {
 	 * created using helper methods (from a String pattern or a Script element)
 	 * and encapsulate the description of what is being searched (for example,
 	 * search method declarations in a case sensitive way).
-	 * 
+	 *
 	 * @see SearchEngine#search(SearchPattern, SearchParticipant[],
 	 *      IJavaSearchScope, SearchRequestor, IProgressMonitor) for detailed
 	 *      comment
@@ -94,7 +94,7 @@ public class NewSearchEngine {
 	 * using helper methods (from a String pattern or a Script element) and
 	 * encapsulate the description of what is being searched (for example,
 	 * search method declarations in a case sensitive way).
-	 * 
+	 *
 	 * @param pattern
 	 *            Old-style search pattern
 	 * @param participants
@@ -139,7 +139,7 @@ public class NewSearchEngine {
 					participant.beginSearching();
 					requestor.enterParticipant(participant);
 
-					Set<String> indexMatchPathSet = new HashSet<String>();
+					Set<String> indexMatchPathSet = new HashSet<>();
 					collectPaths(pattern, scope, indexMatchPathSet, monitor);
 					String[] indexMatchPaths = indexMatchPathSet
 							.toArray(new String[indexMatchPathSet.size()]);
@@ -158,24 +158,23 @@ public class NewSearchEngine {
 						int indexMatchLength = indexMatchPaths.length;
 						SearchDocument[] indexMatches = new SearchDocument[indexMatchLength];
 						for (int j = 0; j < indexMatchLength; j++) {
-							indexMatches[j] = participant.getDocument(
-									indexMatchPaths[j], null);
+							indexMatches[j] = participant
+									.getDocument(indexMatchPaths[j], null);
 						}
 						SearchDocument[] matches = ModuleFactory
 								.addWorkingCopies(pattern, indexMatches,
 										getWorkingCopies(), participant);
 
-						final Set<IPath> paths = new HashSet<IPath>();
-						List<SearchDocument> filteredMatches = new ArrayList<SearchDocument>();
+						final Set<IPath> paths = new HashSet<>();
+						List<SearchDocument> filteredMatches = new ArrayList<>();
 						for (int q = 0; q < matches.length; ++q) {
 							IPath path = new Path(matches[q].getPath());
 							if (paths.add(path)) {
 								filteredMatches.add(matches[q]);
 							}
 						}
-						SearchDocument[] fmatches = filteredMatches
-								.toArray(new SearchDocument[filteredMatches
-										.size()]);
+						SearchDocument[] fmatches = filteredMatches.toArray(
+								new SearchDocument[filteredMatches.size()]);
 
 						participant.locateMatches(fmatches, pattern, scope,
 								requestor, monitor == null ? null
@@ -266,21 +265,15 @@ public class NewSearchEngine {
 
 		if (elementType > 0 && elementName != null && searchFor != null
 				&& matchRule != null) {
-			ISearchEngine searchEngine = ModelAccess.getSearchEngine(scope
-					.getLanguageToolkit());
+			ISearchEngine searchEngine = ModelAccess
+					.getSearchEngine(scope.getLanguageToolkit());
 
 			if (searchEngine != null) {
-				ISearchRequestor requestor = new ISearchRequestor() {
-					@Override
-					public void match(int elementType, int flags, int offset,
-							int length, int nameOffset, int nameLength,
-							String elementName, String metadata, String doc,
-							String qualifier, String parent,
-							ISourceModule sourceModule, boolean isReference) {
-
-						paths.add(sourceModule.getPath().toString());
-					}
-				};
+				ISearchRequestor requestor = (elementType1, flags, offset,
+						length, nameOffset, nameLength, elementName1, metadata,
+						doc, qualifier1, parent, sourceModule,
+						isReference) -> paths
+								.add(sourceModule.getPath().toString());
 
 				searchEngine.search(elementType, qualifier, elementName, 0, 0,
 						0, searchFor, matchRule, scope, requestor, monitor);
@@ -289,8 +282,8 @@ public class NewSearchEngine {
 					// Search also for prefix (workaround to the way original
 					// search engine worked)
 					searchEngine.search(elementType, qualifier, elementName, 0,
-							0, 0, searchFor, MatchRule.PREFIX, scope,
-							requestor, monitor);
+							0, 0, searchFor, MatchRule.PREFIX, scope, requestor,
+							monitor);
 				}
 			}
 		}
@@ -305,14 +298,14 @@ public class NewSearchEngine {
 		if (this.workingCopies != null) {
 			if (this.workingCopyOwner == null) {
 				copies = ModelManager.getModelManager().getWorkingCopies(
-						DefaultWorkingCopyOwner.PRIMARY, false/*
-															 * don't add primary
-															 * WCs a second time
-															 */);
+						DefaultWorkingCopyOwner.PRIMARY,
+						false/*
+								 * don't add primary WCs a second time
+								 */);
 				if (copies == null) {
 					copies = this.workingCopies;
 				} else {
-					Map<IPath, ISourceModule> pathToCUs = new HashMap<IPath, ISourceModule>();
+					Map<IPath, ISourceModule> pathToCUs = new HashMap<>();
 					for (int i = 0; i < copies.length; i++) {
 						ISourceModule unit = copies[i];
 						pathToCUs.put(unit.getPath(), unit);
@@ -334,10 +327,10 @@ public class NewSearchEngine {
 					this.workingCopyOwner, true/* add primary WCs */);
 		} else {
 			copies = ModelManager.getModelManager().getWorkingCopies(
-					DefaultWorkingCopyOwner.PRIMARY, false/*
-														 * don't add primary WCs
-														 * a second time
-														 */);
+					DefaultWorkingCopyOwner.PRIMARY,
+					false/*
+							 * don't add primary WCs a second time
+							 */);
 		}
 		if (copies == null) {
 			return null;

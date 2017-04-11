@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.utils;
 
@@ -52,9 +51,10 @@ public class NatureExtensionManager<E> {
 			return;
 		}
 
-		extensions = new HashMap<String, Object>(5);
+		extensions = new HashMap<>(5);
 		registerConfigurationElements();
-		for (Iterator<Object> i = extensions.values().iterator(); i.hasNext();) {
+		for (Iterator<Object> i = extensions.values().iterator(); i
+				.hasNext();) {
 			@SuppressWarnings("unchecked")
 			final List<Object> descriptors = (List<Object>) i.next();
 			initializeDescriptors(descriptors);
@@ -78,16 +78,17 @@ public class NatureExtensionManager<E> {
 				@SuppressWarnings("unchecked")
 				List<Object> elements = (List<Object>) extensions.get(category);
 				if (elements == null) {
-					elements = new ArrayList<Object>();
+					elements = new ArrayList<>();
 					extensions.put(category, elements);
 				}
 				elements.add(createDescriptor(confElement));
 			} else {
 				final String[] bindings = new String[] { categoryAttr,
-						extensionPoint, confElement.getContributor().getName() };
-				final String msg = NLS
-						.bind(Messages.NatureExtensionManager_missingCategoryAttribute,
-								bindings);
+						extensionPoint,
+						confElement.getContributor().getName() };
+				final String msg = NLS.bind(
+						Messages.NatureExtensionManager_missingCategoryAttribute,
+						bindings);
 				DLTKCore.warn(msg);
 			}
 		}
@@ -99,7 +100,7 @@ public class NatureExtensionManager<E> {
 
 	/**
 	 * Returns the name of the attribute used to categorized the extensions
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getCategoryAttributeName() {
@@ -117,7 +118,7 @@ public class NatureExtensionManager<E> {
 	 * Return array of instances for the specified natureId. If there are no
 	 * contributed instances for the specified natureId the result of the
 	 * {@link #createEmptyResult()} is returned.
-	 * 
+	 *
 	 * @param natureId
 	 * @return
 	 * @throws CoreException
@@ -125,8 +126,9 @@ public class NatureExtensionManager<E> {
 	public E[] getInstances(String natureId) {
 		initialize();
 		final E[] nature = filter(getByNature(natureId), natureId);
-		final E[] all = universalNatureId != null ? filter(
-				getByNature(universalNatureId), natureId) : null;
+		final E[] all = universalNatureId != null
+				? filter(getByNature(universalNatureId), natureId)
+				: null;
 		if (nature != null) {
 			if (all != null) {
 				return merge(all, nature);
@@ -158,8 +160,9 @@ public class NatureExtensionManager<E> {
 
 	public E[] getAllInstances() {
 		initialize();
-		List<E> result = new ArrayList<E>();
-		for (Iterator<String> i = extensions.keySet().iterator(); i.hasNext();) {
+		List<E> result = new ArrayList<>();
+		for (Iterator<String> i = extensions.keySet().iterator(); i
+				.hasNext();) {
 			E[] natureInstances = getByNature(i.next());
 			if (natureInstances != null) {
 				for (int j = 0; j < natureInstances.length; ++j) {
@@ -200,21 +203,22 @@ public class NatureExtensionManager<E> {
 				return (E[]) ext;
 			} else if (ext instanceof List) {
 				final List<Object> elements = (List<Object>) ext;
-				final List<E> result = new ArrayList<E>(elements.size());
+				final List<E> result = new ArrayList<>(elements.size());
 				for (int i = 0; i < elements.size(); ++i) {
 					final Object element = elements.get(i);
 					if (isInstance(element)) {
 						result.add((E) element);
 					} else {
 						try {
-							final Object instance = createInstanceByDescriptor(element);
+							final Object instance = createInstanceByDescriptor(
+									element);
 							if (instance != null && isValidInstance(instance)) {
 								result.add((E) instance);
 							}
 						} catch (Exception e) {
-							final String msg = NLS
-									.bind(Messages.NatureExtensionManager_instantiantionError,
-											elementType.getName());
+							final String msg = NLS.bind(
+									Messages.NatureExtensionManager_instantiantionError,
+									elementType.getName());
 							DLTKCore.error(msg, e);
 						}
 					}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2016 xored software, Inc.
+ * Copyright (c) 2010, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -19,8 +19,8 @@ import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.internal.core.search.matching.DLTKSearchPattern;
 
-public abstract class AbstractMatchingPredicate<E> implements
-		IMatchingPredicate<E> {
+public abstract class AbstractMatchingPredicate<E>
+		implements IMatchingPredicate<E> {
 
 	private final boolean isCaseSensitive;
 	private final boolean isCamelCase;
@@ -30,9 +30,11 @@ public abstract class AbstractMatchingPredicate<E> implements
 
 	protected final char[] namePattern;
 
-	public AbstractMatchingPredicate(SearchPattern pattern, char[] namePattern) {
+	public AbstractMatchingPredicate(SearchPattern pattern,
+			char[] namePattern) {
 		int matchRule = pattern.getMatchRule();
-		this.isCaseSensitive = (matchRule & SearchPattern.R_CASE_SENSITIVE) != 0;
+		this.isCaseSensitive = (matchRule
+				& SearchPattern.R_CASE_SENSITIVE) != 0;
 		this.isCamelCase = (matchRule & SearchPattern.R_CAMELCASE_MATCH) != 0;
 		// this.isErasureMatch = (matchRule & SearchPattern.R_ERASURE_MATCH) !=
 		// 0;
@@ -72,10 +74,8 @@ public abstract class AbstractMatchingPredicate<E> implements
 		switch (this.matchMode) {
 		case SearchPattern.R_EXACT_MATCH:
 			if (!this.isCamelCase) {
-				if (sameLength
-						&& matchFirstChar
-						&& CharOperation.equals(pattern, name,
-								this.isCaseSensitive)) {
+				if (sameLength && matchFirstChar && CharOperation
+						.equals(pattern, name, this.isCaseSensitive)) {
 					return MatchLevel.POSSIBLE_MATCH;
 				}
 				break;
@@ -83,10 +83,8 @@ public abstract class AbstractMatchingPredicate<E> implements
 			// fall through next case to match as prefix if camel case
 			// failed
 		case SearchPattern.R_PREFIX_MATCH:
-			if (canBePrefix
-					&& matchFirstChar
-					&& CharOperation.prefixEquals(pattern, name,
-							this.isCaseSensitive)) {
+			if (canBePrefix && matchFirstChar && CharOperation
+					.prefixEquals(pattern, name, this.isCaseSensitive)) {
 				return MatchLevel.POSSIBLE_MATCH;
 			}
 			break;
@@ -117,7 +115,7 @@ public abstract class AbstractMatchingPredicate<E> implements
 		sb.append(getClass().getSimpleName());
 		sb.append("(");
 		sb.append(namePattern != null ? new String(namePattern) : "*");
-		final List<String> options = new ArrayList<String>();
+		final List<String> options = new ArrayList<>();
 		collectToStringOptions(options);
 		if (!options.isEmpty()) {
 			sb.append(":");

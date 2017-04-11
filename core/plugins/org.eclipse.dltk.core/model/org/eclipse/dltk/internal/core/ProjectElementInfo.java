@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -132,8 +131,7 @@ class ProjectElementInfo extends OpenableElementInfo {
 						break;
 					}
 					// ignore source file if src == project
-					if (srcIsProject
-							&& Util.isValidSourceModule(project, res)
+					if (srcIsProject && Util.isValidSourceModule(project, res)
 							&& !Util.isExcluded(res, inclusionPatterns,
 									exclusionPatterns)) {
 						break;
@@ -142,12 +140,10 @@ class ProjectElementInfo extends OpenableElementInfo {
 					// else add nonscriptresource
 					if (resources.length == resourcesCounter) {
 						// resize
-						System
-								.arraycopy(
-										resources,
-										0,
-										(resources = new IResource[resourcesCounter * 2]),
-										0, resourcesCounter);
+						System.arraycopy(resources, 0,
+								(resources = new IResource[resourcesCounter
+										* 2]),
+								0, resourcesCounter);
 					}
 					resources[resourcesCounter++] = res;
 					break;
@@ -158,21 +154,20 @@ class ProjectElementInfo extends OpenableElementInfo {
 					// correspond to an output location
 					if ((srcIsProject
 							&& !Util.isExcluded(res, inclusionPatterns,
-									exclusionPatterns) && Util
-							.isValidFolderNameForPackage((IContainer) project
-									.getResource(), res.getName()))
+									exclusionPatterns)
+							&& Util.isValidFolderNameForPackage(
+									(IContainer) project.getResource(),
+									res.getName()))
 							|| this.isBuildpathEntry(resFullPath, buildpath)) {
 						break;
 					}
 					// else add nonscriptresource
 					if (resources.length == resourcesCounter) {
 						// resize
-						System
-								.arraycopy(
-										resources,
-										0,
-										(resources = new IResource[resourcesCounter * 2]),
-										0, resourcesCounter);
+						System.arraycopy(resources, 0,
+								(resources = new IResource[resourcesCounter
+										* 2]),
+								0, resourcesCounter);
 					}
 					resources[resourcesCounter++] = res;
 				}
@@ -227,15 +222,15 @@ class ProjectElementInfo extends OpenableElementInfo {
 			ISourceModule[] workingCopies) {
 		ProjectCache cache = getProjectCache(project);
 		return new NameLookup(cache.allProjectFragmentCache,
-				cache.allPkgFragmentsCache, cache.isPackageCache,
-				workingCopies, cache.rootToResolvedEntries);
+				cache.allPkgFragmentsCache, cache.isPackageCache, workingCopies,
+				cache.rootToResolvedEntries);
 	}
 
 	ProjectCache getProjectCache(ScriptProject project) {
 		ProjectCache cache = this.projectCache;
 		if (cache == null) {
 			IProjectFragment[] roots;
-			Map<IProjectFragment, BuildpathEntry> reverseMap = new HashMap<IProjectFragment, BuildpathEntry>(
+			Map<IProjectFragment, BuildpathEntry> reverseMap = new HashMap<>(
 					3);
 			try {
 				roots = project.getAllProjectFragments(reverseMap);
@@ -252,8 +247,8 @@ class ProjectElementInfo extends OpenableElementInfo {
 				IModelElement[] frags = null;
 				try {
 					if (DLTKCore.DEBUG) {
-						System.err
-								.println("TODO: Require to check for ExternalProjectFragment compatibility."); //$NON-NLS-1$
+						System.err.println(
+								"TODO: Require to check for ExternalProjectFragment compatibility."); //$NON-NLS-1$
 					}
 					if (root.isArchive() && !root.isOpen()) {
 						ArchiveProjectFragmentInfo info = new ArchiveProjectFragmentInfo();
@@ -269,8 +264,9 @@ class ProjectElementInfo extends OpenableElementInfo {
 				for (int j = 0, length2 = frags.length; j < length2; j++) {
 					IScriptFolder fragment = (IScriptFolder) frags[j];
 					IPath parentPath = fragment.getParent().getPath();
-					String[] pkgName = fragment.getPath().removeFirstSegments(
-							parentPath.segmentCount()).segments();
+					String[] pkgName = fragment.getPath()
+							.removeFirstSegments(parentPath.segmentCount())
+							.segments();
 					Object existing = fragmentsCache.get(pkgName);
 					if (existing == null) {
 						fragmentsCache.put(pkgName, root);
@@ -285,7 +281,8 @@ class ProjectElementInfo extends OpenableElementInfo {
 									(IProjectFragment) existing, root });
 						} else {
 							IProjectFragment[] entry = (IProjectFragment[]) existing;
-							IProjectFragment[] copy = new IProjectFragment[entry.length + 1];
+							IProjectFragment[] copy = new IProjectFragment[entry.length
+									+ 1];
 							System.arraycopy(entry, 0, copy, 0, entry.length);
 							copy[entry.length] = root;
 							fragmentsCache.put(pkgName, copy);

@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.  
+ * Copyright (c) 2010, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html  
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
@@ -46,7 +46,7 @@ public class SimpleExtensionManager<E> {
 
 	@SuppressWarnings("unchecked")
 	private void initialize() {
-		final List<E> result = new ArrayList<E>();
+		final List<E> result = new ArrayList<>();
 		final IExtensionRegistry registry = RegistryFactory.getRegistry();
 		if (registry != null) { // if running under OSGI
 			final IConfigurationElement[] elements = registry

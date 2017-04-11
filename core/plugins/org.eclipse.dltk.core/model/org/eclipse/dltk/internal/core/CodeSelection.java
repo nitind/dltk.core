@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 NumberFour AG and others.
+ * Copyright (c) 2012, 2017 NumberFour AG and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -83,7 +83,7 @@ class CodeSelection implements ICodeSelection {
 		} else if (modelElements == null && foreignElements != null) {
 			return Arrays.asList(foreignElements);
 		} else {
-			final List<Object> result = new ArrayList<Object>(
+			final List<Object> result = new ArrayList<>(
 					modelElements.length + foreignElements.length);
 			Collections.addAll(result, modelElements);
 			Collections.addAll(result, foreignElements);
@@ -94,11 +94,11 @@ class CodeSelection implements ICodeSelection {
 	@Override
 	public Iterator<Object> iterator() {
 		if (modelElements != null && foreignElements == null) {
-			return new ArrayIterator<Object>(modelElements);
+			return new ArrayIterator<>(modelElements);
 		} else if (modelElements == null && foreignElements != null) {
-			return new ArrayIterator<Object>(foreignElements);
+			return new ArrayIterator<>(foreignElements);
 		} else {
-			return new MultiArrayIterator<Object>(modelElements,
+			return new MultiArrayIterator<>(modelElements,
 					foreignElements);
 		}
 	}

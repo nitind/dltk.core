@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,7 +42,7 @@ public class Model extends Openable implements IScriptModel {
 	 * A set of java.io.Files used as a cache of external files that are known
 	 * to be existing. Note this cache is kept for the whole session.
 	 */
-	public static HashSet<IFileHandle> existingExternalFiles = new HashSet<IFileHandle>();
+	public static HashSet<IFileHandle> existingExternalFiles = new HashSet<>();
 
 	/**
 	 * A set of external files ({@link #existingExternalFiles}) which have been
@@ -50,7 +50,7 @@ public class Model extends Openable implements IScriptModel {
 	 * {@link java.io.File#isFile()}. Note this cache is kept for the whole
 	 * session.
 	 */
-	public static HashSet<IFileHandle> existingExternalConfirmedFiles = new HashSet<IFileHandle>();
+	public static HashSet<IFileHandle> existingExternalConfirmedFiles = new HashSet<>();
 
 	protected Model() {
 		super(null);
@@ -58,10 +58,10 @@ public class Model extends Openable implements IScriptModel {
 
 	@Override
 	protected boolean buildStructure(OpenableElementInfo info,
-			IProgressMonitor pm, Map newElements, IResource underlyingResource) /*
-																				 * throws
-																				 * ModelException
-																				 */{
+			IProgressMonitor pm, Map newElements,
+			IResource underlyingResource) /*
+											 * throws ModelException
+											 */ {
 		// determine my children
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
 				.getProjects();
@@ -117,8 +117,9 @@ public class Model extends Openable implements IScriptModel {
 				return externalFile;
 			} else {
 				if (ModelManager.ZIP_ACCESS_VERBOSE) {
-					System.out
-							.println("(" + Thread.currentThread() + ") [Model.getTarget(...)] Checking existence of " + path.toString()); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out.println("(" + Thread.currentThread() //$NON-NLS-1$
+							+ ") [Model.getTarget(...)] Checking existence of " //$NON-NLS-1$
+							+ path.toString());
 				}
 				if (externalFile.exists()) {
 					// cache external file
@@ -133,7 +134,7 @@ public class Model extends Openable implements IScriptModel {
 	/**
 	 * Returns the active script project associated with the specified resource,
 	 * or <code>null</code> if no script project yet exists for the resource.
-	 * 
+	 *
 	 * @exception IllegalArgumentException
 	 *                if the given resource is not one of an IProject, IFolder,
 	 *                or IFile.
@@ -174,7 +175,7 @@ public class Model extends Openable implements IScriptModel {
 	public IScriptProject[] getScriptProjects(String nature)
 			throws ModelException {
 		final List<IModelElement> list = getChildrenOfType(SCRIPT_PROJECT);
-		final List<IScriptProject> result = new ArrayList<IScriptProject>();
+		final List<IScriptProject> result = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
 			IScriptProject project = (IScriptProject) list.get(i);
 			IDLTKLanguageToolkit toolkit = DLTKLanguageManager
@@ -193,11 +194,10 @@ public class Model extends Openable implements IScriptModel {
 			IProgressMonitor monitor) throws ModelException {
 		if (elements != null && elements.length > 0 && elements[0] != null
 				&& elements[0].getElementType() < IModelElement.TYPE) {
-			runOperation(new CopyResourceElementsOperation(elements,
-					containers, force), elements, siblings, renamings, monitor);
+			runOperation(new CopyResourceElementsOperation(elements, containers,
+					force), elements, siblings, renamings, monitor);
 		} else {
-			runOperation(
-					new CopyElementsOperation(elements, containers, force),
+			runOperation(new CopyElementsOperation(elements, containers, force),
 					elements, siblings, renamings, monitor);
 		}
 	}
@@ -233,8 +233,8 @@ public class Model extends Openable implements IScriptModel {
 	 * Flushes the cache of external files known to be existing.
 	 */
 	public static void flushExternalFileCache() {
-		existingExternalFiles = new HashSet<IFileHandle>();
-		existingExternalConfirmedFiles = new HashSet<IFileHandle>();
+		existingExternalFiles = new HashSet<>();
+		existingExternalConfirmedFiles = new HashSet<>();
 	}
 
 	/**
@@ -391,8 +391,8 @@ public class Model extends Openable implements IScriptModel {
 			IProgressMonitor monitor) throws ModelException {
 		if (elements != null && elements.length > 0 && elements[0] != null
 				&& elements[0].getElementType() < IModelElement.TYPE) {
-			runOperation(new MoveResourceElementsOperation(elements,
-					containers, force), elements, siblings, renamings, monitor);
+			runOperation(new MoveResourceElementsOperation(elements, containers,
+					force), elements, siblings, renamings, monitor);
 		} else {
 			if (DLTKCore.DEBUG) {
 				System.err.println("TODO:Add move elements operation"); //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,8 +36,8 @@ import org.eclipse.dltk.core.environment.IFileStoreProvider;
 
 public class EFSFileHandle implements IFileHandle, IFileStoreProvider {
 
-	private static Map<String, Long> timestamps = new HashMap<String, Long>();
-	private static Map<String, Long> lastaccess = new HashMap<String, Long>();
+	private static Map<String, Long> timestamps = new HashMap<>();
+	private static Map<String, Long> lastaccess = new HashMap<>();
 
 	private IFileStore file;
 	private IEnvironment environment;
@@ -68,8 +68,8 @@ public class EFSFileHandle implements IFileHandle, IFileStoreProvider {
 
 	@Override
 	public IFileHandle getChild(final String childname) {
-		return new EFSFileHandle(environment, file
-				.getFileStore(new Path(childname)));
+		return new EFSFileHandle(environment,
+				file.getFileStore(new Path(childname)));
 	}
 
 	@Override

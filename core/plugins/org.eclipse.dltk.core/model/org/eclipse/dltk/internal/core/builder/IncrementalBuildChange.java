@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2016 xored software, Inc.
+ * Copyright (c) 2010, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -28,8 +28,8 @@ import org.eclipse.dltk.core.builder.IBuildChange;
 import org.eclipse.dltk.core.builder.IProjectChange;
 import org.eclipse.dltk.core.builder.IScriptBuilder;
 
-public class IncrementalBuildChange extends IncrementalProjectChange implements
-		IBuildChange {
+public class IncrementalBuildChange extends IncrementalProjectChange
+		implements IBuildChange {
 
 	public IncrementalBuildChange(IResourceDelta delta,
 			IProjectChange[] projectChanges, IProject project,
@@ -90,8 +90,8 @@ public class IncrementalBuildChange extends IncrementalProjectChange implements
 
 	private void loadExternalPaths() throws CoreException {
 		if (externalPaths == null) {
-			externalPaths = new ArrayList<IPath>();
-			externalFragments = new ArrayList<IProjectFragment>();
+			externalPaths = new ArrayList<>();
+			externalFragments = new ArrayList<>();
 			final IProjectFragment[] allFragments = getScriptProject()
 					.getAllProjectFragments();
 			for (int i = 0; i < allFragments.length; i++) {

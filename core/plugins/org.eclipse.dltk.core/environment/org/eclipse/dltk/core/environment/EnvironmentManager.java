@@ -52,19 +52,19 @@ public final class EnvironmentManager {
 	private static final String ENVIRONMENT_EXTENSION = DLTKCore.PLUGIN_ID
 			+ ".environment"; //$NON-NLS-1$
 
-	private static class EnvironmentProviderManager extends
-			LazyExtensionManager<IEnvironmentProvider> {
+	private static class EnvironmentProviderManager
+			extends LazyExtensionManager<IEnvironmentProvider> {
 
-		private static class EnvironmentProviderDesc extends
-				Descriptor<IEnvironmentProvider> {
+		private static class EnvironmentProviderDesc
+				extends Descriptor<IEnvironmentProvider> {
 			private String id;
 			private int priority;
 
 			public EnvironmentProviderDesc(EnvironmentProviderManager manager,
 					IConfigurationElement configurationElement) {
 				super(manager, configurationElement);
-				this.priority = parseInt(configurationElement
-						.getAttribute("priority")); //$NON-NLS-1$
+				this.priority = parseInt(
+						configurationElement.getAttribute("priority")); //$NON-NLS-1$
 				this.id = configurationElement.getAttribute("id"); //$NON-NLS-1$
 			}
 
@@ -87,12 +87,11 @@ public final class EnvironmentManager {
 		@Override
 		protected void initializeDescriptors(
 				List<Descriptor<IEnvironmentProvider>> descriptors) {
-			Collections.sort(descriptors,
-					(arg0, arg1) -> {
-						EnvironmentProviderDesc d1 = (EnvironmentProviderDesc) arg0;
-						EnvironmentProviderDesc d2 = (EnvironmentProviderDesc) arg1;
-						return d1.priority - d2.priority;
-					});
+			Collections.sort(descriptors, (arg0, arg1) -> {
+				EnvironmentProviderDesc d1 = (EnvironmentProviderDesc) arg0;
+				EnvironmentProviderDesc d2 = (EnvironmentProviderDesc) arg1;
+				return d1.priority - d2.priority;
+			});
 		}
 
 	}
@@ -101,7 +100,7 @@ public final class EnvironmentManager {
 
 	private static ListenerList listeners = new ListenerList();
 
-	private static final Map<IProject, IEnvironment> environmentCache = new HashMap<IProject, IEnvironment>();
+	private static final Map<IProject, IEnvironment> environmentCache = new HashMap<>();
 
 	private static IResourceChangeListener resourceListener = event -> {
 		int eventType = event.getType();
@@ -119,17 +118,18 @@ public final class EnvironmentManager {
 	};
 
 	private EnvironmentManager() {
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(
-				resourceListener);
+		ResourcesPlugin.getWorkspace()
+				.addResourceChangeListener(resourceListener);
 	}
 
 	/**
 	 * Returns {@link IEnvironmentProvider} with the specified
 	 * <code>providerId</code> or <code>null</code>.
-	 * 
+	 *
 	 * @since 2.0
 	 */
-	public static IEnvironmentProvider getEnvironmentProvider(String providerId) {
+	public static IEnvironmentProvider getEnvironmentProvider(
+			String providerId) {
 		if (providerId != null) {
 			for (Descriptor<IEnvironmentProvider> descriptor : manager
 					.getDescriptors()) {
@@ -197,8 +197,8 @@ public final class EnvironmentManager {
 		synchronized (environmentCache) {
 			IEnvironment environment = environmentCache.get(project);
 			if (environment == null) {
-				if (!ExternalScriptProject.EXTERNAL_PROJECT_NAME.equals(project
-						.getName())) {
+				if (!ExternalScriptProject.EXTERNAL_PROJECT_NAME
+						.equals(project.getName())) {
 					try {
 						final String environmentId = project
 								.getPersistentProperty(PROJECT_ENVIRONMENT);
@@ -340,10 +340,10 @@ public final class EnvironmentManager {
 		}
 	}
 
-	public static void setEnvironment(IProject project, IEnvironment environment)
-			throws CoreException {
-		setEnvironmentId(project, environment != null ? environment.getId()
-				: null);
+	public static void setEnvironment(IProject project,
+			IEnvironment environment) throws CoreException {
+		setEnvironmentId(project,
+				environment != null ? environment.getId() : null);
 	}
 
 	public static IEnvironment[] getEnvironments() {
@@ -351,7 +351,7 @@ public final class EnvironmentManager {
 	}
 
 	public static IEnvironment[] getEnvironments(boolean allowWait) {
-		List<IEnvironment> envList = new ArrayList<IEnvironment>();
+		List<IEnvironment> envList = new ArrayList<>();
 		for (IEnvironmentProvider provider : manager) {
 			if (allowWait) {
 				waitInitialized(provider);
@@ -443,15 +443,15 @@ public final class EnvironmentManager {
 		if (provider.isInitialized()) {
 			return;
 		}
-		ExecutionContexts.getManager().executeInBackground(
-				new ExecutableOperation(
+		ExecutionContexts.getManager()
+				.executeInBackground(new ExecutableOperation(
 						Messages.EnvironmentManager_initializingOperationName) {
 					@Override
 					public void execute(IProgressMonitor monitor) {
 						monitor.beginTask(Util.EMPTY_STRING, 1);
-						monitor.setTaskName(NLS
-								.bind(Messages.EnvironmentManager_initializingTaskName,
-										provider.getProviderName()));
+						monitor.setTaskName(NLS.bind(
+								Messages.EnvironmentManager_initializingTaskName,
+								provider.getProviderName()));
 						provider.waitInitialized();
 						monitor.worked(1);
 						monitor.done();
@@ -487,18 +487,18 @@ public final class EnvironmentManager {
 		}
 	}
 
-	private static class LocationResolverManager extends
-			LazyExtensionManager<IEnvironmentLocationResolver> {
+	private static class LocationResolverManager
+			extends LazyExtensionManager<IEnvironmentLocationResolver> {
 
-		private static class Desc extends
-				Descriptor<IEnvironmentLocationResolver> {
+		private static class Desc
+				extends Descriptor<IEnvironmentLocationResolver> {
 			private int priority;
 
 			public Desc(LocationResolverManager manager,
 					IConfigurationElement configurationElement) {
 				super(manager, configurationElement);
-				this.priority = parseInt(configurationElement
-						.getAttribute("priority")); //$NON-NLS-1$
+				this.priority = parseInt(
+						configurationElement.getAttribute("priority")); //$NON-NLS-1$
 			}
 
 		}
@@ -519,12 +519,11 @@ public final class EnvironmentManager {
 		@Override
 		protected void initializeDescriptors(
 				List<Descriptor<IEnvironmentLocationResolver>> descriptors) {
-			Collections.sort(descriptors,
-					(arg0, arg1) -> {
-						Desc d1 = (Desc) arg0;
-						Desc d2 = (Desc) arg1;
-						return d1.priority - d2.priority;
-					});
+			Collections.sort(descriptors, (arg0, arg1) -> {
+				Desc d1 = (Desc) arg0;
+				Desc d2 = (Desc) arg1;
+				return d1.priority - d2.priority;
+			});
 		}
 	}
 
@@ -537,7 +536,7 @@ public final class EnvironmentManager {
 		if (resolverManager == null) {
 			resolverManager = new LocationResolverManager();
 		}
-		final List<URI> result = new ArrayList<URI>();
+		final List<URI> result = new ArrayList<>();
 		for (IEnvironmentLocationResolver resolver : resolverManager) {
 			final URI[] resolved = resolver.resolve(location);
 			if (resolved.length != 0) {

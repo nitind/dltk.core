@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.builder;
 
@@ -51,7 +50,7 @@ public class State {
 	 **/
 	public static final byte VERSION = 0x0018;
 
-	Set<IPath> externalFolderLocations = new HashSet<IPath>();
+	Set<IPath> externalFolderLocations = new HashSet<>();
 
 	boolean noCleanExternalFolders = false;
 
@@ -67,7 +66,7 @@ public class State {
 
 		@Override
 		public String toString() {
-			final List<String> values = new ArrayList<String>();
+			final List<String> values = new ArrayList<>();
 			if ((flags & IBuildState.STRUCTURAL) != 0) {
 				values.add("STRUCTURAL");
 			}
@@ -86,9 +85,9 @@ public class State {
 	 * Full (absolute,including project) path to the set of paths, depending on
 	 * it.
 	 */
-	private final Map<IPath, Map<IPath, DependencyInfo>> dependencies = new HashMap<IPath, Map<IPath, DependencyInfo>>();
+	private final Map<IPath, Map<IPath, DependencyInfo>> dependencies = new HashMap<>();
 
-	private final Set<IPath> importProblems = new HashSet<IPath>();
+	private final Set<IPath> importProblems = new HashSet<>();
 
 	static final byte SOURCE_FOLDER = 1;
 	static final byte BINARY_FOLDER = 2;
@@ -138,7 +137,7 @@ public class State {
 
 	void recordStructuralChanges(Set<IPath> changes) {
 		if (changes != null && !changes.isEmpty()) {
-			this.structuralChanges = new HashSet<IPath>(changes);
+			this.structuralChanges = new HashSet<>(changes);
 		} else {
 			this.structuralChanges = null;
 		}
@@ -149,16 +148,17 @@ public class State {
 			System.out.println("About to read state " + project.getName()); //$NON-NLS-1$
 		if (VERSION != in.readByte()) {
 			if (ScriptBuilder.DEBUG)
-				System.out
-						.println("Found non-compatible state version... answered null for " + project.getName()); //$NON-NLS-1$
+				System.out.println(
+						"Found non-compatible state version... answered null for " //$NON-NLS-1$
+								+ project.getName());
 			return null;
 		}
 
 		State newState = new State(in.readUTF());
 		if (!project.getName().equals(newState.scriptProjectName)) {
 			if (ScriptBuilder.DEBUG)
-				System.out
-						.println("Project's name does not match... answered null"); //$NON-NLS-1$
+				System.out.println(
+						"Project's name does not match... answered null"); //$NON-NLS-1$
 			return null;
 		}
 		newState.buildNumber = in.readInt();
@@ -169,14 +169,14 @@ public class State {
 		for (int i = 0; i < length; i++) {
 			String folderName = in.readUTF();
 			if (folderName.length() > 0)
-				newState.externalFolderLocations.add(Path
-						.fromPortableString(folderName));
+				newState.externalFolderLocations
+						.add(Path.fromPortableString(folderName));
 		}
 		newState.noCleanExternalFolders = in.readBoolean();
 		final int dependencyCount = in.readInt();
 		newState.dependencies.clear();
 		for (int i = 0; i < dependencyCount; ++i) {
-			final Map<IPath, DependencyInfo> paths = new HashMap<IPath, DependencyInfo>();
+			final Map<IPath, DependencyInfo> paths = new HashMap<>();
 			newState.dependencies.put(Path.fromPortableString(in.readUTF()),
 					paths);
 			readDependencyPaths(in, paths);
@@ -184,8 +184,8 @@ public class State {
 		newState.importProblems.clear();
 		readPaths(in, newState.importProblems);
 		if (ScriptBuilder.DEBUG)
-			System.out
-					.println("Successfully read state for " + newState.scriptProjectName); //$NON-NLS-1$
+			System.out.println("Successfully read state for " //$NON-NLS-1$
+					+ newState.scriptProjectName);
 		return newState;
 	}
 
@@ -224,8 +224,8 @@ public class State {
 		 * ClasspathMultiDirectory[] int id String path(s)
 		 */
 		out.writeInt(externalFolderLocations.size());
-		for (Iterator<IPath> iterator = this.externalFolderLocations.iterator(); iterator
-				.hasNext();) {
+		for (Iterator<IPath> iterator = this.externalFolderLocations
+				.iterator(); iterator.hasNext();) {
 			IPath path = iterator.next();
 			out.writeUTF(path.toPortableString());
 		}
@@ -287,7 +287,7 @@ public class State {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void setNoCleanExternalFolders() {
 		this.noCleanExternalFolders = true;
@@ -303,7 +303,7 @@ public class State {
 		Assert.isLegal(!path.equals(dependency));
 		Map<IPath, DependencyInfo> paths = dependencies.get(dependency);
 		if (paths == null) {
-			paths = new HashMap<IPath, DependencyInfo>();
+			paths = new HashMap<>();
 			dependencies.put(dependency, paths);
 		}
 		DependencyInfo depInfo = paths.get(path);
@@ -335,7 +335,7 @@ public class State {
 	 * Finds the files which should be rebuilt for the specified changes and
 	 * adds them to the newDependencies and newStructuralDependencies
 	 * parameters.
-	 * 
+	 *
 	 * @param paths
 	 *            input parameter - paths of all the changed files
 	 * @param structuralChanges
@@ -361,10 +361,11 @@ public class State {
 			final Map<IPath, DependencyInfo> deps = dependencies.get(path);
 			if (deps != null) {
 				for (Map.Entry<IPath, DependencyInfo> entry : deps.entrySet()) {
-					if (structuralChange
-							|| ((entry.getValue().flags & IBuildState.CONTENT) != 0)) {
+					if (structuralChange || ((entry.getValue().flags
+							& IBuildState.CONTENT) != 0)) {
 						newDependencies.add(entry.getKey());
-						if ((entry.getValue().flags & IBuildState.EXPORTED) != 0) {
+						if ((entry.getValue().flags
+								& IBuildState.EXPORTED) != 0) {
 							newStructuralDependencies.add(entry.getKey());
 						}
 					}
@@ -378,22 +379,23 @@ public class State {
 		if (structuralChanges == null) {
 			return Collections.emptyList();
 		}
-		final Set<IPath> result = new HashSet<IPath>();
+		final Set<IPath> result = new HashSet<>();
 		result.addAll(paths);
 		result.retainAll(structuralChanges);
 		if (result.isEmpty()) {
 			return Collections.emptyList();
 		}
-		final List<IPath> queue = new ArrayList<IPath>(result);
+		final List<IPath> queue = new ArrayList<>(result);
 		while (!queue.isEmpty()) {
-			final List<IPath> nextQueue = new ArrayList<IPath>();
+			final List<IPath> nextQueue = new ArrayList<>();
 			for (IPath path : queue) {
 				final Map<IPath, DependencyInfo> deps = dependencies.get(path);
 				if (deps != null) {
 					for (Map.Entry<IPath, DependencyInfo> entry : deps
 							.entrySet()) {
 						if (!result.contains(entry.getKey())
-								&& ((entry.getValue().flags & IBuildState.STRUCTURAL) != 0)) {
+								&& ((entry.getValue().flags
+										& IBuildState.STRUCTURAL) != 0)) {
 							nextQueue.add(entry.getKey());
 						}
 					}
@@ -411,8 +413,8 @@ public class State {
 		for (Iterator<Map.Entry<IPath, Map<IPath, DependencyInfo>>> i = dependencies
 				.entrySet().iterator(); i.hasNext();) {
 			final Map.Entry<IPath, Map<IPath, DependencyInfo>> entry = i.next();
-			System.out.println("  " + entry.getKey() + " -> "
-					+ entry.getValue());
+			System.out
+					.println("  " + entry.getKey() + " -> " + entry.getValue());
 		}
 	}
 }

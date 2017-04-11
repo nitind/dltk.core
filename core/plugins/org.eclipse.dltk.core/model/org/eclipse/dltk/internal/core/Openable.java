@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,12 +49,12 @@ import org.eclipse.dltk.core.WorkingCopyOwner;
 
 /**
  * Abstract class for implementations of model elements which are IOpenable.
- * 
+ *
  * @see IModelElement
  * @see IOpenable
  */
-public abstract class Openable extends ModelElement implements IOpenable,
-		IBufferChangedListener {
+public abstract class Openable extends ModelElement
+		implements IOpenable, IBufferChangedListener {
 
 	protected Openable(ModelElement parent) {
 		super(parent);
@@ -65,7 +65,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	 * element as being out of synch with its buffer's contents. If the buffer
 	 * has been closed, this element is set as NOT out of synch with the
 	 * contents.
-	 * 
+	 *
 	 * @see IBufferChangedListener
 	 */
 	@Override
@@ -176,9 +176,8 @@ public abstract class Openable extends ModelElement implements IOpenable,
 			default:
 				element = "element"; //$NON-NLS-1$
 			}
-			System.out
-					.println(Thread.currentThread()
-							+ " OPENING " + element + " " + this.toStringWithAncestors()); //$NON-NLS-1$//$NON-NLS-2$
+			System.out.println(Thread.currentThread() + " OPENING " + element //$NON-NLS-1$
+					+ " " + this.toStringWithAncestors()); //$NON-NLS-1$
 		}
 
 		// open the parent if necessary
@@ -219,7 +218,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	 * the first time a request is being made for the buffer, an attempt is made
 	 * to create and fill this element's buffer. If the buffer has been closed
 	 * since it was first opened, the buffer is re-created.
-	 * 
+	 *
 	 * @see IOpenable
 	 */
 	@Override
@@ -259,7 +258,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	/**
 	 * Return my underlying resource. Elements that may not have a corresponding
 	 * resource must override this method.
-	 * 
+	 *
 	 * @see IScriptElement
 	 */
 	@Override
@@ -323,7 +322,8 @@ public abstract class Openable extends ModelElement implements IOpenable,
 		// to see if they have an child with unsaved changes
 		int elementType = getElementType();
 		if (elementType == SCRIPT_FOLDER || elementType == PROJECT_FRAGMENT
-				|| elementType == SCRIPT_PROJECT || elementType == SCRIPT_MODEL) { // fix
+				|| elementType == SCRIPT_PROJECT
+				|| elementType == SCRIPT_MODEL) { // fix
 			// for
 			// 1FWNMHH
 			Enumeration openBuffers = getBufferManager().getOpenBuffers();
@@ -343,7 +343,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 
 	/**
 	 * Subclasses must override as required.
-	 * 
+	 *
 	 * @see IOpenable
 	 */
 	@Override
@@ -352,7 +352,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	}
 
 	/**
-	 * 
+	 *
 	 * @see IOpenable
 	 */
 	@Override
@@ -418,7 +418,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 
 	/**
 	 * Answers true if the parent exists (null parent is answering true)
-	 * 
+	 *
 	 */
 	protected boolean parentExists() {
 		IModelElement parentElement = getParent();
@@ -435,8 +435,8 @@ public abstract class Openable extends ModelElement implements IOpenable,
 		if (workspace == null)
 			return false; // workaround for
 		// http://bugs.eclipse.org/bugs/show_bug.cgi?id=34069
-		return Model.getTarget(workspace.getRoot(), this.getPath()
-				.makeRelative(), // ensure path is relative (see
+		return Model.getTarget(workspace.getRoot(),
+				this.getPath().makeRelative(), // ensure path is relative (see
 				// http://dev.eclipse.org/bugs/show_bug.cgi?id=22517)
 				true) != null;
 	}
@@ -447,8 +447,8 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	@Override
 	public void save(IProgressMonitor pm, boolean force) throws ModelException {
 		if (isReadOnly()) {
-			throw new ModelException(new ModelStatus(
-					IModelStatusConstants.READ_ONLY, this));
+			throw new ModelException(
+					new ModelStatus(IModelStatusConstants.READ_ONLY, this));
 		}
 		IBuffer buf = getBuffer();
 		if (buf != null) { // some Openables (like a ScriptProject) don't have
@@ -566,11 +566,10 @@ public abstract class Openable extends ModelElement implements IOpenable,
 				getScriptProject(), cu, position, requestor);
 		if (!thread.execute(timeout)) {
 			Thread.interrupted();
-			requestor
-					.completionFailure(new DefaultProblem(
-							"Computation of proposals takes too long. Please try again.",
-							IProblemIdentifier.NULL, null,
-							ProblemSeverity.WARNING, 0, 0, 0));
+			requestor.completionFailure(new DefaultProblem(
+					"Computation of proposals takes too long. Please try again.",
+					IProblemIdentifier.NULL, null, ProblemSeverity.WARNING, 0,
+					0, 0));
 			if (requestor instanceof ICompletionRequestorExtension) {
 				((ICompletionRequestorExtension) requestor).reset();
 			}
@@ -578,7 +577,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 	}
 
 	static class ModelElementSelectionRequestor implements ISelectionRequestor {
-		private final List<IModelElement> elements = new ArrayList<IModelElement>();
+		private final List<IModelElement> elements = new ArrayList<>();
 		private List<Object> foreignElements;
 		private Map<Object, ISourceRange> ranges;
 
@@ -588,7 +587,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 				acceptModelElement((IModelElement) element);
 			} else {
 				if (foreignElements == null) {
-					foreignElements = new ArrayList<Object>();
+					foreignElements = new ArrayList<>();
 				}
 				foreignElements.add(element);
 			}
@@ -604,7 +603,7 @@ public abstract class Openable extends ModelElement implements IOpenable,
 			acceptForeignElement(element);
 			if (range != null) {
 				if (ranges == null) {
-					ranges = new HashMap<Object, ISourceRange>();
+					ranges = new HashMap<>();
 				}
 				ranges.put(element, range);
 			}
@@ -632,11 +631,14 @@ public abstract class Openable extends ModelElement implements IOpenable,
 				return null;
 			} else {
 				final IModelElement[] elementArray = elements != null
-						&& !elements.isEmpty() ? elements
-						.toArray(new IModelElement[elements.size()]) : null;
+						&& !elements.isEmpty()
+								? elements.toArray(
+										new IModelElement[elements.size()])
+								: null;
 				final Object[] foreignElementArray = foreignElements != null
-						&& !foreignElements.isEmpty() ? foreignElements
-						.toArray() : null;
+						&& !foreignElements.isEmpty()
+								? foreignElements.toArray()
+								: null;
 				return new CodeSelection(elementArray, foreignElementArray,
 						ranges);
 			}
@@ -658,16 +660,17 @@ public abstract class Openable extends ModelElement implements IOpenable,
 				.getLanguageToolkit(this);
 		if (toolkit == null) {
 			if (DLTKCore.VERBOSE) {
-				System.out
-						.println("DLTK.Openable.VERBOSE: Failed to detect language toolkit... for module:" //$NON-NLS-1$
+				System.out.println(
+						"DLTK.Openable.VERBOSE: Failed to detect language toolkit... for module:" //$NON-NLS-1$
 								+ this.getResource().getName());
 			}
 			return;
 		}
 
-		if (offset < 0 || length < 0 || (end != -1 && (offset + length > end))) {
-			throw new ModelException(new ModelStatus(
-					IModelStatusConstants.INDEX_OUT_OF_BOUNDS));
+		if (offset < 0 || length < 0
+				|| (end != -1 && (offset + length > end))) {
+			throw new ModelException(
+					new ModelStatus(IModelStatusConstants.INDEX_OUT_OF_BOUNDS));
 		}
 
 		final ISelectionEngine[] engines = DLTKLanguageManager
@@ -676,8 +679,8 @@ public abstract class Openable extends ModelElement implements IOpenable,
 			for (ISelectionEngine engine : engines) {
 				engine.setOptions(project.getOptions(true));
 				engine.setRequestor(requestor);
-				final IModelElement[] result = engine.select(cu, offset, offset
-						+ length - 1);
+				final IModelElement[] result = engine.select(cu, offset,
+						offset + length - 1);
 				if (result != null) {
 					requestor.addModelElements(result);
 				}

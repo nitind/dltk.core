@@ -40,9 +40,9 @@ import org.eclipse.dltk.internal.core.util.Util;
  * A search participant describes a particular extension to a generic search
  * mechanism, allowing thus to perform combined search actions which will
  * involve all required participants
- * 
+ *
  * A search scope defines which participants are involved.
- * 
+ *
  * A search participant is responsible for holding index files, and selecting
  * the appropriate ones to feed to index queries. It also can map a document
  * path to an actual document (note that documents could live outside the
@@ -76,8 +76,9 @@ public class DLTKSearchParticipant extends SearchParticipant {
 	}
 
 	private boolean isExternal(String documentPath) {
-		Object target = Model.getTarget(ResourcesPlugin.getWorkspace()
-				.getRoot(), new Path(documentPath), true);
+		Object target = Model.getTarget(
+				ResourcesPlugin.getWorkspace().getRoot(),
+				new Path(documentPath), true);
 		if (target instanceof IResource)
 			return false;
 		else
@@ -90,12 +91,12 @@ public class DLTKSearchParticipant extends SearchParticipant {
 			SearchPattern pattern, IDLTKSearchScope scope,
 			SearchRequestor requestor, IProgressMonitor monitor)
 			throws CoreException {
-		IMatchLocator matchLocator = createMatchLocator(scope
-				.getLanguageToolkit());
+		IMatchLocator matchLocator = createMatchLocator(
+				scope.getLanguageToolkit());
 		matchLocator.initialize(pattern, scope);
 		matchLocator.setRequestor(requestor);
-		matchLocator.setProgressMonitor(monitor == null ? null
-				: new SubProgressMonitor(monitor, 95));
+		matchLocator.setProgressMonitor(
+				monitor == null ? null : new SubProgressMonitor(monitor, 95));
 		/* eliminating false matches and locating them */
 		if (monitor != null && monitor.isCanceled())
 			throw new OperationCanceledException();
@@ -116,7 +117,7 @@ public class DLTKSearchParticipant extends SearchParticipant {
 
 	private ISourceModule[] doLocateModules(SearchDocument[] searchDocuments,
 			IDLTKSearchScope scope, IProgressMonitor progressMonitor) {
-		final List<ISourceModule> modules = new ArrayList<ISourceModule>(
+		final List<ISourceModule> modules = new ArrayList<>(
 				searchDocuments.length);
 		int docsLength = searchDocuments.length;
 		if (BasicSearchEngine.VERBOSE) {
@@ -126,8 +127,9 @@ public class DLTKSearchParticipant extends SearchParticipant {
 			System.out.println("]"); //$NON-NLS-1$
 		}
 		// init infos for progress increasing
-		int n = docsLength < 1000 ? Math.min(Math.max(docsLength / 200 + 1, 2),
-				4) : 5 * (docsLength / 1000);
+		int n = docsLength < 1000
+				? Math.min(Math.max(docsLength / 200 + 1, 2), 4)
+				: 5 * (docsLength / 1000);
 		// step should not be 0
 		final int progressStep = docsLength < n ? 1 : docsLength / n;
 		int progressWorked = 0;
@@ -138,7 +140,7 @@ public class DLTKSearchParticipant extends SearchParticipant {
 		}
 		Util.sort(searchDocuments, (a, b) -> ((SearchDocument) a).getPath()
 				.compareTo(((SearchDocument) b).getPath()));
-		final Set<String> previousPaths = new HashSet<String>();
+		final Set<String> previousPaths = new HashSet<>();
 		for (int i = 0; i < docsLength; i++) {
 			if (progressMonitor != null && progressMonitor.isCanceled()) {
 				throw new OperationCanceledException();
@@ -175,7 +177,8 @@ public class DLTKSearchParticipant extends SearchParticipant {
 	}
 
 	@Override
-	public IPath[] selectIndexes(SearchPattern pattern, IDLTKSearchScope scope) {
+	public IPath[] selectIndexes(SearchPattern pattern,
+			IDLTKSearchScope scope) {
 		if (this.indexSelector == null) {
 			this.indexSelector = new IndexSelector(scope, pattern);
 			this.indexSelector.setMixinOnly(this.bOnlyMixin);

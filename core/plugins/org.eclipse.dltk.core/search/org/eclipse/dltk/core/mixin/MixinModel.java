@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,6 @@ import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IElementChangedListener;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IModelElementDelta;
-import org.eclipse.dltk.core.IModelElementVisitor;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
@@ -70,13 +69,13 @@ public class MixinModel {
 	/**
 	 * Contains map of source modules to mixin elements.
 	 */
-	private Map<ISourceModule, List<MixinElement>> elementToMixinCache = new HashMap<ISourceModule, List<MixinElement>>();
+	private Map<ISourceModule, List<MixinElement>> elementToMixinCache = new HashMap<>();
 
 	private final RequestCache requestCache = new RequestCache(
 			REQUEST_CACHE_LIMIT);
 
 	// true if exists, false if doesn't
-	private Map<String, Boolean> knownKeysCache = new HashMap<String, Boolean>();
+	private Map<String, Boolean> knownKeysCache = new HashMap<>();
 	// boolean, for the atomicity of it
 	public boolean removes = true;
 
@@ -91,11 +90,11 @@ public class MixinModel {
 	/**
 	 * modules required to be reparsed
 	 */
-	private Set<ISourceModule> modulesToReparse = new HashSet<ISourceModule>();
+	private Set<ISourceModule> modulesToReparse = new HashSet<>();
 
 	/**
 	 * Creates workspace instance
-	 * 
+	 *
 	 * @param toolkit
 	 */
 	public MixinModel(IDLTKLanguageToolkit toolkit) {
@@ -104,7 +103,7 @@ public class MixinModel {
 
 	/**
 	 * Creates project instance
-	 * 
+	 *
 	 * @param toolkit
 	 * @param project
 	 */
@@ -117,15 +116,15 @@ public class MixinModel {
 		this.cache = new MixinCache(CACHE_LIMIT);
 		DLTKCore.addElementChangedListener(changedListener,
 				ElementChangedEvent.POST_CHANGE);
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(
-				changedListener);
+		ResourcesPlugin.getWorkspace()
+				.addResourceChangeListener(changedListener);
 		MixinModelRegistry.register(this);
 	}
 
 	public void stop() {
 		DLTKCore.removeElementChangedListener(changedListener);
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(
-				changedListener);
+		ResourcesPlugin.getWorkspace()
+				.removeResourceChangeListener(changedListener);
 		MixinModelRegistry.unregister(this);
 	}
 
@@ -231,7 +230,7 @@ public class MixinModel {
 		}
 		long parsee = TRACE ? System.currentTimeMillis() : 0;
 
-		Set<MixinElement> result = new HashSet<MixinElement>();
+		Set<MixinElement> result = new HashSet<>();
 
 		synchronized (this) {
 			for (String key : entry.keys) {
@@ -254,8 +253,8 @@ public class MixinModel {
 	}
 
 	// called with lock being held
-	private void addKeyToSet(Set<MixinElement> result,
-			MixinElement element, String pattern) {
+	private void addKeyToSet(Set<MixinElement> result, MixinElement element,
+			String pattern) {
 		// Skip all not matched keys
 		if (!CharOperation.match(pattern.toCharArray(),
 				element.key.toCharArray(), true)) {
@@ -280,7 +279,7 @@ public class MixinModel {
 			// TODO searches with clashing keys
 			// requestCache.put(pattern, entry);
 		}
-		Map<ISourceModule, Set<String>> keys = new HashMap<ISourceModule, Set<String>>();
+		Map<ISourceModule, Set<String>> keys = new HashMap<>();
 		ISourceModule[] containedModules = null;
 		try {
 			containedModules = SearchEngine.searchMixinSources(
@@ -290,10 +289,10 @@ public class MixinModel {
 		}
 		entry.expireTime = System.currentTimeMillis()
 				+ REQUEST_CACHE_EXPIRE_TIME;
-		entry.modules = new HashSet<ISourceModule>(
+		entry.modules = new HashSet<>(
 				Arrays.asList(containedModules));
 		entry.prefix = pattern;
-		entry.keys = new HashSet<String>();
+		entry.keys = new HashSet<>();
 		for (Set<String> strs : keys.values()) {
 			entry.keys.addAll(strs);
 		}
@@ -389,16 +388,16 @@ public class MixinModel {
 
 	// TODO long-running operation. shouldn't be synchronized
 	public synchronized void reportModule(ISourceModule sourceModule) {
-			if (!elementToMixinCache.containsKey(sourceModule)) {
-				elementToMixinCache.put(sourceModule,
-						new ArrayList<MixinElement>());
-			} else {
-				// Module already in model. So we do not to rebuild it.
-				if (!modulesToReparse.remove(sourceModule)) {
-					return;
-				}
-				// We need to reparse module if some elements are moved from it.
+		if (!elementToMixinCache.containsKey(sourceModule)) {
+			elementToMixinCache.put(sourceModule,
+					new ArrayList<MixinElement>());
+		} else {
+			// Module already in model. So we do not to rebuild it.
+			if (!modulesToReparse.remove(sourceModule)) {
+				return;
 			}
+			// We need to reparse module if some elements are moved from it.
+		}
 		try {
 			IMixinParser mixinParser = MixinManager
 					.getMixinParser(sourceModule);
@@ -417,7 +416,7 @@ public class MixinModel {
 	/**
 	 * Should find all elements source modules to be sure we build complete
 	 * child tree.
-	 * 
+	 *
 	 * @param element
 	 * @return
 	 * @since 2.0
@@ -437,7 +436,7 @@ public class MixinModel {
 	/**
 	 * Returns a mixin element from this.cache by it's key, or creates new one
 	 * if cache doesn't contain required element
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
@@ -452,8 +451,8 @@ public class MixinModel {
 		return element;
 	}
 
-	private interface IMixinChangedListener extends IElementChangedListener,
-			IResourceChangeListener {
+	private interface IMixinChangedListener
+			extends IElementChangedListener, IResourceChangeListener {
 	}
 
 	private IMixinChangedListener changedListener = new IMixinChangedListener() {
@@ -470,13 +469,18 @@ public class MixinModel {
 			IModelElement element = delta.getElement();
 			if (delta.getKind() == IModelElementDelta.REMOVED
 					|| delta.getKind() == IModelElementDelta.CHANGED
-					|| (delta.getFlags() & IModelElementDelta.F_REMOVED_FROM_BUILDPATH) != 0
+					|| (delta.getFlags()
+							& IModelElementDelta.F_REMOVED_FROM_BUILDPATH) != 0
 					|| (delta.getFlags() & IModelElementDelta.CHANGED) != 0) {
 				if (element.getElementType() != IModelElement.SOURCE_MODULE
-						&& element.getElementType() != IModelElement.PROJECT_FRAGMENT
-						&& element.getElementType() != IModelElement.SCRIPT_FOLDER
-						&& element.getElementType() != IModelElement.SCRIPT_MODEL
-						&& element.getElementType() != IModelElement.SCRIPT_PROJECT) {
+						&& element
+								.getElementType() != IModelElement.PROJECT_FRAGMENT
+						&& element
+								.getElementType() != IModelElement.SCRIPT_FOLDER
+						&& element
+								.getElementType() != IModelElement.SCRIPT_MODEL
+						&& element
+								.getElementType() != IModelElement.SCRIPT_PROJECT) {
 					ISourceModule module = (ISourceModule) element
 							.getAncestor(IModelElement.SOURCE_MODULE);
 					MixinModel.this.remove(module);
@@ -488,24 +492,24 @@ public class MixinModel {
 
 			if (element.getElementType() == IModelElement.SCRIPT_PROJECT
 					&& delta.getKind() == IModelElementDelta.CHANGED
-					&& (delta.getFlags() & IModelElementDelta.F_BUILDPATH_CHANGED) != 0) {
+					&& (delta.getFlags()
+							& IModelElementDelta.F_BUILDPATH_CHANGED) != 0) {
 				clear();
 				return;
-			} else if ((delta.getKind() == IModelElementDelta.REMOVED || delta
-					.getKind() == IModelElementDelta.CHANGED)
-					&& (element.getElementType() == IModelElement.SCRIPT_FOLDER || element
-							.getElementType() == IModelElement.PROJECT_FRAGMENT)) {
+			} else if ((delta.getKind() == IModelElementDelta.REMOVED
+					|| delta.getKind() == IModelElementDelta.CHANGED)
+					&& (element.getElementType() == IModelElement.SCRIPT_FOLDER
+							|| element
+									.getElementType() == IModelElement.PROJECT_FRAGMENT)) {
 				if (delta.getAffectedChildren().length == 0) {
 					try {
-						element.accept(new IModelElementVisitor() {
-							@Override
-							public boolean visit(IModelElement element) {
-								if (element.getElementType() == ISourceModule.SOURCE_MODULE) {
-									remove((ISourceModule) element);
-									return false;
-								}
-								return true;
+						element.accept(element1 -> {
+							if (element1
+									.getElementType() == ISourceModule.SOURCE_MODULE) {
+								remove((ISourceModule) element1);
+								return false;
 							}
+							return true;
 						});
 					} catch (ModelException e) {
 						if (DLTKCore.DEBUG) {
@@ -528,8 +532,8 @@ public class MixinModel {
 				for (IModelElementDelta child : delta.getAffectedChildren()) {
 					processDelta(child);
 				}
-			} else if (delta.getKind() == IModelElementDelta.REMOVED
-					&& element.getElementType() == IModelElement.SCRIPT_FOLDER) {
+			} else if (delta.getKind() == IModelElementDelta.REMOVED && element
+					.getElementType() == IModelElement.SCRIPT_FOLDER) {
 				/* folder delete delta has no children */
 				MixinModel.this.removeFolder((IScriptFolder) element);
 			}
@@ -565,7 +569,7 @@ public class MixinModel {
 						return;
 					}
 					// remove all resources with given project from model.
-					List<ISourceModule> toRemove = new ArrayList<ISourceModule>();
+					List<ISourceModule> toRemove = new ArrayList<>();
 					synchronized (this) {
 						IProject project = (IProject) resource;
 						for (ISourceModule module : elementToMixinCache
@@ -651,7 +655,7 @@ public class MixinModel {
 	 */
 	protected synchronized void removeFolder(IScriptFolder folder) {
 		final IPath folderPath = folder.getPath();
-		final List<ISourceModule> modulesToRemove = new ArrayList<ISourceModule>();
+		final List<ISourceModule> modulesToRemove = new ArrayList<>();
 		for (final ISourceModule module : elementToMixinCache.keySet()) {
 			final IPath path = module.getPath();
 			if (folderPath.isPrefixOf(path)) {
@@ -682,7 +686,7 @@ public class MixinModel {
 
 	/***************************************************************************
 	 * Then getObjects are called, special initialize listener are called.
-	 * 
+	 *
 	 */
 	public interface IMixinObjectInitializeListener {
 		void initialize(IMixinElement element, Object object,
@@ -693,14 +697,14 @@ public class MixinModel {
 
 	private static final Object[] NO_OBJECTS = new Object[0];
 
-	private final class MixinElement implements IMixinElement,
-			IInternalMixinElement {
+	private final class MixinElement
+			implements IMixinElement, IInternalMixinElement {
 		private String key;
 		private boolean bFinal = false;
-		private List<ISourceModule> sourceModules = new ArrayList<ISourceModule>();
-		private Map<ISourceModule, List<Object>> sourceModuleToObject = new HashMap<ISourceModule, List<Object>>();
+		private List<ISourceModule> sourceModules = new ArrayList<>();
+		private Map<ISourceModule, List<Object>> sourceModuleToObject = new HashMap<>();
 
-		private Set<MixinElement> children = new HashSet<MixinElement>();
+		private Set<MixinElement> children = new HashSet<>();
 
 		@Override
 		public boolean equals(Object obj) {
@@ -736,7 +740,7 @@ public class MixinModel {
 			if (info.object != null) {
 				List<Object> list = this.sourceModuleToObject.get(module);
 				if (list == null) {
-					list = new ArrayList<Object>();
+					list = new ArrayList<>();
 					this.sourceModuleToObject.put(module, list);
 				}
 				list.add(info.object);
@@ -769,8 +773,8 @@ public class MixinModel {
 		@Override
 		public IMixinElement getChildren(String key) {
 			this.validate();
-			return MixinModel.this.get(this.key
-					+ IMixinRequestor.MIXIN_NAME_SEPARATOR + key);
+			return MixinModel.this
+					.get(this.key + IMixinRequestor.MIXIN_NAME_SEPARATOR + key);
 		}
 
 		@Override
@@ -837,7 +841,7 @@ public class MixinModel {
 		public Object[] getAllObjects() {
 			this.validate();
 			synchronized (MixinModel.this) {
-				Set<Object> objects = new HashSet<Object>();
+				Set<Object> objects = new HashSet<>();
 				for (ISourceModule module : sourceModules) {
 					for (Object obj : this.getObjects(module)) {
 						objects.add(obj);
@@ -920,8 +924,8 @@ public class MixinModel {
 				// all selected elements.
 				if (list.length != 1) {
 					for (int i = 0; i < list.length - 1; ++i) {
-						MixinElement parent = getCreateEmpty(element
-								.getParentKey());
+						MixinElement parent = getCreateEmpty(
+								element.getParentKey());
 						parent.children.add(element);
 						addElementToModules(parent);
 						element = parent;
@@ -935,9 +939,9 @@ public class MixinModel {
 			List<MixinElement> elements = MixinModel.this.elementToMixinCache
 					.get(currentModule);
 			if (elements == null) {
-				elements = new ArrayList<MixinElement>();
-				MixinModel.this.elementToMixinCache
-						.put(currentModule, elements);
+				elements = new ArrayList<>();
+				MixinModel.this.elementToMixinCache.put(currentModule,
+						elements);
 			}
 			elements.add(element);
 		}
@@ -997,8 +1001,8 @@ public class MixinModel {
 			ISourceModule module, Object o) {
 		Object[] listeners = mixinObjectInitializeListeners.getListeners();
 		for (int i = 0; i < listeners.length; i++) {
-			((IMixinObjectInitializeListener) (listeners[i])).initialize(
-					element, o, module);
+			((IMixinObjectInitializeListener) (listeners[i]))
+					.initialize(element, o, module);
 		}
 	}
 

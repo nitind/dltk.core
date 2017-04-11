@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2016 xored software, Inc.
+ * Copyright (c) 2010, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -19,7 +19,7 @@ import java.util.Queue;
 
 public class OrMatchingPredicate<E> implements IMatchingPredicate<E> {
 
-	private List<IMatchingPredicate<E>> predicates = new ArrayList<IMatchingPredicate<E>>();
+	private List<IMatchingPredicate<E>> predicates = new ArrayList<>();
 
 	public void addPredicate(IMatchingPredicate<E> predicate) {
 		predicates.add(predicate);
@@ -48,9 +48,10 @@ public class OrMatchingPredicate<E> implements IMatchingPredicate<E> {
 	}
 
 	public IMatchingPredicate<E> optimize() {
-		final Queue<IMatchingPredicate<E>> queue = new LinkedList<IMatchingPredicate<E>>(
+		final Queue<IMatchingPredicate<E>> queue = new LinkedList<>(
 				predicates);
-		for (IMatchingPredicate<E> predicate; (predicate = queue.poll()) != null;) {
+		for (IMatchingPredicate<E> predicate; (predicate = queue
+				.poll()) != null;) {
 			for (Iterator<IMatchingPredicate<E>> i = predicates.iterator(); i
 					.hasNext();) {
 				final IMatchingPredicate<E> next = i.next();
@@ -61,7 +62,7 @@ public class OrMatchingPredicate<E> implements IMatchingPredicate<E> {
 			}
 		}
 		if (predicates.isEmpty()) {
-			return new FalseMatchingPredicate<E>();
+			return new FalseMatchingPredicate<>();
 		} else if (predicates.size() == 1) {
 			return predicates.get(0);
 		} else {

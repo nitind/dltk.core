@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,8 +30,8 @@ public class EnvironmentPathUtils {
 
 	public static IPath getFullPath(IEnvironment env, IPath path) {
 		if (isFull(path)) {
-			throw new RuntimeException(NLS.bind(
-					Messages.EnvironmentPathUtils_invalidPath, path));
+			throw new RuntimeException(
+					NLS.bind(Messages.EnvironmentPathUtils_invalidPath, path));
 		}
 		// if( path.segment(0).startsWith("#special#")) {
 		// return path;
@@ -45,8 +45,8 @@ public class EnvironmentPathUtils {
 
 	public static IPath getFullPath(String envId, IPath path) {
 		if (isFull(path)) {
-			throw new RuntimeException(NLS.bind(
-					Messages.EnvironmentPathUtils_invalidPath, path));
+			throw new RuntimeException(
+					NLS.bind(Messages.EnvironmentPathUtils_invalidPath, path));
 		}
 		// if( path.segment(0).startsWith("#special#")) {
 		// return path;
@@ -119,8 +119,9 @@ public class EnvironmentPathUtils {
 		return env.getFile(path);
 	}
 
-	public static Map<IEnvironment, String> decodePaths(String concatenatedPaths) {
-		Map<IEnvironment, String> result = new HashMap<IEnvironment, String>();
+	public static Map<IEnvironment, String> decodePaths(
+			String concatenatedPaths) {
+		Map<IEnvironment, String> result = new HashMap<>();
 		if (concatenatedPaths != null) {
 			String[] paths = concatenatedPaths
 					.split(EnvironmentPathUtils.PATH_DELIMITER);
@@ -159,8 +160,8 @@ public class EnvironmentPathUtils {
 	}
 
 	public static IFileHandle getFile(IResource resource) {
-		IEnvironment environment = EnvironmentManager.getEnvironment(resource
-				.getProject());
+		IEnvironment environment = EnvironmentManager
+				.getEnvironment(resource.getProject());
 		if (environment == null) {
 			return null;
 		}
@@ -237,8 +238,8 @@ public class EnvironmentPathUtils {
 		if (device != null) {
 			final int pos = device.indexOf(SEPARATOR);
 			if (pos >= 0) {
-				return LocalEnvironment.ENVIRONMENT_ID.equals(device.substring(
-						0, pos));
+				return LocalEnvironment.ENVIRONMENT_ID
+						.equals(device.substring(0, pos));
 			}
 		}
 		return false;

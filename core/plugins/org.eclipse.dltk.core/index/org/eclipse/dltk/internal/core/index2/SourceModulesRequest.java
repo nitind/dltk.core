@@ -28,9 +28,9 @@ import org.eclipse.dltk.core.index2.ProjectIndexer2;
  * Request for re-indexing a set of source modules. First, source modules are
  * analyzed to determine which of them must be re-indexed, and what dead source
  * modules must be removed from index.
- * 
+ *
  * @author michael
- * 
+ *
  */
 public class SourceModulesRequest extends AbstractIndexRequest {
 
@@ -57,8 +57,8 @@ public class SourceModulesRequest extends AbstractIndexRequest {
 			return;
 		}
 
-		Set<String> toRemove = new HashSet<String>();
-		List<ISourceModule> toReindex = new ArrayList<ISourceModule>();
+		Set<String> toRemove = new HashSet<>();
+		List<ISourceModule> toReindex = new ArrayList<>();
 
 		analyzeSourceModuleChanges(containerPath, sourceModules, toRemove,
 				toReindex);

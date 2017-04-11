@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,12 +24,12 @@ public class ASTListNode extends ASTNode {
 
 	public ASTListNode(int start, int end) {
 		super(start, end);
-		this.nodes = new ArrayList<ASTNode>();
+		this.nodes = new ArrayList<>();
 	}
 
 	public ASTListNode() {
 		super(0, -1);
-		this.nodes = new ArrayList<ASTNode>();
+		this.nodes = new ArrayList<>();
 	}
 
 	public void addNode(ASTNode s) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation
- *     xored software, Inc. - Search All occurences bugfix, 
+ *     xored software, Inc. - Search All occurences bugfix,
  *     						  hilight only class name when class is in search results ( Alex Panchenko <alex@xored.com>)
  *******************************************************************************/
 
@@ -189,7 +189,7 @@ public abstract class ASTNode implements ISourceNode {
 	/**
 	 * Returns the offset of the region which should be highlighted when this
 	 * item is added to search results.
-	 * 
+	 *
 	 * The goal is to highlight only classname when searching for types.
 	 */
 	public int matchStart() {
@@ -217,13 +217,13 @@ public abstract class ASTNode implements ISourceNode {
 	public abstract void traverse(ASTVisitor visitor) throws Exception;
 
 	public void printNode(CorePrinter output) {
-		output.println(this.getClass()
-				+ " (node doesn't support debug printing)"); //$NON-NLS-1$
+		output.println(
+				this.getClass() + " (node doesn't support debug printing)"); //$NON-NLS-1$
 	}
 
 	protected ISourceRange getSourceRange() {
-		return new SourceRange(this.sourceStart(), this.sourceEnd()
-				- this.sourceStart() + 1);
+		return new SourceRange(this.sourceStart(),
+				this.sourceEnd() - this.sourceStart() + 1);
 	}
 
 	private static String simplifyClassName(String name) {
@@ -249,11 +249,11 @@ public abstract class ASTNode implements ISourceNode {
 	/**
 	 * Uses simplest visitor to get childs and returns collection of ASTNode
 	 * objects
-	 * 
+	 *
 	 * @return
 	 */
 	public List<ASTNode> getChilds() {
-		final List<ASTNode> result = new ArrayList<ASTNode>();
+		final List<ASTNode> result = new ArrayList<>();
 		ASTVisitor visitor = new ASTVisitor() {
 
 			@Override
@@ -278,7 +278,7 @@ public abstract class ASTNode implements ISourceNode {
 
 	/**
 	 * Tests if the specified node is located at the same location.
-	 * 
+	 *
 	 * @param other
 	 * @return
 	 */

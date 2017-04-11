@@ -12,7 +12,7 @@ import org.eclipse.dltk.internal.core.util.Util;
 public abstract class AbstractDataSaver {
 	private static final int MAX_STR = 65500;
 	protected DataOutputStream out;
-	private List<String> stringIndex = new ArrayList<String>();
+	private List<String> stringIndex = new ArrayList<>();
 	private final ByteArrayOutputStream data = new ByteArrayOutputStream();
 
 	/**
@@ -29,7 +29,7 @@ public abstract class AbstractDataSaver {
 		}
 		if (value.length() > MAX_STR) {
 			// Split string to two strings
-			List<String> strs = new ArrayList<String>();
+			List<String> strs = new ArrayList<>();
 			int len = value.length();
 			int pos = 0;
 			while (len > 0) {

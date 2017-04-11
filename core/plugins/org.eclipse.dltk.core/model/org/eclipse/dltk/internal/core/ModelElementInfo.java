@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -37,7 +36,7 @@ public class ModelElementInfo {
 
 	public void addChild(IModelElement child) {
 		if (this.children == null) {
-			this.children = new ArrayList<IModelElement>(5);
+			this.children = new ArrayList<>(5);
 		}
 		if (!this.children.contains(child)) {
 			this.children.add(child);
@@ -88,7 +87,7 @@ public class ModelElementInfo {
 		if (children == null) {
 			this.children = null;
 		} else {
-			this.children = new ArrayList<IModelElement>(children.length);
+			this.children = new ArrayList<>(children.length);
 			for (int i = 0; i < children.length; i++) {
 				this.children.add(children[i]);
 			}
@@ -99,7 +98,7 @@ public class ModelElementInfo {
 		if (children == null) {
 			this.children = null;
 		} else {
-			this.children = new ArrayList<IModelElement>(children);
+			this.children = new ArrayList<>(children);
 		}
 	}
 

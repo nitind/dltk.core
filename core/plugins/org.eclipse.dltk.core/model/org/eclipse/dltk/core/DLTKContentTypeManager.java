@@ -77,7 +77,8 @@ public class DLTKContentTypeManager {
 		if (DEBUG) {
 			log(toolkit.getLanguageName(), name);
 		}
-		final IDLTKAssociationManager associationManager = getAssociationManager(toolkit);
+		final IDLTKAssociationManager associationManager = getAssociationManager(
+				toolkit);
 		if (associationManager.isAssociatedWith(name)) {
 			return true;
 		}
@@ -91,7 +92,8 @@ public class DLTKContentTypeManager {
 		if (DEBUG) {
 			log(toolkit.getLanguageName(), path);
 		}
-		final IDLTKAssociationManager associationManager = getAssociationManager(toolkit);
+		final IDLTKAssociationManager associationManager = getAssociationManager(
+				toolkit);
 		if (associationManager.isAssociatedWith(path.lastSegment())) {
 			return true;
 		}
@@ -106,7 +108,8 @@ public class DLTKContentTypeManager {
 				if (file.getEnvironment().isLocal()) {
 					final File localFile = new File(file.toOSString());
 					return toolkit.canValidateContent(file)
-							&& validateLocalFileContent(contentTypes, localFile);
+							&& validateLocalFileContent(contentTypes,
+									localFile);
 				} else {
 					return toolkit.canValidateContent(file)
 							&& validateRemoteFileContent(contentTypes, file);
@@ -138,8 +141,8 @@ public class DLTKContentTypeManager {
 			try {
 				stream = new BufferedInputStream(file.openInputStream(null),
 						2048);
-				IContentDescription description = type.getDescriptionFor(
-						stream, IContentDescription.ALL);
+				IContentDescription description = type.getDescriptionFor(stream,
+						IContentDescription.ALL);
 				if (description != null) {
 					if (checkDescription(type, description)) {
 						return true;
@@ -172,8 +175,8 @@ public class DLTKContentTypeManager {
 			InputStream stream = null;
 			try {
 				stream = new BufferedInputStream(new FileInputStream(file));
-				IContentDescription description = type.getDescriptionFor(
-						stream, IContentDescription.ALL);
+				IContentDescription description = type.getDescriptionFor(stream,
+						IContentDescription.ALL);
 				if (description != null) {
 					if (checkDescription(type, description)) {
 						return true;
@@ -232,7 +235,8 @@ public class DLTKContentTypeManager {
 		if (status.getSeverity() != IStatus.OK) {
 			return false;
 		}
-		final IDLTKAssociationManager associationManager = getAssociationManager(toolkit);
+		final IDLTKAssociationManager associationManager = getAssociationManager(
+				toolkit);
 		if (associationManager.isAssociatedWith(resource.getName())) {
 			try {
 				configureAsScript((IFile) resource, toolkit.getNatureId());
@@ -330,7 +334,7 @@ public class DLTKContentTypeManager {
 
 	/**
 	 * Sets value of {@link #DLTK_VALID} property
-	 * 
+	 *
 	 * @param file
 	 * @param natureId
 	 * @param value
@@ -338,8 +342,8 @@ public class DLTKContentTypeManager {
 	private static void setValidScript(IFile file, String natureId,
 			boolean value) {
 		try {
-			file.setPersistentProperty(DLTK_VALID, value ? TRUE_VALUE
-					: FALSE_VALUE);
+			file.setPersistentProperty(DLTK_VALID,
+					value ? TRUE_VALUE : FALSE_VALUE);
 			if (value) {
 				configureAsScript(file, natureId);
 			}
@@ -371,7 +375,7 @@ public class DLTKContentTypeManager {
 		return false;
 	}
 
-	private static final Map<IDLTKLanguageToolkit, IContentType[]> contentTypesCache = new HashMap<IDLTKLanguageToolkit, IContentType[]>();
+	private static final Map<IDLTKLanguageToolkit, IContentType[]> contentTypesCache = new HashMap<>();
 
 	private static IContentTypeChangeListener changeListener = null;
 
@@ -379,11 +383,12 @@ public class DLTKContentTypeManager {
 	 * Returns {@link IContentType}s for the specified IDLTKLanguageToolkit. If
 	 * there are no content types found empty array is returned. Master content
 	 * type is returned first.
-	 * 
+	 *
 	 * @param toolkit
 	 * @return
 	 */
-	private static IContentType[] getContentTypes(IDLTKLanguageToolkit toolkit) {
+	private static IContentType[] getContentTypes(
+			IDLTKLanguageToolkit toolkit) {
 		IContentType[] result;
 		synchronized (contentTypesCache) {
 			result = contentTypesCache.get(toolkit);
@@ -402,10 +407,10 @@ public class DLTKContentTypeManager {
 				manager.addContentTypeChangeListener(changeListener);
 			}
 		}
-		final IContentType masterType = manager.getContentType(toolkit
-				.getLanguageContentType());
+		final IContentType masterType = manager
+				.getContentType(toolkit.getLanguageContentType());
 		if (masterType != null) {
-			final Set<IContentType> selected = new HashSet<IContentType>();
+			final Set<IContentType> selected = new HashSet<>();
 			for (IContentType type : manager.getAllContentTypes()) {
 				if (type.isKindOf(masterType)) {
 					selected.add(type);
@@ -429,7 +434,7 @@ public class DLTKContentTypeManager {
 		return result;
 	}
 
-	private static final Map<IDLTKLanguageToolkit, IDLTKAssociationManager> associationManagerCache = new HashMap<IDLTKLanguageToolkit, IDLTKAssociationManager>();
+	private static final Map<IDLTKLanguageToolkit, IDLTKAssociationManager> associationManagerCache = new HashMap<>();
 
 	/**
 	 * @param toolkit
@@ -444,8 +449,9 @@ public class DLTKContentTypeManager {
 		if (manager != null) {
 			return manager;
 		}
-		manager = toolkit.getPreferenceQualifier() != null ? new DLTKAssociationManager(
-				toolkit.getNatureId(), toolkit.getPreferenceQualifier())
+		manager = toolkit.getPreferenceQualifier() != null
+				? new DLTKAssociationManager(toolkit.getNatureId(),
+						toolkit.getPreferenceQualifier())
 				: new NopAssociationManager();
 		synchronized (associationManagerCache) {
 			associationManagerCache.put(toolkit, manager);
@@ -455,8 +461,8 @@ public class DLTKContentTypeManager {
 
 	private static IResourceChangeListener listener = null;
 
-	private static class ResetScriptValidPropertyListener implements
-			IResourceChangeListener, IResourceDeltaVisitor {
+	private static class ResetScriptValidPropertyListener
+			implements IResourceChangeListener, IResourceDeltaVisitor {
 
 		@Override
 		public void resourceChanged(IResourceChangeEvent event) {
@@ -474,7 +480,8 @@ public class DLTKContentTypeManager {
 			final IResource resource = delta.getResource();
 			if (resource.getType() == IResource.FILE) {
 				if (delta.getKind() == IResourceDelta.CHANGED
-						&& (delta.getFlags() & (IResourceDelta.CONTENT | IResourceDelta.REPLACED)) != 0) {
+						&& (delta.getFlags() & (IResourceDelta.CONTENT
+								| IResourceDelta.REPLACED)) != 0) {
 					resource.setPersistentProperty(DLTK_VALID, null);
 				}
 				return false;
@@ -494,8 +501,8 @@ public class DLTKContentTypeManager {
 
 	public static void uninstallListener() {
 		if (listener != null) {
-			ResourcesPlugin.getWorkspace().removeResourceChangeListener(
-					listener);
+			ResourcesPlugin.getWorkspace()
+					.removeResourceChangeListener(listener);
 			listener = null;
 		}
 	}

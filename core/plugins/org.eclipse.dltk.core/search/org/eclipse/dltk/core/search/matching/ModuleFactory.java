@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -52,8 +52,8 @@ public class ModuleFactory {
 		if (searchDocument instanceof WorkingCopyDocument) {
 			return ((WorkingCopyDocument) searchDocument).workingCopy;
 		} else {
-			final Openable openable = this.handleFactory.createOpenable(
-					searchDocument.getPath(), this.scope);
+			final Openable openable = this.handleFactory
+					.createOpenable(searchDocument.getPath(), this.scope);
 			return openable instanceof ISourceModule ? (ISourceModule) openable
 					: null;
 		}
@@ -61,7 +61,7 @@ public class ModuleFactory {
 
 	public static ISourceModule[] selectWorkingCopies(
 			SearchDocument[] searchDocuments) {
-		final List<ISourceModule> copies = new ArrayList<ISourceModule>();
+		final List<ISourceModule> copies = new ArrayList<>();
 		for (int i = 0, length = searchDocuments.length; i < length; i++) {
 			SearchDocument document = searchDocuments[i];
 			if (document instanceof WorkingCopyDocument) {
@@ -77,8 +77,8 @@ public class ModuleFactory {
 		WorkingCopyDocument(org.eclipse.dltk.core.ISourceModule workingCopy,
 				SearchParticipant participant, boolean external) {
 			super(workingCopy.getPath().toString(), getContents(workingCopy),
-					participant, external, workingCopy.getScriptProject()
-							.getProject());
+					participant, external,
+					workingCopy.getScriptProject().getProject());
 			this.workingCopy = workingCopy;
 		}
 
@@ -105,8 +105,8 @@ public class ModuleFactory {
 			SearchParticipant participant) {
 		// working copies take precedence over corresponding compilation units
 		Map<String, SearchDocument> workingCopyDocuments = ModuleFactory
-				.workingCopiesThatCanSeeFocus(copies, pattern.focus, pattern
-						.isPolymorphicSearch(), participant);
+				.workingCopiesThatCanSeeFocus(copies, pattern.focus,
+						pattern.isPolymorphicSearch(), participant);
 		SearchDocument[] matches = null;
 		int length = indexMatches.length;
 		for (int i = 0; i < length; i++) {
@@ -116,10 +116,9 @@ public class ModuleFactory {
 						.remove(searchDocument.getPath());
 				if (workingCopyDocument != null) {
 					if (matches == null) {
-						System
-								.arraycopy(indexMatches, 0,
-										matches = new SearchDocument[length],
-										0, length);
+						System.arraycopy(indexMatches, 0,
+								matches = new SearchDocument[length], 0,
+								length);
 					}
 					matches[i] = workingCopyDocument;
 				}
@@ -154,14 +153,13 @@ public class ModuleFactory {
 				focus = focus.getParent();
 			}
 		}
-		Map<String, SearchDocument> result = new HashMap<String, SearchDocument>();
+		Map<String, SearchDocument> result = new HashMap<>();
 		for (int i = 0, length = copies.length; i < length; i++) {
 			org.eclipse.dltk.core.ISourceModule workingCopy = copies[i];
-			IPath projectOrArchive = MatchLocator.getProjectOrArchive(
-					workingCopy).getPath();
-			if (focus == null
-					|| IndexSelector.canSeeFocus(focus, isPolymorphicSearch,
-							projectOrArchive)) {
+			IPath projectOrArchive = MatchLocator
+					.getProjectOrArchive(workingCopy).getPath();
+			if (focus == null || IndexSelector.canSeeFocus(focus,
+					isPolymorphicSearch, projectOrArchive)) {
 				boolean external = false;
 				IProjectFragment frag = (IProjectFragment) workingCopy
 						.getAncestor(IModelElement.PROJECT_FRAGMENT);

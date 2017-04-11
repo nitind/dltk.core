@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,7 +56,7 @@ public class DeltaProcessingState implements IResourceChangeListener {
 	/*
 	 * The delta processor for the current thread.
 	 */
-	private ThreadLocal<DeltaProcessor> deltaProcessors = new ThreadLocal<DeltaProcessor>();
+	private ThreadLocal<DeltaProcessor> deltaProcessors = new ThreadLocal<>();
 
 	/* A table from IPath (from a buildpath entry) to RootInfo */
 	public HashMap roots = new HashMap();
@@ -105,13 +105,13 @@ public class DeltaProcessingState implements IResourceChangeListener {
 	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=271102 Java model corrupt
 	 * after switching target platform)
 	 */
-	private HashMap<IProject, BuildpathChange> buildpathChanges = new HashMap<IProject, BuildpathChange>();
+	private HashMap<IProject, BuildpathChange> buildpathChanges = new HashMap<>();
 
 	/* A table from ScriptProject to BuildpathValidation */
-	private HashMap<ScriptProject, BuildpathValidation> buildpathValidations = new HashMap<ScriptProject, BuildpathValidation>();
+	private HashMap<ScriptProject, BuildpathValidation> buildpathValidations = new HashMap<>();
 
 	/* A table from ScriptProject to ProjectReferenceChange */
-	private HashMap<ScriptProject, ProjectReferenceChange> projectReferenceChanges = new HashMap<ScriptProject, ProjectReferenceChange>();
+	private HashMap<ScriptProject, ProjectReferenceChange> projectReferenceChanges = new HashMap<>();
 
 	/* A table from JavaProject to ExternalFolderChange */
 	private HashMap externalFolderChanges = new HashMap();
@@ -142,9 +142,7 @@ public class DeltaProcessingState implements IResourceChangeListener {
 				// notifications and one listener decide to change
 				// any event mask of another listeners (yet not notified).
 				int cloneLength = this.elementChangedListenerMasks.length;
-				System.arraycopy(
-						this.elementChangedListenerMasks,
-						0,
+				System.arraycopy(this.elementChangedListenerMasks, 0,
 						this.elementChangedListenerMasks = new int[cloneLength],
 						0, cloneLength);
 				this.elementChangedListenerMasks[i] = eventMask; // could be
@@ -156,10 +154,9 @@ public class DeltaProcessingState implements IResourceChangeListener {
 		// original arrays and max boundary and we only add to the end.
 		int length;
 		if ((length = this.elementChangedListeners.length) == this.elementChangedListenerCount) {
-			System.arraycopy(
-					this.elementChangedListeners,
-					0,
-					this.elementChangedListeners = new IElementChangedListener[length * 2],
+			System.arraycopy(this.elementChangedListeners, 0,
+					this.elementChangedListeners = new IElementChangedListener[length
+							* 2],
 					0, length);
 			System.arraycopy(this.elementChangedListenerMasks, 0,
 					this.elementChangedListenerMasks = new int[length * 2], 0,
@@ -193,10 +190,9 @@ public class DeltaProcessingState implements IResourceChangeListener {
 		// original arrays and max boundary and we only add to the end.
 		int length;
 		if ((length = this.preResourceChangeListeners.length) == this.preResourceChangeListenerCount) {
-			System.arraycopy(
-					this.preResourceChangeListeners,
-					0,
-					this.preResourceChangeListeners = new IResourceChangeListener[length * 2],
+			System.arraycopy(this.preResourceChangeListeners, 0,
+					this.preResourceChangeListeners = new IResourceChangeListener[length
+							* 2],
 					0, length);
 			System.arraycopy(this.preResourceChangeEventMasks, 0,
 					this.preResourceChangeEventMasks = new int[length * 2], 0,
@@ -222,8 +218,9 @@ public class DeltaProcessingState implements IResourceChangeListener {
 			IBuildpathEntry[] oldResolvedBuildpath) {
 		BuildpathChange change = this.buildpathChanges.get(project);
 		if (change == null) {
-			change = new BuildpathChange((ScriptProject) ModelManager
-					.getModelManager().getModel().getScriptProject(project),
+			change = new BuildpathChange(
+					(ScriptProject) ModelManager.getModelManager().getModel()
+							.getScriptProject(project),
 					oldRawBuildpath, oldResolvedBuildpath);
 			this.buildpathChanges.put(project, change);
 		} else {
@@ -241,7 +238,7 @@ public class DeltaProcessingState implements IResourceChangeListener {
 
 	public synchronized HashMap<IProject, BuildpathChange> removeAllBuildpathChanges() {
 		final HashMap<IProject, BuildpathChange> result = this.buildpathChanges;
-		this.buildpathChanges = new HashMap<IProject, BuildpathChange>(
+		this.buildpathChanges = new HashMap<>(
 				result.size());
 		return result;
 	}
@@ -295,7 +292,8 @@ public class DeltaProcessingState implements IResourceChangeListener {
 
 				// all buildpaths in the workspace are going to be resolved
 				// ensure that containers are initialized in one batch
-				ModelManager.getModelManager().batchContainerInitializations = true;
+				ModelManager
+						.getModelManager().batchContainerInitializations = true;
 
 				newRoots = new HashMap();
 				newOtherRoots = new HashMap();
@@ -320,9 +318,11 @@ public class DeltaProcessingState implements IResourceChangeListener {
 					}
 					for (int j = 0, buildpathLength = buildpath.length; j < buildpathLength; j++) {
 						IBuildpathEntry entry = buildpath[j];
-						if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-							IScriptProject key = model.getScriptProject(entry
-									.getPath().segment(0)); // TODO (jerome)
+						if (entry
+								.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+							IScriptProject key = model.getScriptProject(
+									entry.getPath().segment(0)); // TODO
+																	// (jerome)
 							// reuse handle
 							IScriptProject[] dependents = (IScriptProject[]) newProjectDependencies
 									.get(key);
@@ -330,10 +330,9 @@ public class DeltaProcessingState implements IResourceChangeListener {
 								dependents = new IScriptProject[] { project };
 							} else {
 								int dependentsLength = dependents.length;
-								System.arraycopy(
-										dependents,
-										0,
-										dependents = new IScriptProject[dependentsLength + 1],
+								System.arraycopy(dependents, 0,
+										dependents = new IScriptProject[dependentsLength
+												+ 1],
 										0, dependentsLength);
 								dependents[dependentsLength] = project;
 							}
@@ -344,16 +343,13 @@ public class DeltaProcessingState implements IResourceChangeListener {
 						// root path
 						IPath path = entry.getPath();
 						if (newRoots.get(path) == null) {
-							newRoots.put(
-									path,
-									new DeltaProcessor.RootInfo(
-											project,
-											path,
-											((BuildpathEntry) entry)
-													.fullInclusionPatternChars(),
-											((BuildpathEntry) entry)
-													.fullExclusionPatternChars(),
-											entry.getEntryKind()));
+							newRoots.put(path, new DeltaProcessor.RootInfo(
+									project, path,
+									((BuildpathEntry) entry)
+											.fullInclusionPatternChars(),
+									((BuildpathEntry) entry)
+											.fullExclusionPatternChars(),
+									entry.getEntryKind()));
 						} else {
 							ArrayList rootList = (ArrayList) newOtherRoots
 									.get(path);
@@ -362,11 +358,12 @@ public class DeltaProcessingState implements IResourceChangeListener {
 								newOtherRoots.put(path, rootList);
 							}
 							rootList.add(new DeltaProcessor.RootInfo(project,
-									path, ((BuildpathEntry) entry)
+									path,
+									((BuildpathEntry) entry)
 											.fullInclusionPatternChars(),
 									((BuildpathEntry) entry)
-											.fullExclusionPatternChars(), entry
-											.getEntryKind()));
+											.fullExclusionPatternChars(),
+									entry.getEntryKind()));
 						}
 					}
 				}
@@ -550,7 +547,7 @@ public class DeltaProcessingState implements IResourceChangeListener {
 	 */
 	public synchronized HashSet<String> getOldScriptProjectNames() {
 		if (this.scriptProjectNamesCache == null) {
-			HashSet<String> result = new HashSet<String>();
+			HashSet<String> result = new HashSet<>();
 			IScriptProject[] projects;
 			try {
 				projects = ModelManager.getModelManager().getModel()
@@ -609,8 +606,8 @@ public class DeltaProcessingState implements IResourceChangeListener {
 		while (iterator.hasNext()) {
 			IPath path = (IPath) iterator.next();
 			if (containerPath.isPrefixOf(path) && !containerPath.equals(path)) {
-				IResourceDelta rootDelta = containerDelta.findMember(path
-						.removeFirstSegments(1));
+				IResourceDelta rootDelta = containerDelta
+						.findMember(path.removeFirstSegments(1));
 				if (rootDelta == null)
 					continue;
 				DeltaProcessor.RootInfo rootInfo = (DeltaProcessor.RootInfo) updatedRoots
@@ -644,9 +641,8 @@ public class DeltaProcessingState implements IResourceChangeListener {
 							// in
 							// the
 							// container
-							deltaProcessor.updateCurrentDeltaAndIndex(
-									rootDelta, IModelElement.PROJECT_FRAGMENT,
-									rootInfo);
+							deltaProcessor.updateCurrentDeltaAndIndex(rootDelta,
+									IModelElement.PROJECT_FRAGMENT, rootInfo);
 						}
 					}
 				}

@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.  
+ * Copyright (c) 2009, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html  
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
@@ -27,8 +27,10 @@ import org.eclipse.dltk.core.ModelException;
 public class ProjectRefreshOperation extends ModelOperation {
 
 	public ProjectRefreshOperation(IScriptProject[] projects) {
-		super(projects, new IModelElement[] { DLTKCore.create(ResourcesPlugin
-				.getWorkspace().getRoot()) }, false);
+		super(projects,
+				new IModelElement[] { DLTKCore
+						.create(ResourcesPlugin.getWorkspace().getRoot()) },
+				false);
 	}
 
 	private ModelElementDelta delta = null;
@@ -55,7 +57,7 @@ public class ProjectRefreshOperation extends ModelOperation {
 	}
 
 	private void refreshProject(IScriptProject project) throws ModelException {
-		Set<ISourceModule> modules = new HashSet<ISourceModule>();
+		Set<ISourceModule> modules = new HashSet<>();
 		for (IProjectFragment fragment : project.getProjectFragments()) {
 			if (!fragment.isExternal()
 					&& fragment.getKind() == IProjectFragment.K_SOURCE) {
@@ -76,7 +78,8 @@ public class ProjectRefreshOperation extends ModelOperation {
 			if (!fragment.isExternal()
 					&& fragment.getKind() == IProjectFragment.K_SOURCE) {
 				for (IModelElement element : fragment.getChildren()) {
-					if (element.getElementType() == IModelElement.SCRIPT_FOLDER) {
+					if (element
+							.getElementType() == IModelElement.SCRIPT_FOLDER) {
 						for (ISourceModule module : ((IScriptFolder) element)
 								.getSourceModules()) {
 							if (!modules.remove(module)) {

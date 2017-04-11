@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -164,7 +164,7 @@ public abstract class Member extends SourceRefElement implements IMember {
 			parameters = CharOperation.NO_STRINGS;
 			e.printStackTrace();
 		}
-		ArrayList<IMethod> list = new ArrayList<IMethod>();
+		ArrayList<IMethod> list = new ArrayList<>();
 		for (int i = 0, length = methods.length; i < length; i++) {
 			IMethod existingMethod = methods[i];
 			try {

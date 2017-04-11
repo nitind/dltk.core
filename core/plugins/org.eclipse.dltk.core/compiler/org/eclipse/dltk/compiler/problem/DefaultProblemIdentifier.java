@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2016 xored software, Inc. and others.
+ * Copyright (c) 2011, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -33,8 +33,8 @@ public enum DefaultProblemIdentifier implements IProblemIdentifier {
 		return DLTKCore.PLUGIN_ID;
 	}
 
-	private static class Manager extends
-			NatureExtensionManager<IProblemIdentifierFactory> {
+	private static class Manager
+			extends NatureExtensionManager<IProblemIdentifierFactory> {
 
 		public Manager() {
 			super(InternalDLTKLanguageManager.PROBLEM_FACTORY_EXTPOINT,
@@ -91,8 +91,8 @@ public enum DefaultProblemIdentifier implements IProblemIdentifier {
 			synchronized (reportedProblemIds) {
 				if (reportedProblemIds.size() < 100
 						&& reportedProblemIds.add(id)) {
-					DLTKCore.warn("Error decoding problem idenfier \"" + id
-							+ "\"");
+					DLTKCore.warn(
+							"Error decoding problem idenfier \"" + id + "\"");
 				}
 			}
 			try {
@@ -109,7 +109,7 @@ public enum DefaultProblemIdentifier implements IProblemIdentifier {
 	public static IProblemIdentifier[] values(String namespace) {
 		final IProblemIdentifierFactory[] factories = getManager()
 				.getInstances(namespace);
-		final List<IProblemIdentifier> result = new ArrayList<IProblemIdentifier>();
+		final List<IProblemIdentifier> result = new ArrayList<>();
 		if (factories != null) {
 			for (IProblemIdentifierFactory factory : factories) {
 				Collections.addAll(result, factory.values());
@@ -118,7 +118,7 @@ public enum DefaultProblemIdentifier implements IProblemIdentifier {
 		return result.toArray(new IProblemIdentifier[result.size()]);
 	}
 
-	private static final Set<String> reportedProblemIds = new HashSet<String>();
+	private static final Set<String> reportedProblemIds = new HashSet<>();
 
 	public static IProblemIdentifier getProblemId(IMarker marker) {
 		return decode(marker.getAttribute(IScriptModelMarker.ID, null));

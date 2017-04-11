@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,9 +29,9 @@ import org.eclipse.dltk.internal.core.ExternalSourceModule;
 
 /**
  * Request for indexing external project
- * 
+ *
  * @author michael
- * 
+ *
  */
 public class ExternalProjectFragmentRequest extends AbstractIndexRequest {
 
@@ -62,20 +62,18 @@ public class ExternalProjectFragmentRequest extends AbstractIndexRequest {
 		return EnvironmentManager.getEnvironment(fragment);
 	}
 
-	private Set<ISourceModule> getExternalSourceModules() throws ModelException {
-		final Set<ISourceModule> modules = new HashSet<ISourceModule>();
-		IModelElementVisitor visitor = new IModelElementVisitor() {
-			@Override
-			public boolean visit(IModelElement element) {
-				if (element.getElementType() == IModelElement.SOURCE_MODULE) {
-					if (element instanceof ExternalSourceModule
-							|| element instanceof BuiltinSourceModule) {
-						modules.add((ISourceModule) element);
-					}
-					return false;
+	private Set<ISourceModule> getExternalSourceModules()
+			throws ModelException {
+		final Set<ISourceModule> modules = new HashSet<>();
+		IModelElementVisitor visitor = element -> {
+			if (element.getElementType() == IModelElement.SOURCE_MODULE) {
+				if (element instanceof ExternalSourceModule
+						|| element instanceof BuiltinSourceModule) {
+					modules.add((ISourceModule) element);
 				}
-				return true;
+				return false;
 			}
+			return true;
 		};
 		fragment.accept(visitor);
 		return modules;

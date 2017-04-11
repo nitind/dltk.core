@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 xored software, Inc. and others.
+ * Copyright (c) 2016, 2017 xored software, Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -95,7 +95,7 @@ public class MetadataContentCache extends AbstractContentCache {
 		}
 	}
 
-	private Map<EntryKey, CacheEntry> entryCache = new HashMap<EntryKey, CacheEntry>();
+	private Map<EntryKey, CacheEntry> entryCache = new HashMap<>();
 	private IPath cacheLocation;
 	private CRC32 checksum = new CRC32();
 
@@ -176,8 +176,8 @@ public class MetadataContentCache extends AbstractContentCache {
 			try {
 				File file = new File(handle.getPath().toOSString());
 				File canonicalFile = file.getCanonicalFile();
-				if (!file.getAbsolutePath().equals(
-						canonicalFile.getAbsoluteFile())) {
+				if (!file.getAbsolutePath()
+						.equals(canonicalFile.getAbsoluteFile())) {
 					return canonicalFile.lastModified();
 				}
 			} catch (IOException e) {
@@ -234,8 +234,8 @@ public class MetadataContentCache extends AbstractContentCache {
 	}
 
 	private EntryKey makeKey(IFileHandle handle) {
-		return new EntryKey(handle.getEnvironmentId(), handle.getPath()
-				.toString());
+		return new EntryKey(handle.getEnvironmentId(),
+				handle.getPath().toString());
 	}
 
 	long changeCount = 0;
@@ -254,7 +254,7 @@ public class MetadataContentCache extends AbstractContentCache {
 			}
 		}
 		try {
-			Map<String, Object> options = new HashMap<String, Object>();
+			Map<String, Object> options = new HashMap<>();
 			options.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Boolean.TRUE);
 			BufferedOutputStream outStream = new BufferedOutputStream(
 					new FileOutputStream(indexFileHandle), 4096);
@@ -280,8 +280,9 @@ public class MetadataContentCache extends AbstractContentCache {
 			EList<CacheEntryAttribute> attributes = entry.getAttributes();
 			for (CacheEntryAttribute cacheEntryAttribute : attributes) {
 				if (cacheEntryAttribute.getName().equals(attribute)) {
-					file = new File(cacheLocation.append(
-							cacheEntryAttribute.getLocation()).toOSString());
+					file = new File(cacheLocation
+							.append(cacheEntryAttribute.getLocation())
+							.toOSString());
 					break;
 				}
 			}
@@ -294,8 +295,9 @@ public class MetadataContentCache extends AbstractContentCache {
 						new FileInputStream(file), 4096);
 				Util.copy(inp, bout);
 				inp.close();
-				node.done("Metadata", RuntimePerformanceMonitor.IOREAD, file
-						.length(), EnvironmentManager.getLocalEnvironment());
+				node.done("Metadata", RuntimePerformanceMonitor.IOREAD,
+						file.length(),
+						EnvironmentManager.getLocalEnvironment());
 				return new ByteArrayInputStream(bout.toByteArray());
 			} catch (FileNotFoundException e) {
 				if (DLTKCore.DEBUG) {
@@ -335,14 +337,15 @@ public class MetadataContentCache extends AbstractContentCache {
 		EList<CacheEntryAttribute> attributes = entry.getAttributes();
 		for (CacheEntryAttribute cacheEntryAttribute : attributes) {
 			if (cacheEntryAttribute.getName().equals(attribute)) {
-				file = new File(cacheLocation.append(
-						cacheEntryAttribute.getLocation()).toOSString());
+				file = new File(
+						cacheLocation.append(cacheEntryAttribute.getLocation())
+								.toOSString());
 				return file;
 			}
 		}
 
-		IPath location = generateNewLocation(handle.getPath(), handle
-				.getEnvironmentId());
+		IPath location = generateNewLocation(handle.getPath(),
+				handle.getEnvironmentId());
 		CacheEntryAttribute attrEntry = CacheFactory.eINSTANCE
 				.createCacheEntryAttribute();
 		attrEntry.setLocation(location.toPortableString());
@@ -356,15 +359,15 @@ public class MetadataContentCache extends AbstractContentCache {
 	private IPath generateNewLocation(IPath path, String environment) {
 		checksum.reset();
 		checksum.update(environment.getBytes());
-		IPath indexPath = cacheLocation.append(Long.toString(checksum
-				.getValue()));
+		IPath indexPath = cacheLocation
+				.append(Long.toString(checksum.getValue()));
 		File indexFolderFile = new File(indexPath.toOSString());
 		if (!indexFolderFile.exists()) {
 			indexFolderFile.mkdir();
 		}
 		checksum.reset();
-		checksum.update(path.removeLastSegments(1).toPortableString()
-				.getBytes());
+		checksum.update(
+				path.removeLastSegments(1).toPortableString().getBytes());
 		IPath folder = indexPath.append(Long.toString(checksum.getValue()));
 		File folderFile = new File(folder.toOSString());
 		if (!folderFile.exists()) {
@@ -378,8 +381,9 @@ public class MetadataContentCache extends AbstractContentCache {
 			File file = new File(location.toOSString());
 			if (!file.exists()) {
 				index.setLastIndex(i);
-				return location.removeFirstSegments(
-						cacheLocation.segmentCount()).setDevice(null);
+				return location
+						.removeFirstSegments(cacheLocation.segmentCount())
+						.setDevice(null);
 			}
 		}
 	}
@@ -418,7 +422,7 @@ public class MetadataContentCache extends AbstractContentCache {
 	@Override
 	public synchronized void clear() {
 		initialize();
-		Set<EntryKey> keySet = new HashSet<EntryKey>(entryCache.keySet());
+		Set<EntryKey> keySet = new HashSet<>(entryCache.keySet());
 		for (EntryKey k : keySet) {
 			removeCacheEntry(entryCache.get(k), k);
 		}

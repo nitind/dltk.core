@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.search.matching2;
 
@@ -22,25 +21,25 @@ import java.util.Set;
 /**
  * A set of matches and possible matches, which need to be resolved.
  */
-public abstract class MatchingNodeSet<E> implements IMatchingNodeSet<E>,
-		Comparator<E> {
+public abstract class MatchingNodeSet<E>
+		implements IMatchingNodeSet<E>, Comparator<E> {
 	/**
 	 * Map of matching ast nodes that don't need to be resolved to their
 	 * accuracy level. Each node is removed as it is reported.
 	 */
-	private Map<E, MatchLevel> matchingNodes = new HashMap<E, MatchLevel>();
+	private Map<E, MatchLevel> matchingNodes = new HashMap<>();
 
 	// sourceRange -> node
-	private HashtableOfLong<E> matchingNodesKeys = new HashtableOfLong<E>();
+	private HashtableOfLong<E> matchingNodesKeys = new HashtableOfLong<>();
 
 	/**
 	 * Set of possible matching ast nodes. They need to be resolved to determine
 	 * if they really match the search pattern.
 	 */
-	private Set<E> possibleMatchingNodes = new HashSet<E>();
+	private Set<E> possibleMatchingNodes = new HashSet<>();
 
 	// sourceRange -> node
-	private HashtableOfLong<E> possibleMatchingNodesKeys = new HashtableOfLong<E>();
+	private HashtableOfLong<E> possibleMatchingNodesKeys = new HashtableOfLong<>();
 
 	@Override
 	public MatchLevel addMatch(E node, MatchLevel matchLevel) {
@@ -107,7 +106,7 @@ public abstract class MatchingNodeSet<E> implements IMatchingNodeSet<E>,
 		for (E node : matchingNodes.keySet()) {
 			if (checkRange(node, start, end)) {
 				if (nodes == null)
-					nodes = new ArrayList<E>();
+					nodes = new ArrayList<>();
 				nodes.add(node);
 			}
 		}
@@ -121,7 +120,7 @@ public abstract class MatchingNodeSet<E> implements IMatchingNodeSet<E>,
 	 * Returns all the matching nodes
 	 */
 	public List<E> matchingNodes() {
-		final List<E> nodes = new ArrayList<E>(matchingNodes.keySet());
+		final List<E> nodes = new ArrayList<>(matchingNodes.keySet());
 		Collections.sort(nodes, this);
 		return nodes;
 	}
@@ -152,7 +151,7 @@ public abstract class MatchingNodeSet<E> implements IMatchingNodeSet<E>,
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		result.append("Exact matches:"); //$NON-NLS-1$
-		List<E> nodes = new ArrayList<E>(matchingNodes.keySet());
+		List<E> nodes = new ArrayList<>(matchingNodes.keySet());
 		Collections.sort(nodes, this);
 		for (E node : nodes) {
 			result.append("\n\t"); //$NON-NLS-1$

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -23,8 +22,8 @@ import org.eclipse.dltk.core.DLTKCore;
  * DLTKCore.initializeDefaultPreferences which was deprecated with new eclipse
  * preferences mechanism.
  */
-public class DLTKCorePreferenceInitializer extends
-		AbstractPreferenceInitializer {
+public class DLTKCorePreferenceInitializer
+		extends AbstractPreferenceInitializer {
 
 	/**
 	 * If modified, also modify the method
@@ -33,16 +32,16 @@ public class DLTKCorePreferenceInitializer extends
 	@Override
 	public void initializeDefaultPreferences() {
 		// Get options names set
-		HashSet<String> optionNames = ModelManager.getModelManager().optionNames;
+		HashSet<String> optionNames = ModelManager
+				.getModelManager().optionNames;
 
-		Map<String, String> defaultOptionsMap = new HashMap<String, String>();
+		Map<String, String> defaultOptionsMap = new HashMap<>();
 
 		// DLTKCore settings
 		defaultOptionsMap.put(DLTKCore.CORE_INCOMPLETE_BUILDPATH,
 				DLTKCore.ERROR);
 		defaultOptionsMap.put(DLTKCore.CORE_CIRCULAR_BUILDPATH, DLTKCore.ERROR);
-		defaultOptionsMap.put(
-				DLTKCore.CORE_ENABLE_BUILDPATH_EXCLUSION_PATTERNS,
+		defaultOptionsMap.put(DLTKCore.CORE_ENABLE_BUILDPATH_EXCLUSION_PATTERNS,
 				DLTKCore.ENABLED);
 		defaultOptionsMap.put(DLTKCore.INDEXER_ENABLED, DLTKCore.ENABLED);
 		defaultOptionsMap.put(DLTKCore.BUILDER_ENABLED, DLTKCore.ENABLED);

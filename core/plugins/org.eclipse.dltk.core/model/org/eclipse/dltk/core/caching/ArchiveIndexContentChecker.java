@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 xored software, Inc.
+ * Copyright (c) 2009, 2017 xored software, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,10 +48,10 @@ public class ArchiveIndexContentChecker {
 			zipFile = new ZipFile(file);
 
 			ZipEntry entry = zipFile.getEntry(".index");
-			Resource indexResource = new XMIResourceImpl(URI
-					.createURI("dltk_cache://zipIndex"));
-			indexResource.load(new BufferedInputStream(zipFile
-					.getInputStream(entry), 8096), null);
+			Resource indexResource = new XMIResourceImpl(
+					URI.createURI("dltk_cache://zipIndex"));
+			indexResource.load(new BufferedInputStream(
+					zipFile.getInputStream(entry), 8096), null);
 			contents = indexResource.getContents();
 		} catch (Exception e) {
 		}
@@ -62,7 +62,7 @@ public class ArchiveIndexContentChecker {
 			return true;
 		}
 		File parent = file.getParentFile();
-		List<File> collected = new ArrayList<File>();
+		List<File> collected = new ArrayList<>();
 		for (EObject eObject : contents) {
 			CacheIndex cacheIndex = (CacheIndex) eObject;
 			EList<CacheEntry> entries = cacheIndex.getEntries();
@@ -78,8 +78,8 @@ public class ArchiveIndexContentChecker {
 				long timestamp = childFile.lastModified();
 				try {
 					File canonicalFile = childFile.getCanonicalFile();
-					if (!canonicalFile.getAbsolutePath().equals(
-							file.getAbsolutePath())) {
+					if (!canonicalFile.getAbsolutePath()
+							.equals(file.getAbsolutePath())) {
 						// This is symlink
 						timestamp = canonicalFile.lastModified();
 					}
@@ -113,7 +113,7 @@ public class ArchiveIndexContentChecker {
 			return true;
 		}
 		IFileStore parent = store.getParent();
-		List<IFileStore> collected = new ArrayList<IFileStore>();
+		List<IFileStore> collected = new ArrayList<>();
 		for (EObject eObject : contents) {
 			CacheIndex cacheIndex = (CacheIndex) eObject;
 			EList<CacheEntry> entries = cacheIndex.getEntries();
@@ -131,8 +131,8 @@ public class ArchiveIndexContentChecker {
 				if (childFileInfo.getAttribute(EFS.ATTRIBUTE_SYMLINK)) {
 					String canonicalFile = childFileInfo
 							.getStringAttribute(EFS.ATTRIBUTE_LINK_TARGET);
-					IFileStore fileStore = childFile.getFileStore(new Path(
-							canonicalFile));
+					IFileStore fileStore = childFile
+							.getFileStore(new Path(canonicalFile));
 					IFileInfo fetchInfo = fileStore.fetchInfo();
 					timestamp = fetchInfo.getLastModified();
 				}

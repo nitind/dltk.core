@@ -41,7 +41,8 @@ public class ProjectReferenceChange {
 	public void updateProjectReferencesIfNecessary() throws ModelException {
 		if (!project.getProject().isAccessible())
 			return;
-		String[] oldRequired = this.oldResolvedBuildpath == null ? CharOperation.NO_STRINGS
+		String[] oldRequired = this.oldResolvedBuildpath == null
+				? CharOperation.NO_STRINGS
 				: this.project.projectPrerequisites(this.oldResolvedBuildpath);
 		IBuildpathEntry[] newResolvedBuildpath = this.project
 				.getResolvedBuildpath();
@@ -53,7 +54,7 @@ public class ProjectReferenceChange {
 
 			IProject[] projectReferences = description.getDynamicReferences();
 
-			HashSet<String> oldReferences = new HashSet<String>(
+			HashSet<String> oldReferences = new HashSet<>(
 					projectReferences.length);
 			for (int i = 0; i < projectReferences.length; i++) {
 				String projectName = projectReferences[i].getName();
@@ -106,9 +107,10 @@ public class ProjectReferenceChange {
 			// above) we don't reach here
 			// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=241751
 			IWorkspace workspace = projectResource.getWorkspace();
-			ISchedulingRule rule = workspace.getRuleFactory().modifyRule(
-					projectResource); // scheduling rule for modifying the
-										// project
+			ISchedulingRule rule = workspace.getRuleFactory()
+					.modifyRule(projectResource); // scheduling rule for
+													// modifying the
+													// project
 			IWorkspaceRunnable runnable = monitor -> {
 				IProjectDescription description1 = projectResource
 						.getDescription();

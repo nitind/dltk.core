@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2016 IBM Corporation and others.
+ * Copyright (c) 2002, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation
- *     xored software, Inc. - Search All occurences bugfix, 
+ *     xored software, Inc. - Search All occurences bugfix,
  *     						  hilight only class name when class is in search results ( Alex Panchenko <alex@xored.com>)
  *******************************************************************************/
 package org.eclipse.dltk.ast.declarations;
@@ -78,7 +78,7 @@ public class TypeDeclaration extends Declaration {
 	/**
 	 * Creates new type declaration from type name ANTLR token, start and end
 	 * position.
-	 * 
+	 *
 	 * @param name
 	 *            type name.
 	 * @param start
@@ -132,7 +132,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Creates type declaration from name token.
-	 * 
+	 *
 	 * @param name
 	 *            name ANTRL token.
 	 */
@@ -161,7 +161,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Return list of superclass declaration expressions.
-	 * 
+	 *
 	 * @return
 	 */
 	public ASTListNode getSuperClasses() {
@@ -171,7 +171,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Set superclases expression list.
-	 * 
+	 *
 	 * @param exprList
 	 */
 	public void setSuperClasses(ASTListNode exprList) {
@@ -182,7 +182,7 @@ public class TypeDeclaration extends Declaration {
 	/**
 	 * Add superclass expression to list of superclasses. List would be created
 	 * if not yet.
-	 * 
+	 *
 	 * @param expression
 	 */
 	public void addSuperClass(ASTNode expression) {
@@ -206,7 +206,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Return body end position in associated file.
-	 * 
+	 *
 	 * @return
 	 */
 	public int getBodyEnd() {
@@ -218,7 +218,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Sets body end position in associated file.
-	 * 
+	 *
 	 * @param bodyEnd
 	 */
 	protected void setBodyEnd(int bodyEnd) {
@@ -228,7 +228,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Return body start position in associated file.
-	 * 
+	 *
 	 * @return
 	 */
 	public int getBodyStart() {
@@ -248,7 +248,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Use sourceEnd() instead.
-	 * 
+	 *
 	 * @return
 	 * @deprecated
 	 */
@@ -261,7 +261,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Use setEnd instead
-	 * 
+	 *
 	 * @param declarationSourceEnd
 	 * @deprecated
 	 */
@@ -273,7 +273,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Use sourceStart instead.
-	 * 
+	 *
 	 * @return
 	 * @deprecated
 	 */
@@ -286,7 +286,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Used setStart instead
-	 * 
+	 *
 	 * @param declarationSourceStart
 	 * @deprecated
 	 */
@@ -299,7 +299,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Return parents end position in associated file.
-	 * 
+	 *
 	 * @return
 	 */
 	public int getParentEnd() {
@@ -309,7 +309,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Sets parents end position in associated file.
-	 * 
+	 *
 	 * @param parentEnd
 	 */
 	protected void setParentEnd(int parentEnd) {
@@ -319,7 +319,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Return parents start position in associated file.
-	 * 
+	 *
 	 * @return
 	 */
 	public int getParentStart() {
@@ -329,7 +329,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Sets parents start position in associated file.
-	 * 
+	 *
 	 * @param parentStart
 	 */
 	protected void setParentStart(int parentStart) {
@@ -339,7 +339,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Set inner statements.
-	 * 
+	 *
 	 * @param body
 	 */
 	public void setBody(Block body) {
@@ -358,7 +358,7 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Set inner statements with start and end position in associated file.
-	 * 
+	 *
 	 * @param startBody
 	 *            start position.
 	 * @param body
@@ -375,13 +375,13 @@ public class TypeDeclaration extends Declaration {
 
 	/**
 	 * Return super class names.
-	 * 
+	 *
 	 * @return
 	 */
 	public List<String> getSuperClassNames() {
 		if (this.fSuperClasses != null) {
 			final List<ASTNode> superClasses = this.fSuperClasses.getChilds();
-			final List<String> names = new ArrayList<String>(
+			final List<String> names = new ArrayList<>(
 					superClasses.size());
 			for (Iterator<ASTNode> i = superClasses.iterator(); i.hasNext();) {
 				final ASTNode expr = i.next();

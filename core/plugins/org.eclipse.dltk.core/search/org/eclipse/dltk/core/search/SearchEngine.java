@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.search;
 
@@ -28,8 +27,8 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor;
-import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.dltk.core.RuntimePerformanceMonitor.PerformanceNode;
+import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.dltk.core.index2.search.NewSearchEngine;
 import org.eclipse.dltk.core.search.indexing.IndexManager;
 import org.eclipse.dltk.internal.compiler.env.AccessRuleSet;
@@ -88,11 +87,11 @@ public class SearchEngine {
 	 * <p>
 	 * The given working copies take precedence over primary working copies (if
 	 * any).
-	 * 
+	 *
 	 * @param workingCopies
 	 *            the working copies that take precedence over their original
 	 *            compilation units
-	 * 
+	 *
 	 */
 	public SearchEngine(ISourceModule[] workingCopies) {
 		int length = workingCopies.length;
@@ -105,11 +104,11 @@ public class SearchEngine {
 	 * Creates a new search engine with the given working copy owner. The
 	 * working copies owned by this owner will take precedence over the primary
 	 * compilation units in the subsequent search operations.
-	 * 
+	 *
 	 * @param workingCopyOwner
 	 *            the owner of the working copies that take precedence over
 	 *            their original compilation units
-	 * 
+	 *
 	 */
 	public SearchEngine(WorkingCopyOwner workingCopyOwner) {
 		this.basicEngine = new BasicSearchEngine(workingCopyOwner);
@@ -119,7 +118,7 @@ public class SearchEngine {
 	 * Returns a Script search scope limited to the hierarchy of the given type.
 	 * The Script elements resulting from a search with this scope will be types
 	 * in this hierarchy, or members of the types in this hierarchy.
-	 * 
+	 *
 	 * @param type
 	 *            the focus of the hierarchy scope
 	 * @return a new hierarchy scope
@@ -137,7 +136,7 @@ public class SearchEngine {
 	 * owned by the given owner take precedence over the original compilation
 	 * units. The Script elements resulting from a search with this scope will
 	 * be types in this hierarchy, or members of the types in this hierarchy.
-	 * 
+	 *
 	 * @param type
 	 *            the focus of the hierarchy scope
 	 * @param owner
@@ -146,7 +145,7 @@ public class SearchEngine {
 	 * @return a new hierarchy scope
 	 * @exception ModelException
 	 *                if the hierarchy could not be computed on the given type
-	 * 
+	 *
 	 */
 	public static IDLTKSearchScope createHierarchyScope(IType type,
 			WorkingCopyOwner owner) throws ModelException {
@@ -158,7 +157,7 @@ public class SearchEngine {
 	 * type. The Script elements resulting from a search with this scope will be
 	 * types in this super hierarchy, or members of the types in this super
 	 * hierarchy.
-	 * 
+	 *
 	 * @param type
 	 *            the focus of the hierarchy scope
 	 * @return a new super hierarchy scope
@@ -177,7 +176,7 @@ public class SearchEngine {
 	 * compilation units. The Script elements resulting from a search with this
 	 * scope will be types in this super hierarchy, or members of the types in
 	 * this super hierarchy.
-	 * 
+	 *
 	 * @param type
 	 *            the focus of the hierarchy scope
 	 * @param owner
@@ -186,7 +185,7 @@ public class SearchEngine {
 	 * @return a new super hierarchy scope
 	 * @exception ModelException
 	 *                if the hierarchy could not be computed on the given type
-	 * 
+	 *
 	 */
 	public static IDLTKSearchScope createSuperHierarchyScope(IType type,
 			WorkingCopyOwner owner) throws ModelException {
@@ -210,11 +209,11 @@ public class SearchEngine {
 	 * In other words, this is equivalent to using
 	 * SearchEngine.createJavaSearchScope(elements, true).
 	 * </p>
-	 * 
+	 *
 	 * @param elements
 	 *            the Script elements the scope is limited to
 	 * @return a new Script search scope
-	 * 
+	 *
 	 */
 	public static IDLTKSearchScope createSearchScope(IModelElement[] elements,
 			IDLTKLanguageToolkit toolkit) {
@@ -223,15 +222,15 @@ public class SearchEngine {
 
 	public static IDLTKSearchScope createSearchScope(IModelElement element) {
 		return BasicSearchEngine.createSearchScope(
-				new IModelElement[] { element }, DLTKLanguageManager
-						.getLanguageToolkit(element));
+				new IModelElement[] { element },
+				DLTKLanguageManager.getLanguageToolkit(element));
 	}
 
 	/**
 	 * Returns a Script search scope limited to the given Script elements. The
 	 * Script elements resulting from a search with this scope will be children
 	 * of the given elements.
-	 * 
+	 *
 	 * If an element is an IScriptProject, then the project's source folders,
 	 * its jars (external and internal) and - if specified - its referenced
 	 * projects (with their source folders and jars, recursively) will be
@@ -239,14 +238,14 @@ public class SearchEngine {
 	 * fragments of this package fragment root will be included. If an element
 	 * is an IScriptFolder, then only the compilation unit and class files of
 	 * this package fragment will be included. Subpackages will NOT be included.
-	 * 
+	 *
 	 * @param elements
 	 *            the Script elements the scope is limited to
 	 * @param includeReferencedProjects
 	 *            a flag indicating if referenced projects must be recursively
 	 *            included
 	 * @return a new Script search scope
-	 * 
+	 *
 	 */
 	public static IDLTKSearchScope createSearchScope(IModelElement[] elements,
 			boolean includeReferencedProjects, IDLTKLanguageToolkit toolkit) {
@@ -258,7 +257,7 @@ public class SearchEngine {
 	 * Returns a Script search scope limited to the given Script elements. The
 	 * Script elements resulting from a search with this scope will be children
 	 * of the given elements.
-	 * 
+	 *
 	 * If an element is an IScriptProject, then it includes: - its source
 	 * folders if IJavaSearchScope.SOURCES is specified, - its application
 	 * libraries (internal and external jars, class folders that are on the raw
@@ -274,7 +273,7 @@ public class SearchEngine {
 	 * fragment root will be included. If an element is an IScriptFolder, then
 	 * only the compilation unit and class files of this package fragment will
 	 * be included. Subpackages will NOT be included.
-	 * 
+	 *
 	 * @param elements
 	 *            the Script elements the scope is limited to
 	 * @param includeMask
@@ -284,7 +283,7 @@ public class SearchEngine {
 	 * @see IJavaSearchScope#APPLICATION_LIBRARIES
 	 * @see IJavaSearchScope#SYSTEM_LIBRARIES
 	 * @see IJavaSearchScope#REFERENCED_PROJECTS
-	 * 
+	 *
 	 */
 	public static IDLTKSearchScope createSearchScope(IModelElement[] elements,
 			int includeMask, IDLTKLanguageToolkit toolkit) {
@@ -301,7 +300,7 @@ public class SearchEngine {
 
 	/**
 	 * Create a type name match on a given type with specific modifiers.
-	 * 
+	 *
 	 * @param type
 	 *            The java model handle of the type
 	 * @param modifiers
@@ -314,7 +313,7 @@ public class SearchEngine {
 
 	/**
 	 * Returns a Script search scope with the workspace as the only limit.
-	 * 
+	 *
 	 * @return a new workspace scope
 	 */
 	public static IDLTKSearchScope createWorkspaceScope(
@@ -324,9 +323,9 @@ public class SearchEngine {
 
 	/**
 	 * Returns a new default Script search participant.
-	 * 
+	 *
 	 * @return a new default Script search participant
-	 * 
+	 *
 	 */
 	public static SearchParticipant getDefaultSearchParticipant() {
 		return BasicSearchEngine.getDefaultSearchParticipant();
@@ -337,7 +336,7 @@ public class SearchEngine {
 	 * created using helper methods (from a String pattern or a Script element)
 	 * and encapsulate the description of what is being searched (for example,
 	 * search method declarations in a case sensitive way).
-	 * 
+	 *
 	 * @param pattern
 	 *            the pattern to search
 	 * @param participants
@@ -353,15 +352,15 @@ public class SearchEngine {
 	 *                <ul>
 	 *                <li>the buildpath is incorrectly set</li>
 	 *                </ul>
-	 * 
+	 *
 	 */
 	public void search(SearchPattern pattern, SearchParticipant[] participants,
 			IDLTKSearchScope scope, SearchRequestor requestor,
 			IProgressMonitor monitor) throws CoreException {
 
 		if (this.newSearchEngine.isEnabled(scope.getLanguageToolkit())) {
-			this.newSearchEngine.search(pattern, participants, scope,
-					requestor, monitor);
+			this.newSearchEngine.search(pattern, participants, scope, requestor,
+					monitor);
 		} else {
 			this.basicEngine.search(pattern, participants, scope, requestor,
 					monitor);
@@ -379,7 +378,7 @@ public class SearchEngine {
 	 * Searches for all top-level types and member types in the given scope. The
 	 * search can be selecting specific types (given a package exact full name
 	 * or a type name with specific match mode).
-	 * 
+	 *
 	 * @param packageExactName
 	 *            the exact package full name of the searched types.<br>
 	 *            If you want to use a prefix or a wild-carded string for
@@ -413,7 +412,8 @@ public class SearchEngine {
 	 * @param searchFor
 	 *            determines the nature of the searched elements
 	 *            <ul>
-	 *            <li>{@link IDLTKSearchConstants#CLASS}: only look for classes</li>
+	 *            <li>{@link IDLTKSearchConstants#CLASS}: only look for
+	 *            classes</li>
 	 *            <li>{@link IDLTKSearchConstants#INTERFACE}: only look for
 	 *            interfaces</li>
 	 *            <li>{@link IDLTKSearchConstants#ENUM}: only look for
@@ -451,7 +451,7 @@ public class SearchEngine {
 	 *                <ul>
 	 *                <li>the buildpath is incorrectly set</li>
 	 *                </ul>
-	 * 
+	 *
 	 */
 	public void searchAllTypeNames(final char[] packageExactName,
 			final char[] typeName, final int matchRule, int searchFor,
@@ -469,7 +469,7 @@ public class SearchEngine {
 	 * search can be selecting specific types (given a package name using
 	 * specific match mode and/or a type name using another specific match
 	 * mode).
-	 * 
+	 *
 	 * @param packageName
 	 *            the full name of the package of the searched types, or a
 	 *            prefix for this package, or a wild-carded string for this
@@ -520,7 +520,8 @@ public class SearchEngine {
 	 * @param searchFor
 	 *            determines the nature of the searched elements
 	 *            <ul>
-	 *            <li>{@link IDLTKSearchConstants#CLASS}: only look for classes</li>
+	 *            <li>{@link IDLTKSearchConstants#CLASS}: only look for
+	 *            classes</li>
 	 *            <li>{@link IDLTKSearchConstants#INTERFACE}: only look for
 	 *            interfaces</li>
 	 *            <li>{@link IDLTKSearchConstants#ENUM}: only look for
@@ -558,7 +559,7 @@ public class SearchEngine {
 	 *                <ul>
 	 *                <li>the buildpath is incorrectly set</li>
 	 *                </ul>
-	 * 
+	 *
 	 */
 	public void searchAllTypeNames(final char[] packageName,
 			final int packageMatchRule, final char[] typeName,
@@ -582,7 +583,7 @@ public class SearchEngine {
 	 * Provided {@link TypeNameMatchRequestor} requestor will collect
 	 * {@link TypeNameMatch} matches found during the search.
 	 * </p>
-	 * 
+	 *
 	 * @param packageName
 	 *            the full name of the package of the searched types, or a
 	 *            prefix for this package, or a wild-carded string for this
@@ -635,7 +636,8 @@ public class SearchEngine {
 	 * @param searchFor
 	 *            determines the nature of the searched elements
 	 *            <ul>
-	 *            <li>{@link IJavaSearchConstants#CLASS}: only look for classes</li>
+	 *            <li>{@link IJavaSearchConstants#CLASS}: only look for
+	 *            classes</li>
 	 *            <li>{@link IJavaSearchConstants#INTERFACE}: only look for
 	 *            interfaces</li>
 	 *            <li>{@link IJavaSearchConstants#ENUM}: only look for
@@ -693,7 +695,7 @@ public class SearchEngine {
 	 * Searches for all top-level types and member types in the given scope
 	 * matching any of the given qualifications and type names in a case
 	 * sensitive way.
-	 * 
+	 *
 	 * @param qualifications
 	 *            the qualified name of the package/enclosing type of the
 	 *            searched types
@@ -723,7 +725,7 @@ public class SearchEngine {
 	 *                <ul>
 	 *                <li>the buildpath is incorrectly set</li>
 	 *                </ul>
-	 * 
+	 *
 	 */
 	public void searchAllTypeNames(final char[][] qualifications,
 			final char[][] typeNames, IDLTKSearchScope scope,
@@ -746,7 +748,7 @@ public class SearchEngine {
 	 * Provided {@link TypeNameMatchRequestor} requestor will collect
 	 * {@link TypeNameMatch} matches found during the search.
 	 * </p>
-	 * 
+	 *
 	 * @param qualifications
 	 *            the qualified name of the package/enclosing type of the
 	 *            searched types. May be <code>null</code>, then any package
@@ -803,11 +805,11 @@ public class SearchEngine {
 	 * class A {
 	 * 	int field1;
 	 * }
-	 * 
+	 *
 	 * class B extends A {
 	 * 	String value;
 	 * }
-	 * 
+	 *
 	 * class X {
 	 * 	void test() {
 	 * 		B b = new B();
@@ -819,7 +821,7 @@ public class SearchEngine {
 	 * <code>X.test()</code> would collect the fields <code>B.value</code> and
 	 * <code>A.field1</code>.
 	 * </p>
-	 * 
+	 *
 	 * @param enclosingElement
 	 *            the method, type, or compilation unit to be searched in
 	 * @param requestor
@@ -832,7 +834,7 @@ public class SearchEngine {
 	 *                <li>the element doesn't exist</li>
 	 *                <li>the buildpath is incorrectly set</li>
 	 *                </ul>
-	 * 
+	 *
 	 */
 	public void searchDeclarationsOfAccessedFields(
 			IModelElement enclosingElement, SearchRequestor requestor,
@@ -850,14 +852,14 @@ public class SearchEngine {
 	 * <pre>
 	 * class A {
 	 * }
-	 * 
+	 *
 	 * class B extends A {
 	 * }
-	 * 
+	 *
 	 * interface I {
 	 * 	int VALUE = 0;
 	 * }
-	 * 
+	 *
 	 * class X {
 	 * 	void test() {
 	 * 		B b = new B();
@@ -869,7 +871,7 @@ public class SearchEngine {
 	 * <code>X.test()</code> would collect the class <code>B</code> and the
 	 * interface <code>I</code>.
 	 * </p>
-	 * 
+	 *
 	 * @param enclosingElement
 	 *            the method, type, or compilation unit to be searched in
 	 * @param requestor
@@ -882,7 +884,7 @@ public class SearchEngine {
 	 *                <li>the element doesn't exist</li>
 	 *                <li>the buildpath is incorrectly set</li>
 	 *                </ul>
-	 * 
+	 *
 	 */
 	public void searchDeclarationsOfReferencedTypes(
 			IModelElement enclosingElement, SearchRequestor requestor,
@@ -901,16 +903,16 @@ public class SearchEngine {
 	 * class A {
 	 * 	void foo() {
 	 * 	};
-	 * 
+	 *
 	 * 	void bar() {
 	 * 	};
 	 * }
-	 * 
+	 *
 	 * class B extends A {
 	 * 	void foo() {
 	 * 	};
 	 * }
-	 * 
+	 *
 	 * class X {
 	 * 	void test() {
 	 * 		A a = new B();
@@ -924,7 +926,7 @@ public class SearchEngine {
 	 * <code>X.test()</code> would collect the methods <code>A.foo()</code>,
 	 * <code>B.foo()</code>, and <code>A.bar()</code>.
 	 * </p>
-	 * 
+	 *
 	 * @param enclosingElement
 	 *            the method, type, or compilation unit to be searched in
 	 * @param requestor
@@ -937,11 +939,11 @@ public class SearchEngine {
 	 *                <li>the element doesn't exist</li>
 	 *                <li>the buildpath is incorrectly set</li>
 	 *                </ul>
-	 * 
+	 *
 	 */
-	public void searchDeclarationsOfSentMessages(
-			IModelElement enclosingElement, SearchRequestor requestor,
-			IProgressMonitor monitor) throws ModelException {
+	public void searchDeclarationsOfSentMessages(IModelElement enclosingElement,
+			SearchRequestor requestor, IProgressMonitor monitor)
+			throws ModelException {
 		this.basicEngine.searchDeclarationsOfSentMessages(enclosingElement,
 				requestor, monitor);
 	}
@@ -970,14 +972,15 @@ public class SearchEngine {
 			final Map<ISourceModule, Set<String>> keysByModule,
 			IProgressMonitor monitor) {
 		PerformanceNode p = RuntimePerformanceMonitor.begin();
-		final long startTime = DLTKCore.VERBOSE_MIXIN ? System
-				.currentTimeMillis() : 0;
+		final long startTime = DLTKCore.VERBOSE_MIXIN
+				? System.currentTimeMillis()
+				: 0;
 		// Index requestor
-		final Map<String, ISourceModule> processed = new HashMap<String, ISourceModule>();
+		final Map<String, ISourceModule> processed = new HashMap<>();
 		IndexQueryRequestor searchRequestor = new IndexQueryRequestor() {
 
 			final HandleFactory factory = new HandleFactory();
-			final Set<String> searched = new HashSet<String>();
+			final Set<String> searched = new HashSet<>();
 
 			@Override
 			public boolean acceptIndexMatch(String documentPath,
@@ -1010,7 +1013,7 @@ public class SearchEngine {
 					if (keysByModule.containsKey(module)) {
 						keys = keysByModule.get(module);
 					} else {
-						keys = new HashSet<String>();
+						keys = new HashSet<>();
 						keysByModule.put(module, keys);
 					}
 					keys.add(val);
@@ -1024,7 +1027,8 @@ public class SearchEngine {
 
 		MixinPattern pattern = new MixinPattern(searchPattern.toCharArray(),
 				SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE
-						| SearchPattern.R_PATTERN_MATCH, toolkit);
+						| SearchPattern.R_PATTERN_MATCH,
+				toolkit);
 
 		SearchParticipant participant = SearchEngine
 				.getDefaultSearchParticipant();
@@ -1032,9 +1036,9 @@ public class SearchEngine {
 		participant.selectMixinIndexes(pattern, scope);
 
 		// add type names from indexes
-		indexManager.performConcurrentJob(new PatternSearchJob(pattern,
-				participant, // Script search only
-				scope, searchRequestor),
+		indexManager.performConcurrentJob(
+				new PatternSearchJob(pattern, participant, // Script search only
+						scope, searchRequestor),
 				IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, monitor);
 		if (DLTKCore.VERBOSE_MIXIN) {
 			final String msg = "mixin search for \"{0}\": {1} results in {2} ms";//$NON-NLS-1$
@@ -1065,7 +1069,7 @@ public class SearchEngine {
 	public static String[] searchMixinPatterns(final IDLTKSearchScope scope,
 			String key, IDLTKLanguageToolkit toolkit) {
 		// Index requestor
-		final List<String> result = new ArrayList<String>();
+		final List<String> result = new ArrayList<>();
 		IndexQueryRequestor searchRequestor = new IndexQueryRequestor() {
 			@Override
 			public boolean acceptIndexMatch(String documentPath,
@@ -1096,16 +1100,16 @@ public class SearchEngine {
 		participant.selectMixinIndexes(pattern, scope);
 
 		// add type names from indexes
-		indexManager.performConcurrentJob(new PatternSearchJob(pattern,
-				participant, // Script search only
-				scope, searchRequestor),
+		indexManager.performConcurrentJob(
+				new PatternSearchJob(pattern, participant, // Script search only
+						scope, searchRequestor),
 				IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
 		return result.toArray(new String[result.size()]);
 	}
 
 	/**
 	 * Create a method name match on a given type with specific modifiers.
-	 * 
+	 *
 	 * @param type
 	 *            The java model handle of the type
 	 * @param modifiers
@@ -1122,7 +1126,7 @@ public class SearchEngine {
 	 * The search can be selecting specific methods (given a package name using
 	 * specific match mode and/or a method name using another specific match
 	 * mode).
-	 * 
+	 *
 	 * @param packageName
 	 *            the full name of the package of the searched methods, or a
 	 *            prefix for this package, or a wild-carded string for this
@@ -1135,7 +1139,8 @@ public class SearchEngine {
 	 *            one of
 	 *            <ul>
 	 *            <li>{@link SearchPattern#R_EXACT_MATCH} if the package name
-	 *            and method name are the full names of the searched method.</li>
+	 *            and method name are the full names of the searched
+	 *            method.</li>
 	 *            <li>{@link SearchPattern#R_PREFIX_MATCH} if the package name
 	 *            and method name are prefixes of the names of the searched
 	 *            methods.</li>
@@ -1154,7 +1159,8 @@ public class SearchEngine {
 	 *            one of
 	 *            <ul>
 	 *            <li>{@link SearchPattern#R_EXACT_MATCH} if the package name
-	 *            and method name are the full names of the searched methods.</li>
+	 *            and method name are the full names of the searched
+	 *            methods.</li>
 	 *            <li>{@link SearchPattern#R_PREFIX_MATCH} if the package name
 	 *            and method name are prefixes of the names of the searched
 	 *            methods.</li>
@@ -1199,7 +1205,7 @@ public class SearchEngine {
 	 *                <ul>
 	 *                <li>the buildpath is incorrectly set</li>
 	 *                </ul>
-	 * 
+	 *
 	 */
 	public void searchAllMethodNames(final char[] methodName,
 			final int methodMatchRule, int searchFor, IDLTKSearchScope scope,
@@ -1218,7 +1224,7 @@ public class SearchEngine {
 	 * The search can be selecting specific methods (given a package name using
 	 * specific match mode and/or a method name using another specific match
 	 * mode).
-	 * 
+	 *
 	 * @param packageName
 	 *            the full name of the package of the searched methods, or a
 	 *            prefix for this package, or a wild-carded string for this
@@ -1231,7 +1237,8 @@ public class SearchEngine {
 	 *            one of
 	 *            <ul>
 	 *            <li>{@link SearchPattern#R_EXACT_MATCH} if the package name
-	 *            and method name are the full names of the searched method.</li>
+	 *            and method name are the full names of the searched
+	 *            method.</li>
 	 *            <li>{@link SearchPattern#R_PREFIX_MATCH} if the package name
 	 *            and method name are prefixes of the names of the searched
 	 *            methods.</li>
@@ -1250,7 +1257,8 @@ public class SearchEngine {
 	 *            one of
 	 *            <ul>
 	 *            <li>{@link SearchPattern#R_EXACT_MATCH} if the package name
-	 *            and method name are the full names of the searched methods.</li>
+	 *            and method name are the full names of the searched
+	 *            methods.</li>
 	 *            <li>{@link SearchPattern#R_PREFIX_MATCH} if the package name
 	 *            and method name are prefixes of the names of the searched
 	 *            methods.</li>
@@ -1295,7 +1303,7 @@ public class SearchEngine {
 	 *                <ul>
 	 *                <li>the buildpath is incorrectly set</li>
 	 *                </ul>
-	 * 
+	 *
 	 */
 	public void searchAllMethodNames(final char[] methodName,
 			final int methodMatchRule, int searchFor, IDLTKSearchScope scope,

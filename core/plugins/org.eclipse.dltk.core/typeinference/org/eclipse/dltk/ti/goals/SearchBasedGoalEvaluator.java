@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.ti.goals;
 
@@ -30,8 +29,8 @@ import org.eclipse.dltk.ti.ISourceModuleContext;
 
 public abstract class SearchBasedGoalEvaluator extends GoalEvaluator {
 
-	private List<IGoal> possiblePositionsGoals = new ArrayList<IGoal>();
-	private List<ItemReference> references = new ArrayList<ItemReference>();
+	private List<IGoal> possiblePositionsGoals = new ArrayList<>();
+	private List<ItemReference> references = new ArrayList<>();
 
 	private SearchRequestor requestor = new SearchRequestor() {
 
@@ -74,15 +73,17 @@ public abstract class SearchBasedGoalEvaluator extends GoalEvaluator {
 		SearchEngine engine = new SearchEngine();
 
 		try {
-			engine.search(pattern, new SearchParticipant[] { SearchEngine
-					.getDefaultSearchParticipant() }, scope, requestor, null);
+			engine.search(pattern,
+					new SearchParticipant[] {
+							SearchEngine.getDefaultSearchParticipant() },
+					scope, requestor, null);
 		} catch (CoreException e) {
 			e.printStackTrace();
 			return IGoal.NO_GOALS;
 		}
 
-		return possiblePositionsGoals.toArray(new IGoal[possiblePositionsGoals
-				.size()]);
+		return possiblePositionsGoals
+				.toArray(new IGoal[possiblePositionsGoals.size()]);
 	}
 
 	@Override

@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 xored software, Inc. and others.
+ * Copyright (c) 2009, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html  
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.jobs.Job;
 
 /**
  * This class is designed to show progress messages using Eclipse Jobs subsystem
- * 
+ *
  * @author asobolev
  * @since 2.0
  */
@@ -53,7 +53,7 @@ public class ProgressMonitoringJob extends Job implements IProgressMonitor {
 
 	private static final int WORKED = 6;
 
-	private List<WorkNode> queue = new LinkedList<WorkNode>();
+	private List<WorkNode> queue = new LinkedList<>();
 
 	private final Object lock = new Object();
 	private boolean canceled = false;

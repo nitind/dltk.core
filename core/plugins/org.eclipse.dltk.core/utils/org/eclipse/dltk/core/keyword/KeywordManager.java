@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 xored software, Inc.
+ * Copyright (c) 2011, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -23,7 +23,7 @@ import org.eclipse.dltk.utils.LazyExtensionManager;
 /**
  * The implementation of the keyword manager. Please create you own instance
  * specifying the required nature.
- * 
+ *
  * @since 3.0
  */
 public class KeywordManager extends LazyExtensionManager<IKeywordProvider> {
@@ -43,8 +43,9 @@ public class KeywordManager extends LazyExtensionManager<IKeywordProvider> {
 		return super.createDescriptor(confElement);
 	}
 
-	public String[] getKeywords(IKeywordCategory category, ISourceModule module) {
-		List<String> result = new ArrayList<String>();
+	public String[] getKeywords(IKeywordCategory category,
+			ISourceModule module) {
+		List<String> result = new ArrayList<>();
 		for (IKeywordProvider provider : this) {
 			String[] keywords = provider.getKeywords(category, module);
 			if (keywords != null) {

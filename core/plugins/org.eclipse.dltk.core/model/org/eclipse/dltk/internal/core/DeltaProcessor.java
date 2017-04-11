@@ -90,12 +90,11 @@ public class DeltaProcessor {
 				if (resource != null) {
 					this.root = this.project.getProjectFragment(resource);
 				} else {
-					Object target = Model
-							.getTarget(
-									ResourcesPlugin.getWorkspace().getRoot(),
-									this.rootPath, false/*
-														 * don't check existence
-														 */);
+					Object target = Model.getTarget(
+							ResourcesPlugin.getWorkspace().getRoot(),
+							this.rootPath, false/*
+												 * don't check existence
+												 */);
 					if (target instanceof IResource) {
 						this.root = this.project
 								.getProjectFragment((IResource) target);
@@ -209,7 +208,7 @@ public class DeltaProcessor {
 	 * Queue of deltas created explicily by the script Model that have yet to be
 	 * fired.
 	 */
-	public ArrayList<IModelElementDelta> modelDeltas = new ArrayList<IModelElementDelta>();
+	public ArrayList<IModelElementDelta> modelDeltas = new ArrayList<>();
 	/*
 	 * Queue of reconcile deltas on working copies that have yet to be fired.
 	 * This is a table form IWorkingCopy to IModelElementDelta
@@ -224,7 +223,7 @@ public class DeltaProcessor {
 	 */
 	private final ModelUpdater modelUpdater = new ModelUpdater();
 	/* A set of IDLTKProject whose caches need to be reset */
-	private HashSet<IScriptProject> projectCachesToReset = new HashSet<IScriptProject>();
+	private HashSet<IScriptProject> projectCachesToReset = new HashSet<>();
 
 	/*
 	 * A table from IScriptProject to an array of IProjectFragment. This table
@@ -232,10 +231,12 @@ public class DeltaProcessor {
 	 */
 	public Map<IScriptProject, IProjectFragment[]> oldRoots;
 
-	/* A set of IDylanProject whose package fragment roots need to be refreshed */
-	private HashSet<IScriptProject> rootsToRefresh = new HashSet<IScriptProject>();
+	/*
+	 * A set of IDylanProject whose package fragment roots need to be refreshed
+	 */
+	private HashSet<IScriptProject> rootsToRefresh = new HashSet<>();
 	/** {@link Runnable}s that should be called after model is updated */
-	private final ArrayList<Runnable> postActions = new ArrayList<Runnable>();
+	private final ArrayList<Runnable> postActions = new ArrayList<>();
 	/*
 	 * Type of event that should be processed no matter what the real event type
 	 * is.
@@ -289,10 +290,11 @@ public class DeltaProcessor {
 	 * Adds the given project and its dependents to the list of the roots to
 	 * refresh.
 	 */
-	private void addToRootsToRefreshWithDependents(IScriptProject scriptProject) {
+	private void addToRootsToRefreshWithDependents(
+			IScriptProject scriptProject) {
 		this.rootsToRefresh.add(scriptProject);
-		this.addDependentProjects(scriptProject,
-				this.state.projectDependencies, this.rootsToRefresh);
+		this.addDependentProjects(scriptProject, this.state.projectDependencies,
+				this.rootsToRefresh);
 	}
 
 	/*
@@ -443,9 +445,10 @@ public class DeltaProcessor {
 						this.manager.containerRemove(scriptProject);
 					}
 					this.state.rootsAreStale = true;
-				} else if ((delta.getFlags() & IResourceDelta.DESCRIPTION) != 0) {
-					boolean wasScriptProject = this.state.findProject(project
-							.getName()) != null;
+				} else if ((delta.getFlags()
+						& IResourceDelta.DESCRIPTION) != 0) {
+					boolean wasScriptProject = this.state
+							.findProject(project.getName()) != null;
 					boolean isScriptProject = DLTKLanguageManager
 							.hasScriptNature(project);
 					if (wasScriptProject != isScriptProject) {
@@ -526,7 +529,7 @@ public class DeltaProcessor {
 				case IResourceDelta.CHANGED:
 					int flags = delta.getFlags();
 					if ((flags & IResourceDelta.CONTENT) == 0
-					// only consider content change
+							// only consider content change
 							&& (flags & IResourceDelta.ENCODING) == 0
 							// and encoding change
 							&& (flags & IResourceDelta.MOVED_FROM) == 0) {
@@ -537,8 +540,8 @@ public class DeltaProcessor {
 					// fall through
 				case IResourceDelta.ADDED:
 				case IResourceDelta.REMOVED:
-					scriptProject = (ScriptProject) DLTKCore.create(file
-							.getProject());
+					scriptProject = (ScriptProject) DLTKCore
+							.create(file.getProject());
 					readRawBuildpath(scriptProject);
 					break;
 				}
@@ -556,8 +559,8 @@ public class DeltaProcessor {
 	private void checkProjectReferenceChange(IProject project,
 			ScriptProject javaProject) {
 		BuildpathChange change = this.state.getBuildpathChange(project);
-		this.state.addProjectReferenceChange(javaProject, change == null ? null
-				: change.oldResolvedBuildpath);
+		this.state.addProjectReferenceChange(javaProject,
+				change == null ? null : change.oldResolvedBuildpath);
 	}
 
 	private void readRawBuildpath(ScriptProject javaProject) {
@@ -644,8 +647,8 @@ public class DeltaProcessor {
 			// an elementType SCRIPT_PROJECT (see #elementType(...)).
 			if (resource instanceof IProject) {
 				this.popUntilPrefixOf(path);
-				if (this.currentElement != null
-						&& this.currentElement.getElementType() == IModelElement.SCRIPT_PROJECT
+				if (this.currentElement != null && this.currentElement
+						.getElementType() == IModelElement.SCRIPT_PROJECT
 						&& ((IScriptProject) this.currentElement).getProject()
 								.equals(resource)) {
 					return this.currentElement;
@@ -668,16 +671,16 @@ public class DeltaProcessor {
 			}
 			break;
 		case IModelElement.PROJECT_FRAGMENT:
-			element = rootInfo == null ? DLTKCore.create(resource) : rootInfo
-					.getProjectFragment(resource);
+			element = rootInfo == null ? DLTKCore.create(resource)
+					: rootInfo.getProjectFragment(resource);
 			break;
 		case IModelElement.SCRIPT_FOLDER:
 			if (rootInfo != null) {
 				if (rootInfo.project.contains(resource)) {
 					IProjectFragment root = rootInfo.getProjectFragment(null);
 					// create package handle
-					IPath pkgPath = path.removeFirstSegments(rootInfo.rootPath
-							.segmentCount());
+					IPath pkgPath = path.removeFirstSegments(
+							rootInfo.rootPath.segmentCount());
 					element = root.getScriptFolder(pkgPath);
 				}
 			} else {
@@ -694,8 +697,8 @@ public class DeltaProcessor {
 					} else if (((ScriptProject) root.getScriptProject())
 							.contains(resource)) {
 						// create package handle
-						IPath pkgPath = path.removeFirstSegments(root.getPath()
-								.segmentCount());
+						IPath pkgPath = path.removeFirstSegments(
+								root.getPath().segmentCount());
 						element = root.getScriptFolder(pkgPath);
 					}
 				}
@@ -716,8 +719,8 @@ public class DeltaProcessor {
 					IProjectFragment root = (IProjectFragment) this.currentElement;
 					IPath rootPath = root.getPath();
 					IPath pkgPath = path.removeLastSegments(1);
-					IPath pkgName = pkgPath.removeFirstSegments(rootPath
-							.segmentCount());
+					IPath pkgName = pkgPath
+							.removeFirstSegments(rootPath.segmentCount());
 					pkgFragment = root.getScriptFolder(pkgName);
 					break;
 				case IModelElement.SCRIPT_FOLDER:
@@ -775,10 +778,10 @@ public class DeltaProcessor {
 		if (refreshedElements == null) {
 			return false;
 		}
-		Map<IPath, ZipStatus> externalArchivesStatus = new HashMap<IPath, ZipStatus>();
+		Map<IPath, ZipStatus> externalArchivesStatus = new HashMap<>();
 		boolean hasDelta = false;
 		// find JARs to refresh
-		Set<IPath> archivePathsToRefresh = new HashSet<IPath>();
+		Set<IPath> archivePathsToRefresh = new HashSet<>();
 		// modification exception (see
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=63534)
 		for (IModelElement element : refreshedElements) {
@@ -788,8 +791,8 @@ public class DeltaProcessor {
 				break;
 			case IModelElement.SCRIPT_PROJECT:
 				ScriptProject scriptProject = (ScriptProject) element;
-				if (!DLTKLanguageManager.hasScriptNature(scriptProject
-						.getProject())) {
+				if (!DLTKLanguageManager
+						.hasScriptNature(scriptProject.getProject())) {
 					// project is not accessible or has lost its script
 					// nature
 					break;
@@ -804,7 +807,8 @@ public class DeltaProcessor {
 				try {
 					buildpath = scriptProject.getResolvedBuildpath();
 					for (int j = 0, cpLength = buildpath.length; j < cpLength; j++) {
-						if (buildpath[j].getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+						if (buildpath[j]
+								.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 							archivePathsToRefresh.add(buildpath[j].getPath());
 						}
 					}
@@ -813,7 +817,8 @@ public class DeltaProcessor {
 				}
 				break;
 			case IModelElement.SCRIPT_MODEL:
-				for (String projectName : this.state.getOldScriptProjectNames()) {
+				for (String projectName : this.state
+						.getOldScriptProjectNames()) {
 					IProject project = ResourcesPlugin.getWorkspace().getRoot()
 							.getProject(projectName);
 					if (!DLTKLanguageManager.hasScriptNature(project)) {
@@ -829,7 +834,8 @@ public class DeltaProcessor {
 						continue;
 					}
 					for (int k = 0, cpLength = buildpath.length; k < cpLength; k++) {
-						if (buildpath[k].getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+						if (buildpath[k]
+								.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 							archivePathsToRefresh.add(buildpath[k].getPath());
 						}
 					}
@@ -870,8 +876,8 @@ public class DeltaProcessor {
 						Object targetLibrary = Model.getTarget(wksRoot,
 								entryPath, true);
 						if (targetLibrary == null) { // missing JAR
-							if (this.state.getExternalLibTimeStamps().remove(
-									entryPath) != null) {
+							if (this.state.getExternalLibTimeStamps()
+									.remove(entryPath) != null) {
 								externalArchivesStatus.put(entryPath,
 										ZipStatus.EXTERNAL_ZIP_REMOVED);
 								// the jar was physically removed: remove the
@@ -901,7 +907,8 @@ public class DeltaProcessor {
 											.removeIndex(entryPath);
 									ProjectIndexerManager.removeLibrary(
 											scriptProject, entryPath);
-								} else if (oldTimestamp.longValue() != newTimeStamp) {
+								} else if (oldTimestamp
+										.longValue() != newTimeStamp) {
 									externalArchivesStatus.put(entryPath,
 											ZipStatus.EXTERNAL_ZIP_CHANGED);
 									this.state.getExternalLibTimeStamps().put(
@@ -948,8 +955,9 @@ public class DeltaProcessor {
 								continue;
 							}
 							if (VERBOSE) {
-								System.out
-										.println("- External ZIP ADDED, affecting root: " + root.getElementName()); //$NON-NLS-1$
+								System.out.println(
+										"- External ZIP ADDED, affecting root: " //$NON-NLS-1$
+												+ root.getElementName());
 							}
 							this.elementAdded((Openable) root, null, null);
 							// in case it contains a chained jar
@@ -965,8 +973,9 @@ public class DeltaProcessor {
 								continue;
 							}
 							if (VERBOSE) {
-								System.out
-										.println("- External ZIP CHANGED, affecting root: " + root.getElementName()); //$NON-NLS-1$
+								System.out.println(
+										"- External ZIP CHANGED, affecting root: " //$NON-NLS-1$
+												+ root.getElementName());
 							}
 							this.contentChanged((Openable) root);
 							hasDelta = true;
@@ -978,8 +987,9 @@ public class DeltaProcessor {
 								continue;
 							}
 							if (VERBOSE) {
-								System.out
-										.println("- External ZIP REMOVED, affecting root: " + root.getElementName()); //$NON-NLS-1$
+								System.out.println(
+										"- External ZIP REMOVED, affecting root: " //$NON-NLS-1$
+												+ root.getElementName());
 							}
 							this.elementRemoved((Openable) root, null, null);
 
@@ -1027,19 +1037,19 @@ public class DeltaProcessor {
 
 			// remember roots of this project
 			if (this.oldRoots == null) {
-				this.oldRoots = new HashMap<IScriptProject, IProjectFragment[]>();
+				this.oldRoots = new HashMap<>();
 			}
 			if (scriptProject.isOpen()) {
 				this.oldRoots.put(scriptProject,
 						scriptProject.getProjectFragments());
 			} else {
 				// compute roots without opening project
-				this.oldRoots.put(scriptProject, scriptProject
-						.computeProjectFragments(
+				this.oldRoots.put(scriptProject,
+						scriptProject.computeProjectFragments(
 								scriptProject.getResolvedBuildpath(), false,
 								null /*
-									 * no reverse map
-									 */));
+										 * no reverse map
+										 */));
 			}
 
 			scriptProject.close();
@@ -1070,9 +1080,8 @@ public class DeltaProcessor {
 		if (elementType == IModelElement.SCRIPT_PROJECT) {
 			// project add is handled by DylanProject.configure() because
 			// when a project is created, it does not yet have a script nature
-			if (delta != null
-					&& DLTKLanguageManager.hasScriptNature((IProject) delta
-							.getResource())) {
+			if (delta != null && DLTKLanguageManager
+					.hasScriptNature((IProject) delta.getResource())) {
 				this.addToParentInfo(element);
 				if ((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
 					Openable movedFromElement = (Openable) element.getModel()
@@ -1152,17 +1161,17 @@ public class DeltaProcessor {
 				RootInfo movedFromInfo = this.enclosingRootInfo(movedFromPath,
 						IResourceDelta.REMOVED);
 				int movedFromType = this.elementType(movedFromRes,
-						IResourceDelta.REMOVED, element.getParent()
-								.getElementType(), movedFromInfo);
+						IResourceDelta.REMOVED,
+						element.getParent().getElementType(), movedFromInfo);
 				// reset current element as it might be inside a nested root
 				// (popUntilPrefixOf() may use the outer root)
 				this.currentElement = null;
 				// create the moved from element
 				Openable movedFromElement = elementType != IModelElement.SCRIPT_PROJECT
 						&& movedFromType == IModelElement.SCRIPT_PROJECT ? null
-						: // outside buildpath
-						this.createElement(movedFromRes, movedFromType,
-								movedFromInfo);
+								: // outside buildpath
+								this.createElement(movedFromRes, movedFromType,
+										movedFromInfo);
 				if (movedFromElement == null) {
 					// moved from outside buildpath
 					this.currentDelta().added(element);
@@ -1201,7 +1210,8 @@ public class DeltaProcessor {
 	private void elementRemoved(Openable element, IResourceDelta delta,
 			RootInfo rootInfo) {
 		int elementType = element.getElementType();
-		if (delta == null || (delta.getFlags() & IResourceDelta.MOVED_TO) == 0) {
+		if (delta == null
+				|| (delta.getFlags() & IResourceDelta.MOVED_TO) == 0) {
 			// regular element removal
 			if (this.isPrimaryWorkingCopy(element, elementType)) {
 				// filter out changes to primary compilation unit in working
@@ -1240,17 +1250,17 @@ public class DeltaProcessor {
 			// find the element type of the moved from element
 			RootInfo movedToInfo = this.enclosingRootInfo(movedToPath,
 					IResourceDelta.ADDED);
-			int movedToType = this.elementType(movedToRes,
-					IResourceDelta.ADDED, element.getParent().getElementType(),
-					movedToInfo);
+			int movedToType = this.elementType(movedToRes, IResourceDelta.ADDED,
+					element.getParent().getElementType(), movedToInfo);
 			// reset current element as it might be inside a nested root
 			// (popUntilPrefixOf() may use the outer root)
 			this.currentElement = null;
 			// create the moved To element
 			Openable movedToElement = elementType != IModelElement.SCRIPT_PROJECT
 					&& movedToType == IModelElement.SCRIPT_PROJECT ? null : // outside
-					// buildpath
-					this.createElement(movedToRes, movedToType, movedToInfo);
+			// buildpath
+							this.createElement(movedToRes, movedToType,
+									movedToInfo);
 			if (movedToElement == null) {
 				// moved outside buildpath
 				this.currentDelta().removed(element);
@@ -1306,7 +1316,8 @@ public class DeltaProcessor {
 			if (rootInfo == null) {
 				rootInfo = this.enclosingRootInfo(res.getFullPath(), kind);
 			}
-			if (rootInfo != null && rootInfo.isRootOfProject(res.getFullPath())) {
+			if (rootInfo != null
+					&& rootInfo.isRootOfProject(res.getFullPath())) {
 				return IModelElement.PROJECT_FRAGMENT;
 			}
 			// not yet in a package fragment root or root of another project
@@ -1366,7 +1377,7 @@ public class DeltaProcessor {
 	 * Flushes all deltas without firing them.
 	 */
 	public void flush() {
-		this.modelDeltas = new ArrayList<IModelElementDelta>();
+		this.modelDeltas = new ArrayList<>();
 	}
 
 	/*
@@ -1392,8 +1403,8 @@ public class DeltaProcessor {
 			return;
 		}
 		if (DEBUG) {
-			System.out
-					.println("-----------------------------------------------------------------------------------------------------------------------");//$NON-NLS-1$
+			System.out.println(
+					"-----------------------------------------------------------------------------------------------------------------------");//$NON-NLS-1$
 		}
 		IModelElementDelta deltaToNotify;
 		if (customDelta == null) {
@@ -1452,18 +1463,17 @@ public class DeltaProcessor {
 			int listenerCount) {
 		// post change deltas
 		if (DEBUG) {
-			System.out
-					.println("FIRING POST_CHANGE Delta [" + Thread.currentThread() + "]:"); //$NON-NLS-1$//$NON-NLS-2$
-			System.out
-					.println(deltaToNotify == null ? "<NONE>" : deltaToNotify.toString()); //$NON-NLS-1$
+			System.out.println("FIRING POST_CHANGE Delta [" //$NON-NLS-1$
+					+ Thread.currentThread() + "]:"); //$NON-NLS-1$
+			System.out.println(deltaToNotify == null ? "<NONE>" //$NON-NLS-1$
+					: deltaToNotify.toString());
 		}
 		if (deltaToNotify != null) {
 			// flush now so as to keep listener reactions to post their own
 			// deltas for subsequent iteration
 			this.flush();
-			this.notifyListeners(deltaToNotify,
-					ElementChangedEvent.POST_CHANGE, listeners, listenerMask,
-					listenerCount);
+			this.notifyListeners(deltaToNotify, ElementChangedEvent.POST_CHANGE,
+					listeners, listenerMask, listenerCount);
 		}
 	}
 
@@ -1472,18 +1482,18 @@ public class DeltaProcessor {
 		IModelElementDelta deltaToNotify = this
 				.mergeDeltas(this.reconcileDeltas.values());
 		if (DEBUG) {
-			System.out
-					.println("FIRING POST_RECONCILE Delta [" + Thread.currentThread() + "]:"); //$NON-NLS-1$//$NON-NLS-2$
-			System.out
-					.println(deltaToNotify == null ? "<NONE>" : deltaToNotify.toString()); //$NON-NLS-1$
+			System.out.println("FIRING POST_RECONCILE Delta [" //$NON-NLS-1$
+					+ Thread.currentThread() + "]:"); //$NON-NLS-1$
+			System.out.println(deltaToNotify == null ? "<NONE>" //$NON-NLS-1$
+					: deltaToNotify.toString());
 		}
 		if (deltaToNotify != null) {
 			// flush now so as to keep listener reactions to post their own
 			// deltas for subsequent iteration
 			this.reconcileDeltas = new HashMap();
 			this.notifyListeners(deltaToNotify,
-					ElementChangedEvent.POST_RECONCILE, listeners,
-					listenerMask, listenerCount);
+					ElementChangedEvent.POST_RECONCILE, listeners, listenerMask,
+					listenerCount);
 		}
 	}
 
@@ -1540,7 +1550,8 @@ public class DeltaProcessor {
 	 * Returns whether the given element is a primary compilation unit in
 	 * working copy mode.
 	 */
-	private boolean isPrimaryWorkingCopy(IModelElement element, int elementType) {
+	private boolean isPrimaryWorkingCopy(IModelElement element,
+			int elementType) {
 		if (elementType == IModelElement.SOURCE_MODULE) {
 			SourceModule cu = (SourceModule) element;
 			return cu.isPrimary() && cu.isWorkingCopy();
@@ -1559,8 +1570,8 @@ public class DeltaProcessor {
 			return (IModelElementDelta) deltas.iterator().next();
 		}
 		if (VERBOSE) {
-			System.out
-					.println("MERGING " + deltas.size() + " DELTAS [" + Thread.currentThread() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			System.out.println("MERGING " + deltas.size() + " DELTAS [" //$NON-NLS-1$ //$NON-NLS-2$
+					+ Thread.currentThread() + "]"); //$NON-NLS-1$
 		}
 		Iterator iterator = deltas.iterator();
 		ModelElementDelta rootDelta = new ModelElementDelta(this.manager.model);
@@ -1607,8 +1618,8 @@ public class DeltaProcessor {
 				final IElementChangedListener listener = listeners[i];
 				long start = -1;
 				if (VERBOSE) {
-					System.out
-							.print("Listener #" + (i + 1) + "=" + listener.toString());//$NON-NLS-1$//$NON-NLS-2$
+					System.out.print(
+							"Listener #" + (i + 1) + "=" + listener.toString());//$NON-NLS-1$//$NON-NLS-2$
 					start = System.currentTimeMillis();
 				}
 				// wrap callbacks with Safe runnable for subsequent listeners to
@@ -1635,8 +1646,8 @@ public class DeltaProcessor {
 					}
 				});
 				if (VERBOSE) {
-					System.out
-							.println(" -> " + (System.currentTimeMillis() - start) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out.println(" -> " //$NON-NLS-1$
+							+ (System.currentTimeMillis() - start) + "ms"); //$NON-NLS-1$
 				}
 			}
 		}
@@ -1722,8 +1733,8 @@ public class DeltaProcessor {
 			if (currentElementPath != null) {
 				if (this.currentElement instanceof IScriptFolder
 						&& ((IScriptFolder) this.currentElement).isRootFolder()
-						&& currentElementPath.segmentCount() != path
-								.segmentCount() - 1) {
+						&& currentElementPath
+								.segmentCount() != path.segmentCount() - 1) {
 					// default package and path is not a direct child
 					this.currentElement = (Openable) this.currentElement
 							.getParent();
@@ -1887,9 +1898,9 @@ public class DeltaProcessor {
 	 * and that the script Model should update any required internal structures
 	 * such that its elements remain consistent. Translates
 	 * <code>IResourceDeltas</code> into <code>IModelElementDeltas</code>.
-	 * 
+	 *
 	 * @see IResourceDelta
-	 * 
+	 *
 	 * @see IResource
 	 */
 	public void resourceChanged(IResourceChangeEvent event) {
@@ -1900,8 +1911,8 @@ public class DeltaProcessor {
 
 		switch (eventType) {
 		case IResourceChangeEvent.PRE_DELETE:
-			if (resource.getType() == IResource.PROJECT
-					&& DLTKLanguageManager.hasScriptNature((IProject) resource)) {
+			if (resource.getType() == IResource.PROJECT && DLTKLanguageManager
+					.hasScriptNature((IProject) resource)) {
 
 				this.deleting((IProject) resource);
 			}
@@ -1944,15 +1955,17 @@ public class DeltaProcessor {
 									this.state.rootsAreStale = true;
 
 									change.requestIndexing();
-									this.state
-											.addBuildpathValidation(change.project);
+									this.state.addBuildpathValidation(
+											change.project);
 								}
-								if ((result & BuildpathChange.HAS_PROJECT_CHANGE) != 0) {
+								if ((result
+										& BuildpathChange.HAS_PROJECT_CHANGE) != 0) {
 									this.state.addProjectReferenceChange(
 											change.project,
 											change.oldResolvedBuildpath);
 								}
-								if ((result & BuildpathChange.HAS_LIBRARY_CHANGE) != 0) {
+								if ((result
+										& BuildpathChange.HAS_LIBRARY_CHANGE) != 0) {
 									this.state.addExternalFolderChange(
 											change.project,
 											change.oldResolvedBuildpath);
@@ -2060,8 +2073,8 @@ public class DeltaProcessor {
 	}
 
 	@SuppressWarnings("serial")
-	private static class FragmentCache extends
-			HashMap<ScriptProject, IProjectFragment[]> {
+	private static class FragmentCache
+			extends HashMap<ScriptProject, IProjectFragment[]> {
 
 		public IProjectFragment[] getAllFragments(ScriptProject project)
 				throws ModelException {
@@ -2077,7 +2090,7 @@ public class DeltaProcessor {
 
 	/**
 	 * Create delta for custom user project fragments.
-	 * 
+	 *
 	 * @param refreshedElementsCopy
 	 */
 	private boolean createCustomElementDelta(IProgressMonitor monitor,
@@ -2087,7 +2100,7 @@ public class DeltaProcessor {
 		}
 		boolean hasDelta = false;
 		final FragmentCache fragmentCache = new FragmentCache();
-		HashSet<IProjectFragment> fragmentsToRefresh = new HashSet<IProjectFragment>();
+		HashSet<IProjectFragment> fragmentsToRefresh = new HashSet<>();
 		for (IModelElement element : refreshedElements) {
 			switch (element.getElementType()) {
 			case IModelElement.PROJECT_FRAGMENT:
@@ -2104,8 +2117,8 @@ public class DeltaProcessor {
 				break;
 			case IModelElement.SCRIPT_PROJECT:
 				ScriptProject scriptProject = (ScriptProject) element;
-				if (!DLTKLanguageManager.hasScriptNature(scriptProject
-						.getProject())) {
+				if (!DLTKLanguageManager
+						.hasScriptNature(scriptProject.getProject())) {
 					// project is not accessible or has lost its script
 					// nature
 					break;
@@ -2136,7 +2149,8 @@ public class DeltaProcessor {
 				}
 				break;
 			case IModelElement.SCRIPT_MODEL:
-				for (String projectName : this.state.getOldScriptProjectNames()) {
+				for (String projectName : this.state
+						.getOldScriptProjectNames()) {
 					IProject project = ResourcesPlugin.getWorkspace().getRoot()
 							.getProject(projectName);
 					if (!DLTKLanguageManager.hasScriptNature(project)) {
@@ -2165,7 +2179,7 @@ public class DeltaProcessor {
 		if (fragmentsToRefresh.isEmpty()) {
 			return false;
 		}
-		final Set<String> projectsToRefresh = new HashSet<String>();
+		final Set<String> projectsToRefresh = new HashSet<>();
 		for (IProjectFragment fragment : fragmentsToRefresh) {
 			projectsToRefresh.add(fragment.getScriptProject().getElementName());
 		}
@@ -2188,13 +2202,13 @@ public class DeltaProcessor {
 			ScriptProject scriptProject = (ScriptProject) DLTKCore
 					.create(project);
 			try {
-				final Set<IProjectFragment> oldFragments = new HashSet<IProjectFragment>();
+				final Set<IProjectFragment> oldFragments = new HashSet<>();
 				Collections.addAll(oldFragments,
 						scriptProject.getProjectFragments());
-				final Set<IProjectFragment> newFragments = new HashSet<IProjectFragment>();
+				final Set<IProjectFragment> newFragments = new HashSet<>();
 				Collections.addAll(newFragments,
 						fragmentCache.getAllFragments(scriptProject));
-				final Set<IProjectFragment> allFragments = new HashSet<IProjectFragment>();
+				final Set<IProjectFragment> allFragments = new HashSet<>();
 				allFragments.addAll(oldFragments);
 				allFragments.addAll(newFragments);
 				allFragments.retainAll(fragmentsToRefresh);
@@ -2209,8 +2223,8 @@ public class DeltaProcessor {
 								.getTimeStamp();
 						if (newTimeStamp == 0)
 							continue;
-						customTimeStamps.put(fragment.getPath(), new Long(
-								newTimeStamp));
+						customTimeStamps.put(fragment.getPath(),
+								new Long(newTimeStamp));
 						// index new library
 						ProjectIndexerManager.indexLibrary(scriptProject,
 								fragment.getPath());
@@ -2224,19 +2238,19 @@ public class DeltaProcessor {
 						// ProjectIndexerManager.removeLibrary(scriptProject,
 						// fragment.getPath());
 						if (fragment instanceof Openable) {
-							this.elementRemoved((Openable) fragment, null, null);
+							this.elementRemoved((Openable) fragment, null,
+									null);
 						}
 						hasDelta = true;
 					} else {
-						final Long oldTimestamp = customTimeStamps.get(fragment
-								.getPath());
+						final Long oldTimestamp = customTimeStamps
+								.get(fragment.getPath());
 						final long newTimeStamp = ((IProjectFragmentTimestamp) fragment)
 								.getTimeStamp();
-						if (newTimeStamp != 0
-								&& (oldTimestamp == null || newTimeStamp != oldTimestamp
-										.longValue())) {
-							customTimeStamps.put(fragment.getPath(), new Long(
-									newTimeStamp));
+						if (newTimeStamp != 0 && (oldTimestamp == null
+								|| newTimeStamp != oldTimestamp.longValue())) {
+							customTimeStamps.put(fragment.getPath(),
+									new Long(newTimeStamp));
 							// index changed library
 							ProjectIndexerManager.indexLibrary(scriptProject,
 									fragment.getPath());
@@ -2301,14 +2315,14 @@ public class DeltaProcessor {
 		if (res instanceof IProject) {
 			// reset source element parser cache
 			// this.sourceElementParserCache = null;
-			processChildren = this
-					.updateCurrentDeltaAndIndex(
-							delta,
-							elementType == IModelElement.PROJECT_FRAGMENT ? IModelElement.SCRIPT_PROJECT
-									: // case
-										// of
-										// prj=src
-									elementType, rootInfo);
+			processChildren = this.updateCurrentDeltaAndIndex(delta,
+					elementType == IModelElement.PROJECT_FRAGMENT
+							? IModelElement.SCRIPT_PROJECT
+							: // case
+								// of
+								// prj=src
+							elementType,
+					rootInfo);
 		} else if (rootInfo != null) {
 			processChildren = this.updateCurrentDeltaAndIndex(delta,
 					elementType, rootInfo);
@@ -2340,8 +2354,8 @@ public class DeltaProcessor {
 				}
 				// compute child type
 				int childType = this.elementType(childRes, childKind,
-						elementType, rootInfo == null ? childRootInfo
-								: rootInfo);
+						elementType,
+						rootInfo == null ? childRootInfo : rootInfo);
 				boolean isNestedRoot = rootInfo != null
 						&& childRootInfo != null;
 				if (!isNestedRoot) { // do not treat as non-script rsc if
@@ -2372,7 +2386,8 @@ public class DeltaProcessor {
 									this.currentElement = rootInfo.project;
 								}
 								if (elementType == IModelElement.SCRIPT_PROJECT
-										|| (elementType == IModelElement.PROJECT_FRAGMENT && res instanceof IProject)) {
+										|| (elementType == IModelElement.PROJECT_FRAGMENT
+												&& res instanceof IProject)) {
 									// NB: attach non-script resource to project
 									// (not to its package fragment root)
 									parent = rootInfo.project;
@@ -2429,7 +2444,8 @@ public class DeltaProcessor {
 				// if the child is a package fragment root of one or several
 				// other projects
 				ArrayList rootList;
-				if ((rootList = this.otherRootsInfo(childPath, childKind)) != null) {
+				if ((rootList = this.otherRootsInfo(childPath,
+						childKind)) != null) {
 					Iterator iterator = rootList.iterator();
 					while (iterator.hasNext()) {
 						childRootInfo = (RootInfo) iterator.next();
@@ -2508,9 +2524,10 @@ public class DeltaProcessor {
 						// in case .buildpath got modified while closed
 					}
 					affectedProjects.add(project.getFullPath());
-				} else if ((delta.getFlags() & IResourceDelta.DESCRIPTION) != 0) {
-					boolean wasScriptProject = this.state.findProject(project
-							.getName()) != null;
+				} else if ((delta.getFlags()
+						& IResourceDelta.DESCRIPTION) != 0) {
+					boolean wasScriptProject = this.state
+							.findProject(project.getName()) != null;
 					if (wasScriptProject != isDylanProject) {
 						// project gained or lost script nature
 						ScriptProject scriptProject = (ScriptProject) DLTKCore
@@ -2552,7 +2569,7 @@ public class DeltaProcessor {
 	 * recomputed.
 	 */
 	private boolean validateBuildpaths(IResourceDelta delta) {
-		HashSet<IPath> affectedProjects = new HashSet<IPath>(5);
+		HashSet<IPath> affectedProjects = new HashSet<>(5);
 		validateBuildpaths(delta, affectedProjects);
 		boolean needCycleValidation = false;
 		// validate buildpaths of affected projects (dependent projects
@@ -2586,14 +2603,14 @@ public class DeltaProcessor {
 							break;
 						case IBuildpathEntry.BPE_LIBRARY:
 							IPath entryPath = entry.getPath();
-							IPath libProjectPath = entryPath
-									.removeLastSegments(entryPath
-											.segmentCount() - 1);
+							IPath libProjectPath = entryPath.removeLastSegments(
+									entryPath.segmentCount() - 1);
 							if (!libProjectPath.equals(projectPath)
-							/*
-							 * if library contained in another project
-							 */
-							&& affectedProjects.contains(libProjectPath)) {
+									/*
+									 * if library contained in another project
+									 */
+									&& affectedProjects
+											.contains(libProjectPath)) {
 								this.state
 										.addBuildpathValidation(scriptProject);
 							}
@@ -2650,13 +2667,14 @@ public class DeltaProcessor {
 				// reset the corresponding project built state, since cannot
 				// reuse if added back
 				if (DLTKCore.DEBUG) {
-					System.out
-							.println("Clearing last state for removed project : " + deltaRes); //$NON-NLS-1$
+					System.out.println(
+							"Clearing last state for removed project : " //$NON-NLS-1$
+									+ deltaRes);
 				}
-				this.manager.setLastBuiltState((IProject) deltaRes, null /*
-																		 * no
-																		 * state
-																		 */);
+				this.manager.setLastBuiltState((IProject) deltaRes,
+						null /*
+								 * no state
+								 */);
 				// clean up previous session containers (see
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=89850)
 				this.manager.previousSessionContainers.remove(element);
@@ -2701,14 +2719,14 @@ public class DeltaProcessor {
 									.indexProject(res));
 						}
 					} else {
-						boolean wasDylanProject = this.state.findProject(res
-								.getName()) != null;
+						boolean wasDylanProject = this.state
+								.findProject(res.getName()) != null;
 						if (wasDylanProject) {
 							this.close(element);
 							this.removeFromParentInfo(element);
 							this.currentDelta().closed(element);
-							this.manager.indexManager.discardJobs(element
-									.getElementName());
+							this.manager.indexManager
+									.discardJobs(element.getElementName());
 							final IPath projectPath = res.getFullPath();
 							this.manager.indexManager
 									.removeIndexFamily(projectPath);
@@ -2720,14 +2738,14 @@ public class DeltaProcessor {
 				}
 				if ((flags & IResourceDelta.DESCRIPTION) != 0) {
 					IProject res = (IProject) delta.getResource();
-					boolean wasDylanProject = this.state.findProject(res
-							.getName()) != null;
+					boolean wasDylanProject = this.state
+							.findProject(res.getName()) != null;
 					boolean isDylanProject = DLTKLanguageManager
 							.hasScriptNature(res);
 					if (wasDylanProject != isDylanProject) {
 						// project's nature has been added or removed
-						element = this
-								.createElement(res, elementType, rootInfo);
+						element = this.createElement(res, elementType,
+								rootInfo);
 						if (element == null) {
 							return false; // note its resources are still
 						}
@@ -2738,8 +2756,8 @@ public class DeltaProcessor {
 							ProjectIndexerManager.indexProject(res);
 						} else {
 							this.elementRemoved(element, delta, rootInfo);
-							this.manager.indexManager.discardJobs(element
-									.getElementName());
+							this.manager.indexManager
+									.discardJobs(element.getElementName());
 							final IPath projectPath = res.getFullPath();
 							this.manager.indexManager
 									.removeIndexFamily(projectPath);
@@ -2747,12 +2765,14 @@ public class DeltaProcessor {
 							// reset the corresponding project built state,
 							// since cannot reuse if added back
 							if (DLTKCore.DEBUG) {
-								System.out
-										.println("Clearing last state for project loosing script nature: " + res); //$NON-NLS-1$
+								System.out.println(
+										"Clearing last state for project loosing script nature: " //$NON-NLS-1$
+												+ res);
 							}
-							this.manager.setLastBuiltState(res, null /*
-																	 * no state
-																	 */);
+							this.manager.setLastBuiltState(res,
+									null /*
+											 * no state
+											 */);
 						}
 						return false; // when a project's nature is
 						// added/removed don't process children
@@ -2823,7 +2843,8 @@ public class DeltaProcessor {
 				break;
 			}
 			int kind = delta.getKind();
-			if (kind == IResourceDelta.ADDED || kind == IResourceDelta.REMOVED) {
+			if (kind == IResourceDelta.ADDED
+					|| kind == IResourceDelta.REMOVED) {
 				IProjectFragment root = (IProjectFragment) element;
 				this.updateRootIndex(root, Path.EMPTY, delta);
 				break;
@@ -2906,8 +2927,8 @@ public class DeltaProcessor {
 					ProjectIndexerManager.indexSourceModule(
 							(ISourceModule) element, toolkit);
 					if (DLTKCore.DEBUG) {
-						System.err
-								.println("update index: some actions are required to perform here...."); //$NON-NLS-1$
+						System.err.println(
+								"update index: some actions are required to perform here...."); //$NON-NLS-1$
 					}
 				}
 				// Clean file from secondary types cache but do not
@@ -2922,8 +2943,8 @@ public class DeltaProcessor {
 				/* remove project segment */
 				final String path = Util.relativePath(file.getFullPath(), 1);
 				indexManager.remove(path, project.getFullPath());
-				ProjectIndexerManager.removeSourceModule(
-						DLTKCore.create(project), path);
+				ProjectIndexerManager
+						.removeSourceModule(DLTKCore.create(project), path);
 				// Clean file from secondary types cache and update
 				// indexing
 				// secondary type cache as indexing cannot remove

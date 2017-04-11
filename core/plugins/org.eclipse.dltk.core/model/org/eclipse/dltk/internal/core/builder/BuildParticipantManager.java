@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc.
+ * Copyright (c) 2008, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -34,8 +34,8 @@ import org.eclipse.dltk.internal.core.builder.BuildParticipantManager.FactoryVal
 import org.eclipse.dltk.utils.NatureExtensionManager;
 import org.eclipse.osgi.util.NLS;
 
-public class BuildParticipantManager extends
-		NatureExtensionManager<FactoryValue> {
+public class BuildParticipantManager
+		extends NatureExtensionManager<FactoryValue> {
 
 	private static final String EXT_POINT = DLTKCore.PLUGIN_ID
 			+ ".buildParticipant"; //$NON-NLS-1$
@@ -48,11 +48,11 @@ public class BuildParticipantManager extends
 		}
 	}
 
-	public static class BuildParticipantFactoryValue extends
-			FactoryValue<IBuildParticipantFactory> {
+	public static class BuildParticipantFactoryValue
+			extends FactoryValue<IBuildParticipantFactory> {
 		final String id;
 		final String name;
-		public final Set<String> requirements = new HashSet<String>();
+		public final Set<String> requirements = new HashSet<>();
 
 		/**
 		 * @param factory
@@ -66,8 +66,8 @@ public class BuildParticipantManager extends
 
 	}
 
-	public static class FilterFactoryValue extends
-			FactoryValue<IBuildParticipantFilterFactory> {
+	public static class FilterFactoryValue
+			extends FactoryValue<IBuildParticipantFilterFactory> {
 
 		public FilterFactoryValue(IBuildParticipantFilterFactory factory) {
 			super(factory);
@@ -118,10 +118,9 @@ public class BuildParticipantManager extends
 		} else if (FILTER.equals(element.getName())) {
 			final Object factory = element.createExecutableExtension(classAttr);
 			if (!(factory instanceof IBuildParticipantFilterFactory)) {
-				DLTKCore.warn(NLS
-						.bind("{0} contributed by {1} must implement {2}",
-								new Object[] {
-										element.getName(),
+				DLTKCore.warn(
+						NLS.bind("{0} contributed by {1} must implement {2}",
+								new Object[] { element.getName(),
 										element.getContributor(),
 										IBuildParticipantFilterFactory.class
 												.getName() }));
@@ -130,10 +129,10 @@ public class BuildParticipantManager extends
 			return new FilterFactoryValue(
 					(IBuildParticipantFilterFactory) factory);
 		} else {
-			DLTKCore.warn(NLS
-					.bind("Wrong element {0} in {1} extension point contributed by {2}",
-							new Object[] { element.getName(), extensionPoint,
-									element.getContributor() }));
+			DLTKCore.warn(NLS.bind(
+					"Wrong element {0} in {1} extension point contributed by {2}",
+					new Object[] { element.getName(), extensionPoint,
+							element.getContributor() }));
 			return null;
 		}
 	}
@@ -167,7 +166,7 @@ public class BuildParticipantManager extends
 	/**
 	 * Returns {@link IBuildParticipant} instances of the specified nature. If
 	 * there are no build participants then the empty array is returned.
-	 * 
+	 *
 	 * @param project
 	 * @param natureId
 	 * @return
@@ -185,9 +184,9 @@ public class BuildParticipantManager extends
 	public static BuildParticipantResult createParticipants(
 			IScriptProject project, FactoryValue<?>[] factories) {
 		final IBuildParticipant[] result = new IBuildParticipant[factories.length];
-		final Set<String> processed = new HashSet<String>();
-		final Map<String, IBuildParticipant> created = new HashMap<String, IBuildParticipant>();
-		final Map<IBuildParticipant, List<IBuildParticipant>> dependencies = new HashMap<IBuildParticipant, List<IBuildParticipant>>();
+		final Set<String> processed = new HashSet<>();
+		final Map<String, IBuildParticipant> created = new HashMap<>();
+		final Map<IBuildParticipant, List<IBuildParticipant>> dependencies = new HashMap<>();
 		for (;;) {
 			final int iterationStartCount = created.size();
 			for (int i = 0; i < factories.length; ++i) {
@@ -211,7 +210,7 @@ public class BuildParticipantManager extends
 									List<IBuildParticipant> depList = dependencies
 											.get(reqParticipant);
 									if (depList == null) {
-										depList = new ArrayList<IBuildParticipant>();
+										depList = new ArrayList<>();
 										dependencies.put(reqParticipant,
 												depList);
 									}
@@ -253,7 +252,8 @@ public class BuildParticipantManager extends
 	}
 
 	public static IBuildParticipantFilter[] createFilters(
-			IScriptProject project, FactoryValue<?>[] factories, Object context) {
+			IScriptProject project, FactoryValue<?>[] factories,
+			Object context) {
 		final IBuildParticipantFilter[] result = new IBuildParticipantFilter[factories.length];
 		int created = 0;
 		for (int i = 0; i < factories.length; ++i) {
@@ -303,7 +303,7 @@ public class BuildParticipantManager extends
 	 * First removes dangling {@link IBuildParticipant}s from
 	 * {@link #dependencies} then notifies participants about their
 	 * dependencies.
-	 * 
+	 *
 	 * @param dependencies
 	 * @param participants
 	 */
@@ -331,9 +331,8 @@ public class BuildParticipantManager extends
 			if (entry.getKey() instanceof IBuildParticipantExtension4) {
 				final List<IBuildParticipant> dependents = entry.getValue();
 				((IBuildParticipantExtension4) entry.getKey())
-						.notifyDependents(dependents
-								.toArray(new IBuildParticipant[dependents
-										.size()]));
+						.notifyDependents(dependents.toArray(
+								new IBuildParticipant[dependents.size()]));
 			}
 		}
 	}

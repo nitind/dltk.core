@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -186,7 +186,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 			throw newNotPresentException();
 
 		// add modules from resources
-		HashSet<IModelElement> vChildren = new HashSet<IModelElement>();
+		HashSet<IModelElement> vChildren = new HashSet<>();
 		try {
 			IProjectFragment root = getProjectFragment();
 			IResource[] members = ((IContainer) underlyingResource).members();
@@ -208,7 +208,8 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 
 		if (kind == IProjectFragment.K_SOURCE) {
 			// add primary source modules
-			ISourceModule[] primarySourceModules = getSourceModules(DefaultWorkingCopyOwner.PRIMARY);
+			ISourceModule[] primarySourceModules = getSourceModules(
+					DefaultWorkingCopyOwner.PRIMARY);
 			for (int i = 0, length = primarySourceModules.length; i < length; i++) {
 				ISourceModule primary = primarySourceModules[i];
 				vChildren.add(primary);
@@ -217,7 +218,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 
 		// IModelElement[] children = new IModelElement[vChildren.size()];
 		// vChildren.toArray(children);
-		List<IModelElement> childrenSet = new ArrayList<IModelElement>(
+		List<IModelElement> childrenSet = new ArrayList<>(
 				vChildren);
 		// Call for extra model providers
 		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
@@ -231,8 +232,8 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 				}
 			}
 		}
-		info.setChildren(childrenSet.toArray(new IModelElement[childrenSet
-				.size()]));
+		info.setChildren(
+				childrenSet.toArray(new IModelElement[childrenSet.size()]));
 		return true;
 	}
 
@@ -374,8 +375,8 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		if (this.isRootFolder()) {
 			return ModelElementInfo.NO_NON_SCRIPT_RESOURCES;
 		} else {
-			return ((ScriptFolderInfo) getElementInfo()).getForeignResources(
-					getResource(), getProjectFragment());
+			return ((ScriptFolderInfo) getElementInfo())
+					.getForeignResources(getResource(), getProjectFragment());
 		}
 	}
 
@@ -407,7 +408,8 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 			if (!memento.hasMoreTokens())
 				return this;
 			String classFileName = memento.nextToken();
-			ModelElement classFile = (ModelElement) getSourceModule(classFileName);
+			ModelElement classFile = (ModelElement) getSourceModule(
+					classFileName);
 			return classFile.getHandleFromMemento(memento, owner);
 		case JEM_USER_ELEMENT:
 			return MementoModelElementUtil.getHandleFromMemento(memento, this,
@@ -440,7 +442,8 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 			String rename, boolean replace, IProgressMonitor monitor)
 			throws ModelException {
 		if (container == null) {
-			throw new IllegalArgumentException(Messages.operation_nullContainer);
+			throw new IllegalArgumentException(
+					Messages.operation_nullContainer);
 		}
 		IModelElement[] elements = new IModelElement[] { this };
 		IModelElement[] containers = new IModelElement[] { container };
@@ -468,7 +471,8 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 			String rename, boolean replace, IProgressMonitor monitor)
 			throws ModelException {
 		if (container == null) {
-			throw new IllegalArgumentException(Messages.operation_nullContainer);
+			throw new IllegalArgumentException(
+					Messages.operation_nullContainer);
 		}
 		IModelElement[] elements = new IModelElement[] { this };
 		IModelElement[] containers = new IModelElement[] { container };

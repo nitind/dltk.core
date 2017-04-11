@@ -13,7 +13,7 @@ public class DefaultProblemSeverityTranslator extends PreferencesLookupDelegate
 		super(project);
 	}
 
-	private Map<IProblemIdentifier, ProblemSeverity> cache = new HashMap<IProblemIdentifier, ProblemSeverity>();
+	private Map<IProblemIdentifier, ProblemSeverity> cache = new HashMap<>();
 
 	@Override
 	public ProblemSeverity getSeverity(IProblemIdentifier problemId,

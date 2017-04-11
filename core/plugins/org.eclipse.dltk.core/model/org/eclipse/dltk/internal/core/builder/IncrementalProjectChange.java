@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2016 xored software, Inc. and others.
+ * Copyright (c) 2010, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -34,8 +34,8 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.builder.IRenameChange;
 import org.eclipse.dltk.utils.TextUtils;
 
-public class IncrementalProjectChange extends AbstractBuildChange implements
-		IResourceDeltaVisitor {
+public class IncrementalProjectChange extends AbstractBuildChange
+		implements IResourceDeltaVisitor {
 
 	private final IResourceDelta delta;
 
@@ -58,7 +58,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 		validateFlags(options, NO_RENAMES);
 		loadData();
 		if (deletes[options] == null) {
-			final List<IPath> paths = new ArrayList<IPath>();
+			final List<IPath> paths = new ArrayList<>();
 			if (projectDeletes != null) {
 				paths.addAll(projectDeletes);
 			}
@@ -86,26 +86,27 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 	@Override
 	public List<IFile> getResources(int options) throws CoreException {
 		options = validateFlags(options, ALL | NO_RENAMES | ADDED | CHANGED);
-		if ((options & (ADDED | CHANGED | NO_RENAMES)) == (CHANGED | NO_RENAMES)) {
+		if ((options & (ADDED | CHANGED | NO_RENAMES)) == (CHANGED
+				| NO_RENAMES)) {
 			throw new IllegalArgumentException();
 		}
 		loadData();
 		if (resources[options] == null) {
-			final List<IFile> files = new ArrayList<IFile>();
+			final List<IFile> files = new ArrayList<>();
 			if (checkFlag(options, ADDED)) {
 				if (projectAdditions != null) {
-					files.addAll(projectAdditions.getResources(checkFlag(
-							options, ALL)));
+					files.addAll(projectAdditions
+							.getResources(checkFlag(options, ALL)));
 				}
 				if (wantRenames(options) && projectRenames != null) {
-					files.addAll(projectRenames.getResources(checkFlag(options,
-							ALL)));
+					files.addAll(projectRenames
+							.getResources(checkFlag(options, ALL)));
 				}
 			}
 			if (checkFlag(options, CHANGED)) {
 				if (projectChanges != null) {
-					files.addAll(projectChanges.getResources(checkFlag(options,
-							ALL)));
+					files.addAll(projectChanges
+							.getResources(checkFlag(options, ALL)));
 				}
 			}
 			resources[options] = unmodifiableList(files);
@@ -122,7 +123,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 		options = validateFlags(options, ADDED | CHANGED);
 		loadData();
 		if (modules[options] == null) {
-			final List<ISourceModule> m = new ArrayList<ISourceModule>();
+			final List<ISourceModule> m = new ArrayList<>();
 			if (checkFlag(options, ADDED)) {
 				if (projectAdditions != null) {
 					m.addAll(projectAdditions.getSourceModules());
@@ -183,8 +184,8 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 		}
 
 		private final void detectSourceModules() {
-			final List<ISourceModule> m = new ArrayList<ISourceModule>();
-			final Set<IFile> rr = new HashSet<IFile>();
+			final List<ISourceModule> m = new ArrayList<>();
+			final Set<IFile> rr = new HashSet<>();
 			locateSourceModules(this.keySet(), m, rr);
 			this.modules = unmodifiableList(m);
 			this.realResources = unmodifiableSet(rr);
@@ -215,7 +216,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 
 		List<IRenameChange> getRenames() {
 			if (renames == null) {
-				final List<IRenameChange> r = new ArrayList<IRenameChange>();
+				final List<IRenameChange> r = new ArrayList<>();
 				for (Map.Entry<IFile, IPath> entry : entrySet()) {
 					r.add(new RenameChange(entry.getValue(), entry.getKey()));
 				}
@@ -282,8 +283,8 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 					if (projectRenames == null) {
 						projectRenames = new RenameChangeSet();
 					}
-					projectRenames.put((IFile) resource, delta
-							.getMovedFromPath().removeFirstSegments(1));
+					projectRenames.put((IFile) resource,
+							delta.getMovedFromPath().removeFirstSegments(1));
 				} else {
 					if (projectAdditions == null) {
 						projectAdditions = new ChangeSet();
@@ -292,7 +293,8 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 				}
 				break;
 			case IResourceDelta.CHANGED:
-				if ((delta.getFlags() & (IResourceDelta.CONTENT | IResourceDelta.ENCODING)) != 0) {
+				if ((delta.getFlags() & (IResourceDelta.CONTENT
+						| IResourceDelta.ENCODING)) != 0) {
 					if (projectChanges == null) {
 						projectChanges = new ChangeSet();
 					}
@@ -302,7 +304,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 			case IResourceDelta.REMOVED:
 				if ((delta.getFlags() & IResourceDelta.MOVED_TO) == 0) {
 					if (projectDeletes == null) {
-						projectDeletes = new ArrayList<IPath>();
+						projectDeletes = new ArrayList<>();
 					}
 					projectDeletes.add(delta.getProjectRelativePath());
 				}
@@ -320,7 +322,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 		} catch (CoreException e) {
 			return e.toString();
 		}
-		final List<String> lines = new ArrayList<String>();
+		final List<String> lines = new ArrayList<>();
 		if (projectAdditions != null) {
 			lines.add("additions=" + projectAdditions.toString());
 		}
@@ -335,7 +337,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 
 	protected Set<IPath> getAddedPaths() throws CoreException {
 		loadData();
-		final Set<IPath> paths = new HashSet<IPath>();
+		final Set<IPath> paths = new HashSet<>();
 		if (projectAdditions != null) {
 			for (IFile file : projectAdditions.getAll()) {
 				paths.add(file.getFullPath());
@@ -354,7 +356,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 	 */
 	protected Collection<IPath> getDeletedPaths() throws CoreException {
 		loadData();
-		final Set<IPath> paths = new HashSet<IPath>();
+		final Set<IPath> paths = new HashSet<>();
 		if (projectDeletes != null) {
 			final IPath projectPath = project.getFullPath();
 			for (IPath path : projectDeletes) {
@@ -372,7 +374,7 @@ public class IncrementalProjectChange extends AbstractBuildChange implements
 
 	protected Set<IPath> getChangedPaths() throws CoreException {
 		loadData();
-		final Set<IPath> paths = new HashSet<IPath>();
+		final Set<IPath> paths = new HashSet<>();
 		if (projectAdditions != null) {
 			for (IFile file : projectAdditions.getAll()) {
 				paths.add(file.getFullPath());

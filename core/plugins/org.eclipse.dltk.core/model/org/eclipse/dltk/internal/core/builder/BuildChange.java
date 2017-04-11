@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2016 NumberFour AG and others
+ * Copyright (c) 2011, 2017 NumberFour AG and others
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -60,7 +60,8 @@ public class BuildChange extends AbstractBuildChange implements IBuildChange {
 	@Override
 	public List<IFile> getResources(int options) throws CoreException {
 		options = validateFlags(options, ALL | NO_RENAMES | ADDED | CHANGED);
-		if ((options & (ADDED | CHANGED | NO_RENAMES)) == (CHANGED | NO_RENAMES)) {
+		if ((options & (ADDED | CHANGED | NO_RENAMES)) == (CHANGED
+				| NO_RENAMES)) {
 			throw new IllegalArgumentException();
 		}
 		if (checkFlag(options, ALL)) {
@@ -81,8 +82,8 @@ public class BuildChange extends AbstractBuildChange implements IBuildChange {
 
 	private void loadSourceModules() {
 		if (modules == null) {
-			modules = new ArrayList<ISourceModule>();
-			realResources = new ArrayList<IFile>();
+			modules = new ArrayList<>();
+			realResources = new ArrayList<>();
 			locateSourceModules(files, modules, realResources);
 		}
 	}

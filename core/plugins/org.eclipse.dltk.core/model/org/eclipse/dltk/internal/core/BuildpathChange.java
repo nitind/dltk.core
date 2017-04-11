@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -67,7 +67,8 @@ public class BuildpathChange {
 	 * Returns the index of the item in the list if the given list contains the
 	 * specified entry. If the list does not contain the entry, -1 is returned.
 	 */
-	private int buildpathContains(IBuildpathEntry[] list, IBuildpathEntry entry) {
+	private int buildpathContains(IBuildpathEntry[] list,
+			IBuildpathEntry entry) {
 		IPath[] exclusionPatterns = entry.getExclusionPatterns();
 		IPath[] inclusionPatterns = entry.getInclusionPatterns();
 		int listLen = list == null ? 0 : list.length;
@@ -91,8 +92,8 @@ public class BuildpathChange {
 						// compare toStrings instead of IPaths
 						// since IPath.equals is specified to ignore trailing
 						// separators
-						if (!inclusionPatterns[j].toString().equals(
-								otherIncludes[j].toString()))
+						if (!inclusionPatterns[j].toString()
+								.equals(otherIncludes[j].toString()))
 							continue nextEntry;
 					}
 				}
@@ -109,8 +110,8 @@ public class BuildpathChange {
 						// compare toStrings instead of IPaths
 						// since IPath.equals is specified to ignore trailing
 						// separators
-						if (!exclusionPatterns[j].toString().equals(
-								otherExcludes[j].toString()))
+						if (!exclusionPatterns[j].toString()
+								.equals(otherExcludes[j].toString()))
 							continue nextEntry;
 					}
 				}
@@ -132,7 +133,8 @@ public class BuildpathChange {
 	 * whether a delta was generated, and whether project reference have
 	 * changed.
 	 */
-	public int generateDelta(ModelElementDelta delta, boolean addBuildpathChange) {
+	public int generateDelta(ModelElementDelta delta,
+			boolean addBuildpathChange) {
 		ModelManager manager = ModelManager.getModelManager();
 		DeltaProcessingState state = manager.deltaState;
 		if (state.findProject(this.project.getElementName()) == null)
@@ -150,13 +152,10 @@ public class BuildpathChange {
 			PerProjectInfo perProjectInfo = this.project.getPerProjectInfo();
 
 			// get new info
-			this.project.resolveBuildpath(perProjectInfo, false/*
-																 * don't use
-																 * previous
-																 * session
-																 * values
-																 */,
-					addBuildpathChange);
+			this.project.resolveBuildpath(perProjectInfo,
+					false/*
+							 * don't use previous session values
+							 */, addBuildpathChange);
 			IBuildpathEntry[] newRawBuildpath;
 
 			// use synchronized block to ensure consistency
@@ -169,13 +168,10 @@ public class BuildpathChange {
 				// another thread reset the resolved buildpath, use a temporary
 				// PerProjectInfo
 				PerProjectInfo temporaryInfo = this.project.newTemporaryInfo();
-				this.project.resolveBuildpath(temporaryInfo, false/*
-																 * don't use
-																 * previous
-																 * session
-																 * values
-																 */,
-						addBuildpathChange);
+				this.project.resolveBuildpath(temporaryInfo,
+						false/*
+								 * don't use previous session values
+								 */, addBuildpathChange);
 				newRawBuildpath = temporaryInfo.rawBuildpath;
 				newResolvedBuildpath = temporaryInfo.getResolvedBuildpath();
 			}
@@ -239,7 +235,7 @@ public class BuildpathChange {
 			roots = allOldRoots.get(this.project);
 		}
 		if (roots != null) {
-			removedRoots = new HashMap<IPath, IProjectFragment>();
+			removedRoots = new HashMap<>();
 			for (int i = 0; i < roots.length; i++) {
 				IProjectFragment root = roots[i];
 				removedRoots.put(root.getPath(), root);
@@ -274,8 +270,8 @@ public class BuildpathChange {
 				}
 				if (pkgFragmentRoots == null) {
 					try {
-						List<IProjectFragment> accumulatedRoots = new ArrayList<IProjectFragment>();
-						HashSet<String> rootIDs = new HashSet<String>(5);
+						List<IProjectFragment> accumulatedRoots = new ArrayList<>();
+						HashSet<String> rootIDs = new HashSet<>(5);
 						rootIDs.add(this.project.rootID());
 						this.project.computeProjectFragments(
 								this.oldResolvedBuildpath[i], accumulatedRoots,
@@ -283,9 +279,8 @@ public class BuildpathChange {
 								false, // don't check existence
 								false, // don't retrieve exported roots
 								null); /* no reverse map */
-						pkgFragmentRoots = accumulatedRoots
-								.toArray(new IProjectFragment[accumulatedRoots
-										.size()]);
+						pkgFragmentRoots = accumulatedRoots.toArray(
+								new IProjectFragment[accumulatedRoots.size()]);
 					} catch (ModelException e) {
 						pkgFragmentRoots = new IProjectFragment[] {};
 					}
@@ -294,15 +289,15 @@ public class BuildpathChange {
 						IModelElementDelta.F_REMOVED_FROM_BUILDPATH);
 			} else {
 				// remote project changes
-				if (this.oldResolvedBuildpath[i].getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+				if (this.oldResolvedBuildpath[i]
+						.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
 					result |= HAS_PROJECT_CHANGE;
 					continue;
 				}
 				if (index != i) { // reordering of the buildpath
-					addBuildpathDeltas(
-							delta,
-							this.project
-									.computeProjectFragments(this.oldResolvedBuildpath[i]),
+					addBuildpathDeltas(delta,
+							this.project.computeProjectFragments(
+									this.oldResolvedBuildpath[i]),
 							IModelElementDelta.F_REORDER);
 				}
 				// TODO (alex) check source attachment
@@ -322,10 +317,9 @@ public class BuildpathChange {
 				if (entryKind == IBuildpathEntry.BPE_LIBRARY) {
 					result |= HAS_LIBRARY_CHANGE;
 				}
-				addBuildpathDeltas(
-						delta,
-						this.project
-								.computeProjectFragments(newResolvedBuildpath[i]),
+				addBuildpathDeltas(delta,
+						this.project.computeProjectFragments(
+								newResolvedBuildpath[i]),
 						IModelElementDelta.F_ADDED_TO_BUILDPATH);
 			} // buildpath reordering has already been generated in previous
 				// loop
@@ -366,7 +360,8 @@ public class BuildpathChange {
 					this.oldResolvedBuildpath[i]);
 			if (index == -1) {
 				// remote projects are not indexed in this project
-				if (this.oldResolvedBuildpath[i].getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+				if (this.oldResolvedBuildpath[i]
+						.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
 					continue;
 				}
 
@@ -382,8 +377,8 @@ public class BuildpathChange {
 							.fullInclusionPatternChars();
 					char[][] exclusionPatterns = ((BuildpathEntry) oldEntry)
 							.fullExclusionPatternChars();
-					indexManager.removeSourceFolderFromIndex(this.project,
-							path, inclusionPatterns, exclusionPatterns);
+					indexManager.removeSourceFolderFromIndex(this.project, path,
+							inclusionPatterns, exclusionPatterns);
 					ProjectIndexerManager.removeProjectFragment(project, path);
 					break;
 				case IBuildpathEntry.BPE_LIBRARY:
@@ -402,10 +397,11 @@ public class BuildpathChange {
 		for (int i = 0; i < newLength; i++) {
 			int index = buildpathContains(this.oldResolvedBuildpath,
 					newResolvedBuildpath[i]);
-			if (index == -1
-					|| newResolvedBuildpath[i].getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+			if (index == -1 || newResolvedBuildpath[i]
+					.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 				// remote projects are not indexed in this project
-				if (newResolvedBuildpath[i].getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+				if (newResolvedBuildpath[i]
+						.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
 					continue;
 				}
 

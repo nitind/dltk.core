@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2016 xored software, Inc. and others.
+ * Copyright (c) 2010, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -25,7 +25,7 @@ import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.core.BuiltinSourceModule;
 
 class ExternalModuleCollector implements IModelElementVisitor {
-	final List<ISourceModule> elements = new ArrayList<ISourceModule>();
+	final List<ISourceModule> elements = new ArrayList<>();
 	private final IProgressMonitor monitor;
 
 	public ExternalModuleCollector(IProgressMonitor monitor) {
@@ -42,14 +42,14 @@ class ExternalModuleCollector implements IModelElementVisitor {
 			return false;
 		}
 		if (element.getElementType() == IModelElement.PROJECT_FRAGMENT) {
-			if (!(element instanceof IProjectFragment && ((IProjectFragment) element)
-					.isExternal())) {
+			if (!(element instanceof IProjectFragment
+					&& ((IProjectFragment) element).isExternal())) {
 				return false;
 			}
 			IProjectFragment fragment = (IProjectFragment) element;
 
-			String localPath = EnvironmentPathUtils.getLocalPath(
-					fragment.getPath()).toString();
+			String localPath = EnvironmentPathUtils
+					.getLocalPath(fragment.getPath()).toString();
 			if (!localPath.startsWith("#")) { //$NON-NLS-1$
 				this.monitor
 						.subTask(Messages.ScriptBuilder_scanningExternalFolder
@@ -63,8 +63,8 @@ class ExternalModuleCollector implements IModelElementVisitor {
 			return false; // do not enter into source module content.
 		} else if (element.getElementType() == IModelElement.SCRIPT_FOLDER) {
 			IScriptFolder folder = (IScriptFolder) element;
-			String localPath = EnvironmentPathUtils.getLocalPath(
-					folder.getPath()).toString();
+			String localPath = EnvironmentPathUtils
+					.getLocalPath(folder.getPath()).toString();
 			if (!localPath.startsWith("#")) { //$NON-NLS-1$
 				this.monitor
 						.subTask(Messages.ScriptBuilder_scanningExternalFolder

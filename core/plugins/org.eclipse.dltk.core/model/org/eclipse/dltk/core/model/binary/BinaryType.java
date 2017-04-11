@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 xored software, Inc. and others.
+ * Copyright (c) 2016, 2017 xored software, Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,7 +74,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 		IProject project = scriptProject.getProject();
 		IProject[] referencingProjects = project.getReferencingProjects();
 
-		List<IScriptProject> scriptProjects = new ArrayList<IScriptProject>(
+		List<IScriptProject> scriptProjects = new ArrayList<>(
 				referencingProjects.length + 1);
 		scriptProjects.add(scriptProject);
 
@@ -84,9 +84,10 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 				scriptProjects.add(DLTKCore.create(p));
 			}
 		}
-		return SearchEngine.createSearchScope(scriptProjects
-				.toArray(new IModelElement[scriptProjects.size()]), false,
-				DLTKLanguageManager.getLanguageToolkit(this));
+		return SearchEngine.createSearchScope(
+				scriptProjects
+						.toArray(new IModelElement[scriptProjects.size()]),
+				false, DLTKLanguageManager.getLanguageToolkit(this));
 	}
 
 	@Override
@@ -237,7 +238,8 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 	@Override
 	public ITypeHierarchy loadTypeHierachy(InputStream input,
 			IProgressMonitor monitor) throws ModelException {
-		return loadTypeHierachy(input, DefaultWorkingCopyOwner.PRIMARY, monitor);
+		return loadTypeHierachy(input, DefaultWorkingCopyOwner.PRIMARY,
+				monitor);
 	}
 
 	/**
@@ -252,7 +254,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 	 * compilation unit of a loaded type has the given owner if such a working
 	 * copy exists, otherwise the type's compilation unit is a primary
 	 * compilation unit.
-	 * 
+	 *
 	 * Only hierarchies originally created by the following methods can be
 	 * loaded:
 	 * <ul>
@@ -263,7 +265,7 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 	 * IProgressMonitor)</li>
 	 * <li>IType#newTypeHierarchy(IProgressMonitor)</li>
 	 * <li>IType#newTypeHierarchy(WorkingCopyOwner, IProgressMonitor)</li> </u>
-	 * 
+	 *
 	 * @param input
 	 *            stream where hierarchy will be read
 	 * @param monitor
@@ -304,7 +306,8 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 		CreateTypeHierarchyOperation op;
 		IScriptProject scriptProject = getScriptProject();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-		op = new CreateTypeHierarchyOperation(this, workingCopies, scope, false);
+		op = new CreateTypeHierarchyOperation(this, workingCopies, scope,
+				false);
 		op.runOperation(monitor);
 		return op.getResult();
 	}
@@ -321,7 +324,8 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 		CreateTypeHierarchyOperation op;
 		IScriptProject scriptProject = getScriptProject();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-		op = new CreateTypeHierarchyOperation(this, workingCopies, scope, false);
+		op = new CreateTypeHierarchyOperation(this, workingCopies, scope,
+				false);
 		op.runOperation(monitor);
 		return op.getResult();
 	}
@@ -383,8 +387,8 @@ public class BinaryType extends BinaryMember implements IType, IParent {
 						projectWCs = new ISourceModule[index], 0, index);
 			}
 		}
-		CreateTypeHierarchyOperation op = new CreateTypeHierarchyOperation(
-				this, projectWCs, project, true);
+		CreateTypeHierarchyOperation op = new CreateTypeHierarchyOperation(this,
+				projectWCs, project, true);
 		op.runOperation(monitor);
 		return op.getResult();
 	}

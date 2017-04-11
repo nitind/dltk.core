@@ -41,7 +41,7 @@ public class PersistentTimeStampMap {
 	}
 
 	private Hashtable<IPath, Long> readTimeStamps(File timestampsFile) {
-		Hashtable<IPath, Long> timeStamps = new Hashtable<IPath, Long>();
+		Hashtable<IPath, Long> timeStamps = new Hashtable<>();
 		DataInputStream in = null;
 		try {
 			in = new DataInputStream(new BufferedInputStream(
@@ -73,8 +73,8 @@ public class PersistentTimeStampMap {
 			return;
 		DataOutputStream out = null;
 		try {
-			out = new DataOutputStream(new BufferedOutputStream(
-					new FileOutputStream(timestamps)));
+			out = new DataOutputStream(
+					new BufferedOutputStream(new FileOutputStream(timestamps)));
 			out.writeInt(stamps.size());
 			for (Map.Entry<IPath, Long> entry : stamps.entrySet()) {
 				out.writeUTF(entry.getKey().toPortableString());

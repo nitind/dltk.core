@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -168,7 +168,7 @@ public class StandardScriptBuilder implements IScriptBuilder {
 				}
 			}
 			if (count != 0) {
-				final List<T> result = new ArrayList<T>(count);
+				final List<T> result = new ArrayList<>(count);
 				for (int i = 0; i < participants.length; ++i) {
 					final IBuildParticipant participant = participants[i];
 					if (clazz.isInstance(participant)) {
@@ -239,13 +239,13 @@ public class StandardScriptBuilder implements IScriptBuilder {
 	private void processInParallel(final List<ISourceModule> modules,
 			int buildType, IBuildState state, final IScriptProject project,
 			final IProgressMonitor monitor) {
-		final Queue<ISourceModule> queue = new ArrayBlockingQueue<ISourceModule>(
+		final Queue<ISourceModule> queue = new ArrayBlockingQueue<>(
 				modules.size(), true, modules);
 
 		int maxThreads = Math.min(modules.size() / 2,
 				Runtime.getRuntime().availableProcessors());
 
-		List<Job> jobs = new ArrayList<Job>(maxThreads);
+		List<Job> jobs = new ArrayList<>(maxThreads);
 		try {
 			for (int i = 0; i < maxThreads; i++) {
 				Job job = new BuildModulesJob(queue, buildType, state);
@@ -296,7 +296,7 @@ public class StandardScriptBuilder implements IScriptBuilder {
 	 * {@link IBuildParticipantExtension#endBuild()}. If called multiple times
 	 * only first time actual work are performed, so subsequent calls returns
 	 * result of the first call.
-	 * 
+	 *
 	 * @param buildType
 	 * @param monitor
 	 * @return

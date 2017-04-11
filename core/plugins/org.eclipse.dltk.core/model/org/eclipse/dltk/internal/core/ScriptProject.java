@@ -87,8 +87,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public class ScriptProject extends Openable implements IScriptProject,
-		IScriptProjectFilenames {
+public class ScriptProject extends Openable
+		implements IScriptProject, IScriptProjectFilenames {
 	/**
 	 * Value of the project's raw buildpath if the .buildpath file contains
 	 * invalid entries.
@@ -97,7 +97,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * Whether the underlying file system is case sensitive.
 	 */
-	protected static final boolean IS_CASE_SENSITIVE = !new File("Temp").equals(new File("temp")); //$NON-NLS-1$ //$NON-NLS-2$
+	protected static final boolean IS_CASE_SENSITIVE = !new File("Temp") //$NON-NLS-1$
+			.equals(new File("temp")); //$NON-NLS-1$
 	/**
 	 * An empty array of strings indicating that a project doesn't have any
 	 * prerequesite projects.
@@ -141,7 +142,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 
 	/**
 	 * The path is known to match a source/library folder entry.
-	 * 
+	 *
 	 * @param path
 	 *            IPath
 	 * @return IProjectFragment
@@ -150,8 +151,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 		if (path.segmentCount() == 1) { // default project root
 			return getProjectFragment(this.project);
 		}
-		return getProjectFragment(this.project.getWorkspace().getRoot()
-				.getFolder(path));
+		return getProjectFragment(
+				this.project.getWorkspace().getRoot().getFolder(path));
 	}
 
 	@Override
@@ -192,7 +193,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 
 	@Override
 	public IProjectFragment getProjectFragment(String path) {
-		return getProjectFragment(canonicalizedPath(Path.fromPortableString(path)));
+		return getProjectFragment(
+				canonicalizedPath(Path.fromPortableString(path)));
 	}
 
 	/*
@@ -220,9 +222,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 */
 	@Override
 	public IProjectFragment getProjectFragment(IPath path) {
-		boolean isSpecial = !path.isEmpty()
-				&& path.segment(0)
-						.startsWith(IBuildpathEntry.BUILDPATH_SPECIAL);
+		boolean isSpecial = !path.isEmpty() && path.segment(0)
+				.startsWith(IBuildpathEntry.BUILDPATH_SPECIAL);
 		if (!path.isAbsolute() && !isSpecial) {
 			path = getPath().append(path);
 		}
@@ -242,9 +243,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 			// still
 			// resolve to a source/lib folder
 			// thus will try to guess based on existing resource
-			if (isSpecial
-					&& path.segment(0).startsWith(
-							IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
+			if (isSpecial && path.segment(0)
+					.startsWith(IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
 				return new BuiltinProjectFragment(path, this);
 			}
 			if (org.eclipse.dltk.compiler.util.Util.isArchiveFileName(
@@ -252,7 +252,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 					path.lastSegment())) {
 				IResource resource = this.project.getWorkspace().getRoot()
 						.findMember(path);
-				if (resource != null && resource.getType() == IResource.FOLDER) {
+				if (resource != null
+						&& resource.getType() == IResource.FOLDER) {
 					return getProjectFragment(resource);
 				}
 				return getProjectFragment0(path);
@@ -265,7 +266,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 				IResource folder = this.project.getWorkspace().getRoot()
 						.findMember(path);
 				if (folder != null) {
-					IProjectFragment projectFragment = getProjectFragment(folder);
+					IProjectFragment projectFragment = getProjectFragment(
+							folder);
 					return projectFragment;
 				}
 				// No folders with such path exist in workspace, lets
@@ -297,22 +299,21 @@ public class ScriptProject extends Openable implements IScriptProject,
 		IBuildpathEntry[] resolvedClasspath = perProjectInfo
 				.getResolvedBuildpath();
 		if (resolvedClasspath == null) {
-			resolveBuildpath(perProjectInfo, false/*
-												 * don't use previous session
-												 * values
-												 */, true/* add classpath change */);
+			resolveBuildpath(perProjectInfo,
+					false/*
+							 * don't use previous session values
+							 */, true/* add classpath change */);
 			resolvedClasspath = perProjectInfo.getResolvedBuildpath();
 			if (resolvedClasspath == null) {
 				// another thread reset the resolved classpath, use a temporary
 				// PerProjectInfo
 				PerProjectInfo temporaryInfo = newTemporaryInfo();
-				resolveBuildpath(temporaryInfo, false/*
-													 * don't use previous
-													 * session values
-													 */, true/*
-															 * add classpath
-															 * change
-															 */);
+				resolveBuildpath(temporaryInfo,
+						false/*
+								 * don't use previous session values
+								 */, true/*
+											 * add classpath change
+											 */);
 				resolvedClasspath = temporaryInfo.getResolvedBuildpath();
 			}
 		}
@@ -343,14 +344,14 @@ public class ScriptProject extends Openable implements IScriptProject,
 			unresolvedEntryStatus = perProjectInfo.unresolvedEntryStatus;
 		}
 
-		if (resolvedClasspath == null
-				|| (unresolvedEntryStatus != null && !unresolvedEntryStatus
-						.isOK())) { // force resolution to ensure initializers
-									// are run again
-			resolveBuildpath(perProjectInfo, false/*
-												 * don't use previous session
-												 * values
-												 */, true/* add classpath change */);
+		if (resolvedClasspath == null || (unresolvedEntryStatus != null
+				&& !unresolvedEntryStatus.isOK())) { // force resolution to
+														// ensure initializers
+														// are run again
+			resolveBuildpath(perProjectInfo,
+					false/*
+							 * don't use previous session values
+							 */, true/* add classpath change */);
 			synchronized (perProjectInfo) {
 				resolvedClasspath = perProjectInfo.getResolvedBuildpath();
 				unresolvedEntryStatus = perProjectInfo.unresolvedEntryStatus;
@@ -359,13 +360,12 @@ public class ScriptProject extends Openable implements IScriptProject,
 				// another thread reset the resolved classpath, use a temporary
 				// PerProjectInfo
 				PerProjectInfo temporaryInfo = newTemporaryInfo();
-				resolveBuildpath(temporaryInfo, false/*
-													 * don't use previous
-													 * session values
-													 */, true/*
-															 * add classpath
-															 * change
-															 */);
+				resolveBuildpath(temporaryInfo,
+						false/*
+								 * don't use previous session values
+								 */, true/*
+											 * add classpath change
+											 */);
 				resolvedClasspath = temporaryInfo.getResolvedBuildpath();
 				unresolvedEntryStatus = temporaryInfo.unresolvedEntryStatus;
 			}
@@ -377,9 +377,9 @@ public class ScriptProject extends Openable implements IScriptProject,
 	}
 
 	private void verbose_reentering_classpath_resolution() {
-		Util.verbose("CPResolution: reentering raw classpath resolution, will use empty classpath instead" + //$NON-NLS-1$
-				"	project: " + getElementName() + '\n' + //$NON-NLS-1$
-				"	invocation stack trace:"); //$NON-NLS-1$
+		Util.verbose(
+				"CPResolution: reentering raw classpath resolution, will use empty classpath instead" //$NON-NLS-1$
+						+ "	project: " + getElementName() + '\n' + "	invocation stack trace:");
 		new Exception("<Fake exception>").printStackTrace(System.out); //$NON-NLS-1$
 	}
 
@@ -388,12 +388,12 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * as a list of buildpath entries, where all buildpath variable entries have
 	 * been resolved and substituted with their final target entries. All
 	 * project exports have been appended to project entries.
-	 * 
+	 *
 	 * @return IBuildpathEntry[]
 	 * @throws ModelException
 	 */
 	public IBuildpathEntry[] getExpandedBuildpath() throws ModelException {
-		List<IBuildpathEntry> accumulatedEntries = new ArrayList<IBuildpathEntry>();
+		List<IBuildpathEntry> accumulatedEntries = new ArrayList<>();
 		computeExpandedBuildpath(null, new HashSet<String>(5),
 				accumulatedEntries);
 		return accumulatedEntries
@@ -405,7 +405,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * as a list of buildpath entries, where all buildpath variable entries have
 	 * been resolved and substituted with their final target entries. All
 	 * project exports have been appended to project entries.
-	 * 
+	 *
 	 * @param ignoreUnresolvedVariable
 	 *            boolean
 	 * @return IBuildpathEntry[]
@@ -453,7 +453,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 				if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
 					IResource member = workspaceRoot
 							.findMember(entry.getPath());
-					if (member != null && member.getType() == IResource.PROJECT) { // double
+					if (member != null
+							&& member.getType() == IResource.PROJECT) { // double
 						// check
 						// if
 						// bound
@@ -478,7 +479,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * Computes the project fragments identified by the given entry. Only works
 	 * with resolved entry
-	 * 
+	 *
 	 * @param resolvedEntry
 	 *            IBuildpathEntry
 	 * @return IProjectFragment[]
@@ -517,8 +518,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 		// since can create deadlocks (see bug 37274)
 		IBuildpathEntry[] resolvedBuildpath = getResolvedBuildpath();
 		// compute the project fragements
-		IProjectFragment[] children = computeProjectFragments(
-				resolvedBuildpath, false, null);
+		IProjectFragment[] children = computeProjectFragments(resolvedBuildpath,
+				false, null);
 		setProjectInfoChildren(info, children);
 
 		// remember the timestamps of external libraries the first time they are
@@ -529,7 +530,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 
 	private void setProjectInfoChildren(OpenableElementInfo info,
 			IProjectFragment[] children) {
-		List<IModelElement> fragments = new ArrayList<IModelElement>();
+		List<IModelElement> fragments = new ArrayList<>();
 		Collections.addAll(fragments, children);
 		// Call for extra model providers
 		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
@@ -544,13 +545,14 @@ public class ScriptProject extends Openable implements IScriptProject,
 			}
 		}
 
-		info.setChildren(fragments.toArray(new IModelElement[fragments.size()]));
+		info.setChildren(
+				fragments.toArray(new IModelElement[fragments.size()]));
 	}
 
 	public ModelManager.PerProjectInfo getPerProjectInfo()
 			throws ModelException {
-		return ModelManager.getModelManager().getPerProjectInfoCheckExistence(
-				this.project);
+		return ModelManager.getModelManager()
+				.getPerProjectInfoCheckExistence(this.project);
 	}
 
 	/**
@@ -558,7 +560,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * project's buildpath. Note: this follows project buildpath references to
 	 * find required project contributions, eliminating duplicates silently.
 	 * Only works with resolved entries
-	 * 
+	 *
 	 * @param resolvedBuildpath
 	 *            IBuildpathEntry[]
 	 * @param retrieveExportedRoots
@@ -570,15 +572,15 @@ public class ScriptProject extends Openable implements IScriptProject,
 			IBuildpathEntry[] resolvedBuildpath, boolean retrieveExportedRoots,
 			Map<IProjectFragment, BuildpathEntry> rootToResolvedEntries)
 			throws ModelException {
-		List<IProjectFragment> accumulatedRoots = new ArrayList<IProjectFragment>();
+		List<IProjectFragment> accumulatedRoots = new ArrayList<>();
 		computeProjectFragments(resolvedBuildpath, accumulatedRoots,
 				new HashSet<String>(5), // rootIDs
 				null, // inside original project
 				true, // check existency
 				retrieveExportedRoots, rootToResolvedEntries);
 
-		return accumulatedRoots.toArray(new IProjectFragment[accumulatedRoots
-				.size()]);
+		return accumulatedRoots
+				.toArray(new IProjectFragment[accumulatedRoots.size()]);
 	}
 
 	/**
@@ -586,7 +588,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * project's buildpath. Note: this follows project buildpath references to
 	 * find required project contributions, eliminating duplicates silently.
 	 * Only works with resolved entries
-	 * 
+	 *
 	 * @param resolvedBuildpath
 	 *            IBuildpathEntry[]
 	 * @param accumulatedRoots
@@ -622,7 +624,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * Returns the package fragment roots identified by the given entry. In case
 	 * it refers to a project, it will follow its buildpath so as to find
 	 * exported roots as well. Only works with resolved entry
-	 * 
+	 *
 	 * @param resolvedEntry
 	 *            IBuildpathEntry
 	 * @param accumulatedRoots
@@ -660,7 +662,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 							checkExistency);
 					if (target == null)
 						return;
-					if (target instanceof IFolder || target instanceof IProject) {
+					if (target instanceof IFolder
+							|| target instanceof IProject) {
 						root = getProjectFragment((IResource) target);
 					}
 				} else {
@@ -679,7 +682,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 			if (checkExistency) {
 				if (entryPath.segmentCount() > 0
 						&& entryPath.segment(0).startsWith(
-						IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)
+								IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)
 						&& BuiltinProjectFragment.isSupported(this)) {
 					root = new BuiltinProjectFragment(entryPath, this);
 					break;
@@ -697,8 +700,9 @@ public class ScriptProject extends Openable implements IScriptProject,
 					// This is external folder or zip.
 					if (Model.isFile(target)
 							&& (org.eclipse.dltk.compiler.util.Util
-									.isArchiveFileName(DLTKLanguageManager
-											.getLanguageToolkit(this),
+									.isArchiveFileName(
+											DLTKLanguageManager
+													.getLanguageToolkit(this),
 											entryPath.lastSegment()))) {
 						// root = new ArchiveProjectFragment(entryPath, this);
 						root = getProjectFragment0(entryPath);
@@ -727,16 +731,15 @@ public class ScriptProject extends Openable implements IScriptProject,
 					rootIDs.add(rootID);
 					ScriptProject requiredProject = (ScriptProject) DLTKCore
 							.create(requiredProjectRsc);
-					requiredProject
-							.computeProjectFragments(
-									requiredProject.getResolvedBuildpath(),
-									accumulatedRoots,
-									rootIDs,
-									rootToResolvedEntries == null ? resolvedEntry
-											: ((BuildpathEntry) resolvedEntry)
-													.combineWith((BuildpathEntry) referringEntry),
-									checkExistency, retrieveExportedRoots,
-									rootToResolvedEntries);
+					requiredProject.computeProjectFragments(
+							requiredProject.getResolvedBuildpath(),
+							accumulatedRoots, rootIDs,
+							rootToResolvedEntries == null ? resolvedEntry
+									: ((BuildpathEntry) resolvedEntry)
+											.combineWith(
+													(BuildpathEntry) referringEntry),
+							checkExistency, retrieveExportedRoots,
+							rootToResolvedEntries);
 				}
 			}
 			break;
@@ -745,9 +748,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 			accumulatedRoots.add(root);
 			rootIDs.add(rootID);
 			if (rootToResolvedEntries != null)
-				rootToResolvedEntries.put(root,
-						((BuildpathEntry) resolvedEntry)
-								.combineWith((BuildpathEntry) referringEntry));
+				rootToResolvedEntries.put(root, ((BuildpathEntry) resolvedEntry)
+						.combineWith((BuildpathEntry) referringEntry));
 		}
 	}
 
@@ -772,7 +774,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 
 	public String[] projectPrerequisites(IBuildpathEntry[] entries)
 			throws ModelException {
-		ArrayList<String> prerequisites = new ArrayList<String>();
+		ArrayList<String> prerequisites = new ArrayList<>();
 		for (int i = 0, length = entries.length; i < length; i++) {
 			IBuildpathEntry entry = entries[i];
 			if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
@@ -793,8 +795,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * Returns a default build path. This is the root of the project
 	 */
 	protected IBuildpathEntry[] defaultBuildpath() {
-		return new IBuildpathEntry[] { DLTKCore.newSourceEntry(this.project
-				.getFullPath()) };
+		return new IBuildpathEntry[] {
+				DLTKCore.newSourceEntry(this.project.getFullPath()) };
 	}
 
 	/*
@@ -837,8 +839,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 			perProjectInfo.setResolvedBuildpath(result.resolvedClasspath,
 					result.rawReverseMap, result.rootPathToResolvedEntries,
 					usePreviousSession ? PerProjectInfo.NEED_RESOLUTION
-							: result.unresolvedEntryStatus, timeStamp,
-					addBuildpathChange);
+							: result.unresolvedEntryStatus,
+					timeStamp, addBuildpathChange);
 		} finally {
 			if (!isBuildpathBeingResolved) {
 				manager.setBuildpathBeingResolved(this, false);
@@ -851,7 +853,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * Answers an ID which is used to distinguish project/entries during project
 	 * fragment root computations
-	 * 
+	 *
 	 * @return String
 	 */
 	public String rootID() {
@@ -877,7 +879,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * Returns a canonicalized path from the given external path. Note that the
 	 * return path contains the same number of segments and it contains a device
 	 * only if the given path contained one.
-	 * 
+	 *
 	 * @param externalPath
 	 *            IPath
 	 * @see java.io.File for the definition of a canonicalized path
@@ -932,20 +934,19 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 */
 	public IBuildpathEntry[] resolveBuildpath(IBuildpathEntry[] rawClasspath)
 			throws ModelException {
-		return resolveBuildpath(rawClasspath, false/*
-													 * don't use previous
-													 * session
-													 */, true/*
-															 * resolve chained
-															 * libraries
-															 */).resolvedClasspath;
+		return resolveBuildpath(rawClasspath,
+				false/*
+						 * don't use previous session
+						 */, true/*
+									 * resolve chained libraries
+									 */).resolvedClasspath;
 	}
 
 	static class ResolvedBuildpath {
 		IBuildpathEntry[] resolvedClasspath;
 		IModelStatus unresolvedEntryStatus = ModelStatus.VERIFIED_OK;
-		HashMap<IPath, IBuildpathEntry> rawReverseMap = new HashMap<IPath, IBuildpathEntry>();
-		Map<IPath, IBuildpathEntry> rootPathToResolvedEntries = new HashMap<IPath, IBuildpathEntry>();
+		HashMap<IPath, IBuildpathEntry> rawReverseMap = new HashMap<>();
+		Map<IPath, IBuildpathEntry> rootPathToResolvedEntries = new HashMap<>();
 	}
 
 	public ResolvedBuildpath resolveBuildpath(IBuildpathEntry[] rawClasspath,
@@ -955,19 +956,20 @@ public class ScriptProject extends Openable implements IScriptProject,
 		ExternalFoldersManager externalFoldersManager = ModelManager
 				.getExternalManager();
 		ResolvedBuildpath result = new ResolvedBuildpath();
-		Map<String, Boolean> knownDrives = new HashMap<String, Boolean>();
+		Map<String, Boolean> knownDrives = new HashMap<>();
 
 		Map referencedEntriesMap = new HashMap();
-		List<IPath> rawLibrariesPath = new ArrayList<IPath>();
-		LinkedHashSet<IBuildpathEntry> resolvedEntries = new LinkedHashSet<IBuildpathEntry>();
+		List<IPath> rawLibrariesPath = new ArrayList<>();
+		LinkedHashSet<IBuildpathEntry> resolvedEntries = new LinkedHashSet<>();
 
 		if (resolveChainedLibraries) {
 			for (int index = 0; index < rawClasspath.length; index++) {
 				IBuildpathEntry currentEntry = rawClasspath[index];
-				if (currentEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
-					rawLibrariesPath
-							.add(BuildpathEntry.resolveDotDot(getProject()
-									.getLocation(), currentEntry.getPath()));
+				if (currentEntry
+						.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+					rawLibrariesPath.add(BuildpathEntry.resolveDotDot(
+							getProject().getLocation(),
+							currentEntry.getPath()));
 				}
 			}
 		}
@@ -982,8 +984,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 
 			case IBuildpathEntry.BPE_VARIABLE:
 				try {
-					resolvedEntry = DLTKCore
-							.getResolvedBuildpathEntry(rawEntry /* usePreviousSession */);
+					resolvedEntry = DLTKCore.getResolvedBuildpathEntry(
+							rawEntry /* usePreviousSession */);
 				} catch (/* ClasspathEntry. */AssertionFailedException e) {
 					// Catch the assertion failure and set status instead
 					// see bug
@@ -1000,24 +1002,24 @@ public class ScriptProject extends Openable implements IScriptProject,
 					// If the entry is already present in the rawReversetMap, it
 					// means the entry and the chained libraries
 					// have already been processed. So, skip it.
-					if (resolveChainedLibraries
-							&& resolvedEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
+					if (resolveChainedLibraries && resolvedEntry
+							.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
 							&& result.rawReverseMap
 									.get(resolvedEntry.getPath()) == null) {
 						// resolve Class-Path: in manifest
 						BuildpathEntry[] extraEntries = ((BuildpathEntry) resolvedEntry)
 								.resolvedChainedLibraries();
 						for (int j = 0, length2 = extraEntries.length; j < length2; j++) {
-							if (!rawLibrariesPath.contains(extraEntries[j]
-									.getPath())) {
+							if (!rawLibrariesPath
+									.contains(extraEntries[j].getPath())) {
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=305037
 								// referenced entries for variable entries could
 								// also be persisted with extra attributes, so
 								// addAsChainedEntry = true
 								addToResult(rawEntry, extraEntries[j], result,
-										resolvedEntries,
-										externalFoldersManager,
-										referencedEntriesMap, true, knownDrives);
+										resolvedEntries, externalFoldersManager,
+										referencedEntriesMap, true,
+										knownDrives);
 							}
 						}
 					}
@@ -1028,8 +1030,9 @@ public class ScriptProject extends Openable implements IScriptProject,
 				break;
 
 			case IBuildpathEntry.BPE_CONTAINER:
-				IBuildpathContainer container = usePreviousSession ? manager
-						.getPreviousSessionContainer(rawEntry.getPath(), this)
+				IBuildpathContainer container = usePreviousSession
+						? manager.getPreviousSessionContainer(
+								rawEntry.getPath(), this)
 						: DLTKCore.getBuildpathContainer(rawEntry.getPath(),
 								this);
 				if (container == null) {
@@ -1071,20 +1074,21 @@ public class ScriptProject extends Openable implements IScriptProject,
 
 					if (cEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 						// resolve ".." in library path
-						cEntry = cEntry.resolvedDotDot(getProject()
-								.getLocation());
+						cEntry = cEntry
+								.resolvedDotDot(getProject().getLocation());
 						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=313965
 						// Do not resolve if the system attribute is set to
 						// false
-						if (resolveChainedLibraries
-								&& ModelManager.getModelManager().resolveReferencedLibrariesForContainers
-								&& result.rawReverseMap.get(cEntry.getPath()) == null) {
+						if (resolveChainedLibraries && ModelManager
+								.getModelManager().resolveReferencedLibrariesForContainers
+								&& result.rawReverseMap
+										.get(cEntry.getPath()) == null) {
 							// resolve Class-Path: in manifest
 							BuildpathEntry[] extraEntries = cEntry
 									.resolvedChainedLibraries();
 							for (int k = 0, length2 = extraEntries.length; k < length2; k++) {
-								if (!rawLibrariesPath.contains(extraEntries[k]
-										.getPath())) {
+								if (!rawLibrariesPath
+										.contains(extraEntries[k].getPath())) {
 									addToResult(rawEntry, extraEntries[k],
 											result, resolvedEntries,
 											externalFoldersManager,
@@ -1095,8 +1099,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 						}
 					}
 					addToResult(rawEntry, cEntry, result, resolvedEntries,
-							externalFoldersManager, referencedEntriesMap,
-							false, knownDrives);
+							externalFoldersManager, referencedEntriesMap, false,
+							knownDrives);
 				}
 				break;
 
@@ -1105,14 +1109,14 @@ public class ScriptProject extends Openable implements IScriptProject,
 				resolvedEntry = ((BuildpathEntry) rawEntry)
 						.resolvedDotDot(getProject().getLocation());
 
-				if (resolveChainedLibraries
-						&& result.rawReverseMap.get(resolvedEntry.getPath()) == null) {
+				if (resolveChainedLibraries && result.rawReverseMap
+						.get(resolvedEntry.getPath()) == null) {
 					// resolve Class-Path: in manifest
 					BuildpathEntry[] extraEntries = ((BuildpathEntry) resolvedEntry)
 							.resolvedChainedLibraries();
 					for (int k = 0, length2 = extraEntries.length; k < length2; k++) {
-						if (!rawLibrariesPath.contains(extraEntries[k]
-								.getPath())) {
+						if (!rawLibrariesPath
+								.contains(extraEntries[k].getPath())) {
 							addToResult(rawEntry, extraEntries[k], result,
 									resolvedEntries, externalFoldersManager,
 									referencedEntriesMap, true, knownDrives);
@@ -1145,7 +1149,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 
 		IPath resolvedPath;
 		// If it's already been resolved, do not add to resolvedEntries
-		if (result.rawReverseMap.get(resolvedPath = resolvedEntry.getPath()) == null) {
+		if (result.rawReverseMap
+				.get(resolvedPath = resolvedEntry.getPath()) == null) {
 			result.rawReverseMap.put(resolvedPath, rawEntry);
 			result.rootPathToResolvedEntries.put(resolvedPath, resolvedEntry);
 			resolvedEntries.add(resolvedEntry);
@@ -1164,17 +1169,17 @@ public class ScriptProject extends Openable implements IScriptProject,
 		}
 		if (resolvedEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
 				&& ExternalFoldersManager.isExternalFolderPath(resolvedPath)) {
-			externalFoldersManager
-					.addFolder(resolvedPath, true/* scheduleForCreation */); // no-op
-																			// if
-																			// not
-																			// an
-																			// external
-																			// folder
-																			// or
-																			// if
-																			// already
-																			// registered
+			externalFoldersManager.addFolder(resolvedPath,
+					true/* scheduleForCreation */); // no-op
+													// if
+													// not
+													// an
+													// external
+													// folder
+													// or
+													// if
+													// already
+													// registered
 		}
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=336046
 		// The source attachment path could be external too and in which case,
@@ -1248,7 +1253,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * Computes the collection of project fragments (local ones) and set it on
 	 * the given info. Need to check *all* project fragments in order to reset
 	 * NameLookup
-	 * 
+	 *
 	 * @param info
 	 *            ProjectElementInfo
 	 * @throws ModelException
@@ -1274,8 +1279,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 			}
 		}
 		info.setForeignResources(null);
-		IProjectFragment[] fragments = computeProjectFragments(buildpath,
-				false, null);
+		IProjectFragment[] fragments = computeProjectFragments(buildpath, false,
+				null);
 		setProjectInfoChildren(info, fragments);
 	}
 
@@ -1306,8 +1311,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 			switch (status.getCode()) {
 			case IModelStatusConstants.BUILDPATH_CYCLE:
 				isCycleProblem = true;
-				if (DLTKCore.ERROR.equals(getOption(
-						DLTKCore.CORE_CIRCULAR_BUILDPATH, true))) {
+				if (DLTKCore.ERROR.equals(
+						getOption(DLTKCore.CORE_CIRCULAR_BUILDPATH, true))) {
 					severity = IMarker.SEVERITY_ERROR;
 				} else {
 					severity = IMarker.SEVERITY_WARNING;
@@ -1322,8 +1327,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 				if (path != null) {
 					arguments = new String[] { path.toString() };
 				}
-				if (DLTKCore.ERROR.equals(getOption(
-						DLTKCore.CORE_INCOMPLETE_BUILDPATH, true))) {
+				if (DLTKCore.ERROR.equals(
+						getOption(DLTKCore.CORE_INCOMPLETE_BUILDPATH, true))) {
 					severity = IMarker.SEVERITY_ERROR;
 				} else {
 					severity = IMarker.SEVERITY_WARNING;
@@ -1331,7 +1336,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 				break;
 			}
 		} else {
-			severity = status.getSeverity() == IStatus.ERROR ? IMarker.SEVERITY_ERROR
+			severity = status.getSeverity() == IStatus.ERROR
+					? IMarker.SEVERITY_ERROR
 					: IMarker.SEVERITY_WARNING;
 		}
 		try {
@@ -1340,8 +1346,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 			marker.setAttributes(
 					new String[] { IMarker.MESSAGE, IMarker.SEVERITY,
 							IMarker.LOCATION, IModelMarker.CYCLE_DETECTED,
-							IModelMarker.BUILDPATH_FILE_FORMAT,
-							IModelMarker.ID, IModelMarker.ARGUMENTS, },
+							IModelMarker.BUILDPATH_FILE_FORMAT, IModelMarker.ID,
+							IModelMarker.ARGUMENTS, },
 					new Object[] { status.getMessage(),
 							Integer.valueOf(severity),
 							Messages.buildpath_buildPath,
@@ -1375,11 +1381,13 @@ public class ScriptProject extends Openable implements IScriptProject,
 						String cycleAttr = (String) marker
 								.getAttribute(IModelMarker.CYCLE_DETECTED);
 						String buildpathFileFormatAttr = (String) marker
-								.getAttribute(IModelMarker.BUILDPATH_FILE_FORMAT);
-						if ((flushCycleMarkers == (cycleAttr != null && cycleAttr
-								.equals("true"))) //$NON-NLS-1$
-								&& (flushBuildpathFormatMarkers == (buildpathFileFormatAttr != null && buildpathFileFormatAttr
-										.equals("true")))) { //$NON-NLS-1$
+								.getAttribute(
+										IModelMarker.BUILDPATH_FILE_FORMAT);
+						if ((flushCycleMarkers == (cycleAttr != null
+								&& cycleAttr.equals("true"))) //$NON-NLS-1$
+								&& (flushBuildpathFormatMarkers == (buildpathFileFormatAttr != null
+										&& buildpathFileFormatAttr
+												.equals("true")))) { //$NON-NLS-1$
 							marker.delete();
 						}
 					}
@@ -1398,7 +1406,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 */
 	public IBuildpathEntry[] decodeBuildpath(String xmlBuildpath,
 			Map unknownElements) throws IOException, AssertionFailedException {
-		ArrayList<IBuildpathEntry> paths = new ArrayList<IBuildpathEntry>();
+		ArrayList<IBuildpathEntry> paths = new ArrayList<>();
 		StringReader reader = new StringReader(xmlBuildpath);
 		Element cpElement;
 		try {
@@ -1421,8 +1429,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 		for (int i = 0; i < length; ++i) {
 			Node node = list.item(i);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				IBuildpathEntry entry = BuildpathEntry.elementDecode(
-						(Element) node, this, unknownElements);
+				IBuildpathEntry entry = BuildpathEntry
+						.elementDecode((Element) node, this, unknownElements);
 				if (entry != null) {
 					paths.add(entry);
 				}
@@ -1459,12 +1467,10 @@ public class ScriptProject extends Openable implements IScriptProject,
 					|| node.getNodeType() != Node.ELEMENT_NODE) {
 				return null;
 			}
-			return BuildpathEntry.elementDecode(node, this, null/*
-																 * not
-																 * interested in
-																 * unknown
-																 * elements
-																 */);
+			return BuildpathEntry.elementDecode(node, this,
+					null/*
+						 * not interested in unknown elements
+						 */);
 		} catch (IOException e) {
 			// bad format
 			return null;
@@ -1478,7 +1484,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * appropriately. Shared properties produce real resource files which can be
 	 * shared through a VCM onto a server. Persistent properties are not
 	 * shareable.
-	 * 
+	 *
 	 * @param key
 	 *            String
 	 * @see IScriptProject#setSharedProperty(String, String)
@@ -1534,7 +1540,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * Saves the buildpath in a shareable format (VCM-wise) only when necessary,
 	 * that is, if it is semantically different from the existing one in file.
 	 * Will never write an identical one.
-	 * 
+	 *
 	 * @param newBuildpath
 	 *            IBuildpathEntry[]
 	 * @param newOutputLocation
@@ -1570,10 +1576,10 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * decide which form of storage to use appropriately. Shared properties
 	 * produce real resource files which can be shared through a VCM onto a
 	 * server. Persistent properties are not shareable.
-	 * 
+	 *
 	 * shared properties end up in resource files, and thus cannot be modified
 	 * during delta notifications (a CoreException would then be thrown).
-	 * 
+	 *
 	 * @param key
 	 *            String
 	 * @param value
@@ -1610,21 +1616,20 @@ public class ScriptProject extends Openable implements IScriptProject,
 			ByteArrayOutputStream s = new ByteArrayOutputStream();
 			OutputStreamWriter writer = new OutputStreamWriter(s,
 					StandardCharsets.UTF_8);
-			XMLWriter xmlWriter = new XMLWriter(writer, this, true/*
-																 * print XML
-																 * version
-																 */);
+			XMLWriter xmlWriter = new XMLWriter(writer, this,
+					true/*
+						 * print XML version
+						 */);
 			xmlWriter.startTag(BuildpathEntry.TAG_BUILDPATH, indent);
 			for (int i = 0; i < buildpath.length; ++i) {
 				((BuildpathEntry) buildpath[i]).elementEncode(xmlWriter,
 						this.project.getFullPath(), indent, true,
 						unknownElements);
 			}
-			xmlWriter.endTag(BuildpathEntry.TAG_BUILDPATH, indent, true/*
-																		 * insert
-																		 * new
-																		 * line
-																		 */);
+			xmlWriter.endTag(BuildpathEntry.TAG_BUILDPATH, indent,
+					true/*
+						 * insert new line
+						 */);
 			writer.flush();
 			writer.close();
 			return s.toString("UTF8");//$NON-NLS-1$
@@ -1638,19 +1643,17 @@ public class ScriptProject extends Openable implements IScriptProject,
 		try {
 			ByteArrayOutputStream s = new ByteArrayOutputStream();
 			OutputStreamWriter writer = new OutputStreamWriter(s, "UTF8"); //$NON-NLS-1$
-			XMLWriter xmlWriter = new XMLWriter(writer, this, false/*
-																	 * don't
-																	 * print XML
-																	 * version
-																	 */);
-			((BuildpathEntry) buildpathEntry)
-					.elementEncode(xmlWriter, this.project.getFullPath(),
-							true/* indent */, true/*
-												 * insert new line
-												 */, null/*
-														 * not interested in
-														 * unknown elements
-														 */);
+			XMLWriter xmlWriter = new XMLWriter(writer, this,
+					false/*
+							 * don't print XML version
+							 */);
+			((BuildpathEntry) buildpathEntry).elementEncode(xmlWriter,
+					this.project.getFullPath(), true/* indent */,
+					true/*
+						 * insert new line
+						 */, null/*
+									 * not interested in unknown elements
+									 */);
 			writer.flush();
 			writer.close();
 			return s.toString("UTF8");//$NON-NLS-1$
@@ -1663,13 +1666,13 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * @see IScriptProject
 	 */
 	public boolean hasBuildpathCycle(IBuildpathEntry[] preferredBuildpath) {
-		HashSet<IPath> cycleParticipants = new HashSet<IPath>();
-		HashMap<ScriptProject, IBuildpathEntry[]> preferredBuildpaths = new HashMap<ScriptProject, IBuildpathEntry[]>(
+		HashSet<IPath> cycleParticipants = new HashSet<>();
+		HashMap<ScriptProject, IBuildpathEntry[]> preferredBuildpaths = new HashMap<>(
 				1);
 		preferredBuildpaths.put(this, preferredBuildpath);
 		updateCycleParticipants(new ArrayList<IPath>(2), cycleParticipants,
-				ResourcesPlugin.getWorkspace().getRoot(),
-				new HashSet<IPath>(2), preferredBuildpaths);
+				ResourcesPlugin.getWorkspace().getRoot(), new HashSet<IPath>(2),
+				preferredBuildpaths);
 		return !cycleParticipants.isEmpty();
 	}
 
@@ -1722,12 +1725,13 @@ public class ScriptProject extends Openable implements IScriptProject,
 		String propertyName = optionName;
 		if (ModelManager.getModelManager().optionNames.contains(propertyName)) {
 			IEclipsePreferences projectPreferences = getEclipsePreferences();
-			String javaCoreDefault = inheritCoreOptions ? DLTKCore
-					.getOption(propertyName) : null;
+			String javaCoreDefault = inheritCoreOptions
+					? DLTKCore.getOption(propertyName)
+					: null;
 			if (projectPreferences == null)
 				return javaCoreDefault;
-			String value = projectPreferences
-					.get(propertyName, javaCoreDefault);
+			String value = projectPreferences.get(propertyName,
+					javaCoreDefault);
 			return value == null ? null : value.trim();
 		}
 		return null;
@@ -1736,12 +1740,13 @@ public class ScriptProject extends Openable implements IScriptProject,
 	@Override
 	public Map<String, String> getOptions(boolean inheritCoreOptions) {
 		// initialize to the defaults from DLTKCore options pool
-		Map<String, String> options = inheritCoreOptions ? DLTKCore
-				.getOptions() : new Hashtable<String, String>(5);
+		Map<String, String> options = inheritCoreOptions ? DLTKCore.getOptions()
+				: new Hashtable<>(5);
 		// Get project specific options
 		ModelManager.PerProjectInfo perProjectInfo = null;
 		Hashtable<String, String> projectOptions = null;
-		HashSet<String> optionNames = ModelManager.getModelManager().optionNames;
+		HashSet<String> optionNames = ModelManager
+				.getModelManager().optionNames;
 		try {
 			perProjectInfo = getPerProjectInfo();
 			projectOptions = perProjectInfo.options;
@@ -1752,8 +1757,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 					return options; // cannot do better (non-script project)
 				// create project options
 				String[] propertyNames = projectPreferences.keys();
-				projectOptions = new Hashtable<String, String>(
-						propertyNames.length);
+				projectOptions = new Hashtable<>(propertyNames.length);
 				for (int i = 0; i < propertyNames.length; i++) {
 					String propertyName = propertyNames[i];
 					String value = projectPreferences.get(propertyName, null);
@@ -1765,15 +1769,16 @@ public class ScriptProject extends Openable implements IScriptProject,
 				perProjectInfo.options = projectOptions;
 			}
 		} catch (ModelException jme) {
-			projectOptions = new Hashtable<String, String>();
+			projectOptions = new Hashtable<>();
 		} catch (BackingStoreException e) {
-			projectOptions = new Hashtable<String, String>();
+			projectOptions = new Hashtable<>();
 		}
 		// Inherit from DLTKCore options if specified
 		if (inheritCoreOptions) {
 			for (String propertyName : projectOptions.keySet()) {
 				String propertyValue = projectOptions.get(propertyName);
-				if (propertyValue != null && optionNames.contains(propertyName)) {
+				if (propertyValue != null
+						&& optionNames.contains(propertyName)) {
 					options.put(propertyName, propertyValue.trim());
 				}
 			}
@@ -1881,7 +1886,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * Returns the project custom preference pool. Project preferences may
 	 * include custom encoding.
-	 * 
+	 *
 	 * @return IEclipsePreferences
 	 */
 	public IEclipsePreferences getEclipsePreferences() {
@@ -1906,8 +1911,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 			@Override
 			public void removed(IEclipsePreferences.NodeChangeEvent event) {
 				if (event.getChild() == eclipsePreferences) {
-					ModelManager.getModelManager().resetProjectPreferences(
-							ScriptProject.this);
+					ModelManager.getModelManager()
+							.resetProjectPreferences(ScriptProject.this);
 				}
 			}
 		};
@@ -1924,7 +1929,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * If a cycle is detected, then cycleParticipants contains all the paths of
 	 * projects involved in this cycle (directly and indirectly), no cycle if
 	 * the set is empty (and started empty)
-	 * 
+	 *
 	 * @param prereqChain
 	 *            ArrayList
 	 * @param cycleParticipants
@@ -1953,10 +1958,12 @@ public class ScriptProject extends Openable implements IScriptProject,
 				IBuildpathEntry entry = buildpath[i];
 				if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
 					IPath prereqProjectPath = entry.getPath();
-					int index = cycleParticipants.contains(prereqProjectPath) ? 0
+					int index = cycleParticipants.contains(prereqProjectPath)
+							? 0
 							: prereqChain.indexOf(prereqProjectPath);
 					if (index >= 0) { // refer to cycle, or in cycle itself
-						for (int size = prereqChain.size(); index < size; index++) {
+						for (int size = prereqChain
+								.size(); index < size; index++) {
 							cycleParticipants.add(prereqChain.get(index));
 						}
 					} else {
@@ -1987,7 +1994,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	 * handle. Two handles represent the same project if they are identical or
 	 * if they represent a project with the same underlying resource and
 	 * occurrence counts.
-	 * 
+	 *
 	 * @see ModelElement#equals(Object)
 	 */
 	@Override
@@ -2027,8 +2034,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 		for (int j = 0, cpLength = buildpath.length; j < cpLength; j++) {
 			IBuildpathEntry entry = buildpath[j];
 			IPath entryPath = entry.getPath();
-			if ((innerMostEntry == null || innerMostEntry.getPath().isPrefixOf(
-					entryPath))
+			if ((innerMostEntry == null
+					|| innerMostEntry.getPath().isPrefixOf(entryPath))
 					&& entryPath.isPrefixOf(fullPath)) {
 				innerMostEntry = entry;
 			}
@@ -2087,10 +2094,10 @@ public class ScriptProject extends Openable implements IScriptProject,
 			if (location == null)
 				throw new IOException(
 						"Cannot obtain a location URI for " + rscFile); //$NON-NLS-1$
-			File file = Util.toLocalFile(location, null/*
-														 * no progress monitor
-														 * available
-														 */);
+			File file = Util.toLocalFile(location,
+					null/*
+						 * no progress monitor available
+						 */);
 			if (file == null)
 				throw new IOException("Unable to fetch file from " + location); //$NON-NLS-1$
 			try {
@@ -2102,9 +2109,11 @@ public class ScriptProject extends Openable implements IScriptProject,
 				throw e;
 			}
 		}
-		if (hasUTF8BOM(bytes)) { // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=240034
-			int length = bytes.length-IContentDescription.BOM_UTF_8.length;
-			System.arraycopy(bytes, IContentDescription.BOM_UTF_8.length, bytes = new byte[length], 0, length);
+		if (hasUTF8BOM(bytes)) { // see
+									// https://bugs.eclipse.org/bugs/show_bug.cgi?id=240034
+			int length = bytes.length - IContentDescription.BOM_UTF_8.length;
+			System.arraycopy(bytes, IContentDescription.BOM_UTF_8.length,
+					bytes = new byte[length], 0, length);
 		}
 		String xmlBuildpath = new String(bytes, StandardCharsets.UTF_8);
 		// .buildpath always encoded with UTF-8
@@ -2113,7 +2122,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 
 	/**
 	 * Compare current buildpath with given one to see if any different.
-	 * 
+	 *
 	 * @param newBuildpath
 	 *            IBuildpathEntry[]
 	 * @param otherBuildpath
@@ -2147,10 +2156,10 @@ public class ScriptProject extends Openable implements IScriptProject,
 		IProject[] rscProjects = workspaceRoot.getProjects();
 		int length = rscProjects.length;
 		ScriptProject[] projects = new ScriptProject[length];
-		HashSet<IPath> cycleParticipants = new HashSet<IPath>();
-		HashSet<IPath> traversed = new HashSet<IPath>();
+		HashSet<IPath> cycleParticipants = new HashSet<>();
+		HashSet<IPath> traversed = new HashSet<>();
 		// compute cycle participants
-		ArrayList<IPath> prereqChain = new ArrayList<IPath>();
+		ArrayList<IPath> prereqChain = new ArrayList<>();
 		for (int i = 0; i < length; i++) {
 			if (DLTKLanguageManager.hasScriptNature(rscProjects[i])) {
 				ScriptProject project = (projects[i] = (ScriptProject) DLTKCore
@@ -2170,11 +2179,11 @@ public class ScriptProject extends Openable implements IScriptProject,
 			if (project != null) {
 				if (cycleParticipants.contains(project.getPath())) {
 					IMarker cycleMarker = project.getCycleMarker();
-					String circularCPOption = project.getOption(
-							DLTKCore.CORE_CIRCULAR_BUILDPATH, true);
+					String circularCPOption = project
+							.getOption(DLTKCore.CORE_CIRCULAR_BUILDPATH, true);
 					int circularCPSeverity = DLTKCore.ERROR
 							.equals(circularCPOption) ? IMarker.SEVERITY_ERROR
-							: IMarker.SEVERITY_WARNING;
+									: IMarker.SEVERITY_WARNING;
 					if (cycleMarker != null) {
 						// update existing cycle marker if needed
 						try {
@@ -2190,7 +2199,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 					} else {
 						// create new marker
 						project.createBuildpathProblemMarker(new ModelStatus(
-								IModelStatusConstants.BUILDPATH_CYCLE, project));
+								IModelStatusConstants.BUILDPATH_CYCLE,
+								project));
 					}
 				} else {
 					project.flushBuildpathProblemMarkers(true, false);
@@ -2227,19 +2237,13 @@ public class ScriptProject extends Openable implements IScriptProject,
 				String packageName = path.toString();// .replace(IPath.SEPARATOR,
 				// '.');
 
-				NameLookup lookup = newNameLookup((WorkingCopyOwner) null/*
-																		 * no
-																		 * need
-																		 * to
-																		 * look
-																		 * at
-																		 * working
-																		 * copies
-																		 * for
-																		 * pkgs
-																		 */);
-				IScriptFolder[] pkgFragments = lookup.findScriptFolders(
-						packageName, false);
+				NameLookup lookup = newNameLookup(
+						(WorkingCopyOwner) null/*
+												 * no need to look at working
+												 * copies for pkgs
+												 */);
+				IScriptFolder[] pkgFragments = lookup
+						.findScriptFolders(packageName, false);
 				if (pkgFragments == null) {
 					return null;
 
@@ -2273,19 +2277,15 @@ public class ScriptProject extends Openable implements IScriptProject,
 
 				// lookup type
 				NameLookup lookup = newNameLookup(owner);
-				NameLookup.Answer answer = lookup.findType(qualifiedName,
-						false, NameLookup.ACCEPT_ALL, true/*
-														 * consider secondary
-														 * types
-														 */, false/*
-																 * do NOT wait
-																 * for indexes
-																 */, false/*
-																		 * don't
-																		 * check
-																		 * restrictions
-																		 */,
-						null);
+				NameLookup.Answer answer = lookup.findType(qualifiedName, false,
+						NameLookup.ACCEPT_ALL, true/*
+													 * consider secondary types
+													 */,
+						false/*
+								 * do NOT wait for indexes
+								 */, false/*
+											 * don't check restrictions
+											 */, null);
 
 				if (answer != null) {
 					return answer.type.getParent();
@@ -2297,7 +2297,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 				return null;
 			}
 		} catch (ModelException e) {
-			if (e.getStatus().getCode() == IModelStatusConstants.ELEMENT_DOES_NOT_EXIST) {
+			if (e.getStatus()
+					.getCode() == IModelStatusConstants.ELEMENT_DOES_NOT_EXIST) {
 				return null;
 			} else {
 				throw e;
@@ -2338,10 +2339,10 @@ public class ScriptProject extends Openable implements IScriptProject,
 			throws ModelException {
 		IProjectFragment[] allRoots = this.getAllProjectFragments();
 		if (!path.isAbsolute()) {
-			if (path.segmentCount() == 0
-					|| !path.segment(0).startsWith(
-							IBuildpathEntry.BUILDPATH_SPECIAL)) {
-				throw new IllegalArgumentException(Messages.path_mustBeAbsolute);
+			if (path.segmentCount() == 0 || !path.segment(0)
+					.startsWith(IBuildpathEntry.BUILDPATH_SPECIAL)) {
+				throw new IllegalArgumentException(
+						Messages.path_mustBeAbsolute);
 			}
 		}
 		for (int i = 0; i < allRoots.length; i++) {
@@ -2484,10 +2485,10 @@ public class ScriptProject extends Openable implements IScriptProject,
 	@Override
 	public IBuildpathEntry[] readRawBuildpath() {
 		// Read buildpath file without creating markers nor logging problems
-		IBuildpathEntry[] buildpath = readFileEntries(null/*
-														 * not interested in
-														 * unknown elements
-														 */);
+		IBuildpathEntry[] buildpath = readFileEntries(
+				null/*
+					 * not interested in unknown elements
+					 */);
 		if (buildpath == ScriptProject.INVALID_BUILDPATH)
 			return defaultBuildpath();
 		return buildpath;
@@ -2502,19 +2503,16 @@ public class ScriptProject extends Openable implements IScriptProject,
 		try {
 			return readFileEntriesWithException(unkwownElements);
 		} catch (CoreException e) {
-			Util.log(
-					e,
-					"Exception while reading " + getPath().append(BUILDPATH_FILENAME)); //$NON-NLS-1$
+			Util.log(e, "Exception while reading " //$NON-NLS-1$
+					+ getPath().append(BUILDPATH_FILENAME));
 			return ScriptProject.INVALID_BUILDPATH;
 		} catch (IOException e) {
-			Util.log(
-					e,
-					"Exception while reading " + getPath().append(BUILDPATH_FILENAME)); //$NON-NLS-1$
+			Util.log(e, "Exception while reading " //$NON-NLS-1$
+					+ getPath().append(BUILDPATH_FILENAME));
 			return ScriptProject.INVALID_BUILDPATH;
 		} catch (AssertionFailedException e) {
-			Util.log(
-					e,
-					"Exception while reading " + getPath().append(BUILDPATH_FILENAME)); //$NON-NLS-1$
+			Util.log(e, "Exception while reading " //$NON-NLS-1$
+					+ getPath().append(BUILDPATH_FILENAME));
 			return ScriptProject.INVALID_BUILDPATH;
 		}
 	}
@@ -2587,8 +2585,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 			case IBuildpathEntry.BPE_CONTAINER:
 				IBuildpathContainer container;
 				try {
-					container = DLTKCore.getBuildpathContainer(
-							rawEntry.getPath(), this);
+					container = DLTKCore
+							.getBuildpathContainer(rawEntry.getPath(), this);
 				} catch (ModelException e) {
 					break;
 				}
@@ -2653,11 +2651,10 @@ public class ScriptProject extends Openable implements IScriptProject,
 				// (no exclusion there)
 				return true;
 			}
-			if (entryPath.isPrefixOf(path)
-					&& !Util.isExcluded(path, ((BuildpathEntry) entry)
-							.fullInclusionPatternChars(),
-							((BuildpathEntry) entry)
-									.fullExclusionPatternChars(), isFolderPath)) {
+			if (entryPath.isPrefixOf(path) && !Util.isExcluded(path,
+					((BuildpathEntry) entry).fullInclusionPatternChars(),
+					((BuildpathEntry) entry).fullExclusionPatternChars(),
+					isFolderPath)) {
 				return true;
 			}
 		}
@@ -2673,11 +2670,11 @@ public class ScriptProject extends Openable implements IScriptProject,
 			if (entryPath.equals(elementPath))
 				return true;
 		} else {
-			if (entryPath.isPrefixOf(elementPath)
-					&& !Util.isExcluded(elementPath, ((BuildpathEntry) entry)
-							.fullInclusionPatternChars(),
-							((BuildpathEntry) entry)
-									.fullExclusionPatternChars(), isFolderPath))
+			if (entryPath.isPrefixOf(elementPath) && !Util.isExcluded(
+					elementPath,
+					((BuildpathEntry) entry).fullInclusionPatternChars(),
+					((BuildpathEntry) entry).fullExclusionPatternChars(),
+					isFolderPath))
 				return true;
 		}
 		return false;
@@ -2724,8 +2721,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 			while (memento.hasMoreTokens()) {
 				token = memento.nextToken();
 				char firstChar = token.charAt(0);
-				if (ModelElement.JEM_USER_ELEMENT_ENDING.indexOf(firstChar) == -1
-						&& firstChar != JEM_COUNT) {
+				if (ModelElement.JEM_USER_ELEMENT_ENDING
+						.indexOf(firstChar) == -1 && firstChar != JEM_COUNT) {
 					name += token;
 				} else {
 					break;
@@ -2737,8 +2734,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 					if (name.equals(children[i].getElementName())
 							&& children[i] instanceof IModelElementMemento) {
 						IModelElementMemento childMemento = (IModelElementMemento) children[i];
-						return childMemento.getHandleFromMemento(token,
-								memento, owner);
+						return childMemento.getHandleFromMemento(token, memento,
+								owner);
 					}
 				}
 			} catch (ModelException e) {
@@ -2861,7 +2858,8 @@ public class ScriptProject extends Openable implements IScriptProject,
 			throws ModelException {
 
 		if (type == null) {
-			throw new IllegalArgumentException(Messages.hierarchy_nullFocusType);
+			throw new IllegalArgumentException(
+					Messages.hierarchy_nullFocusType);
 		}
 		if (region == null) {
 			throw new IllegalArgumentException(Messages.hierarchy_nullRegion);
@@ -2877,7 +2875,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * Returns the buildpath entry that refers to the given path or
 	 * <code>null</code> if there is no reference to the path.
-	 * 
+	 *
 	 * @param path
 	 *            IPath
 	 * @return IBuildpathEntry
@@ -2917,10 +2915,10 @@ public class ScriptProject extends Openable implements IScriptProject,
 	public NameLookup newNameLookup(WorkingCopyOwner owner)
 			throws ModelException {
 		ModelManager manager = ModelManager.getModelManager();
-		ISourceModule[] workingCopies = owner == null ? null : manager
-				.getWorkingCopies(owner, true/*
-											 * add primary WCs
-											 */);
+		ISourceModule[] workingCopies = owner == null ? null
+				: manager.getWorkingCopies(owner, true/*
+														 * add primary WCs
+														 */);
 		return newNameLookup(workingCopies);
 	}
 
@@ -2936,7 +2934,7 @@ public class ScriptProject extends Openable implements IScriptProject,
 				getResolvedBuildpath(), true/* retrieveExportedRoots */,
 				rootToResolvedEntries);
 		// Add all user project fragments
-		List<IModelElement> fragments = new ArrayList<IModelElement>();
+		List<IModelElement> fragments = new ArrayList<>();
 		Collections.addAll(fragments, computed);
 		// Call for extra model providers
 		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
@@ -2964,8 +2962,9 @@ public class ScriptProject extends Openable implements IScriptProject,
 		return getScriptFoldersInFragments(roots);
 	}
 
-	public IScriptFolder[] getScriptFoldersInFragments(IProjectFragment[] roots) {
-		ArrayList<IScriptFolder> frags = new ArrayList<IScriptFolder>();
+	public IScriptFolder[] getScriptFoldersInFragments(
+			IProjectFragment[] roots) {
+		ArrayList<IScriptFolder> frags = new ArrayList<>();
 		for (int i = 0; i < roots.length; i++) {
 			IProjectFragment root = roots[i];
 			try {
@@ -2983,14 +2982,14 @@ public class ScriptProject extends Openable implements IScriptProject,
 	/**
 	 * Because resources could only be in project, not came from containers.
 	 * Lets skip container buildpath entries then checking.
-	 * 
+	 *
 	 * This should remove deadlock then we came here from editor initialization
 	 * and try to lock already locked workspace.
 	 */
 	public IBuildpathEntry[] getResourceOnlyResolvedBuildpath()
 			throws ModelException {
 		IBuildpathEntry[] rawBuildpath = getRawBuildpath();
-		List<IBuildpathEntry> rawEntries = new ArrayList<IBuildpathEntry>();
+		List<IBuildpathEntry> rawEntries = new ArrayList<>();
 		for (IBuildpathEntry entry : rawBuildpath) {
 			if (entry.getEntryKind() != IBuildpathEntry.BPE_CONTAINER) {
 				rawEntries.add(entry);

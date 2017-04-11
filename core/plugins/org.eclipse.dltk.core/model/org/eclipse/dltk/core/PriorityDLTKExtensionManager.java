@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core;
 
@@ -21,7 +20,7 @@ import org.eclipse.core.runtime.Platform;
 /**
  * Extension point must contain nature entry and priority entry. Other entries
  * aren't required.
- * 
+ *
  * @author Haiodo
  */
 public class PriorityDLTKExtensionManager {
@@ -41,7 +40,7 @@ public class PriorityDLTKExtensionManager {
 	/**
 	 * guarded by itself
 	 */
-	private final Map<String, ElementInfo> prefferedExtensionCache = new HashMap<String, ElementInfo>();
+	private final Map<String, ElementInfo> prefferedExtensionCache = new HashMap<>();
 
 	public static class ElementInfo {
 		int level;
@@ -58,7 +57,8 @@ public class PriorityDLTKExtensionManager {
 		}
 	}
 
-	public PriorityDLTKExtensionManager(String extensionPoint, String identifier) {
+	public PriorityDLTKExtensionManager(String extensionPoint,
+			String identifier) {
 		Assert.isNotNull(extensionPoint);
 		Assert.isNotNull(identifier);
 		this.extensionPoint = extensionPoint;
@@ -70,7 +70,7 @@ public class PriorityDLTKExtensionManager {
 			return extensions;
 		}
 
-		extensions = new HashMap<String, ElementInfo>(5);
+		extensions = new HashMap<>(5);
 		IConfigurationElement[] cfg = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(extensionPoint);
 
@@ -112,7 +112,8 @@ public class PriorityDLTKExtensionManager {
 	 * @param element
 	 * @return
 	 */
-	protected boolean isValidConfigurationElement(IConfigurationElement element) {
+	protected boolean isValidConfigurationElement(
+			IConfigurationElement element) {
 		return true;
 	}
 
@@ -189,7 +190,7 @@ public class PriorityDLTKExtensionManager {
 
 	/**
 	 * Values config, nature, level are setted in current class.
-	 * 
+	 *
 	 * @param config
 	 * @return
 	 */
@@ -223,7 +224,7 @@ public class PriorityDLTKExtensionManager {
 		}
 		if (level != -1) {
 			if (prefferedLevels == null) {
-				prefferedLevels = new HashMap<String, Integer>();
+				prefferedLevels = new HashMap<>();
 			}
 			prefferedLevels.put(id, Integer.valueOf(level));
 		} else {

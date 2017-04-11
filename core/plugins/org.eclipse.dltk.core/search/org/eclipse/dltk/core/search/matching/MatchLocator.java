@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation
- *     xored software, Inc. - Search All occurences bugfix, 
+ *     xored software, Inc. - Search All occurences bugfix,
  *     						  hilight only class name when class is in search results ( Alex Panchenko <alex@xored.com>)
  *******************************************************************************/
 package org.eclipse.dltk.core.search.matching;
@@ -183,10 +183,10 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 	public static SearchPattern createAndPattern(
 			final SearchPattern leftPattern, final SearchPattern rightPattern) {
 		Assert.isNotNull(leftPattern.getToolkit());
-		Assert.isTrue(leftPattern.getToolkit()
-				.equals(rightPattern.getToolkit()));
-		return new AndPattern(0/* no kind */, 0/* no rule */, leftPattern
-				.getToolkit()) {
+		Assert.isTrue(
+				leftPattern.getToolkit().equals(rightPattern.getToolkit()));
+		return new AndPattern(0/* no kind */, 0/* no rule */,
+				leftPattern.getToolkit()) {
 			SearchPattern current = leftPattern;
 
 			@Override
@@ -245,8 +245,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 	@Override
 	public void initialize(SearchPattern pattern, IDLTKSearchScope scope) {
 		this.pattern = pattern;
-		this.patternLocator = PatternLocator.patternLocator(this.pattern, scope
-				.getLanguageToolkit());
+		this.patternLocator = PatternLocator.patternLocator(this.pattern,
+				scope.getLanguageToolkit());
 		this.matchContainer = this.patternLocator.matchContainer();
 		this.scope = scope;
 	}
@@ -326,7 +326,7 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 	/**
 	 * Increment the {@link SourceRefElement#occurrenceCount} until the
 	 * specified handle is unique.
-	 * 
+	 *
 	 * @param handle
 	 */
 	protected void resolveDuplicates(IMember handle) {
@@ -445,7 +445,7 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 	/**
 	 * Create a new parser for the given project, as well as a lookup
 	 * environment.
-	 * 
+	 *
 	 * @since 2.0
 	 */
 	public void initialize(IScriptProject project, int possibleMatchSize)
@@ -465,11 +465,14 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 		// scriptmodel
 		// only for this possible match and its required types.
 
-		this.nameEnvironment = possibleMatchSize == 1 ? (INameEnvironment) searchableEnvironment
+		this.nameEnvironment = possibleMatchSize == 1
+				? (INameEnvironment) searchableEnvironment
 				: null;// (INameEnvironment)
 
-		this.lookupEnvironment = new LookupEnvironment(this, /* problemReporter, */
-		this.nameEnvironment);
+		this.lookupEnvironment = new LookupEnvironment(this, /*
+																 * problemReporter,
+																 */
+				this.nameEnvironment);
 
 		IDLTKLanguageToolkit tk = null;
 		tk = DLTKLanguageManager.getLanguageToolkit(project);
@@ -506,7 +509,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 				worked();
 				process(possibleMatch);
 				if (this.numberOfMatches > 0
-						&& this.matchesToProcess[this.numberOfMatches - 1] == possibleMatch) {
+						&& this.matchesToProcess[this.numberOfMatches
+								- 1] == possibleMatch) {
 					// forget last possible match as it was processed
 					this.numberOfMatches--;
 				}
@@ -522,8 +526,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 
 		try {
 			if (BasicSearchEngine.VERBOSE)
-				System.out
-						.println("Parsing " + possibleMatch.openable.toStringWithAncestors()); //$NON-NLS-1$
+				System.out.println("Parsing " //$NON-NLS-1$
+						+ possibleMatch.openable.toStringWithAncestors());
 
 			this.parser.setNodeSet(possibleMatch.nodeSet);
 			ModuleDeclaration parsedUnit = this.parser.parse(possibleMatch);
@@ -537,13 +541,11 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 				possibleMatch.parsedUnit = parsedUnit;
 				int size = this.matchesToProcess.length;
 				if (this.numberOfMatches == size)
-					System
-							.arraycopy(
-									this.matchesToProcess,
-									0,
-									this.matchesToProcess = new PossibleMatch[size == 0 ? 1
-											: size * 2], 0,
-									this.numberOfMatches);
+					System.arraycopy(this.matchesToProcess, 0,
+							this.matchesToProcess = new PossibleMatch[size == 0
+									? 1
+									: size * 2],
+							0, this.numberOfMatches);
 				this.matchesToProcess[this.numberOfMatches++] = possibleMatch;
 			}
 		} finally {
@@ -554,7 +556,7 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 
 	/**
 	 * Locate the matches amongst the possible matches.
-	 * 
+	 *
 	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	protected void locateMatches(IScriptProject scriptProject,
@@ -593,8 +595,9 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 			System.out.println("]"); //$NON-NLS-1$
 		}
 		// init infos for progress increasing
-		int n = docsLength < 1000 ? Math.min(Math.max(docsLength / 200 + 1, 2),
-				4) : 5 * (docsLength / 1000);
+		int n = docsLength < 1000
+				? Math.min(Math.max(docsLength / 200 + 1, 2), 4)
+				: 5 * (docsLength / 1000);
 		this.progressStep = docsLength < n ? 1 : docsLength / n; // step
 		// should
 		// not be 0
@@ -610,8 +613,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 			// optimize space)
 			if (this.handleFactory == null)
 				this.handleFactory = new HandleFactory();
-			final ModuleFactory moduleFactory = new ModuleFactory(
-					handleFactory, this.scope);
+			final ModuleFactory moduleFactory = new ModuleFactory(handleFactory,
+					this.scope);
 			if (this.progressMonitor != null) {
 				this.progressMonitor.beginTask("", searchDocuments.length); //$NON-NLS-1$
 			}
@@ -623,7 +626,7 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 			Util.sort(searchDocuments, (a, b) -> ((SearchDocument) a).getPath()
 					.compareTo(((SearchDocument) b).getPath()));
 			int displayed = 0; // progress worked displayed
-			final Set<String> previousPaths = new HashSet<String>();
+			final Set<String> previousPaths = new HashSet<>();
 			for (int i = 0; i < docsLength; i++) {
 				if (this.progressMonitor != null
 						&& this.progressMonitor.isCanceled()) {
@@ -655,8 +658,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 					// locate matches in previous project
 					if (previousScriptProject != null) {
 						try {
-							locateMatches(previousScriptProject, matchSet, i
-									- displayed);
+							locateMatches(previousScriptProject, matchSet,
+									i - displayed);
 							displayed = i;
 						} catch (ModelException e) {
 							// problem with buildpath in this project -> skip it
@@ -672,8 +675,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 			// last project
 			if (previousScriptProject != null) {
 				try {
-					locateMatches(previousScriptProject, matchSet, docsLength
-							- displayed);
+					locateMatches(previousScriptProject, matchSet,
+							docsLength - displayed);
 				} catch (ModelException e) {
 					// problem with buildpath in last project -> ignore
 					DLTKCore.error("error in locateMatches", e); //$NON-NLS-1$
@@ -717,8 +720,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 					participant, resource);
 
 		case IModelElement.METHOD:
-			return new MethodDeclarationMatch(element, accuracy, offset,
-					length, participant, resource);
+			return new MethodDeclarationMatch(element, accuracy, offset, length,
+					participant, resource);
 		default:
 			return null;
 		}
@@ -781,9 +784,9 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 
 	public TypeReferenceMatch newTypeReferenceMatch(
 			IModelElement enclosingElement, int accuracy, ASTNode reference) {
-		return newTypeReferenceMatch(enclosingElement, accuracy, reference
-				.sourceStart(), reference.sourceEnd() - reference.sourceStart()
-				+ 1, reference);
+		return newTypeReferenceMatch(enclosingElement, accuracy,
+				reference.sourceStart(),
+				reference.sourceEnd() - reference.sourceStart() + 1, reference);
 	}
 
 	/*
@@ -812,15 +815,15 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 			start = System.currentTimeMillis();
 			System.out.println("Reporting match"); //$NON-NLS-1$
 			System.out.println("\tResource: " + match.getResource());//$NON-NLS-1$
-			System.out
-					.println("\tPositions: [offset=" + match.getOffset() + ", length=" + match.getLength() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			System.out.println("\tPositions: [offset=" + match.getOffset() //$NON-NLS-1$
+					+ ", length=" + match.getLength() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			try {
 				ModelElement modelElement = (ModelElement) match.getElement();
-				System.out
-						.println("\tJava element: " + modelElement.toStringWithAncestors()); //$NON-NLS-1$
+				System.out.println("\tJava element: " //$NON-NLS-1$
+						+ modelElement.toStringWithAncestors());
 				if (!modelElement.exists())
-					System.out
-							.println("\t\tWARNING: this element does NOT exist!"); //$NON-NLS-1$
+					System.out.println(
+							"\t\tWARNING: this element does NOT exist!"); //$NON-NLS-1$
 			} catch (Exception e) {
 				// it's just for debug purposes... ignore all exceptions in this
 				// area
@@ -831,8 +834,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 					ModelElement local = (ModelElement) typeRefMatch
 							.getLocalElement();
 					if (local != null) {
-						System.out
-								.println("\tLocal element: " + local.toStringWithAncestors()); //$NON-NLS-1$
+						System.out.println("\tLocal element: " //$NON-NLS-1$
+								+ local.toStringWithAncestors());
 					}
 					IModelElement[] others = typeRefMatch.getOtherElements();
 					if (others != null) {
@@ -841,8 +844,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 							System.out.println("\tOther elements:"); //$NON-NLS-1$
 							for (int i = 0; i < length; i++) {
 								ModelElement other = (ModelElement) others[i];
-								System.out
-										.println("\t\t- " + other.toStringWithAncestors()); //$NON-NLS-1$
+								System.out.println("\t\t- " //$NON-NLS-1$
+										+ other.toStringWithAncestors());
 							}
 						}
 					}
@@ -851,9 +854,9 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 					// this area
 				}
 			}
-			System.out
-					.println(match.getAccuracy() == SearchMatch.A_ACCURATE ? "\tAccuracy: EXACT_MATCH" //$NON-NLS-1$
-							: "\tAccuracy: POTENTIAL_MATCH"); //$NON-NLS-1$
+			System.out.println(match.getAccuracy() == SearchMatch.A_ACCURATE
+					? "\tAccuracy: EXACT_MATCH" //$NON-NLS-1$
+					: "\tAccuracy: POTENTIAL_MATCH"); //$NON-NLS-1$
 			System.out.print("\tRule: "); //$NON-NLS-1$
 			if (match.isExact()) {
 				System.out.println("EXACT"); //$NON-NLS-1$
@@ -881,11 +884,12 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 				nodeSet.addMatch(node, PatternLocator.ACCURATE_MATCH);
 				/**
 				 * FIXME originally it was
-				 * 
+				 *
 				 * <pre>
-				 * nodeSet.addMatch(node, this.patternLocator.resolveLevel(node));
+				 * nodeSet.addMatch(node,
+				 * 		this.patternLocator.resolveLevel(node));
 				 * </pre>
-				 * 
+				 *
 				 * but resolveLevel() are not ported
 				 */
 			}
@@ -915,7 +919,7 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 			System.out.print("	- node set: accurate=" + size); //$NON-NLS-1$
 			size = nodeSet.possibleMatchingNodesSet == null ? 0
 					: nodeSet.possibleMatchingNodesSet.elementSize;
-			System.out.println(", possible=" + size); //$NON-NLS-1$			
+			System.out.println(", possible=" + size); //$NON-NLS-1$
 
 		}
 
@@ -929,7 +933,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 		if (nodeSet.matchingNodes.elementSize == 0)
 			return; // no matching nodes were found
 		this.handles = new HashSet();
-		boolean matchedUnitContainer = (this.matchContainer & PatternLocator.COMPILATION_UNIT_CONTAINER) != 0;
+		boolean matchedUnitContainer = (this.matchContainer
+				& PatternLocator.COMPILATION_UNIT_CONTAINER) != 0;
 		// report references in javadoc
 
 		TypeDeclaration[] types = unit.getTypes();
@@ -940,8 +945,9 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 				TypeDeclaration type = types[i];
 				Integer level = (Integer) nodeSet.matchingNodes
 						.removeKey(parser.processType(type));
-				int accuracy = (level != null && matchedUnitContainer) ? level
-						.intValue() : -1;
+				int accuracy = (level != null && matchedUnitContainer)
+						? level.intValue()
+						: -1;
 				reportMatching(type, null, accuracy, nodeSet, 1);
 			}
 		}
@@ -954,8 +960,9 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 				MethodDeclaration method = methods[i];
 				Integer level = (Integer) nodeSet.matchingNodes
 						.removeKey(parser.processMethod(method));
-				int accuracy = (level != null && matchedUnitContainer) ? level
-						.intValue() : -1;
+				int accuracy = (level != null && matchedUnitContainer)
+						? level.intValue()
+						: -1;
 				reportMatching(unit, method, null, accuracy, nodeSet);
 			}
 		}
@@ -968,17 +975,19 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 				FieldDeclaration method = fields[i];
 				Integer level = (Integer) nodeSet.matchingNodes
 						.removeKey(method);
-				int accuracy = (level != null && matchedUnitContainer) ? level
-						.intValue() : -1;
+				int accuracy = (level != null && matchedUnitContainer)
+						? level.intValue()
+						: -1;
 				reportMatching(unit, method, null, accuracy, nodeSet);
 			}
 		}
 
 		// references in this module
-		ASTNode[] nodes = nodeSet.matchingNodes(unit.sourceStart(), unit
-				.sourceEnd());
+		ASTNode[] nodes = nodeSet.matchingNodes(unit.sourceStart(),
+				unit.sourceEnd());
 		if (nodes != null) {
-			if ((this.matchContainer & PatternLocator.COMPILATION_UNIT_CONTAINER) != 0) {
+			if ((this.matchContainer
+					& PatternLocator.COMPILATION_UNIT_CONTAINER) != 0) {
 				ISourceModule enclosingElement = createSourceModuleHandle();
 				if (encloses(enclosingElement)) {
 					for (int i = 0, l = nodes.length; i < l; i++) {
@@ -986,12 +995,12 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 						Integer level = (Integer) nodeSet.matchingNodes
 								.removeKey(node);
 						if (DLTKCore.DEBUG) {
-							System.out
-									.println("TODO: Searching. Add scope support."); //$NON-NLS-1$
+							System.out.println(
+									"TODO: Searching. Add scope support."); //$NON-NLS-1$
 						}
 						this.patternLocator.matchReportReference(node,
-								enclosingElement, (Scope) null, level
-										.intValue(), this);
+								enclosingElement, (Scope) null,
+								level.intValue(), this);
 
 					}
 				}
@@ -1031,7 +1040,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 					enclosingElement, accuracy, this);
 			report(match);
 		}
-		boolean matchedClassContainer = (this.matchContainer & PatternLocator.CLASS_CONTAINER) != 0;
+		boolean matchedClassContainer = (this.matchContainer
+				& PatternLocator.CLASS_CONTAINER) != 0;
 
 		// filter out element not in hierarchy scope
 		if (DLTKCore.DEBUG) {
@@ -1050,8 +1060,9 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 				MethodDeclaration method = methods[i];
 				Integer level = (Integer) nodeSet.matchingNodes
 						.removeKey(parser.processMethod(method));
-				int value = (level != null && matchedClassContainer) ? level
-						.intValue() : -1;
+				int value = (level != null && matchedClassContainer)
+						? level.intValue()
+						: -1;
 				reportMatching(type, method, enclosingElement, value, true,
 						nodeSet);
 			}
@@ -1065,8 +1076,9 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 				TypeDeclaration memberType = memberTypes[i];
 				Integer level = (Integer) nodeSet.matchingNodes
 						.removeKey(parser.processType(memberType));
-				int value = (level != null && matchedClassContainer) ? level
-						.intValue() : -1;
+				int value = (level != null && matchedClassContainer)
+						? level.intValue()
+						: -1;
 				reportMatching(memberType, enclosingElement, value, nodeSet, 1);
 			}
 		}
@@ -1080,8 +1092,9 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 				FieldDeclaration field = fields[i];
 				Integer level = (Integer) nodeSet.matchingNodes
 						.removeKey(field);
-				int value = (level != null && matchedClassContainer) ? level
-						.intValue() : -1;
+				int value = (level != null && matchedClassContainer)
+						? level.intValue()
+						: -1;
 				reportMatching(type, field, enclosingElement, value, true,
 						nodeSet);
 			}
@@ -1089,22 +1102,23 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 
 		// references in this type
 		if (typeInHierarchy) {
-			ASTNode[] nodes = nodeSet.matchingNodes(type.sourceStart(), type
-					.sourceEnd());
+			ASTNode[] nodes = nodeSet.matchingNodes(type.sourceStart(),
+					type.sourceEnd());
 			if (nodes != null) {
-				if ((this.matchContainer & PatternLocator.METHOD_CONTAINER) != 0) {
+				if ((this.matchContainer
+						& PatternLocator.METHOD_CONTAINER) != 0) {
 					if (encloses(enclosingElement)) {
 						for (int i = 0, l = nodes.length; i < l; i++) {
 							ASTNode node = nodes[i];
 							Integer level = (Integer) nodeSet.matchingNodes
 									.removeKey(node);
 							if (DLTKCore.DEBUG) {
-								System.out
-										.println("TODO: Searching. Add scope support."); //$NON-NLS-1$
+								System.out.println(
+										"TODO: Searching. Add scope support."); //$NON-NLS-1$
 							}
 							this.patternLocator.matchReportReference(node,
-									enclosingElement, (Scope) null, level
-											.intValue(), this);
+									enclosingElement, (Scope) null,
+									level.intValue(), this);
 						}
 						return;
 					}
@@ -1149,7 +1163,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 			ASTNode[] nodes = nodeSet.matchingNodes(method.sourceStart(),
 					method.sourceEnd());
 			if (nodes != null) {
-				if ((this.matchContainer & PatternLocator.CLASS_CONTAINER) != 0) {
+				if ((this.matchContainer
+						& PatternLocator.CLASS_CONTAINER) != 0) {
 					if (enclosingElement == null)
 						enclosingElement = createHandle(method, parent);
 					if (encloses(enclosingElement)) {
@@ -1158,12 +1173,12 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 							Integer level = (Integer) nodeSet.matchingNodes
 									.removeKey(node);
 							if (DLTKCore.DEBUG) {
-								System.out
-										.println("TODO: Searching. Add scope support."); //$NON-NLS-1$
+								System.out.println(
+										"TODO: Searching. Add scope support."); //$NON-NLS-1$
 							}
 							this.patternLocator.matchReportReference(node,
-									enclosingElement, (Scope) null, level
-											.intValue(), this);
+									enclosingElement, (Scope) null,
+									level.intValue(), this);
 						}
 						return;
 					}
@@ -1204,10 +1219,11 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 
 		// references in this method
 		if (typeInHierarchy) {
-			ASTNode[] nodes = nodeSet.matchingNodes(field.sourceStart(), field
-					.sourceEnd());
+			ASTNode[] nodes = nodeSet.matchingNodes(field.sourceStart(),
+					field.sourceEnd());
 			if (nodes != null) {
-				if ((this.matchContainer & PatternLocator.CLASS_CONTAINER) != 0) {
+				if ((this.matchContainer
+						& PatternLocator.CLASS_CONTAINER) != 0) {
 					if (enclosingElement == null)
 						enclosingElement = createHandle(field, parent);
 					if (encloses(enclosingElement)) {
@@ -1216,12 +1232,12 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 							Integer level = (Integer) nodeSet.matchingNodes
 									.removeKey(node);
 							if (DLTKCore.DEBUG) {
-								System.out
-										.println("TODO: Searching. Add scope support."); //$NON-NLS-1$
+								System.out.println(
+										"TODO: Searching. Add scope support."); //$NON-NLS-1$
 							}
 							this.patternLocator.matchReportReference(node,
-									enclosingElement, (Scope) null, level
-											.intValue(), this);
+									enclosingElement, (Scope) null,
+									level.intValue(), this);
 						}
 						return;
 					}
@@ -1267,8 +1283,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 		}
 
 		// references in this method
-		ASTNode[] nodes = nodeSet.matchingNodes(field.sourceStart(), field
-				.sourceEnd());
+		ASTNode[] nodes = nodeSet.matchingNodes(field.sourceStart(),
+				field.sourceEnd());
 		if (nodes != null) {
 			if (parent == null) {
 				parent = createSourceModuleHandle();
@@ -1282,12 +1298,12 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 						Integer level = (Integer) nodeSet.matchingNodes
 								.removeKey(node);
 						if (DLTKCore.DEBUG) {
-							System.out
-									.println("TODO: Searching. Add scope support."); //$NON-NLS-1$
+							System.out.println(
+									"TODO: Searching. Add scope support."); //$NON-NLS-1$
 						}
 						this.patternLocator.matchReportReference(node,
-								enclosingElement, (Scope) null, level
-										.intValue(), this);
+								enclosingElement, (Scope) null,
+								level.intValue(), this);
 					}
 					return;
 				}
@@ -1327,8 +1343,8 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 		}
 
 		// references in this method
-		ASTNode[] nodes = nodeSet.matchingNodes(method.sourceStart(), method
-				.sourceEnd());
+		ASTNode[] nodes = nodeSet.matchingNodes(method.sourceStart(),
+				method.sourceEnd());
 		if (nodes != null) {
 			if (parent == null) {
 				parent = createSourceModuleHandle();
@@ -1342,12 +1358,12 @@ public class MatchLocator implements IMatchLocator, ITypeRequestor {
 						Integer level = (Integer) nodeSet.matchingNodes
 								.removeKey(node);
 						if (DLTKCore.DEBUG) {
-							System.out
-									.println("TODO: Searching. Add scope support."); //$NON-NLS-1$
+							System.out.println(
+									"TODO: Searching. Add scope support."); //$NON-NLS-1$
 						}
 						this.patternLocator.matchReportReference(node,
-								enclosingElement, (Scope) null, level
-										.intValue(), this);
+								enclosingElement, (Scope) null,
+								level.intValue(), this);
 					}
 					return;
 				}

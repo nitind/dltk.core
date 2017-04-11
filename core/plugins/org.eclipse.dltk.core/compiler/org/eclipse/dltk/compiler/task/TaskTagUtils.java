@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.eclipse.dltk.compiler.task;
 
 import java.util.ArrayList;
@@ -17,7 +14,7 @@ public abstract class TaskTagUtils {
 
 	public static List<TodoTask> decodeTaskTags(String tags) {
 		final String[] tagPairs = getTokens(tags, TAG_SEPARATOR);
-		final List<TodoTask> elements = new ArrayList<TodoTask>();
+		final List<TodoTask> elements = new ArrayList<>();
 		for (int i = 0; i < tagPairs.length; ++i) {
 			final String[] values = getTokens(tagPairs[i], PRIORITY_SEPARATOR);
 			final TodoTask task = new TodoTask();
@@ -49,7 +46,7 @@ public abstract class TaskTagUtils {
 	}
 
 	public static List<TodoTask> getDefaultTags() {
-		final List<TodoTask> defaultTags = new ArrayList<TodoTask>();
+		final List<TodoTask> defaultTags = new ArrayList<>();
 		defaultTags.add(new TodoTask("FIXME", TodoTask.PRIORITY_HIGH)); //$NON-NLS-1$
 		defaultTags.add(new TodoTask("TODO", TodoTask.PRIORITY_NORMAL)); //$NON-NLS-1$
 		defaultTags.add(new TodoTask("XXX", TodoTask.PRIORITY_NORMAL)); //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc.
+ * Copyright (c) 2008, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -26,10 +26,10 @@ import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.osgi.util.NLS;
 
-public abstract class AbstractBuildContext implements IBuildContext,
-		IBuildContextExtension {
+public abstract class AbstractBuildContext
+		implements IBuildContext, IBuildContextExtension {
 
-	private final Map<String, Object> attributes = new HashMap<String, Object>();
+	private final Map<String, Object> attributes = new HashMap<>();
 
 	@Override
 	public Object get(String attribute) {
@@ -69,10 +69,9 @@ public abstract class AbstractBuildContext implements IBuildContext,
 			try {
 				contents = module.getSourceAsCharArray();
 			} catch (ModelException e) {
-				DLTKCore.error(
-						NLS.bind(
-								Messages.AbstractBuildContext_errorRetrievingContentsOf,
-								module.getElementName()), e);
+				DLTKCore.error(NLS.bind(
+						Messages.AbstractBuildContext_errorRetrievingContentsOf,
+						module.getElementName()), e);
 				contents = CharOperation.NO_CHAR;
 			}
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,7 +37,7 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 	@Internal
 	final int capacity = ModelCache.DEFAULT_ROOT_SIZE * 50;
 
-	private final ReferenceQueue<ISourceModuleInfo> queue = new ReferenceQueue<ISourceModuleInfo>();
+	private final ReferenceQueue<ISourceModuleInfo> queue = new ReferenceQueue<>();
 
 	@SuppressWarnings("serial")
 	private final Map<ISourceModule, CacheReference> map = new LinkedHashMap<ISourceModule, CacheReference>(
@@ -49,8 +49,8 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 		}
 	};
 
-	private static class CacheReference extends
-			SoftReference<ISourceModuleInfo> {
+	private static class CacheReference
+			extends SoftReference<ISourceModuleInfo> {
 		final long modificationStamp;
 		final ISourceModule module;
 
@@ -87,8 +87,8 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 	private void expungeStaleEntries() {
 		for (CacheReference r; (r = (CacheReference) queue.poll()) != null;) {
 			if (DEBUG) {
-				System.out.println("[Cache] expunge "
-						+ r.module.getElementName());
+				System.out.println(
+						"[Cache] expunge " + r.module.getElementName());
 			}
 			map.remove(r.module);
 		}
@@ -178,7 +178,7 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 		@Override
 		public synchronized void put(String key, Object value) {
 			if (map == null) {
-				map = new HashMap<Object, Object>();
+				map = new HashMap<>();
 			}
 			map.put(key, value);
 		}
@@ -202,7 +202,8 @@ public class SourceModuleInfoCache implements ISourceModuleInfoCache,
 	 * synchronized.
 	 */
 	private void removeByProject(IProject project) {
-		for (Iterator<ISourceModule> i = map.keySet().iterator(); i.hasNext();) {
+		for (Iterator<ISourceModule> i = map.keySet().iterator(); i
+				.hasNext();) {
 			final ISourceModule module = i.next();
 			if (project.equals(module.getScriptProject().getProject())) {
 				i.remove();

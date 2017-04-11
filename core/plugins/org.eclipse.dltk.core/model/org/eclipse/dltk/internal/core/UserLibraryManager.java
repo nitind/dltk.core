@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,22 +33,22 @@ import org.eclipse.dltk.internal.core.util.Util;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
- * 
+ *
  */
 public class UserLibraryManager {
 
 	public final static String BP_USERLIBRARY_PREFERENCES_PREFIX = DLTKCore.PLUGIN_ID
 			+ ".userLibrary."; //$NON-NLS-1$
 
-	private final Map<String, UserLibrary> userLibraries = new HashMap<String, UserLibrary>();
+	private final Map<String, UserLibrary> userLibraries = new HashMap<>();
 
 	public UserLibraryManager() {
 		initialize();
 	}
 
 	/*
-	 * Gets the library for a given name or <code>null</code> if no such
-	 * library exists.
+	 * Gets the library for a given name or <code>null</code> if no such library
+	 * exists.
 	 */
 	public UserLibrary getUserLibrary(String libName,
 			IDLTKLanguageToolkit toolkit) {
@@ -86,9 +86,8 @@ public class UserLibraryManager {
 	 * Returns the names of all defined user libraries. The corresponding
 	 * classpath container path is the name appended to the CONTAINER_ID.
 	 */
-	public String[] getUserLibraryNames(
-			IDLTKLanguageToolkit toolkit) {
-		final Set<String> result = new HashSet<String>();
+	public String[] getUserLibraryNames(IDLTKLanguageToolkit toolkit) {
+		final Set<String> result = new HashSet<>();
 		synchronized (userLibraries) {
 			for (String key : userLibraries.keySet()) {
 				int pos = key.indexOf("#"); //$NON-NLS-1$
@@ -105,8 +104,8 @@ public class UserLibraryManager {
 	}
 
 	private void initialize() {
-		IEclipsePreferences instancePreferences = ModelManager
-				.getModelManager().getInstancePreferences();
+		IEclipsePreferences instancePreferences = ModelManager.getModelManager()
+				.getInstancePreferences();
 		String[] propertyNames;
 		try {
 			propertyNames = instancePreferences.keys();
@@ -122,18 +121,15 @@ public class UserLibraryManager {
 				String propertyValue = instancePreferences.get(propertyName,
 						null);
 				if (propertyValue != null) {
-					String libName = propertyName
-							.substring(BP_USERLIBRARY_PREFERENCES_PREFIX
-									.length());
+					String libName = propertyName.substring(
+							BP_USERLIBRARY_PREFERENCES_PREFIX.length());
 					StringReader reader = new StringReader(propertyValue);
 					UserLibrary library;
 					try {
 						library = UserLibrary.createFromString(reader);
 					} catch (IOException e) {
-						Util
-						.log(
-								e,
-								"Exception while initializing user library " + libName); //$NON-NLS-1$
+						Util.log(e, "Exception while initializing user library " //$NON-NLS-1$
+								+ libName);
 						instancePreferences.remove(propertyName);
 						preferencesNeedFlush = true;
 						continue;
@@ -156,8 +152,8 @@ public class UserLibraryManager {
 			// find affected projects
 			IPath containerPath = new Path(DLTKCore.USER_LIBRARY_CONTAINER_ID)
 					.append(getLibraryName(libName));
-			IScriptProject[] allJavaProjects = DLTKCore.create(
-					ResourcesPlugin.getWorkspace().getRoot())
+			IScriptProject[] allJavaProjects = DLTKCore
+					.create(ResourcesPlugin.getWorkspace().getRoot())
 					.getScriptProjects();
 			ArrayList affectedProjects = new ArrayList();
 			for (int i = 0; i < allJavaProjects.length; i++) {
@@ -176,8 +172,8 @@ public class UserLibraryManager {
 
 			// decode user library
 			UserLibrary userLibrary = encodedUserLibrary == null ? null
-					: UserLibrary.createFromString(new StringReader(
-							encodedUserLibrary));
+					: UserLibrary.createFromString(
+							new StringReader(encodedUserLibrary));
 
 			// update user libraries map
 			synchronized (userLibraries) {
@@ -216,8 +212,8 @@ public class UserLibraryManager {
 
 	public void removeUserLibrary(String libName,
 			IDLTKLanguageToolkit toolkit) {
-		IEclipsePreferences instancePreferences = ModelManager
-				.getModelManager().getInstancePreferences();
+		IEclipsePreferences instancePreferences = ModelManager.getModelManager()
+				.getInstancePreferences();
 		String propertyName = BP_USERLIBRARY_PREFERENCES_PREFIX
 				+ makeLibraryName(libName, toolkit);
 		instancePreferences.remove(propertyName);
@@ -230,17 +226,16 @@ public class UserLibraryManager {
 		// preferenceChange(...))
 	}
 
-	public void setUserLibrary(String libName,
-			IBuildpathEntry[] entries, boolean isSystemLibrary,
-			IDLTKLanguageToolkit toolkit) {
+	public void setUserLibrary(String libName, IBuildpathEntry[] entries,
+			boolean isSystemLibrary, IDLTKLanguageToolkit toolkit) {
 		setUserLibrary(libName, entries, isSystemLibrary, null, toolkit);
 	}
 
-	public void setUserLibrary(String libName,
-			IBuildpathEntry[] entries, boolean isSystemLibrary,
-			Map<String, String> attributes, IDLTKLanguageToolkit toolkit) {
-		IEclipsePreferences instancePreferences = ModelManager
-				.getModelManager().getInstancePreferences();
+	public void setUserLibrary(String libName, IBuildpathEntry[] entries,
+			boolean isSystemLibrary, Map<String, String> attributes,
+			IDLTKLanguageToolkit toolkit) {
+		IEclipsePreferences instancePreferences = ModelManager.getModelManager()
+				.getInstancePreferences();
 		String propertyName = BP_USERLIBRARY_PREFERENCES_PREFIX
 				+ makeLibraryName(libName, toolkit);
 		try {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,7 @@ import org.eclipse.dltk.internal.core.util.LRUCache;
  */
 public class BufferCache extends OverflowingLRUCache {
 
-	private ThreadLocal<List<IBuffer>> buffersToClose = new ThreadLocal<List<IBuffer>>();
+	private ThreadLocal<List<IBuffer>> buffersToClose = new ThreadLocal<>();
 
 	/**
 	 * Constructs a new buffer cache of the given size.
@@ -38,7 +38,7 @@ public class BufferCache extends OverflowingLRUCache {
 	/**
 	 * Returns true if the buffer is successfully closed and removed from the
 	 * cache, otherwise false.
-	 * 
+	 *
 	 * <p>
 	 * NOTE: this triggers an external removal of this buffer by closing the
 	 * buffer.
@@ -49,12 +49,13 @@ public class BufferCache extends OverflowingLRUCache {
 
 		// prevent buffer that have unsaved changes or working copy buffer to be
 		// removed see https://bugs.eclipse.org/bugs/show_bug.cgi?id=39311
-		if (!((Openable) buffer.getOwner()).canBufferBeRemovedFromCache(buffer)) {
+		if (!((Openable) buffer.getOwner())
+				.canBufferBeRemovedFromCache(buffer)) {
 			return false;
 		} else {
 			List<IBuffer> buffers = this.buffersToClose.get();
 			if (buffers == null) {
-				buffers = new ArrayList<IBuffer>();
+				buffers = new ArrayList<>();
 				this.buffersToClose.set(buffers);
 			}
 			buffers.add(buffer);

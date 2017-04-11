@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -138,20 +138,20 @@ public class SourceType extends NamedMember implements IType {
 			String fieldName = memento.nextToken();
 			ModelElement field = (ModelElement) getField(fieldName);
 			return field.getHandleFromMemento(memento, workingCopyOwner);
-			// case JEM_INITIALIZER:
-			// if (!memento.hasMoreTokens()) return this;
-			// String count = memento.nextToken();
-			// JavaElement initializer =
-			// (JavaElement)getInitializer(Integer.parseInt(count));
-			// return initializer.getHandleFromMemento(memento,
-			// workingCopyOwner);
+		// case JEM_INITIALIZER:
+		// if (!memento.hasMoreTokens()) return this;
+		// String count = memento.nextToken();
+		// JavaElement initializer =
+		// (JavaElement)getInitializer(Integer.parseInt(count));
+		// return initializer.getHandleFromMemento(memento,
+		// workingCopyOwner);
 		case JEM_METHOD:
 			if (!memento.hasMoreTokens()) {
 				return this;
 			}
 
 			String selector = memento.nextToken();
-			ArrayList<String> params = new ArrayList<String>();
+			ArrayList<String> params = new ArrayList<>();
 			nextParam: while (memento.hasMoreTokens()) {
 				token = memento.nextToken();
 				switch (token.charAt(0)) {
@@ -237,11 +237,10 @@ public class SourceType extends NamedMember implements IType {
 	@Override
 	public String getFullyQualifiedName(String enclosingTypeSeparator) {
 		try {
-			return getFullyQualifiedName(enclosingTypeSeparator, false/*
-																	 * don't
-																	 * show
-																	 * parameters
-																	 */);
+			return getFullyQualifiedName(enclosingTypeSeparator,
+					false/*
+							 * don't show parameters
+							 */);
 		} catch (ModelException e) {
 			// exception thrown only when showing parameters
 			return null;
@@ -300,11 +299,10 @@ public class SourceType extends NamedMember implements IType {
 	@Override
 	public String getTypeQualifiedName(String enclosingTypeSeparator) {
 		try {
-			return getTypeQualifiedName(enclosingTypeSeparator, false/*
-																	 * don't
-																	 * show
-																	 * parameters
-																	 */);
+			return getTypeQualifiedName(enclosingTypeSeparator,
+					false/*
+							 * don't show parameters
+							 */);
 		} catch (ModelException e) {
 			// exception thrown only when showing parameters
 			return null;
@@ -334,7 +332,8 @@ public class SourceType extends NamedMember implements IType {
 	@Override
 	public ITypeHierarchy loadTypeHierachy(InputStream input,
 			IProgressMonitor monitor) throws ModelException {
-		return loadTypeHierachy(input, DefaultWorkingCopyOwner.PRIMARY, monitor);
+		return loadTypeHierachy(input, DefaultWorkingCopyOwner.PRIMARY,
+				monitor);
 	}
 
 	/**
@@ -349,7 +348,7 @@ public class SourceType extends NamedMember implements IType {
 	 * compilation unit of a loaded type has the given owner if such a working
 	 * copy exists, otherwise the type's compilation unit is a primary
 	 * compilation unit.
-	 * 
+	 *
 	 * Only hierarchies originally created by the following methods can be
 	 * loaded:
 	 * <ul>
@@ -360,7 +359,7 @@ public class SourceType extends NamedMember implements IType {
 	 * IProgressMonitor)</li>
 	 * <li>IType#newTypeHierarchy(IProgressMonitor)</li>
 	 * <li>IType#newTypeHierarchy(WorkingCopyOwner, IProgressMonitor)</li> </u>
-	 * 
+	 *
 	 * @param input
 	 *            stream where hierarchy will be read
 	 * @param monitor
@@ -401,7 +400,8 @@ public class SourceType extends NamedMember implements IType {
 		CreateTypeHierarchyOperation op;
 		IScriptProject scriptProject = getScriptProject();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-		op = new CreateTypeHierarchyOperation(this, workingCopies, scope, false);
+		op = new CreateTypeHierarchyOperation(this, workingCopies, scope,
+				false);
 		op.runOperation(monitor);
 		return op.getResult();
 	}
@@ -423,7 +423,8 @@ public class SourceType extends NamedMember implements IType {
 		CreateTypeHierarchyOperation op;
 		IScriptProject scriptProject = getScriptProject();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-		op = new CreateTypeHierarchyOperation(this, workingCopies, scope, false);
+		op = new CreateTypeHierarchyOperation(this, workingCopies, scope,
+				false);
 		op.runOperation(monitor);
 		return op.getResult();
 	}
@@ -467,8 +468,8 @@ public class SourceType extends NamedMember implements IType {
 						projectWCs = new ISourceModule[index], 0, index);
 			}
 		}
-		CreateTypeHierarchyOperation op = new CreateTypeHierarchyOperation(
-				this, projectWCs, project, true);
+		CreateTypeHierarchyOperation op = new CreateTypeHierarchyOperation(this,
+				projectWCs, project, true);
 		op.runOperation(monitor);
 		return op.getResult();
 	}
@@ -479,7 +480,7 @@ public class SourceType extends NamedMember implements IType {
 		IProject project = scriptProject.getProject();
 		IProject[] referencingProjects = project.getReferencingProjects();
 
-		List<IScriptProject> scriptProjects = new ArrayList<IScriptProject>(
+		List<IScriptProject> scriptProjects = new ArrayList<>(
 				referencingProjects.length + 1);
 		scriptProjects.add(scriptProject);
 
@@ -489,9 +490,10 @@ public class SourceType extends NamedMember implements IType {
 				scriptProjects.add(DLTKCore.create(p));
 			}
 		}
-		return SearchEngine.createSearchScope(scriptProjects
-				.toArray(new IModelElement[scriptProjects.size()]), false,
-				DLTKLanguageManager.getLanguageToolkit(this));
+		return SearchEngine.createSearchScope(
+				scriptProjects
+						.toArray(new IModelElement[scriptProjects.size()]),
+				false, DLTKLanguageManager.getLanguageToolkit(this));
 	}
 
 	/**

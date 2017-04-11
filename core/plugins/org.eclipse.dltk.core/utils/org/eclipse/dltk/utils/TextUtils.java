@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,7 @@ public abstract class TextUtils {
 	/**
 	 * (Copied from <code>Pattern</code> class, JRE 5.) Returns a literal
 	 * pattern <code>String</code> for the specified <code>String</code>.
-	 * 
+	 *
 	 * <p>
 	 * This method produces a <code>String</code> that can be used to create a
 	 * <code>Pattern</code> that would match the string <code>s</code> as if it
@@ -35,7 +35,7 @@ public abstract class TextUtils {
 	 * </p>
 	 * Metacharacters or escape sequences in the input sequence will be given no
 	 * special meaning.
-	 * 
+	 *
 	 * @param s
 	 *            The string to be literalized
 	 * @return A literal string replacement
@@ -62,7 +62,7 @@ public abstract class TextUtils {
 	/**
 	 * Split this string around line boundaries (handles any line boundaries -
 	 * "\n", "\r", "\r\n" so it is not equivalent to String#split("\n"))
-	 * 
+	 *
 	 * @param content
 	 * @return
 	 */
@@ -77,7 +77,7 @@ public abstract class TextUtils {
 	/**
 	 * Split this string around line boundaries (handles any line boundaries -
 	 * "\n", "\r", "\r\n" so it is not equivalent to String#split("\n"))
-	 * 
+	 *
 	 * @param content
 	 * @param limit
 	 *            the maximal number of lines to return
@@ -94,7 +94,7 @@ public abstract class TextUtils {
 	/**
 	 * Counts the number of lines in the specified string. Lines are counter by
 	 * the separators ("\n", "\r", "\r\n")
-	 * 
+	 *
 	 * @param content
 	 * @return
 	 */
@@ -107,7 +107,8 @@ public abstract class TextUtils {
 	 * @param lines
 	 * @return
 	 */
-	public static CharSequence selectHeadLines(CharSequence content, int lines) {
+	public static CharSequence selectHeadLines(CharSequence content,
+			int lines) {
 		return new LineSplitter(content).selectHeadLines(lines);
 	}
 
@@ -141,7 +142,7 @@ public abstract class TextUtils {
 		}
 
 		public String[] split() {
-			final List<String> result = new ArrayList<String>();
+			final List<String> result = new ArrayList<>();
 			contentPos = 0;
 			while (contentPos < contentEnd) {
 				final int begin = contentPos;
@@ -152,7 +153,7 @@ public abstract class TextUtils {
 		}
 
 		public String[] split(int lines) {
-			final List<String> result = new ArrayList<String>(lines);
+			final List<String> result = new ArrayList<>(lines);
 			contentPos = 0;
 			while (lines > 0 && contentPos < contentEnd) {
 				final int begin = contentPos;
@@ -220,7 +221,7 @@ public abstract class TextUtils {
 		}
 
 		public ISourceLineTracker buildLineTracker() {
-			final List<String> delimiters = new ArrayList<String>();
+			final List<String> delimiters = new ArrayList<>();
 			IntList lineOffsets = new IntList(256);
 			contentPos = 0;
 			while (contentPos < contentEnd) {
@@ -382,12 +383,12 @@ public abstract class TextUtils {
 	 * Joins the elements of the provided <code>Collection</code> into a single
 	 * String containing the provided elements.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * No delimiter is added before or after the list. A <code>null</code>
 	 * separator is the same as an empty String ("").
 	 * </p>
-	 * 
+	 *
 	 * @param collection
 	 *            the <code>Collection</code> of values to join together, may be
 	 *            null
@@ -430,12 +431,12 @@ public abstract class TextUtils {
 	 * Joins the elements of the provided <code>Collection</code> into a single
 	 * String containing the provided elements.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * No delimiter is added before or after the list. A <code>null</code>
 	 * separator is the same as an empty String ("").
 	 * </p>
-	 * 
+	 *
 	 * @param collection
 	 *            the <code>Collection</code> of values to join together, may be
 	 *            null
@@ -516,7 +517,7 @@ public abstract class TextUtils {
 		if (i == -1) {
 			return new String[] { str };
 		}
-		final List<String> list = new ArrayList<String>();
+		final List<String> list = new ArrayList<>();
 		int start = 0;
 		boolean match = i != 0;
 		while (i < len) {
@@ -561,7 +562,7 @@ public abstract class TextUtils {
 		if (i == -1) {
 			return new String[] { str };
 		}
-		final List<String> list = new ArrayList<String>();
+		final List<String> list = new ArrayList<>();
 		int start = 0;
 		boolean match = i != 0;
 		while (i < len) {
@@ -586,21 +587,22 @@ public abstract class TextUtils {
 	 * Creates a new <code>ISourceRange</code> object whose offset and length
 	 * are a subset of the original and do not include any leading or trailing
 	 * whitespace.
-	 * 
+	 *
 	 * <p>
 	 * This method is most useful when calculating the start and end offsets
 	 * required to create an <code>IProblem</code>,
 	 * <code>IValidatorProblem</code>, etc
 	 * </p>
-	 * 
+	 *
 	 * @param source
 	 *            source contents
 	 * @param range
 	 *            position in the document whitespace should be stripped from
-	 * 
+	 *
 	 * @return source range minus leading/trailing whitespace
 	 */
-	public static ISourceRange trimWhitespace(String source, ISourceRange range) {
+	public static ISourceRange trimWhitespace(String source,
+			ISourceRange range) {
 		int sOffset = range.getOffset();
 		int eOffset = sOffset + range.getLength();
 

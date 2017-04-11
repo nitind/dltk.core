@@ -11,7 +11,7 @@ import org.eclipse.dltk.internal.core.util.Util;
 public class AbstractDataLoader {
 	protected InputStream stream;
 	protected DataInputStream in;
-	private List<String> stringIndex = new ArrayList<String>();
+	private List<String> stringIndex = new ArrayList<>();
 
 	public AbstractDataLoader(InputStream stream) {
 		this.stream = stream;

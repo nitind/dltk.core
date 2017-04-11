@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 xored software, Inc. and others.
+ * Copyright (c) 2016, 2017 xored software, Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,7 +41,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 /**
  * This cache provider checks for folder .index files and load such files into
  * required cache.
- * 
+ *
  * @author Andrei Sobolev
  */
 public class ArchiveContentCacheProvider implements IContentCacheProvider {
@@ -64,8 +64,8 @@ public class ArchiveContentCacheProvider implements IContentCacheProvider {
 		}
 		String DLTK_INDEX_FILE = ".dltk.index";
 		// Check for additional indexes
-		if (processIndexFile(handle, attribute, parent, parent
-				.getChild(DLTK_INDEX_FILE), cache)) {
+		if (processIndexFile(handle, attribute, parent,
+				parent.getChild(DLTK_INDEX_FILE), cache)) {
 			return cache.getCacheEntryAttribute(handle, attribute, true);
 		}
 		long lastAccess = cache.getCacheEntryAttributeLong(parent,
@@ -86,8 +86,8 @@ public class ArchiveContentCacheProvider implements IContentCacheProvider {
 				}
 			}
 		}
-		cache.setCacheEntryAttribute(parent, CHECK_TIMEOUT, System
-				.currentTimeMillis());
+		cache.setCacheEntryAttribute(parent, CHECK_TIMEOUT,
+				System.currentTimeMillis());
 		return null;
 	}
 
@@ -98,7 +98,7 @@ public class ArchiveContentCacheProvider implements IContentCacheProvider {
 		// Check for additional indexes
 		IFileHandle[] children = folder.getChildren();
 		if (children != null) {
-			List<IFileHandle> indexFiles = new ArrayList<IFileHandle>();
+			List<IFileHandle> indexFiles = new ArrayList<>();
 			for (IFileHandle fileHandle : children) {
 				String fileName = fileHandle.getName();
 				if (fileName.startsWith(DLTK_INDEX_FILE)
@@ -108,11 +108,11 @@ public class ArchiveContentCacheProvider implements IContentCacheProvider {
 			}
 			SubProgressMonitor processingIndexes = new SubProgressMonitor(
 					monitor, 1);
-			processingIndexes.beginTask("Processing index files", indexFiles
-					.size());
+			processingIndexes.beginTask("Processing index files",
+					indexFiles.size());
 			for (IFileHandle fileHandle : indexFiles) {
-				processingIndexes.subTask("Processing:"
-						+ fileHandle.toOSString());
+				processingIndexes
+						.subTask("Processing:" + fileHandle.toOSString());
 				processIndexFile(null, null, folder, fileHandle, cache);
 				processingIndexes.worked(1);
 			}
@@ -145,28 +145,28 @@ public class ArchiveContentCacheProvider implements IContentCacheProvider {
 		return false;
 	}
 
-	public static boolean processIndexFile(IFileHandle handle,
-			String attribute, IFileHandle parent, IFileHandle indexFile,
-			String fStamp, IContentCache cache) throws IOException,
-			ZipException {
+	public static boolean processIndexFile(IFileHandle handle, String attribute,
+			IFileHandle parent, IFileHandle indexFile, String fStamp,
+			IContentCache cache) throws IOException, ZipException {
 		File zipFileHandle = cache.getEntryAsFile(indexFile, "handle");
 
 		if (!zipFileHandle.exists()) {
-			BufferedInputStream inp = new BufferedInputStream(indexFile
-					.openInputStream(new NullProgressMonitor()), 4096);
+			BufferedInputStream inp = new BufferedInputStream(
+					indexFile.openInputStream(new NullProgressMonitor()), 4096);
 			PerformanceNode p = RuntimePerformanceMonitor.begin();
 			Util.copy(zipFileHandle, inp);
 			inp.close();
-			p.done("#", "Indexes read", zipFileHandle.length(), indexFile
-					.getEnvironment());
+			p.done("#", "Indexes read", zipFileHandle.length(),
+					indexFile.getEnvironment());
 		}
 		ZipFile zipFile = new ZipFile(zipFileHandle);
 
 		ZipEntry entry = zipFile.getEntry(".index");
-		Resource indexResource = new XMIResourceImpl(URI
-				.createURI("dltk_cache://zipIndex"));
-		indexResource.load(new BufferedInputStream(zipFile
-				.getInputStream(entry), 8096), null);
+		Resource indexResource = new XMIResourceImpl(
+				URI.createURI("dltk_cache://zipIndex"));
+		indexResource.load(
+				new BufferedInputStream(zipFile.getInputStream(entry), 8096),
+				null);
 		EList<EObject> contents = indexResource.getContents();
 		boolean found = false;
 		for (EObject eObject : contents) {
@@ -174,8 +174,8 @@ public class ArchiveContentCacheProvider implements IContentCacheProvider {
 			EList<CacheEntry> entries = cacheIndex.getEntries();
 			for (CacheEntry cacheEntry : entries) {
 				String path = cacheEntry.getPath();
-				IFileHandle entryHandle = new WrapTimeStampHandle(parent
-						.getChild(path), cacheEntry.getTimestamp());
+				IFileHandle entryHandle = new WrapTimeStampHandle(
+						parent.getChild(path), cacheEntry.getTimestamp());
 				// cache.setCacheEntryAttribute(entryHandle, "timestamp",
 				// cacheEntry.getTimestamp());
 				EList<CacheEntryAttribute> attributes = cacheEntry
@@ -195,8 +195,8 @@ public class ArchiveContentCacheProvider implements IContentCacheProvider {
 					ZipEntry zipEntry = zipFile.getEntry(location);
 					InputStream inputStream;
 					try {
-						inputStream = new BufferedInputStream(zipFile
-								.getInputStream(zipEntry), 8096);
+						inputStream = new BufferedInputStream(
+								zipFile.getInputStream(zipEntry), 8096);
 						Util.copy(inputStream, stream);
 						stream.close();
 						inputStream.close();

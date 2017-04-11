@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2016 NumberFour AG
+ * Copyright (c) 2011, 2017 NumberFour AG
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -28,7 +28,7 @@ abstract class AbstractBuildState implements IBuildState {
 		this.projectName = projectName;
 	}
 
-	private final Set<IPath> structuralChanges = new HashSet<IPath>();
+	private final Set<IPath> structuralChanges = new HashSet<>();
 
 	@Override
 	public void recordStructuralChange(IPath path) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,8 +25,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
@@ -90,9 +90,10 @@ public class DLTKTypeInferenceEngine implements ITypeInferencer {
 		try {
 			int includeMask = IDLTKSearchScope.SOURCES;
 			includeMask |= (IDLTKSearchScope.APPLICATION_LIBRARIES
-					| IDLTKSearchScope.REFERENCED_PROJECTS | IDLTKSearchScope.SYSTEM_LIBRARIES);
-			IDLTKSearchScope scope = SearchEngine.createSearchScope(
-					dltkProject, includeMask);
+					| IDLTKSearchScope.REFERENCED_PROJECTS
+					| IDLTKSearchScope.SYSTEM_LIBRARIES);
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(dltkProject,
+					includeMask);
 
 			String typeName = ""; //$NON-NLS-1$
 			if (patternString.indexOf("::") != -1) { //$NON-NLS-1$
@@ -143,7 +144,8 @@ public class DLTKTypeInferenceEngine implements ITypeInferencer {
 						superClasses = itype.getSuperClasses();
 						if (superClasses != null) {
 							for (int cnt = 0, max = superClasses.length; cnt < max; cnt++) {
-								if (!superClassSet.contains(superClasses[cnt])) {
+								if (!superClassSet
+										.contains(superClasses[cnt])) {
 									superClassSet.add(superClasses[cnt]);
 
 									collectSuperClasses(project,
@@ -181,7 +183,7 @@ public class DLTKTypeInferenceEngine implements ITypeInferencer {
 	private static ThreadLocal<List<AbstractTypeGoal>> goals = new ThreadLocal<List<AbstractTypeGoal>>() {
 		@Override
 		protected List<AbstractTypeGoal> initialValue() {
-			return new ArrayList<AbstractTypeGoal>();
+			return new ArrayList<>();
 		}
 	};
 
@@ -229,7 +231,8 @@ public class DLTKTypeInferenceEngine implements ITypeInferencer {
 				}
 			}
 		}
-		if ((typeSet.size() > 1) && (goal.getContext() instanceof BasicContext)) {
+		if ((typeSet.size() > 1)
+				&& (goal.getContext() instanceof BasicContext)) {
 			reduceTypes((BasicContext) goal.getContext(), typeSet);
 		}
 

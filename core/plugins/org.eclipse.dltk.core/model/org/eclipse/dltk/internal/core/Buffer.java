@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,7 +58,7 @@ public class Buffer implements IBuffer {
 	public synchronized void addBufferChangedListener(
 			IBufferChangedListener listener) {
 		if (this.changeListeners == null) {
-			this.changeListeners = new ArrayList<IBufferChangedListener>(5);
+			this.changeListeners = new ArrayList<>(5);
 		}
 		if (!this.changeListeners.contains(listener)) {
 			this.changeListeners.add(listener);
@@ -84,8 +84,8 @@ public class Buffer implements IBuffer {
 				this.gapStart += text.length;
 				this.flags |= F_HAS_UNSAVED_CHANGES;
 			}
-			notifyChanged(new BufferChangedEvent(this, length, 0, new String(
-					text)));
+			notifyChanged(
+					new BufferChangedEvent(this, length, 0, new String(text)));
 		}
 	}
 
@@ -185,8 +185,8 @@ public class Buffer implements IBuffer {
 			}
 			StringBuffer buf = new StringBuffer();
 			buf.append(this.contents, offset, this.gapStart - offset);
-			buf.append(this.contents, this.gapEnd, offset + length
-					- this.gapStart);
+			buf.append(this.contents, this.gapEnd,
+					offset + length - this.gapStart);
 			return buf.toString();
 		}
 	}
@@ -243,13 +243,13 @@ public class Buffer implements IBuffer {
 			System.arraycopy(this.contents, 0, content, 0, newGapStart);
 			System.arraycopy(this.contents, newGapStart, content, newGapEnd,
 					delta);
-			System.arraycopy(this.contents, this.gapEnd, content, newGapEnd
-					+ delta, this.contents.length - this.gapEnd);
+			System.arraycopy(this.contents, this.gapEnd, content,
+					newGapEnd + delta, this.contents.length - this.gapEnd);
 		} else {
 			int delta = newGapStart - this.gapStart;
 			System.arraycopy(this.contents, 0, content, 0, this.gapStart);
-			System.arraycopy(this.contents, this.gapEnd, content,
-					this.gapStart, delta);
+			System.arraycopy(this.contents, this.gapEnd, content, this.gapStart,
+					delta);
 			System.arraycopy(this.contents, this.gapEnd + delta, content,
 					newGapEnd, content.length - newGapEnd);
 		}
@@ -270,9 +270,8 @@ public class Buffer implements IBuffer {
 				SafeRunner.run(new ISafeRunnable() {
 					@Override
 					public void handleException(Throwable exception) {
-						Util
-								.log(exception,
-										"Exception occurred in listener of buffer change notification"); //$NON-NLS-1$
+						Util.log(exception,
+								"Exception occurred in listener of buffer change notification"); //$NON-NLS-1$
 					}
 
 					@Override
@@ -299,7 +298,7 @@ public class Buffer implements IBuffer {
 	/**
 	 * Replaces <code>length</code> characters starting from
 	 * <code>position</code> with <code>text<code>.
-	 * After that operation, the gap is placed at the end of the 
+	 * After that operation, the gap is placed at the end of the
 	 * inserted <code>text</code>.
 	 */
 	@Override
@@ -333,21 +332,21 @@ public class Buffer implements IBuffer {
 			if (textLength > 0) {
 				string = new String(text);
 			}
-			notifyChanged(new BufferChangedEvent(this, position, length, string));
+			notifyChanged(
+					new BufferChangedEvent(this, position, length, string));
 		}
 	}
 
 	/**
 	 * Replaces <code>length</code> characters starting from
 	 * <code>position</code> with <code>text<code>.
-	 * After that operation, the gap is placed at the end of the 
+	 * After that operation, the gap is placed at the end of the
 	 * inserted <code>text</code>.
 	 */
 	@Override
 	public void replace(int position, int length, String text) {
-		this
-				.replace(position, length, text == null ? null : text
-						.toCharArray());
+		this.replace(position, length,
+				text == null ? null : text.toCharArray());
 	}
 
 	@Override
@@ -381,14 +380,12 @@ public class Buffer implements IBuffer {
 
 			// Special case for UTF-8 BOM files
 			// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=110576
-			if (encoding != null
-					&& encoding
-							.equals(org.eclipse.dltk.compiler.util.Util.UTF_8)) {
+			if (encoding != null && encoding
+					.equals(org.eclipse.dltk.compiler.util.Util.UTF_8)) {
 				IContentDescription description = this.file
 						.getContentDescription();
-				if (description != null
-						&& description
-								.getProperty(IContentDescription.BYTE_ORDER_MARK) != null) {
+				if (description != null && description.getProperty(
+						IContentDescription.BYTE_ORDER_MARK) != null) {
 					int bomLength = IContentDescription.BOM_UTF_8.length;
 					byte[] bytesWithBOM = new byte[bytes.length + bomLength];
 					System.arraycopy(IContentDescription.BOM_UTF_8, 0,
@@ -402,10 +399,10 @@ public class Buffer implements IBuffer {
 			// Set file contents
 			ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
 			if (this.file.exists()) {
-				this.file
-						.setContents(stream, force ? IResource.FORCE
-								| IResource.KEEP_HISTORY
-								: IResource.KEEP_HISTORY, null);
+				this.file.setContents(stream,
+						force ? IResource.FORCE | IResource.KEEP_HISTORY
+								: IResource.KEEP_HISTORY,
+						null);
 			} else {
 				this.file.create(stream, force, null);
 			}
@@ -445,8 +442,8 @@ public class Buffer implements IBuffer {
 				this.gapStart = -1;
 				this.gapEnd = -1;
 			}
-			BufferChangedEvent event = new BufferChangedEvent(this, 0, this
-					.getLength(), string);
+			BufferChangedEvent event = new BufferChangedEvent(this, 0,
+					this.getLength(), string);
 			notifyChanged(event);
 		}
 	}
@@ -470,8 +467,8 @@ public class Buffer implements IBuffer {
 	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer
-				.append("Owner: " + ((ModelElement) this.owner).toStringWithAncestors()); //$NON-NLS-1$
+		buffer.append("Owner: " //$NON-NLS-1$
+				+ ((ModelElement) this.owner).toStringWithAncestors());
 		buffer.append("\nHas unsaved changes: " + this.hasUnsavedChanges()); //$NON-NLS-1$
 		buffer.append("\nIs readonly: " + this.isReadOnly()); //$NON-NLS-1$
 		buffer.append("\nIs closed: " + this.isClosed()); //$NON-NLS-1$

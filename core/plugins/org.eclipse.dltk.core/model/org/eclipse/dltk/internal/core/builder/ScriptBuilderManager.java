@@ -23,8 +23,8 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.builder.IScriptBuilder;
 import org.eclipse.dltk.utils.NatureExtensionManager;
 
-public class ScriptBuilderManager extends
-		NatureExtensionManager<IScriptBuilder> {
+public class ScriptBuilderManager
+		extends NatureExtensionManager<IScriptBuilder> {
 
 	private ScriptBuilderManager() {
 		super(LANGUAGE_EXTPOINT, IScriptBuilder.class, "#"); //$NON-NLS-1$
@@ -54,7 +54,7 @@ public class ScriptBuilderManager extends
 					if (className != null && className.length() != 0) {
 						List<String> disable = disabled.get(natureId);
 						if (disable == null) {
-							disable = new ArrayList<String>();
+							disable = new ArrayList<>();
 							disabled.put(natureId, disable);
 						}
 						if (!disable.contains(className)) {
@@ -66,7 +66,7 @@ public class ScriptBuilderManager extends
 		}
 	}
 
-	private Map<String, List<String>> disabled = new HashMap<String, List<String>>();
+	private Map<String, List<String>> disabled = new HashMap<>();
 
 	@Override
 	protected boolean isValidElement(IConfigurationElement element) {
@@ -95,11 +95,12 @@ public class ScriptBuilderManager extends
 	}
 
 	@Override
-	protected IScriptBuilder[] filter(IScriptBuilder[] objects, String natureId) {
+	protected IScriptBuilder[] filter(IScriptBuilder[] objects,
+			String natureId) {
 		if (objects != null) {
 			final List<String> disable = disabled.get(natureId);
 			if (disable != null) {
-				final List<IScriptBuilder> output = new ArrayList<IScriptBuilder>();
+				final List<IScriptBuilder> output = new ArrayList<>();
 				for (IScriptBuilder object : objects) {
 					if (!disable.contains(object.getClass().getName())) {
 						output.add(object);
@@ -115,14 +116,14 @@ public class ScriptBuilderManager extends
 		return objects;
 	}
 
-	protected final Map<Object, Integer> priorities = new IdentityHashMap<Object, Integer>();
+	protected final Map<Object, Integer> priorities = new IdentityHashMap<>();
 
 	@Override
 	protected Object createInstanceByDescriptor(Object descriptor)
 			throws CoreException {
 		final Object instance = super.createInstanceByDescriptor(descriptor);
-		priorities
-				.put(instance, priorityOf((IConfigurationElement) descriptor));
+		priorities.put(instance,
+				priorityOf((IConfigurationElement) descriptor));
 		return instance;
 	}
 
@@ -146,7 +147,7 @@ public class ScriptBuilderManager extends
 
 	/**
 	 * Return merged with all elements with nature #
-	 * 
+	 *
 	 * @param natureId
 	 * @return
 	 * @throws CoreException

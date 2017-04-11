@@ -1,11 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -24,7 +24,6 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.util.Messages;
 import org.eclipse.dltk.internal.core.util.Util;
 
-
 /**
  * This operation creates a new script folder under a given project fragment.
  * The following must be specified:
@@ -37,10 +36,10 @@ import org.eclipse.dltk.internal.core.util.Util;
  * operation has no effect. The result elements include the
  * <code>IScriptFolder</code> created and any side effect script folders that
  * were created.
- * 
+ *
  * <p>
  * NOTE: A default script folder exists by default for a given project fragment.
- * 
+ *
  * <p>
  * Possible exception conditions:
  * <ul>
@@ -60,17 +59,16 @@ public class CreateScriptFolderOperation extends ModelOperation {
 	 * into segments. Intermediate folders are created as required for each
 	 * segment. If the folders already exist, this operation has no effect.
 	 */
-	public CreateScriptFolderOperation(IProjectFragment parentElement, String packageName, boolean force) {
-		super(null, new IModelElement[] {
-			parentElement
-		}, force);
+	public CreateScriptFolderOperation(IProjectFragment parentElement,
+			String packageName, boolean force) {
+		super(null, new IModelElement[] { parentElement }, force);
 		this.pkgName = packageName == null ? null : new Path(packageName);
 	}
 
 	/**
 	 * Execute the operation - creates the new script folder and any side effect
 	 * folders.
-	 * 
+	 *
 	 * @exception ModelException
 	 *                if the operation is unable to complete
 	 */
@@ -78,10 +76,11 @@ public class CreateScriptFolderOperation extends ModelOperation {
 	protected void executeOperation() throws ModelException {
 		ModelElementDelta delta = null;
 		IProjectFragment root = (IProjectFragment) getParentElement();
-		beginTask(Messages.operation_createScriptFolderProgress, this.pkgName.segmentCount());
+		beginTask(Messages.operation_createScriptFolderProgress,
+				this.pkgName.segmentCount());
 		IContainer parentFolder = (IContainer) root.getResource();
 		IPath sideEffectPackageName = Path.EMPTY;
-		ArrayList<IScriptFolder> results = new ArrayList<IScriptFolder>(
+		ArrayList<IScriptFolder> results = new ArrayList<>(
 				this.pkgName.segmentCount());
 		int i;
 		for (i = 0; i < this.pkgName.segmentCount(); i++) {
@@ -91,7 +90,8 @@ public class CreateScriptFolderOperation extends ModelOperation {
 			if (subFolder == null) {
 				createFolder(parentFolder, subFolderName, force);
 				parentFolder = parentFolder.getFolder(new Path(subFolderName));
-				IScriptFolder addedFrag = root.getScriptFolder(sideEffectPackageName);
+				IScriptFolder addedFrag = root
+						.getScriptFolder(sideEffectPackageName);
 				if (!Util.isExcluded(parentFolder, root)) {
 					if (delta == null) {
 						delta = newModelElementDelta();
@@ -126,25 +126,26 @@ public class CreateScriptFolderOperation extends ModelOperation {
 	 * same name as a folder in the script folder's hierarchy.
 	 * <li>ELEMENT_NOT_PRESENT - the underlying resource for the root is missing
 	 * </ul>
-	 * 
+	 *
 	 * @see IScriptModelStatus
 	 * @see ScriptConventions
 	 */
 	@Override
 	public IModelStatus verify() {
 		if (getParentElement() == null) {
-			return new ModelStatus(IModelStatusConstants.NO_ELEMENTS_TO_PROCESS);
+			return new ModelStatus(
+					IModelStatusConstants.NO_ELEMENTS_TO_PROCESS);
 		}
-		IPath packageName = this.pkgName == null ? null : this.pkgName.append("."); //$NON-NLS-1$
+		IPath packageName = this.pkgName == null ? null
+				: this.pkgName.append("."); //$NON-NLS-1$
 		String packageNameValue = null;
 		if (packageName != null) {
 			packageNameValue = packageName.toOSString();
 		}
-		if (this.pkgName == null
-				|| (this.pkgName.segmentCount() > 0 && !Util
-						.isValidFolderNameForPackage(
-								(IContainer) getParentElement().getResource(),
-								packageName.toString()))) {
+		if (this.pkgName == null || (this.pkgName.segmentCount() > 0
+				&& !Util.isValidFolderNameForPackage(
+						(IContainer) getParentElement().getResource(),
+						packageName.toString()))) {
 			return new ModelStatus(IModelStatusConstants.INVALID_NAME,
 					packageNameValue);
 		}
@@ -155,11 +156,13 @@ public class CreateScriptFolderOperation extends ModelOperation {
 		IContainer parentFolder = (IContainer) root.getResource();
 		int i;
 		for (i = 0; i < this.pkgName.segmentCount(); i++) {
-			IResource subFolder = parentFolder.findMember(this.pkgName.segment(i));
+			IResource subFolder = parentFolder
+					.findMember(this.pkgName.segment(i));
 			if (subFolder != null) {
 				if (subFolder.getType() != IResource.FOLDER) {
-					return new ModelStatus(IModelStatusConstants.NAME_COLLISION, Messages.bind(Messages.status_nameCollision,
-							subFolder.getFullPath().toString()));
+					return new ModelStatus(IModelStatusConstants.NAME_COLLISION,
+							Messages.bind(Messages.status_nameCollision,
+									subFolder.getFullPath().toString()));
 				}
 				parentFolder = (IContainer) subFolder;
 			}

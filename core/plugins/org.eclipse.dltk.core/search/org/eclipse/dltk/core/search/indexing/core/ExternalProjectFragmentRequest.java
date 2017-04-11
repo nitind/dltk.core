@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc.
+ * Copyright (c) 2008, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -56,8 +56,8 @@ public class ExternalProjectFragmentRequest extends IndexRequest {
 
 	@Override
 	protected void run() throws CoreException, IOException {
-		IEnvironment environment = EnvironmentManager.getEnvironment(fragment
-				.getScriptProject());
+		IEnvironment environment = EnvironmentManager
+				.getEnvironment(fragment.getScriptProject());
 		if (environment == null || !environment.connect()) {
 			return;
 		}
@@ -67,9 +67,9 @@ public class ExternalProjectFragmentRequest extends IndexRequest {
 			return;
 		}
 		final IPath containerPath = fragment.getPath();
-		Set<IFileHandle> parentFolders = new HashSet<IFileHandle>();
-		final List<Object> changes = checkChanges(index, modules,
-				containerPath, getEnvironment(), parentFolders);
+		Set<IFileHandle> parentFolders = new HashSet<>();
+		final List<Object> changes = checkChanges(index, modules, containerPath,
+				getEnvironment(), parentFolders);
 		if (DEBUG) {
 			log("changes.size=" + changes.size()); //$NON-NLS-1$
 		}
@@ -90,8 +90,8 @@ public class ExternalProjectFragmentRequest extends IndexRequest {
 							false);
 					if (file != null && changes.size() > 1) {
 						IFileHandle parentHandle = file.getParent();
-						if (parentHandle != null
-								&& parentFolders.add(parentHandle.getParent())) {
+						if (parentHandle != null && parentFolders
+								.add(parentHandle.getParent())) {
 							ModelManager.getModelManager().getCoreCache()
 									.updateFolderTimestamps(parentHandle);
 						}
@@ -119,7 +119,7 @@ public class ExternalProjectFragmentRequest extends IndexRequest {
 	}
 
 	static class ExternalModuleVisitor implements IModelElementVisitor {
-		final Set<ISourceModule> modules = new HashSet<ISourceModule>();
+		final Set<ISourceModule> modules = new HashSet<>();
 
 		@Override
 		public boolean visit(IModelElement element) {
@@ -135,7 +135,8 @@ public class ExternalProjectFragmentRequest extends IndexRequest {
 		}
 	}
 
-	private Set<ISourceModule> getExternalSourceModules() throws ModelException {
+	private Set<ISourceModule> getExternalSourceModules()
+			throws ModelException {
 		final ExternalModuleVisitor visitor = new ExternalModuleVisitor();
 		fragment.accept(visitor);
 		return visitor.modules;

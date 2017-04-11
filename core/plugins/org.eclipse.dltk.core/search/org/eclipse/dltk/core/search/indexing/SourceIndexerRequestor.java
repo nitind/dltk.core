@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,9 +23,9 @@ import org.eclipse.dltk.core.ISearchPatternProcessor;
  * requestor recognises thescriptelements (methods, fields, ...) and add them to
  * an index.
  */
-public class SourceIndexerRequestor implements ISourceElementRequestor,
-		IBinaryElementRequestor, IIndexConstants,
-		ISourceElementRequestorExtension {
+public class SourceIndexerRequestor
+		implements ISourceElementRequestor, IBinaryElementRequestor,
+		IIndexConstants, ISourceElementRequestorExtension {
 	protected AbstractIndexer indexer;
 	// char[] packageName = CharOperation.NO_CHAR;
 	protected String[] enclosingTypeNames = new String[5];
@@ -35,7 +35,7 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 
 	protected ISearchFactory searchFactory;
 	protected ISearchPatternProcessor searchPatternProcessor;
-	private Stack<String[]> namespaces = new Stack<String[]>();
+	private Stack<String[]> namespaces = new Stack<>();
 
 	public SourceIndexerRequestor(AbstractIndexer indexer) {
 		this.indexer = indexer;
@@ -109,7 +109,7 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 
 	/*
 	 * Rebuild the proper qualification for the current source type:
-	 * 
+	 *
 	 * java.lang.Object ---> null java.util.Hashtable$Entry --> [Hashtable]
 	 * x.y.A$B$C --> [A, B]
 	 */
@@ -137,7 +137,8 @@ public class SourceIndexerRequestor implements ISourceElementRequestor,
 		if (typeInfo.superclasses != null) {
 			// typeInfo.superclasses = typeInfo.superclasses;
 			for (int i = 0, length = typeInfo.superclasses.length; i < length; i++) {
-				typeInfo.superclasses[i] = getSimpleName(typeInfo.superclasses[i]);
+				typeInfo.superclasses[i] = getSimpleName(
+						typeInfo.superclasses[i]);
 			}
 			// add implicit constructor reference to default constructor
 			if (DLTKCore.DEBUG) {

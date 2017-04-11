@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,7 @@ import java.util.HashSet;
  */
 public class CombinedType implements IEvaluatedType {
 
-	private Collection<IEvaluatedType> types = new HashSet<IEvaluatedType>();
+	private Collection<IEvaluatedType> types = new HashSet<>();
 
 	@Override
 	public String getTypeName() {
@@ -33,8 +33,7 @@ public class CombinedType implements IEvaluatedType {
 	}
 
 	public IEvaluatedType[] getTypes() {
-		return types
-				.toArray(new IEvaluatedType[types.size()]);
+		return types.toArray(new IEvaluatedType[types.size()]);
 	}
 
 	/**

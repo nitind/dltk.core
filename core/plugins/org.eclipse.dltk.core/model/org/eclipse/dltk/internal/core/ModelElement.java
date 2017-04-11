@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,12 +41,12 @@ import org.eclipse.dltk.utils.CorePrinter;
 
 /**
  * Root of model element handle hierarchy.
- * 
+ *
  * @see IModelElement
  */
 
-public abstract class ModelElement extends PlatformObject implements
-		IModelElement, IModelElementMemento {
+public abstract class ModelElement extends PlatformObject
+		implements IModelElement, IModelElementMemento {
 
 	public static final char JEM_ESCAPE = '\\';
 	public static final char JEM_SCRIPTPROJECT = '=';
@@ -84,16 +84,17 @@ public abstract class ModelElement extends PlatformObject implements
 
 	/**
 	 * Constructs a handle for a model element with the given parent element.
-	 * 
+	 *
 	 * @param parent
 	 *            The parent of model element
-	 * 
+	 *
 	 * @exception IllegalArgumentException
 	 *                if the type is not one of the valid model element type
 	 *                constants
-	 * 
+	 *
 	 */
-	protected ModelElement(ModelElement parent) throws IllegalArgumentException {
+	protected ModelElement(ModelElement parent)
+			throws IllegalArgumentException {
 		this.parent = parent;
 	}
 
@@ -159,7 +160,7 @@ public abstract class ModelElement extends PlatformObject implements
 	 * Returns the info for this handle. If this element is not already open, it
 	 * and all of its parents are opened. Does not return null. NOTE: BinaryType
 	 * infos are NOT rooted under ModelElementInfo.
-	 * 
+	 *
 	 * @exception ModelException
 	 *                if the element is not present or not accessible
 	 */
@@ -171,7 +172,7 @@ public abstract class ModelElement extends PlatformObject implements
 	 * Returns the info for this handle. If this element is not already open, it
 	 * and all of its parents are opened. Does not return null. NOTE: BinaryType
 	 * infos are NOT rooted under ModelElementInfo.
-	 * 
+	 *
 	 * @exception ModelException
 	 *                if the element is not present or not accessible
 	 */
@@ -231,7 +232,7 @@ public abstract class ModelElement extends PlatformObject implements
 	/**
 	 * Return the first instance of IOpenable in the parent hierarchy of this
 	 * element.
-	 * 
+	 *
 	 * <p>
 	 * Subclasses that are not IOpenable's must override this method.
 	 */
@@ -281,11 +282,11 @@ public abstract class ModelElement extends PlatformObject implements
 	 * given handle. By default, two handles represent the same element if they
 	 * are identical or if they represent the same type of element, have equal
 	 * names, parents, and occurrence counts.
-	 * 
+	 *
 	 * <p>
 	 * If a subclass has other requirements for equality, this method must be
 	 * overridden.
-	 * 
+	 *
 	 * @see Object#equals
 	 */
 	@Override
@@ -314,8 +315,8 @@ public abstract class ModelElement extends PlatformObject implements
 	public int hashCode() {
 		if (this.parent == null)
 			return super.hashCode();
-		return Util.combineHashCodes(getElementName().hashCode(), this.parent
-				.hashCode());
+		return Util.combineHashCodes(getElementName().hashCode(),
+				this.parent.hashCode());
 	}
 
 	/**
@@ -341,7 +342,7 @@ public abstract class ModelElement extends PlatformObject implements
 	/**
 	 * Returns a collection of (immediate) children of this node of the
 	 * specified type.
-	 * 
+	 *
 	 * @param type
 	 *            - one of the EM_* constants defined by ModelElement
 	 */
@@ -354,7 +355,7 @@ public abstract class ModelElement extends PlatformObject implements
 			IProgressMonitor monitor) throws ModelException {
 		IModelElement[] children = getChildren(monitor);
 		int size = children.length;
-		List<IModelElement> list = new ArrayList<IModelElement>(size);
+		List<IModelElement> list = new ArrayList<>(size);
 		for (int i = 0; i < size; ++i) {
 			IModelElement elt = children[i];
 			if (elt.getElementType() == type) {
@@ -526,7 +527,7 @@ public abstract class ModelElement extends PlatformObject implements
 
 	/**
 	 * Debugging purposes
-	 * 
+	 *
 	 * @param showResolvedInfo
 	 *            TODO
 	 */
@@ -613,15 +614,17 @@ public abstract class ModelElement extends PlatformObject implements
 										+ range.getLength()) {
 									candidate = child;
 								} else {
-									return candidate == null ? child
-											.getSourceElementAt(position)
-											: candidate
-													.getSourceElementAt(position);
+									return candidate == null
+											? child.getSourceElementAt(position)
+											: candidate.getSourceElementAt(
+													position);
 								}
-								child = --i >= 0 ? (SourceRefElement) children[i]
+								child = --i >= 0
+										? (SourceRefElement) children[i]
 										: null;
 							} while (child instanceof IField
-									&& child.getSourceRange().getOffset() == declarationStart);
+									&& child.getSourceRange()
+											.getOffset() == declarationStart);
 							// position in field's type: use first field
 							return candidate.getSourceElementAt(position);
 						} else if (child instanceof IParent) {
@@ -642,7 +645,7 @@ public abstract class ModelElement extends PlatformObject implements
 	/**
 	 * Returns element type and name. called from
 	 * {@link #printNode(CorePrinter)} only.
-	 * 
+	 *
 	 * @return
 	 */
 	protected String describeElement() {
@@ -652,7 +655,7 @@ public abstract class ModelElement extends PlatformObject implements
 
 	/**
 	 * Only for testing. Used to print this node with all sub childs.
-	 * 
+	 *
 	 * @param output
 	 */
 	public void printNode(CorePrinter output) {

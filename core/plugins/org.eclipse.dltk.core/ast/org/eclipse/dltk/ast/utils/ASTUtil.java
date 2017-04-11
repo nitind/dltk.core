@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ast.utils;
 
@@ -50,7 +49,8 @@ public class ASTUtil {
 				.toArray(new TypeDeclaration[finalTypes.size()]);
 	}
 
-	public static MethodDeclaration[] getMethods(List statements, List functions) {
+	public static MethodDeclaration[] getMethods(List statements,
+			List functions) {
 		List finalMethods = new ArrayList();
 		finalMethods.addAll(functions);
 
@@ -93,7 +93,7 @@ public class ASTUtil {
 
 	public static <E> List<E> select(ASTNode root, final Class<E> type,
 			final boolean visitNested) {
-		final List<E> result = new ArrayList<E>();
+		final List<E> result = new ArrayList<>();
 		try {
 			root.traverse(new ASTVisitor() {
 				@SuppressWarnings("unchecked")

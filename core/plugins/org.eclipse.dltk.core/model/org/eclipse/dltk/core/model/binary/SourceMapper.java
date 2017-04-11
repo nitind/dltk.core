@@ -35,16 +35,16 @@ public class SourceMapper {
 		}
 	}
 
-	private Map<IModelElement, Range> sourceRanges = new HashMap<IModelElement, Range>();
+	private Map<IModelElement, Range> sourceRanges = new HashMap<>();
 
-	private Map<IModelElement, Range> nameRanges = new HashMap<IModelElement, Range>();
+	private Map<IModelElement, Range> nameRanges = new HashMap<>();
 
 	private IPath sourcePath;
 
 	// private IPath sourceRoot;
 
-	private Set<IBinaryModule> sourcesNotPressent = new HashSet<IBinaryModule>();
-	private Map<IBinaryModule, String> sourcesMap = new WeakHashMap<IBinaryModule, String>();
+	private Set<IBinaryModule> sourcesNotPressent = new HashSet<>();
+	private Map<IBinaryModule, String> sourcesMap = new WeakHashMap<>();
 
 	public SourceMapper(IPath sourcePath, IPath sourceAttachmentRootPath) {
 		this.sourcePath = sourcePath;
@@ -81,24 +81,24 @@ public class SourceMapper {
 
 	void reportType(TypeInfo info, IType type) {
 		synchronized (sourceRanges) {
-			nameRanges.put(type, new Range(info.nameSourceStart,
-					info.nameSourceEnd));
+			nameRanges.put(type,
+					new Range(info.nameSourceStart, info.nameSourceEnd));
 			sourceRanges.put(type, new Range(info.declarationStart, 0));
 		}
 	}
 
 	void reportField(FieldInfo info, IField field) {
 		synchronized (sourceRanges) {
-			nameRanges.put(field, new Range(info.nameSourceStart,
-					info.nameSourceEnd));
+			nameRanges.put(field,
+					new Range(info.nameSourceStart, info.nameSourceEnd));
 			sourceRanges.put(field, new Range(info.declarationStart, 0));
 		}
 	}
 
 	void reportMethod(MethodInfo info, IMethod method) {
 		synchronized (sourceRanges) {
-			nameRanges.put(method, new Range(info.nameSourceStart,
-					info.nameSourceEnd));
+			nameRanges.put(method,
+					new Range(info.nameSourceStart, info.nameSourceEnd));
 			sourceRanges.put(method, new Range(info.declarationStart, 0));
 		}
 	}

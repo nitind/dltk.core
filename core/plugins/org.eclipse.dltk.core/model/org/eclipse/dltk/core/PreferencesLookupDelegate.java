@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Jae Gangemi and others.
+ * Copyright (c) 2016, 2017 Jae Gangemi and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,17 +24,17 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 /**
  * Delegates preferences lookup to the {@link IPreferencesService preference
  * service}
- * 
+ *
  * <p>
  * The following scopes are searched for the preference value:
  * </p>
- * 
+ *
  * <ul>
  * <li>ProjectScope (if project != null)</li>
  * <li>InstanceScope</li>
  * <li>DefaultScope</li>
  * </ul>
- * 
+ *
  * <p>
  * Plugins should include an implementation of the
  * {@link org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer} to
@@ -52,11 +52,11 @@ public class PreferencesLookupDelegate implements IPreferencesLookupDelegate {
 
 	/**
 	 * Creates a new delegate instance
-	 * 
+	 *
 	 * <p>
 	 * A project may be specified to retrieve project specific value.
 	 * </p>
-	 * 
+	 *
 	 * @param project
 	 *            project reference, may be <code>null</code>
 	 */
@@ -71,12 +71,12 @@ public class PreferencesLookupDelegate implements IPreferencesLookupDelegate {
 
 	/**
 	 * Returns a string preference value
-	 * 
+	 *
 	 * @param qualifier
 	 *            preference key qualifier (plugin id)
 	 * @param key
 	 *            preference key
-	 * 
+	 *
 	 * @return preference value or an empty string if the preference is not
 	 *         defined
 	 */
@@ -87,12 +87,12 @@ public class PreferencesLookupDelegate implements IPreferencesLookupDelegate {
 
 	/**
 	 * Returns a int preference value
-	 * 
+	 *
 	 * @param qualifier
 	 *            preference key qualifier (plugin id)
 	 * @param key
 	 *            preference key
-	 * 
+	 *
 	 * @return preference value or an empty string if the preference is not
 	 *         defined
 	 */
@@ -103,12 +103,12 @@ public class PreferencesLookupDelegate implements IPreferencesLookupDelegate {
 
 	/**
 	 * Returns a boolean preference value
-	 * 
+	 *
 	 * @param qualifier
 	 *            preference key qualifier (plugin id)
 	 * @param key
 	 *            preference key
-	 * 
+	 *
 	 * @return preference value or <code>false</code> if the preference is not
 	 *         defined
 	 */
@@ -118,7 +118,7 @@ public class PreferencesLookupDelegate implements IPreferencesLookupDelegate {
 	}
 
 	private IScopeContext[] getLookupScopes(IProject project) {
-		List<IScopeContext> list = new ArrayList<IScopeContext>(3);
+		List<IScopeContext> list = new ArrayList<>(3);
 		list.add(InstanceScope.INSTANCE);
 		list.add(DefaultScope.INSTANCE);
 

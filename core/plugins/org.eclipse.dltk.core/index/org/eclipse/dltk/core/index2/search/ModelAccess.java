@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,17 +35,17 @@ import org.eclipse.dltk.internal.core.index2.IndexerManager;
 
 /**
  * Utility for accessing DLTK model elements through index
- * 
+ *
  * @author michael
  * @since 2.0
- * 
+ *
  */
 public class ModelAccess {
 
 	/**
 	 * Finds field elements in index. Element qualifier (package name) will be
 	 * calculated from the field name.
-	 * 
+	 *
 	 * @param name
 	 *            Element name
 	 * @param matchRule
@@ -66,7 +66,7 @@ public class ModelAccess {
 	public IField[] findFields(String name, MatchRule matchRule, int trueFlags,
 			int falseFlags, IDLTKSearchScope scope, IProgressMonitor monitor) {
 
-		List<IField> result = new LinkedList<IField>();
+		List<IField> result = new LinkedList<>();
 		if (!findElements(IModelElement.FIELD, name, matchRule, trueFlags,
 				falseFlags, scope, result, monitor)) {
 			return null;
@@ -76,7 +76,7 @@ public class ModelAccess {
 
 	/**
 	 * Finds field elements in index
-	 * 
+	 *
 	 * @param qualifier
 	 *            Element qualifier (package name)
 	 * @param name
@@ -100,7 +100,7 @@ public class ModelAccess {
 			MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 
-		List<IField> result = new LinkedList<IField>();
+		List<IField> result = new LinkedList<>();
 		if (!findElements(IModelElement.FIELD, qualifier, name, matchRule,
 				trueFlags, falseFlags, scope, result, monitor)) {
 			return null;
@@ -111,7 +111,7 @@ public class ModelAccess {
 	/**
 	 * Finds method elements in index.Element qualifier (package name) will be
 	 * calculated from the method name.
-	 * 
+	 *
 	 * @param name
 	 *            Element name
 	 * @param matchRule
@@ -133,7 +133,7 @@ public class ModelAccess {
 			int trueFlags, int falseFlags, IDLTKSearchScope scope,
 			IProgressMonitor monitor) {
 
-		List<IMethod> result = new LinkedList<IMethod>();
+		List<IMethod> result = new LinkedList<>();
 		if (!findElements(IModelElement.METHOD, name, matchRule, trueFlags,
 				falseFlags, scope, result, monitor)) {
 			return null;
@@ -143,7 +143,7 @@ public class ModelAccess {
 
 	/**
 	 * Finds method elements in index
-	 * 
+	 *
 	 * @param qualifier
 	 *            Element qualifier (package name)
 	 * @param name
@@ -167,7 +167,7 @@ public class ModelAccess {
 			MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 
-		List<IMethod> result = new LinkedList<IMethod>();
+		List<IMethod> result = new LinkedList<>();
 		if (!findElements(IModelElement.METHOD, qualifier, name, matchRule,
 				trueFlags, falseFlags, scope, result, monitor)) {
 			return null;
@@ -178,7 +178,7 @@ public class ModelAccess {
 	/**
 	 * Finds type elements in index. Element qualifier (package name) will be
 	 * calculated from the type name.
-	 * 
+	 *
 	 * @param name
 	 *            Element name
 	 * @param matchRule
@@ -199,7 +199,7 @@ public class ModelAccess {
 	public IType[] findTypes(String name, MatchRule matchRule, int trueFlags,
 			int falseFlags, IDLTKSearchScope scope, IProgressMonitor monitor) {
 
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		if (!findElements(IModelElement.TYPE, name, matchRule, trueFlags,
 				falseFlags, scope, result, monitor)) {
 			return null;
@@ -209,7 +209,7 @@ public class ModelAccess {
 
 	/**
 	 * Finds type elements in index.
-	 * 
+	 *
 	 * @param qualifier
 	 *            Element qualifier (package name)
 	 * @param name
@@ -229,11 +229,11 @@ public class ModelAccess {
 	 *            Progress monitor
 	 * @return elements array, or <code>null</code> in case error has occurred.
 	 */
-	public IType[] findTypes(String qualifier, String name,
-			MatchRule matchRule, int trueFlags, int falseFlags,
-			IDLTKSearchScope scope, IProgressMonitor monitor) {
+	public IType[] findTypes(String qualifier, String name, MatchRule matchRule,
+			int trueFlags, int falseFlags, IDLTKSearchScope scope,
+			IProgressMonitor monitor) {
 
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		if (!findElements(IModelElement.TYPE, qualifier, name, matchRule,
 				trueFlags, falseFlags, scope, result, monitor)) {
 			return null;
@@ -263,6 +263,7 @@ public class ModelAccess {
 		return findElements(elementType, qualifier, name, matchRule, trueFlags,
 				falseFlags, scope, result, monitor);
 	}
+
 	protected <T extends IModelElement> boolean findElements(int elementType,
 			String qualifier, String name, MatchRule matchRule, int trueFlags,
 			int falseFlags, IDLTKSearchScope scope, final Collection<T> result,
@@ -295,8 +296,8 @@ public class ModelAccess {
 			public void match(int elementType, int flags, int offset,
 					int length, int nameOffset, int nameLength,
 					String elementName, String metadata, String doc,
-					String qualifier, String parent,
-					ISourceModule sourceModule, boolean isReference) {
+					String qualifier, String parent, ISourceModule sourceModule,
+					boolean isReference) {
 
 				IModelElement element = elementResolver.resolve(elementType,
 						flags, offset, length, nameOffset, nameLength,
@@ -323,7 +324,7 @@ public class ModelAccess {
 
 	/**
 	 * Converts old-style search flags to MatchRule.
-	 * 
+	 *
 	 * @param searchRule
 	 *            Search flags: {@link SearchPattern#R_EXACT_MATCH}, etc...
 	 * @return match rule. If searchRule is not supported by the new mechanism
@@ -345,7 +346,7 @@ public class ModelAccess {
 
 	/**
 	 * Creates search participant
-	 * 
+	 *
 	 * @param toolkit
 	 *            Language toolkit
 	 * @return indexer participant instance or <code>null</code> in case new
@@ -360,13 +361,13 @@ public class ModelAccess {
 		if (indexer == null) {
 			return null;
 		}
-		return IndexerManager.getIndexerParticipant(indexer, toolkit
-				.getNatureId());
+		return IndexerManager.getIndexerParticipant(indexer,
+				toolkit.getNatureId());
 	}
 
 	/**
 	 * Creates new search engine instance
-	 * 
+	 *
 	 * @param toolkit
 	 *            Language toolkit
 	 * @return search engine instance or <code>null</code> in case new indexing
@@ -384,7 +385,7 @@ public class ModelAccess {
 
 	/**
 	 * Creates element resolver
-	 * 
+	 *
 	 * @param toolkit
 	 *            Language toolkit
 	 * @return element resolver or <code>null</code> in case new indexing

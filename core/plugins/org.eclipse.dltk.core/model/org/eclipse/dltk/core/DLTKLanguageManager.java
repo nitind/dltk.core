@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.core;
 
@@ -92,19 +91,20 @@ public class DLTKLanguageManager {
 				.findScriptNature(project) != null;
 	}
 
-	public static IDLTKLanguageToolkit getLanguageToolkit(IModelElement element) {
+	public static IDLTKLanguageToolkit getLanguageToolkit(
+			IModelElement element) {
 		IDLTKLanguageToolkit toolkit = (IDLTKLanguageToolkit) InternalDLTKLanguageManager
 				.getLanguageToolkitsManager().getObject(element);
 		if (toolkit == null) {
-			while (element != null
-					&& element.getElementType() != IModelElement.SOURCE_MODULE) {
+			while (element != null && element
+					.getElementType() != IModelElement.SOURCE_MODULE) {
 				element = element.getParent();
 			}
-			if (element != null
-					&& element.getElementType() == IModelElement.SOURCE_MODULE) {
+			if (element != null && element
+					.getElementType() == IModelElement.SOURCE_MODULE) {
 				if (element.getResource() != null) {
-					IDLTKLanguageToolkit tk = findAppropriateToolkitByObject(element
-							.getResource());
+					IDLTKLanguageToolkit tk = findAppropriateToolkitByObject(
+							element.getResource());
 					if (tk != null) {
 						return tk;
 					}
@@ -132,7 +132,7 @@ public class DLTKLanguageManager {
 	/**
 	 * Returns the toolkit of the specified {@link IProject} or null if not
 	 * found.
-	 * 
+	 *
 	 * @param project
 	 * @return
 	 */
@@ -143,11 +143,12 @@ public class DLTKLanguageManager {
 
 	/**
 	 * Return the toolkit of the specified resource or <code>null</code>.
-	 * 
+	 *
 	 * @param resource
 	 * @return
 	 */
-	public static IDLTKLanguageToolkit findToolkitForResource(IResource resource) {
+	public static IDLTKLanguageToolkit findToolkitForResource(
+			IResource resource) {
 		if (resource.getType() == IResource.PROJECT) {
 			return findToolkit((IProject) resource);
 		} else {
@@ -163,7 +164,7 @@ public class DLTKLanguageManager {
 	 * Return the language toolkit of the specified resource in the specified
 	 * project. Until multiple languages are allowed for the same project - it
 	 * will just return the first matching toolkit of the project.
-	 * 
+	 *
 	 * @param scriptProject
 	 * @param resource
 	 * @param useDefault
@@ -288,7 +289,8 @@ public class DLTKLanguageManager {
 				natureID);
 	}
 
-	public static DLTKSearchParticipant createSearchParticipant(String natureID) {
+	public static DLTKSearchParticipant createSearchParticipant(
+			String natureID) {
 		ISearchFactory factory = getSearchFactory(natureID);
 		if (factory != null) {
 			DLTKSearchParticipant participant = factory
@@ -309,7 +311,8 @@ public class DLTKLanguageManager {
 		return InternalDLTKLanguageManager.createMatchLocator(natureID);
 	}
 
-	public static SourceIndexerRequestor createSourceRequestor(String natureID) {
+	public static SourceIndexerRequestor createSourceRequestor(
+			String natureID) {
 		ISearchFactory factory = getSearchFactory(natureID);
 		if (factory != null) {
 			SourceIndexerRequestor requestor = factory.createSourceRequestor();
@@ -343,7 +346,8 @@ public class DLTKLanguageManager {
 		return null;
 	}
 
-	private static ICallHierarchyFactory getCallHierarchyFactory(String natureId) {
+	private static ICallHierarchyFactory getCallHierarchyFactory(
+			String natureId) {
 		return (ICallHierarchyFactory) InternalDLTKLanguageManager
 				.getCallHierarchyManager().getObject(natureId);
 	}
@@ -390,8 +394,8 @@ public class DLTKLanguageManager {
 	public static ISearchPatternProcessor getSearchPatternProcessor(
 			IDLTKLanguageToolkit toolkit, boolean allowDefault) {
 		if (toolkit != null) {
-			final ISearchPatternProcessor processor = getSearchPatternProcessor(toolkit
-					.getNatureId());
+			final ISearchPatternProcessor processor = getSearchPatternProcessor(
+					toolkit.getNatureId());
 			if (processor != null) {
 				return processor;
 			}
@@ -410,10 +414,9 @@ public class DLTKLanguageManager {
 	 * @since 2.0
 	 */
 	public static Set<String> loadFilenameAssociations(final String natureId) {
-		final IConfigurationElement[] elements = Platform
-				.getExtensionRegistry().getConfigurationElementsFor(
-						FILENAME_ASSOCIATION_EXT_POINT);
-		final Set<String> patterns = new HashSet<String>();
+		final IConfigurationElement[] elements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(FILENAME_ASSOCIATION_EXT_POINT);
+		final Set<String> patterns = new HashSet<>();
 		for (IConfigurationElement element : elements) {
 			if (natureId.equals(element.getAttribute("nature"))) { //$NON-NLS-1$
 				final String pattern = element.getAttribute("pattern"); //$NON-NLS-1$

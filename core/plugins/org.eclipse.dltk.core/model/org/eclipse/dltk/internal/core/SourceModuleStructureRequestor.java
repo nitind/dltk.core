@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,8 +22,8 @@ import org.eclipse.dltk.core.INamespace;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 
-public class SourceModuleStructureRequestor implements ISourceElementRequestor,
-		ISourceElementRequestorExtension {
+public class SourceModuleStructureRequestor
+		implements ISourceElementRequestor, ISourceElementRequestorExtension {
 
 	private DuplicateResolver.Resolver counters = DuplicateResolver.create();
 
@@ -39,7 +39,7 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 	 */
 	private SourceModuleElementInfo moduleInfo;
 
-	private Stack<INamespace> namespaces = new Stack<INamespace>();
+	private Stack<INamespace> namespaces = new Stack<>();
 
 	/**
 	 * The import container info - null until created
@@ -87,8 +87,8 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 
 	@Override
 	public void enterModule() {
-		this.infoStack = new Stack<ModelElementInfo>();
-		this.handleStack = new Stack<ModelElement>();
+		this.infoStack = new Stack<>();
+		this.handleStack = new Stack<>();
 		this.enterModuleRoot();
 	}
 
@@ -245,7 +245,7 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 	/**
 	 * Returns type in which we currently are. If we are not in type, returns
 	 * null.
-	 * 
+	 *
 	 * @return
 	 */
 	private SourceType getCurrentType() {
@@ -262,7 +262,7 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 	 * Searches for a type already in the model. If founds, returns it. If
 	 * <code>parentName</code> starts with a delimiter, searches starting from
 	 * current source module (i.e. in global), else from the current level.
-	 * 
+	 *
 	 * @param parentName
 	 * @param delimiter
 	 * @return null if type not found
@@ -272,8 +272,8 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 			SourceType element = null;
 			if (parentName.startsWith(delimiter)) {
 				if (this.module != null) {
-					element = this.findTypeFrom(this.module.getChildren(),
-							"", parentName, delimiter); //$NON-NLS-1$
+					element = this.findTypeFrom(this.module.getChildren(), "", //$NON-NLS-1$
+							parentName, delimiter);
 				}
 				return element;
 			} else {
@@ -285,8 +285,8 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 								"", parentName, delimiter); //$NON-NLS-1$
 					}
 				} else {
-					element = this.findTypeFrom(enc.getChildren(),
-							"", parentName, delimiter); //$NON-NLS-1$
+					element = this.findTypeFrom(enc.getChildren(), "", //$NON-NLS-1$
+							parentName, delimiter);
 				}
 				return element;
 			}
@@ -376,7 +376,8 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 		info.setNameSourceEnd(typeInfo.nameSourceEnd);
 		ModelManager manager = ModelManager.getModelManager();
 		String[] superclasses = typeInfo.superclasses;
-		for (int i = 0, length = superclasses == null ? 0 : superclasses.length; i < length; i++) {
+		for (int i = 0, length = superclasses == null ? 0
+				: superclasses.length; i < length; i++) {
 			superclasses[i] = manager.intern(superclasses[i]);
 		}
 		info.setSuperclassNames(superclasses);
@@ -465,7 +466,7 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 
 		// create the import container and its info
 		if (this.importContainers == null) {
-			importContainers = new HashMap<String, ImportContainer>();
+			importContainers = new HashMap<>();
 		}
 		String containerName = importInfo.containerName;
 		if (containerName == null) {
@@ -484,8 +485,8 @@ public class SourceModuleStructureRequestor implements ISourceElementRequestor,
 					.get(importContainer);
 		}
 
-		String elementName = ModelManager.getModelManager().intern(
-				importInfo.name);
+		String elementName = ModelManager.getModelManager()
+				.intern(importInfo.name);
 		ImportDeclaration handle = createImportDeclaration(importContainer,
 				elementName, importInfo.version, importInfo.alias,
 				importInfo.type, importInfo.modifiers);

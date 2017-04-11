@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search;
 
@@ -46,8 +45,8 @@ public class ProjectIndexerManager {
 
 	// Contains list of indexers for selected nature.
 	private static Map<String, ProjectIndexerDescriptor> indexers;
-	private static final Map<String, Set<String>> enabledIndexers = new HashMap<String, Set<String>>();
-	private static final Map<String, Set<String>> disabledIndexers = new HashMap<String, Set<String>>();
+	private static final Map<String, Set<String>> enabledIndexers = new HashMap<>();
+	private static final Map<String, Set<String>> disabledIndexers = new HashMap<>();
 
 	private static class ProjectIndexerDescriptor {
 		private final String id;
@@ -81,14 +80,14 @@ public class ProjectIndexerManager {
 			return;
 		}
 
-		indexers = new HashMap<String, ProjectIndexerDescriptor>();
+		indexers = new HashMap<>();
 		for (IConfigurationElement element : Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(EXTPOINT)) {
 			if (DISABLE_ELEM.equals(element.getName())) {
 				final String nature = element.getAttribute(NATURE_ATTR);
 				Set<String> disabledForNature = disabledIndexers.get(nature);
 				if (disabledForNature == null) {
-					disabledForNature = new HashSet<String>();
+					disabledForNature = new HashSet<>();
 					disabledIndexers.put(nature, disabledForNature);
 				}
 				disabledForNature.add(element.getAttribute(INDEXER_ATTR));
@@ -96,25 +95,24 @@ public class ProjectIndexerManager {
 				final String nature = element.getAttribute(NATURE_ATTR);
 				Set<String> enabledForNature = enabledIndexers.get(nature);
 				if (enabledForNature == null) {
-					enabledForNature = new HashSet<String>();
+					enabledForNature = new HashSet<>();
 					enabledIndexers.put(nature, enabledForNature);
 				}
 				enabledForNature.add(element.getAttribute(INDEXER_ATTR));
 			} else if (INDEXER_ELEM.equals(element.getName())) {
 				final String id = element.getAttribute(ID_ATTR);
 				if (id == null) {
-					DLTKCore.warn(NLS
-							.bind("{0} contributed by {1} does not have \"{2}\" attribute", //$NON-NLS-1$
-									new Object[] { INDEXER_ELEM,
-											element.getContributor().getName(),
-											ID_ATTR }));
+					DLTKCore.warn(NLS.bind(
+							"{0} contributed by {1} does not have \"{2}\" attribute", //$NON-NLS-1$
+							new Object[] { INDEXER_ELEM,
+									element.getContributor().getName(),
+									ID_ATTR }));
 					continue;
 				}
 				if (indexers.containsKey(id)) {
-					DLTKCore.warn(NLS
-							.bind("Duplicate {0} contribution from {1} (previous one is from \"{2}\")", //$NON-NLS-1$
-							new Object[] {
-									INDEXER_ELEM,
+					DLTKCore.warn(NLS.bind(
+							"Duplicate {0} contribution from {1} (previous one is from \"{2}\")", //$NON-NLS-1$
+							new Object[] { INDEXER_ELEM,
 									element.getContributor().getName(),
 									indexers.get(id).element.getContributor()
 											.getName() }));
@@ -137,7 +135,7 @@ public class ProjectIndexerManager {
 
 	/**
 	 * Return merged with all elements with nature #
-	 * 
+	 *
 	 * @param natureId
 	 * @return
 	 * @throws CoreException
@@ -162,7 +160,7 @@ public class ProjectIndexerManager {
 	public static IProjectIndexer[] getAllIndexers() {
 		initialize();
 
-		final Set<String> indexerIds = new HashSet<String>();
+		final Set<String> indexerIds = new HashSet<>();
 		for (Set<String> ids : enabledIndexers.values()) {
 			indexerIds.addAll(ids);
 		}
@@ -181,7 +179,7 @@ public class ProjectIndexerManager {
 
 	private static IProjectIndexer[] getIndexers(Set<String> indexerIds,
 			String disabledNature) {
-		final List<IProjectIndexer> result = new ArrayList<IProjectIndexer>(
+		final List<IProjectIndexer> result = new ArrayList<>(
 				indexerIds.size());
 		final Set<String> disabled = disabledIndexers.get(disabledNature);
 		for (String indexerId : indexerIds) {
@@ -234,9 +232,9 @@ public class ProjectIndexerManager {
 	/**
 	 * Removes the indexes for a given path. This is a no-op if the index did
 	 * not exist.
-	 * 
+	 *
 	 * @param project
-	 * 
+	 *
 	 * @param path
 	 */
 	public static void removeLibrary(IScriptProject project, IPath path) {
@@ -277,7 +275,8 @@ public class ProjectIndexerManager {
 	 * @param project
 	 * @param path
 	 */
-	public static void removeProjectFragment(IScriptProject project, IPath path) {
+	public static void removeProjectFragment(IScriptProject project,
+			IPath path) {
 		final IProjectIndexer[] indexers = getIndexers(project);
 		if (indexers != null) {
 			for (int i = 0; i < indexers.length; ++i) {
@@ -290,7 +289,8 @@ public class ProjectIndexerManager {
 	 * @param project
 	 * @param path
 	 */
-	public static void indexProjectFragment(IScriptProject project, IPath path) {
+	public static void indexProjectFragment(IScriptProject project,
+			IPath path) {
 		final IProjectIndexer[] indexers = getIndexers(project);
 		if (indexers != null) {
 			for (int i = 0; i < indexers.length; ++i) {
@@ -395,8 +395,8 @@ public class ProjectIndexerManager {
 		if (wantRefresh) {
 			final IScriptProject[] projects;
 			try {
-				projects = DLTKCore.create(
-						ResourcesPlugin.getWorkspace().getRoot())
+				projects = DLTKCore
+						.create(ResourcesPlugin.getWorkspace().getRoot())
 						.getScriptProjects();
 			} catch (Exception e) {
 				DLTKCore.error(e);

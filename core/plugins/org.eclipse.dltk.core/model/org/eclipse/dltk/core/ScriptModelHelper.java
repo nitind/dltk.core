@@ -10,22 +10,22 @@ public class ScriptModelHelper {
 	/**
 	 * Returns the opened script projects in the model, opened script projects
 	 * that have the specified nature id, or an empty array if there are none.
-	 * 
+	 *
 	 * @param model
 	 *            script model
-	 * 
+	 *
 	 * @param natureId
 	 *            nature id, if null then all opened script projects returned
-	 * 
+	 *
 	 * @return the script projects in this model, or an empty array if there are
 	 *         none
-	 * 
+	 *
 	 * @throws ModelException
 	 *             if the request fails
 	 */
 	public static IScriptProject[] getOpenedScriptProjects(IScriptModel model,
 			String natureId) throws ModelException {
-		final List<IScriptProject> list = new ArrayList<IScriptProject>();
+		final List<IScriptProject> list = new ArrayList<>();
 		final IScriptProject[] projects = model.getScriptProjects();
 		try {
 			for (int i = 0; i < projects.length; ++i) {

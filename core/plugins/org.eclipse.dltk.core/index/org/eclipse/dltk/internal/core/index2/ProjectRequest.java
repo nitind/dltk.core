@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,9 +26,9 @@ import org.eclipse.dltk.internal.core.BuiltinProjectFragment;
 
 /**
  * Request for indexing project
- * 
+ *
  * @author michael
- * 
+ *
  */
 public class ProjectRequest extends AbstractIndexRequest {
 
@@ -49,7 +49,7 @@ public class ProjectRequest extends AbstractIndexRequest {
 	protected void run() throws CoreException {
 		final IProjectFragment[] fragments = project.getAllProjectFragments();
 
-		final Set<ISourceModule> sourceModules = new HashSet<ISourceModule>();
+		final Set<ISourceModule> sourceModules = new HashSet<>();
 		for (final IProjectFragment fragment : fragments) {
 			if (isCancelled) {
 				return;
@@ -71,15 +71,12 @@ public class ProjectRequest extends AbstractIndexRequest {
 
 	private void getSourceModules(IProjectFragment fragment,
 			final Set<ISourceModule> sourceModules) throws ModelException {
-		IModelElementVisitor visitor = new IModelElementVisitor() {
-			@Override
-			public boolean visit(IModelElement element) {
-				if (element.getElementType() == IModelElement.SOURCE_MODULE) {
-					sourceModules.add((ISourceModule) element);
-					return false;
-				}
-				return true;
+		IModelElementVisitor visitor = element -> {
+			if (element.getElementType() == IModelElement.SOURCE_MODULE) {
+				sourceModules.add((ISourceModule) element);
+				return false;
 			}
+			return true;
 		};
 		fragment.accept(visitor);
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc. and others.
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -22,10 +22,10 @@ import org.eclipse.dltk.compiler.task.ITaskReporter;
 import org.eclipse.dltk.core.IScriptModelMarker;
 import org.eclipse.dltk.internal.core.util.Util;
 
-public class ProblemCollector extends AbstractProblemReporter implements
-		ITaskReporter {
+public class ProblemCollector extends AbstractProblemReporter
+		implements ITaskReporter {
 
-	protected final List<IProblem> problems = new ArrayList<IProblem>();
+	protected final List<IProblem> problems = new ArrayList<>();
 
 	public void reset() {
 		problems.clear();
@@ -226,7 +226,7 @@ public class ProblemCollector extends AbstractProblemReporter implements
 	 * @return
 	 */
 	public List<IProblem> getErrors() {
-		final List<IProblem> result = new ArrayList<IProblem>();
+		final List<IProblem> result = new ArrayList<>();
 		for (final IProblem problem : problems) {
 			if (problem.isError()) {
 				result.add(problem);
@@ -241,8 +241,8 @@ public class ProblemCollector extends AbstractProblemReporter implements
 	 * @throws CoreException
 	 * @since 3.0
 	 */
-	public void createMarkers(IResource resource, IProblemFactory problemFactory)
-			throws CoreException {
+	public void createMarkers(IResource resource,
+			IProblemFactory problemFactory) throws CoreException {
 		createMarkers(resource, problemFactory,
 				IProblemSeverityTranslator.IDENTITY);
 	}

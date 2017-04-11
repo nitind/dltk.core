@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -43,9 +43,8 @@ public class SourceModulesRequest extends IndexRequest {
 	 * @param project
 	 * @param modules
 	 */
-	public SourceModulesRequest(IProjectIndexer indexer,
-			IScriptProject project, IDLTKLanguageToolkit toolkit,
-			Set<ISourceModule> modules) {
+	public SourceModulesRequest(IProjectIndexer indexer, IScriptProject project,
+			IDLTKLanguageToolkit toolkit, Set<ISourceModule> modules) {
 		super(indexer);
 		this.project = project;
 		this.toolkit = toolkit;
@@ -69,7 +68,7 @@ public class SourceModulesRequest extends IndexRequest {
 			return;
 		}
 		final IPath containerPath = project.getPath();
-		Set<IFileHandle> parentFolders = new HashSet<IFileHandle>();
+		Set<IFileHandle> parentFolders = new HashSet<>();
 		final List<?> changes = checkChanges(index, modules, containerPath,
 				EnvironmentManager.getEnvironment(project), parentFolders);
 		if (DEBUG) {

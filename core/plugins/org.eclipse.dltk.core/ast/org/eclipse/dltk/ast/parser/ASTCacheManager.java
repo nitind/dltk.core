@@ -17,16 +17,16 @@ public class ASTCacheManager {
 
 	public synchronized static IASTCache[] getProviders(String lang) {
 		if (providers == null) {
-			providers = new HashMap<String, IASTCache[]>();
+			providers = new HashMap<>();
 
 			ElementInfo[] infos = manager.getElementInfos();
-			Map<String, List<IASTCache>> langToElementList = new HashMap<String, List<IASTCache>>();
+			Map<String, List<IASTCache>> langToElementList = new HashMap<>();
 			// Fill element names and sort elements by language
 			for (int i = 0; i < infos.length; i++) {
 				String langauge = infos[i].getConfig().getAttribute("language");
 				List<IASTCache> elements = langToElementList.get(langauge);
 				if (elements == null) {
-					elements = new ArrayList<IASTCache>();
+					elements = new ArrayList<>();
 					langToElementList.put(langauge, elements);
 				}
 				elements.add((IASTCache) manager.getInitObject(infos[i]));

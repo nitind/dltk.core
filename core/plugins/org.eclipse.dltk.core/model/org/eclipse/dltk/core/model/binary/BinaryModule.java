@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 xored software, Inc. and others.
+ * Copyright (c) 2016, 2017 xored software, Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,8 +48,8 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @since 2.0
  */
-public class BinaryModule extends AbstractSourceModule implements
-		IBinaryModule, IExternalSourceModule, ISourceMapperProvider,
+public class BinaryModule extends AbstractSourceModule
+		implements IBinaryModule, IExternalSourceModule, ISourceMapperProvider,
 		org.eclipse.dltk.compiler.env.ISourceModule {
 
 	protected BinaryModule(ModelElement parent, String name,
@@ -87,8 +87,8 @@ public class BinaryModule extends AbstractSourceModule implements
 		IBinaryElementParser binaryParser = DLTKLanguageManager
 				.getBinaryElementParser(this);
 		if (binaryParser == null) {
-			DLTKCore.error(NLS.bind("Binary parser for {0} not found",
-					getPath()));
+			DLTKCore.error(
+					NLS.bind("Binary parser for {0} not found", getPath()));
 			return false;
 		}
 		BinaryModuleStructureRequestor requestor = new BinaryModuleStructureRequestor(
@@ -99,11 +99,11 @@ public class BinaryModule extends AbstractSourceModule implements
 		// Call for extra model providers
 		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 				.getLanguageToolkit(this);
-		IModelProvider[] providers = ModelProviderManager.getProviders(toolkit
-				.getNatureId());
+		IModelProvider[] providers = ModelProviderManager
+				.getProviders(toolkit.getNatureId());
 		if (providers != null) {
 			// We need to update children contents using model providers
-			List<IModelElement> childrenSet = new ArrayList<IModelElement>(
+			List<IModelElement> childrenSet = new ArrayList<>(
 					moduleInfo.getChildrenAsList());
 			for (int i = 0; i < providers.length; i++) {
 				providers[i].provideModelChanges(this, childrenSet);
@@ -236,9 +236,8 @@ public class BinaryModule extends AbstractSourceModule implements
 	}
 
 	@Override
-	public void reconcile(boolean forceProblemDetection,
-			WorkingCopyOwner owner, IProgressMonitor monitor)
-			throws ModelException {
+	public void reconcile(boolean forceProblemDetection, WorkingCopyOwner owner,
+			IProgressMonitor monitor) throws ModelException {
 	}
 
 	@Override
@@ -280,7 +279,8 @@ public class BinaryModule extends AbstractSourceModule implements
 
 	@Override
 	protected String getNatureId() {
-		IDLTKLanguageToolkit lookupLanguageToolkit = lookupLanguageToolkit(getScriptProject());
+		IDLTKLanguageToolkit lookupLanguageToolkit = lookupLanguageToolkit(
+				getScriptProject());
 		if (lookupLanguageToolkit == null) {
 			return null;
 		}

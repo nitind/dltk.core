@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc.
+ * Copyright (c) 2008, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -60,8 +60,8 @@ public class ArchiveProjectFragmentRequest extends IndexRequest {
 
 	@Override
 	protected void run() throws CoreException, IOException {
-		IEnvironment environment = EnvironmentManager.getEnvironment(fragment
-				.getScriptProject());
+		IEnvironment environment = EnvironmentManager
+				.getEnvironment(fragment.getScriptProject());
 		if (environment == null || !environment.connect()) {
 			return;
 		}
@@ -70,16 +70,16 @@ public class ArchiveProjectFragmentRequest extends IndexRequest {
 		if (index == null) {
 			return;
 		}
-		final IFileHandle archive = EnvironmentPathUtils.getFile(fragment
-				.getPath());
+		final IFileHandle archive = EnvironmentPathUtils
+				.getFile(fragment.getPath());
 		if (archive == null) {
 			return;
 		}
 		final String signature = archive.lastModified() + "#"
 				+ archive.length();
 		final IPath containerPath = fragment.getPath();
-		final List<Object> changes = checkChanges(index, modules,
-				containerPath, signature);
+		final List<Object> changes = checkChanges(index, modules, containerPath,
+				signature);
 		if (DEBUG) {
 			log("changes.size=" + changes.size()); //$NON-NLS-1$
 		}
@@ -125,7 +125,7 @@ public class ArchiveProjectFragmentRequest extends IndexRequest {
 			String signature) throws ModelException, IOException {
 		final String[] documents = queryDocumentNames(index);
 		if (documents != null && documents.length != 0) {
-			final List<Object> changes = new ArrayList<Object>();
+			final List<Object> changes = new ArrayList<>();
 			final Map<String, ISourceModule> m = collectSourceModulePaths(
 					modules, containerPath);
 			if (DEBUG) {
@@ -134,7 +134,7 @@ public class ArchiveProjectFragmentRequest extends IndexRequest {
 				log("map.size=" + m.size()); //$NON-NLS-1$
 			}
 			boolean signatureOK = false;
-			final List<ISourceModule> updates = new ArrayList<ISourceModule>();
+			final List<ISourceModule> updates = new ArrayList<>();
 			for (int i = 0; i < documents.length; ++i) {
 				final String document = documents[i];
 				if (document.startsWith(SIGNATURE_PREFIX)) {
@@ -160,12 +160,12 @@ public class ArchiveProjectFragmentRequest extends IndexRequest {
 			}
 			return changes;
 		} else {
-			return new ArrayList<Object>(modules);
+			return new ArrayList<>(modules);
 		}
 	}
 
 	static class ExternalModuleVisitor implements IModelElementVisitor {
-		final Set<ISourceModule> modules = new HashSet<ISourceModule>();
+		final Set<ISourceModule> modules = new HashSet<>();
 
 		@Override
 		public boolean visit(IModelElement element) {
@@ -181,7 +181,8 @@ public class ArchiveProjectFragmentRequest extends IndexRequest {
 		}
 	}
 
-	private Set<ISourceModule> getExternalSourceModules() throws ModelException {
+	private Set<ISourceModule> getExternalSourceModules()
+			throws ModelException {
 		final ExternalModuleVisitor visitor = new ExternalModuleVisitor();
 		fragment.accept(visitor);
 		return visitor.modules;

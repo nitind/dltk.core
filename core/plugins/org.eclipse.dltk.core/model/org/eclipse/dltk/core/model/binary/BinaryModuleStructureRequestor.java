@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,7 +55,7 @@ public class BinaryModuleStructureRequestor implements IBinaryElementRequestor {
 
 	private SourceMapper mapper;
 	private Map<IModelElement, ModelElementInfo> newElements;
-	private Stack<INamespace> namespaces = new Stack<INamespace>();
+	private Stack<INamespace> namespaces = new Stack<>();
 
 	public BinaryModuleStructureRequestor(IBinaryModule module,
 			BinaryModuleElementInfo moduleInfo, SourceMapper mapper,
@@ -68,8 +68,8 @@ public class BinaryModuleStructureRequestor implements IBinaryElementRequestor {
 
 	@Override
 	public void enterModule() {
-		this.handleStack = new Stack<ModelElement>();
-		this.infoStack = new Stack<ModelElementInfo>();
+		this.handleStack = new Stack<>();
+		this.infoStack = new Stack<>();
 		this.enterModuleRoot();
 	}
 
@@ -116,8 +116,8 @@ public class BinaryModuleStructureRequestor implements IBinaryElementRequestor {
 		this.processMethod(methodInfo, parentHandle, parentInfo);
 	}
 
-	private void processMethod(MethodInfo methodInfo,
-			ModelElement parentHandle, ModelElementInfo parentInfo) {
+	private void processMethod(MethodInfo methodInfo, ModelElement parentHandle,
+			ModelElementInfo parentInfo) {
 		ModelManager manager = ModelManager.getModelManager();
 		BinaryMethod handle = new BinaryMethod(parentHandle,
 				manager.intern(methodInfo.name));
@@ -193,7 +193,8 @@ public class BinaryModuleStructureRequestor implements IBinaryElementRequestor {
 
 		ModelManager manager = ModelManager.getModelManager();
 		String[] superclasses = typeInfo.superclasses;
-		for (int i = 0, length = superclasses == null ? 0 : superclasses.length; i < length; i++) {
+		for (int i = 0, length = superclasses == null ? 0
+				: superclasses.length; i < length; i++) {
 			superclasses[i] = manager.intern(superclasses[i]);
 		}
 		handleInfo.setSuperclassNames(superclasses);

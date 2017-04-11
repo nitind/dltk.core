@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2016 xored software, Inc. and others.
+ * Copyright (c) 2010, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -31,8 +31,8 @@ import org.eclipse.dltk.core.builder.IProjectChange;
 import org.eclipse.dltk.core.builder.IRenameChange;
 import org.eclipse.dltk.core.builder.IScriptBuilder;
 
-public class FullBuildChange extends AbstractBuildChange implements
-		IBuildChange, IResourceVisitor {
+public class FullBuildChange extends AbstractBuildChange
+		implements IBuildChange, IResourceVisitor {
 
 	public FullBuildChange(IProject project, IProgressMonitor monitor) {
 		super(project, monitor);
@@ -68,7 +68,7 @@ public class FullBuildChange extends AbstractBuildChange implements
 
 	private void loadProjectResources() throws CoreException {
 		if (projectResources == null) {
-			projectResources = new ArrayList<IFile>();
+			projectResources = new ArrayList<>();
 			project.accept(this);
 		}
 	}
@@ -87,9 +87,10 @@ public class FullBuildChange extends AbstractBuildChange implements
 	private void loadSourceModules() throws CoreException {
 		if (projectModules == null) {
 			loadProjectResources();
-			projectModules = new ArrayList<ISourceModule>();
-			realResources = new ArrayList<IFile>();
-			locateSourceModules(projectResources, projectModules, realResources);
+			projectModules = new ArrayList<>();
+			realResources = new ArrayList<>();
+			locateSourceModules(projectResources, projectModules,
+					realResources);
 		}
 	}
 
@@ -147,8 +148,8 @@ public class FullBuildChange extends AbstractBuildChange implements
 
 	private void loadExternalPaths() throws CoreException {
 		if (externalPaths == null) {
-			externalPaths = new ArrayList<IPath>();
-			externalFragments = new ArrayList<IProjectFragment>();
+			externalPaths = new ArrayList<>();
+			externalFragments = new ArrayList<>();
 			final IProjectFragment[] allFragments = getScriptProject()
 					.getAllProjectFragments();
 			for (int i = 0; i < allFragments.length; i++) {

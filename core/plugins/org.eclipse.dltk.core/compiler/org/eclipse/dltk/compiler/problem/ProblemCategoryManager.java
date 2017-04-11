@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2016 NumberFour AG and others.
+ * Copyright (c) 2011, 2017 NumberFour AG and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -69,7 +69,7 @@ public class ProblemCategoryManager {
 		}
 	}
 
-	private final Map<Key, ScopeDescriptor> scopes = new HashMap<Key, ScopeDescriptor>();
+	private final Map<Key, ScopeDescriptor> scopes = new HashMap<>();
 
 	@SuppressWarnings("serial")
 	static class ScopeDescriptor extends HashMap<String, ProblemCategory> {
@@ -77,8 +77,8 @@ public class ProblemCategoryManager {
 	}
 
 	@SuppressWarnings("serial")
-	static class ProblemCategory extends HashSet<IProblemIdentifier> implements
-			IProblemCategory {
+	static class ProblemCategory extends HashSet<IProblemIdentifier>
+			implements IProblemCategory {
 
 		private final String name;
 		private final Collection<IProblemIdentifier> contents;
@@ -99,11 +99,11 @@ public class ProblemCategoryManager {
 		}
 
 	}
-	
+
 	/**
 	 * returns an array (empty is nothing can be found) of all the category ids
 	 * that can be found for this problem.
-	 * 
+	 *
 	 * @param natureId
 	 * @param scopeId
 	 * @param problem
@@ -117,7 +117,7 @@ public class ProblemCategoryManager {
 			return new String[0];
 		Iterator<Entry<String, ProblemCategory>> iterator = scope.entrySet()
 				.iterator();
-		List<String> ids = new ArrayList<String>();
+		List<String> ids = new ArrayList<>();
 		while (iterator.hasNext()) {
 			Entry<String, ProblemCategory> entry = iterator.next();
 			if (entry.getValue().contains(problem)) {
@@ -153,15 +153,14 @@ public class ProblemCategoryManager {
 		if (scope == null) {
 			scope = new ScopeDescriptor();
 			final IConfigurationElement[] elements = Platform
-					.getExtensionRegistry()
-					.getConfigurationElementsFor(
+					.getExtensionRegistry().getConfigurationElementsFor(
 							InternalDLTKLanguageManager.PROBLEM_FACTORY_EXTPOINT);
 			for (IConfigurationElement element : elements) {
 				if (CATEGORY_ELEMENT.equals(element.getName())
-						&& scopeKey.natureId.equals(element
-								.getAttribute(NATURE_ATTR))
-						&& scopeKey.scopeId.equals(element
-								.getAttribute(SCOPE_ATTR))) {
+						&& scopeKey.natureId
+								.equals(element.getAttribute(NATURE_ATTR))
+						&& scopeKey.scopeId
+								.equals(element.getAttribute(SCOPE_ATTR))) {
 					final String categoryId = element.getAttribute(ID_ATTR);
 					if (categoryId != null) {
 						ProblemCategory category = scope.get(categoryId);
