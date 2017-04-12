@@ -5,19 +5,19 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.internal.compiler.env;
 
-import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.env.ISourceType;
 
 public class NameEnvironmentAnswer {
-	private ISourceModule compilationUnit;
+	private IModuleSource compilationUnit;
 	private ISourceType[] sourceTypes;
 	private AccessRestriction accessRestriction;
 
-	public NameEnvironmentAnswer(ISourceModule compilationUnit,
+	public NameEnvironmentAnswer(IModuleSource compilationUnit,
 			AccessRestriction accessRestriction) {
 		this.compilationUnit = compilationUnit;
 		this.accessRestriction = accessRestriction;
@@ -40,14 +40,14 @@ public class NameEnvironmentAnswer {
 	 * Answer the compilation unit or null if the receiver represents a binary
 	 * or source type.
 	 */
-	public ISourceModule getSourceModule() {
+	public IModuleSource getSourceModule() {
 		return this.compilationUnit;
 	}
 
 	/**
 	 * Answer the unresolved source forms for the type or null if the receiver
 	 * represents a compilation unit or binary type.
-	 * 
+	 *
 	 * Multiple source forms can be answered in case the originating compilation
 	 * unit did contain several type at once. Then the first type is guaranteed
 	 * to be the requested type.
@@ -86,8 +86,7 @@ public class NameEnvironmentAnswer {
 			return true;
 		if (this.accessRestriction == null)
 			return true;
-		return otherAnswer.accessRestriction != null
-				&& this.accessRestriction.getProblemId() < otherAnswer.accessRestriction
-						.getProblemId();
+		return otherAnswer.accessRestriction != null && this.accessRestriction
+				.getProblemId() < otherAnswer.accessRestriction.getProblemId();
 	}
 }

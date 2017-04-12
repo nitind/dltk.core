@@ -9,7 +9,7 @@
 package org.eclipse.dltk.internal.core;
 
 import org.eclipse.dltk.compiler.CharOperation;
-import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
@@ -35,7 +35,7 @@ class SearchableEnvironmentRequestor extends ModelElementRequestor {
 	 * The <code>ICompilationUNit</code> this ModelElementRequestor will not
 	 * accept types within.
 	 */
-	protected ISourceModule unitToSkip;
+	protected IModuleSource unitToSkip;
 
 	protected IScriptProject project;
 
@@ -62,7 +62,7 @@ class SearchableEnvironmentRequestor extends ModelElementRequestor {
 	 * <code>unitToSkip</code>.
 	 */
 	public SearchableEnvironmentRequestor(ISearchRequestor requestor,
-			ISourceModule unitToSkip, IScriptProject project,
+			IModuleSource unitToSkip, IScriptProject project,
 			NameLookup nameLookup) {
 		this.requestor = requestor;
 		this.unitToSkip = unitToSkip;
@@ -79,8 +79,8 @@ class SearchableEnvironmentRequestor extends ModelElementRequestor {
 	 */
 	@Override
 	public void acceptScriptFolder(IScriptFolder ScriptFolder) {
-		this.requestor.acceptPackage(ScriptFolder.getElementName()
-				.toCharArray());
+		this.requestor
+				.acceptPackage(ScriptFolder.getElementName().toCharArray());
 	}
 
 	/**
@@ -116,14 +116,15 @@ class SearchableEnvironmentRequestor extends ModelElementRequestor {
 						char[] fileWithoutExtension = type.getElementName()
 								.toCharArray();
 						accessRestriction = accessRuleSet
-								.getViolatedRestriction(CharOperation
-										.concatWith(packageChars,
+								.getViolatedRestriction(
+										CharOperation.concatWith(packageChars,
 												fileWithoutExtension, '/'));
 					}
 				}
 			}
-			this.requestor.acceptType(packageName, type.getElementName()
-					.toCharArray(), null, type.getFlags(), accessRestriction);
+			this.requestor.acceptType(packageName,
+					type.getElementName().toCharArray(), null, type.getFlags(),
+					accessRestriction);
 		} catch (ModelException jme) {
 			// ignore
 		}

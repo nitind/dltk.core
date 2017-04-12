@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.compiler.CharOperation;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.BufferChangedEvent;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKContentTypeManager;
@@ -54,7 +55,7 @@ import org.eclipse.dltk.internal.core.util.Util;
 import org.eclipse.dltk.utils.CorePrinter;
 
 public abstract class AbstractSourceModule extends Openable
-		implements ISourceModule, org.eclipse.dltk.compiler.env.ISourceModule {
+		implements ISourceModule, IModuleSource {
 	private static final int DEFAULT_COMPLETION_TIMEOUT = 5000;
 
 	// ~ Static fields/initializers

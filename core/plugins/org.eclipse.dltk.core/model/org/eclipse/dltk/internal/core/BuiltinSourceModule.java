@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ import java.io.InputStream;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
@@ -20,8 +21,8 @@ import org.eclipse.dltk.core.WorkingCopyOwner;
 /**
  * Represents a builtin source module.
  */
-public class BuiltinSourceModule extends AbstractExternalSourceModule implements
-		org.eclipse.dltk.compiler.env.ISourceModule {
+public class BuiltinSourceModule extends AbstractExternalSourceModule
+		implements IModuleSource {
 
 	public BuiltinSourceModule(BuiltinScriptFolder parent, String name,
 			WorkingCopyOwner owner) {
