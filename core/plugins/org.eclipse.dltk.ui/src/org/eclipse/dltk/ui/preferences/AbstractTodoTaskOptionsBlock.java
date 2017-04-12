@@ -18,7 +18,7 @@ import org.eclipse.dltk.ui.util.SWTFactory;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -85,7 +85,7 @@ public abstract class AbstractTodoTaskOptionsBlock
 
 	}
 
-	private static class TodoTaskSorter extends ViewerSorter {
+	private static class TodoTaskSorter extends ViewerComparator {
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			return getComparator().compare(((TodoTask) e1).name,
