@@ -67,7 +67,7 @@ import org.eclipse.ui.commands.ICommand;
 import org.eclipse.ui.commands.ICommandManager;
 import org.eclipse.ui.commands.IKeySequenceBinding;
 import org.eclipse.ui.commands.Priority;
-import org.eclipse.ui.contexts.IWorkbenchContextSupport;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.keys.KeySequence;
 
 /**
@@ -589,8 +589,8 @@ public abstract class AbstractInformationControl extends PopupDialog
 		// Remember current scope and then set window context.
 		if (fKeyBindingScopes == null && fKeyBindingService != null) {
 			fKeyBindingScopes = fKeyBindingService.getScopes();
-			fKeyBindingService.setScopes(new String[] {
-					IWorkbenchContextSupport.CONTEXT_ID_WINDOW });
+			fKeyBindingService.setScopes(
+					new String[] { IContextService.CONTEXT_ID_WINDOW });
 		}
 
 		// Register action with command support

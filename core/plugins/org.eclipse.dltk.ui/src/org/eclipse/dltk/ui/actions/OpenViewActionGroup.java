@@ -18,12 +18,12 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
 import org.eclipse.ui.part.Page;
-import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 
 /**
  * Action group that adds actions to open a new DLTK view part or an external
@@ -31,176 +31,202 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
  */
 public class OpenViewActionGroup extends ActionGroup {
 
-    private boolean fEditorIsOwner;
+	private boolean fEditorIsOwner;
 	private boolean fIsTypeHiararchyViewerOwner;
-    private boolean fIsCallHiararchyViewerOwner;
+	private boolean fIsCallHiararchyViewerOwner;
 
 	private ISelectionProvider fSelectionProvider;
 
-	//private OpenSuperImplementationAction fOpenSuperImplementation;
-	//private OpenExternalJavadocAction fOpenExternalJavadoc;
+	// private OpenSuperImplementationAction fOpenSuperImplementation;
+	// private OpenExternalJavadocAction fOpenExternalJavadoc;
 	private OpenTypeHierarchyAction fOpenTypeHierarchy;
-    private OpenCallHierarchyAction fOpenCallHierarchy;
+	private OpenCallHierarchyAction fOpenCallHierarchy;
 	private PropertyDialogAction fOpenPropertiesDialog;
 
 	boolean disableCallHierarcy = false;
 
 	/**
-	 * Creates a new <code>OpenActionGroup</code>. The group requires
-	 * that the selection provided by the page's selection provider is
-	 * of type {@link IStructuredSelection}.
+	 * Creates a new <code>OpenActionGroup</code>. The group requires that the
+	 * selection provided by the page's selection provider is of type
+	 * {@link IStructuredSelection}.
 	 *
-	 * @param page the page that owns this action group
+	 * @param page
+	 *            the page that owns this action group
 	 */
 	public OpenViewActionGroup(Page page) {
 		createSiteActions(page.getSite(), null);
 	}
 
 	/**
-	 * Creates a new <code>OpenActionGroup</code>. The group requires
-	 * that the selection provided by the given selection provider is
-	 * of type {@link IStructuredSelection}.
+	 * Creates a new <code>OpenActionGroup</code>. The group requires that the
+	 * selection provided by the given selection provider is of type
+	 * {@link IStructuredSelection}.
 	 *
-	 * @param page the page that owns this action group
-	 * @param selectionProvider the selection provider used instead of the
-	 *  page selection provider.
+	 * @param page
+	 *            the page that owns this action group
+	 * @param selectionProvider
+	 *            the selection provider used instead of the page selection
+	 *            provider.
 	 *
 	 *
 	 */
-	public OpenViewActionGroup(Page page, ISelectionProvider selectionProvider) {
+	public OpenViewActionGroup(Page page,
+			ISelectionProvider selectionProvider) {
 		createSiteActions(page.getSite(), selectionProvider);
 	}
 
 	/**
-	 * Creates a new <code>OpenActionGroup</code>. The group requires
-	 * that the selection provided by the part's selection provider is
-	 * of type {@link IStructuredSelection}.
+	 * Creates a new <code>OpenActionGroup</code>. The group requires that the
+	 * selection provided by the part's selection provider is of type
+	 * {@link IStructuredSelection}.
 	 *
-	 * @param part the view part that owns this action group
+	 * @param part
+	 *            the view part that owns this action group
 	 */
 	public OpenViewActionGroup(IViewPart part) {
 		this(part, null);
 	}
 
 	/**
-	 * Creates a new <code>OpenActionGroup</code>. The group requires
-	 * that the selection provided by the given selection provider is of type
+	 * Creates a new <code>OpenActionGroup</code>. The group requires that the
+	 * selection provided by the given selection provider is of type
 	 * {@link IStructuredSelection}.
 	 *
-	 * @param part the view part that owns this action group
-	 * @param selectionProvider the selection provider used instead of the
-	 *  page selection provider.
+	 * @param part
+	 *            the view part that owns this action group
+	 * @param selectionProvider
+	 *            the selection provider used instead of the page selection
+	 *            provider.
 	 *
 	 *
 	 */
-	public OpenViewActionGroup(IViewPart part, ISelectionProvider selectionProvider) {
+	public OpenViewActionGroup(IViewPart part,
+			ISelectionProvider selectionProvider) {
 		createSiteActions(part.getSite(), selectionProvider);
 		// we do a name check here to avoid class loading.
-		String partName= part.getClass().getName();
-		fIsTypeHiararchyViewerOwner= "org.eclipse.dltk.internal.ui.typehierarchy.TypeHierarchyViewPart".equals(partName); //$NON-NLS-1$
-		fIsCallHiararchyViewerOwner= "org.eclipse.dltk.internal.ui.callhierarchy.CallHierarchyViewPart".equals(partName); //$NON-NLS-1$
+		String partName = part.getClass().getName();
+		fIsTypeHiararchyViewerOwner = "org.eclipse.dltk.internal.ui.typehierarchy.TypeHierarchyViewPart" //$NON-NLS-1$
+				.equals(partName);
+		fIsCallHiararchyViewerOwner = "org.eclipse.dltk.internal.ui.callhierarchy.CallHierarchyViewPart" //$NON-NLS-1$
+				.equals(partName);
 	}
 
 	/**
-	 * Creates a new <code>OpenActionGroup</code>. The group requires
-	 * that the selection provided by the given selection provider is of type
+	 * Creates a new <code>OpenActionGroup</code>. The group requires that the
+	 * selection provided by the given selection provider is of type
 	 * {@link IStructuredSelection}.
 	 *
-	 * @param site the site that will own the action group.
-	 * @param selectionProvider the selection provider used instead of the
-	 *  page selection provider.
+	 * @param site
+	 *            the site that will own the action group.
+	 * @param selectionProvider
+	 *            the selection provider used instead of the page selection
+	 *            provider.
 	 *
 	 *
 	 */
-	public OpenViewActionGroup(IWorkbenchSite site, ISelectionProvider selectionProvider) {
+	public OpenViewActionGroup(IWorkbenchSite site,
+			ISelectionProvider selectionProvider) {
 		createSiteActions(site, selectionProvider);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call this constructor.
-	 * @param part the editor part
+	 * Note: This constructor is for internal use only. Clients should not call
+	 * this constructor.
+	 * 
+	 * @param part
+	 *            the editor part
 	 */
 	public OpenViewActionGroup(ScriptEditor part) {
-		fEditorIsOwner= true;
+		fEditorIsOwner = true;
 
-		if( part.getCallHierarchyID() == null ) {
+		if (part.getCallHierarchyID() == null) {
 			disableCallHierarcy = true;
 		}
 
-		//fOpenSuperImplementation= new OpenSuperImplementationAction(part);
-		//fOpenSuperImplementation.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_SUPER_IMPLEMENTATION);
-		//part.setAction("OpenSuperImplementation", fOpenSuperImplementation); //$NON-NLS-1$
+		// fOpenSuperImplementation= new OpenSuperImplementationAction(part);
+		// fOpenSuperImplementation.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_SUPER_IMPLEMENTATION);
+		// part.setAction("OpenSuperImplementation", fOpenSuperImplementation);
+		// //$NON-NLS-1$
 
-		//fOpenExternalJavadoc= new OpenExternalJavadocAction(part);
-		//fOpenExternalJavadoc.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_EXTERNAL_JAVADOC);
-		//part.setAction("OpenExternalJavadoc", fOpenExternalJavadoc); //$NON-NLS-1$
+		// fOpenExternalJavadoc= new OpenExternalJavadocAction(part);
+		// fOpenExternalJavadoc.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_EXTERNAL_JAVADOC);
+		// part.setAction("OpenExternalJavadoc", fOpenExternalJavadoc);
+		// //$NON-NLS-1$
 
-		fOpenTypeHierarchy= new OpenTypeHierarchyAction(part);
-		fOpenTypeHierarchy.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
+		fOpenTypeHierarchy = new OpenTypeHierarchyAction(part);
+		fOpenTypeHierarchy.setActionDefinitionId(
+				IScriptEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
 		part.setAction("OpenTypeHierarchy", fOpenTypeHierarchy); //$NON-NLS-1$
-		if( !disableCallHierarcy ) {
-			fOpenCallHierarchy= new OpenCallHierarchyAction(part);
-			fOpenCallHierarchy.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
+		if (!disableCallHierarcy) {
+			fOpenCallHierarchy = new OpenCallHierarchyAction(part);
+			fOpenCallHierarchy.setActionDefinitionId(
+					IScriptEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
 			part.setAction("OpenCallHierarchy", fOpenCallHierarchy); //$NON-NLS-1$
 		}
 
 		initialize(part.getEditorSite().getSelectionProvider());
 	}
 
-	private void createSiteActions(IWorkbenchSite site, ISelectionProvider specialProvider) {
-//		fOpenSuperImplementation= new OpenSuperImplementationAction(site);
-//		fOpenSuperImplementation.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_SUPER_IMPLEMENTATION);
-//		fOpenSuperImplementation.setSpecialSelectionProvider(specialProvider);
-//
-//		fOpenExternalJavadoc= new OpenExternalJavadocAction(site);
-//		fOpenExternalJavadoc.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_EXTERNAL_JAVADOC);
-//		fOpenExternalJavadoc.setSpecialSelectionProvider(specialProvider);
-//
-		fOpenTypeHierarchy= new OpenTypeHierarchyAction(site);
-		fOpenTypeHierarchy.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
+	private void createSiteActions(IWorkbenchSite site,
+			ISelectionProvider specialProvider) {
+		// fOpenSuperImplementation= new OpenSuperImplementationAction(site);
+		// fOpenSuperImplementation.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_SUPER_IMPLEMENTATION);
+		// fOpenSuperImplementation.setSpecialSelectionProvider(specialProvider);
+		//
+		// fOpenExternalJavadoc= new OpenExternalJavadocAction(site);
+		// fOpenExternalJavadoc.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_EXTERNAL_JAVADOC);
+		// fOpenExternalJavadoc.setSpecialSelectionProvider(specialProvider);
+		//
+		fOpenTypeHierarchy = new OpenTypeHierarchyAction(site);
+		fOpenTypeHierarchy.setActionDefinitionId(
+				IScriptEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
 		fOpenTypeHierarchy.setSpecialSelectionProvider(specialProvider);
 
-		if( !disableCallHierarcy ) {
-			fOpenCallHierarchy= new OpenCallHierarchyAction(site);
-			fOpenCallHierarchy.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
+		if (!disableCallHierarcy) {
+			fOpenCallHierarchy = new OpenCallHierarchyAction(site);
+			fOpenCallHierarchy.setActionDefinitionId(
+					IScriptEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
 			fOpenCallHierarchy.setSpecialSelectionProvider(specialProvider);
 		}
 
-        ISelectionProvider provider= specialProvider != null ? specialProvider : site.getSelectionProvider();
+		ISelectionProvider provider = specialProvider != null ? specialProvider
+				: site.getSelectionProvider();
 
-        if(getShowProperties()) {
-	        fOpenPropertiesDialog= new PropertyDialogAction(site, provider);
-	        fOpenPropertiesDialog.setActionDefinitionId(IWorkbenchActionDefinitionIds.PROPERTIES);
-        }
+		if (getShowProperties()) {
+			fOpenPropertiesDialog = new PropertyDialogAction(site, provider);
+			fOpenPropertiesDialog.setActionDefinitionId(
+					IWorkbenchCommandConstants.FILE_PROPERTIES);
+		}
 
-        initialize(provider);
+		initialize(provider);
 	}
 
 	private void initialize(ISelectionProvider provider) {
-		fSelectionProvider= provider;
-		ISelection selection= provider.getSelection();
-//		fOpenSuperImplementation.update(selection);
-//		fOpenExternalJavadoc.update(selection);
+		fSelectionProvider = provider;
+		ISelection selection = provider.getSelection();
+		// fOpenSuperImplementation.update(selection);
+		// fOpenExternalJavadoc.update(selection);
 		fOpenTypeHierarchy.update(selection);
-		if( !disableCallHierarcy ) {
+		if (!disableCallHierarcy) {
 			fOpenCallHierarchy.update(selection);
 		}
 		if (!fEditorIsOwner) {
-			if(getShowProperties()) {
+			if (getShowProperties()) {
 				if (selection instanceof IStructuredSelection) {
-					IStructuredSelection ss= (IStructuredSelection)selection;
+					IStructuredSelection ss = (IStructuredSelection) selection;
 					fOpenPropertiesDialog.selectionChanged(ss);
 				} else {
 					fOpenPropertiesDialog.selectionChanged(selection);
 				}
 			}
-//			provider.addSelectionChangedListener(fOpenSuperImplementation);
-//			provider.addSelectionChangedListener(fOpenExternalJavadoc);
+			// provider.addSelectionChangedListener(fOpenSuperImplementation);
+			// provider.addSelectionChangedListener(fOpenExternalJavadoc);
 			provider.addSelectionChangedListener(fOpenTypeHierarchy);
-			if( !disableCallHierarcy ) {
+			if (!disableCallHierarcy) {
 				provider.addSelectionChangedListener(fOpenCallHierarchy);
 			}
-			// no need to register the open properties dialog action since it registers itself
+			// no need to register the open properties dialog action since it
+			// registers itself
 		}
 	}
 
@@ -215,37 +241,47 @@ public class OpenViewActionGroup extends ActionGroup {
 		super.fillContextMenu(menu);
 		if (!fIsTypeHiararchyViewerOwner)
 			appendToGroup(menu, fOpenTypeHierarchy);
-        if (!fIsCallHiararchyViewerOwner) {
-        	if( !disableCallHierarcy ) {
-        		appendToGroup(menu, fOpenCallHierarchy);
-        	}
-        }
-		IStructuredSelection selection= getStructuredSelection();
-		if (getShowProperties() && fOpenPropertiesDialog != null && fOpenPropertiesDialog.isEnabled() && selection != null &&fOpenPropertiesDialog.isApplicableForSelection(selection))
-			menu.appendToGroup(IContextMenuConstants.GROUP_PROPERTIES, fOpenPropertiesDialog);
+		if (!fIsCallHiararchyViewerOwner) {
+			if (!disableCallHierarcy) {
+				appendToGroup(menu, fOpenCallHierarchy);
+			}
+		}
+		IStructuredSelection selection = getStructuredSelection();
+		if (getShowProperties() && fOpenPropertiesDialog != null
+				&& fOpenPropertiesDialog.isEnabled() && selection != null
+				&& fOpenPropertiesDialog.isApplicableForSelection(selection))
+			menu.appendToGroup(IContextMenuConstants.GROUP_PROPERTIES,
+					fOpenPropertiesDialog);
 	}
 
 	@Override
 	public void dispose() {
-//		fSelectionProvider.removeSelectionChangedListener(fOpenSuperImplementation);
-//		fSelectionProvider.removeSelectionChangedListener(fOpenExternalJavadoc);
+		// fSelectionProvider.removeSelectionChangedListener(fOpenSuperImplementation);
+		// fSelectionProvider.removeSelectionChangedListener(fOpenExternalJavadoc);
 		fSelectionProvider.removeSelectionChangedListener(fOpenTypeHierarchy);
-		if( !disableCallHierarcy ) {
-			fSelectionProvider.removeSelectionChangedListener(fOpenCallHierarchy);
+		if (!disableCallHierarcy) {
+			fSelectionProvider
+					.removeSelectionChangedListener(fOpenCallHierarchy);
 		}
 		super.dispose();
 	}
 
 	private void setGlobalActionHandlers(IActionBars actionBars) {
-//		actionBars.setGlobalActionHandler(DLTKActionConstants.OPEN_SUPER_IMPLEMENTATION, fOpenSuperImplementation);
-//		actionBars.setGlobalActionHandler(DLTKActionConstants.OPEN_EXTERNAL_JAVA_DOC, fOpenExternalJavadoc);
-		actionBars.setGlobalActionHandler(DLTKActionConstants.OPEN_TYPE_HIERARCHY, fOpenTypeHierarchy);
-		if( !disableCallHierarcy ) {
-			actionBars.setGlobalActionHandler(DLTKActionConstants.OPEN_CALL_HIERARCHY, fOpenCallHierarchy);
+		// actionBars.setGlobalActionHandler(DLTKActionConstants.OPEN_SUPER_IMPLEMENTATION,
+		// fOpenSuperImplementation);
+		// actionBars.setGlobalActionHandler(DLTKActionConstants.OPEN_EXTERNAL_JAVA_DOC,
+		// fOpenExternalJavadoc);
+		actionBars.setGlobalActionHandler(
+				DLTKActionConstants.OPEN_TYPE_HIERARCHY, fOpenTypeHierarchy);
+		if (!disableCallHierarcy) {
+			actionBars.setGlobalActionHandler(
+					DLTKActionConstants.OPEN_CALL_HIERARCHY,
+					fOpenCallHierarchy);
 		}
 
-        if (!fEditorIsOwner && getShowProperties())
-        	actionBars.setGlobalActionHandler(ActionFactory.PROPERTIES.getId(), fOpenPropertiesDialog);
+		if (!fEditorIsOwner && getShowProperties())
+			actionBars.setGlobalActionHandler(ActionFactory.PROPERTIES.getId(),
+					fOpenPropertiesDialog);
 	}
 
 	private void appendToGroup(IMenuManager menu, IAction action) {
@@ -254,15 +290,15 @@ public class OpenViewActionGroup extends ActionGroup {
 	}
 
 	private IStructuredSelection getStructuredSelection() {
-		ISelection selection= getContext().getSelection();
+		ISelection selection = getContext().getSelection();
 		if (selection instanceof IStructuredSelection)
-			return (IStructuredSelection)selection;
+			return (IStructuredSelection) selection;
 		return null;
 	}
 
 	/**
-	 * Note: This method is for internal use only.
-	 * As specified in the class documentation, this class should not be subclassed by clients.
+	 * Note: This method is for internal use only. As specified in the class
+	 * documentation, this class should not be subclassed by clients.
 	 */
 	protected boolean getShowProperties() {
 		return true;
