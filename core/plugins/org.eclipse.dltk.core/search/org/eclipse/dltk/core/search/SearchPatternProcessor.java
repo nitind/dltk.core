@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 xored software, Inc. and others
+ * Copyright (c) 2016, 2017 xored software, Inc. and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,8 @@ package org.eclipse.dltk.core.search;
 
 import org.eclipse.dltk.core.ISearchPatternProcessor;
 
-public abstract class SearchPatternProcessor implements ISearchPatternProcessor {
+public abstract class SearchPatternProcessor
+		implements ISearchPatternProcessor {
 
 	protected static final String TYPE_SEPARATOR_STR = String
 			.valueOf(TYPE_SEPARATOR);

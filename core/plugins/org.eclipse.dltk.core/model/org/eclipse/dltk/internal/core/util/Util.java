@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,19 +76,15 @@ public class Util {
 	private static final String ARGUMENTS_DELIMITER_STR = String
 			.valueOf(ARGUMENTS_DELIMITER);
 	private static final String EMPTY_ARGUMENT = "   "; //$NON-NLS-1$
-	public final static String UTF_8 = "UTF-8"; //$NON-NLS-1$
 
 	/**
 	 * Converts an array of Objects into String.
 	 */
 	public static String toString(Object[] objects) {
-		return toString(objects, new Displayable() {
-			@Override
-			public String displayString(Object o) {
-				if (o == null)
-					return "null"; //$NON-NLS-1$
-				return o.toString();
-			}
+		return toString(objects, o -> {
+			if (o == null)
+				return "null"; //$NON-NLS-1$
+			return o.toString();
 		});
 	}
 
@@ -116,7 +112,8 @@ public class Util {
 		}
 		Throwable nestedException;
 		if (e instanceof ModelException
-				&& (nestedException = ((ModelException) e).getException()) != null) {
+				&& (nestedException = ((ModelException) e)
+						.getException()) != null) {
 			e = nestedException;
 		}
 		IStatus status = new Status(IStatus.ERROR, DLTKCore.PLUGIN_ID,
@@ -134,7 +131,8 @@ public class Util {
 	/**
 	 * Sort the strings in the given collection.
 	 */
-	private static void quickSort(String[] sortedCollection, int left, int right) {
+	private static void quickSort(String[] sortedCollection, int left,
+			int right) {
 		int original_left = left;
 		int original_right = right;
 		String mid = sortedCollection[(left + right) / 2];
@@ -257,7 +255,8 @@ public class Util {
 		return args.toString();
 	}
 
-	public static String[] getProblemArgumentsFromMarker(String argumentsString) {
+	public static String[] getProblemArgumentsFromMarker(
+			String argumentsString) {
 		if (argumentsString == null || argumentsString.length() == 0)
 			return null;
 		if (argumentsString.charAt(0) == NEW_FORMAT_MARK) {
@@ -414,8 +413,8 @@ public class Util {
 		// line delimiter in project preference
 		IScopeContext[] scopeContext;
 		if (project != null) {
-			scopeContext = new IScopeContext[] { new ProjectScope(
-					project.getProject()) };
+			scopeContext = new IScopeContext[] {
+					new ProjectScope(project.getProject()) };
 			lineSeparator = Platform.getPreferencesService().getString(
 					Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
 					scopeContext);
@@ -435,7 +434,7 @@ public class Util {
 
 	/**
 	 * Finds the first line separator used by the given text.
-	 * 
+	 *
 	 * @return </code>"\n"</code> or </code>"\r"</code> or </code>"\r\n"</code>,
 	 *         or <code>null</code> if none found
 	 */
@@ -463,14 +462,15 @@ public class Util {
 		verbose(log, System.out);
 	}
 
-	public static synchronized void verbose(String log, PrintStream printStream) {
+	public static synchronized void verbose(String log,
+			PrintStream printStream) {
 		int start = 0;
 		do {
 			int end = log.indexOf('\n', start);
 			printStream.print(Thread.currentThread());
 			printStream.print(" "); //$NON-NLS-1$
-			printStream.print(log.substring(start, end == -1 ? log.length()
-					: end + 1));
+			printStream.print(
+					log.substring(start, end == -1 ? log.length() : end + 1));
 			start = end + 1;
 		} while (start != 0);
 		printStream.println();
@@ -540,10 +540,11 @@ public class Util {
 								IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
 					}
 					IStatus status = new Status(IStatus.WARNING,
-							DLTKCore.PLUGIN_ID, NLS.bind(
-									Messages.Util_errorReceivingFile,
+							DLTKCore.PLUGIN_ID,
+							NLS.bind(Messages.Util_errorReceivingFile,
 									file.getFullPath(),
-									String.valueOf(tryCount)), e);
+									String.valueOf(tryCount)),
+							e);
 					DLTKCore.getDefault().getLog().log(status);
 				}
 			}
@@ -646,15 +647,15 @@ public class Util {
 			boolean isFolderPath) {
 		if (inclusionPatterns == null && exclusionPatterns == null)
 			return false;
-		return org.eclipse.dltk.compiler.util.Util.isExcluded(resourcePath
-				.toString().toCharArray(), inclusionPatterns,
+		return org.eclipse.dltk.compiler.util.Util.isExcluded(
+				resourcePath.toString().toCharArray(), inclusionPatterns,
 				exclusionPatterns, isFolderPath);
 	}
 
 	/*
 	 * Returns whether the given resource matches one of the exclusion patterns.
 	 * NOTE: should not be asked directly using pkg root pathes
-	 * 
+	 *
 	 * @see IBuildpathEntry#getExclusionPatterns
 	 */
 	public final static boolean isExcluded(IResource resource,
@@ -683,29 +684,30 @@ public class Util {
 		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 				.getLanguageToolkit(parent);
 		if (toolkit != null) {
-			return DLTKContentTypeManager.isValidResourceForContentType(
-					toolkit, resource);
+			return DLTKContentTypeManager.isValidResourceForContentType(toolkit,
+					resource);
 		} else {
 			toolkit = DLTKLanguageManager.findToolkitForResource(resource);
 			if (toolkit != null) {
-				return DLTKContentTypeManager.isValidResourceForContentType(
-						toolkit, resource);
+				return DLTKContentTypeManager
+						.isValidResourceForContentType(toolkit, resource);
 			}
 			return false;
 		}
 	}
 
-	public static boolean isValidSourceModule(IModelElement parent, IPath path) {
+	public static boolean isValidSourceModule(IModelElement parent,
+			IPath path) {
 		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 				.getLanguageToolkit(parent);
 		if (toolkit != null) {
-			return DLTKContentTypeManager.isValidFileNameForContentType(
-					toolkit, path);
+			return DLTKContentTypeManager.isValidFileNameForContentType(toolkit,
+					path);
 		} else {
 			toolkit = DLTKLanguageManager.findToolkit(path);
 			if (toolkit != null) {
-				return DLTKContentTypeManager.isValidFileNameForContentType(
-						toolkit, path);
+				return DLTKContentTypeManager
+						.isValidFileNameForContentType(toolkit, path);
 			}
 			return false;
 		}
@@ -730,8 +732,8 @@ public class Util {
 		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 				.getLanguageToolkit(parent);
 		if (toolkit != null) {
-			return DLTKContentTypeManager.isValidFileNameForContentType(
-					toolkit, name);
+			return DLTKContentTypeManager.isValidFileNameForContentType(toolkit,
+					name);
 		} else {
 			return false;
 		}
@@ -740,7 +742,7 @@ public class Util {
 	/**
 	 * This is deprecated since the main part of the implementation
 	 * DLTKLanguageManager.findToolkit() is deprecated too.
-	 * 
+	 *
 	 * @deprecated
 	 */
 	@Deprecated
@@ -748,8 +750,8 @@ public class Util {
 		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 				.findToolkitForResource(res);
 		if (toolkit != null) {
-			return DLTKContentTypeManager.isValidResourceForContentType(
-					toolkit, res);
+			return DLTKContentTypeManager.isValidResourceForContentType(toolkit,
+					res);
 		}
 		return false;
 	}
@@ -941,14 +943,10 @@ public class Util {
 		int len = elements.length;
 		IModelElement[] copy = new IModelElement[len];
 		System.arraycopy(elements, 0, copy, 0, len);
-		sort(copy, new Comparer() {
-			@Override
-			public int compare(Object a, Object b) {
-				return ((org.eclipse.dltk.internal.core.ModelElement) a)
-						.toStringWithAncestors().compareTo(
-								((ModelElement) b).toStringWithAncestors());
-			}
-		});
+		sort(copy,
+				(a, b) -> ((org.eclipse.dltk.internal.core.ModelElement) a)
+						.toStringWithAncestors()
+						.compareTo(((ModelElement) b).toStringWithAncestors()));
 		return copy;
 	}
 
@@ -1005,7 +1003,7 @@ public class Util {
 	/**
 	 * Compares two strings lexicographically. The comparison is based on the
 	 * Unicode value of each character in the strings.
-	 * 
+	 *
 	 * @return the value <code>0</code> if the str1 is equal to str2; a value
 	 *         less than <code>0</code> if str1 is lexicographically less than
 	 *         str2; and a value greater than <code>0</code> if str1 is
@@ -1052,12 +1050,13 @@ public class Util {
 
 	/**
 	 * Return a new array which is the split of the given string using the given
-	 * divider. The given end is exclusive and the given start is inclusive. <br>
+	 * divider. The given end is exclusive and the given start is inclusive.
+	 * <br>
 	 * <br>
 	 * For example:
 	 * <ol>
 	 * <li>
-	 * 
+	 *
 	 * <pre>
 	 * divider = 'b'
 	 *       string = &quot;abbaba&quot;
@@ -1065,10 +1064,10 @@ public class Util {
 	 *       end = 5
 	 *       result =&gt; { &quot;&quot;, &quot;a&quot;, &quot;&quot; }
 	 * </pre>
-	 * 
+	 *
 	 * </li>
 	 * </ol>
-	 * 
+	 *
 	 * @param divider
 	 *            the given divider
 	 * @param string
@@ -1083,8 +1082,8 @@ public class Util {
 	 *             if start is lower than 0 or end is greater than the array
 	 *             length
 	 */
-	public static final String[] splitOn(char divider, String string,
-			int start, int end) {
+	public static final String[] splitOn(char divider, String string, int start,
+			int end) {
 		int length = string == null ? 0 : string.length();
 		if (length == 0 || start > end)
 			return CharOperation.NO_STRINGS;
@@ -1111,25 +1110,25 @@ public class Util {
 	 * For example:<br>
 	 * <ol>
 	 * <li>
-	 * 
+	 *
 	 * <pre>
 	 * array = {&quot;a&quot;, &quot;b&quot;}
 	 *       separator = '.'
 	 *       =&gt; result = &quot;a.b&quot;
 	 * </pre>
-	 * 
+	 *
 	 * </li>
 	 * <li>
-	 * 
+	 *
 	 * <pre>
 	 * array = {}
 	 *       separator = '.'
 	 *       =&gt; result = &quot;&quot;
 	 * </pre>
-	 * 
+	 *
 	 * </li>
 	 * </ol>
-	 * 
+	 *
 	 * @param array
 	 *            the given array
 	 * @param separator
@@ -1154,37 +1153,37 @@ public class Util {
 	 * For example:<br>
 	 * <ol>
 	 * <li>
-	 * 
+	 *
 	 * <pre>
 	 * name = &quot;c&quot;
 	 *       array = { &quot;a&quot;, &quot;b&quot; }
 	 *       separator = '.'
 	 *       =&gt; result = &quot;a.b.c&quot;
 	 * </pre>
-	 * 
+	 *
 	 * </li>
 	 * <li>
-	 * 
+	 *
 	 * <pre>
 	 * name = null
 	 *       array = { &quot;a&quot;, &quot;b&quot; }
 	 *       separator = '.'
 	 *       =&gt; result = &quot;a.b&quot;
 	 * </pre>
-	 * 
+	 *
 	 * </li>
 	 * <li>
-	 * 
+	 *
 	 * <pre>
 	 * name = &quot; c&quot;
 	 *       array = null
 	 *       separator = '.'
 	 *       =&gt; result = &quot;c&quot;
 	 * </pre>
-	 * 
+	 *
 	 * </li>
 	 * </ol>
-	 * 
+	 *
 	 * @param array
 	 *            the given array
 	 * @param name
@@ -1219,33 +1218,33 @@ public class Util {
 	 * For example:
 	 * <ol>
 	 * <li>
-	 * 
+	 *
 	 * <pre>
 	 * first = null
 	 *       second = &quot;a&quot;
 	 *       =&gt; result = {&quot;a&quot;}
 	 * </pre>
-	 * 
+	 *
 	 * <li>
-	 * 
+	 *
 	 * <pre>
 	 * first = {&quot;a&quot;}
 	 *       second = null
 	 *       =&gt; result = {&quot;a&quot;}
 	 * </pre>
-	 * 
+	 *
 	 * </li>
 	 * <li>
-	 * 
+	 *
 	 * <pre>
 	 * first = {&quot;a&quot;}
 	 *       second = {&quot;b&quot;}
 	 *       =&gt; result = {&quot;a&quot;, &quot;b&quot;}
 	 * </pre>
-	 * 
+	 *
 	 * </li>
 	 * </ol>
-	 * 
+	 *
 	 * @param first
 	 *            the first array to concatenate
 	 * @param second
@@ -1339,8 +1338,8 @@ public class Util {
 			if (!compoundName[i].equalsIgnoreCase(prefix[i]))
 				return false;
 		}
-		return compoundName[prefixLength - 1].toLowerCase().startsWith(
-				prefix[prefixLength - 1].toLowerCase());
+		return compoundName[prefixLength - 1].toLowerCase()
+				.startsWith(prefix[prefixLength - 1].toLowerCase());
 	}
 
 	/**
@@ -1355,7 +1354,7 @@ public class Util {
 	 * <p>
 	 * This method blocks until all the bytes are read, the end of the stream is
 	 * detected, or an exception is thrown.
-	 * 
+	 *
 	 * @param in
 	 *            a data input stream.
 	 * @return a Unicode string.
@@ -1432,15 +1431,16 @@ public class Util {
 	 * value is the number of bytes actually written out, not the length of the
 	 * string. Following the length, each character of the string is output, in
 	 * sequence, using the UTF-8 encoding for the character.
-	 * 
+	 *
 	 * @param str
 	 *            a string to be written.
 	 * @return the number of bytes written to the stream.
 	 * @exception IOException
 	 *                if an I/O error occurs.
-	 * 
+	 *
 	 */
-	public static int writeUTF(OutputStream out, char[] str) throws IOException {
+	public static int writeUTF(OutputStream out, char[] str)
+			throws IOException {
 		int strlen = str.length;
 		int utflen = 0;
 		for (int i = 0; i < strlen; i++) {
@@ -1482,7 +1482,7 @@ public class Util {
 	 * Scans the given string for an identifier starting at the given index and
 	 * returns the index of the last character. Stop characters are: ";", ":",
 	 * "&lt;", "&gt;", "/", ".".
-	 * 
+	 *
 	 * @param string
 	 *            the signature string
 	 * @param start

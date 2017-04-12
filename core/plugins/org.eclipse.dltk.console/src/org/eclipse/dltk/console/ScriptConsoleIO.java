@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.dltk.core.DLTKCore;
 
@@ -57,7 +58,7 @@ public class ScriptConsoleIO implements IScriptConsoleIO {
 			}
 		}
 
-		return new String(buffer, 0, from, "UTF-8"); //$NON-NLS-1$
+		return new String(buffer, 0, from, StandardCharsets.UTF_8);
 	}
 
 	protected static int readLength(InputStream input) throws IOException {
@@ -124,11 +125,11 @@ public class ScriptConsoleIO implements IScriptConsoleIO {
 	@Override
 	public ShellResponse execShell(String command, String[] args) throws IOException {
 
-		output.write((SHELL + "\n").getBytes("UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
-		output.write((command + "\n").getBytes("UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
+		output.write((SHELL + "\n").getBytes(StandardCharsets.UTF_8)); //$NON-NLS-1$ //$NON-NLS-2$
+		output.write((command + "\n").getBytes(StandardCharsets.UTF_8)); //$NON-NLS-1$ //$NON-NLS-2$
 
 		for (int i = 0; i < args.length; ++i) {
-			output.write((args[i] + "\n").getBytes("UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
+			output.write((args[i] + "\n").getBytes(StandardCharsets.UTF_8)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		output.flush();
 
@@ -139,8 +140,8 @@ public class ScriptConsoleIO implements IScriptConsoleIO {
 
 	@Override
 	public InterpreterResponse execInterpreter(String command) throws IOException {
-		output.write((INTERPRETER + "\n").getBytes("UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
-		output.write((command + "\n").getBytes("UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
+		output.write((INTERPRETER + "\n").getBytes(StandardCharsets.UTF_8)); //$NON-NLS-1$ //$NON-NLS-2$
+		output.write((command + "\n").getBytes(StandardCharsets.UTF_8)); //$NON-NLS-1$ //$NON-NLS-2$
 		output.flush();
 
 		final String response = readResponse(input);
