@@ -1610,7 +1610,7 @@ public class ModelManager implements ISaveParticipant {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		workspace.removeResourceChangeListener(this.deltaState);
 		DLTKContentTypeManager.uninstallListener();
-		workspace.removeSaveParticipant(DLTKCore.getDefault());
+		workspace.removeSaveParticipant(DLTKCore.PLUGIN_ID);
 
 		if (sourceModuleInfoCache != null) {
 			sourceModuleInfoCache.stop();
@@ -2206,7 +2206,10 @@ public class ModelManager implements ISaveParticipant {
 			IPath containerPath, IBuildpathEntry[] classpathEntries) {
 		Util.verbose(
 				"CPContainer GET - missbehaving container (returning null classpath entry)\n" //$NON-NLS-1$
-						+ "	project: " + project.getElementName() + '\n' + "	container path: " + containerPath + '\n' + "	classpath entries: {\n" + Util.toString(classpathEntries, o -> {
+						+ "	project: " + project.getElementName() + '\n'
+						+ "	container path: " + containerPath + '\n'
+						+ "	classpath entries: {\n"
+						+ Util.toString(classpathEntries, o -> {
 							StringBuffer buffer = new StringBuffer("		"); //$NON-NLS-1$
 							if (o == null) {
 								buffer.append("<null>"); //$NON-NLS-1$
@@ -2222,7 +2225,9 @@ public class ModelManager implements ISaveParticipant {
 			IPath containerPath) {
 		Util.verbose(
 				"CPContainer GET - missbehaving container (returning null as classpath entries)\n" //$NON-NLS-1$
-						+ "	project: " + project.getElementName() + '\n' + "	container path: " + containerPath + '\n' + "	classpath entries: <null>");
+						+ "	project: " + project.getElementName() + '\n'
+						+ "	container path: " + containerPath + '\n'
+						+ "	classpath entries: <null>");
 	}
 
 	private void containerRemoveInitializationInProgress(IScriptProject project,
