@@ -17,7 +17,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchSite;
@@ -25,7 +24,6 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.actions.BuildAction;
 import org.eclipse.ui.ide.IDEActionFactory;
-
 
 /**
  * Contributes all build related actions to the context menu and installs
@@ -42,25 +40,27 @@ public class BuildActionGroup extends ActionGroup {
 	private IWorkbenchSite fSite;
 
 	private BuildAction fBuildAction;
- 	private RefreshAction fRefreshAction;
+	private RefreshAction fRefreshAction;
 
 	/**
-	 * Creates a new <code>BuildActionGroup</code>. The group requires that
-	 * the selection provided by the view part's selection provider is of type
+	 * Creates a new <code>BuildActionGroup</code>. The group requires that the
+	 * selection provided by the view part's selection provider is of type
 	 * <code>org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 *
-	 * @param part the view part that owns this action group
+	 * @param part
+	 *            the view part that owns this action group
 	 */
 	public BuildActionGroup(IViewPart part) {
-		fSite= part.getSite();
-		Shell shell= fSite.getShell();
-		ISelectionProvider provider= fSite.getSelectionProvider();
+		fSite = part.getSite();
+		ISelectionProvider provider = fSite.getSelectionProvider();
 
-		fBuildAction= new BuildAction(shell, IncrementalProjectBuilder.INCREMENTAL_BUILD);
+		fBuildAction = new BuildAction(fSite,
+				IncrementalProjectBuilder.INCREMENTAL_BUILD);
 		fBuildAction.setText(ActionMessages.BuildAction_label);
-		fBuildAction.setActionDefinitionId("org.eclipse.ui.project.buildProject"); //$NON-NLS-1$
+		fBuildAction
+				.setActionDefinitionId("org.eclipse.ui.project.buildProject"); //$NON-NLS-1$
 
-		fRefreshAction= new RefreshAction(fSite);
+		fRefreshAction = new RefreshAction(fSite);
 		fRefreshAction.setActionDefinitionId("org.eclipse.ui.file.refresh"); //$NON-NLS-1$
 
 		provider.addSelectionChangedListener(fBuildAction);
@@ -71,7 +71,7 @@ public class BuildActionGroup extends ActionGroup {
 	 * Returns the refresh action managed by this group.
 	 *
 	 * @return the refresh action. If this group doesn't manage a refresh action
-	 * 	<code>null</code> is returned
+	 *         <code>null</code> is returned
 	 */
 	public IAction getRefreshAction() {
 		return fRefreshAction;
@@ -85,8 +85,9 @@ public class BuildActionGroup extends ActionGroup {
 
 	@Override
 	public void fillContextMenu(IMenuManager menu) {
-		ISelection selection= getContext().getSelection();
-		if (!ResourcesPlugin.getWorkspace().isAutoBuilding() && isBuildTarget(selection)) {
+		ISelection selection = getContext().getSelection();
+		if (!ResourcesPlugin.getWorkspace().isAutoBuilding()
+				&& isBuildTarget(selection)) {
 			appendToGroup(menu, fBuildAction);
 		}
 		appendToGroup(menu, fRefreshAction);
@@ -95,15 +96,17 @@ public class BuildActionGroup extends ActionGroup {
 
 	@Override
 	public void dispose() {
-		ISelectionProvider provider= fSite.getSelectionProvider();
+		ISelectionProvider provider = fSite.getSelectionProvider();
 		provider.removeSelectionChangedListener(fBuildAction);
 		provider.removeSelectionChangedListener(fRefreshAction);
 		super.dispose();
 	}
 
 	private void setGlobalActionHandlers(IActionBars actionBar) {
-		actionBar.setGlobalActionHandler(IDEActionFactory.BUILD_PROJECT.getId(), fBuildAction);
-		actionBar.setGlobalActionHandler(ActionFactory.REFRESH.getId(), fRefreshAction);
+		actionBar.setGlobalActionHandler(IDEActionFactory.BUILD_PROJECT.getId(),
+				fBuildAction);
+		actionBar.setGlobalActionHandler(ActionFactory.REFRESH.getId(),
+				fRefreshAction);
 	}
 
 	private void appendToGroup(IMenuManager menu, IAction action) {
@@ -114,7 +117,7 @@ public class BuildActionGroup extends ActionGroup {
 	private boolean isBuildTarget(ISelection s) {
 		if (!(s instanceof IStructuredSelection))
 			return false;
-		IStructuredSelection selection= (IStructuredSelection)s;
+		IStructuredSelection selection = (IStructuredSelection) s;
 		if (selection.size() != 1)
 			return false;
 		return selection.getFirstElement() instanceof IScriptProject;
