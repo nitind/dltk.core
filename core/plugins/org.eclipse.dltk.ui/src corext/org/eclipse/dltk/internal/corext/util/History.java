@@ -177,9 +177,7 @@ public abstract class History {
 		IPath stateLocation = DLTKUIPlugin.getDefault().getStateLocation()
 				.append(fFileName);
 		File file = new File(stateLocation.toOSString());
-		OutputStream out = null;
-		try {
-			out = new FileOutputStream(file);
+		try (OutputStream out = new FileOutputStream(file)) {
 			save(out);
 		} catch (IOException e) {
 			DLTKUIPlugin.log(e);
@@ -189,14 +187,6 @@ public abstract class History {
 			// The XML library can be misconficgured (e.g. via
 			// -Djava.endorsed.dirs=C:\notExisting\xerces-2_7_1)
 			DLTKUIPlugin.log(e);
-		} finally {
-			try {
-				if (out != null) {
-					out.close();
-				}
-			} catch (IOException e) {
-				DLTKUIPlugin.log(e);
-			}
 		}
 	}
 

@@ -594,8 +594,8 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 
 		protected static void saveLibraries(List libraries, File file,
 				String encoding, IProgressMonitor monitor) throws IOException {
-			OutputStream stream = new FileOutputStream(file);
-			try {
+
+			try (OutputStream stream = new FileOutputStream(file)) {
 				DocumentBuilder docBuilder = null;
 				DocumentBuilderFactory factory = DocumentBuilderFactory
 						.newInstance();
@@ -674,11 +674,6 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 			} catch (TransformerException e) {
 				throw new IOException(e.getMessage());
 			} finally {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					// ignore
-				}
 				if (monitor != null) {
 					monitor.done();
 				}

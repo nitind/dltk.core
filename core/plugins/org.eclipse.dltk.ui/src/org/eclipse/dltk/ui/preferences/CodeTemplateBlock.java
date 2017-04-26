@@ -575,17 +575,12 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 			TemplateReaderWriter reader = new TemplateReaderWriter();
 			File file = new File(path);
 			if (file.exists()) {
-				InputStream input = new BufferedInputStream(
-						new FileInputStream(file));
-				try {
+
+				try (InputStream input = new BufferedInputStream(
+						new FileInputStream(file))) {
 					TemplatePersistenceData[] datas = reader.read(input, null);
 					for (int i = 0; i < datas.length; i++) {
 						updateTemplate(datas[i]);
-					}
-				} finally {
-					try {
-						input.close();
-					} catch (IOException x) {
 					}
 				}
 			}
@@ -705,20 +700,13 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 		}
 
 		if (!file.exists() || confirmOverwrite(file)) {
-			OutputStream output = null;
-			try {
-				output = new BufferedOutputStream(new FileOutputStream(file));
+			try (OutputStream output = new BufferedOutputStream(
+					new FileOutputStream(file))) {
+
 				TemplateReaderWriter writer = new TemplateReaderWriter();
 				writer.save(templates, output);
 				output.close();
 			} catch (IOException e) {
-				if (output != null) {
-					try {
-						output.close();
-					} catch (IOException e2) {
-						// ignore
-					}
-				}
 				openWriteErrorDialog();
 			}
 		}

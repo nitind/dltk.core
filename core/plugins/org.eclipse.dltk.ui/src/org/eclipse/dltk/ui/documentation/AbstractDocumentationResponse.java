@@ -20,8 +20,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 /**
  * @since 2.0
  */
-public abstract class AbstractDocumentationResponse implements
-		IDocumentationResponse {
+public abstract class AbstractDocumentationResponse
+		implements IDocumentationResponse {
 
 	private final Object object;
 
@@ -54,15 +54,9 @@ public abstract class AbstractDocumentationResponse implements
 
 	@Override
 	public String getText() throws IOException {
-		final Reader reader = getReader();
-		try {
+
+		try (final Reader reader = getReader()) {
 			return DocumentationUtils.readAll(reader);
-		} finally {
-			try {
-				reader.close();
-			} catch (IOException e) {
-				// ignore close exception
-			}
 		}
 	}
 

@@ -31,7 +31,6 @@ import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
-
 public class CreateFileChange extends DLTKChange {
 
 	private String fChangeName;
@@ -46,49 +45,47 @@ public class CreateFileChange extends DLTKChange {
 		this(path, source, encoding, IResource.NULL_STAMP);
 	}
 
-	public CreateFileChange(IPath path, String source, String encoding, long stampToRestore) {
+	public CreateFileChange(IPath path, String source, String encoding,
+			long stampToRestore) {
 		Assert.isNotNull(path, "path"); //$NON-NLS-1$
 		Assert.isNotNull(source, "source"); //$NON-NLS-1$
-		fPath= path;
-		fSource= source;
-		fEncoding= encoding;
-		fExplicitEncoding= fEncoding != null;
-		fStampToRestore= stampToRestore;
+		fPath = path;
+		fSource = source;
+		fEncoding = encoding;
+		fExplicitEncoding = fEncoding != null;
+		fStampToRestore = stampToRestore;
 	}
 
 	/*
-	private CreateFileChange(IPath path, String source, String encoding, long stampToRestore, boolean explicit) {
-		Assert.isNotNull(path, "path"); //$NON-NLS-1$
-		Assert.isNotNull(source, "source"); //$NON-NLS-1$
-		Assert.isNotNull(encoding, "encoding"); //$NON-NLS-1$
-		fPath= path;
-		fSource= source;
-		fEncoding= encoding;
-		fStampToRestore= stampToRestore;
-		fExplicitEncoding= explicit;
-	}
-	*/
+	 * private CreateFileChange(IPath path, String source, String encoding, long
+	 * stampToRestore, boolean explicit) { Assert.isNotNull(path, "path");
+	 * //$NON-NLS-1$ Assert.isNotNull(source, "source"); //$NON-NLS-1$
+	 * Assert.isNotNull(encoding, "encoding"); //$NON-NLS-1$ fPath= path;
+	 * fSource= source; fEncoding= encoding; fStampToRestore= stampToRestore;
+	 * fExplicitEncoding= explicit; }
+	 */
 
 	protected void setEncoding(String encoding, boolean explicit) {
 		Assert.isNotNull(encoding, "encoding"); //$NON-NLS-1$
-		fEncoding= encoding;
-		fExplicitEncoding= explicit;
+		fEncoding = encoding;
+		fExplicitEncoding = explicit;
 	}
 
 	@Override
 	public String getName() {
 		if (fChangeName == null)
-			return Messages.format(NLSChangesMessages.createFile_Create_file, fPath.toOSString());
+			return Messages.format(NLSChangesMessages.createFile_Create_file,
+					fPath.toOSString());
 		else
 			return fChangeName;
 	}
 
 	public void setName(String name) {
-		fChangeName= name;
+		fChangeName = name;
 	}
 
 	protected void setSource(String source) {
-		fSource= source;
+		fSource = source;
 	}
 
 	protected String getSource() {
@@ -96,7 +93,7 @@ public class CreateFileChange extends DLTKChange {
 	}
 
 	protected void setPath(IPath path) {
-		fPath= path;
+		fPath = path;
 	}
 
 	protected IPath getPath() {
@@ -110,22 +107,22 @@ public class CreateFileChange extends DLTKChange {
 
 	@Override
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException {
-		RefactoringStatus result= new RefactoringStatus();
-		IFile file= ResourcesPlugin.getWorkspace().getRoot().getFile(fPath);
+		RefactoringStatus result = new RefactoringStatus();
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(fPath);
 
-		URI location= file.getLocationURI();
+		URI location = file.getLocationURI();
 		if (location == null) {
 			result.addFatalError(Messages.format(
-				NLSChangesMessages.CreateFileChange_error_unknownLocation,
-				file.getFullPath().toString()));
+					NLSChangesMessages.CreateFileChange_error_unknownLocation,
+					file.getFullPath().toString()));
 			return result;
 		}
 
-		IFileInfo jFile= EFS.getStore(location).fetchInfo();
+		IFileInfo jFile = EFS.getStore(location).fetchInfo();
 		if (jFile.exists()) {
 			result.addFatalError(Messages.format(
-				NLSChangesMessages.CreateFileChange_error_exists,
-				file.getFullPath().toString()));
+					NLSChangesMessages.CreateFileChange_error_exists,
+					file.getFullPath().toString()));
 			return result;
 		}
 		return result;
@@ -134,22 +131,22 @@ public class CreateFileChange extends DLTKChange {
 	@Override
 	public Change perform(IProgressMonitor pm) throws CoreException {
 
-		InputStream is= null;
 		try {
 			pm.beginTask(NLSChangesMessages.createFile_creating_resource, 3);
 
 			initializeEncoding();
-			IFile file= getOldFile(new SubProgressMonitor(pm, 1));
+			IFile file = getOldFile(new SubProgressMonitor(pm, 1));
 			/*
-			if (file.exists()) {
-				CompositeChange composite= new CompositeChange(getName());
-				composite.add(new DeleteFileChange(file));
-				composite.add(new CreateFileChange(fPath, fSource, fEncoding, fStampToRestore, fExplicitEncoding));
-				pm.worked(1);
-				return composite.perform(new SubProgressMonitor(pm, 1));
-			} else { */
-			try {
-				is= new ByteArrayInputStream(fSource.getBytes(fEncoding));
+			 * if (file.exists()) { CompositeChange composite= new
+			 * CompositeChange(getName()); composite.add(new
+			 * DeleteFileChange(file)); composite.add(new
+			 * CreateFileChange(fPath, fSource, fEncoding, fStampToRestore,
+			 * fExplicitEncoding)); pm.worked(1); return composite.perform(new
+			 * SubProgressMonitor(pm, 1)); } else {
+			 */
+			try (InputStream is = new ByteArrayInputStream(
+					fSource.getBytes(fEncoding))) {
+
 				file.create(is, false, new SubProgressMonitor(pm, 1));
 				if (fStampToRestore != IResource.NULL_STAMP) {
 					file.revertModificationStamp(fStampToRestore);
@@ -162,16 +159,12 @@ public class CreateFileChange extends DLTKChange {
 				return new DeleteFileChange(file);
 			} catch (UnsupportedEncodingException e) {
 				throw new ModelException(e, IModelStatusConstants.IO_EXCEPTION);
+			} catch (IOException ioe) {
+				throw new ModelException(ioe,
+						IModelStatusConstants.IO_EXCEPTION);
 			}
 		} finally {
-			try {
-				if (is != null)
-					is.close();
-			} catch (IOException ioe) {
-				throw new ModelException(ioe, IModelStatusConstants.IO_EXCEPTION);
-			} finally {
-				pm.done();
-			}
+			pm.done();
 		}
 	}
 
@@ -186,27 +179,28 @@ public class CreateFileChange extends DLTKChange {
 
 	private void initializeEncoding() {
 		if (fEncoding == null) {
-			fExplicitEncoding= false;
-			IFile file= ResourcesPlugin.getWorkspace().getRoot().getFile(fPath);
+			fExplicitEncoding = false;
+			IFile file = ResourcesPlugin.getWorkspace().getRoot()
+					.getFile(fPath);
 			if (file != null) {
 				try {
 					if (file.exists()) {
-						fEncoding= file.getCharset(false);
+						fEncoding = file.getCharset(false);
 						if (fEncoding == null) {
-							fEncoding= file.getCharset(true);
+							fEncoding = file.getCharset(true);
 						} else {
-							fExplicitEncoding= true;
+							fExplicitEncoding = true;
 						}
 					} else {
-						fEncoding= file.getCharset(true);
+						fEncoding = file.getCharset(true);
 					}
 				} catch (CoreException e) {
-					fEncoding= ResourcesPlugin.getEncoding();
-					fExplicitEncoding= true;
+					fEncoding = ResourcesPlugin.getEncoding();
+					fExplicitEncoding = true;
 				}
 			} else {
-				fEncoding= ResourcesPlugin.getEncoding();
-				fExplicitEncoding= true;
+				fEncoding = ResourcesPlugin.getEncoding();
+				fExplicitEncoding = true;
 			}
 		}
 		Assert.isNotNull(fEncoding);

@@ -27,6 +27,7 @@ public class WorkingSetActionGroup extends ActionGroup {
 	
 	private IViewSite fSite;
 	private ISelectionChangedListener fLazyInitializer= new  ISelectionChangedListener() {
+		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			ISelectionProvider selectionProvider= fSite.getSelectionProvider();
 			selectionProvider.removeSelectionChangedListener(fLazyInitializer);
@@ -60,6 +61,7 @@ public class WorkingSetActionGroup extends ActionGroup {
 		fSite.getSelectionProvider().addSelectionChangedListener(fLazyInitializer);
 	}
 	
+	@Override
 	public void dispose() {
 		ISelectionProvider selectionProvider= fSite.getSelectionProvider();
 		
@@ -77,6 +79,7 @@ public class WorkingSetActionGroup extends ActionGroup {
 		}
 	}
 	
+	@Override
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
 		menu.appendToGroup(IContextMenuConstants.GROUP_REORGANIZE, new Separator(GROUP_WORKINGSETS));
