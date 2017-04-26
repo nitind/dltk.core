@@ -91,7 +91,7 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 	 * The status of the last validation of the file (i.e. source module).
 	 */
 	protected IStatus sourceModuleStatus;
-	private final List<IStatus> extensionStatus = new ArrayList<IStatus>();
+	private final List<IStatus> extensionStatus = new ArrayList<>();
 
 	private StringDialogField fileDialogField;
 
@@ -108,7 +108,8 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 				ISourceModule module = getScriptFolder()
 						.getSourceModule(getFileName());
 				if (module.exists()) {
-					status.setError(Messages.NewSourceModulePage_fileAlreadyExists);
+					status.setError(
+							Messages.NewSourceModulePage_fileAlreadyExists);
 				} else {
 					IResource resource = module.getResource();
 					if (resource != null) {
@@ -117,10 +118,12 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 							try {
 								IFileStore store = EFS.getStore(location);
 								if (store.fetchInfo().exists()) {
-									status.setError(Messages.NewSourceModulePage_error_TypeNameExistsDifferentCase);
+									status.setError(
+											Messages.NewSourceModulePage_error_TypeNameExistsDifferentCase);
 								}
 							} catch (CoreException e) {
-								status.setError(Messages.NewSourceModulePage_error_uri_location_unkown);
+								status.setError(
+										Messages.NewSourceModulePage_error_uri_location_unkown);
 							}
 						}
 					}
@@ -185,7 +188,7 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 				}
 				Map<String, Object> data = null;
 				if (templateName != null) {
-					data = new HashMap<String, Object>();
+					data = new HashMap<>();
 					data.put(CodeTemplatesPreferencePage.DATA_SELECT_TEMPLATE,
 							templateName);
 				}
@@ -247,7 +250,7 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 	}
 
 	protected Template[] getApplicableTemplates() {
-		final List<Template> result = new ArrayList<Template>();
+		final List<Template> result = new ArrayList<>();
 		final ICodeTemplateArea templateArea = getTemplateArea();
 		if (templateArea != null) {
 			final TemplateStore store = templateArea.getTemplateAccess()
@@ -255,7 +258,8 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 			final String[] contextTypeIds = getCodeTemplateContextTypeIds();
 			for (int i = 0; i < contextTypeIds.length; ++i) {
 				Template[] templates = store.getTemplates(contextTypeIds[i]);
-				Arrays.sort(templates, (t0, t1) -> t0.getName().compareToIgnoreCase(t1.getName()));
+				Arrays.sort(templates, (t0, t1) -> t0.getName()
+						.compareToIgnoreCase(t1.getName()));
 				for (int j = 0; j < templates.length; ++j) {
 					result.add(templates[j]);
 				}
@@ -273,8 +277,9 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 	 */
 	protected String getLastUsedTemplateName() {
 		final IDialogSettings dialogSettings = getDialogSettings();
-		return dialogSettings != null ? dialogSettings
-				.get(getLastUsedTemplateKey()) : null;
+		return dialogSettings != null
+				? dialogSettings.get(getLastUsedTemplateKey())
+				: null;
 	}
 
 	/**
@@ -343,7 +348,7 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 				}
 			}
 		}
-		final List<IStatus> statuses = new ArrayList<IStatus>();
+		final List<IStatus> statuses = new ArrayList<>();
 		if (containerStatus != null) {
 			statuses.add(containerStatus);
 		}
@@ -408,7 +413,7 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 
 		}
 
-		final List<StepEntry> entries = new ArrayList<StepEntry>();
+		final List<StepEntry> entries = new ArrayList<>();
 
 		@Override
 		public void addStep(String kind, int priority, ICreateStep step) {
@@ -417,7 +422,7 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 
 		@Override
 		public ICreateStep[] getSteps(String kind) {
-			final List<StepEntry> selection = new ArrayList<StepEntry>();
+			final List<StepEntry> selection = new ArrayList<>();
 			for (StepEntry entry : entries) {
 				if (kind.equals(entry.kind)) {
 					selection.add(entry);
@@ -487,7 +492,7 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 		for (ISourceModuleWizardExtension extension : getExtensions()) {
 			extension.prepare(context);
 		}
-		final List<ICreateStep> steps = new ArrayList<ICreateStep>();
+		final List<ICreateStep> steps = new ArrayList<>();
 		Collections.addAll(steps, context.getSteps(ICreateStep.KIND_PREPARE));
 		Collections.addAll(steps, context.getSteps(ICreateStep.KIND_EXECUTE));
 		Collections.addAll(steps, context.getSteps(ICreateStep.KIND_FINALIZE));
@@ -574,7 +579,7 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 
 	}
 
-	final List<ModeEntry> modes = new ArrayList<ModeEntry>();
+	final List<ModeEntry> modes = new ArrayList<>();
 
 	private ModeEntry getActiveMode() {
 		for (ModeEntry f : modes) {
@@ -609,12 +614,13 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 	 * @param composite
 	 * @param nColumns
 	 */
-	protected void createContentControls(Composite composite, final int nColumns) {
+	protected void createContentControls(Composite composite,
+			final int nColumns) {
 		createContainerControls(composite, nColumns);
 
 		// createPackageControls(composite, nColumns);
 		createFileControls(composite, nColumns);
-		final List<ISourceModuleWizardMode> modes = new ArrayList<ISourceModuleWizardMode>();
+		final List<ISourceModuleWizardMode> modes = new ArrayList<>();
 		for (ISourceModuleWizardExtension extension : getExtensions()) {
 			modes.addAll(extension.getModes());
 		}
@@ -625,8 +631,10 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 			ggd.horizontalSpan = nColumns;
 			contents.setLayoutData(ggd);
 			contents.setLayout(new GridLayout(nColumns, false));
-			ModeEntry wsEntry = addMode(contents, nColumns, new WorkspaceMode());
-			((GridData) wsEntry.field.getSelectionButton().getLayoutData()).horizontalSpan = nColumns;
+			ModeEntry wsEntry = addMode(contents, nColumns,
+					new WorkspaceMode());
+			((GridData) wsEntry.field.getSelectionButton()
+					.getLayoutData()).horizontalSpan = nColumns;
 			for (ISourceModuleWizardMode template : modes) {
 				addMode(contents, nColumns, template);
 			}
@@ -735,7 +743,8 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 		dialog.setIgnoreCase(false);
 		dialog.setTitle(Messages.NewSourceModulePage_selectScriptFolder);
 		dialog.setMessage(Messages.NewSourceModulePage_selectScriptFolder);
-		dialog.setEmptyListMessage(Messages.NewSourceModulePage_noFoldersAvailable);
+		dialog.setEmptyListMessage(
+				Messages.NewSourceModulePage_noFoldersAvailable);
 
 		IProjectFragment projectFragment = getProjectFragment();
 		if (projectFragment != null) {
@@ -796,8 +805,8 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 		final ICodeTemplateArea templateArea = getTemplateArea();
 		if (templateArea != null) {
 			final Template template = getSelectedTemplate();
-			saveLastUsedTemplateName(template != null ? template.getName()
-					: NO_TEMPLATE);
+			saveLastUsedTemplateName(
+					template != null ? template.getName() : NO_TEMPLATE);
 			if (template != null) {
 				final TemplateContextType contextType = templateArea
 						.getTemplateAccess().getContextTypeRegistry()
@@ -808,13 +817,14 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 						CodeGeneration.getLineDelimiterUsed(module));
 				// String fileComment = getFileComment(file, lineDelimiter);
 				// context.setVariable(CodeTemplateContextType.FILE_COMMENT,
-				//					fileComment != null ? fileComment : ""); //$NON-NLS-1$
+				// fileComment != null ? fileComment : ""); //$NON-NLS-1$
 				// ICProject cproject = CoreModel.getDefault().create(
 				// file.getProject());
 				// String includeGuardSymbol = generateIncludeGuardSymbol(file
 				// .getName(), cproject);
 				// context.setVariable(CodeTemplateContextType.INCLUDE_GUARD_SYMBOL,
-				//					includeGuardSymbol != null ? includeGuardSymbol : ""); //$NON-NLS-1$
+				// includeGuardSymbol != null ? includeGuardSymbol : "");
+				// //$NON-NLS-1$
 				context.setSourceModuleVariables(module);
 				final String[] fullLine = {};
 				final String result = CodeGeneration.evaluateTemplate(context,
@@ -832,8 +842,8 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 	protected IEnvironment getEnvironment() {
 		final IProjectFragment fragment = getProjectFragment();
 		if (fragment != null) {
-			return EnvironmentManager.getEnvironment(fragment
-					.getScriptProject().getProject());
+			return EnvironmentManager
+					.getEnvironment(fragment.getScriptProject().getProject());
 		}
 		return null;
 	}
@@ -844,8 +854,8 @@ public abstract class NewSourceModulePage extends NewContainerWizardPage {
 
 	void setMode(String mode) {
 		for (ModeEntry entry : modes) {
-			entry.setSelection(mode != null
-					&& mode.equals(entry.template.getId()));
+			entry.setSelection(
+					mode != null && mode.equals(entry.template.getId()));
 		}
 	}
 

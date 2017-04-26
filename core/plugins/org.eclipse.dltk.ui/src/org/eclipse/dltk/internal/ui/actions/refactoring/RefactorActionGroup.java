@@ -161,8 +161,8 @@ public class RefactorActionGroup extends ActionGroup {
 
 	protected UndoRedoActionGroup fUndoRedoActionGroup;
 
-	private final List<SelectionDispatchAction> fActions = new ArrayList<SelectionDispatchAction>();
-	private final List<ContributedRefactoringAction> fContributedActions = new ArrayList<ContributedRefactoringAction>();
+	private final List<SelectionDispatchAction> fActions = new ArrayList<>();
+	private final List<ContributedRefactoringAction> fContributedActions = new ArrayList<>();
 
 	private static final String QUICK_MENU_ID = "org.eclipse.dltk.ui.edit.text.script.refactor.quickMenu"; //$NON-NLS-1$
 

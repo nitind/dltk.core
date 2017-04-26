@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ui.text.completion;
 
@@ -37,9 +36,9 @@ import org.osgi.framework.Bundle;
  * <code>org.eclipse.dltk.ui.javaCompletionProposalComputer</code> extension
  * point. Instances are immutable. Instances can be obtained from a
  * {@link CompletionProposalComputerRegistry}.
- * 
+ *
  * @see CompletionProposalComputerRegistry
- * 
+ *
  */
 final class CompletionProposalComputerDescriptor {
 	/** The default category id. */
@@ -58,7 +57,7 @@ final class CompletionProposalComputerDescriptor {
 	public static final String TOOLKITID = "toolkitId"; //$NON-NLS-1$
 
 	/** Set of Script partition types. */
-	private static final Set<String> PARTITION_SET = new HashSet<String>();
+	private static final Set<String> PARTITION_SET = new HashSet<>();
 	/** The name of the performance event used to trace extensions. */
 	private static final String PERFORMANCE_EVENT = DLTKUIPlugin.getPluginId()
 			+ "/perf/content_assist/extensions"; //$NON-NLS-1$
@@ -127,7 +126,7 @@ final class CompletionProposalComputerDescriptor {
 
 	/**
 	 * Creates a new descriptor.
-	 * 
+	 *
 	 * @param element
 	 *            the configuration element to read
 	 * @param registry
@@ -152,7 +151,7 @@ final class CompletionProposalComputerDescriptor {
 		else
 			fName = name;
 
-		Set<String> partitions = new HashSet<String>();
+		Set<String> partitions = new HashSet<>();
 		IConfigurationElement[] children = element.getChildren(PARTITION);
 		if (children.length == 0) {
 			fPartitions = PARTITION_SET; // add to all partition types if no
@@ -184,7 +183,7 @@ final class CompletionProposalComputerDescriptor {
 		}
 
 		String toolkitId = element.getAttribute(TOOLKITID);
-		this.fToolkitID = toolkitId; 
+		this.fToolkitID = toolkitId;
 		if (category == null) {
 			// create a category if it does not exist
 			fCategory = new CompletionProposalCategory(categoryId, fName,
@@ -194,6 +193,7 @@ final class CompletionProposalComputerDescriptor {
 			fCategory = category;
 		}
 	}
+
 	public String getLanguageToolkitID() {
 		return this.fToolkitID;
 	}
@@ -208,12 +208,11 @@ final class CompletionProposalComputerDescriptor {
 		if (obj == null) {
 			Object[] args = { getId(), fElement.getContributor().getName(),
 					attribute };
-			String message = Messages
-					.format(
-							ScriptTextMessages.CompletionProposalComputerDescriptor_illegal_attribute_message,
-							args);
-			IStatus status = new Status(IStatus.WARNING, DLTKUIPlugin
-					.getPluginId(), IStatus.OK, message, null);
+			String message = Messages.format(
+					ScriptTextMessages.CompletionProposalComputerDescriptor_illegal_attribute_message,
+					args);
+			IStatus status = new Status(IStatus.WARNING,
+					DLTKUIPlugin.getPluginId(), IStatus.OK, message, null);
 			DLTKUIPlugin.log(status);
 			throw new InvalidRegistryObjectException();
 		}
@@ -221,7 +220,7 @@ final class CompletionProposalComputerDescriptor {
 
 	/**
 	 * Returns the identifier of the described extension.
-	 * 
+	 *
 	 * @return Returns the id
 	 */
 	public String getId() {
@@ -230,7 +229,7 @@ final class CompletionProposalComputerDescriptor {
 
 	/**
 	 * Returns the name of the described extension.
-	 * 
+	 *
 	 * @return Returns the name
 	 */
 	public String getName() {
@@ -239,7 +238,7 @@ final class CompletionProposalComputerDescriptor {
 
 	/**
 	 * Returns the partition types of the described extension.
-	 * 
+	 *
 	 * @return the set of partition types (element type: {@link String})
 	 */
 	public Set<String> getPartitions() {
@@ -248,7 +247,7 @@ final class CompletionProposalComputerDescriptor {
 
 	/**
 	 * Tells whether we tried to load the computer.
-	 * 
+	 *
 	 * @since 3.0
 	 */
 	private boolean fTriedLoadingComputer = false;
@@ -257,7 +256,7 @@ final class CompletionProposalComputerDescriptor {
 	 * Returns a cached instance of the computer as described in the extension's
 	 * xml. The computer is {@link #createComputer() created} the first time
 	 * that this method is called and then cached.
-	 * 
+	 *
 	 * @return a new instance of the completion proposal computer as described
 	 *         by this descriptor
 	 * @throws CoreException
@@ -292,12 +291,13 @@ final class CompletionProposalComputerDescriptor {
 	/**
 	 * Returns a new instance of the computer as described in the extension's
 	 * xml. Note that the safest way to access the computer is by using the
-	 * {@linkplain #computeCompletionProposals(ContentAssistInvocationContext, IProgressMonitor) computeCompletionProposals}
-	 * and
-	 * {@linkplain #computeContextInformation(ContentAssistInvocationContext, IProgressMonitor) computeContextInformation}
-	 * methods. These delegate the functionality to the contributed computer,
-	 * but handle instance creation and any exceptions thrown.
-	 * 
+	 * {@linkplain #computeCompletionProposals(ContentAssistInvocationContext, IProgressMonitor)
+	 * computeCompletionProposals} and
+	 * {@linkplain #computeContextInformation(ContentAssistInvocationContext, IProgressMonitor)
+	 * computeContextInformation} methods. These delegate the functionality to
+	 * the contributed computer, but handle instance creation and any exceptions
+	 * thrown.
+	 *
 	 * @return a new instance of the completion proposal computer as described
 	 *         by this descriptor
 	 * @throws CoreException
@@ -317,7 +317,7 @@ final class CompletionProposalComputerDescriptor {
 	 * the extension is disabled, throws an exception or otherwise does not
 	 * adhere to the contract described in
 	 * {@link IScriptCompletionProposalComputer}, an empty list is returned.
-	 * 
+	 *
 	 * @param context
 	 *            the invocation context passed on to the extension
 	 * @param monitor
@@ -339,8 +339,7 @@ final class CompletionProposalComputerDescriptor {
 			try {
 				PerformanceStats stats = startMeter(context, computer);
 				List<ICompletionProposal> proposals = computer
-						.computeCompletionProposals(context,
-						monitor);
+						.computeCompletionProposals(context, monitor);
 				stopMeter(stats, COMPUTE_COMPLETION_PROPOSALS);
 
 				if (proposals != null) {
@@ -350,7 +349,6 @@ final class CompletionProposalComputerDescriptor {
 			} finally {
 				fIsReportingDelay = true;
 
-				
 			}
 			status = createAPIViolationStatus(COMPUTE_COMPLETION_PROPOSALS);
 		} catch (InvalidRegistryObjectException x) {
@@ -373,7 +371,7 @@ final class CompletionProposalComputerDescriptor {
 	 * extension. If the extension is disabled, throws an exception or otherwise
 	 * does not adhere to the contract described in
 	 * {@link IScriptCompletionProposalComputer}, an empty list is returned.
-	 * 
+	 *
 	 * @param context
 	 *            the invocation context passed on to the extension
 	 * @param monitor
@@ -394,8 +392,7 @@ final class CompletionProposalComputerDescriptor {
 
 			PerformanceStats stats = startMeter(context, computer);
 			List<IContextInformation> proposals = computer
-					.computeContextInformation(context,
-					monitor);
+					.computeContextInformation(context, monitor);
 			stopMeter(stats, COMPUTE_CONTEXT_INFORMATION);
 
 			if (proposals != null) {
@@ -422,10 +419,8 @@ final class CompletionProposalComputerDescriptor {
 	/**
 	 * Notifies the described extension of a proposal computation session start.
 	 * <p>
-	 * <em>
-	 * Note: This method is called every time code assist is invoked and
-	 * is <strong>not</strong> filtered by partition type.
-	 * </em>
+	 * <em> Note: This method is called every time code assist is invoked and is
+	 * <strong>not</strong> filtered by partition type. </em>
 	 * </p>
 	 */
 	public void sessionStarted() {
@@ -457,10 +452,8 @@ final class CompletionProposalComputerDescriptor {
 	/**
 	 * Notifies the described extension of a proposal computation session end.
 	 * <p>
-	 * <em>
-	 * Note: This method is called every time code assist is invoked and
-	 * is <strong>not</strong> filtered by partition type.
-	 * </em>
+	 * <em> Note: This method is called every time code assist is invoked and is
+	 * <strong>not</strong> filtered by partition type. </em>
 	 * </p>
 	 */
 	public void sessionEnded() {
@@ -537,8 +530,8 @@ final class CompletionProposalComputerDescriptor {
 		// unable to instantiate the extension - log & disable
 		String blame = createBlameMessage();
 		String reason = ScriptTextMessages.CompletionProposalComputerDescriptor_reason_instantiation;
-		return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(),
-				IStatus.OK, blame + " " + reason, x); //$NON-NLS-1$
+		return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), IStatus.OK,
+				blame + " " + reason, x); //$NON-NLS-1$
 	}
 
 	private IStatus createExceptionStatus(RuntimeException x) {
@@ -552,10 +545,9 @@ final class CompletionProposalComputerDescriptor {
 	private IStatus createAPIViolationStatus(String operation) {
 		String blame = createBlameMessage();
 		Object[] args = { operation };
-		String reason = Messages
-				.format(
-						ScriptTextMessages.CompletionProposalComputerDescriptor_reason_API,
-						args);
+		String reason = Messages.format(
+				ScriptTextMessages.CompletionProposalComputerDescriptor_reason_API,
+				args);
 		return new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(),
 				IStatus.OK, blame + " " + reason, null); //$NON-NLS-1$
 	}
@@ -563,10 +555,9 @@ final class CompletionProposalComputerDescriptor {
 	private IStatus createPerformanceStatus(String operation) {
 		String blame = createBlameMessage();
 		Object[] args = { operation };
-		String reason = Messages
-				.format(
-						ScriptTextMessages.CompletionProposalComputerDescriptor_reason_performance,
-						args);
+		String reason = Messages.format(
+				ScriptTextMessages.CompletionProposalComputerDescriptor_reason_performance,
+				args);
 		return new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(),
 				IStatus.OK, blame + " " + reason, null); //$NON-NLS-1$
 	}
@@ -574,16 +565,15 @@ final class CompletionProposalComputerDescriptor {
 	private String createBlameMessage() {
 		Object[] args = { getName(),
 				fElement.getDeclaringExtension().getContributor().getName() };
-		String disable = Messages
-				.format(
-						ScriptTextMessages.CompletionProposalComputerDescriptor_blame_message,
-						args);
+		String disable = Messages.format(
+				ScriptTextMessages.CompletionProposalComputerDescriptor_blame_message,
+				args);
 		return disable;
 	}
 
 	/**
 	 * Returns the enablement state of the described extension.
-	 * 
+	 *
 	 * @return the enablement state of the described extension
 	 */
 	private boolean isEnabled() {
@@ -596,7 +586,7 @@ final class CompletionProposalComputerDescriptor {
 
 	/**
 	 * Returns the error message from the described extension.
-	 * 
+	 *
 	 * @return the error message from the described extension
 	 */
 	public String getErrorMessage() {
@@ -605,7 +595,7 @@ final class CompletionProposalComputerDescriptor {
 
 	/**
 	 * Returns the contributor of the described extension.
-	 * 
+	 *
 	 * @return the contributor of the described extension
 	 */
 	IContributor getContributor() {

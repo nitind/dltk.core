@@ -39,7 +39,7 @@ public class ModelElementUtil {
 
 	public static IModelElement[] getElementsOfType(IModelElement[] elements,
 			int type) {
-		Set<IModelElement> result = new HashSet<IModelElement>(elements.length);
+		Set<IModelElement> result = new HashSet<>(elements.length);
 		for (int i = 0; i < elements.length; i++) {
 			IModelElement element = elements[i];
 			if (element.getElementType() == type)
@@ -59,7 +59,7 @@ public class ModelElementUtil {
 
 	public static IMethod[] getAllConstructors(IType type)
 			throws ModelException {
-		List<IMethod> result = new ArrayList<IMethod>();
+		List<IMethod> result = new ArrayList<>();
 		IMethod[] methods = type.getMethods();
 		for (int i = 0; i < methods.length; i++) {
 			IMethod iMethod = methods[i];
@@ -77,10 +77,10 @@ public class ModelElementUtil {
 			throws ModelException {
 		IBuildpathEntry cpe = root.getRawBuildpathEntry();
 		IScriptProject myProject = root.getScriptProject();
-		IScriptProject[] allScriptProjects = DLTKCore.create(
-				ResourcesPlugin.getWorkspace().getRoot()).getScriptProjects();
-		List<IScriptProject> result = new ArrayList<IScriptProject>(
-				allScriptProjects.length);
+		IScriptProject[] allScriptProjects = DLTKCore
+				.create(ResourcesPlugin.getWorkspace().getRoot())
+				.getScriptProjects();
+		List<IScriptProject> result = new ArrayList<>(allScriptProjects.length);
 		for (int i = 0; i < allScriptProjects.length; i++) {
 			IScriptProject project = allScriptProjects[i];
 			if (project.equals(myProject))
@@ -95,7 +95,7 @@ public class ModelElementUtil {
 	public static IMember[] merge(IMember[] a1, IMember[] a2) {
 		// Don't use hash sets since ordering is important for some
 		// refactorings.
-		List<IMember> result = new ArrayList<IMember>(a1.length + a2.length);
+		List<IMember> result = new ArrayList<>(a1.length + a2.length);
 		for (int i = 0; i < a1.length; i++) {
 			IMember member = a1[i];
 			if (!result.contains(member))
@@ -126,7 +126,7 @@ public class ModelElementUtil {
 			return new IScriptFolder[] { pack };
 		IProjectFragment root = (IProjectFragment) pack.getParent();
 		IModelElement[] allPackages = root.getChildren();
-		ArrayList<IScriptFolder> subpackages = new ArrayList<IScriptFolder>();
+		ArrayList<IScriptFolder> subpackages = new ArrayList<>();
 		subpackages.add(pack);
 		final IPath folderPath = pack.getPath();
 		for (int i = 0; i < allPackages.length; i++) {

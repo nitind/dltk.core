@@ -224,7 +224,7 @@ public class SelectionListenerWithASTManager {
 	private Map<ITextEditor, PartListenerGroup> fListenerGroups;
 
 	private SelectionListenerWithASTManager() {
-		fListenerGroups = new HashMap<ITextEditor, PartListenerGroup>();
+		fListenerGroups = new HashMap<>();
 	}
 
 	/**

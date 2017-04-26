@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,7 +49,7 @@ import org.eclipse.ui.texteditor.IEditorStatusLine;
  * <p>
  * The action is applicable to selections containing elements of type
  * <code>ISourceModule</code>, <code>IMember</code> or <code>IFile</code>.
- * 
+ *
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
@@ -62,7 +62,7 @@ public class OpenAction extends SelectionDispatchAction {
 	 * Creates a new <code>OpenAction</code>. The action requires that the
 	 * selection provided by the site's selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code> .
-	 * 
+	 *
 	 * @param site
 	 *            the site providing context information for this action
 	 */
@@ -82,7 +82,7 @@ public class OpenAction extends SelectionDispatchAction {
 	/**
 	 * Note: This constructor is for internal use only. Clients should not call
 	 * this constructor.
-	 * 
+	 *
 	 * @param editor
 	 *            the Script editor
 	 */
@@ -90,7 +90,8 @@ public class OpenAction extends SelectionDispatchAction {
 		this(editor.getEditorSite());
 		fEditor = editor;
 		setText(ActionMessages.OpenAction_declaration_label);
-		setEnabled(EditorUtility.getEditorInputModelElement(fEditor, false) != null);
+		setEnabled(EditorUtility.getEditorInputModelElement(fEditor,
+				false) != null);
 	}
 
 	/*
@@ -125,13 +126,11 @@ public class OpenAction extends SelectionDispatchAction {
 				|| ((element instanceof IAdaptable) && (((IAdaptable) element)
 						.getAdapter(ISourceReference.class) != null)))
 			return true;
-		if ((element instanceof IFile)
-				|| ((element instanceof IAdaptable) && (((IAdaptable) element)
-						.getAdapter(IFile.class) != null)))
+		if ((element instanceof IFile) || ((element instanceof IAdaptable)
+				&& (((IAdaptable) element).getAdapter(IFile.class) != null)))
 			return true;
-		if ((element instanceof IStorage)
-				|| ((element instanceof IAdaptable) && (((IAdaptable) element)
-						.getAdapter(IStorage.class) != null)))
+		if ((element instanceof IStorage) || ((element instanceof IAdaptable)
+				&& (((IAdaptable) element).getAdapter(IStorage.class) != null)))
 			return true;
 		return false;
 	}
@@ -139,14 +138,14 @@ public class OpenAction extends SelectionDispatchAction {
 	/**
 	 * This method allows alternative editor implementations to override the
 	 * resolution logic.
-	 * 
+	 *
 	 * @return
 	 * @throws InvocationTargetException
 	 * @throws InterruptedException
 	 * @since 3.0
 	 */
-	protected Object[] resolveElements() throws InvocationTargetException,
-			InterruptedException {
+	protected Object[] resolveElements()
+			throws InvocationTargetException, InterruptedException {
 		return SelectionConverter.resolveForked(fEditor, false);
 	}
 
@@ -177,8 +176,7 @@ public class OpenAction extends SelectionDispatchAction {
 		if (elements == null || elements.length == 0) {
 			IEditorStatusLine statusLine = null;
 			if (fEditor != null)
-				statusLine = fEditor
-						.getAdapter(IEditorStatusLine.class);
+				statusLine = fEditor.getAdapter(IEditorStatusLine.class);
 			if (statusLine != null)
 				statusLine.setMessage(true,
 						ActionMessages.OpenAction_error_messageBadSelection,
@@ -208,7 +206,7 @@ public class OpenAction extends SelectionDispatchAction {
 		if (elements == null)
 			return null;
 
-		Map<Object, Object> uniqueElements = new HashMap<Object, Object>();
+		Map<Object, Object> uniqueElements = new HashMap<>();
 		for (int i = 0; i < elements.length; i++) {
 			Object element = elements[i];
 			if (element instanceof IModelElement) {
@@ -228,8 +226,8 @@ public class OpenAction extends SelectionDispatchAction {
 
 	private boolean isProcessable() {
 		if (fEditor != null) {
-			IModelElement je = EditorUtility.getEditorInputModelElement(
-					fEditor, false);
+			IModelElement je = EditorUtility.getEditorInputModelElement(fEditor,
+					false);
 			if (je instanceof ISourceModule
 					&& !ScriptModelUtil.isPrimary((ISourceModule) je))
 				return true; // can process non-primary working copies
@@ -250,7 +248,7 @@ public class OpenAction extends SelectionDispatchAction {
 	/**
 	 * Note: this method is for internal use only. Clients should not call this
 	 * method.
-	 * 
+	 *
 	 * @param elements
 	 *            the elements to process
 	 */
@@ -261,14 +259,14 @@ public class OpenAction extends SelectionDispatchAction {
 			Object element = elements[i];
 			try {
 				element = getElementToOpen(element);
-				boolean activateOnOpen = fEditor != null ? true : OpenStrategy
-						.activateOnOpen();
+				boolean activateOnOpen = fEditor != null ? true
+						: OpenStrategy.activateOnOpen();
 				OpenActionUtil.open(element, activateOnOpen);
 			} catch (ModelException e) {
-				DLTKUIPlugin.log(new Status(IStatus.ERROR,
-						DLTKUIPlugin.PLUGIN_ID,
-						IModelStatusConstants.INTERNAL_ERROR,
-						ActionMessages.OpenAction_error_message, e));
+				DLTKUIPlugin
+						.log(new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID,
+								IModelStatusConstants.INTERNAL_ERROR,
+								ActionMessages.OpenAction_error_message, e));
 
 				ErrorDialog.openError(getShell(), getDialogTitle(),
 						ActionMessages.OpenAction_error_messageProblems,
@@ -287,13 +285,11 @@ public class OpenAction extends SelectionDispatchAction {
 				}
 
 				if (name != null) {
-					MessageDialog
-							.openError(
-									getShell(),
-									ActionMessages.OpenAction_error_messageProblems,
-									NLS.bind(
-											ActionMessages.OpenAction_error_messageArgs,
-											name, x.getMessage()));
+					MessageDialog.openError(getShell(),
+							ActionMessages.OpenAction_error_messageProblems,
+							NLS.bind(
+									ActionMessages.OpenAction_error_messageArgs,
+									name, x.getMessage()));
 				}
 			}
 		}
@@ -302,7 +298,7 @@ public class OpenAction extends SelectionDispatchAction {
 	/**
 	 * Note: this method is for internal use only. Clients should not call this
 	 * method.
-	 * 
+	 *
 	 * @param object
 	 *            the element to open
 	 * @return the real element to open

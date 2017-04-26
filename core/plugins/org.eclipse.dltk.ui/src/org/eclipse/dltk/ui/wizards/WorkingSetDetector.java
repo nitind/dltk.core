@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.  
+ * Copyright (c) 2009, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html  
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
@@ -28,7 +28,7 @@ import org.eclipse.ui.IWorkingSet;
 
 /**
  * Detects {@link IWorkingSet}s selected before project wizard was called.
- * 
+ *
  * @since 2.0
  */
 public class WorkingSetDetector {
@@ -37,7 +37,7 @@ public class WorkingSetDetector {
 
 	/**
 	 * Detects workings sets currently selected
-	 * 
+	 *
 	 * @param selection
 	 * @param workbench
 	 * @return
@@ -59,7 +59,8 @@ public class WorkingSetDetector {
 			return EMPTY_WORKING_SET_ARRAY;
 
 		ScriptExplorerPart explorerPart = (ScriptExplorerPart) activePart;
-		if (explorerPart.getRootMode() == ScriptExplorerPart.PROJECTS_AS_ROOTS) {
+		if (explorerPart
+				.getRootMode() == ScriptExplorerPart.PROJECTS_AS_ROOTS) {
 			// Get active filter
 			IWorkingSet filterWorkingSet = explorerPart.getFilterWorkingSet();
 			if (filterWorkingSet == null)
@@ -94,7 +95,8 @@ public class WorkingSetDetector {
 		return null;
 	}
 
-	private IWorkingSet[] getSelectedWorkingSet(IStructuredSelection selection) {
+	private IWorkingSet[] getSelectedWorkingSet(
+			IStructuredSelection selection) {
 		if (!(selection instanceof ITreeSelection))
 			return EMPTY_WORKING_SET_ARRAY;
 
@@ -124,7 +126,7 @@ public class WorkingSetDetector {
 			return EMPTY_WORKING_SET_ARRAY;
 		}
 
-		List<IWorkingSet> result = new ArrayList<IWorkingSet>();
+		List<IWorkingSet> result = new ArrayList<>();
 		for (Iterator<?> iterator = elements.iterator(); iterator.hasNext();) {
 			Object element = iterator.next();
 			if (element instanceof IWorkingSet) {

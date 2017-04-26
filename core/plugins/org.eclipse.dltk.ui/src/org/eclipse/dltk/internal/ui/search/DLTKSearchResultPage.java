@@ -211,8 +211,7 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage
 			int length) throws PartInitException {
 		try {
 			IMarker marker = file.createMarker(NewSearchUI.SEARCH_MARKER);
-			HashMap<String, Integer> attributes = new HashMap<String, Integer>(
-					4);
+			HashMap<String, Integer> attributes = new HashMap<>(4);
 			attributes.put(IMarker.CHAR_START, Integer.valueOf(offset));
 			attributes.put(IMarker.CHAR_END, Integer.valueOf(offset + length));
 			marker.setAttributes(attributes);

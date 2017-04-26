@@ -10,7 +10,6 @@ package org.eclipse.dltk.internal.ui.text.hover;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -125,7 +124,7 @@ public class AnnotationExpandHover
 		if (model == null)
 			return null;
 
-		List<Annotation> exact = new ArrayList<Annotation>();
+		List<Annotation> exact = new ArrayList<>();
 		HashMap messagesAtPosition = new HashMap();
 
 		Iterator<Annotation> e = model.getAnnotationIterator();
@@ -163,27 +162,20 @@ public class AnnotationExpandHover
 		return input;
 	}
 
-	protected void sort(List exact, final IAnnotationModel model) {
-		class AnnotationComparator implements Comparator {
+	protected void sort(List<Annotation> exact, final IAnnotationModel model) {
 
-			@Override
-			public int compare(Object o1, Object o2) {
-				Annotation a1 = (Annotation) o1;
-				Annotation a2 = (Annotation) o2;
+		Collections.sort(exact, (o1, o2) -> {
 
-				Position p1 = model.getPosition(a1);
-				Position p2 = model.getPosition(a2);
+			Position p1 = model.getPosition(o1);
+			Position p2 = model.getPosition(o2);
 
-				// annotation order:
-				// primary order: by position in line
-				// secondary: annotation importance
-				if (p1.offset == p2.offset)
-					return getOrder(a2) - getOrder(a1);
-				return p1.offset - p2.offset;
-			}
-		}
-
-		Collections.sort(exact, new AnnotationComparator());
+			// annotation order:
+			// primary order: by position in line
+			// secondary: annotation importance
+			if (p1.offset == p2.offset)
+				return getOrder(o2) - getOrder(o1);
+			return p1.offset - p2.offset;
+		});
 
 	}
 

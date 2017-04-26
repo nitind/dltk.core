@@ -236,7 +236,7 @@ public final class ScriptCopyProcessor extends CopyProcessor
 				.computeAffectedNaturs(fCopyPolicy.getScriptElements());
 		String[] rNatures = ResourceProcessors
 				.computeAffectedNatures(fCopyPolicy.getResources());
-		Set<String> result = new HashSet<String>();
+		Set<String> result = new HashSet<>();
 		result.addAll(Arrays.asList(jNatures));
 		result.addAll(Arrays.asList(rNatures));
 		return result.toArray(new String[result.size()]);

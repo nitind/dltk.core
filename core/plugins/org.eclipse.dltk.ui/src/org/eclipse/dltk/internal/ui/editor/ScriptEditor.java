@@ -477,7 +477,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 		public void addTextConverter(ITextConverter textConverter) {
 			if (fTextConverters == null) {
-				fTextConverters = new ArrayList<ITextConverter>(1);
+				fTextConverters = new ArrayList<>(1);
 				fTextConverters.add(textConverter);
 			} else if (!fTextConverters.contains(textConverter))
 				fTextConverters.add(textConverter);
@@ -767,8 +767,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * @return the preference store for this editor
 	 */
 	private IPreferenceStore createCombinedPreferenceStore(IEditorInput input) {
-		final List<IPreferenceStore> stores = new ArrayList<IPreferenceStore>(
-				8);
+		final List<IPreferenceStore> stores = new ArrayList<>(8);
 		final IScriptProject project = EditorUtility.getScriptProject(input);
 		final IDLTKLanguageToolkit toolkit = getLanguageToolkit();
 		final String preferenceQualifier = toolkit.getPreferenceQualifier();
@@ -3123,7 +3122,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 	@Override
 	protected String[] collectContextMenuPreferencePages() {
-		final List<String> result = new ArrayList<String>();
+		final List<String> result = new ArrayList<>();
 		final IDLTKUILanguageToolkit uiToolkit = getUILanguageToolkit();
 		addPages(result, uiToolkit.getEditorPreferencePages());
 		addPages(result, super.collectContextMenuPreferencePages());

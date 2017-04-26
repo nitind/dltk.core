@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.
+ * Copyright (c) 2009, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -46,7 +46,8 @@ import org.eclipse.text.edits.MultiTextEdit;
 public class CodeGeneration {
 
 	public static String evaluateTemplate(TemplateContext context,
-			Template template, String[] fullLineVariables) throws CoreException {
+			Template template, String[] fullLineVariables)
+			throws CoreException {
 		TemplateBuffer buffer;
 		try {
 			buffer = context.evaluate(template);
@@ -66,12 +67,12 @@ public class CodeGeneration {
 
 	// remove lines for empty variables, prefix multi-line variables
 	private static String fixFullLineVariables(TemplateBuffer buffer,
-			String[] variables) throws MalformedTreeException,
-			BadLocationException {
+			String[] variables)
+			throws MalformedTreeException, BadLocationException {
 		IDocument doc = new Document(buffer.getString());
 		int nLines = doc.getNumberOfLines();
 		MultiTextEdit edit = new MultiTextEdit();
-		Set<Integer> removedLines = new HashSet<Integer>();
+		Set<Integer> removedLines = new HashSet<>();
 		for (int i = 0; i < variables.length; i++) {
 			TemplateVariable position = findVariable(buffer, variables[i]);
 			if (position == null) {
@@ -84,14 +85,16 @@ public class CodeGeneration {
 					try {
 						int startLine = doc.getLineOfOffset(offset);
 						int startOffset = doc.getLineOffset(startLine);
-						int endLine = doc.getLineOfOffset(offset
-								+ position.getLength());
-						String prefix = doc.get(startOffset, offset
-								- startOffset);
+						int endLine = doc
+								.getLineOfOffset(offset + position.getLength());
+						String prefix = doc.get(startOffset,
+								offset - startOffset);
 						if (prefix.length() > 0 && startLine < endLine) {
-							for (int line = startLine + 1; line <= endLine; ++line) {
+							for (int line = startLine
+									+ 1; line <= endLine; ++line) {
 								int lineOffset = doc.getLineOffset(line);
-								edit.addChild(new InsertEdit(lineOffset, prefix));
+								edit.addChild(
+										new InsertEdit(lineOffset, prefix));
 							}
 						}
 					} catch (BadLocationException exc) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,52 +27,56 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
 
-
 /**
  * This class contains some utility methods for J Search.
  */
 public class SearchUtil {
 
 	// LRU working sets
-	public static final int LRU_WORKINGSET_LIST_SIZE= 3;
+	public static final int LRU_WORKINGSET_LIST_SIZE = 3;
 	private static LRUWorkingSetsList fgLRUWorkingSets;
 
 	// Settings store
-	private static final String DIALOG_SETTINGS_KEY= "ModelElementSearchActions"; //$NON-NLS-1$
-	private static final String STORE_LRU_WORKING_SET_NAMES= "lastUsedWorkingSetNames"; //$NON-NLS-1$
-	
-	//private static final String BIN_PRIM_CONST_WARN_DIALOG_ID= "BinaryPrimitiveConstantWarningDialog"; //$NON-NLS-1$
+	private static final String DIALOG_SETTINGS_KEY = "ModelElementSearchActions"; //$NON-NLS-1$
+	private static final String STORE_LRU_WORKING_SET_NAMES = "lastUsedWorkingSetNames"; //$NON-NLS-1$
+
+	// private static final String BIN_PRIM_CONST_WARN_DIALOG_ID=
+	// "BinaryPrimitiveConstantWarningDialog"; //$NON-NLS-1$
 
 	public static boolean isSearchPlugInActivated() {
-		return Platform.getBundle("org.eclipse.search").getState() == Bundle.ACTIVE; //$NON-NLS-1$
+		return Platform.getBundle("org.eclipse.search") //$NON-NLS-1$
+				.getState() == Bundle.ACTIVE;
 	}
 
-	
 	/**
-	 * This helper method with Object as parameter is needed to prevent the loading
-	 * of the Search plug-in: the Interpreter verifies the method call and hence loads the
-	 * types used in the method signature, eventually triggering the loading of
-	 * a plug-in (in this case ISearchQuery results in Search plug-in being loaded).
+	 * This helper method with Object as parameter is needed to prevent the
+	 * loading of the Search plug-in: the Interpreter verifies the method call
+	 * and hence loads the types used in the method signature, eventually
+	 * triggering the loading of a plug-in (in this case ISearchQuery results in
+	 * Search plug-in being loaded).
 	 */
 	public static void runQueryInBackground(Object query) {
-		NewSearchUI.runQueryInBackground((ISearchQuery)query);
+		NewSearchUI.runQueryInBackground((ISearchQuery) query);
 	}
-	
+
 	/**
-	 * This helper method with Object as parameter is needed to prevent the loading
-	 * of the Search plug-in: the Interpreter verifies the method call and hence loads the
-	 * types used in the method signature, eventually triggering the loading of
-	 * a plug-in (in this case ISearchQuery results in Search plug-in being loaded).
+	 * This helper method with Object as parameter is needed to prevent the
+	 * loading of the Search plug-in: the Interpreter verifies the method call
+	 * and hence loads the types used in the method signature, eventually
+	 * triggering the loading of a plug-in (in this case ISearchQuery results in
+	 * Search plug-in being loaded).
 	 */
-	public static IStatus runQueryInForeground(IRunnableContext context, Object query) {
-		return NewSearchUI.runQueryInForeground(context, (ISearchQuery)query);
+	public static IStatus runQueryInForeground(IRunnableContext context,
+			Object query) {
+		return NewSearchUI.runQueryInForeground(context, (ISearchQuery) query);
 	}
-	
+
 	/**
 	 * Returns the compilation unit for the givenscriptelement.
-	 * 
-	 * @param	element thescriptelement whose compilation unit is searched for
-	 * @return	the compilation unit of the givenscriptelement
+	 *
+	 * @param element
+	 *            thescriptelement whose compilation unit is searched for
+	 * @return the compilation unit of the givenscriptelement
 	 */
 	static ISourceModule findSourceModule(IModelElement element) {
 		if (element == null)
@@ -80,19 +84,20 @@ public class SearchUtil {
 		return (ISourceModule) element.getAncestor(IModelElement.SOURCE_MODULE);
 	}
 
-
 	public static String toString(IWorkingSet[] workingSets) {
 		Arrays.sort(workingSets, new WorkingSetComparator());
-		String result= ""; //$NON-NLS-1$
+		String result = ""; //$NON-NLS-1$
 		if (workingSets != null && workingSets.length > 0) {
-			boolean firstFound= false;
-			for (int i= 0; i < workingSets.length; i++) {
-				String workingSetLabel= workingSets[i].getLabel();
+			boolean firstFound = false;
+			for (int i = 0; i < workingSets.length; i++) {
+				String workingSetLabel = workingSets[i].getLabel();
 				if (firstFound)
-					result= Messages.format(SearchMessages.SearchUtil_workingSetConcatenation, new String[] {result, workingSetLabel}); 
+					result = Messages.format(
+							SearchMessages.SearchUtil_workingSetConcatenation,
+							new String[] { result, workingSetLabel });
 				else {
-					result= workingSetLabel;
-					firstFound= true;
+					result = workingSetLabel;
+					firstFound = true;
 				}
 			}
 		}
@@ -103,26 +108,27 @@ public class SearchUtil {
 
 	/**
 	 * Updates the LRU list of working sets.
-	 * 
-	 * @param workingSets	the workings sets to be added to the LRU list
+	 *
+	 * @param workingSets
+	 *            the workings sets to be added to the LRU list
 	 */
 	public static void updateLRUWorkingSets(IWorkingSet[] workingSets) {
 		if (workingSets == null || workingSets.length < 1)
 			return;
-		
+
 		getLRUWorkingSets().add(workingSets);
 		saveState(getDialogStoreSection());
 	}
 
 	private static void saveState(IDialogSettings settingsStore) {
 		IWorkingSet[] workingSets;
-		Iterator iter= fgLRUWorkingSets.iterator();
-		int i= 0;
+		Iterator iter = fgLRUWorkingSets.iterator();
+		int i = 0;
 		while (iter.hasNext()) {
-			workingSets= (IWorkingSet[])iter.next();
-			String[] names= new String[workingSets.length];
-			for (int j= 0; j < workingSets.length; j++)
-				names[j]= workingSets[j].getName();
+			workingSets = (IWorkingSet[]) iter.next();
+			String[] names = new String[workingSets.length];
+			for (int j = 0; j < workingSets.length; j++)
+				names[j] = workingSets[j].getName();
 			settingsStore.put(STORE_LRU_WORKING_SET_NAMES + i, names);
 			i++;
 		}
@@ -136,21 +142,24 @@ public class SearchUtil {
 	}
 
 	private static void restoreState() {
-		fgLRUWorkingSets= new LRUWorkingSetsList(LRU_WORKINGSET_LIST_SIZE);
-		IDialogSettings settingsStore= getDialogStoreSection();
-		
-		boolean foundLRU= false;
-		for (int i= LRU_WORKINGSET_LIST_SIZE - 1; i >= 0; i--) {
-			String[] lruWorkingSetNames= settingsStore.getArray(STORE_LRU_WORKING_SET_NAMES + i);
+		fgLRUWorkingSets = new LRUWorkingSetsList(LRU_WORKINGSET_LIST_SIZE);
+		IDialogSettings settingsStore = getDialogStoreSection();
+
+		boolean foundLRU = false;
+		for (int i = LRU_WORKINGSET_LIST_SIZE - 1; i >= 0; i--) {
+			String[] lruWorkingSetNames = settingsStore
+					.getArray(STORE_LRU_WORKING_SET_NAMES + i);
 			if (lruWorkingSetNames != null) {
-				Set<IWorkingSet> workingSets = new HashSet<IWorkingSet>(2);
-				for (int j= 0; j < lruWorkingSetNames.length; j++) {
-					IWorkingSet workingSet= PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSet(lruWorkingSetNames[j]);
+				Set<IWorkingSet> workingSets = new HashSet<>(2);
+				for (int j = 0; j < lruWorkingSetNames.length; j++) {
+					IWorkingSet workingSet = PlatformUI.getWorkbench()
+							.getWorkingSetManager()
+							.getWorkingSet(lruWorkingSetNames[j]);
 					if (workingSet != null) {
 						workingSets.add(workingSet);
 					}
 				}
-				foundLRU= true;
+				foundLRU = true;
 				if (!workingSets.isEmpty())
 					fgLRUWorkingSets.add(workingSets
 							.toArray(new IWorkingSet[workingSets.size()]));
@@ -162,29 +171,34 @@ public class SearchUtil {
 	}
 
 	private static IDialogSettings getDialogStoreSection() {
-		IDialogSettings settingsStore= DLTKUIPlugin.getDefault().getDialogSettings().getSection(DIALOG_SETTINGS_KEY);
+		IDialogSettings settingsStore = DLTKUIPlugin.getDefault()
+				.getDialogSettings().getSection(DIALOG_SETTINGS_KEY);
 		if (settingsStore == null)
-			settingsStore= DLTKUIPlugin.getDefault().getDialogSettings().addNewSection(DIALOG_SETTINGS_KEY);
+			settingsStore = DLTKUIPlugin.getDefault().getDialogSettings()
+					.addNewSection(DIALOG_SETTINGS_KEY);
 		return settingsStore;
 	}
 
 	private static void restoreFromOldFormat() {
-		fgLRUWorkingSets= new LRUWorkingSetsList(LRU_WORKINGSET_LIST_SIZE);
-		IDialogSettings settingsStore= getDialogStoreSection();
+		fgLRUWorkingSets = new LRUWorkingSetsList(LRU_WORKINGSET_LIST_SIZE);
+		IDialogSettings settingsStore = getDialogStoreSection();
 
-		boolean foundLRU= false;
-		String[] lruWorkingSetNames= settingsStore.getArray(STORE_LRU_WORKING_SET_NAMES);
+		boolean foundLRU = false;
+		String[] lruWorkingSetNames = settingsStore
+				.getArray(STORE_LRU_WORKING_SET_NAMES);
 		if (lruWorkingSetNames != null) {
-			for (int i= lruWorkingSetNames.length - 1; i >= 0; i--) {
-				IWorkingSet workingSet= PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSet(lruWorkingSetNames[i]);
+			for (int i = lruWorkingSetNames.length - 1; i >= 0; i--) {
+				IWorkingSet workingSet = PlatformUI.getWorkbench()
+						.getWorkingSetManager()
+						.getWorkingSet(lruWorkingSetNames[i]);
 				if (workingSet != null) {
-					foundLRU= true;
-					fgLRUWorkingSets.add(new IWorkingSet[]{workingSet});
+					foundLRU = true;
+					fgLRUWorkingSets.add(new IWorkingSet[] { workingSet });
 				}
 			}
 		}
 		if (foundLRU)
 			// save in new format
 			saveState(settingsStore);
-	}	
+	}
 }

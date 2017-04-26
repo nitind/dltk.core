@@ -36,8 +36,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 /**
  * Manages a type hierarchy, to keep it refreshed, and to allow it to be shared.
  */
-public class TypeHierarchyLifeCycle implements ITypeHierarchyChangedListener,
-		IElementChangedListener {
+public class TypeHierarchyLifeCycle
+		implements ITypeHierarchyChangedListener, IElementChangedListener {
 
 	private boolean fHierarchyRefreshNeeded;
 	private ITypeHierarchy fHierarchy;
@@ -54,7 +54,7 @@ public class TypeHierarchyLifeCycle implements ITypeHierarchyChangedListener,
 		fHierarchy = null;
 		fInputElement = null;
 		fIsSuperTypesOnly = isSuperTypesOnly;
-		fChangeListeners = new ArrayList<ITypeHierarchyLifeCycleListener>(2);
+		fChangeListeners = new ArrayList<>(2);
 	}
 
 	public ITypeHierarchy getHierarchy() {
@@ -74,7 +74,8 @@ public class TypeHierarchyLifeCycle implements ITypeHierarchyChangedListener,
 		}
 	}
 
-	public void removeChangedListener(ITypeHierarchyLifeCycleListener listener) {
+	public void removeChangedListener(
+			ITypeHierarchyLifeCycleListener listener) {
 		fChangeListeners.remove(listener);
 	}
 
@@ -92,14 +93,14 @@ public class TypeHierarchyLifeCycle implements ITypeHierarchyChangedListener,
 	}
 
 	public void ensureRefreshedTypeHierarchy(final IModelElement element,
-			IRunnableContext context) throws InvocationTargetException,
-			InterruptedException {
+			IRunnableContext context)
+			throws InvocationTargetException, InterruptedException {
 		if (element == null || !element.exists()) {
 			freeHierarchy();
 			return;
 		}
-		boolean hierachyCreationNeeded = (fHierarchy == null || !element
-				.equals(fInputElement));
+		boolean hierachyCreationNeeded = (fHierarchy == null
+				|| !element.equals(fInputElement));
 
 		if (hierachyCreationNeeded || fHierarchyRefreshNeeded) {
 
@@ -138,7 +139,8 @@ public class TypeHierarchyLifeCycle implements ITypeHierarchyChangedListener,
 						region.add(roots[i]);
 					}
 				}
-			} else if (element.getElementType() == IModelElement.PROJECT_FRAGMENT) {
+			} else if (element
+					.getElementType() == IModelElement.PROJECT_FRAGMENT) {
 				IProjectFragment[] roots = element.getScriptProject()
 						.getProjectFragments();
 				String name = element.getElementName();
@@ -158,8 +160,8 @@ public class TypeHierarchyLifeCycle implements ITypeHierarchyChangedListener,
 
 	public synchronized void doHierarchyRefresh(IModelElement element,
 			IProgressMonitor pm) throws ModelException {
-		boolean hierachyCreationNeeded = (fHierarchy == null || !element
-				.equals(fInputElement));
+		boolean hierachyCreationNeeded = (fHierarchy == null
+				|| !element.equals(fInputElement));
 		// to ensure the order of the two listeners always remove / add
 		// listeners on operations
 		// on type hierarchies
@@ -196,10 +198,11 @@ public class TypeHierarchyLifeCycle implements ITypeHierarchyChangedListener,
 		if (fHierarchyRefreshNeeded) {
 			return;
 		} else {
-			ArrayList<IType> changedTypes = new ArrayList<IType>();
+			ArrayList<IType> changedTypes = new ArrayList<>();
 			processDelta(event.getDelta(), changedTypes);
 			if (changedTypes.size() > 0) {
-				fireChange(changedTypes.toArray(new IType[changedTypes.size()]));
+				fireChange(
+						changedTypes.toArray(new IType[changedTypes.size()]));
 			}
 		}
 	}
@@ -246,7 +249,8 @@ public class TypeHierarchyLifeCycle implements ITypeHierarchyChangedListener,
 	}
 
 	private boolean isPossibleStructuralChange(int flags) {
-		return (flags & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
+		return (flags & (IModelElementDelta.F_CONTENT
+				| IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
 	}
 
 	private void processTypeDelta(IType type, ArrayList<IType> changedTypes) {

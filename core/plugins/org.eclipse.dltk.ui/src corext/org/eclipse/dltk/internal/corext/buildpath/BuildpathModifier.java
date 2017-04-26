@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,10 +70,10 @@ public class BuildpathModifier {
 		 * The new build path entry that was generated upon calling a method of
 		 * <code>BuildpathModifier</code>. The type indicates which kind of
 		 * interaction was executed on this entry.
-		 * 
+		 *
 		 * Note that the list does not contain elements of type
 		 * <code>IBuildpathEntry</code>, but <code>BPListElement</code>
-		 * 
+		 *
 		 * @param newEntries
 		 *            list of <code>BPListElement</code>
 		 */
@@ -92,7 +92,7 @@ public class BuildpathModifier {
 
 	/**
 	 * Create a linked source folder.
-	 * 
+	 *
 	 * @param query
 	 *            a query to create a linked source folder
 	 * @param project
@@ -126,7 +126,7 @@ public class BuildpathModifier {
 	 * handlet by the <code>
 	 * Buildpathmodifier</code> itself using the return value of
 	 * <code>FolderCreationQuery.getCreatedFolder()</code>.
-	 * 
+	 *
 	 * @param folderQuery
 	 *            query to create the new folder
 	 * @param outputQuery
@@ -172,7 +172,7 @@ public class BuildpathModifier {
 
 	/**
 	 * Add a list of elements to the build path.
-	 * 
+	 *
 	 * @param elements
 	 *            a list of elements to be added to the build path. An element
 	 *            must either be of type <code>IFolder</code>,
@@ -193,8 +193,8 @@ public class BuildpathModifier {
 	 * @see BuildpathModifierQueries.OutputFolderQuery
 	 */
 	protected List addToBuildpath(List elements, IScriptProject project,
-			IProgressMonitor monitor) throws OperationCanceledException,
-			CoreException {
+			IProgressMonitor monitor)
+			throws OperationCanceledException, CoreException {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
 		try {
@@ -210,7 +210,7 @@ public class BuildpathModifier {
 				List<BPListElement> existingEntries = getExistingEntries(
 						project);
 
-				List<BPListElement> newEntries = new ArrayList<BPListElement>();
+				List<BPListElement> newEntries = new ArrayList<>();
 				for (int i = 0; i < elements.size(); i++) {
 					Object element = elements.get(i);
 					BPListElement entry;
@@ -227,9 +227,9 @@ public class BuildpathModifier {
 				BuildPathBasePage.fixNestingConflicts(
 						newEntries
 								.toArray(new BPListElement[newEntries.size()]),
-						existingEntries
-								.toArray(new BPListElement[existingEntries
-										.size()]), modifiedSourceEntries);
+						existingEntries.toArray(
+								new BPListElement[existingEntries.size()]),
+						modifiedSourceEntries);
 
 				setNewEntry(existingEntries, newEntries, project,
 						new SubProgressMonitor(monitor, 1));
@@ -254,8 +254,8 @@ public class BuildpathModifier {
 				return result;
 			} else {
 				StatusInfo rootStatus = new StatusInfo();
-				rootStatus
-						.setError(NewWizardMessages.BuildpathModifier_Error_NoNatures);
+				rootStatus.setError(
+						NewWizardMessages.BuildpathModifier_Error_NoNatures);
 				throw new CoreException(rootStatus);
 			}
 		} finally {
@@ -266,7 +266,7 @@ public class BuildpathModifier {
 	/**
 	 * Add external archives (.zip files) to the buildpath. The method uses the
 	 * query to find out which entries need to be added.
-	 * 
+	 *
 	 * @param query
 	 *            the query to get the information which entries need to be
 	 *            added
@@ -277,7 +277,7 @@ public class BuildpathModifier {
 	 * @return a list of <code>IProjectFragment</code>s representing the added
 	 *         archives or an empty list if no element was added.
 	 * @throws CoreException
-	 * 
+	 *
 	 * @see IAddArchivesQuery
 	 */
 	protected List addExternalArchives(IAddArchivesQuery query,
@@ -286,7 +286,7 @@ public class BuildpathModifier {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
 		IPath[] selected = query.doQuery();
-		List<BPListElement> addedEntries = new ArrayList<BPListElement>();
+		List<BPListElement> addedEntries = new ArrayList<>();
 		try {
 			monitor.beginTask(
 					NewWizardMessages.BuildpathModifier_Monitor_AddToBuildpath,
@@ -299,7 +299,8 @@ public class BuildpathModifier {
 				}
 				monitor.worked(1);
 
-				List<BPListElement> existingEntries = getExistingEntries(project);
+				List<BPListElement> existingEntries = getExistingEntries(
+						project);
 				setNewEntry(existingEntries, addedEntries, project,
 						new SubProgressMonitor(monitor, 1));
 				updateBuildpath(existingEntries, project,
@@ -309,8 +310,8 @@ public class BuildpathModifier {
 				for (int i = 0; i < addedEntries.size(); i++) {
 					IBuildpathEntry entry = addedEntries.get(i)
 							.getBuildpathEntry();
-					IModelElement elem = project.findProjectFragment(entry
-							.getPath());
+					IModelElement elem = project
+							.findProjectFragment(entry.getPath());
 					if (elem != null) {
 						result.add(elem);
 					}
@@ -327,7 +328,7 @@ public class BuildpathModifier {
 	/**
 	 * Add libraries to the buildpath. The method uses the query to find out
 	 * which entries need to be added.
-	 * 
+	 *
 	 * @param query
 	 *            the query to get the information which entries need to be
 	 *            added
@@ -338,7 +339,7 @@ public class BuildpathModifier {
 	 * @return a list of <code>BuildpathContainer</code>s representing the added
 	 *         archives or an empty list if no element was added.
 	 * @throws CoreException
-	 * 
+	 *
 	 * @see IAddArchivesQuery
 	 */
 	protected List<BuildPathContainer> addLibraries(IAddLibrariesQuery query,
@@ -348,7 +349,7 @@ public class BuildpathModifier {
 			monitor = new NullProgressMonitor();
 		IBuildpathEntry[] selected = query.doQuery(project,
 				project.getRawBuildpath());
-		List<BPListElement> addedEntries = new ArrayList<BPListElement>();
+		List<BPListElement> addedEntries = new ArrayList<>();
 		try {
 			monitor.beginTask(
 					NewWizardMessages.BuildpathModifier_Monitor_AddToBuildpath,
@@ -356,18 +357,19 @@ public class BuildpathModifier {
 			if (selected != null) {
 				for (int i = 0; i < selected.length; i++) {
 					addedEntries.add(new BPListElement(project,
-							IBuildpathEntry.BPE_CONTAINER, selected[i]
-									.getPath(), null, false));
+							IBuildpathEntry.BPE_CONTAINER,
+							selected[i].getPath(), null, false));
 				}
 				monitor.worked(1);
 
-				List<BPListElement> existingEntries = getExistingEntries(project);
+				List<BPListElement> existingEntries = getExistingEntries(
+						project);
 				setNewEntry(existingEntries, addedEntries, project,
 						new SubProgressMonitor(monitor, 1));
 				updateBuildpath(existingEntries, project,
 						new SubProgressMonitor(monitor, 1));
 
-				List<BuildPathContainer> result = new ArrayList<BuildPathContainer>(
+				List<BuildPathContainer> result = new ArrayList<>(
 						addedEntries.size());
 				for (int i = 0; i < addedEntries.size(); i++) {
 					result.add(new BuildPathContainer(project, selected[i]));
@@ -378,7 +380,7 @@ public class BuildpathModifier {
 		} finally {
 			monitor.done();
 		}
-		return new ArrayList<BuildPathContainer>();
+		return new ArrayList<>();
 	}
 
 	protected List addLibraryEntries(List resources, IScriptProject project,
@@ -392,17 +394,17 @@ public class BuildpathModifier {
 					4);
 			for (int i = 0; i < resources.size(); i++) {
 				IResource res = (IResource) resources.get(i);
-				addedEntries.add(new BPListElement(project,
-						IBuildpathEntry.BPE_LIBRARY, res.getFullPath(), res,
-						false));
+				addedEntries.add(
+						new BPListElement(project, IBuildpathEntry.BPE_LIBRARY,
+								res.getFullPath(), res, false));
 			}
 			monitor.worked(1);
 
 			List existingEntries = getExistingEntries(project);
 			setNewEntry(existingEntries, addedEntries, project,
 					new SubProgressMonitor(monitor, 1));
-			updateBuildpath(existingEntries, project, new SubProgressMonitor(
-					monitor, 1));
+			updateBuildpath(existingEntries, project,
+					new SubProgressMonitor(monitor, 1));
 
 			List result = new ArrayList(addedEntries.size());
 			for (int i = 0; i < resources.size(); i++) {
@@ -422,7 +424,7 @@ public class BuildpathModifier {
 
 	/**
 	 * Remove a list of elements to the build path.
-	 * 
+	 *
 	 * @param query
 	 *            query to remove unused linked folders from the project
 	 * @param elements
@@ -465,7 +467,8 @@ public class BuildpathModifier {
 						if (root.getKind() == IProjectFragment.K_BINARY) {
 							archiveRemoved = true;
 							res = removeFromBuildpath(root, existingEntries,
-									project, new SubProgressMonitor(monitor, 1));
+									project,
+									new SubProgressMonitor(monitor, 1));
 						} else {
 							final IResource resource = root
 									.getCorrespondingResource();
@@ -495,17 +498,16 @@ public class BuildpathModifier {
 											new SubProgressMonitor(monitor, 1));
 								}
 							} else {
-								res = removeFromBuildpath(root,
-										existingEntries, project,
+								res = removeFromBuildpath(root, existingEntries,
+										project,
 										new SubProgressMonitor(monitor, 1));
 							}
 						}
 					} else {
 						archiveRemoved = true;
 						BuildPathContainer container = (BuildPathContainer) element;
-						existingEntries
-								.remove(BPListElement.createFromExisting(
-										container.getBuildpathEntry(), project));
+						existingEntries.remove(BPListElement.createFromExisting(
+								container.getBuildpathEntry(), project));
 					}
 				}
 				if (res != null) {
@@ -514,8 +516,8 @@ public class BuildpathModifier {
 
 			}
 
-			updateBuildpath(existingEntries, project, new SubProgressMonitor(
-					monitor, 1));
+			updateBuildpath(existingEntries, project,
+					new SubProgressMonitor(monitor, 1));
 			fireEvent(existingEntries);
 			if (archiveRemoved && resultElements.size() == 0)
 				resultElements.add(project);
@@ -530,11 +532,11 @@ public class BuildpathModifier {
 	 * inclusion filter for the corresponding <code>IProjectFragment</code>s
 	 * need to be modified. All elements must be either be of type
 	 * <code>IResource</code> or <code>IModelElement</code>.
-	 * 
+	 *
 	 * Note: the <code>IModelElement</code>'s fragment (if there is one) is not
 	 * allowed to be excluded! However, inclusion (or simply no filter) on the
 	 * parent fragment is allowed.
-	 * 
+	 *
 	 * @param elements
 	 *            a list of elements to be included. The elements must be either
 	 *            of type <code>IResource</code> or <code>IModelElement</code>.
@@ -545,7 +547,7 @@ public class BuildpathModifier {
 	 * @return a list of <code>IModelElement</code>s corresponding to the
 	 *         included ones.
 	 * @throws ModelException
-	 * 
+	 *
 	 * @see #exclude(List, IScriptProject, IProgressMonitor)
 	 */
 	protected List include(List elements, IScriptProject project,
@@ -573,13 +575,13 @@ public class BuildpathModifier {
 				if (root != null) {
 					BPListElement entry = getBuildpathEntry(existingEntries,
 							root);
-					include(resource, entry, project, new SubProgressMonitor(
-							monitor, 1));
+					include(resource, entry, project,
+							new SubProgressMonitor(monitor, 1));
 				}
 			}
 
-			updateBuildpath(existingEntries, project, new SubProgressMonitor(
-					monitor, 4));
+			updateBuildpath(existingEntries, project,
+					new SubProgressMonitor(monitor, 4));
 			List scriptElements = getCorrespondingElements(resources, project);
 			return scriptElements;
 		} finally {
@@ -591,11 +593,11 @@ public class BuildpathModifier {
 	 * Exclude a list of <code>IModelElement</code>s. This means that the
 	 * exclusion filter for the corresponding <code>IProjectFragment</code>s
 	 * needs to be modified.
-	 * 
+	 *
 	 * Note: the <code>IModelElement</code>'s fragment (if there is one) is not
 	 * allowed to be excluded! However, inclusion (or simply no filter) on the
 	 * parent fragment is allowed.
-	 * 
+	 *
 	 * @param scriptElements
 	 *            list of script elements to be excluded
 	 * @param project
@@ -630,8 +632,8 @@ public class BuildpathModifier {
 				}
 			}
 
-			updateBuildpath(existingEntries, project, new SubProgressMonitor(
-					monitor, 4));
+			updateBuildpath(existingEntries, project,
+					new SubProgressMonitor(monitor, 4));
 			return resources;
 		} finally {
 			monitor.done();
@@ -641,11 +643,11 @@ public class BuildpathModifier {
 	/**
 	 * Inverse operation to include. The <code>IModelElement</code>s in the list
 	 * will be removed from their fragment roots inclusion filter.
-	 * 
+	 *
 	 * Note: the <code>IModelElement</code>'s fragment (if there is one) is not
 	 * allowed to be excluded! However, inclusion (or simply no filter) on the
 	 * parent fragment is allowed.
-	 * 
+	 *
 	 * @param scriptElements
 	 *            a list of <code>IModelElements</code> to be unincluded
 	 * @param project
@@ -654,7 +656,7 @@ public class BuildpathModifier {
 	 *            progress monitor, can be <code>null</code>
 	 * @return a list of elements representing unexcluded elements
 	 * @throws ModelException
-	 * 
+	 *
 	 * @see #include(List, IScriptProject, IProgressMonitor)
 	 */
 	protected List unInclude(List scriptElements, IScriptProject project,
@@ -678,8 +680,8 @@ public class BuildpathModifier {
 						new SubProgressMonitor(monitor, 1));
 			}
 
-			updateBuildpath(existingEntries, project, new SubProgressMonitor(
-					monitor, 4));
+			updateBuildpath(existingEntries, project,
+					new SubProgressMonitor(monitor, 4));
 			List result = getCorrespondingElements(scriptElements, project);
 			return result;
 		} finally {
@@ -691,11 +693,11 @@ public class BuildpathModifier {
 	 * Inverse operation to <code>exclude</code>. The list of elements of type
 	 * <code>IResource</code> will be removed from the exclusion filters of
 	 * their parent roots.
-	 * 
+	 *
 	 * Note: the <code>IModelElement</code>'s fragment (if there is one) is not
 	 * allowed to be excluded! However, inclusion (or simply no filter) on the
 	 * parent fragment is allowed.
-	 * 
+	 *
 	 * @param elements
 	 *            list of <code>IResource</code>s to be unexcluded
 	 * @param project
@@ -704,7 +706,7 @@ public class BuildpathModifier {
 	 *            progress monitor, can be <code>null</code>
 	 * @return an object representing the unexcluded element
 	 * @throws ModelException
-	 * 
+	 *
 	 * @see #exclude(List, IScriptProject, IProgressMonitor)
 	 * @see #unExclude(List, IScriptProject, IProgressMonitor)
 	 */
@@ -724,8 +726,8 @@ public class BuildpathModifier {
 						new SubProgressMonitor(monitor, 1));
 				if (root != null) {
 					BPListElement entry = getBuildpathEntry(entries, root);
-					unExclude(resource, entry, project, new SubProgressMonitor(
-							monitor, 1));
+					unExclude(resource, entry, project,
+							new SubProgressMonitor(monitor, 1));
 				}
 			}
 
@@ -741,7 +743,7 @@ public class BuildpathModifier {
 	/**
 	 * Edit the filters of a given <code>IModelElement</code> by using the
 	 * passed <code>IInclusionExclusionQuery</code>.
-	 * 
+	 *
 	 * @param element
 	 *            the script element to edit the filters on. Must be either of
 	 *            type <code>IScriptProject</code> or
@@ -784,18 +786,19 @@ public class BuildpathModifier {
 	}
 
 	/**
-	 * Reset a list of elements. The elements can be either of type <li>
-	 * <code>IScriptProject</code></li> <li><code>IProjectFragment</code></li>
+	 * Reset a list of elements. The elements can be either of type
+	 * <li><code>IScriptProject</code></li>
+	 * <li><code>IProjectFragment</code></li>
 	 * <li><code>BPListElementAttribute</code></li><br>
-	 * 
+	 *
 	 * Depending on the element, resetting performs two different operations:
 	 * <li>On <code>IScriptProject</code> or <code>IProjectFragment</code>, the
 	 * inclusion and exclusion filters are reset. Only entries in the filters
 	 * that correspond to either source folders or output folders will not be
-	 * removed (to prevent damage on the project layout)</li> <li>On
-	 * <code>BPListElementAttribute</code>, the output location of the given
-	 * attribute is reset to the default output location.</li>
-	 * 
+	 * removed (to prevent damage on the project layout)</li>
+	 * <li>On <code>BPListElementAttribute</code>, the output location of the
+	 * given attribute is reset to the default output location.</li>
+	 *
 	 * @param project
 	 *            the script project
 	 * @param monitor
@@ -847,7 +850,7 @@ public class BuildpathModifier {
 	/**
 	 * Get the <code>IBuildpathEntry</code> from the project and convert it into
 	 * a list of <code>BPListElement</code>s.
-	 * 
+	 *
 	 * @param project
 	 *            the script project to get it's build path entries from
 	 * @return a list of <code>BPListElement</code>s corresponding to the build
@@ -857,7 +860,7 @@ public class BuildpathModifier {
 	public static List<BPListElement> getExistingEntries(IScriptProject project)
 			throws ModelException {
 		IBuildpathEntry[] buildpathEntries = project.getRawBuildpath();
-		ArrayList<BPListElement> newBuildPath = new ArrayList<BPListElement>();
+		ArrayList<BPListElement> newBuildPath = new ArrayList<>();
 		for (int i = 0; i < buildpathEntries.length; i++) {
 			IBuildpathEntry curr = buildpathEntries[i];
 			newBuildPath.add(BPListElement.createFromExisting(curr, project));
@@ -870,7 +873,7 @@ public class BuildpathModifier {
 	 * the root in the list of elements and return it. If no one can be found,
 	 * the roots <code>BuildpathEntry</code> is converted to a
 	 * <code>BPListElement</code> and returned.
-	 * 
+	 *
 	 * @param elements
 	 *            a list of <code>BPListElements</code>
 	 * @param root
@@ -900,7 +903,7 @@ public class BuildpathModifier {
 	 * For a given <code>IResource</code>, try to convert it into a
 	 * <code>IProjectFragment</code> if possible or return <code>null</code> if
 	 * no fragment root could be created.
-	 * 
+	 *
 	 * @param resource
 	 *            the resource to be converted
 	 * @return the <code>resource<code> as
@@ -916,7 +919,7 @@ public class BuildpathModifier {
 	/**
 	 * Get the source folder of a given <code>IResource</code> element, starting
 	 * with the resource's parent.
-	 * 
+	 *
 	 * @param resource
 	 *            the resource to get the fragment root from
 	 * @param project
@@ -958,7 +961,7 @@ public class BuildpathModifier {
 	/**
 	 * Get the <code>IBuildpathEntry</code> for the given path by looking up all
 	 * build path entries on the project
-	 * 
+	 *
 	 * @param path
 	 *            the path to find a build path entry for
 	 * @param project
@@ -982,7 +985,7 @@ public class BuildpathModifier {
 	/**
 	 * Check whether the current selection is the project's default output
 	 * folder or not
-	 * 
+	 *
 	 * @param attrib
 	 *            the attribute to be checked
 	 * @return <code>true</code> if is the default output folder,
@@ -996,7 +999,7 @@ public class BuildpathModifier {
 	 * Determines whether the current selection (of type
 	 * <code>ISourceModule</code> or <code>IScriptFolder</code>) is on the
 	 * inclusion filter of it's parent source folder.
-	 * 
+	 *
 	 * @param selection
 	 *            the current script element
 	 * @param project
@@ -1014,17 +1017,18 @@ public class BuildpathModifier {
 			monitor = new NullProgressMonitor();
 		try {
 			monitor.beginTask(
-					NewWizardMessages.BuildpathModifier_Monitor_ContainsPath, 4);
+					NewWizardMessages.BuildpathModifier_Monitor_ContainsPath,
+					4);
 			IProjectFragment root = (IProjectFragment) selection
 					.getAncestor(IModelElement.PROJECT_FRAGMENT);
 			IBuildpathEntry entry = root.getRawBuildpathEntry();
 			if (entry == null)
 				return false;
 			return contains(
-					selection.getPath().removeFirstSegments(
-							root.getPath().segmentCount()),
-					entry.getInclusionPatterns(), new SubProgressMonitor(
-							monitor, 2));
+					selection.getPath()
+							.removeFirstSegments(root.getPath().segmentCount()),
+					entry.getInclusionPatterns(),
+					new SubProgressMonitor(monitor, 2));
 		} finally {
 			monitor.done();
 		}
@@ -1032,7 +1036,7 @@ public class BuildpathModifier {
 
 	/**
 	 * Find out whether the <code>IResource</code> excluded or not.
-	 * 
+	 *
 	 * @param resource
 	 *            the resource to be checked
 	 * @param project
@@ -1049,14 +1053,13 @@ public class BuildpathModifier {
 		String fragmentName = getName(resource.getFullPath(), root.getPath());
 		fragmentName = completeName(project, fragmentName);
 		IBuildpathEntry entry = root.getRawBuildpathEntry();
-		return entry != null
-				&& contains(new Path(fragmentName),
-						entry.getExclusionPatterns(), null);
+		return entry != null && contains(new Path(fragmentName),
+				entry.getExclusionPatterns(), null);
 	}
 
 	/**
 	 * Find out whether one of the <code>IResource</code>'s parents is excluded.
-	 * 
+	 *
 	 * @param resource
 	 *            check the resources parents whether they are excluded or not
 	 * @param project
@@ -1073,8 +1076,8 @@ public class BuildpathModifier {
 		if (root == null) {
 			return true;
 		}
-		IPath path = resource.getFullPath().removeFirstSegments(
-				root.getPath().segmentCount());
+		IPath path = resource.getFullPath()
+				.removeFirstSegments(root.getPath().segmentCount());
 		IBuildpathEntry entry = root.getRawBuildpathEntry();
 		if (entry == null)
 			return true; // there is no build path entry, this is equal to the
@@ -1121,7 +1124,7 @@ public class BuildpathModifier {
 
 	/**
 	 * Check whether the <code>IScriptProject</code> is a source folder
-	 * 
+	 *
 	 * @param project
 	 *            the project to test
 	 * @return <code>true</code> if <code>project</code> is a source folder
@@ -1136,7 +1139,7 @@ public class BuildpathModifier {
 	/**
 	 * Check whether the <code>IScriptFolder</code> corresponds to the project's
 	 * default fragment.
-	 * 
+	 *
 	 * @param fragment
 	 *            the package fragment to be checked
 	 * @return <code>true</code> if is the default package fragment,
@@ -1149,7 +1152,7 @@ public class BuildpathModifier {
 	/**
 	 * Determines whether the inclusion filter of the element's source folder is
 	 * empty or not
-	 * 
+	 *
 	 * @return <code>true</code> if the inclusion filter is empty,
 	 *         <code>false</code> otherwise.
 	 * @throws ModelException
@@ -1179,7 +1182,7 @@ public class BuildpathModifier {
 	 * Check whether the input paramenter of type <code>
 	 * IProjectFragment</code> has either it's inclusion or exclusion filter or
 	 * both set (that means they are not empty).
-	 * 
+	 *
 	 * @param root
 	 *            the fragment root to be inspected
 	 * @return <code>true</code> inclusion or exclusion filter set,
@@ -1201,7 +1204,7 @@ public class BuildpathModifier {
 
 	/**
 	 * Add a resource to the build path.
-	 * 
+	 *
 	 * @param resource
 	 *            the resource to be added to the build path
 	 * @param project
@@ -1215,8 +1218,8 @@ public class BuildpathModifier {
 	 */
 	public static BPListElement addToBuildpath(IResource resource,
 			List existingEntries, List newEntries, IScriptProject project,
-			IProgressMonitor monitor) throws OperationCanceledException,
-			CoreException {
+			IProgressMonitor monitor)
+			throws OperationCanceledException, CoreException {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
 		try {
@@ -1236,7 +1239,7 @@ public class BuildpathModifier {
 
 	/**
 	 * Check whether the provided file is an archive (.zip).
-	 * 
+	 *
 	 * @param file
 	 *            the file to be checked
 	 * @param project
@@ -1257,7 +1260,7 @@ public class BuildpathModifier {
 
 	/**
 	 * Add a script element to the build path.
-	 * 
+	 *
 	 * @param scriptElement
 	 *            element to be added to the build path
 	 * @param project
@@ -1271,8 +1274,8 @@ public class BuildpathModifier {
 	 */
 	public static BPListElement addToBuildpath(IModelElement scriptElement,
 			List existingEntries, List newEntries, IScriptProject project,
-			IProgressMonitor monitor) throws OperationCanceledException,
-			CoreException {
+			IProgressMonitor monitor)
+			throws OperationCanceledException, CoreException {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
 		try {
@@ -1290,7 +1293,7 @@ public class BuildpathModifier {
 
 	/**
 	 * Remove the script project from the build path
-	 * 
+	 *
 	 * @param project
 	 *            the project to be removed
 	 * @param existingEntries
@@ -1313,7 +1316,7 @@ public class BuildpathModifier {
 
 	/**
 	 * Remove a given <code>IProjectFragment</code> from the build path.
-	 * 
+	 *
 	 * @param root
 	 *            the <code>IProjectFragment</code> to be removed from the build
 	 *            path
@@ -1327,8 +1330,8 @@ public class BuildpathModifier {
 	 *            progress monitor, can be <code>null</code>
 	 * @return returns the <code>IResource</code> that has been removed from the
 	 *         build path; is of type <code>IFile</code> if the root was an
-	 *         archive, otherwise <code>IFolder</code> or
-	 *         <code>null<code> for external archives.
+	 *         archive, otherwise <code>IFolder</code> or <code>null<code> for
+	 *         external archives.
 	 */
 	public static IResource removeFromBuildpath(IProjectFragment root,
 			List existingEntries, IScriptProject project,
@@ -1353,7 +1356,7 @@ public class BuildpathModifier {
 	/**
 	 * Remove <code>path</code> from inclusion/exlusion filters in all
 	 * <code>existingEntries</code>
-	 * 
+	 *
 	 * @param path
 	 *            the path to remove
 	 * @param project
@@ -1382,8 +1385,7 @@ public class BuildpathModifier {
 			IPath[] exlusions = (IPath[]) element
 					.getAttribute(BPListElement.EXCLUSION);
 			if (exlusions != null) {
-				List<IPath> exlusionList = new ArrayList<IPath>(
-						exlusions.length);
+				List<IPath> exlusionList = new ArrayList<>(exlusions.length);
 				for (int i = 0; i < exlusions.length; i++) {
 					if (!exlusions[i].equals(path)) {
 						exlusionList.add(exlusions[i]);
@@ -1398,8 +1400,7 @@ public class BuildpathModifier {
 			IPath[] inclusion = (IPath[]) element
 					.getAttribute(BPListElement.INCLUSION);
 			if (inclusion != null) {
-				List<IPath> inclusionList = new ArrayList<IPath>(
-						inclusion.length);
+				List<IPath> inclusionList = new ArrayList<>(inclusion.length);
 				for (int i = 0; i < inclusion.length; i++) {
 					if (!inclusion[i].equals(path)) {
 						inclusionList.add(inclusion[i]);
@@ -1421,11 +1422,11 @@ public class BuildpathModifier {
 	 * Include the given <code>IResource</code>. This means that the inclusion
 	 * filter for the corresponding <code>IProjectFragment</code> needs to be
 	 * modified.
-	 * 
+	 *
 	 * Note: the <code>IModelElement</code>'s fragment (if there is one) is not
 	 * allowed to be excluded! However, inclusion (or simply no filter) on the
 	 * parent fragment is allowed.
-	 * 
+	 *
 	 * @param resource
 	 *            the element to be included
 	 * @param entry
@@ -1435,9 +1436,9 @@ public class BuildpathModifier {
 	 *            the script project
 	 * @param monitor
 	 *            progress monitor, can be <code>null</code>
-	 * 
+	 *
 	 * @throws ModelException
-	 * 
+	 *
 	 * @see #exclude(List, IScriptProject, IProgressMonitor)
 	 */
 	private void include(IResource resource, BPListElement entry,
@@ -1456,17 +1457,15 @@ public class BuildpathModifier {
 			IPath[] newIncludedPath = new IPath[includedPath.length + 1];
 			String completedName = completeName(project, name);
 			IPath relPath = new Path(completedName);
-			if (!contains(relPath, includedPath, new SubProgressMonitor(
-					monitor, 2))) {
+			if (!contains(relPath, includedPath,
+					new SubProgressMonitor(monitor, 2))) {
 				System.arraycopy(includedPath, 0, newIncludedPath, 0,
 						includedPath.length);
 				newIncludedPath[includedPath.length] = relPath;
 				entry.setAttribute(BPListElement.INCLUSION, newIncludedPath);
-				entry.setAttribute(
-						BPListElement.EXCLUSION,
-						remove(relPath, (IPath[]) entry
-								.getAttribute(BPListElement.EXCLUSION),
-								new SubProgressMonitor(monitor, 2)));
+				entry.setAttribute(BPListElement.EXCLUSION, remove(relPath,
+						(IPath[]) entry.getAttribute(BPListElement.EXCLUSION),
+						new SubProgressMonitor(monitor, 2)));
 			}
 		} finally {
 			monitor.done();
@@ -1476,7 +1475,7 @@ public class BuildpathModifier {
 	/**
 	 * Exclude an element with a given name and absolute path from the build
 	 * path.
-	 * 
+	 *
 	 * @param name
 	 *            the name of the element to be excluded
 	 * @param fullPath
@@ -1510,11 +1509,9 @@ public class BuildpathModifier {
 						excludedPath.length);
 				newExcludedPath[excludedPath.length] = path;
 				entry.setAttribute(BPListElement.EXCLUSION, newExcludedPath);
-				entry.setAttribute(
-						BPListElement.INCLUSION,
-						remove(path, (IPath[]) entry
-								.getAttribute(BPListElement.INCLUSION),
-								new SubProgressMonitor(monitor, 4)));
+				entry.setAttribute(BPListElement.INCLUSION, remove(path,
+						(IPath[]) entry.getAttribute(BPListElement.INCLUSION),
+						new SubProgressMonitor(monitor, 4)));
 			}
 			result = fullPath == null ? null : getResource(fullPath, project);
 		} finally {
@@ -1526,15 +1523,15 @@ public class BuildpathModifier {
 	/**
 	 * Exclude an object at a given path. This means that the exclusion filter
 	 * for the corresponding <code>IProjectFragment</code> needs to be modified.
-	 * 
+	 *
 	 * First, the fragment root needs to be found. To do so, the new entries are
 	 * and the existing entries are traversed for a match and the entry with the
 	 * path is removed from one of those lists.
-	 * 
+	 *
 	 * Note: the <code>IModelElement</code>'s fragment (if there is one) is not
 	 * allowed to be excluded! However, inclusion (or simply no filter) on the
 	 * parent fragment is allowed.
-	 * 
+	 *
 	 * @param path
 	 *            absolute path of an object to be excluded
 	 * @param existingEntries
@@ -1571,8 +1568,8 @@ public class BuildpathModifier {
 				elem = existingElem;
 			}
 			exclude(path.removeFirstSegments(path.segmentCount() - i)
-					.toString(), null, elem, project, new SubProgressMonitor(
-					monitor, 1));
+					.toString(), null, elem, project,
+					new SubProgressMonitor(monitor, 1));
 		} finally {
 			monitor.done();
 		}
@@ -1582,11 +1579,11 @@ public class BuildpathModifier {
 	 * Exclude a <code>IModelElement</code>. This means that the exclusion
 	 * filter for the corresponding <code>IProjectFragment</code>s need to be
 	 * modified.
-	 * 
+	 *
 	 * Note: the <code>IModelElement</code>'s fragment (if there is one) is not
 	 * allowed to be excluded! However, inclusion (or simply no filter) on the
 	 * parent fragment is allowed.
-	 * 
+	 *
 	 * @param scriptElement
 	 *            the script element to be excluded
 	 * @param entry
@@ -1596,7 +1593,7 @@ public class BuildpathModifier {
 	 *            the script project
 	 * @param monitor
 	 *            progress monitor, can be <code>null</code>
-	 * 
+	 *
 	 * @return the resulting <code>IResource<code>
 	 * @throws ModelException
 	 */
@@ -1618,11 +1615,11 @@ public class BuildpathModifier {
 	 * Inverse operation to <code>include</code>. The provided
 	 * <code>IModelElement</code> will be removed from the inclusion filters of
 	 * it's root.
-	 * 
+	 *
 	 * Note: the <code>IModelElement</code>'s fragment (if there is one) is not
 	 * allowed to be excluded! However, inclusion (or simply no filter) on the
 	 * parent fragment is allowed.
-	 * 
+	 *
 	 * @param scriptElement
 	 *            the script element to be unincluded
 	 * @param entry
@@ -1633,7 +1630,7 @@ public class BuildpathModifier {
 	 * @param monitor
 	 *            progress monitor, can be <code>null</code>
 	 * @throws ModelException
-	 * 
+	 *
 	 * @see #include(List, IScriptProject, IProgressMonitor)
 	 */
 	private void unInclude(IModelElement scriptElement, BPListElement entry,
@@ -1661,11 +1658,11 @@ public class BuildpathModifier {
 	/**
 	 * Inverse operation to <code>exclude</code>. The resource removed from it's
 	 * fragment roots exlusion filter.
-	 * 
+	 *
 	 * Note: the <code>IModelElement</code>'s fragment (if there is one) is not
 	 * allowed to be excluded! However, inclusion (or simply no filter) on the
 	 * parent fragment is allowed.
-	 * 
+	 *
 	 * @param resource
 	 *            the resource to be unexcluded
 	 * @param entry
@@ -1676,7 +1673,7 @@ public class BuildpathModifier {
 	 * @param monitor
 	 *            progress monitor, can be <code>null</code>
 	 * @throws ModelException
-	 * 
+	 *
 	 * @see #exclude(List, IScriptProject, IProgressMonitor)
 	 */
 	public static void unExclude(IResource resource, BPListElement entry,
@@ -1703,7 +1700,7 @@ public class BuildpathModifier {
 	/**
 	 * Resets inclusion and exclusion filters for the given
 	 * <code>IModelElement</code>
-	 * 
+	 *
 	 * @param element
 	 *            element to reset it's filters
 	 * @param entry
@@ -1721,11 +1718,11 @@ public class BuildpathModifier {
 			monitor = new NullProgressMonitor();
 		try {
 			monitor.beginTask(
-					NewWizardMessages.BuildpathModifier_Monitor_ResetFilters, 3);
+					NewWizardMessages.BuildpathModifier_Monitor_ResetFilters,
+					3);
 
 			List<IPath> exclusionList = getFoldersOnBP(element.getPath(),
-					project,
-					new SubProgressMonitor(monitor, 2));
+					project, new SubProgressMonitor(monitor, 2));
 			IPath[] exclusions = exclusionList
 					.toArray(new IPath[exclusionList.size()]);
 
@@ -1741,7 +1738,7 @@ public class BuildpathModifier {
 	 * the provided <code>BPListElement</code> in the list of elements and
 	 * return it. If no one can be found, the provided
 	 * <code>BPListElement</code> is returned.
-	 * 
+	 *
 	 * @param elements
 	 *            a list of <code>BPListElements</code>
 	 * @param cpElement
@@ -1755,8 +1752,8 @@ public class BuildpathModifier {
 	public static BPListElement getBuildpathEntry(List elements,
 			BPListElement cpElement) throws ModelException {
 		for (int i = 0; i < elements.size(); i++) {
-			if (((BPListElement) elements.get(i)).getPath().equals(
-					cpElement.getPath()))
+			if (((BPListElement) elements.get(i)).getPath()
+					.equals(cpElement.getPath()))
 				return (BPListElement) elements.get(i);
 		}
 		elements.add(cpElement);
@@ -1765,7 +1762,7 @@ public class BuildpathModifier {
 
 	/**
 	 * For a given path, find the corresponding element in the list.
-	 * 
+	 *
 	 * @param path
 	 *            the path to found an entry for
 	 * @param elements
@@ -1789,7 +1786,7 @@ public class BuildpathModifier {
 	 * entry. For example, this can be necessary after having edited some
 	 * filters on a build path entry, which can happen when including or
 	 * excluding an object.
-	 * 
+	 *
 	 * @param newEntries
 	 *            a list of <code>BPListElements</code> that should be used as
 	 *            build path entries for the project.
@@ -1812,7 +1809,8 @@ public class BuildpathModifier {
 			if (!status.isOK())
 				throw new ModelException(status);
 
-			project.setRawBuildpath(entries, new SubProgressMonitor(monitor, 2));
+			project.setRawBuildpath(entries,
+					new SubProgressMonitor(monitor, 2));
 			fireEvent(newEntries);
 		} finally {
 			monitor.done();
@@ -1831,7 +1829,8 @@ public class BuildpathModifier {
 			if (!status.isOK())
 				throw new ModelException(status);
 
-			project.setRawBuildpath(entries, new SubProgressMonitor(monitor, 2));
+			project.setRawBuildpath(entries,
+					new SubProgressMonitor(monitor, 2));
 		} finally {
 			monitor.done();
 		}
@@ -1840,11 +1839,12 @@ public class BuildpathModifier {
 	/**
 	 * For a given list of entries, find out what representation they will have
 	 * in the project and return a list with corresponding elements.
-	 * 
+	 *
 	 * @param entries
 	 *            a list of entries to find an appropriate representation for.
-	 *            The list can contain elements of two types: <li>
-	 *            <code>IResource</code></li> <li><code>IModelElement</code></li>
+	 *            The list can contain elements of two types:
+	 *            <li><code>IResource</code></li>
+	 *            <li><code>IModelElement</code></li>
 	 * @param project
 	 *            the script project
 	 * @return a list of elements corresponding to the passed entries.
@@ -1875,7 +1875,7 @@ public class BuildpathModifier {
 	/**
 	 * Returns for the given absolute path the corresponding resource, this is
 	 * either element of type <code>IFile</code> or <code>IFolder</code>.
-	 * 
+	 *
 	 * @param path
 	 *            an absolute path to a resource
 	 * @param project
@@ -1889,7 +1889,7 @@ public class BuildpathModifier {
 
 	/**
 	 * Find out whether the provided path equals to one in the array.
-	 * 
+	 *
 	 * @param path
 	 *            path to find an equivalent for
 	 * @param paths
@@ -1924,9 +1924,9 @@ public class BuildpathModifier {
 
 	/**
 	 * Add a '/' at the end of the name if it does not end with extension.
-	 * 
+	 *
 	 * XXX this method does nothing, use {@link #completeName(IPath, String)}
-	 * 
+	 *
 	 * @param name
 	 *            append '/' at the end if necessary
 	 * @return modified string
@@ -1937,7 +1937,7 @@ public class BuildpathModifier {
 			System.err.println("Add Buildpath name completion here"); //$NON-NLS-1$
 		}
 		// if (!DLTKCore.isScriptLikeFileName(name)) {
-		//			name= name + "/"; //$NON-NLS-1$
+		// name= name + "/"; //$NON-NLS-1$
 		// name= name.replace('.', '/');
 		// return name;
 		// }
@@ -1946,10 +1946,10 @@ public class BuildpathModifier {
 
 	/**
 	 * Add a '/' at the end of the name if it does not end with extension.
-	 * 
+	 *
 	 * XXX this method incorrectly finds from project, use
 	 * {@link #completeName(IPath, String)}
-	 * 
+	 *
 	 * @param project
 	 *            - the project containing the resource
 	 * @param name
@@ -1971,7 +1971,7 @@ public class BuildpathModifier {
 
 	/**
 	 * Add a '/' at the end of the name if it maps to a folder.
-	 * 
+	 *
 	 * @param fullPath
 	 *            - the project containing the resource
 	 * @param name
@@ -1981,7 +1981,7 @@ public class BuildpathModifier {
 	private static String completeName(IPath fullPath, String name) {
 		// Try to locate the resource in the workspace
 		IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(fullPath); //$NON-NLS-1$
+				.findMember(fullPath); // $NON-NLS-1$
 		// If the resource is a folder and does not end with "/" add it
 		if (resource != null && resource.getType() == IResource.FOLDER
 				&& !name.endsWith("/")) { //$NON-NLS-1$
@@ -1994,9 +1994,9 @@ public class BuildpathModifier {
 	 * Removes <code>path</code> out of the set of given <code>
 	 * paths</code>. If the path is not contained, then the initially provided
 	 * array of paths is returned.
-	 * 
+	 *
 	 * Only the first occurrence will be removed.
-	 * 
+	 *
 	 * @param path
 	 *            path to be removed
 	 * @param paths
@@ -2034,11 +2034,11 @@ public class BuildpathModifier {
 	 * Find all folders that are on the build path and <code>path</code> is a
 	 * prefix of those folders path entry, that is, all folders which are a
 	 * subfolder of <code>path</code>.
-	 * 
+	 *
 	 * For example, if <code>path</code>=/MyProject/src then all folders having
 	 * a path like /MyProject/src/*, where * can be any valid string are
 	 * returned if they are also on the project's build path.
-	 * 
+	 *
 	 * @param path
 	 *            absolute path
 	 * @param project
@@ -2053,7 +2053,7 @@ public class BuildpathModifier {
 			IProgressMonitor monitor) throws ModelException {
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
-		List<IPath> srcFolders = new ArrayList<IPath>();
+		List<IPath> srcFolders = new ArrayList<>();
 		IBuildpathEntry[] cpEntries = project.getRawBuildpath();
 		for (int i = 0; i < cpEntries.length; i++) {
 			IPath cpPath = cpEntries[i].getPath();
@@ -2066,9 +2066,8 @@ public class BuildpathModifier {
 
 	/**
 	 * Returns a string corresponding to the <code>path</code> with the
-	 * <code>rootPath<code>'s number of segments
-	 * removed
-	 * 
+	 * <code>rootPath<code>'s number of segments removed
+	 *
 	 * @param path
 	 *            path to remove segments
 	 * @param rootPath
@@ -2083,7 +2082,7 @@ public class BuildpathModifier {
 	 * Sets and validates the new entries. Note that the elments of the list
 	 * containing the new entries will be added to the list of existing entries
 	 * (therefore, there is no return list for this method).
-	 * 
+	 *
 	 * @param existingEntries
 	 *            a list of existing buildpath entries
 	 * @param newEntries
@@ -2115,7 +2114,7 @@ public class BuildpathModifier {
 	/**
 	 * Convert a list of <code>BPListElement</code>s to an array of
 	 * <code>IBuildpathEntry</code>.
-	 * 
+	 *
 	 * @param list
 	 *            the list to be converted
 	 * @return an array containing build path entries corresponding to the list
@@ -2133,10 +2132,10 @@ public class BuildpathModifier {
 	 * Validate the new entry in the context of the existing entries.
 	 * Furthermore, check if exclusion filters need to be applied and do so if
 	 * necessary.
-	 * 
+	 *
 	 * If validation was successfull, add the new entry to the list of existing
 	 * entries.
-	 * 
+	 *
 	 * @param entry
 	 *            the entry to be validated and added to the list of existing
 	 *            entries.
@@ -2152,17 +2151,16 @@ public class BuildpathModifier {
 		IPath path = entry.getPath();
 		// IPath projPath= project.getProject().getFullPath();
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		IStatus validate = workspaceRoot.getWorkspace().validatePath(
-				path.toString(), IResource.FOLDER);
+		IStatus validate = workspaceRoot.getWorkspace()
+				.validatePath(path.toString(), IResource.FOLDER);
 		StatusInfo rootStatus = new StatusInfo();
 		rootStatus.setOK();
 		boolean isExternal = isExternalArchiveOrLibrary(entry, project);
 		if (!isExternal && validate.matches(IStatus.ERROR)
 				&& !project.getPath().equals(path)) {
-			rootStatus
-					.setError(Messages
-							.format(NewWizardMessages.NewSourceFolderWizardPage_error_InvalidRootName,
-									validate.getMessage()));
+			rootStatus.setError(Messages.format(
+					NewWizardMessages.NewSourceFolderWizardPage_error_InvalidRootName,
+					validate.getMessage()));
 			throw new CoreException(rootStatus);
 		} else {
 			if (!isExternal && !project.getPath().equals(path)) {
@@ -2170,18 +2168,18 @@ public class BuildpathModifier {
 				if (res != null) {
 					if (res.getType() != IResource.FOLDER
 							&& res.getType() != IResource.FILE) {
-						rootStatus
-								.setError(NewWizardMessages.NewSourceFolderWizardPage_error_NotAFolder);
+						rootStatus.setError(
+								NewWizardMessages.NewSourceFolderWizardPage_error_NotAFolder);
 						throw new CoreException(rootStatus);
 					}
 				} else {
 					URI projLocation = project.getProject().getLocationURI();
 					if (projLocation != null) {
-						IFileStore store = EFS.getStore(projLocation).getChild(
-								path);
+						IFileStore store = EFS.getStore(projLocation)
+								.getChild(path);
 						if (store.fetchInfo().exists()) {
-							rootStatus
-									.setError(NewWizardMessages.NewSourceFolderWizardPage_error_AlreadyExistingDifferentCase);
+							rootStatus.setError(
+									NewWizardMessages.NewSourceFolderWizardPage_error_AlreadyExistingDifferentCase);
 							throw new CoreException(rootStatus);
 						}
 					}
@@ -2193,8 +2191,8 @@ public class BuildpathModifier {
 				if (curr.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
 					if (path.equals(curr.getPath())
 							&& !project.getPath().equals(path)) {
-						rootStatus
-								.setError(NewWizardMessages.NewSourceFolderWizardPage_error_AlreadyExisting);
+						rootStatus.setError(
+								NewWizardMessages.NewSourceFolderWizardPage_error_AlreadyExisting);
 						throw new CoreException(rootStatus);
 					}
 				}
@@ -2216,8 +2214,8 @@ public class BuildpathModifier {
 			}
 
 			if (isSourceFolder(project) || project.getPath().equals(path)) {
-				rootStatus
-						.setWarning(NewWizardMessages.NewSourceFolderWizardPage_warning_ReplaceSF);
+				rootStatus.setWarning(
+						NewWizardMessages.NewSourceFolderWizardPage_warning_ReplaceSF);
 				return;
 			}
 
@@ -2232,9 +2230,8 @@ public class BuildpathModifier {
 		BPListElement[] elements = (BPListElement[]) existingEntries
 				.toArray(new BPListElement[length]);
 		int i = 0;
-		while (i < length
-				&& elements[i].getBuildpathEntry().getEntryKind() != entry
-						.getBuildpathEntry().getEntryKind()) {
+		while (i < length && elements[i].getBuildpathEntry()
+				.getEntryKind() != entry.getBuildpathEntry().getEntryKind()) {
 			i++;
 		}
 		if (i < length) {
@@ -2276,7 +2273,7 @@ public class BuildpathModifier {
 	/**
 	 * Test if the provided kind is of type
 	 * <code>IBuildpathEntry.BPE_SOURCE</code>
-	 * 
+	 *
 	 * @param entry
 	 *            the buildpath entry to be compared with the provided type
 	 * @param kind
@@ -2292,9 +2289,9 @@ public class BuildpathModifier {
 	/**
 	 * Event fired whenever build pathentries changed. The event parameter
 	 * corresponds to the a <code>List</code> of <code>BPListElement</code>s
-	 * 
+	 *
 	 * @param newEntries
-	 * 
+	 *
 	 * @see #addToBuildpath(List, IScriptProject, OutputFolderQuery,
 	 *      IProgressMonitor)
 	 * @see #removeFromBuildpath(IRemoveLinkedFolderQuery, List, IScriptProject,

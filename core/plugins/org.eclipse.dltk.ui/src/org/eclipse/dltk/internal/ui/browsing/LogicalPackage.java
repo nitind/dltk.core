@@ -17,8 +17,8 @@ import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
 
 /**
- * Contains a list of package fragments with the same name
- * but residing in different source folders of a unique script project.
+ * Contains a list of package fragments with the same name but residing in
+ * different source folders of a unique script project.
  */
 public class LogicalPackage extends PlatformObject {
 
@@ -26,56 +26,56 @@ public class LogicalPackage extends PlatformObject {
 	private String fName;
 	private IScriptProject fScriptProject;
 
-	public LogicalPackage(IScriptFolder fragment){
-		fPackages = new HashSet<IScriptFolder>();
-		fScriptProject= fragment.getScriptProject();
+	public LogicalPackage(IScriptFolder fragment) {
+		fPackages = new HashSet<>();
+		fScriptProject = fragment.getScriptProject();
 		add(fragment);
-		fName= fragment.getElementName();
+		fName = fragment.getElementName();
 	}
 
-	public IScriptProject getScriptProject(){
+	public IScriptProject getScriptProject() {
 		return fScriptProject;
 	}
 
-	public IScriptFolder[] getFragments(){
+	public IScriptFolder[] getFragments() {
 		return fPackages.toArray(new IScriptFolder[fPackages.size()]);
 	}
 
-	public void add(IScriptFolder fragment){
-		Assert.isTrue(fragment != null && fScriptProject.equals(fragment.getScriptProject()));
+	public void add(IScriptFolder fragment) {
+		Assert.isTrue(fragment != null
+				&& fScriptProject.equals(fragment.getScriptProject()));
 		fPackages.add(fragment);
 	}
 
-	public void remove(IScriptFolder fragment){
+	public void remove(IScriptFolder fragment) {
 		fPackages.remove(fragment);
 	}
 
-	public boolean contains(IScriptFolder fragment){
+	public boolean contains(IScriptFolder fragment) {
 		return fPackages.contains(fragment);
 	}
 
-	public String getElementName(){
+	public String getElementName() {
 		return fName;
 	}
 
-	public int size(){
+	public int size() {
 		return fPackages.size();
 	}
 
 	/**
-	 * Returns true if the given fragment has the same name and
-	 * resides inside the same project as the other fragments in
-	 * the LogicalPackage.
+	 * Returns true if the given fragment has the same name and resides inside
+	 * the same project as the other fragments in the LogicalPackage.
 	 *
 	 * @param fragment
 	 * @return boolean
 	 */
 	public boolean belongs(IScriptFolder fragment) {
 
-		if(fragment==null)
+		if (fragment == null)
 			return false;
 
-		if(fScriptProject.equals(fragment.getScriptProject())){
+		if (fScriptProject.equals(fragment.getScriptProject())) {
 			return fName.equals(fragment.getElementName());
 		}
 
@@ -83,23 +83,24 @@ public class LogicalPackage extends PlatformObject {
 	}
 
 	@Override
-	public boolean equals(Object o){
+	public boolean equals(Object o) {
 		if (!(o instanceof LogicalPackage))
 			return false;
 
-		LogicalPackage lp= (LogicalPackage)o;
+		LogicalPackage lp = (LogicalPackage) o;
 		if (!fScriptProject.equals(lp.getScriptProject()))
 			return false;
 
-		IScriptFolder[] fragments= lp.getFragments();
+		IScriptFolder[] fragments = lp.getFragments();
 
 		if (fragments.length != getFragments().length)
 			return false;
 
-		//this works because a LogicalPackage cannot contain the same IScriptFolder twice
-		for (int i= 0; i < fragments.length; i++) {
-			IScriptFolder fragment= fragments[i];
-			if(!fPackages.contains(fragment))
+		// this works because a LogicalPackage cannot contain the same
+		// IScriptFolder twice
+		for (int i = 0; i < fragments.length; i++) {
+			IScriptFolder fragment = fragments[i];
+			if (!fPackages.contains(fragment))
 				return false;
 		}
 
@@ -108,14 +109,17 @@ public class LogicalPackage extends PlatformObject {
 
 	@Override
 	public int hashCode() {
-		IScriptFolder[] fragments= getFragments();
-		return fScriptProject.hashCode() + getHash(fragments, fragments.length-1);
+		IScriptFolder[] fragments = getFragments();
+		return fScriptProject.hashCode()
+				+ getHash(fragments, fragments.length - 1);
 	}
 
 	private int getHash(IScriptFolder[] fragments, int index) {
 		if (index <= 0)
 			return fragments[0].hashCode() * 17;
-		else return fragments[index].hashCode() * 17 + getHash(fragments, index-1);
+		else
+			return fragments[index].hashCode() * 17
+					+ getHash(fragments, index - 1);
 	}
 
 }

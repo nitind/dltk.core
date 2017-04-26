@@ -40,12 +40,12 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
  *
  * @since 2.1
  */
-public class MarkOccurrencesConfigurationBlock implements
-		IPreferenceConfigurationBlock {
+public class MarkOccurrencesConfigurationBlock
+		implements IPreferenceConfigurationBlock {
 
 	private OverlayPreferenceStore fStore;
 
-	private Map<Object, String> fCheckBoxes = new HashMap<Object, String>();
+	private Map<Object, String> fCheckBoxes = new HashMap<>();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -64,7 +64,7 @@ public class MarkOccurrencesConfigurationBlock implements
 	 * @see #createDependency(Button, String, Control)
 	 * @since 3.0
 	 */
-	private ArrayList<Object> fMasterSlaveListeners = new ArrayList<Object>();
+	private ArrayList<Object> fMasterSlaveListeners = new ArrayList<>();
 
 	private StatusInfo fStatus;
 
@@ -76,7 +76,7 @@ public class MarkOccurrencesConfigurationBlock implements
 	}
 
 	protected List<OverlayPreferenceStore.OverlayKey> createOverlayStoreKeys() {
-		List<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<OverlayPreferenceStore.OverlayKey>();
+		List<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<>();
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
 				OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.EDITOR_MARK_OCCURRENCES));
@@ -104,7 +104,8 @@ public class MarkOccurrencesConfigurationBlock implements
 		composite.setLayout(layout);
 
 		Link link = new Link(composite, SWT.NONE);
-		link.setText(PreferencesMessages.MarkOccurrencesConfigurationBlock_link);
+		link.setText(
+				PreferencesMessages.MarkOccurrencesConfigurationBlock_link);
 		link.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -114,7 +115,8 @@ public class MarkOccurrencesConfigurationBlock implements
 		});
 		// TODO replace by link-specific tooltips when
 		// bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=88866 gets fixed
-		link.setToolTipText(PreferencesMessages.MarkOccurrencesConfigurationBlock_link_tooltip);
+		link.setToolTipText(
+				PreferencesMessages.MarkOccurrencesConfigurationBlock_link_tooltip);
 
 		addFiller(composite);
 

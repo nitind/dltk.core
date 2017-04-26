@@ -96,7 +96,7 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 	public static IBuildpathEntry[] decodeInterpreterEnvironmentLibraryBuildpathEntries(
 			String encoded) {
 		StringTokenizer tok = new StringTokenizer(encoded, " "); //$NON-NLS-1$
-		ArrayList<IBuildpathEntry> res = new ArrayList<IBuildpathEntry>();
+		ArrayList<IBuildpathEntry> res = new ArrayList<>();
 		while (tok.hasMoreTokens()) {
 			try {
 				tok.nextToken(); // desc: ignore
@@ -187,7 +187,8 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 	public NewScriptProjectPreferencePage() {
 		super();
 		setPreferenceStore(DLTKUIPlugin.getDefault().getPreferenceStore());
-		setDescription(PreferencesMessages.NewScriptProjectPreferencePage_description);
+		setDescription(
+				PreferencesMessages.NewScriptProjectPreferencePage_description);
 
 		// title used when opened programatically
 		setTitle(PreferencesMessages.NewScriptProjectPreferencePage_title);
@@ -279,10 +280,12 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 
 		Composite result = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
-		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+		layout.marginHeight = convertVerticalDLUsToPixels(
+				IDialogConstants.VERTICAL_MARGIN);
 		layout.marginWidth = 0;
 		layout.verticalSpacing = convertVerticalDLUsToPixels(10);
-		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(
+				IDialogConstants.HORIZONTAL_SPACING);
 		layout.numColumns = 2;
 		result.setLayout(layout);
 
@@ -294,19 +297,17 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 		layout.numColumns = 2;
 		sourceFolderGroup.setLayout(layout);
 		sourceFolderGroup.setLayoutData(gd);
-		sourceFolderGroup
-				.setText(PreferencesMessages.NewScriptProjectPreferencePage_sourcefolder_label);
+		sourceFolderGroup.setText(
+				PreferencesMessages.NewScriptProjectPreferencePage_sourcefolder_label);
 
 		int indent = 0;
 
-		fProjectAsSourceFolder = addRadioButton(
-				sourceFolderGroup,
+		fProjectAsSourceFolder = addRadioButton(sourceFolderGroup,
 				PreferencesMessages.NewScriptProjectPreferencePage_sourcefolder_project,
 				SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.FALSE, indent);
 		fProjectAsSourceFolder.addSelectionListener(fSelectionListener);
 
-		fFoldersAsSourceFolder = addRadioButton(
-				sourceFolderGroup,
+		fFoldersAsSourceFolder = addRadioButton(sourceFolderGroup,
 				PreferencesMessages.NewScriptProjectPreferencePage_sourcefolder_folder,
 				SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.TRUE, indent);
 		fFoldersAsSourceFolder.addSelectionListener(fSelectionListener);
@@ -314,8 +315,8 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 		indent = convertWidthInCharsToPixels(4);
 
 		fSrcFolderNameLabel = new Label(sourceFolderGroup, SWT.NONE);
-		fSrcFolderNameLabel
-				.setText(PreferencesMessages.NewScriptProjectPreferencePage_folders_src);
+		fSrcFolderNameLabel.setText(
+				PreferencesMessages.NewScriptProjectPreferencePage_folders_src);
 		fSrcFolderNameText = addTextControl(sourceFolderGroup,
 				fSrcFolderNameLabel, SRC_SRCNAME, indent);
 		fSrcFolderNameText.addModifyListener(fModifyListener);
@@ -351,8 +352,7 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 		if (useFolders) {
 			String srcName = fSrcFolderNameText.getText();
 			if (srcName.length() == 0) {
-				updateStatus(new StatusInfo(
-						IStatus.ERROR,
+				updateStatus(new StatusInfo(IStatus.ERROR,
 						PreferencesMessages.NewScriptProjectPreferencePage_folders_error_namesempty));
 				return;
 			}
@@ -365,10 +365,9 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 				status = workspace.validatePath(srcPath.toString(),
 						IResource.FOLDER);
 				if (!status.isOK()) {
-					String message = Messages
-							.format(
-									PreferencesMessages.NewScriptProjectPreferencePage_folders_error_invalidsrcname,
-									status.getMessage());
+					String message = Messages.format(
+							PreferencesMessages.NewScriptProjectPreferencePage_folders_error_invalidsrcname,
+							status.getMessage());
 					updateStatus(new StatusInfo(IStatus.ERROR, message));
 					return;
 				}
@@ -414,9 +413,8 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 		for (int i = 0; i < fRadioButtons.size(); i++) {
 			Button button = (Button) fRadioButtons.get(i);
 			String[] info = (String[]) button.getData();
-			button
-					.setSelection(info[1].equals(store
-							.getDefaultString(info[0])));
+			button.setSelection(
+					info[1].equals(store.getDefaultString(info[0])));
 		}
 		for (int i = 0; i < fTextControls.size(); i++) {
 			Text text = (Text) fTextControls.get(i);
@@ -465,7 +463,7 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 	// String prefString=
 	// getPreferenceStore().getString(CLASSPATH_InterpreterEnvironmentLIBRARY_LIST);
 	// ArrayList list= new ArrayList();
-	//		StringTokenizer tok= new StringTokenizer(prefString, ";"); //$NON-NLS-1$
+	// StringTokenizer tok= new StringTokenizer(prefString, ";"); //$NON-NLS-1$
 	// while (tok.hasMoreTokens()) {
 	// list.add(decodeInterpreterEnvironmentLibraryDescription(tok.nextToken()));
 	// }

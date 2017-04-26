@@ -41,9 +41,8 @@ import org.eclipse.swt.custom.StyleRange;
  *
  * @since 3.0
  */
-public class SemanticHighlightingPresenter implements
-		ITextPresentationListener, ITextInputListener, IDocumentListener,
-		IHighlightedPositionFactory {
+public class SemanticHighlightingPresenter implements ITextPresentationListener,
+		ITextInputListener, IDocumentListener, IHighlightedPositionFactory {
 
 	/**
 	 * Semantic highlighting position updater.
@@ -74,8 +73,8 @@ public class SemanticHighlightingPresenter implements
 			int eventEnd = eventOffset + eventOldLength;
 
 			try {
-				Position[] positions = event.getDocument().getPositions(
-						fCategory);
+				Position[] positions = event.getDocument()
+						.getPositions(fCategory);
 
 				for (int i = 0; i != positions.length; i++) {
 
@@ -164,9 +163,8 @@ public class SemanticHighlightingPresenter implements
 			int end = offset + length;
 
 			int includedLength = 0;
-			while (includedLength < eventNewLength
-					&& Character.isJavaIdentifierPart(newText
-							.charAt(includedLength)))
+			while (includedLength < eventNewLength && Character
+					.isJavaIdentifierPart(newText.charAt(includedLength)))
 				includedLength++;
 			if (includedLength == eventNewLength)
 				position.setLength(length + deltaLength);
@@ -174,9 +172,8 @@ public class SemanticHighlightingPresenter implements
 				int newLeftLength = eventOffset - offset + includedLength;
 
 				int excludedLength = eventNewLength;
-				while (excludedLength > 0
-						&& Character.isJavaIdentifierPart(newText
-								.charAt(excludedLength - 1)))
+				while (excludedLength > 0 && Character.isJavaIdentifierPart(
+						newText.charAt(excludedLength - 1)))
 					excludedLength--;
 				int newRightOffset = eventOffset + excludedLength;
 				int newRightLength = end + deltaLength - newRightOffset;
@@ -212,12 +209,11 @@ public class SemanticHighlightingPresenter implements
 			int eventNewLength = newText.length();
 
 			int includedLength = 0;
-			while (includedLength < eventNewLength
-					&& Character.isJavaIdentifierPart(newText
-							.charAt(includedLength)))
+			while (includedLength < eventNewLength && Character
+					.isJavaIdentifierPart(newText.charAt(includedLength)))
 				includedLength++;
-			position.setLength(event.getOffset() - position.getOffset()
-					+ includedLength);
+			position.setLength(
+					event.getOffset() - position.getOffset() + includedLength);
 		}
 
 		/**
@@ -240,14 +236,13 @@ public class SemanticHighlightingPresenter implements
 			int eventNewLength = newText.length();
 
 			int excludedLength = eventNewLength;
-			while (excludedLength > 0
-					&& Character.isJavaIdentifierPart(newText
-							.charAt(excludedLength - 1)))
+			while (excludedLength > 0 && Character
+					.isJavaIdentifierPart(newText.charAt(excludedLength - 1)))
 				excludedLength--;
 			int deleted = eventEnd - position.getOffset();
 			int inserted = eventNewLength - excludedLength;
-			position.update(eventOffset + excludedLength, position.getLength()
-					- deleted + inserted);
+			position.update(eventOffset + excludedLength,
+					position.getLength() - deleted + inserted);
 		}
 
 		/**
@@ -270,7 +265,9 @@ public class SemanticHighlightingPresenter implements
 	private IPositionUpdater fPositionUpdater = new HighlightingPositionUpdater(
 			getPositionCategory());
 
-	/** The source viewer this semantic highlighting reconciler is installed on */
+	/**
+	 * The source viewer this semantic highlighting reconciler is installed on
+	 */
 	private ScriptSourceViewer fSourceViewer;
 	/** The background presentation reconciler */
 	private ScriptPresentationReconciler fPresentationReconciler;
@@ -279,7 +276,7 @@ public class SemanticHighlightingPresenter implements
 	 * UI's current highlighted positions - can contain <code>null</code>
 	 * elements
 	 */
-	private List<HighlightedPosition> fPositions = new ArrayList<HighlightedPosition>();
+	private List<HighlightedPosition> fPositions = new ArrayList<>();
 	/** UI position lock */
 	private Object fPositionLock = new Object();
 
@@ -302,8 +299,8 @@ public class SemanticHighlightingPresenter implements
 	 * @return The new highlighted position
 	 */
 	@Override
-	public HighlightedPosition createHighlightedPosition(int offset,
-			int length, HighlightingStyle highlighting) {
+	public HighlightedPosition createHighlightedPosition(int offset, int length,
+			HighlightingStyle highlighting) {
 		// TODO: reuse deleted positions
 		return new HighlightedPosition(offset, length, highlighting,
 				fPositionUpdater);
@@ -448,9 +445,11 @@ public class SemanticHighlightingPresenter implements
 		if (fSourceViewer == null)
 			return;
 
-		//		checkOrdering("added positions: ", Arrays.asList(addedPositions)); //$NON-NLS-1$
-		//		checkOrdering("removed positions: ", Arrays.asList(removedPositions)); //$NON-NLS-1$
-		//		checkOrdering("old positions: ", fPositions); //$NON-NLS-1$
+		// checkOrdering("added positions: ", Arrays.asList(addedPositions));
+		// //$NON-NLS-1$
+		// checkOrdering("removed positions: ",
+		// Arrays.asList(removedPositions)); //$NON-NLS-1$
+		// checkOrdering("old positions: ", fPositions); //$NON-NLS-1$
 
 		// TODO: double-check consistency with document.getPositions(...)
 		// TODO: reuse removed positions
@@ -469,8 +468,8 @@ public class SemanticHighlightingPresenter implements
 		try {
 			synchronized (fPositionLock) {
 				List<HighlightedPosition> oldPositions = fPositions;
-				int newSize = Math.max(fPositions.size()
-						+ addedPositions.length - removedPositions.length, 10);
+				int newSize = Math.max(fPositions.size() + addedPositions.length
+						- removedPositions.length, 10);
 
 				/*
 				 * The following loop is a kind of merge sort: it merges two
@@ -480,12 +479,14 @@ public class SemanticHighlightingPresenter implements
 				 * on the fly. The second of two is the list of added positions.
 				 * The result is stored in newPositions.
 				 */
-				List<HighlightedPosition> newPositions = new ArrayList<HighlightedPosition>(
+				List<HighlightedPosition> newPositions = new ArrayList<>(
 						newSize);
 				HighlightedPosition position = null;
 				HighlightedPosition addedPosition = null;
-				for (int i = 0, j = 0, n = oldPositions.size(), m = addedPositions.length; i < n
-						|| position != null || j < m || addedPosition != null;) {
+				for (int i = 0, j = 0, n = oldPositions
+						.size(), m = addedPositions.length; i < n
+								|| position != null || j < m
+								|| addedPosition != null;) {
 					// loop variant: i + j < old(i + j)
 
 					// a) find the next non-deleted Position from the old list
@@ -537,7 +538,7 @@ public class SemanticHighlightingPresenter implements
 			// Should not happen
 			DLTKUIPlugin.log(e);
 		}
-		//		checkOrdering("new positions: ", fPositions); //$NON-NLS-1$
+		// checkOrdering("new positions: ", fPositions); //$NON-NLS-1$
 
 		if (textPresentation != null)
 			fSourceViewer.changeTextPresentation(textPresentation, false);
@@ -622,10 +623,11 @@ public class SemanticHighlightingPresenter implements
 	@Override
 	public void applyTextPresentation(TextPresentation textPresentation) {
 		IRegion region = textPresentation.getExtent();
-		int i = computeIndexAtOffset(fPositions, region.getOffset()), n = computeIndexAtOffset(
-				fPositions, region.getOffset() + region.getLength());
+		int i = computeIndexAtOffset(fPositions, region.getOffset()),
+				n = computeIndexAtOffset(fPositions,
+						region.getOffset() + region.getLength());
 		if (n - i > 2) {
-			List<StyleRange> ranges = new ArrayList<StyleRange>(n - i);
+			List<StyleRange> ranges = new ArrayList<>(n - i);
 			for (; i < n; i++) {
 				HighlightedPosition position = fPositions.get(i);
 				if (!position.isDeleted())
@@ -638,14 +640,15 @@ public class SemanticHighlightingPresenter implements
 			for (; i < n; i++) {
 				HighlightedPosition position = fPositions.get(i);
 				if (!position.isDeleted())
-					textPresentation.replaceStyleRange(position
-							.createStyleRange());
+					textPresentation
+							.replaceStyleRange(position.createStyleRange());
 			}
 		}
 	}
 
 	/*
-	 * @see ITextInputListener#inputDocumentAboutToBeChanged(IDocument,IDocument)
+	 * @see
+	 * ITextInputListener#inputDocumentAboutToBeChanged(IDocument,IDocument)
 	 */
 	@Override
 	public void inputDocumentAboutToBeChanged(IDocument oldInput,
@@ -685,8 +688,8 @@ public class SemanticHighlightingPresenter implements
 	 *         </p>
 	 */
 	public boolean isCanceled() {
-		IDocument document = fSourceViewer != null ? fSourceViewer
-				.getDocument() : null;
+		IDocument document = fSourceViewer != null ? fSourceViewer.getDocument()
+				: null;
 		if (document == null)
 			return fIsCanceled;
 
@@ -702,8 +705,8 @@ public class SemanticHighlightingPresenter implements
 	 *            <code>true</code> iff the current reconcile is canceled
 	 */
 	public void setCanceled(boolean isCanceled) {
-		IDocument document = fSourceViewer != null ? fSourceViewer
-				.getDocument() : null;
+		IDocument document = fSourceViewer != null ? fSourceViewer.getDocument()
+				: null;
 		if (document == null) {
 			fIsCanceled = isCanceled;
 			return;

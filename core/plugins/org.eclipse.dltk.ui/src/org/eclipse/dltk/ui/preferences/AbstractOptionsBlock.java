@@ -23,17 +23,15 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 		implements IPreferenceDelegate<PreferenceKey> {
 
-	private final List<PreferenceKey> keys = new ArrayList<PreferenceKey>();
+	private final List<PreferenceKey> keys = new ArrayList<>();
 
 	private ControlBindingManager<PreferenceKey> bindManager;
 
-	public AbstractOptionsBlock(IStatusChangeListener context,
-			IProject project, PreferenceKey[] allKeys,
-			IWorkbenchPreferenceContainer container) {
+	public AbstractOptionsBlock(IStatusChangeListener context, IProject project,
+			PreferenceKey[] allKeys, IWorkbenchPreferenceContainer container) {
 		super(context, project, allKeys, container);
 
-		this.bindManager = new ControlBindingManager<PreferenceKey>(this,
-				context);
+		this.bindManager = new ControlBindingManager<>(this, context);
 	}
 
 	@Override
@@ -97,7 +95,7 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 	/**
 	 * Returns the string that should be used as the title in the popup box that
 	 * indicates a build needs to occur.
-	 * 
+	 *
 	 * <p>
 	 * Default implementation returns null. Clients should override to return
 	 * context appropriate title. Clients must also override
@@ -105,7 +103,7 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 	 * <code>getProjectBuildDialogMessage()</code> in order to trigger the popup
 	 * box.
 	 * </p>
-	 * 
+	 *
 	 * @deprecated
 	 * @see #getPreferenceChangeRebuildPrompt(boolean, Collection)
 	 */
@@ -117,7 +115,7 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 	/**
 	 * Returns the string that should be used in the popup box that indicates a
 	 * full build needs to occur.
-	 * 
+	 *
 	 * <p>
 	 * Default implementation returns null. Clients should override to return
 	 * context appropriate message. Clients must also override
@@ -125,7 +123,7 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 	 * <code>getProjectBuildDialogMessage()</code> in order to trigger the popup
 	 * box.
 	 * </p>
-	 * 
+	 *
 	 * @deprecated
 	 * @see #getPreferenceChangeRebuildPrompt(boolean, Collection)
 	 */
@@ -137,7 +135,7 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 	/**
 	 * Returns the string that should be used in the popup box that indicates a
 	 * project build needs to occur.
-	 * 
+	 *
 	 * <p>
 	 * Default implementation returns null. Clients should override to return
 	 * context appropriate message. Clients must also override
@@ -145,7 +143,7 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 	 * <code>getFullBuildDialogMessage()</code> in order to trigger the popup
 	 * box.
 	 * </p>
-	 * 
+	 *
 	 * @deprecated
 	 * @see #getPreferenceChangeRebuildPrompt(boolean, Collection)
 	 */
@@ -170,7 +168,7 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 
 	/*
 	 * Override performOk() as public API.
-	 * 
+	 *
 	 * @see OptionsConfigurationBlock#performOk()
 	 */
 	@Override
@@ -180,7 +178,7 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 
 	/*
 	 * Override performApply() as public API.
-	 * 
+	 *
 	 * @see OptionsConfigurationBlock#performApply()
 	 */
 	@Override
@@ -221,8 +219,8 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 		PreferenceLinkArea area = new PreferenceLinkArea(composite, SWT.NONE,
 				prefPageId, message, getPreferenceContainer(), data);
 
-		area.getControl().setLayoutData(
-				new GridData(SWT.FILL, SWT.FILL, false, false));
+		area.getControl()
+				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 	}
 
 	protected void createPropToPrefLink(Composite composite, String message,
@@ -230,13 +228,13 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 		PropToPrefLinkArea area = new PropToPrefLinkArea(composite, SWT.NONE,
 				prefPageId, message, getShell(), data);
 
-		area.getControl().setLayoutData(
-				new GridData(SWT.FILL, SWT.FILL, false, false));
+		area.getControl()
+				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 	}
 
 	/*
 	 * Override getShell() method as public API.
-	 * 
+	 *
 	 * @see OptionsConfigurationBlock#getShell()
 	 */
 	@Override
@@ -246,7 +244,7 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 
 	/*
 	 * Override dispose() method as public API.
-	 * 
+	 *
 	 * @see OptionsConfigurationBlock#dispose()
 	 */
 	@Override
@@ -256,7 +254,7 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 
 	/*
 	 * Override statusChanged() as public API.
-	 * 
+	 *
 	 * @see OptionsConfigurationBlock#statusChanged(IStatus)
 	 */
 	@Override
@@ -266,13 +264,14 @@ public abstract class AbstractOptionsBlock extends OptionsConfigurationBlock
 
 	/*
 	 * Override getPreferenceChangeRebuildPrompt() as public API
-	 * 
+	 *
 	 * @see OptionsConfigurationBlock#getPreferenceChangeRebuildPrompt(boolean,
 	 * java.util.Collection)
 	 */
 	@Override
 	protected IPreferenceChangeRebuildPrompt getPreferenceChangeRebuildPrompt(
-			boolean workspaceSettings, Collection<PreferenceKey> changedOptions) {
+			boolean workspaceSettings,
+			Collection<PreferenceKey> changedOptions) {
 		return super.getPreferenceChangeRebuildPrompt(workspaceSettings,
 				changedOptions);
 	}

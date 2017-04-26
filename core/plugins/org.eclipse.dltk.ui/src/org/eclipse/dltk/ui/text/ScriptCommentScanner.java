@@ -58,7 +58,7 @@ public class ScriptCommentScanner extends AbstractScriptScanner {
 		/**
 		 * Uppercase words
 		 */
-		private Map<CharacterBuffer, IToken> fUppercaseWords = new HashMap<CharacterBuffer, IToken>();
+		private Map<CharacterBuffer, IToken> fUppercaseWords = new HashMap<>();
 
 		/**
 		 * <code>true</code> if task tag detection is case-sensitive.
@@ -148,8 +148,9 @@ public class ScriptCommentScanner extends AbstractScriptScanner {
 
 	public ScriptCommentScanner(ScriptSourceViewerConfiguration configuration,
 			String comment, String todoTag, ITodoTaskPreferences preferences) {
-		this(configuration.getColorManager(), configuration
-				.getPreferenceStore(), comment, todoTag, preferences, false);
+		this(configuration.getColorManager(),
+				configuration.getPreferenceStore(), comment, todoTag,
+				preferences, false);
 		this.fConfiguration = configuration;
 		initialize();
 	}
@@ -194,7 +195,7 @@ public class ScriptCommentScanner extends AbstractScriptScanner {
 	@Override
 	protected List<IRule> createRules() {
 		setDefaultReturnToken(getDefaultToken());
-		List<IRule> list = new ArrayList<IRule>();
+		List<IRule> list = new ArrayList<>();
 		list.add(createTodoRule());
 		return list;
 	}
@@ -226,7 +227,7 @@ public class ScriptCommentScanner extends AbstractScriptScanner {
 	 * @return the list of word matchers
 	 */
 	protected List<CombinedWordRule.WordMatcher> createMatchers() {
-		List<CombinedWordRule.WordMatcher> list = new ArrayList<CombinedWordRule.WordMatcher>();
+		List<CombinedWordRule.WordMatcher> list = new ArrayList<>();
 		String[] tasks = preferences.getTagNames();
 		if (tasks != null && tasks.length != 0) {
 			fTaskTagMatcher = new TaskTagMatcher(getTodoToken());
@@ -268,9 +269,8 @@ public class ScriptCommentScanner extends AbstractScriptScanner {
 					fTaskTagMatcher.addTaskTags(preferences.getTagNames());
 				}
 			}
-		} else if (fTaskTagMatcher != null
-				&& event.getProperty().equals(
-						ITodoTaskPreferences.CASE_SENSITIVE)) {
+		} else if (fTaskTagMatcher != null && event.getProperty()
+				.equals(ITodoTaskPreferences.CASE_SENSITIVE)) {
 			Object value = event.getNewValue();
 			if (value instanceof String) {
 				boolean caseSensitive = Boolean.valueOf((String) value)

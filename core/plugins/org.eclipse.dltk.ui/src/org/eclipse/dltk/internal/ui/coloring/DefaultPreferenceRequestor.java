@@ -24,8 +24,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.RGB;
 
-public class DefaultPreferenceRequestor extends
-		AbstractColoringPreferenceRequestor {
+public class DefaultPreferenceRequestor
+		extends AbstractColoringPreferenceRequestor {
 
 	private final IPreferenceStore store;
 	private final String natureId;
@@ -35,11 +35,12 @@ public class DefaultPreferenceRequestor extends
 		this.natureId = natureId;
 	}
 
-	private Set<String> processedKeys = new HashSet<String>();
+	private Set<String> processedKeys = new HashSet<>();
 
 	@Override
 	public void addPreference(IColoringPreferenceKey key, String name,
-			RGB color, EnablementStyle enablementStyle, FontStyle... fontStyles) {
+			RGB color, EnablementStyle enablementStyle,
+			FontStyle... fontStyles) {
 		if (!processedKeys.add(key.getColorKey())) {
 			DLTKUIPlugin.warn("Duplicate color preference " + key.getColorKey()
 					+ " in " + natureId);

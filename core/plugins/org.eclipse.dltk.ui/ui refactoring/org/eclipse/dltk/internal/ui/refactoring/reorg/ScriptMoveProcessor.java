@@ -46,9 +46,10 @@ import org.eclipse.ltk.core.refactoring.participants.RefactoringArguments;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant;
 import org.eclipse.ltk.core.refactoring.participants.SharableParticipants;
 
-
-public final class ScriptMoveProcessor extends MoveProcessor implements IScriptableRefactoring, ICommentProvider, IQualifiedNameUpdating, IReorgDestinationValidator {
-	//TODO: offer IMovePolicy getMovePolicy(); IReorgPolicy getReorgPolicy();
+public final class ScriptMoveProcessor extends MoveProcessor
+		implements IScriptableRefactoring, ICommentProvider,
+		IQualifiedNameUpdating, IReorgDestinationValidator {
+	// TODO: offer IMovePolicy getMovePolicy(); IReorgPolicy getReorgPolicy();
 	// and remove delegate methods (also for CopyRefactoring)?
 
 	private IReorgQueries fReorgQueries;
@@ -57,14 +58,14 @@ public final class ScriptMoveProcessor extends MoveProcessor implements IScripta
 	private boolean fWasCanceled;
 	private String fComment;
 
-	public static final String IDENTIFIER= "org.eclipse.dltk.ui.MoveProcessor"; //$NON-NLS-1$
+	public static final String IDENTIFIER = "org.eclipse.dltk.ui.MoveProcessor"; //$NON-NLS-1$
 
 	public ScriptMoveProcessor(IMovePolicy policy) {
-		fMovePolicy= policy;
+		fMovePolicy = policy;
 	}
 
 	protected Object getDestination() {
-		IModelElement je= fMovePolicy.getScriptElementDestination();
+		IModelElement je = fMovePolicy.getScriptElementDestination();
 		if (je != null)
 			return je;
 		return fMovePolicy.getResourceDestination();
@@ -72,7 +73,7 @@ public final class ScriptMoveProcessor extends MoveProcessor implements IScripta
 
 	@Override
 	public Object[] getElements() {
-		List result= new ArrayList();
+		List result = new ArrayList();
 		result.addAll(Arrays.asList(fMovePolicy.getScriptElements()));
 		result.addAll(Arrays.asList(fMovePolicy.getResources()));
 		return result.toArray();
@@ -89,14 +90,18 @@ public final class ScriptMoveProcessor extends MoveProcessor implements IScripta
 	}
 
 	@Override
-	public RefactoringParticipant[] loadParticipants(RefactoringStatus status, SharableParticipants shared) throws CoreException {
-		return fMovePolicy.loadParticipants(status, this, getAffectedProjectNatures(), shared);
+	public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
+			SharableParticipants shared) throws CoreException {
+		return fMovePolicy.loadParticipants(status, this,
+				getAffectedProjectNatures(), shared);
 	}
 
 	private String[] getAffectedProjectNatures() throws CoreException {
-		String[] jNatures= ScriptProcessors.computeAffectedNaturs(fMovePolicy.getScriptElements());
-		String[] rNatures= ResourceProcessors.computeAffectedNatures(fMovePolicy.getResources());
-		Set<String> result = new HashSet<String>();
+		String[] jNatures = ScriptProcessors
+				.computeAffectedNaturs(fMovePolicy.getScriptElements());
+		String[] rNatures = ResourceProcessors
+				.computeAffectedNatures(fMovePolicy.getResources());
+		Set<String> result = new HashSet<>();
 		result.addAll(Arrays.asList(jNatures));
 		result.addAll(Arrays.asList(rNatures));
 		return result.toArray(new String[result.size()]);
@@ -107,21 +112,26 @@ public final class ScriptMoveProcessor extends MoveProcessor implements IScripta
 	}
 
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException {
+	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
+			throws CoreException {
 		pm.beginTask("", 1); //$NON-NLS-1$
 		try {
-			RefactoringStatus result= new RefactoringStatus();
-			result.merge(RefactoringStatus.create(Resources.checkInSync(ReorgUtils.getNotNulls(fMovePolicy.getResources()))));
-			IResource[] javaResources= ReorgUtils.getResources(fMovePolicy.getScriptElements());
-			result.merge(RefactoringStatus.create(Resources.checkInSync(ReorgUtils.getNotNulls(javaResources))));
+			RefactoringStatus result = new RefactoringStatus();
+			result.merge(RefactoringStatus.create(Resources.checkInSync(
+					ReorgUtils.getNotNulls(fMovePolicy.getResources()))));
+			IResource[] javaResources = ReorgUtils
+					.getResources(fMovePolicy.getScriptElements());
+			result.merge(RefactoringStatus.create(Resources
+					.checkInSync(ReorgUtils.getNotNulls(javaResources))));
 			return result;
 		} finally {
 			pm.done();
 		}
 	}
 
-	public Object getCommonParentForInputElements(){
-		return new ParentChecker(fMovePolicy.getResources(), fMovePolicy.getScriptElements()).getCommonParent();
+	public Object getCommonParentForInputElements() {
+		return new ParentChecker(fMovePolicy.getResources(),
+				fMovePolicy.getScriptElements()).getCommonParent();
 	}
 
 	public IModelElement[] getScriptElements() {
@@ -132,11 +142,13 @@ public final class ScriptMoveProcessor extends MoveProcessor implements IScripta
 		return fMovePolicy.getResources();
 	}
 
-	public RefactoringStatus setDestination(IModelElement destination) throws ModelException{
+	public RefactoringStatus setDestination(IModelElement destination)
+			throws ModelException {
 		return fMovePolicy.setDestination(destination);
 	}
 
-	public RefactoringStatus setDestination(IResource destination) throws ModelException{
+	public RefactoringStatus setDestination(IResource destination)
+			throws ModelException {
 		return fMovePolicy.setDestination(destination);
 	}
 
@@ -144,58 +156,66 @@ public final class ScriptMoveProcessor extends MoveProcessor implements IScripta
 	public boolean canChildrenBeDestinations(IModelElement modelElement) {
 		return fMovePolicy.canChildrenBeDestinations(modelElement);
 	}
+
 	@Override
 	public boolean canChildrenBeDestinations(IResource resource) {
 		return fMovePolicy.canChildrenBeDestinations(resource);
 	}
+
 	@Override
 	public boolean canElementBeDestination(IModelElement modelElement) {
 		return fMovePolicy.canElementBeDestination(modelElement);
 	}
+
 	@Override
 	public boolean canElementBeDestination(IResource resource) {
 		return fMovePolicy.canElementBeDestination(resource);
 	}
 
-	public void setReorgQueries(IReorgQueries queries){
+	public void setReorgQueries(IReorgQueries queries) {
 		Assert.isNotNull(queries);
-		fReorgQueries= queries;
+		fReorgQueries = queries;
 	}
 
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context) throws CoreException {
-		try{
+	public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
+			CheckConditionsContext context) throws CoreException {
+		try {
 			Assert.isNotNull(fReorgQueries);
-			fWasCanceled= false;
+			fWasCanceled = false;
 			return fMovePolicy.checkFinalConditions(pm, context, fReorgQueries);
 		} catch (OperationCanceledException e) {
-			fWasCanceled= true;
+			fWasCanceled = true;
 			throw e;
 		}
 	}
 
 	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException {
-		Assert.isTrue(fMovePolicy.getScriptElementDestination() == null || fMovePolicy.getResourceDestination() == null);
-		Assert.isTrue(fMovePolicy.getScriptElementDestination() != null || fMovePolicy.getResourceDestination() != null);
+		Assert.isTrue(fMovePolicy.getScriptElementDestination() == null
+				|| fMovePolicy.getResourceDestination() == null);
+		Assert.isTrue(fMovePolicy.getScriptElementDestination() != null
+				|| fMovePolicy.getResourceDestination() != null);
 		try {
-			final DynamicValidationStateChange result= new DynamicValidationStateChange(RefactoringCoreMessages.ScriptMoveProcessor_change_name) {
+			final DynamicValidationStateChange result = new DynamicValidationStateChange(
+					RefactoringCoreMessages.ScriptMoveProcessor_change_name) {
 				@Override
-				public Change perform(IProgressMonitor pm2) throws CoreException {
-					Change change= super.perform(pm2);
-					Change[] changes= getChildren();
-					for (int index= 0; index < changes.length; index++) {
+				public Change perform(IProgressMonitor pm2)
+						throws CoreException {
+					Change change = super.perform(pm2);
+					Change[] changes = getChildren();
+					for (int index = 0; index < changes.length; index++) {
 						if (!(changes[index] instanceof TextEditBasedChange))
 							return null;
 					}
 					return change;
 				}
 			};
-			Change change= fMovePolicy.createChange(pm);
-			if (change instanceof CompositeChange){
-				CompositeChange subComposite= (CompositeChange)change;
+			Change change = fMovePolicy.createChange(pm);
+			if (change instanceof CompositeChange) {
+				CompositeChange subComposite = (CompositeChange) change;
 				result.merge(subComposite);
-			} else{
+			} else {
 				result.add(change);
 			}
 			return result;
@@ -205,7 +225,8 @@ public final class ScriptMoveProcessor extends MoveProcessor implements IScripta
 	}
 
 	@Override
-	public Change postCreateChange(Change[] participantChanges, IProgressMonitor pm) throws CoreException {
+	public Change postCreateChange(Change[] participantChanges,
+			IProgressMonitor pm) throws CoreException {
 		return fMovePolicy.postCreateChange(participantChanges, pm);
 	}
 
@@ -214,11 +235,11 @@ public final class ScriptMoveProcessor extends MoveProcessor implements IScripta
 		return RefactoringCoreMessages.MoveRefactoring_0;
 	}
 
-	public boolean canUpdateReferences(){
+	public boolean canUpdateReferences() {
 		return fMovePolicy.canUpdateReferences();
 	}
 
-	public void setUpdateReferences(boolean update){
+	public void setUpdateReferences(boolean update) {
 		fMovePolicy.setUpdateReferences(update);
 	}
 
@@ -260,20 +281,25 @@ public final class ScriptMoveProcessor extends MoveProcessor implements IScripta
 	public boolean hasAllInputSet() {
 		return fMovePolicy.hasAllInputSet();
 	}
+
 	public boolean hasDestinationSet() {
-		return fMovePolicy.getScriptElementDestination() != null || fMovePolicy.getResourceDestination() != null;
+		return fMovePolicy.getScriptElementDestination() != null
+				|| fMovePolicy.getResourceDestination() != null;
 	}
 
-	public void setCreateTargetQueries(ICreateTargetQueries queries){
+	public void setCreateTargetQueries(ICreateTargetQueries queries) {
 		Assert.isNotNull(queries);
-		fCreateTargetQueries= queries;
+		fCreateTargetQueries = queries;
 	}
+
 	/**
-	 * @return the create target queries, or <code>null</code> if creating new targets is not supported
+	 * @return the create target queries, or <code>null</code> if creating new
+	 *         targets is not supported
 	 */
 	public ICreateTargetQuery getCreateTargetQuery() {
 		return fMovePolicy.getCreateTargetQuery(fCreateTargetQueries);
 	}
+
 	public boolean isTextualMove() {
 		return fMovePolicy.isTextualMove();
 	}
@@ -296,6 +322,6 @@ public final class ScriptMoveProcessor extends MoveProcessor implements IScripta
 
 	@Override
 	public void setComment(String comment) {
-		fComment= comment;
+		fComment = comment;
 	}
 }

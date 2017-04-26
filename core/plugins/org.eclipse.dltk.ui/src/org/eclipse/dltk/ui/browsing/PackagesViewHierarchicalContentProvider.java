@@ -63,9 +63,9 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 					fMapToPackageFragments.clear();
 					IScriptProject project = (IScriptProject) parentElement;
 
-					IScriptFolder[] topLevelChildren = getTopLevelChildrenByElementName(project
-							.getScriptFolders());
-					List<IScriptFolder> list = new ArrayList<IScriptFolder>();
+					IScriptFolder[] topLevelChildren = getTopLevelChildrenByElementName(
+							project.getScriptFolders());
+					List<IScriptFolder> list = new ArrayList<>();
 					for (int i = 0; i < topLevelChildren.length; i++) {
 						IScriptFolder fragment = topLevelChildren[i];
 
@@ -84,14 +84,13 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 						IProjectFragment root = packageFragmentRoots[i];
 						IResource resource = root.getUnderlyingResource();
 						if (resource != null && resource instanceof IFolder) {
-							folders.addAll(getFolders(((IFolder) resource)
-									.members()));
+							folders.addAll(
+									getFolders(((IFolder) resource).members()));
 						}
 					}
 
 					Object[] logicalPackages = combineSamePackagesIntoLogialPackages(
-							list
-							.toArray(new IScriptFolder[list.size()]));
+							list.toArray(new IScriptFolder[list.size()]));
 					if (folders.size() > 0) {
 						if (logicalPackages.length > 0)
 							folders.addAll(Arrays.asList(logicalPackages));
@@ -115,9 +114,10 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 						addFragmentsToMap(fragments);
 						return fragments;
 
-					} else if (resource != null && resource instanceof IFolder) {
-						List children = getFoldersAndElements(((IFolder) resource)
-								.members());
+					} else if (resource != null
+							&& resource instanceof IFolder) {
+						List children = getFoldersAndElements(
+								((IFolder) resource).members());
 
 						IScriptFolder defaultPackage = root.getScriptFolder(""); //$NON-NLS-1$
 						if (defaultPackage.exists())
@@ -162,7 +162,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 				// @Improve: rewrite using concatenate
 			} else if (parentElement instanceof LogicalPackage) {
 
-				List<IScriptFolder> children = new ArrayList<IScriptFolder>();
+				List<IScriptFolder> children = new ArrayList<>();
 				LogicalPackage logicalPackage = (LogicalPackage) parentElement;
 				IScriptFolder[] elements = logicalPackage.getScriptFolders();
 				for (int i = 0; i < elements.length; i++) {
@@ -172,8 +172,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 					children.addAll(Arrays.asList(objects));
 				}
 				return combineSamePackagesIntoLogialPackages(
-						children
-						.toArray(new IScriptFolder[children.size()]));
+						children.toArray(new IScriptFolder[children.size()]));
 			} else if (parentElement instanceof IFolder) {
 				IFolder folder = (IFolder) parentElement;
 				IResource[] resources = folder.members();
@@ -189,7 +188,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 	}
 
 	private void addFragmentsToMap(List elements) {
-		List<IScriptFolder> packageFragments = new ArrayList<IScriptFolder>();
+		List<IScriptFolder> packageFragments = new ArrayList<>();
 		for (Iterator iter = elements.iterator(); iter.hasNext();) {
 			Object elem = iter.next();
 			if (elem instanceof IScriptFolder)
@@ -238,7 +237,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 
 	private IScriptFolder[] findNextLevelChildrenByElementName(
 			IProjectFragment parent, IScriptFolder fragment) {
-		List<IScriptFolder> list = new ArrayList<IScriptFolder>();
+		List<IScriptFolder> list = new ArrayList<>();
 		try {
 
 			IModelElement[] children = parent.getChildren();
@@ -273,7 +272,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 
 	private IScriptFolder[] getTopLevelChildrenByElementName(
 			IModelElement[] elements) {
-		List<IScriptFolder> topLevelElements = new ArrayList<IScriptFolder>();
+		List<IScriptFolder> topLevelElements = new ArrayList<>();
 		for (int i = 0; i < elements.length; i++) {
 			IModelElement iJavaElement = elements[i];
 			// if the name of the PackageFragment is the top level package it
@@ -366,8 +365,8 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 					.getProjectFragments();
 			for (int i = 0; i < roots.length; i++) {
 				IProjectFragment root = roots[i];
-				IScriptFolder fragment = root.getScriptFolder(pkgFragment
-						.getElementName());
+				IScriptFolder fragment = root
+						.getScriptFolder(pkgFragment.getElementName());
 				if (fragment.exists() && !fragment.equals(pkgFragment))
 					fragments.add(fragment);
 			}
@@ -449,7 +448,8 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 	}
 
 	/*
-	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(Object)
+	 * @see
+	 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(Object)
 	 */
 	@Override
 	public Object[] getElements(Object inputElement) {
@@ -465,7 +465,8 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 		if (isClassPathChange(delta)) {
 			Object input = fViewer.getInput();
 			if (input != null) {
-				if (fInputIsProject && input.equals(element.getScriptProject())) {
+				if (fInputIsProject
+						&& input.equals(element.getScriptProject())) {
 					postRefresh(input);
 					return;
 				} else if (!fInputIsProject && input.equals(element)) {

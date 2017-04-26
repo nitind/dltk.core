@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,11 +43,11 @@ import org.eclipse.ui.IWorkbenchSite;
  * <p>
  * The action is applicable to selections containing elements of type
  * <code>IType</code>.
- * 
+ *
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
- * 
+ *
  * @since 2.0
  */
 public class OpenTypeHierarchyAction extends SelectionDispatchAction {
@@ -59,9 +59,9 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 	 * that the selection provided by the site's selection provider is of type
 	 * <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
-	 * 
+	 *
 	 * @param site
-	 * 		the site providing context information for this action
+	 *            the site providing context information for this action
 	 */
 	public OpenTypeHierarchyAction(IWorkbenchSite site) {
 		super(site);
@@ -77,17 +77,17 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 	 * that the selection provided by the given selection provider is of type
 	 * <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
-	 * 
+	 *
 	 * @param site
-	 * 		the site providing context information for this action
+	 *            the site providing context information for this action
 	 * @param provider
-	 * 		a special selection provider which is used instead of the site's
-	 * 		selection provider or <code>null</code> to use the site's selection
-	 * 		provider
-	 * 
+	 *            a special selection provider which is used instead of the
+	 *            site's selection provider or <code>null</code> to use the
+	 *            site's selection provider
+	 *
 	 * @since 3.2
 	 * @deprecated Use {@link #setSpecialSelectionProvider(ISelectionProvider)}
-	 * 	instead. This API will be removed after 3.2 M5.
+	 *             instead. This API will be removed after 3.2 M5.
 	 */
 	@Deprecated
 	public OpenTypeHierarchyAction(IWorkbenchSite site,
@@ -99,9 +99,9 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 	/**
 	 * Note: This constructor is for internal use only. Clients should not call
 	 * this constructor.
-	 * 
+	 *
 	 * @param editor
-	 * 		the Script editor
+	 *            the Script editor
 	 */
 	public OpenTypeHierarchyAction(IEditorPart editor) {
 		this(editor.getEditorSite());
@@ -148,7 +148,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 			// case IModelElement.CLASS_FILE:
 		case IModelElement.SOURCE_MODULE:
 			return true;
-			// case IModelElement.LOCAL_VARIABLE:
+		// case IModelElement.LOCAL_VARIABLE:
 		default:
 			return false;
 		}
@@ -168,8 +168,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 					.codeResolveOrInputForked(fEditor);
 			if (elements == null)
 				return;
-			List<IModelElement> candidates = new ArrayList<IModelElement>(
-					elements.length);
+			List<IModelElement> candidates = new ArrayList<>(elements.length);
 			for (int i = 0; i < elements.length; i++) {
 				IModelElement[] resolvedElements = OpenTypeHierarchyUtil
 						.getCandidates(elements[i]);
@@ -202,7 +201,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 		}
 
 		if (!(input instanceof IModelElement)) {
-			IStatus status = createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_script_element);
+			IStatus status = createStatus(
+					ActionMessages.OpenTypeHierarchyAction_messages_no_script_element);
 			ErrorDialog.openError(getShell(), getDialogTitle(),
 					ActionMessages.OpenTypeHierarchyAction_messages_title,
 					status);
@@ -212,7 +212,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 		if (!ActionUtil.isProcessable(getShell(), element))
 			return;
 
-		List<IModelElement> result = new ArrayList<IModelElement>(1);
+		List<IModelElement> result = new ArrayList<>(1);
 		IStatus status = compileCandidates(result, element);
 		if (status.isOK()) {
 			run(result.toArray(new IModelElement[result.size()]));
@@ -241,8 +241,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 
 	private static IStatus compileCandidates(List<IModelElement> result,
 			IModelElement elem) {
-		IStatus ok = new Status(IStatus.OK, DLTKUIPlugin.getPluginId(), 0,
-				"", null); //$NON-NLS-1$		
+		IStatus ok = new Status(IStatus.OK, DLTKUIPlugin.getPluginId(), 0, "", //$NON-NLS-1$
+				null);
 		try {
 			switch (elem.getElementType()) {
 			// case IModelElement.INITIALIZER:
@@ -258,27 +258,28 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 					result.add(elem);
 					return ok;
 				}
-				return createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_script_resources);
+				return createStatus(
+						ActionMessages.OpenTypeHierarchyAction_messages_no_script_resources);
 			case IModelElement.PACKAGE_DECLARATION:
 				result.add(elem.getAncestor(IModelElement.SCRIPT_FOLDER));
 				return ok;
-				// case IModelElement.IMPORT_DECLARATION:
-				// IImportDeclaration decl= (IImportDeclaration) elem;
-				// if (decl.isOnDemand()) {
-				// elem= JavaModelUtil.findTypeContainer(elem.getJavaProject(),
-				// Signature.getQualifier(elem.getElementName()));
-				// } else {
-				// elem= elem.getJavaProject().findType(elem.getElementName());
-				// }
-				// if (elem != null) {
-				// result.add(elem);
-				// return ok;
-				// }
-				// return createStatus(ActionMessages.
-				// OpenTypeHierarchyAction_messages_unknown_import_decl);
-				// case IJavaElement.CLASS_FILE:
-				// result.add(((IClassFile)elem).getType());
-				// return ok;
+			// case IModelElement.IMPORT_DECLARATION:
+			// IImportDeclaration decl= (IImportDeclaration) elem;
+			// if (decl.isOnDemand()) {
+			// elem= JavaModelUtil.findTypeContainer(elem.getJavaProject(),
+			// Signature.getQualifier(elem.getElementName()));
+			// } else {
+			// elem= elem.getJavaProject().findType(elem.getElementName());
+			// }
+			// if (elem != null) {
+			// result.add(elem);
+			// return ok;
+			// }
+			// return createStatus(ActionMessages.
+			// OpenTypeHierarchyAction_messages_unknown_import_decl);
+			// case IJavaElement.CLASS_FILE:
+			// result.add(((IClassFile)elem).getType());
+			// return ok;
 			case IModelElement.SOURCE_MODULE:
 				AbstractSourceModule cu = (AbstractSourceModule) elem;
 				IType[] types = cu.getTypes();
@@ -286,12 +287,14 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 					result.addAll(Arrays.asList(types));
 					return ok;
 				}
-				return createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_types);
+				return createStatus(
+						ActionMessages.OpenTypeHierarchyAction_messages_no_types);
 			}
 		} catch (ModelException e) {
 			return e.getStatus();
 		}
-		return createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_valid_script_element);
+		return createStatus(
+				ActionMessages.OpenTypeHierarchyAction_messages_no_valid_script_element);
 	}
 
 	private static IStatus createStatus(String message) {

@@ -82,7 +82,7 @@ public class ScriptOutlineInformationControl
 	private LexicalSortingAction fLexicalSortingAction;
 	private SortByDefiningTypeAction fSortByDefiningTypeAction;
 	// private ShowOnlyMainTypeAction fShowOnlyMainTypeAction;
-	protected Map<IType, ITypeHierarchy> fTypeHierarchies = new HashMap<IType, ITypeHierarchy>();
+	protected Map<IType, ITypeHierarchy> fTypeHierarchies = new HashMap<>();
 	private final IPreferenceStore fPreferenceStore;
 
 	/**
@@ -270,7 +270,7 @@ public class ScriptOutlineInformationControl
 				if (!isInnerType(type)) {
 					ITypeHierarchy th = getSuperTypeHierarchy(type);
 					if (th != null) {
-						List<Object> children = new ArrayList<Object>();
+						List<Object> children = new ArrayList<>();
 						Collections.addAll(children, super.getChildren(type));
 						IType[] superClasses = th.getAllSupertypes(type);
 						for (int i = 0, scLength = superClasses.length; i < scLength; i++) {

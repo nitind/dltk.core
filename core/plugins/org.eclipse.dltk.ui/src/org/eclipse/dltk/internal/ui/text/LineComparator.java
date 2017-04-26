@@ -39,7 +39,7 @@ public class LineComparator implements IRangeComparator {
 		fDocument = document;
 		// fills the list with nulls
 		Integer[] nulls = new Integer[fDocument.getNumberOfLines()];
-		fHashes = new ArrayList<Integer>(Arrays.asList(nulls));
+		fHashes = new ArrayList<>(Arrays.asList(nulls));
 	}
 
 	@Override
@@ -51,8 +51,8 @@ public class LineComparator implements IRangeComparator {
 	public boolean rangesEqual(int thisIndex, IRangeComparator other,
 			int otherIndex) {
 		try {
-			return getHash(thisIndex).equals(
-					((LineComparator) other).getHash(otherIndex));
+			return getHash(thisIndex)
+					.equals(((LineComparator) other).getHash(otherIndex));
 		} catch (BadLocationException e) {
 			DLTKUIPlugin.log(e);
 			return false;

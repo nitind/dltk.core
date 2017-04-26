@@ -107,7 +107,7 @@ public class TypeInfoViewer {
 
 		public SearchRequestor(TypeInfoFilter filter, TypeFilter typeFilter) {
 			super();
-			fResult = new ArrayList<TypeNameMatch>(2048);
+			fResult = new ArrayList<>(2048);
 			fFilter = filter;
 			fTypeFilter = typeFilter;
 		}
@@ -137,8 +137,8 @@ public class TypeInfoViewer {
 		}
 	}
 
-	protected static class TypeInfoComparator implements
-			Comparator<TypeNameMatch> {
+	protected static class TypeInfoComparator
+			implements Comparator<TypeNameMatch> {
 		private TypeInfoLabelProvider fLabelProvider;
 		private TypeInfoFilter fFilter;
 
@@ -173,8 +173,9 @@ public class TypeInfoViewer {
 					rightInfo.getTypeQualifiedName());
 			if (result != 0)
 				return result;
-			result = compareTypeContainerName(leftInfo.getType().getPath()
-					.lastSegment(), rightInfo.getType().getPath().lastSegment());
+			result = compareTypeContainerName(
+					leftInfo.getType().getPath().lastSegment(),
+					rightInfo.getType().getPath().lastSegment());
 			if (result != 0)
 				return result;
 
@@ -217,8 +218,8 @@ public class TypeInfoViewer {
 
 		private int compareContainerName(TypeNameMatch leftType,
 				TypeNameMatch rightType) {
-			return fLabelProvider.getContainerName(leftType).compareTo(
-					fLabelProvider.getContainerName(rightType));
+			return fLabelProvider.getContainerName(leftType)
+					.compareTo(fLabelProvider.getContainerName(rightType));
 		}
 
 		private int getCamelCaseCategory(TypeNameMatch type) {
@@ -231,7 +232,8 @@ public class TypeInfoViewer {
 
 		private int getElementTypeCategory(TypeNameMatch type) {
 			try {
-				if (type.getProjectFragment().getKind() == IProjectFragment.K_SOURCE)
+				if (type.getProjectFragment()
+						.getKind() == IProjectFragment.K_SOURCE)
 					return 0;
 			} catch (ModelException e) {
 				// TODO Auto-generated catch block
@@ -246,17 +248,17 @@ public class TypeInfoViewer {
 		private ITypeInfoImageProvider fProviderExtension;
 		private TypeInfoRequestorAdapter fAdapter = new TypeInfoRequestorAdapter();
 
-		private Map<String, String> fLib2Name = new HashMap<String, String>();
+		private Map<String, String> fLib2Name = new HashMap<>();
 		private String[] fInstallLocations;
 		private String[] fVMNames;
 
 		public TypeInfoLabelProvider(ITypeInfoImageProvider extension) {
 			fProviderExtension = extension;
-			List<String> locations = new ArrayList<String>();
-			List<String> labels = new ArrayList<String>();
+			List<String> locations = new ArrayList<>();
+			List<String> labels = new ArrayList<>();
 			IInterpreterInstallType[] installs = ScriptRuntime
-					.getInterpreterInstallTypes(fToolkit.getCoreToolkit()
-							.getNatureId());
+					.getInterpreterInstallTypes(
+							fToolkit.getCoreToolkit().getNatureId());
 			for (int i = 0; i < installs.length; i++) {
 				processVMInstallType(installs[i], locations, labels);
 			}
@@ -269,8 +271,8 @@ public class TypeInfoViewer {
 			if (installType != null) {
 				IInterpreterInstall[] installs = installType
 						.getInterpreterInstalls();
-				final boolean isMac = Platform.OS_MACOSX.equals(Platform
-						.getOS());
+				final boolean isMac = Platform.OS_MACOSX
+						.equals(Platform.getOS());
 				for (int i = 0; i < installs.length; i++) {
 					final IInterpreterInstall install = installs[i];
 					final String label = getFormattedLabel(install.getName());
@@ -289,8 +291,7 @@ public class TypeInfoViewer {
 							// on MacOS X install locations end in an additional
 							// "/Home" segment; remove it
 							if (isMac && filePath.endsWith(HOME_SUFFIX))
-								filePath = filePath.substring(
-										0,
+								filePath = filePath.substring(0,
 										filePath.length()
 												- (HOME_SUFFIX.length() - 1));
 							locations.add(filePath);
@@ -408,7 +409,7 @@ public class TypeInfoViewer {
 					return descriptor;
 			}
 			return ScriptElementImageProvider.getTypeImageDescriptor(
-			/* isInnerType(type), false, */type.getModifiers(), false);
+					/* isInnerType(type), false, */type.getModifiers(), false);
 		}
 
 		private String getTypeContainerName(TypeNameMatch info, int infoLevel) {
@@ -418,15 +419,15 @@ public class TypeInfoViewer {
 					.getLanguageToolkit(info.getType());
 			if (toolkit != null) {
 				ScriptElementLabels labels = toolkit.getScriptElementLabels();
-				result = labels
-						.getElementLabel(
-								info.getType(),
-								ScriptElementLabels.T_CONTAINER_QUALIFIED
-										| (infoLevel > 0 ? ScriptElementLabels.APPEND_FILE
-												: 0)
-										| (infoLevel > 1 ? ScriptElementLabels.CU_POST_QUALIFIED
+				result = labels.getElementLabel(info.getType(),
+						ScriptElementLabels.T_CONTAINER_QUALIFIED
+								| (infoLevel > 0
+										? ScriptElementLabels.APPEND_FILE
+										: 0)
+								| (infoLevel > 1
+										? ScriptElementLabels.CU_POST_QUALIFIED
 												| ScriptElementLabels.APPEND_ROOT_PATH
-												: 0));
+										: 0));
 			}
 			if (result.length() > 0)
 				return result;
@@ -450,7 +451,8 @@ public class TypeInfoViewer {
 			ScriptElementLabels labels = fToolkit.getScriptElementLabels();
 			labels.getProjectFragmentLabel(root,
 					ScriptElementLabels.ROOT_QUALIFIED
-							| ScriptElementLabels.ROOT_VARIABLE, buf);
+							| ScriptElementLabels.ROOT_VARIABLE,
+					buf);
 
 			return buf.toString();
 		}
@@ -494,7 +496,8 @@ public class TypeInfoViewer {
 		private double fWorked;
 		private boolean fDone;
 
-		public ProgressMonitor(IProgressMonitor monitor, TypeInfoViewer viewer) {
+		public ProgressMonitor(IProgressMonitor monitor,
+				TypeInfoViewer viewer) {
 			super(monitor);
 			fViewer = viewer;
 		}
@@ -538,12 +541,10 @@ public class TypeInfoViewer {
 			} else if (fTotalWork == 0) {
 				return fName;
 			} else {
-				return Messages
-						.format(DLTKUIMessages.TypeInfoViewer_progress_label,
-								new Object[] {
-										fName,
-										Integer.valueOf(
-												(int) ((fWorked * 100) / fTotalWork)) });
+				return Messages.format(
+						DLTKUIMessages.TypeInfoViewer_progress_label,
+						new Object[] { fName, Integer.valueOf(
+								(int) ((fWorked * 100) / fTotalWork)) });
 			}
 		}
 	}
@@ -622,8 +623,8 @@ public class TypeInfoViewer {
 				Set<TypeNameMatch> matchIdsInHistory, ProgressMonitor monitor)
 				throws CoreException;
 
-		private void internalRun(ProgressMonitor monitor) throws CoreException,
-				InterruptedException {
+		private void internalRun(ProgressMonitor monitor)
+				throws CoreException, InterruptedException {
 			if (monitor.isCanceled())
 				throw new OperationCanceledException();
 
@@ -633,16 +634,16 @@ public class TypeInfoViewer {
 			TypeNameMatch last = null;
 			TypeNameMatch type = null;
 			TypeNameMatch next = null;
-			List<TypeNameMatch> elements = new ArrayList<TypeNameMatch>();
-			List<ImageDescriptor> imageDescriptors = new ArrayList<ImageDescriptor>();
-			List<String> labels = new ArrayList<String>();
-			Set<TypeNameMatch> filteredMatches = new HashSet<TypeNameMatch>();
+			List<TypeNameMatch> elements = new ArrayList<>();
+			List<ImageDescriptor> imageDescriptors = new ArrayList<>();
+			List<String> labels = new ArrayList<>();
+			Set<TypeNameMatch> filteredMatches = new HashSet<>();
 
 			TypeNameMatch[] matchingTypes = fHistory
 					.getFilteredTypeInfos(fFilter);
 			if (matchingTypes.length > 0) {
-				Arrays.sort(matchingTypes, new TypeInfoComparator(
-						fLabelProvider, fFilter));
+				Arrays.sort(matchingTypes,
+						new TypeInfoComparator(fLabelProvider, fFilter));
 				type = matchingTypes[0];
 				int i = 1;
 				while (type != null) {
@@ -650,8 +651,8 @@ public class TypeInfoViewer {
 							: matchingTypes[i];
 					elements.add(type);
 					filteredMatches.add(type);
-					imageDescriptors.add(fLabelProvider
-							.getImageDescriptor(type));
+					imageDescriptors
+							.add(fLabelProvider.getImageDescriptor(type));
 					labels.add(fLabelProvider.getText(last, type, next));
 					last = type;
 					type = next;
@@ -683,9 +684,9 @@ public class TypeInfoViewer {
 				elements.clear();
 				imageDescriptors.clear();
 				labels.clear();
-				int delta = Math
-						.min(nextIndex == 1 ? fViewer.getNumberOfVisibleItems()
-								: 10, result.length - processed);
+				int delta = Math.min(
+						nextIndex == 1 ? fViewer.getNumberOfVisibleItems() : 10,
+						result.length - processed);
 				if (delta == 0)
 					break;
 				processed = processed + delta;
@@ -694,8 +695,8 @@ public class TypeInfoViewer {
 							: result[nextIndex];
 					elements.add(type);
 					labels.add(fLabelProvider.getText(last, type, next));
-					imageDescriptors.add(fLabelProvider
-							.getImageDescriptor(type));
+					imageDescriptors
+							.add(fLabelProvider.getImageDescriptor(type));
 					last = type;
 					type = next;
 					nextIndex++;
@@ -727,7 +728,7 @@ public class TypeInfoViewer {
 			if ((fMode & INDEX) == 0)
 				return;
 
-			Set<TypeNameMatch> filteredMatches = new HashSet<TypeNameMatch>(
+			Set<TypeNameMatch> filteredMatches = new HashSet<>(
 					matchingTypes.length * 2);
 			for (int i = 0; i < matchingTypes.length; i++) {
 				filteredMatches.add(matchingTypes[i]);
@@ -743,7 +744,8 @@ public class TypeInfoViewer {
 		private IStatus canceled(Exception e, boolean removePendingItems) {
 			fViewer.searchJobCanceled(fTicket, removePendingItems);
 			return new Status(IStatus.CANCEL, DLTKUIPlugin.getPluginId(),
-					IStatus.CANCEL, DLTKUIMessages.TypeInfoViewer_job_cancel, e);
+					IStatus.CANCEL, DLTKUIMessages.TypeInfoViewer_job_cancel,
+					e);
 		}
 
 		private IStatus ok() {
@@ -780,15 +782,16 @@ public class TypeInfoViewer {
 			long start = System.currentTimeMillis();
 			fReqestor.setHistory(matchIdsInHistory);
 
-			monitor.setTaskName(DLTKUIMessages.TypeInfoViewer_searchJob_taskName);
+			monitor.setTaskName(
+					DLTKUIMessages.TypeInfoViewer_searchJob_taskName);
 
-			MatchRule searchRule = ModelAccess.convertSearchRule(fFilter
-					.getSearchFlags());
+			MatchRule searchRule = ModelAccess
+					.convertSearchRule(fFilter.getSearchFlags());
 			IType[] types = new ModelAccess().findTypes(
 					fFilter.getNamePattern(), searchRule, 0,
 					Modifiers.AccNameSpace, fScope, monitor);
 			if (searchRule == MatchRule.CAMEL_CASE) {
-				Set<IType> result = new HashSet<IType>();
+				Set<IType> result = new HashSet<>();
 				if (types != null) {
 					result.addAll(Arrays.asList(types));
 				}
@@ -802,34 +805,36 @@ public class TypeInfoViewer {
 				if (types != null) {
 					result.addAll(Arrays.asList(types));
 				}
-				types = result.size() == 0 ? null : result
-						.toArray(new IType[result.size()]);
+				types = result.size() == 0 ? null
+						: result.toArray(new IType[result.size()]);
 			}
 			if (types != null) {
 				for (IType type : types) {
-					fReqestor.acceptTypeNameMatch(new DLTKSearchTypeNameMatch(
-							type, type.getFlags()));
+					fReqestor.acceptTypeNameMatch(
+							new DLTKSearchTypeNameMatch(type, type.getFlags()));
 				}
 			} else {
 				// consider primary working copies during searching
 				SearchEngine engine = new SearchEngine((WorkingCopyOwner) null);
 				String packPattern = fFilter.getPackagePattern();
-				engine.searchAllTypeNames(packPattern == null ? null
-						: packPattern.toCharArray(), fFilter.getPackageFlags(),
-						fFilter.getNamePattern().toCharArray(), fFilter
-								.getSearchFlags(), fElementKind, fScope,
+				engine.searchAllTypeNames(
+						packPattern == null ? null : packPattern.toCharArray(),
+						fFilter.getPackageFlags(),
+						fFilter.getNamePattern().toCharArray(),
+						fFilter.getSearchFlags(), fElementKind, fScope,
 						fReqestor,
 						IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
 						monitor);
 			}
 			if (DEBUG)
-				System.out
-						.println("Time needed until search has finished: " + (System.currentTimeMillis() - start)); //$NON-NLS-1$
+				System.out.println("Time needed until search has finished: " //$NON-NLS-1$
+						+ (System.currentTimeMillis() - start));
 			TypeNameMatch[] result = fReqestor.getResult();
-			Arrays.sort(result, new TypeInfoComparator(fLabelProvider, fFilter));
+			Arrays.sort(result,
+					new TypeInfoComparator(fLabelProvider, fFilter));
 			if (DEBUG)
-				System.out
-						.println("Time needed until sort has finished: " + (System.currentTimeMillis() - start)); //$NON-NLS-1$
+				System.out.println("Time needed until sort has finished: " //$NON-NLS-1$
+						+ (System.currentTimeMillis() - start));
 			fViewer.rememberResult(fTicket, result);
 			return result;
 		}
@@ -849,7 +854,7 @@ public class TypeInfoViewer {
 		protected TypeNameMatch[] getSearchResult(
 				Set<TypeNameMatch> filteredHistory, ProgressMonitor monitor)
 				throws CoreException {
-			List<TypeNameMatch> result = new ArrayList<TypeNameMatch>(2048);
+			List<TypeNameMatch> result = new ArrayList<>(2048);
 			for (int i = 0; i < fLastResult.length; i++) {
 				TypeNameMatch type = fLastResult[i];
 				if (filteredHistory.contains(type))
@@ -858,11 +863,11 @@ public class TypeInfoViewer {
 					result.add(type);
 			}
 			// we have to sort if the filter is a camel case filter.
-			TypeNameMatch[] types = result.toArray(new TypeNameMatch[result
-					.size()]);
+			TypeNameMatch[] types = result
+					.toArray(new TypeNameMatch[result.size()]);
 			if (fFilter.isCamelCasePattern()) {
-				Arrays.sort(types, new TypeInfoComparator(fLabelProvider,
-						fFilter));
+				Arrays.sort(types,
+						new TypeInfoComparator(fLabelProvider, fFilter));
 			}
 			return types;
 		}
@@ -883,10 +888,9 @@ public class TypeInfoViewer {
 		@Override
 		protected IStatus doRun(ProgressMonitor monitor) {
 			try {
-				monitor.setTaskName(DLTKUIMessages.TypeInfoViewer_syncJob_taskName);
-				new SearchEngine().searchAllTypeNames(
-						null,
-						0,
+				monitor.setTaskName(
+						DLTKUIMessages.TypeInfoViewer_syncJob_taskName);
+				new SearchEngine().searchAllTypeNames(null, 0,
 						// make sure we search a concrete name. This is faster
 						// according to Kent
 						"_______________".toCharArray(), //$NON-NLS-1$
@@ -934,7 +938,8 @@ public class TypeInfoViewer {
 
 		public void initialize(GC gc) {
 			fSeparatorWidth = gc.getAdvanceWidth(SEPARATOR);
-			fMessage = " " + DLTKUIMessages.TypeInfoViewer_separator_message + " "; //$NON-NLS-1$ //$NON-NLS-2$
+			fMessage = " " + DLTKUIMessages.TypeInfoViewer_separator_message //$NON-NLS-1$
+					+ " "; //$NON-NLS-1$
 			fMessageLength = gc.textExtent(fMessage).x;
 		}
 	}
@@ -1018,7 +1023,8 @@ public class TypeInfoViewer {
 		fSearchScope = scope;
 		fElementKind = elementKind;
 		fFilterExtension = filterExtension;
-		fSearchPatternProcessor = searchPatternProcessor != null ? searchPatternProcessor
+		fSearchPatternProcessor = searchPatternProcessor != null
+				? searchPatternProcessor
 				: DLTKLanguageManager.getSearchPatternProcessor(
 						toolkit.getCoreToolkit(), true);
 		fFullyQualifySelection = (flags & SWT.MULTI) != 0;
@@ -1026,7 +1032,7 @@ public class TypeInfoViewer {
 				| SWT.FLAT | flags | (VIRTUAL ? SWT.VIRTUAL : SWT.NONE));
 		fTable.setFont(parent.getFont());
 		fLabelProvider = new TypeInfoLabelProvider(imageExtension);
-		fItems = new ArrayList<TableItem>(500);
+		fItems = new ArrayList<>(500);
 		fTable.setHeaderVisible(false);
 		addPopupMenu();
 		fTable.addControlListener(new ControlAdapter() {
@@ -1078,7 +1084,8 @@ public class TypeInfoViewer {
 					fLastLabels[i] = item.getText();
 					Object data = item.getData();
 					if (data instanceof TypeNameMatch) {
-						String qualifiedText = getQualifiedText((TypeNameMatch) data);
+						String qualifiedText = getQualifiedText(
+								(TypeNameMatch) data);
 						if (qualifiedText.length() > fLastLabels[i].length())
 							item.setText(qualifiedText);
 					}
@@ -1175,7 +1182,7 @@ public class TypeInfoViewer {
 
 	public TypeNameMatch[] getSelection() {
 		TableItem[] items = fTable.getSelection();
-		List<TypeNameMatch> result = new ArrayList<TypeNameMatch>(items.length);
+		List<TypeNameMatch> result = new ArrayList<>(items.length);
 		for (int i = 0; i < items.length; i++) {
 			Object data = items[i].getData();
 			if (data instanceof TypeNameMatch) {
@@ -1243,9 +1250,8 @@ public class TypeInfoViewer {
 		fExpectedItemCount = 0;
 		fDashLineIndex = -1;
 		TypeInfoFilter filter = (fTypeInfoFilter != null) ? fTypeInfoFilter
-				: new TypeInfoFilter(
-						fToolkit,
-						"*", fSearchScope, fElementKind, fFilterExtension, fSearchPatternProcessor); //$NON-NLS-1$
+				: new TypeInfoFilter(fToolkit, "*", fSearchScope, fElementKind, //$NON-NLS-1$
+						fFilterExtension, fSearchPatternProcessor);
 		if (VIRTUAL) {
 			fHistoryMatches = fHistory.getFilteredTypeInfos(filter);
 			fExpectedItemCount = fHistoryMatches.length;
@@ -1473,8 +1479,8 @@ public class TypeInfoViewer {
 
 	private void scheduleSearchJob(int mode) {
 		fSearchJobTicket++;
-		if (fLastCompletedFilter != null
-				&& fTypeInfoFilter.isSubFilter(fLastCompletedFilter.getText())) {
+		if (fLastCompletedFilter != null && fTypeInfoFilter
+				.isSubFilter(fLastCompletedFilter.getText())) {
 			fSearchJob = new CachedResultJob(fSearchJobTicket,
 					fLastCompletedResult, this, fTypeInfoFilter, fHistory,
 					fNumberOfVisibleItems, mode);
@@ -1496,7 +1502,8 @@ public class TypeInfoViewer {
 		});
 	}
 
-	private void searchJobCanceled(int ticket, final boolean removePendingItems) {
+	private void searchJobCanceled(int ticket,
+			final boolean removePendingItems) {
 		syncExec(ticket, () -> {
 			if (removePendingItems) {
 				shortenTable();
@@ -1566,8 +1573,8 @@ public class TypeInfoViewer {
 			fillDashLine(item);
 		} else {
 			item.setData(type);
-			item.setImage(fImageManager.get(fLabelProvider
-					.getImageDescriptor(type)));
+			item.setImage(
+					fImageManager.get(fLabelProvider.getImageDescriptor(type)));
 			item.setText(fLabelProvider.getText(getTypeInfo(index - 1), type,
 					getTypeInfo(index + 1)));
 			item.setForeground(null);
@@ -1677,9 +1684,11 @@ public class TypeInfoViewer {
 	private void fillDashLine(TableItem item) {
 		Rectangle bounds = item.getImageBounds(0);
 		Rectangle area = fTable.getBounds();
-		boolean willHaveScrollBar = fExpectedItemCount + 1 > fNumberOfVisibleItems;
-		item.setText(fDashLine.getText(area.width - bounds.x - bounds.width
-				- fTableWidthDelta - (willHaveScrollBar ? fScrollbarWidth : 0)));
+		boolean willHaveScrollBar = fExpectedItemCount
+				+ 1 > fNumberOfVisibleItems;
+		item.setText(fDashLine
+				.getText(area.width - bounds.x - bounds.width - fTableWidthDelta
+						- (willHaveScrollBar ? fScrollbarWidth : 0)));
 		item.setImage(fSeparatorIcon);
 		item.setForeground(fDashLineColor);
 		item.setData(fDashLine);
@@ -1711,11 +1720,11 @@ public class TypeInfoViewer {
 
 	private Color computeDashLineColor() {
 		Color fg = fTable.getForeground();
-		int fGray = (int) (0.3 * fg.getRed() + 0.59 * fg.getGreen() + 0.11 * fg
-				.getBlue());
+		int fGray = (int) (0.3 * fg.getRed() + 0.59 * fg.getGreen()
+				+ 0.11 * fg.getBlue());
 		Color bg = fTable.getBackground();
-		int bGray = (int) (0.3 * bg.getRed() + 0.59 * bg.getGreen() + 0.11 * bg
-				.getBlue());
+		int bGray = (int) (0.3 * bg.getRed() + 0.59 * bg.getGreen()
+				+ 0.11 * bg.getBlue());
 		int gray = (int) ((fGray + bGray) * 0.66);
 		return new Color(fDisplay, gray, gray, gray);
 	}
@@ -1728,8 +1737,8 @@ public class TypeInfoViewer {
 	}
 
 	private String getQualifiedText(TypeNameMatch type) {
-		return fFullyQualifySelection ? fLabelProvider
-				.getFullyQualifiedText(type) : fLabelProvider
-				.getQualifiedText(type);
+		return fFullyQualifySelection
+				? fLabelProvider.getFullyQualifiedText(type)
+				: fLabelProvider.getQualifiedText(type);
 	}
 }

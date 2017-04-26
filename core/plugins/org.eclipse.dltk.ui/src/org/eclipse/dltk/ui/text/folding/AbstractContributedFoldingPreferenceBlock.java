@@ -29,8 +29,8 @@ public abstract class AbstractContributedFoldingPreferenceBlock extends
 
 	@Override
 	public Control createControl(Composite parent) {
-		Composite composite = SWTFactory.createComposite(parent, parent
-				.getFont(), 1, 1, GridData.FILL);
+		Composite composite = SWTFactory.createComposite(parent,
+				parent.getFont(), 1, 1, GridData.FILL);
 
 		createOptionsControl(composite);
 
@@ -69,7 +69,7 @@ public abstract class AbstractContributedFoldingPreferenceBlock extends
 
 	@Override
 	protected final List<OverlayKey> createOverlayKeys() {
-		ArrayList<OverlayKey> keys = new ArrayList<OverlayKey>();
+		ArrayList<OverlayKey> keys = new ArrayList<>();
 		addOverlayKeys(keys);
 		return keys;
 	}

@@ -366,7 +366,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 		@Override
 		public void addOverlaid(IScriptAnnotation annotation) {
 			if (fOverlaids == null)
-				fOverlaids = new ArrayList<IScriptAnnotation>(1);
+				fOverlaids = new ArrayList<>(1);
 			fOverlaids.add(annotation);
 		}
 
@@ -380,7 +380,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 		}
 
 		@Override
-		public Iterator getOverlaidIterator() {
+		public Iterator<IScriptAnnotation> getOverlaidIterator() {
 			if (fOverlaids != null)
 				return fOverlaids.iterator();
 			return null;
@@ -465,7 +465,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 			Object fValue;
 		}
 
-		private List<Entry> fList = new ArrayList<Entry>(2);
+		private List<Entry> fList = new ArrayList<>(2);
 		private int fAnchor = 0;
 
 		public ReverseMap() {
@@ -546,18 +546,18 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 			List<IProblem> fReportedProblems;
 		}
 
-		private ThreadLocal<ProblemRequestorState> fProblemRequestorState = new ThreadLocal<ProblemRequestorState>();
+		private ThreadLocal<ProblemRequestorState> fProblemRequestorState = new ThreadLocal<>();
 		private int fStateCount = 0;
 
 		private ISourceModule fSourceModule;
-		private List<Annotation> fGeneratedAnnotations = new ArrayList<Annotation>();
+		private List<Annotation> fGeneratedAnnotations = new ArrayList<>();
 		private IProgressMonitor fProgressMonitor;
 		private boolean fIsActive = false;
 		private boolean fIsHandlingTemporaryProblems;
 
 		private ReverseMap fReverseMap = new ReverseMap();
 		private List<ScriptMarkerAnnotation> fPreviouslyOverlaid = null;
-		private List<ScriptMarkerAnnotation> fCurrentlyOverlaid = new ArrayList<ScriptMarkerAnnotation>();
+		private List<ScriptMarkerAnnotation> fCurrentlyOverlaid = new ArrayList<>();
 		protected IProblemFactory problemFactory;
 
 		public SourceModuleAnnotationModel(IResource resource) {
@@ -642,7 +642,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 			if (fSourceModule != null && !fSourceModule.isReadOnly()) {
 				ProblemRequestorState state = new ProblemRequestorState();
 				state.fInsideReportingSequence = insideReportingSequence;
-				state.fReportedProblems = new ArrayList<IProblem>();
+				state.fReportedProblems = new ArrayList<>();
 				synchronized (getLockObject()) {
 					fProblemRequestorState.set(state);
 					++fStateCount;
@@ -700,7 +700,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 				boolean isCanceled = false;
 
 				fPreviouslyOverlaid = fCurrentlyOverlaid;
-				fCurrentlyOverlaid = new ArrayList<ScriptMarkerAnnotation>();
+				fCurrentlyOverlaid = new ArrayList<>();
 
 				if (fGeneratedAnnotations.size() > 0) {
 					temporaryProblemsChanged = true;
@@ -873,7 +873,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 					List<Annotation> list = (List<Annotation>) cached;
 					list.add(annotation);
 				} else if (cached instanceof Annotation) {
-					List<Annotation> list = new ArrayList<Annotation>(2);
+					List<Annotation> list = new ArrayList<>(2);
 					list.add((Annotation) cached);
 					list.add(annotation);
 					fReverseMap.put(position, list);
@@ -934,7 +934,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 		protected IMarker[] retrieveMarkers() throws CoreException {
 			String moduleLocation = location.toPortableString();
 			IMarker[] markers = super.retrieveMarkers();
-			List<IMarker> locationMarkers = new LinkedList<IMarker>();
+			List<IMarker> locationMarkers = new LinkedList<>();
 			for (int i = 0; i < markers.length; i++) {
 				IMarker marker = markers[i];
 				String markerLocation = (String) marker
@@ -1031,7 +1031,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 	 *
 	 *
 	 */
-	private final Map<Object, SourceModuleInfo> fFakeCUMapForMissingInfo = new HashMap<Object, SourceModuleInfo>();
+	private final Map<Object, SourceModuleInfo> fFakeCUMapForMissingInfo = new HashMap<>();
 
 	public SourceModuleDocumentProvider() {
 
@@ -1070,7 +1070,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 		DLTKUIPlugin.getDefault().getPreferenceStore()
 				.removePropertyChangeListener(fPropertyListener);
 
-		Iterator e = getConnectedElementsIterator();
+		Iterator<?> e = getConnectedElementsIterator();
 		while (e.hasNext()) {
 			disconnect(e.next());
 		}
@@ -1119,8 +1119,9 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 	 */
 	protected void enableHandlingTemporaryProblems() {
 		boolean enable = isHandlingTemporaryProblems();
-		for (Iterator iter = getFileInfosIterator(); iter.hasNext();) {
-			FileInfo info = (FileInfo) iter.next();
+		for (Iterator<FileInfo> iter = getFileInfosIterator(); iter
+				.hasNext();) {
+			FileInfo info = iter.next();
 			if (info.fModel instanceof IProblemRequestorExtension) {
 				IProblemRequestorExtension extension = (IProblemRequestorExtension) info.fModel;
 				extension.setIsHandlingTemporaryProblems(enable);

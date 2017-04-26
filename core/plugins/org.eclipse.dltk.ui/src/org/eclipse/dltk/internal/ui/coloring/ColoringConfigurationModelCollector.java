@@ -20,9 +20,9 @@ import org.eclipse.dltk.ui.coloring.IColoringCategoryConstants;
 import org.eclipse.dltk.ui.coloring.IColoringPreferenceKey;
 import org.eclipse.swt.graphics.RGB;
 
-public class ColoringConfigurationModelCollector extends
-		AbstractColoringPreferenceRequestor implements
-		IColoringCategoryConstants {
+public class ColoringConfigurationModelCollector
+		extends AbstractColoringPreferenceRequestor
+		implements IColoringCategoryConstants {
 
 	private String category = sCoreCategory;
 
@@ -51,12 +51,14 @@ public class ColoringConfigurationModelCollector extends
 
 	}
 
-	private final List<Item> entries = new ArrayList<Item>();
+	private final List<Item> entries = new ArrayList<>();
 
 	@Override
 	public void addPreference(IColoringPreferenceKey key, String name,
-			RGB color, EnablementStyle enablementStyle, FontStyle... fontStyles) {
-		entries.add(new Item(name, key.getColorKey(), category, enablementStyle));
+			RGB color, EnablementStyle enablementStyle,
+			FontStyle... fontStyles) {
+		entries.add(
+				new Item(name, key.getColorKey(), category, enablementStyle));
 	}
 
 	public String[][] getColorListModel() {

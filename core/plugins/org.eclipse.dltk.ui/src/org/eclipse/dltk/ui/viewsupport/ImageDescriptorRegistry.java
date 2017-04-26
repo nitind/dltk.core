@@ -18,8 +18,7 @@ import org.eclipse.swt.widgets.Display;
 
 public class ImageDescriptorRegistry {
 
-	private final HashMap<ImageDescriptor, Image> fRegistry = new HashMap<ImageDescriptor, Image>(
-			10);
+	private final HashMap<ImageDescriptor, Image> fRegistry = new HashMap<>(10);
 
 	private final Display fDisplay;
 
@@ -52,7 +51,8 @@ public class ImageDescriptorRegistry {
 	 *            for
 	 * @since 2.0
 	 */
-	public ImageDescriptorRegistry(Display display, boolean disposeWithDisplay) {
+	public ImageDescriptorRegistry(Display display,
+			boolean disposeWithDisplay) {
 		fDisplay = display;
 		if (disposeWithDisplay) {
 			hookDisplay();

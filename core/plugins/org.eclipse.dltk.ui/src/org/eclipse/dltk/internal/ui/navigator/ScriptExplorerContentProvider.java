@@ -66,9 +66,9 @@ import org.eclipse.ui.progress.UIJob;
  *
  * @see org.eclipse.jdt.ui.StandardJavaElementContentProvider
  */
-public class ScriptExplorerContentProvider extends
-		StandardModelElementContentProvider implements ITreeContentProvider,
-		IElementChangedListener, IPropertyChangeListener {
+public class ScriptExplorerContentProvider
+		extends StandardModelElementContentProvider implements
+		ITreeContentProvider, IElementChangedListener, IPropertyChangeListener {
 
 	protected static final int ORIGINAL = 0;
 	protected static final int PARENT = 1 << 0;
@@ -102,9 +102,8 @@ public class ScriptExplorerContentProvider extends
 	}
 
 	private boolean arePackagesFoldedInHierarchicalLayout() {
-		return getPreferenceStore()
-				.getBoolean(
-						PreferenceConstants.APPEARANCE_FOLD_PACKAGES_IN_PACKAGE_EXPLORER);
+		return getPreferenceStore().getBoolean(
+				PreferenceConstants.APPEARANCE_FOLD_PACKAGES_IN_PACKAGE_EXPLORER);
 	}
 
 	protected IPreferenceStore getPreferenceStore() {
@@ -120,7 +119,7 @@ public class ScriptExplorerContentProvider extends
 	 */
 	@Override
 	public void elementChanged(final ElementChangedEvent event) {
-		final ArrayList<Runnable> runnables = new ArrayList<Runnable>();
+		final ArrayList<Runnable> runnables = new ArrayList<>();
 		try {
 			// 58952 delete project does not update Package Explorer [package
 			// explorer]
@@ -138,7 +137,8 @@ public class ScriptExplorerContentProvider extends
 		}
 	}
 
-	protected final void executeRunnables(final Collection<Runnable> runnables) {
+	protected final void executeRunnables(
+			final Collection<Runnable> runnables) {
 
 		// now post all collected runnables
 		Control ctrl = fViewer.getControl();
@@ -250,7 +250,7 @@ public class ScriptExplorerContentProvider extends
 		}
 
 		// hierarchical package mode
-		ArrayList<Object> result = new ArrayList<Object>();
+		ArrayList<Object> result = new ArrayList<>();
 		getHierarchicalPackageChildren(root, null, result);
 		if (!isProjectProjectFragment(root)) {
 			Object[] nonJavaResources = root.getForeignResources();
@@ -269,7 +269,7 @@ public class ScriptExplorerContentProvider extends
 		}
 
 		// hierarchical package mode
-		ArrayList<Object> result = new ArrayList<Object>();
+		ArrayList<Object> result = new ArrayList<>();
 
 		getHierarchicalPackageChildren((IProjectFragment) fragment.getParent(),
 				fragment, result);
@@ -291,7 +291,7 @@ public class ScriptExplorerContentProvider extends
 		}
 
 		// hierarchical package mode
-		ArrayList<Object> result = new ArrayList<Object>();
+		ArrayList<Object> result = new ArrayList<>();
 
 		getHierarchicalPackagesInFolder(folder, result);
 		Object[] others = super.getFolderContent(folder);
@@ -308,18 +308,17 @@ public class ScriptExplorerContentProvider extends
 	public Object[] getChildren(final Object parentElement) {
 		try {
 			if (parentElement instanceof IScriptModel) {
-				return getExtendedChildren(
-						parentElement,
-						StandardModelElementContentProvider
-								.concatenate(
-										getScriptProjects((IScriptModel) parentElement),
-										getNonJavaProjects((IScriptModel) parentElement)));
+				return getExtendedChildren(parentElement,
+						StandardModelElementContentProvider.concatenate(
+								getScriptProjects((IScriptModel) parentElement),
+								getNonJavaProjects(
+										(IScriptModel) parentElement)));
 			}
 
 			if (parentElement instanceof ProjectFragmentContainer) {
-				return getExtendedChildren(
-						parentElement,
-						getContainerProjectFragments((ProjectFragmentContainer) parentElement));
+				return getExtendedChildren(parentElement,
+						getContainerProjectFragments(
+								(ProjectFragmentContainer) parentElement));
 			}
 
 			if (parentElement instanceof IProject) {
@@ -344,7 +343,7 @@ public class ScriptExplorerContentProvider extends
 			return StandardModelElementContentProvider.NO_CHILDREN;
 		}
 
-		List<Object> result = new ArrayList<Object>();
+		List<Object> result = new ArrayList<>();
 
 		boolean addZIPContainer = false;
 
@@ -365,11 +364,12 @@ public class ScriptExplorerContentProvider extends
 				// all ClassPathContainers are added later
 			} else if (fShowLibrariesNode
 					&& (entryKind == IBuildpathEntry.BPE_LIBRARY /*
-																 * || entryKind
-																 * ==
-																 * IBuildpathEntry
-																 * .BPE_VARIABLE
-																 */)) {
+																	 * ||
+																	 * entryKind
+																	 * ==
+																	 * IBuildpathEntry
+																	 * .BPE_VARIABLE
+																	 */)) {
 				addZIPContainer = true;
 			} else {
 				if (isProjectProjectFragment(root)) {
@@ -394,7 +394,8 @@ public class ScriptExplorerContentProvider extends
 		IBuildpathEntry[] rawBuidspath = project.getRawBuildpath();
 		for (int i = 0; i < rawBuidspath.length; i++) {
 			IBuildpathEntry classpathEntry = rawBuidspath[i];
-			if (classpathEntry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+			if (classpathEntry
+					.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 				result.add(new BuildPathContainer(project, classpathEntry));
 			}
 		}
@@ -434,13 +435,13 @@ public class ScriptExplorerContentProvider extends
 								entry);
 					} else if (fShowLibrariesNode
 							&& (entryKind == IBuildpathEntry.BPE_LIBRARY /*
-																		 * ||
-																		 * entryKind
-																		 * ==
-																		 * IBuildpathEntry
-																		 * .
-																		 * BPE_VARIABLE
-																		 */)) {
+																			 * ||
+																			 * entryKind
+																			 * ==
+																			 * IBuildpathEntry
+																			 * .
+																			 * BPE_VARIABLE
+																			 */)) {
 						return new LibraryContainer(root.getScriptProject());
 					}
 				}
@@ -485,7 +486,7 @@ public class ScriptExplorerContentProvider extends
 		IModelElement[] children = parent.getChildren();
 
 		if (fragment == null || fragment.isRootFolder()) {
-			List<IModelElement> newElements = new ArrayList<IModelElement>();
+			List<IModelElement> newElements = new ArrayList<>();
 			for (int i = 0; i < children.length; ++i) {
 				if (children[i] instanceof IScriptFolder) {
 					IScriptFolder scriptFolder = (IScriptFolder) children[i];
@@ -503,26 +504,27 @@ public class ScriptExplorerContentProvider extends
 					.toArray(new IModelElement[newElements.size()]);
 		}
 
-		String prefix = fragment != null ? fragment.getElementName()
-				+ IScriptFolder.PACKAGE_DELIMETER_STR : ""; //$NON-NLS-1$
+		String prefix = fragment != null
+				? fragment.getElementName()
+						+ IScriptFolder.PACKAGE_DELIMETER_STR
+				: ""; //$NON-NLS-1$
 		int prefixLen = prefix.length();
 		for (int i = 0; i < children.length; i++) {
 			if (children[i] instanceof IScriptFolder) {
 				IScriptFolder curr = (IScriptFolder) children[i];
 				String name = curr.getElementName();
-				if (name.startsWith(prefix)
-						&& name.length() > prefixLen
+				if (name.startsWith(prefix) && name.length() > prefixLen
 						&& name.indexOf(IScriptFolder.PACKAGE_DELIMITER,
 								prefixLen) == -1) {
 					if (fFoldPackages) {
-						curr = ScriptExplorerContentProvider.getFolded(
-								children, curr);
+						curr = ScriptExplorerContentProvider.getFolded(children,
+								curr);
 					}
 					result.add(curr);
 				} /*
-				 * else if (fragment == null && curr.isRootFolder()) {
-				 * result.add(curr); }
-				 */
+					 * else if (fragment == null && curr.isRootFolder()) {
+					 * result.add(curr); }
+					 */
 			} else {
 				result.add(children[i]);
 			}
@@ -552,8 +554,8 @@ public class ScriptExplorerContentProvider extends
 						IScriptFolder fragment = (IScriptFolder) element;
 						IProjectFragment root = (IProjectFragment) fragment
 								.getParent();
-						element = ScriptExplorerContentProvider.getFolded(root
-								.getChildren(), fragment);
+						element = ScriptExplorerContentProvider
+								.getFolded(root.getChildren(), fragment);
 					}
 					result.add(element);
 				}
@@ -573,8 +575,8 @@ public class ScriptExplorerContentProvider extends
 					if (fFoldPackages
 							&& ScriptExplorerContentProvider.isEmpty(element)
 							&& ScriptExplorerContentProvider
-									.findSinglePackageChild(element, parent
-											.getChildren()) != null) {
+									.findSinglePackageChild(element,
+											parent.getChildren()) != null) {
 						return getHierarchicalPackageParent(element);
 					}
 				} catch (ModelException e) {
@@ -622,9 +624,9 @@ public class ScriptExplorerContentProvider extends
 		for (int i = 0; i < children.length; i++) {
 			IModelElement element = children[i];
 			String name = element.getElementName();
-			if (name.startsWith(prefix)
-					&& name.length() > prefixLen
-					&& name.indexOf(IScriptFolder.PACKAGE_DELIMITER, prefixLen) == -1) {
+			if (name.startsWith(prefix) && name.length() > prefixLen
+					&& name.indexOf(IScriptFolder.PACKAGE_DELIMITER,
+							prefixLen) == -1) {
 				if (found == null) {
 					found = (IScriptFolder) element;
 				} else {
@@ -669,9 +671,11 @@ public class ScriptExplorerContentProvider extends
 		}
 
 		if (elementType == IModelElement.SCRIPT_FOLDER) {
-			if ((flags & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_CHILDREN)) == IModelElementDelta.F_CONTENT) {
+			if ((flags & (IModelElementDelta.F_CONTENT
+					| IModelElementDelta.F_CHILDREN)) == IModelElementDelta.F_CONTENT) {
 				if (!fIsFlatLayout) {
-					Object parent = getHierarchicalPackageParent((IScriptFolder) element);
+					Object parent = getHierarchicalPackageParent(
+							(IScriptFolder) element);
 					if (!(parent instanceof IProjectFragment)) {
 						postRefresh(internalGetParent(parent), GRANT_PARENT,
 								element, runnables);
@@ -687,7 +691,8 @@ public class ScriptExplorerContentProvider extends
 
 			if (!fIsFlatLayout) {
 				if (kind == IModelElementDelta.REMOVED) {
-					final Object parent = getHierarchicalPackageParent((IScriptFolder) element);
+					final Object parent = getHierarchicalPackageParent(
+							(IScriptFolder) element);
 					if (parent instanceof IProjectFragment) {
 						postRemove(element, runnables);
 						return false;
@@ -697,7 +702,8 @@ public class ScriptExplorerContentProvider extends
 						return true;
 					}
 				} else if (kind == IModelElementDelta.ADDED) {
-					final Object parent = getHierarchicalPackageParent((IScriptFolder) element);
+					final Object parent = getHierarchicalPackageParent(
+							(IScriptFolder) element);
 					if (parent instanceof IProjectFragment) {
 						if (fFoldPackages) {
 							postRefresh(parent, PARENT, element, runnables);
@@ -742,7 +748,8 @@ public class ScriptExplorerContentProvider extends
 
 		if (elementType == IModelElement.SCRIPT_PROJECT) {
 			// handle open and closing of a project
-			if ((flags & (IModelElementDelta.F_CLOSED | IModelElementDelta.F_OPENED)) != 0) {
+			if ((flags & (IModelElementDelta.F_CLOSED
+					| IModelElementDelta.F_OPENED)) != 0) {
 				postRefresh(element, ORIGINAL, element, runnables);
 				return false;
 			}
@@ -772,7 +779,8 @@ public class ScriptExplorerContentProvider extends
 				return true;
 
 			} else if (element instanceof IProjectFragment
-					&& ((IProjectFragment) element).getKind() != IProjectFragment.K_SOURCE) {
+					&& ((IProjectFragment) element)
+							.getKind() != IProjectFragment.K_SOURCE) {
 				// libs and class folders can show up twice (in library
 				// container and as resource at original location)
 				IResource resource = element.getResource();
@@ -836,7 +844,8 @@ public class ScriptExplorerContentProvider extends
 				postRefresh(element, ORIGINAL, element, runnables);
 				return false;
 			}
-			if ((flags & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_CHILDREN)) == IModelElementDelta.F_CONTENT) {
+			if ((flags & (IModelElementDelta.F_CONTENT
+					| IModelElementDelta.F_CHILDREN)) == IModelElementDelta.F_CONTENT) {
 				// content change, without children info (for example resource
 				// added/removed to class folder package)
 				postRefresh(internalGetParent(element), PARENT, element,
@@ -864,7 +873,8 @@ public class ScriptExplorerContentProvider extends
 	private static boolean isStructuralCUChange(final int flags) {
 		// No refresh on working copy creation (F_PRIMARY_WORKING_COPY)
 		return (flags & IModelElementDelta.F_CHILDREN) != 0
-				|| (flags & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
+				|| (flags & (IModelElementDelta.F_CONTENT
+						| IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
 	}
 
 	/* package */void handleAffectedChildren(final IModelElementDelta delta,
@@ -896,13 +906,13 @@ public class ScriptExplorerContentProvider extends
 			if (element instanceof IScriptFolder) {
 				// a package fragment might become non empty refresh from the
 				// parent
-				IModelElement parent = (IModelElement) internalGetParent(element);
+				IModelElement parent = (IModelElement) internalGetParent(
+						element);
 				// 1GE8SI6: ITPJUI:WIN98 - Rename is not shown in Packages View
 				// avoid posting a refresh to an invisible parent
 				if (element.equals(fInput)) {
-					postRefresh(element,
-							ScriptExplorerContentProvider.ORIGINAL, element,
-							runnables);
+					postRefresh(element, ScriptExplorerContentProvider.ORIGINAL,
+							element, runnables);
 				} else {
 					postRefresh(parent, ScriptExplorerContentProvider.PARENT,
 							element, runnables);
@@ -919,7 +929,8 @@ public class ScriptExplorerContentProvider extends
 		}
 		if (resourceDeltas != null) {
 			for (int i = 0; i < resourceDeltas.length; i++) {
-				if (processResourceDelta(resourceDeltas[i], element, runnables)) {
+				if (processResourceDelta(resourceDeltas[i], element,
+						runnables)) {
 					return; // early return, element got refreshed
 				}
 			}
@@ -992,7 +1003,8 @@ public class ScriptExplorerContentProvider extends
 				// refresh one level above to deal with empty package filtering
 				// properly
 				postRefresh(internalGetParent(parent),
-						ScriptExplorerContentProvider.PARENT, parent, runnables);
+						ScriptExplorerContentProvider.PARENT, parent,
+						runnables);
 				return true;
 			} else {
 				postRemove(resource, runnables);
@@ -1004,7 +1016,8 @@ public class ScriptExplorerContentProvider extends
 				// refresh one level above to deal with empty package filtering
 				// properly
 				postRefresh(internalGetParent(parent),
-						ScriptExplorerContentProvider.PARENT, parent, runnables);
+						ScriptExplorerContentProvider.PARENT, parent,
+						runnables);
 				return true;
 			} else {
 				postAdd(parent, resource, runnables);
@@ -1028,7 +1041,8 @@ public class ScriptExplorerContentProvider extends
 		int count = 0;
 		for (int i = 0; i < resourceDeltas.length; i++) {
 			int kind = resourceDeltas[i].getKind();
-			if (kind == IResourceDelta.ADDED || kind == IResourceDelta.REMOVED) {
+			if (kind == IResourceDelta.ADDED
+					|| kind == IResourceDelta.REMOVED) {
 				count++;
 				if (count > 1) {
 					postRefresh(parent, PARENT, resource, runnables);
@@ -1054,13 +1068,14 @@ public class ScriptExplorerContentProvider extends
 	}
 
 	protected void postRefresh(Object root, final int relation,
-			final Object affectedElement, final Collection<Runnable> runnables) {
+			final Object affectedElement,
+			final Collection<Runnable> runnables) {
 		// JFace doesn't refresh when object isn't part of the viewer
 		// Therefore move the refresh start down to the viewer's input
 		if (isParent(root, fInput) || root instanceof IScriptModel) {
 			root = fInput;
 		}
-		List<Object> toRefresh = new ArrayList<Object>(1);
+		List<Object> toRefresh = new ArrayList<>(1);
 		toRefresh.add(root);
 		augmentElementToRefresh(toRefresh, relation, affectedElement);
 		postRefresh(toRefresh, true, runnables);

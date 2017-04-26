@@ -289,7 +289,7 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	}
 
 	public BuildpathModifierAction[] getActions() {
-		List<BuildpathModifierAction> result = new ArrayList<BuildpathModifierAction>();
+		List<BuildpathModifierAction> result = new ArrayList<>();
 		for (int i = 0; i < fActions.length; i++) {
 			BuildpathModifierAction action = fActions[i];
 			if (action instanceof BuildpathModifierDropDownAction) {
@@ -349,7 +349,7 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	/**
 	 * Forces the action group to recompute the available actions and fire an
 	 * event to all listeners
-	 * 
+	 *
 	 * @throws ModelException
 	 *
 	 * @see #setContext(DialogExplorerActionContext)

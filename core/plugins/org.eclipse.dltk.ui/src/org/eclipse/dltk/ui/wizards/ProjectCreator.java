@@ -92,9 +92,9 @@ public class ProjectCreator {
 		if (projectFileBackup == null) {
 			projectFileBackup = new ProjectMetadataBackup();
 		}
-		projectFileBackup.backup(projectLocation, new String[] {
-				IScriptProjectFilenames.PROJECT_FILENAME,
-				IScriptProjectFilenames.BUILDPATH_FILENAME });
+		projectFileBackup.backup(projectLocation,
+				new String[] { IScriptProjectFilenames.PROJECT_FILENAME,
+						IScriptProjectFilenames.BUILDPATH_FILENAME });
 	}
 
 	private void restoreExistingFiles(IProgressMonitor monitor)
@@ -139,9 +139,8 @@ public class ProjectCreator {
 				3);
 		try {
 			try {
-				boolean removeContent = !fKeepContent
-						&& fCurrProject
-								.isSynchronized(IResource.DEPTH_INFINITE);
+				boolean removeContent = !fKeepContent && fCurrProject
+						.isSynchronized(IResource.DEPTH_INFINITE);
 				fCurrProject.delete(removeContent, false,
 						new SubProgressMonitor(monitor, 2));
 
@@ -178,8 +177,8 @@ public class ProjectCreator {
 
 	}
 
-	public static abstract class ProjectCreateStep implements
-			IProjectCreateStep {
+	public static abstract class ProjectCreateStep
+			implements IProjectCreateStep {
 
 		@Override
 		public boolean isCancelable() {
@@ -217,7 +216,7 @@ public class ProjectCreator {
 
 	private static class StepTracker implements IStepTracker {
 
-		private final Set<StepState> executed = new HashSet<StepState>();
+		private final Set<StepState> executed = new HashSet<>();
 
 		public void reset() {
 			executed.clear();
@@ -266,7 +265,7 @@ public class ProjectCreator {
 
 	private static class FinishStepTracker extends FilteredStepTracker {
 
-		private final Set<StepState> executed = new HashSet<StepState>();
+		private final Set<StepState> executed = new HashSet<>();
 
 		public FinishStepTracker(IStepTracker target) {
 			super(target);
@@ -291,8 +290,8 @@ public class ProjectCreator {
 			super(target);
 		}
 
-		final int currentPageIndex = indexOfPage(owner.getContainer()
-				.getCurrentPage());
+		final int currentPageIndex = indexOfPage(
+				owner.getContainer().getCurrentPage());
 
 		@Override
 		protected boolean select(StepState state) {
@@ -302,7 +301,7 @@ public class ProjectCreator {
 		}
 	}
 
-	private final List<StepState> fSteps = new ArrayList<StepState>();
+	private final List<StepState> fSteps = new ArrayList<>();
 
 	private final IStepTracker fStepTracker = new StepTracker();
 
@@ -333,9 +332,9 @@ public class ProjectCreator {
 	 * @throws InvocationTargetException
 	 */
 	private void executeSteps(IStepTracker stepTracker, String kind,
-			IProgressMonitor monitor) throws CoreException,
-			InterruptedException {
-		final List<StepState> selection = new ArrayList<StepState>();
+			IProgressMonitor monitor)
+			throws CoreException, InterruptedException {
+		final List<StepState> selection = new ArrayList<>();
 		for (StepState state : fSteps) {
 			if (kind.equals(state.kind) && owner.isEnabledPage(state.page)
 					&& stepTracker.canExecute(state)) {
@@ -396,20 +395,20 @@ public class ProjectCreator {
 		final boolean cancelable = isCancelable(stepTracker);
 
 		final IRunnableWithProgress op = monitor -> {
-try {
-		if (fIsAutobuild == null) {
-			fIsAutobuild = Boolean.valueOf(CoreUtility
-					.enableAutoBuild(false));
-		}
-		updateProject(monitor, stepTracker);
-} catch (CoreException e1) {
-		throw new InvocationTargetException(e1);
-} catch (OperationCanceledException e2) {
-		throw new InterruptedException();
-} finally {
-		monitor.done();
-}
-};
+			try {
+				if (fIsAutobuild == null) {
+					fIsAutobuild = Boolean
+							.valueOf(CoreUtility.enableAutoBuild(false));
+				}
+				updateProject(monitor, stepTracker);
+			} catch (CoreException e1) {
+				throw new InvocationTargetException(e1);
+			} catch (OperationCanceledException e2) {
+				throw new InterruptedException();
+			} finally {
+				monitor.done();
+			}
+		};
 
 		try {
 			getContainer().run(true, cancelable,
@@ -430,7 +429,7 @@ try {
 	 * @return
 	 */
 	private boolean isCancelable(IStepTracker stepTracker) {
-		final List<String> kinds = new ArrayList<String>();
+		final List<String> kinds = new ArrayList<>();
 		kinds.add(IProjectCreateStep.KIND_INIT);
 		kinds.add(IProjectCreateStep.KIND_INIT_UI);
 		kinds.add(IProjectCreateStep.KIND_FINISH);
@@ -469,9 +468,10 @@ try {
 					 * windows the path keeps the leading slash, e.g.
 					 * "/C:/Users/alex/...")
 					 */
-					realLocation = new URI(rootLocation.getScheme(), null, Path
-							.fromPortableString(rootLocation.getPath())
-							.append(fCurrProject.getName()).toString(), null);
+					realLocation = new URI(rootLocation.getScheme(), null,
+							Path.fromPortableString(rootLocation.getPath())
+									.append(fCurrProject.getName()).toString(),
+							null);
 				} catch (URISyntaxException e) {
 					Assert.isTrue(false, "Can't happen"); //$NON-NLS-1$
 				}
@@ -527,9 +527,8 @@ try {
 		if (projectInterpreter == null) {
 			final String nature = getScriptNature();
 			if (nature != null) {
-				projectInterpreter = ScriptRuntime
-						.getDefaultInterpreterInstall(nature,
-								fLocation.getEnvironment());
+				projectInterpreter = ScriptRuntime.getDefaultInterpreterInstall(
+						nature, fLocation.getEnvironment());
 			}
 		}
 		if (projectInterpreter != null) {
@@ -550,8 +549,8 @@ try {
 	 * @throws CoreException
 	 * @throws InterruptedException
 	 */
-	public void performFinish(IProgressMonitor monitor) throws CoreException,
-			InterruptedException {
+	public void performFinish(IProgressMonitor monitor)
+			throws CoreException, InterruptedException {
 		try {
 			monitor.beginTask(
 					NewWizardMessages.ScriptProjectWizardSecondPage_operation_create,
@@ -630,11 +629,12 @@ try {
 	protected IBuildpathEntry[] initBuildpath(IProgressMonitor monitor)
 			throws CoreException {
 		if (fLocation.getDetect()) {
-			if (!fCurrProject.getFile(
-					IScriptProjectFilenames.BUILDPATH_FILENAME).exists()) {
+			if (!fCurrProject
+					.getFile(IScriptProjectFilenames.BUILDPATH_FILENAME)
+					.exists()) {
 				final IBuildpathDetector detector = createBuildpathDetector();
-				detector.detectBuildpath(new SubProgressMonitor(monitor,
-						WORK_INIT_BP));
+				detector.detectBuildpath(
+						new SubProgressMonitor(monitor, WORK_INIT_BP));
 				return detector.getBuildpath();
 			} else {
 				monitor.worked(WORK_INIT_BP);
@@ -642,8 +642,9 @@ try {
 			}
 		} else if (fLocation.isSrc()) {
 			final IDLTKUILanguageToolkit toolkit = getUILanguageToolkit();
-			final IPath srcPath = toolkit != null ? new Path(
-					toolkit.getString(PreferenceConstants.SRC_SRCNAME))
+			final IPath srcPath = toolkit != null
+					? new Path(
+							toolkit.getString(PreferenceConstants.SRC_SRCNAME))
 					: Path.EMPTY;
 			if (srcPath.segmentCount() > 0) {
 				final IFolder folder = fCurrProject.getFolder(srcPath);
@@ -655,13 +656,13 @@ try {
 			final IPath projectPath = fCurrProject.getFullPath();
 			// configure the buildpath entries, including the default
 			// InterpreterEnvironment library.
-			List<IBuildpathEntry> cpEntries = new ArrayList<IBuildpathEntry>();
+			List<IBuildpathEntry> cpEntries = new ArrayList<>();
 			cpEntries.add(DLTKCore.newSourceEntry(projectPath.append(srcPath)));
 			cpEntries.addAll(getDefaultBuildpathEntries());
 			return cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
 		} else {
 			IPath projectPath = fCurrProject.getFullPath();
-			List<IBuildpathEntry> cpEntries = new ArrayList<IBuildpathEntry>();
+			List<IBuildpathEntry> cpEntries = new ArrayList<>();
 			cpEntries.add(DLTKCore.newSourceEntry(projectPath));
 			cpEntries.addAll(getDefaultBuildpathEntries());
 			monitor.worked(WORK_INIT_BP);

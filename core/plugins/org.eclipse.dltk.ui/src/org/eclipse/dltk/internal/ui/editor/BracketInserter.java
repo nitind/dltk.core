@@ -31,8 +31,8 @@ import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 
-public abstract class BracketInserter implements VerifyKeyListener,
-		ILinkedModeListener {
+public abstract class BracketInserter
+		implements VerifyKeyListener, ILinkedModeListener {
 
 	protected final ScriptEditor editor;
 	protected boolean fCloseBrackets = true;
@@ -40,7 +40,7 @@ public abstract class BracketInserter implements VerifyKeyListener,
 	protected boolean fCloseAngularBrackets = true;
 	protected final String CATEGORY;
 	protected IPositionUpdater fUpdater;
-	protected Stack<BracketLevel> fBracketLevelStack = new Stack<BracketLevel>();
+	protected Stack<BracketLevel> fBracketLevelStack = new Stack<>();
 
 	protected BracketInserter(ScriptEditor editor) {
 		this.editor = editor;
@@ -128,29 +128,28 @@ public abstract class BracketInserter implements VerifyKeyListener,
 		final IDocument document = sourceViewer.getDocument();
 		if (document instanceof IDocumentExtension) {
 			IDocumentExtension extension = (IDocumentExtension) document;
-			extension.registerPostNotificationReplace(null,
-					(d, owner) -> {
-						if ((level.fFirstPosition.isDeleted
-								|| level.fFirstPosition.length == 0)
-								&& !level.fSecondPosition.isDeleted
-								&& level.fSecondPosition.offset == level.fFirstPosition.offset) {
-							try {
-								document.replace(level.fSecondPosition.offset,
-										level.fSecondPosition.length, ""); //$NON-NLS-1$
-							} catch (BadLocationException e1) {
-								DLTKUIPlugin.log(e1);
-							}
-						}
+			extension.registerPostNotificationReplace(null, (d, owner) -> {
+				if ((level.fFirstPosition.isDeleted
+						|| level.fFirstPosition.length == 0)
+						&& !level.fSecondPosition.isDeleted
+						&& level.fSecondPosition.offset == level.fFirstPosition.offset) {
+					try {
+						document.replace(level.fSecondPosition.offset,
+								level.fSecondPosition.length, ""); //$NON-NLS-1$
+					} catch (BadLocationException e1) {
+						DLTKUIPlugin.log(e1);
+					}
+				}
 
-						if (fBracketLevelStack.size() == 0) {
-							document.removePositionUpdater(fUpdater);
-							try {
-								document.removePositionCategory(CATEGORY);
-							} catch (BadPositionCategoryException e2) {
-								DLTKUIPlugin.log(e2);
-							}
-						}
-					});
+				if (fBracketLevelStack.size() == 0) {
+					document.removePositionUpdater(fUpdater);
+					try {
+						document.removePositionCategory(CATEGORY);
+					} catch (BadPositionCategoryException e2) {
+						DLTKUIPlugin.log(e2);
+					}
+				}
+			});
 		}
 	}
 
@@ -165,8 +164,8 @@ public abstract class BracketInserter implements VerifyKeyListener,
 	protected void insertBrackets(final IDocument document, final int offset,
 			final int length, final char character, final char closingCharacter)
 			throws BadLocationException, BadPositionCategoryException {
-		document.replace(offset, length, new String(new char[] { character,
-				closingCharacter }));
+		document.replace(offset, length,
+				new String(new char[] { character, closingCharacter }));
 
 		BracketLevel level = new ScriptEditor.BracketLevel();
 		fBracketLevelStack.push(level);
@@ -205,8 +204,8 @@ public abstract class BracketInserter implements VerifyKeyListener,
 		level.fUI.enter();
 
 		IRegion newSelection = level.fUI.getSelectedRegion();
-		sourceViewer.setSelectedRange(newSelection.getOffset(), newSelection
-				.getLength());
+		sourceViewer.setSelectedRange(newSelection.getOffset(),
+				newSelection.getLength());
 	}
 
 	/**

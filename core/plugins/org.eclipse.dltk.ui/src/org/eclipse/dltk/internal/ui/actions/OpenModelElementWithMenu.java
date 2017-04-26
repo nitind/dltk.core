@@ -65,8 +65,7 @@ public class OpenModelElementWithMenu extends ContributionItem {
 	private IEditorRegistry registry = PlatformUI.getWorkbench()
 			.getEditorRegistry();
 
-	static Hashtable<ImageDescriptor, Image> imageCache = new Hashtable<ImageDescriptor, Image>(
-			11);
+	static Hashtable<ImageDescriptor, Image> imageCache = new Hashtable<>(11);
 
 	/**
 	 * The id of this action.
@@ -250,7 +249,7 @@ public class OpenModelElementWithMenu extends ContributionItem {
 
 		// Check that we don't add it twice. This is possible
 		// if the same editor goes to two mappings.
-		ArrayList<IEditorDescriptor> alreadyMapped = new ArrayList<IEditorDescriptor>();
+		ArrayList<IEditorDescriptor> alreadyMapped = new ArrayList<>();
 
 		if (preferredEditor != null) {
 			createMenuItem(menu, preferredEditor, preferredEditor);

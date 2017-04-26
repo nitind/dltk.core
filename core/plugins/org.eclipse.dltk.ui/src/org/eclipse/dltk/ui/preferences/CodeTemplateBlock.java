@@ -76,8 +76,8 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class CodeTemplateBlock extends OptionsConfigurationBlock {
 
-	private class CodeTemplateAdapter extends ViewerComparator implements
-			ITreeListAdapter, IDialogFieldListener {
+	private class CodeTemplateAdapter extends ViewerComparator
+			implements ITreeListAdapter, IDialogFieldListener {
 
 		private final Object[] NO_CHILDREN = new Object[0];
 
@@ -115,8 +115,8 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 					return getTemplatesOfCategory(category);
 				}
 			} else if (element instanceof TemplateContextType) {
-				return getTemplatesOfContextType(((TemplateContextType) element)
-						.getId());
+				return getTemplatesOfContextType(
+						((TemplateContextType) element).getId());
 			}
 			return NO_CHILDREN;
 		}
@@ -139,9 +139,8 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 					return category;
 				}
 			} else if (element instanceof TemplateContextType) {
-				return codeTemplateAccess
-						.getCategoryOfContextType(((TemplateContextType) element)
-								.getId());
+				return codeTemplateAccess.getCategoryOfContextType(
+						((TemplateContextType) element).getId());
 			}
 			return null;
 		}
@@ -193,7 +192,7 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 	// getJDTUIKey(PreferenceConstants.CODEGEN_ADD_COMMENTS);
 
 	private static PreferenceKey[] getAllKeys() {
-		return new PreferenceKey[] { /* PREF_GENERATE_COMMENTS */};
+		return new PreferenceKey[] { /* PREF_GENERATE_COMMENTS */ };
 	}
 
 	private final static int IDX_ADD = 0;
@@ -249,8 +248,8 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 		fCodeTemplateTree = new TreeListDialogField(adapter, buttonLabels,
 				new CodeTemplateLabelProvider());
 		fCodeTemplateTree.setDialogFieldListener(adapter);
-		fCodeTemplateTree
-				.setLabelText(PreferencesMessages.CodeTemplateBlock_templates_label);
+		fCodeTemplateTree.setLabelText(
+				PreferencesMessages.CodeTemplateBlock_templates_label);
 		fCodeTemplateTree.setViewerComparator(adapter);
 
 		fCodeTemplateTree.enableButton(IDX_EXPORT, false);
@@ -258,8 +257,8 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 		fCodeTemplateTree.enableButton(IDX_EDIT, false);
 		fCodeTemplateTree.enableButton(IDX_REMOVE, false);
 
-		fCodeTemplateTree.addElements(Arrays.asList(codeTemplateAccess
-				.getCategories()));
+		fCodeTemplateTree
+				.addElements(Arrays.asList(codeTemplateAccess.getCategories()));
 
 		fCodeTemplateTree.selectFirstElement();
 
@@ -310,8 +309,8 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 		composite.setLayout(layout);
 
 		fCodeTemplateTree.doFillIntoGrid(composite, 3);
-		LayoutUtil
-				.setHorizontalSpan(fCodeTemplateTree.getLabelControl(null), 2);
+		LayoutUtil.setHorizontalSpan(fCodeTemplateTree.getLabelControl(null),
+				2);
 		LayoutUtil
 				.setHorizontalGrabbing(fCodeTemplateTree.getTreeControl(null));
 
@@ -340,7 +339,8 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 		SourceViewer viewer = new ScriptSourceViewer(parent, null, null, false,
 				SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL, store);
 		ScriptSourceViewerConfiguration configuration = tools
-				.createSourceViewerConfiguraton(store, null, fTemplateProcessor);
+				.createSourceViewerConfiguraton(store, null,
+						fTemplateProcessor);
 		viewer.configure(configuration);
 
 		viewer.setEditable(false);
@@ -351,14 +351,14 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 
 		viewer.setDocument(document);
 
-		Font font = JFaceResources.getFont(configuration
-				.getFontPropertyPreferenceKey());
+		Font font = JFaceResources
+				.getFont(configuration.getFontPropertyPreferenceKey());
 		viewer.getTextWidget().setFont(font);
 		new ScriptSourcePreviewerUpdater(viewer, configuration, store);
 
 		Control control = viewer.getControl();
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.FILL_VERTICAL);
+		data = new GridData(
+				GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL);
 		data.horizontalSpan = nColumns;
 		data.heightHint = fPixelConverter.convertHeightInCharsToPixels(5);
 		control.setLayoutData(data);
@@ -368,7 +368,7 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 
 	protected TemplatePersistenceData[] getTemplatesOfCategory(
 			ICodeTemplateCategory category) {
-		ArrayList<TemplatePersistenceData> res = new ArrayList<TemplatePersistenceData>();
+		ArrayList<TemplatePersistenceData> res = new ArrayList<>();
 		TemplatePersistenceData[] templates = fTemplateStore.getTemplateData();
 		for (int i = 0; i < templates.length; i++) {
 			TemplatePersistenceData curr = templates[i];
@@ -387,7 +387,7 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 
 	protected TemplatePersistenceData[] getTemplatesOfContextType(
 			String contextTypeId) {
-		List<TemplatePersistenceData> res = new ArrayList<TemplatePersistenceData>();
+		List<TemplatePersistenceData> res = new ArrayList<>();
 		TemplatePersistenceData[] templates = fTemplateStore.getTemplateData();
 		for (int i = 0; i < templates.length; ++i) {
 			TemplatePersistenceData curr = templates[i];
@@ -395,13 +395,12 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 				res.add(curr);
 			}
 		}
-		return res
-				.toArray(new TemplatePersistenceData[res.size()]);
+		return res.toArray(new TemplatePersistenceData[res.size()]);
 	}
 
 	protected TemplateContextType[] getTemplateContextTypes(
 			ICodeTemplateCategory category) {
-		ArrayList<TemplateContextType> result = new ArrayList<TemplateContextType>();
+		ArrayList<TemplateContextType> result = new ArrayList<>();
 		TemplateContextType[] contextTypes = category.getTemplateContextTypes();
 		for (int i = 0; i < contextTypes.length; ++i) {
 			TemplateContextType contextType = contextTypes[i];
@@ -417,14 +416,14 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 			Object element = selected.get(0);
 			if (element instanceof TemplateContextType
 					|| element instanceof ICodeTemplateCategory
-					&& ((ICodeTemplateCategory) element).isGroup()) {
+							&& ((ICodeTemplateCategory) element).isGroup()) {
 				return true;
 			}
 			if (element instanceof TemplatePersistenceData) {
 				final TemplatePersistenceData data = (TemplatePersistenceData) element;
 				final ICodeTemplateCategory category = codeTemplateAccess
-						.getCategoryOfContextType(data.getTemplate()
-								.getContextTypeId());
+						.getCategoryOfContextType(
+								data.getTemplate().getContextTypeId());
 				if (category != null && category.isGroup()) {
 					return true;
 				}
@@ -459,8 +458,8 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 					.get(0);
 			Template template = data.getTemplate();
 			TemplateContextType type = codeTemplateAccess
-					.getContextTypeRegistry().getContextType(
-							template.getContextTypeId());
+					.getContextTypeRegistry()
+					.getContextType(template.getContextTypeId());
 			fTemplateProcessor.setContextType(type);
 			fPatternViewer.getDocument().set(template.getPattern());
 		} else {
@@ -493,8 +492,8 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 			}
 			Template newTemplate;
 			if (orig != null) {
-				newTemplate = new Template(
-						"", "", contextTypeId, orig.getPattern(), false); //$NON-NLS-1$//$NON-NLS-2$
+				newTemplate = new Template("", "", contextTypeId, //$NON-NLS-1$//$NON-NLS-2$
+						orig.getPattern(), false);
 			} else {
 				newTemplate = new Template("", "", contextTypeId, "", false); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 			}
@@ -565,8 +564,8 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 	private void import_() {
 		FileDialog dialog = new FileDialog(getShell());
 		dialog.setText(PreferencesMessages.CodeTemplateBlock_import_title);
-		dialog
-				.setFilterExtensions(new String[] { PreferencesMessages.CodeTemplateBlock_import_extension });
+		dialog.setFilterExtensions(new String[] {
+				PreferencesMessages.CodeTemplateBlock_import_extension });
 		String path = dialog.open();
 
 		if (path == null)
@@ -624,10 +623,8 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 					String name = data2.getTemplate().getName();
 					String contextTypeId = data2.getTemplate()
 							.getContextTypeId();
-					if (name != null
-							&& name.equals(dataName)
-							&& contextTypeId.equals(data.getTemplate()
-									.getContextTypeId())) {
+					if (name != null && name.equals(dataName) && contextTypeId
+							.equals(data.getTemplate().getContextTypeId())) {
 						data2.setTemplate(data.getTemplate());
 						return;
 					}
@@ -643,42 +640,45 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 	}
 
 	private void export(List selected) {
-		Set<TemplatePersistenceData> datas = new HashSet<TemplatePersistenceData>();
+		Set<TemplatePersistenceData> datas = new HashSet<>();
 		for (int i = 0; i < selected.size(); i++) {
 			Object curr = selected.get(i);
 			if (curr instanceof TemplatePersistenceData) {
 				datas.add((TemplatePersistenceData) curr);
 			} else if (curr instanceof TemplateContextType) {
-				TemplatePersistenceData[] cat = getTemplatesOfContextType((TemplateContextType) curr);
+				TemplatePersistenceData[] cat = getTemplatesOfContextType(
+						(TemplateContextType) curr);
 				datas.addAll(Arrays.asList(cat));
 			} else if (curr instanceof ICodeTemplateCategory) {
 				ICodeTemplateCategory category = (ICodeTemplateCategory) curr;
 				if (category.isGroup()) {
-					TemplateContextType[] types = getTemplateContextTypes(category);
+					TemplateContextType[] types = getTemplateContextTypes(
+							category);
 					for (int j = 0; j < types.length; ++j) {
 						TemplateContextType contextType = types[j];
-						TemplatePersistenceData[] cat = getTemplatesOfContextType(contextType);
+						TemplatePersistenceData[] cat = getTemplatesOfContextType(
+								contextType);
 						datas.addAll(Arrays.asList(cat));
 					}
 				} else {
-					TemplatePersistenceData[] cat = getTemplatesOfCategory(category);
+					TemplatePersistenceData[] cat = getTemplatesOfCategory(
+							category);
 					datas.addAll(Arrays.asList(cat));
 				}
 			}
 		}
-		export(datas
-				.toArray(new TemplatePersistenceData[datas.size()]));
+		export(datas.toArray(new TemplatePersistenceData[datas.size()]));
 	}
 
 	private void export(TemplatePersistenceData[] templates) {
 		FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
-		dialog.setText(NLS.bind(
-				PreferencesMessages.CodeTemplateBlock_export_title, String
-						.valueOf(templates.length)));
-		dialog
-				.setFilterExtensions(new String[] { PreferencesMessages.CodeTemplateBlock_export_extension });
-		dialog
-				.setFileName(PreferencesMessages.CodeTemplateBlock_export_filename);
+		dialog.setText(
+				NLS.bind(PreferencesMessages.CodeTemplateBlock_export_title,
+						String.valueOf(templates.length)));
+		dialog.setFilterExtensions(new String[] {
+				PreferencesMessages.CodeTemplateBlock_export_extension });
+		dialog.setFileName(
+				PreferencesMessages.CodeTemplateBlock_export_filename);
 		String path = dialog.open();
 
 		if (path == null)
@@ -697,10 +697,9 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 
 		if (file.exists() && !file.canWrite()) {
 			String title = PreferencesMessages.CodeTemplateBlock_export_error_title;
-			String message = NLS
-					.bind(
-							PreferencesMessages.CodeTemplateBlock_export_error_canNotWrite,
-							BasicElementLabels.getPathLabel(file));
+			String message = NLS.bind(
+					PreferencesMessages.CodeTemplateBlock_export_error_canNotWrite,
+					BasicElementLabels.getPathLabel(file));
 			MessageDialog.openError(getShell(), title, message);
 			return;
 		}
@@ -727,14 +726,11 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 	}
 
 	private boolean confirmOverwrite(File file) {
-		return MessageDialog
-				.openQuestion(
-						getShell(),
-						PreferencesMessages.CodeTemplateBlock_export_exists_title,
-						NLS
-								.bind(
-										PreferencesMessages.CodeTemplateBlock_export_exists_message,
-										BasicElementLabels.getPathLabel(file)));
+		return MessageDialog.openQuestion(getShell(),
+				PreferencesMessages.CodeTemplateBlock_export_exists_title,
+				NLS.bind(
+						PreferencesMessages.CodeTemplateBlock_export_exists_message,
+						BasicElementLabels.getPathLabel(file)));
 	}
 
 	@Override

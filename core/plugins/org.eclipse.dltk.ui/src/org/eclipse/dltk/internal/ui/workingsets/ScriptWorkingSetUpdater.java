@@ -27,7 +27,8 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetUpdater;
 
-public class ScriptWorkingSetUpdater implements IWorkingSetUpdater, IElementChangedListener {
+public class ScriptWorkingSetUpdater
+		implements IWorkingSetUpdater, IElementChangedListener {
 
 	private List<IWorkingSet> fWorkingSets;
 
@@ -35,24 +36,28 @@ public class ScriptWorkingSetUpdater implements IWorkingSetUpdater, IElementChan
 		private IWorkingSet fWorkingSet;
 		private List<IAdaptable> fElements;
 		private boolean fChanged;
+
 		public WorkingSetDelta(IWorkingSet workingSet) {
-			fWorkingSet= workingSet;
-			fElements = new ArrayList<IAdaptable>(
+			fWorkingSet = workingSet;
+			fElements = new ArrayList<>(
 					Arrays.asList(workingSet.getElements()));
 		}
+
 		public int indexOf(Object element) {
 			return fElements.indexOf(element);
 		}
 
 		public void set(int index, IAdaptable element) {
 			fElements.set(index, element);
-			fChanged= true;
+			fChanged = true;
 		}
+
 		public void remove(int index) {
 			if (fElements.remove(index) != null) {
-				fChanged= true;
+				fChanged = true;
 			}
 		}
+
 		public void process() {
 			if (fChanged) {
 				fWorkingSet.setElements(
@@ -62,7 +67,7 @@ public class ScriptWorkingSetUpdater implements IWorkingSetUpdater, IElementChan
 	}
 
 	public ScriptWorkingSetUpdater() {
-		fWorkingSets = new ArrayList<IWorkingSet>();
+		fWorkingSets = new ArrayList<>();
 		DLTKCore.addElementChangedListener(this);
 	}
 
@@ -77,22 +82,22 @@ public class ScriptWorkingSetUpdater implements IWorkingSetUpdater, IElementChan
 	@Override
 	public boolean remove(IWorkingSet workingSet) {
 		boolean result;
-		synchronized(fWorkingSets) {
-			result= fWorkingSets.remove(workingSet);
+		synchronized (fWorkingSets) {
+			result = fWorkingSets.remove(workingSet);
 		}
 		return result;
 	}
 
 	@Override
 	public boolean contains(IWorkingSet workingSet) {
-		synchronized(fWorkingSets) {
+		synchronized (fWorkingSets) {
 			return fWorkingSets.contains(workingSet);
 		}
 	}
 
 	@Override
 	public void dispose() {
-		synchronized(fWorkingSets) {
+		synchronized (fWorkingSets) {
 			fWorkingSets.clear();
 		}
 		DLTKCore.removeElementChangedListener(this);
@@ -101,16 +106,18 @@ public class ScriptWorkingSetUpdater implements IWorkingSetUpdater, IElementChan
 	@Override
 	public void elementChanged(ElementChangedEvent event) {
 		IWorkingSet[] workingSets;
-		synchronized(fWorkingSets) {
+		synchronized (fWorkingSets) {
 			workingSets = fWorkingSets
 					.toArray(new IWorkingSet[fWorkingSets.size()]);
 		}
-		for (int w= 0; w < workingSets.length; w++) {
-			WorkingSetDelta workingSetDelta= new WorkingSetDelta(workingSets[w]);
+		for (int w = 0; w < workingSets.length; w++) {
+			WorkingSetDelta workingSetDelta = new WorkingSetDelta(
+					workingSets[w]);
 			processScriptDelta(workingSetDelta, event.getDelta());
-			IResourceDelta[] resourceDeltas= event.getDelta().getResourceDeltas();
+			IResourceDelta[] resourceDeltas = event.getDelta()
+					.getResourceDeltas();
 			if (resourceDeltas != null) {
-				for (int r= 0; r < resourceDeltas.length; r++) {
+				for (int r = 0; r < resourceDeltas.length; r++) {
 					processResourceDelta(workingSetDelta, resourceDeltas[r]);
 				}
 			}
@@ -118,17 +125,20 @@ public class ScriptWorkingSetUpdater implements IWorkingSetUpdater, IElementChan
 		}
 	}
 
-	private void processScriptDelta(WorkingSetDelta result, IModelElementDelta delta) {
-		IModelElement jElement= delta.getElement();
-		int index= result.indexOf(jElement);
-		int type= jElement.getElementType();
-		int kind= delta.getKind();
-		int flags= delta.getFlags();
-		if (type == IModelElement.SCRIPT_PROJECT && kind == IModelElementDelta.CHANGED) {
+	private void processScriptDelta(WorkingSetDelta result,
+			IModelElementDelta delta) {
+		IModelElement jElement = delta.getElement();
+		int index = result.indexOf(jElement);
+		int type = jElement.getElementType();
+		int kind = delta.getKind();
+		int flags = delta.getFlags();
+		if (type == IModelElement.SCRIPT_PROJECT
+				&& kind == IModelElementDelta.CHANGED) {
 			if (index != -1 && (flags & IModelElementDelta.F_CLOSED) != 0) {
-				result.set(index, ((IScriptProject)jElement).getProject());
+				result.set(index, ((IScriptProject) jElement).getProject());
 			} else if ((flags & IModelElementDelta.F_OPENED) != 0) {
-				index= result.indexOf(((IScriptProject)jElement).getProject());
+				index = result
+						.indexOf(((IScriptProject) jElement).getProject());
 				if (index != -1)
 					result.set(index, jElement);
 			}
@@ -142,33 +152,35 @@ public class ScriptWorkingSetUpdater implements IWorkingSetUpdater, IElementChan
 				}
 			}
 		}
-		IResourceDelta[] resourceDeltas= delta.getResourceDeltas();
+		IResourceDelta[] resourceDeltas = delta.getResourceDeltas();
 		if (resourceDeltas != null) {
-			for (int i= 0; i < resourceDeltas.length; i++) {
+			for (int i = 0; i < resourceDeltas.length; i++) {
 				processResourceDelta(result, resourceDeltas[i]);
 			}
 		}
-		IModelElementDelta[] children= delta.getAffectedChildren();
-		for (int i= 0; i < children.length; i++) {
+		IModelElementDelta[] children = delta.getAffectedChildren();
+		for (int i = 0; i < children.length; i++) {
 			processScriptDelta(result, children[i]);
 		}
 	}
 
-	private void processResourceDelta(WorkingSetDelta result, IResourceDelta delta) {
-		IResource resource= delta.getResource();
-		int type= resource.getType();
-		int index= result.indexOf(resource);
-		int kind= delta.getKind();
-		int flags= delta.getFlags();
-		if (kind == IResourceDelta.CHANGED && type == IResource.PROJECT && index != -1) {
+	private void processResourceDelta(WorkingSetDelta result,
+			IResourceDelta delta) {
+		IResource resource = delta.getResource();
+		int type = resource.getType();
+		int index = result.indexOf(resource);
+		int kind = delta.getKind();
+		int flags = delta.getFlags();
+		if (kind == IResourceDelta.CHANGED && type == IResource.PROJECT
+				&& index != -1) {
 			if ((flags & IResourceDelta.OPEN) != 0) {
 				result.set(index, resource);
 			}
 		}
 		if (index != -1 && kind == IResourceDelta.REMOVED) {
 			if ((flags & IResourceDelta.MOVED_TO) != 0) {
-				result.set(index,
-					ResourcesPlugin.getWorkspace().getRoot().findMember(delta.getMovedToPath()));
+				result.set(index, ResourcesPlugin.getWorkspace().getRoot()
+						.findMember(delta.getMovedToPath()));
 			} else {
 				result.remove(index);
 			}
@@ -178,51 +190,53 @@ public class ScriptWorkingSetUpdater implements IWorkingSetUpdater, IElementChan
 		if (projectGotClosedOrOpened(resource, kind, flags))
 			return;
 
-		IResourceDelta[] children= delta.getAffectedChildren();
-		for (int i= 0; i < children.length; i++) {
+		IResourceDelta[] children = delta.getAffectedChildren();
+		for (int i = 0; i < children.length; i++) {
 			processResourceDelta(result, children[i]);
 		}
 	}
 
-	private boolean projectGotClosedOrOpened(IResource resource, int kind, int flags) {
+	private boolean projectGotClosedOrOpened(IResource resource, int kind,
+			int flags) {
 		return resource.getType() == IResource.PROJECT
-			&& kind == IResourceDelta.CHANGED
-			&& (flags & IResourceDelta.OPEN) != 0;
+				&& kind == IResourceDelta.CHANGED
+				&& (flags & IResourceDelta.OPEN) != 0;
 	}
 
 	private void checkElementExistence(IWorkingSet workingSet) {
-		List<IAdaptable> elements = new ArrayList<IAdaptable>(
+		List<IAdaptable> elements = new ArrayList<>(
 				Arrays.asList(workingSet.getElements()));
-		boolean changed= false;
+		boolean changed = false;
 		for (Iterator<IAdaptable> iter = elements.iterator(); iter.hasNext();) {
 			IAdaptable element = iter.next();
-			boolean remove= false;
+			boolean remove = false;
 			if (element instanceof IModelElement) {
-				IModelElement jElement= (IModelElement)element;
+				IModelElement jElement = (IModelElement) element;
 				// If we have directly a project then remove it when it
 				// doesn't exist anymore. However if we have a sub element
 				// under a project only remove the element if the parent
 				// project is open. Otherwise we would remove all elements
 				// in closed projects.
 				if (jElement instanceof IScriptProject) {
-					remove= !jElement.exists();
+					remove = !jElement.exists();
 				} else {
-					IProject project= jElement.getScriptProject().getProject();
-					remove= project.isOpen() && !jElement.exists();
+					IProject project = jElement.getScriptProject().getProject();
+					remove = project.isOpen() && !jElement.exists();
 				}
 			} else if (element instanceof IResource) {
-				IResource resource= (IResource)element;
+				IResource resource = (IResource) element;
 				// See comments above
 				if (resource instanceof IProject) {
-					remove= !resource.exists();
+					remove = !resource.exists();
 				} else {
-					IProject project= resource.getProject();
-					remove= (project != null ? project.isOpen() : true) && !resource.exists();
+					IProject project = resource.getProject();
+					remove = (project != null ? project.isOpen() : true)
+							&& !resource.exists();
 				}
 			}
 			if (remove) {
 				iter.remove();
-				changed= true;
+				changed = true;
 			}
 		}
 		if (changed) {

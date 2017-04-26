@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.  
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html  
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
@@ -56,7 +56,7 @@ public class UIModelProviderManager {
 			contentProviders = initializeProviders(contentProviderManager);
 		}
 		if (lang == null) {
-			List<IModelContentProvider> providers = new ArrayList<IModelContentProvider>();
+			List<IModelContentProvider> providers = new ArrayList<>();
 			for (List<IModelContentProvider> elements : contentProviders
 					.values()) {
 				providers.addAll(elements);
@@ -76,7 +76,7 @@ public class UIModelProviderManager {
 			labelProviders = initializeProviders(labelProviderManager);
 		}
 		if (lang == null) {
-			List<ILabelProvider> providers = new ArrayList<ILabelProvider>();
+			List<ILabelProvider> providers = new ArrayList<>();
 			for (List<ILabelProvider> elements : labelProviders.values()) {
 				providers.addAll(elements);
 			}
@@ -95,7 +95,7 @@ public class UIModelProviderManager {
 			compareProviders = initializeProviders(compareProviderManager);
 		}
 		if (lang == null) {
-			List<IModelCompareProvider> providers = new ArrayList<IModelCompareProvider>();
+			List<IModelCompareProvider> providers = new ArrayList<>();
 			for (List<IModelCompareProvider> elements : compareProviders
 					.values()) {
 				providers.addAll(elements);
@@ -112,15 +112,15 @@ public class UIModelProviderManager {
 
 	private synchronized static <T> Map<String, List<T>> initializeProviders(
 			SimpleClassDLTKExtensionManager manager) {
-		Map<String, List<T>> providers = new HashMap<String, List<T>>();
+		Map<String, List<T>> providers = new HashMap<>();
 		ElementInfo[] infos = manager.getElementInfos();
-		Map<String, List<ElementInfo>> langToElementList = new HashMap<String, List<ElementInfo>>();
+		Map<String, List<ElementInfo>> langToElementList = new HashMap<>();
 		// Fill element names and sort elements by language
 		for (int i = 0; i < infos.length; i++) {
 			String langauge = infos[i].getConfig().getAttribute(LANGUAGE);
 			List<ElementInfo> elements = langToElementList.get(langauge);
 			if (elements == null) {
-				elements = new ArrayList<ElementInfo>();
+				elements = new ArrayList<>();
 				langToElementList.put(langauge, elements);
 			}
 			elements.add(infos[i]);
@@ -131,16 +131,16 @@ public class UIModelProviderManager {
 			List<ElementInfo> elements = entry.getValue();
 
 			// Contains map for all ids
-			Set<String> allIds = new HashSet<String>();
+			Set<String> allIds = new HashSet<>();
 			for (ElementInfo info : elements) {
 				allIds.add(info.getConfig().getAttribute(ID));
 			}
 			// Final IModelProvider elements
-			List<T> result = new ArrayList<T>();
+			List<T> result = new ArrayList<>();
 			// Contains names for added elements
-			Set<String> added = new HashSet<String>();
+			Set<String> added = new HashSet<>();
 			// Process elements and keep dependencies
-			List<ElementInfo> toProcess = new ArrayList<ElementInfo>(elements);
+			List<ElementInfo> toProcess = new ArrayList<>(elements);
 			while (!toProcess.isEmpty()) {
 				ElementInfo info = toProcess.remove(0);
 				String requires = info.getConfig().getAttribute(REQUIRES);

@@ -70,8 +70,8 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.HyperlinkDetectorRegistry;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public abstract class ScriptSourceViewerConfiguration extends
-		TextSourceViewerConfiguration {
+public abstract class ScriptSourceViewerConfiguration
+		extends TextSourceViewerConfiguration {
 
 	private IColorManager fColorManager;
 	private ITextEditor fTextEditor;
@@ -134,7 +134,8 @@ public abstract class ScriptSourceViewerConfiguration extends
 	}
 
 	@Override
-	public String getConfiguredDocumentPartitioning(ISourceViewer sourceViewer) {
+	public String getConfiguredDocumentPartitioning(
+			ISourceViewer sourceViewer) {
 		if (fDocumentPartitioning != null)
 			return fDocumentPartitioning;
 		return super.getConfiguredDocumentPartitioning(sourceViewer);
@@ -162,8 +163,8 @@ public abstract class ScriptSourceViewerConfiguration extends
 			ScriptCompositeReconcilingStrategy strategy = new ScriptCompositeReconcilingStrategy(
 					editor, getConfiguredDocumentPartitioning(sourceViewer),
 					createSpellCheckDelegate());
-			ScriptReconciler reconciler = new ScriptReconciler(editor,
-					strategy, false);
+			ScriptReconciler reconciler = new ScriptReconciler(editor, strategy,
+					false);
 			reconciler.setIsAllowedToModifyDocument(false);
 			reconciler.setIsIncrementalReconciler(false);
 			reconciler.setProgressMonitor(new NullProgressMonitor());
@@ -226,8 +227,8 @@ public abstract class ScriptSourceViewerConfiguration extends
 		};
 	}
 
-	public IInformationPresenter getOutlinePresenter(
-			ISourceViewer sourceViewer, boolean doCodeResolve) {
+	public IInformationPresenter getOutlinePresenter(ISourceViewer sourceViewer,
+			boolean doCodeResolve) {
 		InformationPresenter presenter;
 		if (doCodeResolve)
 			presenter = new InformationPresenter(
@@ -237,8 +238,8 @@ public abstract class ScriptSourceViewerConfiguration extends
 			presenter = new InformationPresenter(
 					getOutlinePresenterControlCreator(sourceViewer,
 							IScriptEditorActionDefinitionIds.SHOW_OUTLINE));
-		presenter
-				.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+		presenter.setDocumentPartitioning(
+				getConfiguredDocumentPartitioning(sourceViewer));
 		presenter.setAnchor(AbstractInformationControlManager.ANCHOR_GLOBAL);
 		IInformationProvider provider = new ScriptElementProvider(getEditor(),
 				doCodeResolve);
@@ -274,8 +275,8 @@ public abstract class ScriptSourceViewerConfiguration extends
 	}
 
 	protected IDialogSettings getSettings(String sectionName) {
-		IDialogSettings settings = DLTKUIPlugin.getDefault()
-				.getDialogSettings().getSection(sectionName);
+		IDialogSettings settings = DLTKUIPlugin.getDefault().getDialogSettings()
+				.getSection(sectionName);
 		if (settings == null)
 			settings = DLTKUIPlugin.getDefault().getDialogSettings()
 					.addNewSection(sectionName);
@@ -284,13 +285,14 @@ public abstract class ScriptSourceViewerConfiguration extends
 	}
 
 	@Override
-	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		if (!fPreferenceStore
-				.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
+	public IHyperlinkDetector[] getHyperlinkDetectors(
+			ISourceViewer sourceViewer) {
+		if (!fPreferenceStore.getBoolean(
+				AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
 			return null;
 
-		final IHyperlinkDetector[] inheritedDetectors = super
-				.getHyperlinkDetectors(sourceViewer);
+		final IHyperlinkDetector[] inheritedDetectors = super.getHyperlinkDetectors(
+				sourceViewer);
 
 		if (fTextEditor == null) {
 			return inheritedDetectors;
@@ -300,7 +302,8 @@ public abstract class ScriptSourceViewerConfiguration extends
 		if (inheritedDetectors != null) {
 			resultLength += inheritedDetectors.length;
 		}
-		final IHyperlinkDetector[] additionalDetectors = getAdditionalRegisteredHyperlinkDetectors(sourceViewer);
+		final IHyperlinkDetector[] additionalDetectors = getAdditionalRegisteredHyperlinkDetectors(
+				sourceViewer);
 		if (additionalDetectors != null) {
 			resultLength += additionalDetectors.length;
 		}
@@ -334,7 +337,8 @@ public abstract class ScriptSourceViewerConfiguration extends
 	@Nullable
 	private final IHyperlinkDetector[] getAdditionalRegisteredHyperlinkDetectors(
 			ISourceViewer sourceViewer) {
-		final Map<String, IAdaptable> targets = getAdditionalHyperlinkDetectorTargets(sourceViewer);
+		final Map<String, IAdaptable> targets = getAdditionalHyperlinkDetectorTargets(
+				sourceViewer);
 		Assert.isNotNull(targets);
 		if (targets.isEmpty()) {
 			return null;
@@ -348,13 +352,14 @@ public abstract class ScriptSourceViewerConfiguration extends
 							target.getValue());
 			if (detectors != null && detectors.length != 0) {
 				if (result == null) {
-					result = new ArrayList<IHyperlinkDetector>();
+					result = new ArrayList<>();
 				}
 				Collections.addAll(result, detectors);
 			}
 		}
-		return result != null ? result.toArray(new IHyperlinkDetector[result
-				.size()]) : null;
+		return result != null
+				? result.toArray(new IHyperlinkDetector[result.size()])
+				: null;
 	}
 
 	/**
@@ -365,7 +370,7 @@ public abstract class ScriptSourceViewerConfiguration extends
 	 */
 	protected Map<String, IAdaptable> getAdditionalHyperlinkDetectorTargets(
 			ISourceViewer sourceViewer) {
-		return new HashMap<String, IAdaptable>();
+		return new HashMap<>();
 	}
 
 	/*
@@ -471,8 +476,8 @@ public abstract class ScriptSourceViewerConfiguration extends
 			ISourceViewer sourceViewer) {
 		InformationPresenter presenter = new InformationPresenter(
 				getInformationPresenterControlCreator(sourceViewer));
-		presenter
-				.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+		presenter.setDocumentPartitioning(
+				getConfiguredDocumentPartitioning(sourceViewer));
 		IInformationProvider provider = new ScriptInformationProvider(
 				getEditor());
 		presenter.setInformationProvider(provider,
@@ -487,14 +492,14 @@ public abstract class ScriptSourceViewerConfiguration extends
 		if (getEditor() != null) {
 			ContentAssistant assistant = new ContentAssistant();
 
-			assistant
-					.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-			assistant
-					.setRestoreCompletionProposalSize(getSettings("completion_proposal_size")); //$NON-NLS-1$
-			assistant
-					.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
-			assistant
-					.setInformationControlCreator(getInformationControlCreator(sourceViewer));
+			assistant.setDocumentPartitioning(
+					getConfiguredDocumentPartitioning(sourceViewer));
+			assistant.setRestoreCompletionProposalSize(
+					getSettings("completion_proposal_size")); //$NON-NLS-1$
+			assistant.setContextInformationPopupOrientation(
+					IContentAssistant.CONTEXT_INFO_ABOVE);
+			assistant.setInformationControlCreator(
+					getInformationControlCreator(sourceViewer));
 
 			alterContentAssistant(assistant);
 

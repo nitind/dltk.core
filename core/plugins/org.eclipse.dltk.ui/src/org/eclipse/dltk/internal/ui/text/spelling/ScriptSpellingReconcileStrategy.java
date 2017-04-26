@@ -43,14 +43,15 @@ import org.eclipse.ui.texteditor.spelling.SpellingService;
  *
  * @since 4.0
  */
-public class ScriptSpellingReconcileStrategy implements IReconcilingStrategy,
-		IReconcilingStrategyExtension {
+public class ScriptSpellingReconcileStrategy
+		implements IReconcilingStrategy, IReconcilingStrategyExtension {
 
 	/**
 	 * Spelling problem collector that forwards {@link SpellingProblem}s as
 	 * {@link IProblem}s to the {@link IProblemRequestor}.
 	 */
-	private class SpellingProblemCollector implements ISpellingProblemCollector {
+	private class SpellingProblemCollector
+			implements ISpellingProblemCollector {
 
 		SpellingProblemCollector() {
 		}
@@ -61,7 +62,8 @@ public class ScriptSpellingReconcileStrategy implements IReconcilingStrategy,
 			if (requestor != null) {
 				try {
 					final IDocument document = getDocument();
-					int line = document.getLineOfOffset(problem.getOffset()) + 1;
+					int line = document.getLineOfOffset(problem.getOffset())
+							+ 1;
 					String word = document.get(problem.getOffset(),
 							problem.getLength());
 					// boolean dictionaryMatch= false;
@@ -76,8 +78,8 @@ public class ScriptSpellingReconcileStrategy implements IReconcilingStrategy,
 					IEditorInput editorInput = fEditor.getEditorInput();
 					if (editorInput != null) {
 						ScriptSpellingProblem iProblem = new ScriptSpellingProblem(
-								problem.getOffset(), problem.getOffset()
-										+ problem.getLength(), line,
+								problem.getOffset(),
+								problem.getOffset() + problem.getLength(), line,
 								problem.getMessage(), word,
 								false /* dictionaryMatch */,
 								false /* sentenceStart */, document,
@@ -171,7 +173,7 @@ public class ScriptSpellingReconcileStrategy implements IReconcilingStrategy,
 				ITypedRegion[] partitions = TextUtilities.computePartitioning(
 						fDocument, fPartitioning, region.getOffset(),
 						region.getLength(), false);
-				List<IRegion> lst = new ArrayList<IRegion>(partitions.length);
+				List<IRegion> lst = new ArrayList<>(partitions.length);
 				for (int index = 0; index < partitions.length; index++) {
 					if (fProgressMonitor != null
 							&& fProgressMonitor.isCanceled())
@@ -203,8 +205,8 @@ public class ScriptSpellingReconcileStrategy implements IReconcilingStrategy,
 	}
 
 	private boolean isSpellingEnabled() {
-		return EditorsUI.getPreferenceStore().getBoolean(
-				SpellingService.PREFERENCE_SPELLING_ENABLED);
+		return EditorsUI.getPreferenceStore()
+				.getBoolean(SpellingService.PREFERENCE_SPELLING_ENABLED);
 	}
 
 	@Override
@@ -219,7 +221,8 @@ public class ScriptSpellingReconcileStrategy implements IReconcilingStrategy,
 	 */
 	private void updateProblemRequester() {
 		IAnnotationModel model = getAnnotationModel();
-		fRequestor = (model instanceof IProblemRequestor) ? (IProblemRequestor) model
+		fRequestor = (model instanceof IProblemRequestor)
+				? (IProblemRequestor) model
 				: null;
 	}
 

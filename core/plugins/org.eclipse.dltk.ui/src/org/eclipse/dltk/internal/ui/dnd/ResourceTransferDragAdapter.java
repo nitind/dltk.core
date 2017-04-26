@@ -9,6 +9,7 @@
 package org.eclipse.dltk.internal.ui.dnd;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,27 +35,26 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ResourceTransfer;
 
-
 /**
  * A drag adapter that transfers the current selection as </code>
- * IResource</code>. Only those elements in the selection are part
- * of the transfer which can be converted into an <code>IResource
+ * IResource</code>. Only those elements in the selection are part of the
+ * transfer which can be converted into an <code>IResource
  * </code>.
  */
-public class ResourceTransferDragAdapter extends DragSourceAdapter implements TransferDragSourceListener {
+public class ResourceTransferDragAdapter extends DragSourceAdapter
+		implements TransferDragSourceListener {
 
 	private ISelectionProvider fProvider;
-
-	private static final List EMPTY_LIST= new ArrayList(0);
 
 	/**
 	 * Creates a new ResourceTransferDragAdapter for the given selection
 	 * provider.
 	 *
-	 * @param provider the selection provider to access the viewer's selection
+	 * @param provider
+	 *            the selection provider to access the viewer's selection
 	 */
 	public ResourceTransferDragAdapter(ISelectionProvider provider) {
-		fProvider= provider;
+		fProvider = provider;
 	}
 
 	@Override
@@ -64,13 +64,13 @@ public class ResourceTransferDragAdapter extends DragSourceAdapter implements Tr
 
 	@Override
 	public void dragStart(DragSourceEvent event) {
-		event.doit= convertSelection().size() > 0;
+		event.doit = convertSelection().size() > 0;
 	}
 
 	@Override
 	public void dragSetData(DragSourceEvent event) {
 		List<IResource> resources = convertSelection();
-		event.data= resources.toArray(new IResource[resources.size()]);
+		event.data = resources.toArray(new IResource[resources.size()]);
 	}
 
 	@Override
@@ -84,17 +84,18 @@ public class ResourceTransferDragAdapter extends DragSourceAdapter implements Tr
 	}
 
 	private List<IResource> convertSelection() {
-		ISelection s= fProvider.getSelection();
+		ISelection s = fProvider.getSelection();
 		if (!(s instanceof IStructuredSelection))
-			return EMPTY_LIST;
-		IStructuredSelection selection= (IStructuredSelection)s;
-		List<IResource> result = new ArrayList<IResource>(selection.size());
-		for (Iterator iter= selection.iterator(); iter.hasNext();) {
-			Object element= iter.next();
-			IResource resource= null;
+			return Collections.emptyList();
+		IStructuredSelection selection = (IStructuredSelection) s;
+		List<IResource> result = new ArrayList<>(selection.size());
+		for (Iterator iter = selection.iterator(); iter.hasNext();) {
+			Object element = iter.next();
+			IResource resource = null;
 			if (element instanceof IModelElement) {
-				// don't use IAdaptable as for members only the top level type adapts
-				resource= ((IModelElement) element).getResource();
+				// don't use IAdaptable as for members only the top level type
+				// adapts
+				resource = ((IModelElement) element).getResource();
 			} else if (element instanceof IAdaptable) {
 				resource = ((IAdaptable) element).getAdapter(IResource.class);
 			}
@@ -105,11 +106,10 @@ public class ResourceTransferDragAdapter extends DragSourceAdapter implements Tr
 	}
 
 	private void handleFinishedDropMove(DragSourceEvent event) {
-		MultiStatus status= new MultiStatus(
-			DLTKUIPlugin.PLUGIN_ID,
-			IModelStatusConstants.INTERNAL_ERROR,
-			DLTKUIMessages.ResourceTransferDragAdapter_cannot_delete_resource,
-			null);
+		MultiStatus status = new MultiStatus(DLTKUIPlugin.PLUGIN_ID,
+				IModelStatusConstants.INTERNAL_ERROR,
+				DLTKUIMessages.ResourceTransferDragAdapter_cannot_delete_resource,
+				null);
 		List<IResource> resources = convertSelection();
 		for (Iterator<IResource> iter = resources.iterator(); iter.hasNext();) {
 			IResource resource = iter.next();
@@ -120,13 +120,12 @@ public class ResourceTransferDragAdapter extends DragSourceAdapter implements Tr
 			}
 		}
 		if (status.getChildren().length > 0) {
-			Shell parent= SWTUtil.getShell(event.widget);
-			ErrorDialog error= new ErrorDialog(parent,
-				DLTKUIMessages.ResourceTransferDragAdapter_moving_resource,
-				DLTKUIMessages.ResourceTransferDragAdapter_cannot_delete_files,
-				status, IStatus.ERROR);
+			Shell parent = SWTUtil.getShell(event.widget);
+			ErrorDialog error = new ErrorDialog(parent,
+					DLTKUIMessages.ResourceTransferDragAdapter_moving_resource,
+					DLTKUIMessages.ResourceTransferDragAdapter_cannot_delete_files,
+					status, IStatus.ERROR);
 			error.open();
 		}
 	}
 }
-

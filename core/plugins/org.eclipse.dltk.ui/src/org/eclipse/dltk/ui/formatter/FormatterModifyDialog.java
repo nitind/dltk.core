@@ -45,8 +45,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
-public abstract class FormatterModifyDialog extends StatusDialog implements
-		IFormatterModifyDialog, IStatusChangeListener {
+public abstract class FormatterModifyDialog extends StatusDialog
+		implements IFormatterModifyDialog, IStatusChangeListener {
 
 	private final FormatterDialogPreferences preferences = new FormatterDialogPreferences();
 
@@ -74,8 +74,8 @@ public abstract class FormatterModifyDialog extends StatusDialog implements
 		super(dialogOwner.getShell());
 		this.dialogOwner = dialogOwner;
 		this.formatterFactory = formatterFactory;
-		this.fDialogSettings = getDialogSettingsSection(dialogOwner
-				.getDialogSettings(), formatterFactory.getId());
+		this.fDialogSettings = getDialogSettingsSection(
+				dialogOwner.getDialogSettings(), formatterFactory.getId());
 		setStatusLineAboveButtons(false);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
@@ -121,8 +121,8 @@ public abstract class FormatterModifyDialog extends StatusDialog implements
 	@Override
 	protected Point getInitialLocation(Point initialSize) {
 		try {
-			return new Point(fDialogSettings.getInt(KEY_X), fDialogSettings
-					.getInt(KEY_Y));
+			return new Point(fDialogSettings.getInt(KEY_X),
+					fDialogSettings.getInt(KEY_Y));
 		} catch (NumberFormatException ex) {
 			return super.getInitialLocation(initialSize);
 		}
@@ -139,27 +139,27 @@ public abstract class FormatterModifyDialog extends StatusDialog implements
 	}
 
 	private TabFolder fTabFolder;
-	private final List<IFormatterModifiyTabPage> fTabPages = new ArrayList<IFormatterModifiyTabPage>();
+	private final List<IFormatterModifiyTabPage> fTabPages = new ArrayList<>();
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		final Composite composite = (Composite) super.createDialogArea(parent);
 
 		Composite nameComposite = new Composite(composite, SWT.NONE);
-		nameComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				false));
+		nameComposite
+				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		nameComposite.setLayout(new GridLayout(3, false));
 
 		fProfileNameField = new StringDialogField();
-		fProfileNameField
-				.setLabelText(FormatterMessages.FormatterModifyDialog_profileName);
+		fProfileNameField.setLabelText(
+				FormatterMessages.FormatterModifyDialog_profileName);
 		if (profile != null) {
 			fProfileNameField.setText(profile.getName());
 		}
 		fProfileNameField.getLabelControl(nameComposite).setLayoutData(
 				new GridData(SWT.LEFT, SWT.CENTER, false, false));
-		fProfileNameField.getTextControl(nameComposite).setLayoutData(
-				new GridData(SWT.FILL, SWT.CENTER, true, false));
+		fProfileNameField.getTextControl(nameComposite)
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		fProfileNameField.setDialogFieldListener(field -> validate());
 
 		fSaveButton = createButton(nameComposite, SAVE_BUTTON_ID,
@@ -216,8 +216,8 @@ public abstract class FormatterModifyDialog extends StatusDialog implements
 	protected void updateButtonsEnableState(IStatus status) {
 		super.updateButtonsEnableState(status);
 		if (fSaveButton != null && !fSaveButton.isDisposed()) {
-			fSaveButton.setEnabled(!validateProfileName()
-					.matches(IStatus.ERROR));
+			fSaveButton
+					.setEnabled(!validateProfileName().matches(IStatus.ERROR));
 		}
 	}
 
@@ -271,9 +271,7 @@ public abstract class FormatterModifyDialog extends StatusDialog implements
 
 		if (profile.isBuiltInProfile()) {
 			if (profile.getName().equals(name)) {
-				return new Status(
-						IStatus.ERROR,
-						DLTKUIPlugin.PLUGIN_ID,
+				return new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID,
 						FormatterMessages.FormatterModifyDialog_changeBuiltInProfileName);
 			}
 		}
@@ -301,8 +299,8 @@ public abstract class FormatterModifyDialog extends StatusDialog implements
 	private void saveButtonPressed() {
 		IProfileStore store = formatterFactory.getProfileStore();
 		IProfile selected = manager.create(ProfileKind.TEMPORARY,
-				fProfileNameField.getText(), getPreferences(), profile
-						.getFormatterId(), profile.getVersion());
+				fProfileNameField.getText(), getPreferences(),
+				profile.getFormatterId(), profile.getVersion());
 
 		final FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
 		dialog.setText(FormatterMessages.FormatterModifyDialog_exportProfile);
@@ -316,14 +314,13 @@ public abstract class FormatterModifyDialog extends StatusDialog implements
 		String message = NLS.bind(
 				FormatterMessages.FormatterModifyDialog_replaceFileQuestion,
 				file.getAbsolutePath());
-		if (file.exists()
-				&& !MessageDialog.openQuestion(getShell(),
-						FormatterMessages.FormatterModifyDialog_exportProfile,
-						message)) {
+		if (file.exists() && !MessageDialog.openQuestion(getShell(),
+				FormatterMessages.FormatterModifyDialog_exportProfile,
+				message)) {
 			return;
 		}
 
-		final Collection<IProfile> profiles = new ArrayList<IProfile>();
+		final Collection<IProfile> profiles = new ArrayList<>();
 		profiles.add(selected);
 		try {
 			store.writeProfilesToFile(profiles, file);

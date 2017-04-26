@@ -36,8 +36,8 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.IWorkingSet;
 
-
-public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements TransferDropTargetListener {
+public class WorkingSetDropAdapter extends DLTKViewerDropAdapter
+		implements TransferDropTargetListener {
 
 	private ScriptExplorerPart fPackageExplorer;
 
@@ -49,16 +49,17 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 
 	public WorkingSetDropAdapter(ScriptExplorerPart part) {
 		super(part.getTreeViewer());
-		fPackageExplorer= part;
+		fPackageExplorer = part;
 
-		fLocation= -1;
+		fLocation = -1;
 
 		setScrollEnabled(true);
 		setExpandEnabled(true);
 		setFeedbackEnabled(false);
 	}
 
-	//---- TransferDropTargetListener interface ---------------------------------------
+	// ---- TransferDropTargetListener interface
+	// ---------------------------------------
 
 	@Override
 	public Transfer getTransfer() {
@@ -67,7 +68,7 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 
 	@Override
 	public boolean isEnabled(DropTargetEvent event) {
-		Object target= event.item != null ? event.item.getData() : null;
+		Object target = event.item != null ? event.item.getData() : null;
 		if (target == null)
 			return false;
 		ISelection selection = LocalSelectionTransfer.getTransfer()
@@ -82,22 +83,26 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 		return true;
 	}
 
-	//---- Actual DND -----------------------------------------------------------------
+	// ---- Actual DND
+	// -----------------------------------------------------------------
 
 	@Override
-	public boolean validateDrop(Object target, int operation, TransferData transferType) {
-		return determineOperation(target, operation, transferType, DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_COPY) != DND.DROP_NONE;
+	public boolean validateDrop(Object target, int operation,
+			TransferData transferType) {
+		return determineOperation(target, operation, transferType,
+				DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_COPY) != DND.DROP_NONE;
 	}
 
 	@Override
-	protected int determineOperation(Object target, int operation, TransferData transferType, int operations) {
-		switch(operation) {
-			case DND.DROP_DEFAULT:
-			case DND.DROP_COPY:
-			case DND.DROP_MOVE:
-				return validateTarget(target, operation);
-			default:
-				return DND.DROP_NONE;
+	protected int determineOperation(Object target, int operation,
+			TransferData transferType, int operations) {
+		switch (operation) {
+		case DND.DROP_DEFAULT:
+		case DND.DROP_COPY:
+		case DND.DROP_MOVE:
+			return validateTarget(target, operation);
+		default:
+			return DND.DROP_NONE;
 		}
 	}
 
@@ -116,7 +121,8 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 
 		if (isWorkingSetSelection()) {
 			setExpandEnabled(false);
-			if (getCurrentLocation() == LOCATION_BEFORE || getCurrentLocation() == LOCATION_AFTER) {
+			if (getCurrentLocation() == LOCATION_BEFORE
+					|| getCurrentLocation() == LOCATION_AFTER) {
 				setFeedbackEnabled(true);
 				return DND.DROP_MOVE;
 			}
@@ -125,34 +131,39 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 			if (isOthersWorkingSet(fWorkingSet) && operation == DND.DROP_COPY)
 				return DND.DROP_NONE;
 
-			List realScriptElements= new ArrayList();
-			List realResource= new ArrayList();
-			ReorgUtils.splitIntoModelElementsAndResources(fElementsToAdds, realScriptElements, realResource);
-			if (fElementsToAdds.length != realScriptElements.size() + realResource.size())
+			List realScriptElements = new ArrayList();
+			List realResource = new ArrayList();
+			ReorgUtils.splitIntoModelElementsAndResources(fElementsToAdds,
+					realScriptElements, realResource);
+			if (fElementsToAdds.length != realScriptElements.size()
+					+ realResource.size())
 				return DND.DROP_NONE;
-			for (Iterator iter= realScriptElements.iterator(); iter.hasNext();) {
-				IModelElement element= (IModelElement)iter.next();
-				if (ReorgUtils.containsElementOrParent(fCurrentElements, element))
+			for (Iterator iter = realScriptElements.iterator(); iter
+					.hasNext();) {
+				IModelElement element = (IModelElement) iter.next();
+				if (ReorgUtils.containsElementOrParent(fCurrentElements,
+						element))
 					return DND.DROP_NONE;
 			}
-			for (Iterator iter= realResource.iterator(); iter.hasNext();) {
-				IResource element= (IResource)iter.next();
-				if (ReorgUtils.containsElementOrParent(fCurrentElements, element))
+			for (Iterator iter = realResource.iterator(); iter.hasNext();) {
+				IResource element = (IResource) iter.next();
+				if (ReorgUtils.containsElementOrParent(fCurrentElements,
+						element))
 					return DND.DROP_NONE;
 			}
 			if (!(fSelection instanceof ITreeSelection)) {
 				return DND.DROP_COPY;
 			}
-			ITreeSelection treeSelection= (ITreeSelection)fSelection;
-			TreePath[] paths= treeSelection.getPaths();
-			for (int i= 0; i < paths.length; i++) {
-				TreePath path= paths[i];
+			ITreeSelection treeSelection = (ITreeSelection) fSelection;
+			TreePath[] paths = treeSelection.getPaths();
+			for (int i = 0; i < paths.length; i++) {
+				TreePath path = paths[i];
 				if (path.getSegmentCount() != 2)
 					return DND.DROP_COPY;
 				if (!(path.getSegment(0) instanceof IWorkingSet))
 					return DND.DROP_COPY;
 				if (paths.length == 1) {
-					IWorkingSet ws= (IWorkingSet)path.getSegment(0);
+					IWorkingSet ws = (IWorkingSet) path.getSegment(0);
 					if (WorkingSetIDs.OTHERS.equals(ws.getId()))
 						return DND.DROP_MOVE;
 				}
@@ -176,14 +187,15 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 	}
 
 	private void initializeState(Object target, ISelection s) {
-		fWorkingSet= (IWorkingSet)target;
-		fSelection= (IStructuredSelection)s;
-		fElementsToAdds= fSelection.toArray();
-		fCurrentElements= new HashSet(Arrays.asList(fWorkingSet.getElements()));
+		fWorkingSet = (IWorkingSet) target;
+		fSelection = (IStructuredSelection) s;
+		fElementsToAdds = fSelection.toArray();
+		fCurrentElements = new HashSet(
+				Arrays.asList(fWorkingSet.getElements()));
 	}
 
 	private boolean isWorkingSetSelection() {
-		for (int i= 0; i < fElementsToAdds.length; i++) {
+		for (int i = 0; i < fElementsToAdds.length; i++) {
 			if (!(fElementsToAdds[i] instanceof IWorkingSet))
 				return false;
 		}
@@ -205,45 +217,50 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 	}
 
 	private void performWorkingSetReordering() {
-		WorkingSetModel model= fPackageExplorer.getWorkingSetModel();
-		List activeWorkingSets= new ArrayList(Arrays.asList(model.getActiveWorkingSets()));
-		int index= activeWorkingSets.indexOf(fWorkingSet);
+		WorkingSetModel model = fPackageExplorer.getWorkingSetModel();
+		List activeWorkingSets = new ArrayList(
+				Arrays.asList(model.getActiveWorkingSets()));
+		int index = activeWorkingSets.indexOf(fWorkingSet);
 		if (index != -1) {
 			if (getCurrentLocation() == LOCATION_AFTER)
 				index++;
 			List result = new ArrayList(activeWorkingSets.size());
-			List selected= new ArrayList(Arrays.asList(fElementsToAdds));
-			for (int i= 0; i < activeWorkingSets.size(); i++) {
+			List selected = new ArrayList(Arrays.asList(fElementsToAdds));
+			for (int i = 0; i < activeWorkingSets.size(); i++) {
 				if (i == index) {
 					result.addAll(selected);
 				}
-				Object element= activeWorkingSets.get(i);
+				Object element = activeWorkingSets.get(i);
 				if (!selected.contains(element)) {
 					result.add(element);
 				}
 			}
 			if (index == activeWorkingSets.size())
 				result.addAll(selected);
-			model.setActiveWorkingSets((IWorkingSet[])result.toArray(new IWorkingSet[result.size()]));
+			model.setActiveWorkingSets((IWorkingSet[]) result
+					.toArray(new IWorkingSet[result.size()]));
 		}
 	}
 
 	private void performElementRearrange(int eventDetail) {
 		// only move if target isn't the other working set. If this is the case
-		// the move will happenn automatically by refreshing the other working set
+		// the move will happenn automatically by refreshing the other working
+		// set
 		if (!isOthersWorkingSet(fWorkingSet)) {
 			List elements = new ArrayList(
 					Arrays.asList(fWorkingSet.getElements()));
 			elements.addAll(Arrays.asList(fElementsToAdds));
-			fWorkingSet.setElements((IAdaptable[])elements.toArray(new IAdaptable[elements.size()]));
+			fWorkingSet.setElements((IAdaptable[]) elements
+					.toArray(new IAdaptable[elements.size()]));
 		}
 		if (eventDetail == DND.DROP_MOVE) {
-			ITreeSelection treeSelection= (ITreeSelection)fSelection;
-			Map workingSets= groupByWorkingSets(treeSelection.getPaths());
-			for (Iterator iter= workingSets.keySet().iterator(); iter.hasNext();) {
-				IWorkingSet ws= (IWorkingSet)iter.next();
-				List toRemove= (List)workingSets.get(ws);
-				List<IAdaptable> currentElements = new ArrayList<IAdaptable>(
+			ITreeSelection treeSelection = (ITreeSelection) fSelection;
+			Map workingSets = groupByWorkingSets(treeSelection.getPaths());
+			for (Iterator iter = workingSets.keySet().iterator(); iter
+					.hasNext();) {
+				IWorkingSet ws = (IWorkingSet) iter.next();
+				List toRemove = (List) workingSets.get(ws);
+				List<IAdaptable> currentElements = new ArrayList<>(
 						Arrays.asList(ws.getElements()));
 				currentElements.removeAll(toRemove);
 				ws.setElements(currentElements
@@ -252,14 +269,14 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 		}
 	}
 
-	private Map/*<List<IWorkingSet>>*/ groupByWorkingSets(TreePath[] paths) {
-		Map result= new HashMap();
-		for (int i= 0; i < paths.length; i++) {
-			TreePath path= paths[i];
-			IWorkingSet ws= (IWorkingSet)path.getSegment(0);
-			List l= (List)result.get(ws);
+	private Map/* <List<IWorkingSet>> */ groupByWorkingSets(TreePath[] paths) {
+		Map result = new HashMap();
+		for (int i = 0; i < paths.length; i++) {
+			TreePath path = paths[i];
+			IWorkingSet ws = (IWorkingSet) path.getSegment(0);
+			List l = (List) result.get(ws);
 			if (l == null) {
-				l= new ArrayList();
+				l = new ArrayList();
 				result.put(ws, l);
 			}
 			l.add(path.getSegment(1));
@@ -267,7 +284,7 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 		return result;
 	}
 
-	//---- test methods for JUnit test since DnD is hard to simulate
+	// ---- test methods for JUnit test since DnD is hard to simulate
 
 	public int internalTestValidateTarget(Object target, int operation) {
 		return validateTarget(target, operation);
@@ -282,7 +299,7 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter implements Tran
 	}
 
 	public void internalTestSetLocation(int location) {
-		fLocation= location;
+		fLocation = location;
 	}
 
 	/**

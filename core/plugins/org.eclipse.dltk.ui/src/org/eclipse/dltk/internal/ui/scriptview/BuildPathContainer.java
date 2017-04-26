@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,28 +43,30 @@ public class BuildPathContainer extends ProjectFragmentContainer {
 	private IBuildpathEntry fClassPathEntry;
 	private IBuildpathContainer fContainer;
 
-	public static class RequiredProjectWrapper implements IAdaptable, IWorkbenchAdapter {
+	public static class RequiredProjectWrapper
+			implements IAdaptable, IWorkbenchAdapter {
 
 		private final BuildPathContainer fParent;
 		private final IScriptProject fProject;
-		
-		public RequiredProjectWrapper(BuildPathContainer parent, IScriptProject project) {
-			fParent= parent;
-			fProject= project;
+
+		public RequiredProjectWrapper(BuildPathContainer parent,
+				IScriptProject project) {
+			fParent = parent;
+			fProject = project;
 		}
-		
+
 		public IScriptProject getProject() {
-			return fProject; 
+			return fProject;
 		}
-		
+
 		public BuildPathContainer getParentClassPathContainer() {
-			return fParent; 
+			return fParent;
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		@Override
 		public <T> T getAdapter(Class<T> adapter) {
-			if (adapter == IWorkbenchAdapter.class) 
+			if (adapter == IWorkbenchAdapter.class)
 				return (T) this;
 			return null;
 		}
@@ -76,7 +78,8 @@ public class BuildPathContainer extends ProjectFragmentContainer {
 
 		@Override
 		public ImageDescriptor getImageDescriptor(Object object) {
-			return PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(IDE.SharedImages.IMG_OBJ_PROJECT);
+			return PlatformUI.getWorkbench().getSharedImages()
+					.getImageDescriptor(IDE.SharedImages.IMG_OBJ_PROJECT);
 		}
 
 		@Override
@@ -92,30 +95,31 @@ public class BuildPathContainer extends ProjectFragmentContainer {
 
 	public BuildPathContainer(IScriptProject parent, IBuildpathEntry entry) {
 		super(parent);
-		fClassPathEntry= entry;
+		fClassPathEntry = entry;
 		try {
-			fContainer= DLTKCore.getBuildpathContainer(entry.getPath(), parent);
+			fContainer = DLTKCore.getBuildpathContainer(entry.getPath(),
+					parent);
 		} catch (ModelException e) {
-			fContainer= null;
+			fContainer = null;
 		}
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof BuildPathContainer) {
-			BuildPathContainer other = (BuildPathContainer)obj;
-			if (getScriptProject().equals(other.getScriptProject()) &&
-				fClassPathEntry.equals(other.fClassPathEntry)) {
-				return true;	
+			BuildPathContainer other = (BuildPathContainer) obj;
+			if (getScriptProject().equals(other.getScriptProject())
+					&& fClassPathEntry.equals(other.fClassPathEntry)) {
+				return true;
 			}
-			
+
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return getScriptProject().hashCode()*17+fClassPathEntry.hashCode();
+		return getScriptProject().hashCode() * 17 + fClassPathEntry.hashCode();
 	}
 
 	@Override
@@ -125,9 +129,9 @@ public class BuildPathContainer extends ProjectFragmentContainer {
 
 	@Override
 	public IAdaptable[] getChildren() {
-		List<IAdaptable> list = new ArrayList<IAdaptable>();
-		IProjectFragment[] roots= getProjectFragments();
-		for (int i= 0; i < roots.length; i++) {
+		List<IAdaptable> list = new ArrayList<>();
+		IProjectFragment[] roots = getProjectFragments();
+		for (int i = 0; i < roots.length; i++) {
 			list.add(roots[i]);
 		}
 		if (fContainer != null) {
@@ -135,15 +139,18 @@ public class BuildPathContainer extends ProjectFragmentContainer {
 					.getBuildpathEntries();
 			if (classpathEntries == null) {
 				// invalid implementation of a classpath container
-				DLTKUIPlugin.log(new IllegalArgumentException("Invalid classpath container implementation: getClasspathEntries() returns null. " + fContainer.getPath())); //$NON-NLS-1$
+				DLTKUIPlugin.log(new IllegalArgumentException(
+						"Invalid classpath container implementation: getClasspathEntries() returns null. " //$NON-NLS-1$
+								+ fContainer.getPath()));
 			} else {
-				IWorkspaceRoot root= ResourcesPlugin.getWorkspace().getRoot();
-				for (int i= 0; i < classpathEntries.length; i++) {
-					IBuildpathEntry entry= classpathEntries[i];
+				IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+				for (int i = 0; i < classpathEntries.length; i++) {
+					IBuildpathEntry entry = classpathEntries[i];
 					if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-						IResource resource= root.findMember(entry.getPath());
+						IResource resource = root.findMember(entry.getPath());
 						if (resource instanceof IProject)
-							list.add(new RequiredProjectWrapper(this, DLTKCore.create((IProject) resource)));
+							list.add(new RequiredProjectWrapper(this,
+									DLTKCore.create((IProject) resource)));
 					}
 				}
 			}
@@ -161,24 +168,30 @@ public class BuildPathContainer extends ProjectFragmentContainer {
 	public String getLabel() {
 		if (fContainer != null)
 			return fContainer.getDescription();
-		
-		IPath path= fClassPathEntry.getPath();
-		String containerId= path.segment(0);
-		BuildpathContainerInitializer initializer= DLTKCore.getBuildpathContainerInitializer(containerId);
+
+		IPath path = fClassPathEntry.getPath();
+		String containerId = path.segment(0);
+		BuildpathContainerInitializer initializer = DLTKCore
+				.getBuildpathContainerInitializer(containerId);
 		if (initializer != null) {
-			String description= initializer.getDescription(path, getScriptProject());
-			return Messages.format(ScriptMessages.BuildPathContainer_unbound_label, description); 
+			String description = initializer.getDescription(path,
+					getScriptProject());
+			return Messages.format(
+					ScriptMessages.BuildPathContainer_unbound_label,
+					description);
 		}
-		return Messages.format(ScriptMessages.BuildPathContainer_unknown_label, path.toString()); 
+		return Messages.format(ScriptMessages.BuildPathContainer_unknown_label,
+				path.toString());
 	}
-	
+
 	public IBuildpathEntry getBuildpathEntry() {
 		return fClassPathEntry;
 	}
-	
-	static boolean contains(IScriptProject project, IBuildpathEntry entry, IProjectFragment root) {
-		IProjectFragment[] roots= project.findProjectFragments(entry);
-		for (int i= 0; i < roots.length; i++) {
+
+	static boolean contains(IScriptProject project, IBuildpathEntry entry,
+			IProjectFragment root) {
+		IProjectFragment[] roots = project.findProjectFragments(entry);
+		for (int i = 0; i < roots.length; i++) {
 			if (roots[i].equals(root))
 				return true;
 		}

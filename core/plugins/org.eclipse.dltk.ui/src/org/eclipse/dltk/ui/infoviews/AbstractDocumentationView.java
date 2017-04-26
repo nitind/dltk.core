@@ -464,7 +464,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 	 */
 	private String getScriptdocHtmlDetailed(Object[] result) {
 		final StringBuffer buffer = new StringBuffer();
-		final List<String> nodocs = new ArrayList<String>();
+		final List<String> nodocs = new ArrayList<>();
 		for (int i = 0; i < result.length; i++) {
 			final Object member = result[i];
 			Reader reader = ScriptDocumentationAccess

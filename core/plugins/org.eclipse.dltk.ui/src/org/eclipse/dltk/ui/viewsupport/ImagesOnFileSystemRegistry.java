@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2011 IBM Corporation and others.
+ * Copyright (c) 2008, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,7 +23,7 @@ import org.eclipse.swt.graphics.ImageLoader;
 
 /**
  * Image registry that keeps its images on the local file system.
- * 
+ *
  * @since 4.0
  */
 public class ImagesOnFileSystemRegistry {
@@ -35,7 +35,7 @@ public class ImagesOnFileSystemRegistry {
 	private int fImageCount;
 
 	public ImagesOnFileSystemRegistry() {
-		fURLMap = new HashMap<ImageDescriptor, URL>();
+		fURLMap = new HashMap<>();
 		fTempDir = getTempDir();
 		fImageCount = 0;
 	}
@@ -52,8 +52,8 @@ public class ImagesOnFileSystemRegistry {
 				imageDir.mkdir();
 			}
 			if (!imageDir.isDirectory()) {
-				DLTKUIPlugin
-						.logErrorMessage("Failed to create image directory " + imageDir.toString()); //$NON-NLS-1$
+				DLTKUIPlugin.logErrorMessage("Failed to create image directory " //$NON-NLS-1$
+						+ imageDir.toString());
 				return null;
 			}
 			return imageDir;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Helper class to check if a set of <tt>IJavaElement</tt> objects can be
  * modified by an operation.
- * 
+ *
  * @since 2.1
  */
 public class ElementValidator {
@@ -37,7 +37,7 @@ public class ElementValidator {
 
 	/**
 	 * Checks if the given element is in sync with the underlying file system.
-	 * 
+	 *
 	 * @param element
 	 *            the element to be checked
 	 * @param parent
@@ -57,7 +57,7 @@ public class ElementValidator {
 	/**
 	 * Checks if the given array of elements is in sync with the underlying file
 	 * system.
-	 * 
+	 *
 	 * @param elements
 	 *            the array of elements to be checked
 	 * @param parent
@@ -80,7 +80,7 @@ public class ElementValidator {
 	 * <code>validateEdit</code> was able to make the file writable the method
 	 * additionally checks if the file has been changed by calling
 	 * <code>validateEdit</code>.
-	 * 
+	 *
 	 * @param element
 	 *            the element to be checked
 	 * @param parent
@@ -92,13 +92,14 @@ public class ElementValidator {
 	 * @return boolean <code>true</code> if the element is writable and its
 	 *         content didn't change by calling <code>validateEdit</code>.
 	 *         Otherwise <code>false</code> is returned
-	 * 
+	 *
 	 * @see org.eclipse.core.resources.IWorkspace#validateEdit(org.eclipse.core.resources.IFile[],
 	 *      java.lang.Object)
 	 */
-	public static boolean checkValidateEdit(IModelElement element,
-			Shell parent, String title) {
-		return checkValidateEdit(new IModelElement[] { element }, parent, title);
+	public static boolean checkValidateEdit(IModelElement element, Shell parent,
+			String title) {
+		return checkValidateEdit(new IModelElement[] { element }, parent,
+				title);
 	}
 
 	/**
@@ -107,7 +108,7 @@ public class ElementValidator {
 	 * <code>validateEdit</code> was able to make the file writable the method
 	 * additionally checks if the file has been changed by calling
 	 * <code>validateEdit</code>.
-	 * 
+	 *
 	 * @param elements
 	 *            the elements to be checked
 	 * @param parent
@@ -119,7 +120,7 @@ public class ElementValidator {
 	 * @return boolean <code>true</code> if all elements are writable and their
 	 *         content didn't change by calling <code>validateEdit</code>.
 	 *         Otherwise <code>false</code> is returned
-	 * 
+	 *
 	 * @see org.eclipse.core.resources.IWorkspace#validateEdit(org.eclipse.core.resources.IFile[],
 	 *      java.lang.Object)
 	 */
@@ -135,7 +136,7 @@ public class ElementValidator {
 	 * <code>checkValidateEdit</code> is performed since the editor does a in
 	 * sync check on focus change. If <code>editor</code> is <code>false</code>
 	 * both checks are performed.
-	 * 
+	 *
 	 * @param element
 	 *            the element to be checked
 	 * @param parent
@@ -148,7 +149,7 @@ public class ElementValidator {
 	 *            specifies if we are in the editor
 	 * @return boolean <code>true</code> if the element passed the checks.
 	 *         Otherwise <code>false</code> is returned
-	 * 
+	 *
 	 * @see #checkInSync(IAdaptable, Shell, String)
 	 * @see #checkValidateEdit(IJavaElement, Shell, String)
 	 */
@@ -164,7 +165,7 @@ public class ElementValidator {
 	 * <code>checkValidateEdit</code> is performed since the editor does a in
 	 * sync check on focus change. If <code>editor</code> is <code>false</code>
 	 * both checks are performed.
-	 * 
+	 *
 	 * @param elements
 	 *            the elements to be checked
 	 * @param parent
@@ -177,7 +178,7 @@ public class ElementValidator {
 	 *            specifies if we are in the editor
 	 * @return boolean <code>true</code> if all elements pass the checks.
 	 *         Otherwise <code>false</code> is returned
-	 * 
+	 *
 	 * @see #checkInSync(IAdaptable[], Shell, String)
 	 * @see #checkValidateEdit(IJavaElement[], Shell, String)
 	 */
@@ -211,7 +212,7 @@ public class ElementValidator {
 	}
 
 	private static IResource[] getResources(IAdaptable[] elements) {
-		Set<IResource> result = new HashSet<IResource>();
+		Set<IResource> result = new HashSet<>();
 		for (int i = 0; i < elements.length; i++) {
 			IAdaptable element = elements[i];
 			IResource resource = null;

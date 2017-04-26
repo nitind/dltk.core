@@ -69,7 +69,8 @@ public class OpenMethodHistory extends History {
 
 	}
 
-	private class MethodHistoryDeltaListener implements IElementChangedListener {
+	private class MethodHistoryDeltaListener
+			implements IElementChangedListener {
 		@Override
 		public void elementChanged(ElementChangedEvent event) {
 			if (processDelta(event.getDelta())) {
@@ -94,22 +95,22 @@ public class OpenMethodHistory extends History {
 
 			switch (elem.getElementType()) {
 			case IModelElement.SCRIPT_PROJECT:
-				if (isRemoved
-						|| (isChanged && (delta.getFlags() & IModelElementDelta.F_CLOSED) != 0)) {
+				if (isRemoved || (isChanged && (delta.getFlags()
+						& IModelElementDelta.F_CLOSED) != 0)) {
 					return true;
 				}
 				return processChildrenDelta(delta);
 			case IModelElement.PROJECT_FRAGMENT:
-				if (isRemoved
-						|| (isChanged && ((delta.getFlags() & IModelElementDelta.F_ARCHIVE_CONTENT_CHANGED) != 0 || (delta
-								.getFlags() & IModelElementDelta.F_REMOVED_FROM_BUILDPATH) != 0))) {
+				if (isRemoved || (isChanged && ((delta.getFlags()
+						& IModelElementDelta.F_ARCHIVE_CONTENT_CHANGED) != 0
+						|| (delta.getFlags()
+								& IModelElementDelta.F_REMOVED_FROM_BUILDPATH) != 0))) {
 					return true;
 				}
 				return processChildrenDelta(delta);
 			case IModelElement.METHOD:
-				if (isRemoved
-						|| isChanged
-						&& (delta.getFlags() & IModelElementDelta.F_MODIFIERS) != 0) {
+				if (isRemoved || isChanged && (delta.getFlags()
+						& IModelElementDelta.F_MODIFIERS) != 0) {
 					return true;
 				}
 				return false;
@@ -125,9 +126,8 @@ public class OpenMethodHistory extends History {
 					return false;
 				}
 
-				if (isRemoved
-						|| (isChanged && isUnknownStructuralChange(delta
-								.getFlags()))) {
+				if (isRemoved || (isChanged
+						&& isUnknownStructuralChange(delta.getFlags()))) {
 					return true;
 				}
 				return processChildrenDelta(delta);
@@ -255,7 +255,8 @@ public class OpenMethodHistory extends History {
 		// Fetching the timestamp might not be cheap (remote file system
 		// external Jars. So check if we alreay have one.
 		if (!fTimestampMapping.containsKey(info)) {
-			fTimestampMapping.put(info, Long.valueOf(getContainerTimestamp(info)));
+			fTimestampMapping.put(info,
+					Long.valueOf(getContainerTimestamp(info)));
 		}
 		super.accessed(info);
 	}
@@ -268,8 +269,8 @@ public class OpenMethodHistory extends History {
 	public synchronized void replace(MethodNameMatch old,
 			MethodNameMatch newMatch) {
 		fTimestampMapping.remove(old);
-		fTimestampMapping.put(newMatch, Long.valueOf(
-				getContainerTimestamp(newMatch)));
+		fTimestampMapping.put(newMatch,
+				Long.valueOf(getContainerTimestamp(newMatch)));
 		super.remove(old);
 		super.accessed(newMatch);
 	}
@@ -289,11 +290,12 @@ public class OpenMethodHistory extends History {
 	public synchronized MethodNameMatch[] getFilteredTypeInfos(
 			MethodInfoFilter filter) {
 		Collection values = getValues();
-		List<MethodNameMatch> result = new ArrayList<MethodNameMatch>();
+		List<MethodNameMatch> result = new ArrayList<>();
 		for (Iterator iter = values.iterator(); iter.hasNext();) {
 			MethodNameMatch method = (MethodNameMatch) iter.next();
 			if ((filter == null || filter.matchesHistoryElement(method))
-					&& !fMethodFilter.isFiltered(method.getFullyQualifiedName()))
+					&& !fMethodFilter
+							.isFiltered(method.getFullyQualifiedName()))
 				result.add(method);
 		}
 		Collections.reverse(result);
@@ -331,10 +333,11 @@ public class OpenMethodHistory extends History {
 					// copy over the modifiers since they may have changed
 					int modifiers = sMethod.getFlags();
 					if (modifiers != type.getModifiers()) {
-						replace(type, SearchEngine.createMethodNameMatch(
-								sMethod, modifiers));
+						replace(type, SearchEngine
+								.createMethodNameMatch(sMethod, modifiers));
 					} else {
-						fTimestampMapping.put(type, Long.valueOf(currentTimestamp));
+						fTimestampMapping.put(type,
+								Long.valueOf(currentTimestamp));
 					}
 				}
 			} catch (ModelException e) {
@@ -368,8 +371,8 @@ public class OpenMethodHistory extends History {
 			} else { // external JAR
 				IProjectFragment root = match.getProjectFragment();
 				if (root.exists()) {
-					IFileInfo info = EFS.getLocalFileSystem().getStore(
-							root.getPath()).fetchInfo();
+					IFileInfo info = EFS.getLocalFileSystem()
+							.getStore(root.getPath()).fetchInfo();
 					if (info.exists()) {
 						return info.getLastModified();
 					}
@@ -390,8 +393,8 @@ public class OpenMethodHistory extends History {
 		if (resource != null) {
 			ITextFileBufferManager manager = FileBuffers
 					.getTextFileBufferManager();
-			ITextFileBuffer textFileBuffer = manager.getTextFileBuffer(resource
-					.getFullPath(), LocationKind.NORMALIZE);
+			ITextFileBuffer textFileBuffer = manager.getTextFileBuffer(
+					resource.getFullPath(), LocationKind.NORMALIZE);
 			if (textFileBuffer != null) {
 				return textFileBuffer.isDirty();
 			}
@@ -420,8 +423,8 @@ public class OpenMethodHistory extends History {
 		} catch (NumberFormatException e) {
 			// take zero
 		}
-		MethodNameMatch info = SearchEngine.createMethodNameMatch(
-				(IMethod) element, modifiers);
+		MethodNameMatch info = SearchEngine
+				.createMethodNameMatch((IMethod) element, modifiers);
 		long timestamp = IResource.NULL_STAMP;
 		String timestampValue = type.getAttribute(NODE_TIMESTAMP);
 		if (timestampValue != null && timestampValue.length() > 0) {
@@ -442,12 +445,12 @@ public class OpenMethodHistory extends History {
 		MethodNameMatch method = (MethodNameMatch) object;
 		String handleId = method.getMethod().getHandleIdentifier();
 		typeElement.setAttribute(NODE_HANDLE, handleId);
-		typeElement.setAttribute(NODE_MODIFIERS, Integer.toString(method
-				.getModifiers()));
+		typeElement.setAttribute(NODE_MODIFIERS,
+				Integer.toString(method.getModifiers()));
 		Long timestamp = (Long) fTimestampMapping.get(method);
 		if (timestamp == null) {
-			typeElement.setAttribute(NODE_TIMESTAMP, Long
-					.toString(IResource.NULL_STAMP));
+			typeElement.setAttribute(NODE_TIMESTAMP,
+					Long.toString(IResource.NULL_STAMP));
 		} else {
 			typeElement.setAttribute(NODE_TIMESTAMP, timestamp.toString());
 		}

@@ -42,7 +42,8 @@ public abstract class SearchLabelProvider extends AppearanceAwareLabelProvider {
 	private static final String EMPHASIZE_POTENTIAL_MATCHES = "org.eclipse.search.potentialMatch.emphasize"; //$NON-NLS-1$
 	private static final String POTENTIAL_MATCH_FG_COLOR = "org.eclipse.search.potentialMatch.fgColor"; //$NON-NLS-1$
 
-	protected static final long DEFAULT_SEARCH_TEXTFLAGS = (DEFAULT_TEXTFLAGS | ScriptElementLabels.P_COMPRESSED)
+	protected static final long DEFAULT_SEARCH_TEXTFLAGS = (DEFAULT_TEXTFLAGS
+			| ScriptElementLabels.P_COMPRESSED)
 			& ~ScriptElementLabels.M_APP_RETURNTYPE;
 	protected static final int DEFAULT_SEARCH_IMAGEFLAGS = DEFAULT_IMAGEFLAGS;
 
@@ -55,16 +56,16 @@ public abstract class SearchLabelProvider extends AppearanceAwareLabelProvider {
 	private IPropertyChangeListener fSearchPropertyListener;
 
 	public SearchLabelProvider(DLTKSearchResultPage page) {
-		super(DEFAULT_SEARCH_TEXTFLAGS, DEFAULT_SEARCH_IMAGEFLAGS, DLTKUIPlugin
-				.getDefault().getPreferenceStore());
+		super(DEFAULT_SEARCH_TEXTFLAGS, DEFAULT_SEARCH_IMAGEFLAGS,
+				DLTKUIPlugin.getDefault().getPreferenceStore());
 		if (DLTKCore.DEBUG) {
-			System.out
-					.println("TODO: Add language dependent preference store support here..."); //$NON-NLS-1$
+			System.out.println(
+					"TODO: Add language dependent preference store support here..."); //$NON-NLS-1$
 		}
 		addLabelDecorator(new ProblemsLabelDecorator());
 
 		fPage = page;
-		fLabelProviderMap = new HashMap<IMatchPresentation, ILabelProvider>(5);
+		fLabelProviderMap = new HashMap<>(5);
 
 		fSearchPreferences = new ScopedPreferenceStore(InstanceScope.INSTANCE,
 				NewSearchUI.PLUGIN_ID);
@@ -96,8 +97,8 @@ public abstract class SearchLabelProvider extends AppearanceAwareLabelProvider {
 
 	private Color getForegroundColor() {
 		if (fPotentialMatchFgColor == null) {
-			fPotentialMatchFgColor = new Color(DLTKUIPlugin
-					.getActiveWorkbenchShell().getDisplay(),
+			fPotentialMatchFgColor = new Color(
+					DLTKUIPlugin.getActiveWorkbenchShell().getDisplay(),
 					getPotentialMatchForegroundColor());
 		}
 		return fPotentialMatchFgColor;
@@ -110,7 +111,8 @@ public abstract class SearchLabelProvider extends AppearanceAwareLabelProvider {
 			Match[] matches = result.getMatches(element);
 			for (int i = 0; i < matches.length; i++) {
 				if ((matches[i]) instanceof DLTKElementMatch) {
-					if (((DLTKElementMatch) matches[i]).getAccuracy() == SearchMatch.A_INACCURATE)
+					if (((DLTKElementMatch) matches[i])
+							.getAccuracy() == SearchMatch.A_INACCURATE)
 						res++;
 				}
 			}
@@ -118,17 +120,17 @@ public abstract class SearchLabelProvider extends AppearanceAwareLabelProvider {
 		return res;
 	}
 
-	protected final String getLabelWithCounts(Object element, String elementName) {
+	protected final String getLabelWithCounts(Object element,
+			String elementName) {
 		int matchCount = fPage.getDisplayedMatchCount(element);
 		int potentialCount = getNumberOfPotentialMatches(element);
 
 		if (matchCount < 2) {
 			if (matchCount == 1 && hasChildren(element)) {
 				if (potentialCount > 0)
-					return Messages
-							.format(
-									SearchMessages.SearchLabelProvider_potential_singular,
-									elementName);
+					return Messages.format(
+							SearchMessages.SearchLabelProvider_potential_singular,
+							elementName);
 				return Messages.format(
 						SearchMessages.SearchLabelProvider_exact_singular,
 						elementName);
@@ -147,10 +149,9 @@ public abstract class SearchLabelProvider extends AppearanceAwareLabelProvider {
 				String[] args = new String[] { elementName,
 						String.valueOf(matchCount), String.valueOf(exactCount),
 						String.valueOf(potentialCount) };
-				return Messages
-						.format(
-								SearchMessages.SearchLabelProvider_exact_and_potential_plural,
-								args);
+				return Messages.format(
+						SearchMessages.SearchLabelProvider_exact_and_potential_plural,
+						args);
 			} else if (exactCount == 0) {
 				String[] args = new String[] { elementName,
 						String.valueOf(matchCount) };

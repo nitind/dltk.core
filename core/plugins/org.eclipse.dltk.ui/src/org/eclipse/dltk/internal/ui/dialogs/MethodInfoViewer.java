@@ -101,14 +101,13 @@ public class MethodInfoViewer {
 		public SearchRequestor(MethodInfoFilter filter,
 				MethodFilter MethodFilter) {
 			super();
-			fResult = new ArrayList<MethodNameMatch>(2048);
+			fResult = new ArrayList<>(2048);
 			fFilter = filter;
 			fMethodFilter = MethodFilter;
 		}
 
 		public MethodNameMatch[] getResult() {
-			return fResult
-					.toArray(new MethodNameMatch[fResult.size()]);
+			return fResult.toArray(new MethodNameMatch[fResult.size()]);
 		}
 
 		public void cancel() {
@@ -152,13 +151,12 @@ public class MethodInfoViewer {
 				return -1;
 			if (leftCategory > rightCategory)
 				return +1;
-			int result = compareName(leftInfo.getSimpleMethodName(), rightInfo
-					.getSimpleMethodName());
+			int result = compareName(leftInfo.getSimpleMethodName(),
+					rightInfo.getSimpleMethodName());
 			if (result != 0)
 				return result;
-			result = compareTypeContainerName(
-					leftInfo.getMethodContainerName(), rightInfo
-							.getMethodContainerName());
+			result = compareTypeContainerName(leftInfo.getMethodContainerName(),
+					rightInfo.getMethodContainerName());
 			if (result != 0)
 				return result;
 
@@ -201,8 +199,8 @@ public class MethodInfoViewer {
 
 		private int compareContainerName(MethodNameMatch leftType,
 				MethodNameMatch rightType) {
-			return fLabelProvider.getContainerName(leftType).compareTo(
-					fLabelProvider.getContainerName(rightType));
+			return fLabelProvider.getContainerName(leftType)
+					.compareTo(fLabelProvider.getContainerName(rightType));
 		}
 
 		private int getCamelCaseCategory(MethodNameMatch type) {
@@ -215,7 +213,8 @@ public class MethodInfoViewer {
 
 		private int getElementTypeCategory(MethodNameMatch type) {
 			try {
-				if (type.getProjectFragment().getKind() == IProjectFragment.K_SOURCE)
+				if (type.getProjectFragment()
+						.getKind() == IProjectFragment.K_SOURCE)
 					return 0;
 			} catch (ModelException e) {
 				// TODO Auto-generated catch block
@@ -232,16 +231,15 @@ public class MethodInfoViewer {
 		private String[] fVMNames;
 
 		public MethodInfoLabelProvider() {
-			List<String> locations = new ArrayList<String>();
-			List<String> labels = new ArrayList<String>();
+			List<String> locations = new ArrayList<>();
+			List<String> labels = new ArrayList<>();
 			IInterpreterInstallType[] installs = ScriptRuntime
-					.getInterpreterInstallTypes(fToolkit.getCoreToolkit()
-							.getNatureId());
+					.getInterpreterInstallTypes(
+							fToolkit.getCoreToolkit().getNatureId());
 			for (int i = 0; i < installs.length; i++) {
 				processVMInstallType(installs[i], locations, labels);
 			}
-			fInstallLocations = locations
-					.toArray(new String[locations.size()]);
+			fInstallLocations = locations.toArray(new String[locations.size()]);
 			fVMNames = labels.toArray(new String[labels.size()]);
 
 		}
@@ -251,8 +249,8 @@ public class MethodInfoViewer {
 			if (installType != null) {
 				IInterpreterInstall[] installs = installType
 						.getInterpreterInstalls();
-				final boolean isMac = Platform.OS_MACOSX.equals(Platform
-						.getOS());
+				final boolean isMac = Platform.OS_MACOSX
+						.equals(Platform.getOS());
 				for (int i = 0; i < installs.length; i++) {
 					final IInterpreterInstall install = installs[i];
 					final String label = getFormattedLabel(install.getName());
@@ -271,9 +269,9 @@ public class MethodInfoViewer {
 							// on MacOS X install locations end in an additional
 							// "/Home" segment; remove it
 							if (isMac && filePath.endsWith(HOME_SUFFIX))
-								filePath = filePath.substring(0, filePath
-										.length()
-										- (HOME_SUFFIX.length() - 1));
+								filePath = filePath.substring(0,
+										filePath.length()
+												- (HOME_SUFFIX.length() - 1));
 							locations.add(filePath);
 							labels.add(label);
 						}
@@ -383,25 +381,26 @@ public class MethodInfoViewer {
 
 		public ImageDescriptor getImageDescriptor(Object element) {
 			MethodNameMatch method = (MethodNameMatch) element;
-			return ScriptElementImageProvider.getMethodImageDescriptor(method
-					.getModifiers());
+			return ScriptElementImageProvider
+					.getMethodImageDescriptor(method.getModifiers());
 		}
 
-		private String getTypeContainerName(MethodNameMatch info, int infoLevel) {
+		private String getTypeContainerName(MethodNameMatch info,
+				int infoLevel) {
 			// String result= info.getTypeContainerName();
 			String result = ""; //$NON-NLS-1$
 			IDLTKUILanguageToolkit toolkit = DLTKUILanguageManager
 					.getLanguageToolkit(info.getMethod());
 			if (toolkit != null) {
 				ScriptElementLabels labels = toolkit.getScriptElementLabels();
-				result = labels
-						.getElementLabel(
-								info.getMethod(),
-								ScriptElementLabels.T_CONTAINER_QUALIFIED
-										| (infoLevel > 0 ? ScriptElementLabels.APPEND_FILE
-												: 0)
-										| (infoLevel > 1 ? ScriptElementLabels.CU_POST_QUALIFIED
-												: 0));
+				result = labels.getElementLabel(info.getMethod(),
+						ScriptElementLabels.T_CONTAINER_QUALIFIED
+								| (infoLevel > 0
+										? ScriptElementLabels.APPEND_FILE
+										: 0)
+								| (infoLevel > 1
+										? ScriptElementLabels.CU_POST_QUALIFIED
+										: 0));
 			}
 			if (result.length() > 0)
 				return result;
@@ -425,7 +424,8 @@ public class MethodInfoViewer {
 			ScriptElementLabels labels = fToolkit.getScriptElementLabels();
 			labels.getProjectFragmentLabel(root,
 					ScriptElementLabels.ROOT_QUALIFIED
-							| ScriptElementLabels.ROOT_VARIABLE, buf);
+							| ScriptElementLabels.ROOT_VARIABLE,
+					buf);
 
 			return buf.toString();
 		}
@@ -469,7 +469,8 @@ public class MethodInfoViewer {
 		private double fWorked;
 		private boolean fDone;
 
-		public ProgressMonitor(IProgressMonitor monitor, MethodInfoViewer viewer) {
+		public ProgressMonitor(IProgressMonitor monitor,
+				MethodInfoViewer viewer) {
 			super(monitor);
 			fViewer = viewer;
 		}
@@ -513,13 +514,10 @@ public class MethodInfoViewer {
 			} else if (fTotalWork == 0) {
 				return fName;
 			} else {
-				return Messages
-						.format(
-								DLTKUIMessages.TypeInfoViewer_progress_label,
-								new Object[] {
-										fName,
-										Integer.valueOf(
-												(int) ((fWorked * 100) / fTotalWork)) });
+				return Messages.format(
+						DLTKUIMessages.TypeInfoViewer_progress_label,
+						new Object[] { fName, Integer.valueOf(
+								(int) ((fWorked * 100) / fTotalWork)) });
 			}
 		}
 	}
@@ -598,8 +596,8 @@ public class MethodInfoViewer {
 				Set matchIdsInHistory, ProgressMonitor monitor)
 				throws CoreException;
 
-		private void internalRun(ProgressMonitor monitor) throws CoreException,
-				InterruptedException {
+		private void internalRun(ProgressMonitor monitor)
+				throws CoreException, InterruptedException {
 			if (monitor.isCanceled())
 				throw new OperationCanceledException();
 
@@ -617,8 +615,8 @@ public class MethodInfoViewer {
 			MethodNameMatch[] matchingTypes = fHistory
 					.getFilteredTypeInfos(fFilter);
 			if (matchingTypes.length > 0) {
-				Arrays.sort(matchingTypes, new MethodInfoComparator(
-						fLabelProvider, fFilter));
+				Arrays.sort(matchingTypes,
+						new MethodInfoComparator(fLabelProvider, fFilter));
 				type = matchingTypes[0];
 				int i = 1;
 				while (type != null) {
@@ -626,8 +624,8 @@ public class MethodInfoViewer {
 							: matchingTypes[i];
 					elements.add(type);
 					filteredMatches.add(type);
-					imageDescriptors.add(fLabelProvider
-							.getImageDescriptor(type));
+					imageDescriptors
+							.add(fLabelProvider.getImageDescriptor(type));
 					labels.add(fLabelProvider.getText(last, type, next));
 					last = type;
 					type = next;
@@ -641,7 +639,8 @@ public class MethodInfoViewer {
 			if ((fMode & INDEX) == 0) {
 				return;
 			}
-			MethodNameMatch[] result = getSearchResult(filteredMatches, monitor);
+			MethodNameMatch[] result = getSearchResult(filteredMatches,
+					monitor);
 			fViewer.fExpectedItemCount += result.length;
 			if (result.length == 0) {
 				return;
@@ -659,9 +658,9 @@ public class MethodInfoViewer {
 				elements.clear();
 				imageDescriptors.clear();
 				labels.clear();
-				int delta = Math.min(nextIndex == 1 ? fViewer
-						.getNumberOfVisibleItems() : 10, result.length
-						- processed);
+				int delta = Math.min(
+						nextIndex == 1 ? fViewer.getNumberOfVisibleItems() : 10,
+						result.length - processed);
 				if (delta == 0)
 					break;
 				processed = processed + delta;
@@ -670,8 +669,8 @@ public class MethodInfoViewer {
 							: result[nextIndex];
 					elements.add(type);
 					labels.add(fLabelProvider.getText(last, type, next));
-					imageDescriptors.add(fLabelProvider
-							.getImageDescriptor(type));
+					imageDescriptors
+							.add(fLabelProvider.getImageDescriptor(type));
 					last = type;
 					type = next;
 					nextIndex++;
@@ -708,7 +707,8 @@ public class MethodInfoViewer {
 				filteredMatches.add(matchingTypes[i]);
 			}
 
-			MethodNameMatch[] result = getSearchResult(filteredMatches, monitor);
+			MethodNameMatch[] result = getSearchResult(filteredMatches,
+					monitor);
 			if (monitor.isCanceled())
 				throw new OperationCanceledException();
 
@@ -718,7 +718,8 @@ public class MethodInfoViewer {
 		private IStatus canceled(Exception e, boolean removePendingItems) {
 			fViewer.searchJobCanceled(fTicket, removePendingItems);
 			return new Status(IStatus.CANCEL, DLTKUIPlugin.getPluginId(),
-					IStatus.CANCEL, DLTKUIMessages.TypeInfoViewer_job_cancel, e);
+					IStatus.CANCEL, DLTKUIMessages.TypeInfoViewer_job_cancel,
+					e);
 		}
 
 		private IStatus ok() {
@@ -754,36 +755,38 @@ public class MethodInfoViewer {
 			long start = System.currentTimeMillis();
 			fReqestor.setHistory(matchIdsInHistory);
 
-			monitor
-					.setTaskName(DLTKUIMessages.TypeInfoViewer_searchJob_taskName);
+			monitor.setTaskName(
+					DLTKUIMessages.TypeInfoViewer_searchJob_taskName);
 
-			IMethod[] methods = new ModelAccess().findMethods(fFilter
-					.getNamePattern(), ModelAccess.convertSearchRule(fFilter
-					.getSearchFlags()), 0, 0, fScope, monitor);
+			IMethod[] methods = new ModelAccess().findMethods(
+					fFilter.getNamePattern(),
+					ModelAccess.convertSearchRule(fFilter.getSearchFlags()), 0,
+					0, fScope, monitor);
 			if (methods != null) {
 				for (IMethod method : methods) {
-					fReqestor
-							.acceptMethodNameMatch(new DLTKSearchMethodNameMatch(
-									method, method.getFlags()));
+					fReqestor.acceptMethodNameMatch(
+							new DLTKSearchMethodNameMatch(method,
+									method.getFlags()));
 				}
 			} else {
 				// consider primary working copies during searching
 				SearchEngine engine = new SearchEngine((WorkingCopyOwner) null);
-				engine.searchAllMethodNames(fFilter.getNamePattern()
-						.toCharArray(), fFilter.getSearchFlags(), fElementKind,
-						fScope, fReqestor,
+				engine.searchAllMethodNames(
+						fFilter.getNamePattern().toCharArray(),
+						fFilter.getSearchFlags(), fElementKind, fScope,
+						fReqestor,
 						IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
 						monitor);
 			}
 			if (DEBUG)
-				System.out
-						.println("Time needed until search has finished: " + (System.currentTimeMillis() - start)); //$NON-NLS-1$
+				System.out.println("Time needed until search has finished: " //$NON-NLS-1$
+						+ (System.currentTimeMillis() - start));
 			MethodNameMatch[] result = fReqestor.getResult();
-			Arrays.sort(result, new MethodInfoComparator(fLabelProvider,
-					fFilter));
+			Arrays.sort(result,
+					new MethodInfoComparator(fLabelProvider, fFilter));
 			if (DEBUG)
-				System.out
-						.println("Time needed until sort has finished: " + (System.currentTimeMillis() - start)); //$NON-NLS-1$
+				System.out.println("Time needed until sort has finished: " //$NON-NLS-1$
+						+ (System.currentTimeMillis() - start));
 			fViewer.rememberResult(fTicket, result);
 			return result;
 		}
@@ -802,7 +805,7 @@ public class MethodInfoViewer {
 		@Override
 		protected MethodNameMatch[] getSearchResult(Set filteredHistory,
 				ProgressMonitor monitor) throws CoreException {
-			List<MethodNameMatch> result = new ArrayList<MethodNameMatch>(2048);
+			List<MethodNameMatch> result = new ArrayList<>(2048);
 			for (int i = 0; i < fLastResult.length; i++) {
 				MethodNameMatch type = fLastResult[i];
 				if (filteredHistory.contains(type))
@@ -814,8 +817,8 @@ public class MethodInfoViewer {
 			MethodNameMatch[] types = result
 					.toArray(new MethodNameMatch[result.size()]);
 			if (fFilter.isCamelCasePattern()) {
-				Arrays.sort(types, new MethodInfoComparator(fLabelProvider,
-						fFilter));
+				Arrays.sort(types,
+						new MethodInfoComparator(fLabelProvider, fFilter));
 			}
 			return types;
 		}
@@ -836,18 +839,20 @@ public class MethodInfoViewer {
 		@Override
 		protected IStatus doRun(ProgressMonitor monitor) {
 			try {
-				monitor
-						.setTaskName(DLTKUIMessages.TypeInfoViewer_syncJob_taskName);
-				new SearchEngine().searchAllTypeNames(
-						null,
-						0, // make sure we search a concrete name. This is
-						// faster
-						// according to Kent
+				monitor.setTaskName(
+						DLTKUIMessages.TypeInfoViewer_syncJob_taskName);
+				new SearchEngine().searchAllTypeNames(null, 0, // make sure we
+																// search a
+																// concrete
+																// name. This is
+																// faster
+																// according to
+																// Kent
 						"_______________".toCharArray(), //$NON-NLS-1$
 						SearchPattern.R_EXACT_MATCH
 								| SearchPattern.R_CASE_SENSITIVE,
-						IDLTKSearchConstants.TYPE, SearchEngine
-								.createWorkspaceScope(fToolkit),
+						IDLTKSearchConstants.TYPE,
+						SearchEngine.createWorkspaceScope(fToolkit),
 						new NopTypeNameRequestor(),
 						IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
 						monitor);
@@ -888,7 +893,8 @@ public class MethodInfoViewer {
 
 		public void initialize(GC gc) {
 			fSeparatorWidth = gc.getAdvanceWidth(SEPARATOR);
-			fMessage = " " + DLTKUIMessages.TypeInfoViewer_separator_message + " "; //$NON-NLS-1$ //$NON-NLS-2$
+			fMessage = " " + DLTKUIMessages.TypeInfoViewer_separator_message //$NON-NLS-1$
+					+ " "; //$NON-NLS-1$
 			fMessageLength = gc.textExtent(fMessage).x;
 		}
 	}
@@ -1023,7 +1029,8 @@ public class MethodInfoViewer {
 					fLastLabels[i] = item.getText();
 					Object data = item.getData();
 					if (data instanceof MethodNameMatch) {
-						String qualifiedText = getQualifiedText((MethodNameMatch) data);
+						String qualifiedText = getQualifiedText(
+								(MethodNameMatch) data);
 						if (qualifiedText.length() > fLastLabels[i].length())
 							item.setText(qualifiedText);
 					}
@@ -1120,8 +1127,7 @@ public class MethodInfoViewer {
 
 	public MethodNameMatch[] getSelection() {
 		TableItem[] items = fTable.getSelection();
-		List<MethodNameMatch> result = new ArrayList<MethodNameMatch>(
-				items.length);
+		List<MethodNameMatch> result = new ArrayList<>(items.length);
 		for (int i = 0; i < items.length; i++) {
 			Object data = items[i].getData();
 			if (data instanceof MethodNameMatch) {
@@ -1188,7 +1194,8 @@ public class MethodInfoViewer {
 		fLastLabels = null;
 		fExpectedItemCount = 0;
 		fDashLineIndex = -1;
-		MethodInfoFilter filter = (fMethodInfoFilter != null) ? fMethodInfoFilter
+		MethodInfoFilter filter = (fMethodInfoFilter != null)
+				? fMethodInfoFilter
 				: new MethodInfoFilter("*", fSearchScope, fElementKind); //$NON-NLS-1$
 		if (VIRTUAL) {
 			fHistoryMatches = fHistory.getFilteredTypeInfos(filter);
@@ -1414,9 +1421,8 @@ public class MethodInfoViewer {
 
 	private void scheduleSearchJob(int mode) {
 		fSearchJobTicket++;
-		if (fLastCompletedFilter != null
-				&& fMethodInfoFilter
-						.isSubFilter(fLastCompletedFilter.getText())) {
+		if (fLastCompletedFilter != null && fMethodInfoFilter
+				.isSubFilter(fLastCompletedFilter.getText())) {
 			fSearchJob = new CachedResultJob(fSearchJobTicket,
 					fLastCompletedResult, this, fMethodInfoFilter, fHistory,
 					fNumberOfVisibleItems, mode);
@@ -1438,7 +1444,8 @@ public class MethodInfoViewer {
 		});
 	}
 
-	private void searchJobCanceled(int ticket, final boolean removePendingItems) {
+	private void searchJobCanceled(int ticket,
+			final boolean removePendingItems) {
 		syncExec(ticket, () -> {
 			if (removePendingItems) {
 				shortenTable();
@@ -1508,8 +1515,8 @@ public class MethodInfoViewer {
 			fillDashLine(item);
 		} else {
 			item.setData(type);
-			item.setImage(fImageManager.get(fLabelProvider
-					.getImageDescriptor(type)));
+			item.setImage(
+					fImageManager.get(fLabelProvider.getImageDescriptor(type)));
 			item.setText(fLabelProvider.getText(getTypeInfo(index - 1), type,
 					getTypeInfo(index + 1)));
 			item.setForeground(null);
@@ -1619,10 +1626,10 @@ public class MethodInfoViewer {
 	private void fillDashLine(TableItem item) {
 		Rectangle bounds = item.getImageBounds(0);
 		Rectangle area = fTable.getBounds();
-		boolean willHaveScrollBar = fExpectedItemCount + 1 > fNumberOfVisibleItems;
-		item
-				.setText(fDashLine.getText(area.width - bounds.x - bounds.width
-						- fTableWidthDelta
+		boolean willHaveScrollBar = fExpectedItemCount
+				+ 1 > fNumberOfVisibleItems;
+		item.setText(fDashLine
+				.getText(area.width - bounds.x - bounds.width - fTableWidthDelta
 						- (willHaveScrollBar ? fScrollbarWidth : 0)));
 		item.setImage(fSeparatorIcon);
 		item.setForeground(fDashLineColor);
@@ -1655,11 +1662,11 @@ public class MethodInfoViewer {
 
 	private Color computeDashLineColor() {
 		Color fg = fTable.getForeground();
-		int fGray = (int) (0.3 * fg.getRed() + 0.59 * fg.getGreen() + 0.11 * fg
-				.getBlue());
+		int fGray = (int) (0.3 * fg.getRed() + 0.59 * fg.getGreen()
+				+ 0.11 * fg.getBlue());
 		Color bg = fTable.getBackground();
-		int bGray = (int) (0.3 * bg.getRed() + 0.59 * bg.getGreen() + 0.11 * bg
-				.getBlue());
+		int bGray = (int) (0.3 * bg.getRed() + 0.59 * bg.getGreen()
+				+ 0.11 * bg.getBlue());
 		int gray = (int) ((fGray + bGray) * 0.66);
 		return new Color(fDisplay, gray, gray, gray);
 	}
@@ -1672,8 +1679,8 @@ public class MethodInfoViewer {
 	}
 
 	private String getQualifiedText(MethodNameMatch type) {
-		return fFullyQualifySelection ? fLabelProvider
-				.getFullyQualifiedText(type) : fLabelProvider
-				.getQualifiedText(type);
+		return fFullyQualifySelection
+				? fLabelProvider.getFullyQualifiedText(type)
+				: fLabelProvider.getQualifiedText(type);
 	}
 }

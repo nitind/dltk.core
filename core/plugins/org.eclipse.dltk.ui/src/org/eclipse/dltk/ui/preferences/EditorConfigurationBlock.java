@@ -68,10 +68,9 @@ public class EditorConfigurationBlock extends AbstractConfigurationBlock {
 	 * @since 2.0
 	 */
 	protected EditorColorItem[] createColorListModel() {
-		return new EditorColorItem[] {
-				new EditorColorItem(
-						PreferencesMessages.EditorPreferencePage_matchingBracketsHighlightColor,
-						PreferenceConstants.EDITOR_MATCHING_BRACKETS_COLOR),
+		return new EditorColorItem[] { new EditorColorItem(
+				PreferencesMessages.EditorPreferencePage_matchingBracketsHighlightColor,
+				PreferenceConstants.EDITOR_MATCHING_BRACKETS_COLOR),
 				new EditorColorItem(
 						PreferencesMessages.EditorPreferencePage_backgroundForMethodParameters,
 						PreferenceConstants.CODEASSIST_PARAMETERS_BACKGROUND),
@@ -97,8 +96,8 @@ public class EditorConfigurationBlock extends AbstractConfigurationBlock {
 
 	public EditorConfigurationBlock(PreferencePage mainPreferencePage,
 			OverlayPreferenceStore store) {
-		this(mainPreferencePage, store, FLAG_TAB_POLICY
-				| FLAG_EDITOR_SMART_NAVIGATION);
+		this(mainPreferencePage, store,
+				FLAG_TAB_POLICY | FLAG_EDITOR_SMART_NAVIGATION);
 	}
 
 	/**
@@ -125,9 +124,10 @@ public class EditorConfigurationBlock extends AbstractConfigurationBlock {
 	public EditorConfigurationBlock(PreferencePage mainPreferencePage,
 			OverlayPreferenceStore store, boolean disableSmart,
 			boolean tabAlwaysIndent) {
-		this(mainPreferencePage, store, FLAG_TAB_POLICY
-				| (disableSmart ? 0 : FLAG_EDITOR_SMART_NAVIGATION)
-				| (tabAlwaysIndent ? FLAG_TAB_ALWAYS_INDENT : 0));
+		this(mainPreferencePage, store,
+				FLAG_TAB_POLICY
+						| (disableSmart ? 0 : FLAG_EDITOR_SMART_NAVIGATION)
+						| (tabAlwaysIndent ? FLAG_TAB_ALWAYS_INDENT : 0));
 	}
 
 	public EditorConfigurationBlock(PreferencePage mainPreferencePage,
@@ -140,13 +140,13 @@ public class EditorConfigurationBlock extends AbstractConfigurationBlock {
 		} else {
 			fColorListModel = null;
 		}
-		getPreferenceStore().addKeys(
-				createOverlayStoreKeys(flags, fColorListModel));
+		getPreferenceStore()
+				.addKeys(createOverlayStoreKeys(flags, fColorListModel));
 	}
 
 	private static OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys(
 			int flags, EditorColorItem[] colorItems) {
-		ArrayList<OverlayKey> keys = new ArrayList<OverlayKey>();
+		ArrayList<OverlayKey> keys = new ArrayList<>();
 		if ((flags & FLAG_EDITOR_SMART_NAVIGATION) != 0) {
 			keys.add(new OverlayPreferenceStore.OverlayKey(
 					OverlayPreferenceStore.BOOLEAN,
@@ -248,20 +248,17 @@ public class EditorConfigurationBlock extends AbstractConfigurationBlock {
 					FormatterMessages.IndentationTabPage_general_group_option_tab_policy_TAB,
 					FormatterMessages.IndentationTabPage_general_group_option_tab_policy_MIXED };
 
-			addComboBox(
-					generalGroup,
+			addComboBox(generalGroup,
 					FormatterMessages.IndentationTabPage_general_group_option_tab_policy,
 					CodeFormatterConstants.FORMATTER_TAB_CHAR, tabPolicyLabels,
 					tabPolicyValues);
 
-			addLabelledTextField(
-					generalGroup,
+			addLabelledTextField(generalGroup,
 					FormatterMessages.IndentationTabPage_general_group_option_indent_size,
 					CodeFormatterConstants.FORMATTER_INDENTATION_SIZE, 2, 1,
 					true);
 
-			addLabelledTextField(
-					generalGroup,
+			addLabelledTextField(generalGroup,
 					FormatterMessages.IndentationTabPage_general_group_option_tab_size,
 					CodeFormatterConstants.FORMATTER_TAB_SIZE, 2, 1, true);
 		}
@@ -327,15 +324,15 @@ public class EditorConfigurationBlock extends AbstractConfigurationBlock {
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		editorComposite.setLayout(layout);
-		gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.FILL_VERTICAL);
+		gd = new GridData(
+				GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL);
 		gd.horizontalSpan = 2;
 		editorComposite.setLayoutData(gd);
 
-		colorList = new List(editorComposite, SWT.SINGLE | SWT.V_SCROLL
-				| SWT.BORDER);
-		gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING
-				| GridData.FILL_HORIZONTAL);
+		colorList = new List(editorComposite,
+				SWT.SINGLE | SWT.V_SCROLL | SWT.BORDER);
+		gd = new GridData(
+				GridData.VERTICAL_ALIGN_BEGINNING | GridData.FILL_HORIZONTAL);
 		gd.heightHint = convertHeightInCharsToPixels(12);
 		colorList.setLayoutData(gd);
 
@@ -380,8 +377,8 @@ public class EditorConfigurationBlock extends AbstractConfigurationBlock {
 		};
 
 		colorDefault = new Button(stylesComposite, SWT.CHECK);
-		colorDefault
-				.setText(PreferencesMessages.EditorPreferencePage_systemDefault);
+		colorDefault.setText(
+				PreferencesMessages.EditorPreferencePage_systemDefault);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalAlignment = GridData.BEGINNING;
 		gd.horizontalSpan = 2;
@@ -437,8 +434,8 @@ public class EditorConfigurationBlock extends AbstractConfigurationBlock {
 			colorDefault.setVisible(false);
 			colorEditor.getButton().setEnabled(true);
 		} else {
-			boolean systemDefault = getPreferenceStore().getBoolean(
-					systemDefaultKey);
+			boolean systemDefault = getPreferenceStore()
+					.getBoolean(systemDefaultKey);
 			colorDefault.setSelection(systemDefault);
 			colorDefault.setVisible(true);
 			colorEditor.getButton().setEnabled(!systemDefault);
@@ -470,8 +467,8 @@ public class EditorConfigurationBlock extends AbstractConfigurationBlock {
 		for (EditorColorItem item : fColorListModel) {
 			if (item.systemDefaultKey != null
 					&& getPreferenceStore().getBoolean(item.systemDefaultKey)) {
-				RGB rgb = colorList.getDisplay().getSystemColor(
-						item.systemColor).getRGB();
+				RGB rgb = colorList.getDisplay()
+						.getSystemColor(item.systemColor).getRGB();
 				PreferenceConverter.setValue(getPreferenceStore(),
 						item.colorKey, rgb);
 			}

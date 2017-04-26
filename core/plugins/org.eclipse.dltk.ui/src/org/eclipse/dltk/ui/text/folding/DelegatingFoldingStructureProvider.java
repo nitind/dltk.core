@@ -68,7 +68,7 @@ public class DelegatingFoldingStructureProvider implements
 		private final ProjectionAnnotationModel fModel;
 		private final IDocument fDocument;
 		private final boolean fAllowCollapsing;
-		protected LinkedHashMap<Annotation, Position> fMap = new LinkedHashMap<Annotation, Position>();
+		protected LinkedHashMap<Annotation, Position> fMap = new LinkedHashMap<>();
 
 		public FoldingStructureComputationContext(IDocument document,
 				ProjectionAnnotationModel model, boolean allowCollapsing) {
@@ -671,9 +671,9 @@ public class DelegatingFoldingStructureProvider implements
 	}
 
 	private void update0(FoldingStructureComputationContext ctx) {
-		Map<Annotation, Position> additions = new HashMap<Annotation, Position>();
-		List<Annotation> deletions = new ArrayList<Annotation>();
-		List<Annotation> updates = new ArrayList<Annotation>();
+		Map<Annotation, Position> additions = new HashMap<>();
+		List<Annotation> deletions = new ArrayList<>();
+		List<Annotation> updates = new ArrayList<>();
 		if (!computeFoldingStructure(ctx)) {
 			return;
 		}
@@ -894,7 +894,7 @@ public class DelegatingFoldingStructureProvider implements
 
 	private Map<AnnotationKey, List<Tuple>> computeCurrentStructure(
 			FoldingStructureComputationContext ctx) {
-		Map<AnnotationKey, List<Tuple>> map = new HashMap<AnnotationKey, List<Tuple>>();
+		Map<AnnotationKey, List<Tuple>> map = new HashMap<>();
 		ProjectionAnnotationModel model = ctx.getModel();
 		Iterator<Annotation> e = model.getAnnotationIterator();
 		while (e.hasNext()) {
@@ -904,7 +904,7 @@ public class DelegatingFoldingStructureProvider implements
 				Position position = model.getPosition(ann);
 				List<Tuple> list = map.get(ann.stamp);
 				if (list == null) {
-					list = new ArrayList<Tuple>(2);
+					list = new ArrayList<>(2);
 					map.put(ann.stamp, list);
 				}
 				list.add(new Tuple(ann, position));
@@ -945,7 +945,7 @@ public class DelegatingFoldingStructureProvider implements
 		ProjectionAnnotationModel model = getModel();
 		if (model == null)
 			return;
-		List<Annotation> modified = new ArrayList<Annotation>();
+		List<Annotation> modified = new ArrayList<>();
 		Iterator<Annotation> iter = model.getAnnotationIterator();
 		while (iter.hasNext()) {
 			Annotation annotation = iter.next();

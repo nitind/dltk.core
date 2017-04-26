@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath;
 
@@ -47,9 +46,9 @@ public class BuildpathContainerDescriptor {
 		String nature = configElement.getAttribute(ATT_NATURE);
 
 		if (name == null) {
-			throw new CoreException(new Status(IStatus.ERROR,
-					DLTKUIPlugin.PLUGIN_ID, 0,
-					"Invalid extension (missing name): " + id, null)); //$NON-NLS-1$
+			throw new CoreException(
+					new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, 0,
+							"Invalid extension (missing name): " + id, null)); //$NON-NLS-1$
 		}
 		if (nature == null) {
 			throw new CoreException(new Status(IStatus.ERROR,
@@ -57,9 +56,10 @@ public class BuildpathContainerDescriptor {
 					"Invalid extension (missing nature): " + nature, null)); //$NON-NLS-1$
 		}
 		if (pageClassName == null) {
-			throw new CoreException(new Status(IStatus.ERROR,
-					DLTKUIPlugin.PLUGIN_ID, 0,
-					"Invalid extension (missing page class name): " + id, null)); //$NON-NLS-1$
+			throw new CoreException(
+					new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, 0,
+							"Invalid extension (missing page class name): " //$NON-NLS-1$
+									+ id, null));
 		}
 	}
 
@@ -71,12 +71,11 @@ public class BuildpathContainerDescriptor {
 				fPage = (IBuildpathContainerPage) elem;
 			} else {
 				String id = fConfigElement.getAttribute(ATT_ID);
-				throw new CoreException(
-						new Status(
-								IStatus.ERROR,
-								DLTKUIPlugin.PLUGIN_ID,
-								0,
-								"Invalid extension (page not of type IBuildpathContainerPage): " + id, null)); //$NON-NLS-1$
+				throw new CoreException(new Status(IStatus.ERROR,
+						DLTKUIPlugin.PLUGIN_ID, 0,
+						"Invalid extension (page not of type IBuildpathContainerPage): " //$NON-NLS-1$
+								+ id,
+						null));
 			}
 		}
 		return fPage;
@@ -129,7 +128,7 @@ public class BuildpathContainerDescriptor {
 
 	public static BuildpathContainerDescriptor[] getDescriptors(
 			IScriptProject proj) {
-		ArrayList<BuildpathContainerDescriptor> containers = new ArrayList<BuildpathContainerDescriptor>();
+		ArrayList<BuildpathContainerDescriptor> containers = new ArrayList<>();
 
 		IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
 				.getExtensionPoint(DLTKUIPlugin.PLUGIN_ID, ATT_EXTENSION);
@@ -147,9 +146,8 @@ public class BuildpathContainerDescriptor {
 					if (defaultPageName.equals(curr.getPageClass())) {
 						defaultPage = curr;
 					} else {
-						if (proj == null
-								|| proj.getProject()
-										.hasNature(curr.getNature()))
+						if (proj == null || proj.getProject()
+								.hasNature(curr.getNature()))
 							containers.add(curr);
 					}
 				} catch (CoreException e) {
@@ -162,7 +160,7 @@ public class BuildpathContainerDescriptor {
 				containers.add(defaultPage);
 			}
 		}
-		return containers.toArray(new BuildpathContainerDescriptor[containers
-				.size()]);
+		return containers
+				.toArray(new BuildpathContainerDescriptor[containers.size()]);
 	}
 }

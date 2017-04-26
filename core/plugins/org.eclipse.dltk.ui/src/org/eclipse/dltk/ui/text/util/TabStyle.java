@@ -36,7 +36,7 @@ public enum TabStyle {
 		return name;
 	}
 
-	private static final Map<String, TabStyle> byName = new HashMap<String, TabStyle>();
+	private static final Map<String, TabStyle> byName = new HashMap<>();
 
 	static {
 		byName.put(TAB.getName(), TAB);

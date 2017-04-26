@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,8 +66,8 @@ public class DLTKSearchScopeFactory {
 		if (shell == null)
 			return null;
 		IWorkingSetSelectionDialog dialog = PlatformUI.getWorkbench()
-				.getWorkingSetManager().createWorkingSetSelectionDialog(shell,
-						true);
+				.getWorkingSetManager()
+				.createWorkingSetSelectionDialog(shell, true);
 		if (dialog.open() == Window.OK) {
 			IWorkingSet[] workingSets = dialog.getSelection();
 			if (workingSets.length > 0)
@@ -122,8 +122,8 @@ public class DLTKSearchScopeFactory {
 		ArrayList res = new ArrayList();
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		for (int i = 0; i < projectNames.length; i++) {
-			IScriptProject project = DLTKCore.create(root
-					.getProject(projectNames[i]));
+			IScriptProject project = DLTKCore
+					.create(root.getProject(projectNames[i]));
 			if (project.exists()) {
 				res.add(project);
 			}
@@ -166,15 +166,16 @@ public class DLTKSearchScopeFactory {
 					: SearchMessages.EnclosingProjectScopeNoInterpreterEnvironment;
 			scopeDescription = Messages.format(label, projectNames[0]);
 		} else if (projectNames.length == 2) {
-			String label = includeInterp ? SearchMessages.EnclosingProjectsScope2
+			String label = includeInterp
+					? SearchMessages.EnclosingProjectsScope2
 					: SearchMessages.EnclosingProjectsScope2NoInterpreterEnvironment;
-			scopeDescription = Messages.format(label, new String[] {
-					projectNames[0], projectNames[1] });
+			scopeDescription = Messages.format(label,
+					new String[] { projectNames[0], projectNames[1] });
 		} else {
 			String label = includeInterp ? SearchMessages.EnclosingProjectsScope
 					: SearchMessages.EnclosingProjectsScopeNoInterpreterEnvironment;
-			scopeDescription = Messages.format(label, new String[] {
-					projectNames[0], projectNames[1] });
+			scopeDescription = Messages.format(label,
+					new String[] { projectNames[0], projectNames[1] });
 		}
 		return scopeDescription;
 	}
@@ -182,8 +183,8 @@ public class DLTKSearchScopeFactory {
 	public String getProjectScopeDescription(IScriptProject project,
 			boolean includeInterp) {
 		if (includeInterp) {
-			return Messages.format(SearchMessages.ProjectScope, project
-					.getElementName());
+			return Messages.format(SearchMessages.ProjectScope,
+					project.getElementName());
 		} else {
 			return Messages.format(
 					SearchMessages.ProjectScopeNoInterpreterEnvironment,
@@ -218,20 +219,20 @@ public class DLTKSearchScopeFactory {
 		if (modelElements.length == 1) {
 			String label = includeInterp ? SearchMessages.SingleSelectionScope
 					: SearchMessages.SingleSelectionScopeNoInterpreterEnvironment;
-			scopeDescription = Messages.format(label, modelElements[0]
-					.getElementName());
+			scopeDescription = Messages.format(label,
+					modelElements[0].getElementName());
 		} else if (modelElements.length == 1) {
 			String label = includeInterp ? SearchMessages.DoubleSelectionScope
 					: SearchMessages.DoubleSelectionScopeNoInterpreterEnvironment;
-			scopeDescription = Messages.format(label, new String[] {
-					modelElements[0].getElementName(),
-					modelElements[1].getElementName() });
+			scopeDescription = Messages.format(label,
+					new String[] { modelElements[0].getElementName(),
+							modelElements[1].getElementName() });
 		} else {
 			String label = includeInterp ? SearchMessages.SelectionScope
 					: SearchMessages.SelectionScopeNoInterpreterEnvironment;
-			scopeDescription = Messages.format(label, new String[] {
-					modelElements[0].getElementName(),
-					modelElements[1].getElementName() });
+			scopeDescription = Messages.format(label,
+					new String[] { modelElements[0].getElementName(),
+							modelElements[1].getElementName() });
 		}
 		return scopeDescription;
 	}
@@ -261,7 +262,7 @@ public class DLTKSearchScopeFactory {
 
 	public IProject[] getProjects(IDLTKSearchScope scope) {
 		IPath[] paths = scope.enclosingProjectsAndZips();
-		HashSet<IProject> temp = new HashSet<IProject>();
+		HashSet<IProject> temp = new HashSet<>();
 		for (int i = 0; i < paths.length; i++) {
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot()
 					.findMember(paths[i]);
@@ -273,8 +274,8 @@ public class DLTKSearchScopeFactory {
 
 	public IModelElement[] getModelElements(ISelection selection) {
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
-			return getModelElements(((IStructuredSelection) selection)
-					.toArray());
+			return getModelElements(
+					((IStructuredSelection) selection).toArray());
 		} else {
 			return new IModelElement[0];
 		}
@@ -284,7 +285,7 @@ public class DLTKSearchScopeFactory {
 		if (elements.length == 0)
 			return new IModelElement[0];
 
-		Set<IModelElement> result = new HashSet<IModelElement>(elements.length);
+		Set<IModelElement> result = new HashSet<>(elements.length);
 		for (int i = 0; i < elements.length; i++) {
 			Object selectedElement = elements[i];
 			if (selectedElement instanceof IModelElement) {
@@ -321,8 +322,8 @@ public class DLTKSearchScopeFactory {
 	}
 
 	private IDLTKSearchScope createSearchScope(
-			Collection<IModelElement> modelElements,
-			boolean includeInterp, IDLTKLanguageToolkit toolkit) {
+			Collection<IModelElement> modelElements, boolean includeInterp,
+			IDLTKLanguageToolkit toolkit) {
 		if (modelElements.isEmpty())
 			return EMPTY_SCOPE;
 		IModelElement[] elementArray = modelElements
@@ -345,8 +346,7 @@ public class DLTKSearchScopeFactory {
 	}
 
 	private void addModelElements(Set modelElements, IResource resource) {
-		IModelElement modelElement = resource
-				.getAdapter(IModelElement.class);
+		IModelElement modelElement = resource.getAdapter(IModelElement.class);
 		if (modelElement == null)
 			// not a Script resource
 			return;
@@ -363,7 +363,8 @@ public class DLTKSearchScopeFactory {
 		modelElements.add(modelElement);
 	}
 
-	private void addModelElements(Set modelElements, IModelElement modelElement) {
+	private void addModelElements(Set modelElements,
+			IModelElement modelElement) {
 		modelElements.add(modelElement);
 	}
 
@@ -373,8 +374,8 @@ public class DLTKSearchScopeFactory {
 
 		if (workingSet.isAggregateWorkingSet() && workingSet.isEmpty()) {
 			try {
-				IScriptProject[] projects = DLTKCore.create(
-						ResourcesPlugin.getWorkspace().getRoot())
+				IScriptProject[] projects = DLTKCore
+						.create(ResourcesPlugin.getWorkspace().getRoot())
 						.getScriptProjects();
 				modelElements.addAll(Arrays.asList(projects));
 			} catch (ModelException e) {
@@ -391,8 +392,7 @@ public class DLTKSearchScopeFactory {
 				addModelElements(modelElements, modelElement);
 				continue;
 			}
-			IResource resource = elements[i]
-					.getAdapter(IResource.class);
+			IResource resource = elements[i].getAdapter(IResource.class);
 			if (resource != null) {
 				addModelElements(modelElements, resource);
 			}
@@ -412,8 +412,8 @@ public class DLTKSearchScopeFactory {
 			IDLTKLanguageToolkit toolkit) {
 		if (!includeInterp) {
 			try {
-				IScriptProject[] projects = DLTKCore.create(
-						ResourcesPlugin.getWorkspace().getRoot())
+				IScriptProject[] projects = DLTKCore
+						.create(ResourcesPlugin.getWorkspace().getRoot())
 						.getScriptProjects();
 				return SearchEngine.createSearchScope(projects,
 						getSearchFlags(includeInterp), toolkit);
@@ -430,13 +430,13 @@ public class DLTKSearchScopeFactory {
 		if (root != null) {
 			try {
 				IBuildpathEntry entry = root.getRawBuildpathEntry();
-				if (entry != null
-						&& entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+				if (entry != null && entry
+						.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 					IBuildpathContainer container = DLTKCore
-							.getBuildpathContainer(entry.getPath(), root
-									.getScriptProject());
-					return container != null
-							&& container.getKind() == IBuildpathContainer.K_DEFAULT_SYSTEM;
+							.getBuildpathContainer(entry.getPath(),
+									root.getScriptProject());
+					return container != null && container
+							.getKind() == IBuildpathContainer.K_DEFAULT_SYSTEM;
 				}
 				return false;
 			} catch (ModelException e) {

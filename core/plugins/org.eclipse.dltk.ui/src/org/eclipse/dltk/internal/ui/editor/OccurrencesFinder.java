@@ -49,7 +49,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -104,7 +103,7 @@ public class OccurrencesFinder {
 
 	public OccurrencesFinder(ScriptEditor editor) {
 		this.editor = editor;
-		final NatureExtensionManager<IOccurrencesFinder> occurrencesFinderManager = new NatureExtensionManager<IOccurrencesFinder>(
+		final NatureExtensionManager<IOccurrencesFinder> occurrencesFinderManager = new NatureExtensionManager<>(
 				DLTKUIPlugin.PLUGIN_ID + ".search", IOccurrencesFinder.class);
 		finders = occurrencesFinderManager
 				.getInstances(editor.getLanguageToolkit().getNatureId());
@@ -143,10 +142,10 @@ public class OccurrencesFinder {
 		}
 
 		private boolean isCanceled(IProgressMonitor progressMonitor) {
-			return fCanceled
-					|| progressMonitor.isCanceled()
+			return fCanceled || progressMonitor.isCanceled()
 					|| fPostSelectionValidator != null
-					&& !(fPostSelectionValidator.isValid(fSelection) || fForcedMarkOccurrencesSelection == fSelection)
+							&& !(fPostSelectionValidator.isValid(fSelection)
+									|| fForcedMarkOccurrencesSelection == fSelection)
 					|| LinkedModeModel.hasInstalledModel(fDocument);
 		}
 
@@ -177,8 +176,7 @@ public class OccurrencesFinder {
 
 			// Add occurrence annotations
 			int length = fLocations.length;
-			Map<Annotation, Position> annotationMap = new HashMap<Annotation, Position>(
-					length);
+			Map<Annotation, Position> annotationMap = new HashMap<>(length);
 			for (int i = 0; i < length; i++) {
 
 				if (isCanceled(progressMonitor))
@@ -191,8 +189,9 @@ public class OccurrencesFinder {
 				String description = location.getDescription();
 				String annotationType = "org.eclipse.dltk.ui.occurrences"; //$NON-NLS-1$
 
-				annotationMap.put(new Annotation(annotationType, false,
-						description), position);
+				annotationMap.put(
+						new Annotation(annotationType, false, description),
+						position);
 			}
 
 			if (isCanceled(progressMonitor))
@@ -211,8 +210,8 @@ public class OccurrencesFinder {
 								mapEntry.getValue());
 					}
 				}
-				fOccurrenceAnnotations = annotationMap.keySet().toArray(
-						new Annotation[annotationMap.keySet().size()]);
+				fOccurrenceAnnotations = annotationMap.keySet()
+						.toArray(new Annotation[annotationMap.keySet().size()]);
 			}
 
 			return Status.OK_STATUS;
@@ -224,8 +223,8 @@ public class OccurrencesFinder {
 	 *
 	 * @since 3.0
 	 */
-	class OccurrencesFinderJobCanceler implements IDocumentListener,
-			ITextInputListener {
+	class OccurrencesFinderJobCanceler
+			implements IDocumentListener, ITextInputListener {
 
 		public void install() {
 			ISourceViewer sourceViewer = getViewer();
@@ -278,9 +277,9 @@ public class OccurrencesFinder {
 		}
 
 		/*
-		 * @see
-		 * org.eclipse.jface.text.ITextInputListener#inputDocumentAboutToBeChanged
-		 * (org.eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
+		 * @see org.eclipse.jface.text.ITextInputListener#
+		 * inputDocumentAboutToBeChanged (org.eclipse.jface.text.IDocument,
+		 * org.eclipse.jface.text.IDocument)
 		 */
 		@Override
 		public void inputDocumentAboutToBeChanged(IDocument oldInput,
@@ -297,7 +296,8 @@ public class OccurrencesFinder {
 		 * .eclipse .jface.text.IDocument, org.eclipse.jface.text.IDocument)
 		 */
 		@Override
-		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
+		public void inputDocumentChanged(IDocument oldInput,
+				IDocument newInput) {
 			if (newInput == null)
 				return;
 			newInput.addDocumentListener(this);
@@ -403,9 +403,8 @@ public class OccurrencesFinder {
 	 * @return
 	 */
 	public boolean isMarkingOccurrences() {
-		return preferenceStore != null
-				&& preferenceStore
-						.getBoolean(PreferenceConstants.EDITOR_MARK_OCCURRENCES);
+		return preferenceStore != null && preferenceStore
+				.getBoolean(PreferenceConstants.EDITOR_MARK_OCCURRENCES);
 	}
 
 	protected boolean handlePreferenceStoreChanged(String property,
@@ -431,14 +430,9 @@ public class OccurrencesFinder {
 	protected void installOccurrencesFinder(boolean forceUpdate) {
 		fMarkOccurrenceAnnotations = true;
 
-		fPostSelectionListenerWithAST = new ISelectionListenerWithAST() {
-			@Override
-			public void selectionChanged(IEditorPart part,
-					ITextSelection selection, ISourceModule module,
-					IModuleDeclaration astRoot) {
-				updateOccurrenceAnnotations(selection, module, astRoot);
-			}
-		};
+		fPostSelectionListenerWithAST = (part, selection, module,
+				astRoot) -> updateOccurrenceAnnotations(selection, module,
+						astRoot);
 		SelectionListenerWithASTManager.getDefault().addListener(editor,
 				fPostSelectionListenerWithAST);
 		if (forceUpdate && getSelectionProvider() != null) {

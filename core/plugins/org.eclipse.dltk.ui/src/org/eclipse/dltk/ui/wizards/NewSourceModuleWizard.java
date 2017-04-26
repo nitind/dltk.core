@@ -73,7 +73,7 @@ public abstract class NewSourceModuleWizard extends NewElementWizard
 
 	protected abstract NewSourceModulePage createNewSourceModulePage();
 
-	private final List<ISourceModuleWizardExtension> extensions = new ArrayList<ISourceModuleWizardExtension>();
+	private final List<ISourceModuleWizardExtension> extensions = new ArrayList<>();
 
 	@Override
 	public void addPages() {
@@ -230,7 +230,7 @@ public abstract class NewSourceModuleWizard extends NewElementWizard
 				}
 			} else {
 				if (disabledModes == null) {
-					disabledModes = new HashSet<String>();
+					disabledModes = new HashSet<>();
 				}
 				disabledModes.add(mode);
 			}
@@ -255,7 +255,7 @@ public abstract class NewSourceModuleWizard extends NewElementWizard
 	public void addFieldChangeListener(String field,
 			IFieldChangeListener listener) {
 		if (listeners == null) {
-			listeners = new HashMap<String, ListenerList<IFieldChangeListener>>();
+			listeners = new HashMap<>();
 		}
 		ListenerList<IFieldChangeListener> list = listeners.get(field);
 		if (list == null) {

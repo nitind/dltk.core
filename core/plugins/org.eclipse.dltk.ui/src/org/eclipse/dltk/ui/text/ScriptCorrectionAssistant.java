@@ -126,8 +126,7 @@ public class ScriptCorrectionAssistant extends QuickAssistAssistant {
 			// Let superclass deal with this
 			return super.showPossibleQuickAssists();
 
-		ArrayList<Annotation> resultingAnnotations = new ArrayList<Annotation>(
-				20);
+		ArrayList<Annotation> resultingAnnotations = new ArrayList<>(20);
 		try {
 			Point selectedRange = fViewer.getSelectedRange();
 			int currOffset = selectedRange.x;
@@ -184,8 +183,8 @@ public class ScriptCorrectionAssistant extends QuickAssistAssistant {
 			int rangeStart = lineInfo.getOffset();
 			int rangeEnd = rangeStart + lineInfo.getLength();
 
-			ArrayList<Annotation> allAnnotations = new ArrayList<Annotation>();
-			ArrayList<Position> allPositions = new ArrayList<Position>();
+			ArrayList<Annotation> allAnnotations = new ArrayList<>();
+			ArrayList<Position> allPositions = new ArrayList<>();
 			int bestOffset = Integer.MAX_VALUE;
 			while (iter.hasNext()) {
 				Annotation annot = iter.next();

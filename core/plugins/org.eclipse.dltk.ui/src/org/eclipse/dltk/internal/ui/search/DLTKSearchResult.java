@@ -31,15 +31,16 @@ import org.eclipse.search.ui.text.IFileMatchAdapter;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.IEditorPart;
 
-public class DLTKSearchResult extends AbstractTextSearchResult implements IEditorMatchAdapter, IFileMatchAdapter {
+public class DLTKSearchResult extends AbstractTextSearchResult
+		implements IEditorMatchAdapter, IFileMatchAdapter {
 
 	private DLTKSearchQuery fQuery;
 	private Map<Object, IMatchPresentation> fElementsToParticipants;
-	private static final Match[] NO_MATCHES= new Match[0];
+	private static final Match[] NO_MATCHES = new Match[0];
 
 	public DLTKSearchResult(DLTKSearchQuery query) {
-		fQuery= query;
-		fElementsToParticipants= new HashMap<Object, IMatchPresentation>();
+		fQuery = query;
+		fElementsToParticipants = new HashMap<>();
 		setActiveMatchFilters(DLTKMatchFilter.getLastUsedFilters());
 	}
 
@@ -59,18 +60,20 @@ public class DLTKSearchResult extends AbstractTextSearchResult implements IEdito
 	}
 
 	@Override
-	public Match[] computeContainedMatches(AbstractTextSearchResult result, IEditorPart editor) {
+	public Match[] computeContainedMatches(AbstractTextSearchResult result,
+			IEditorPart editor) {
 		return computeContainedMatches(editor.getEditorInput());
 	}
 
 	@Override
-	public Match[] computeContainedMatches(AbstractTextSearchResult result, IFile file) {
+	public Match[] computeContainedMatches(AbstractTextSearchResult result,
+			IFile file) {
 		return computeContainedMatches(file);
 	}
 
 	private Match[] computeContainedMatches(IAdaptable adaptable) {
 		IModelElement modelElement = adaptable.getAdapter(IModelElement.class);
-		Set<Match> matches= new HashSet<Match>();
+		Set<Match> matches = new HashSet<>();
 		if (modelElement != null) {
 			collectMatches(matches, modelElement);
 		}
@@ -84,28 +87,27 @@ public class DLTKSearchResult extends AbstractTextSearchResult implements IEdito
 		return NO_MATCHES;
 	}
 
-
 	private void collectMatches(Set<Match> matches, IFile element) {
-		Match[] m= getMatches(element);
+		Match[] m = getMatches(element);
 		if (m.length != 0) {
-			for (int i= 0; i < m.length; i++) {
+			for (int i = 0; i < m.length; i++) {
 				matches.add(m[i]);
 			}
 		}
 	}
 
 	private void collectMatches(Set<Match> matches, IModelElement element) {
-		Match[] m= getMatches(element);
+		Match[] m = getMatches(element);
 		if (m.length != 0) {
-			for (int i= 0; i < m.length; i++) {
+			for (int i = 0; i < m.length; i++) {
 				matches.add(m[i]);
 			}
 		}
 		if (element instanceof IParent) {
-			IParent parent= (IParent) element;
+			IParent parent = (IParent) element;
 			try {
-				IModelElement[] children= parent.getChildren();
-				for (int i= 0; i < children.length; i++) {
+				IModelElement[] children = parent.getChildren();
+				for (int i = 0; i < children.length; i++) {
 					collectMatches(matches, children[i]);
 				}
 			} catch (ModelException e) {
@@ -113,14 +115,19 @@ public class DLTKSearchResult extends AbstractTextSearchResult implements IEdito
 			}
 		}
 	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.search.ui.ISearchResultCategory#getFile(java.lang.Object)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.search.ui.ISearchResultCategory#getFile(java.lang.Object)
 	 */
 	@Override
 	public IFile getFile(Object element) {
 		if (element instanceof IModelElement) {
-			IModelElement modelElement= (IModelElement) element;
-			ISourceModule cu= (ISourceModule) modelElement.getAncestor(IModelElement.SOURCE_MODULE);
+			IModelElement modelElement = (IModelElement) element;
+			ISourceModule cu = (ISourceModule) modelElement
+					.getAncestor(IModelElement.SOURCE_MODULE);
 			if (cu != null) {
 				return (IFile) cu.getResource();
 			}
@@ -134,17 +141,21 @@ public class DLTKSearchResult extends AbstractTextSearchResult implements IEdito
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.eclipse.search2.ui.text.IStructureProvider#isShownInEditor(org.eclipse.search2.ui.text.Match,
-	 *      org.eclipse.ui.IEditorPart)
+	 * @see org.eclipse.search2.ui.text.IStructureProvider#isShownInEditor(org.
+	 * eclipse.search2.ui.text.Match, org.eclipse.ui.IEditorPart)
 	 */
 	@Override
 	public boolean isShownInEditor(Match match, IEditorPart editor) {
-		Object element= match.getElement();
+		Object element = match.getElement();
 		if (element instanceof IModelElement) {
-			element= ((IModelElement) element).getOpenable(); // class file or compilation unit
-			return element != null && element.equals(editor.getEditorInput().getAdapter(IModelElement.class));
+			element = ((IModelElement) element).getOpenable(); // class file or
+																// compilation
+																// unit
+			return element != null && element.equals(
+					editor.getEditorInput().getAdapter(IModelElement.class));
 		} else if (element instanceof IFile) {
-			return element.equals(editor.getEditorInput().getAdapter(IFile.class));
+			return element
+					.equals(editor.getEditorInput().getAdapter(IFile.class));
 		}
 		return false;
 	}
@@ -157,7 +168,9 @@ public class DLTKSearchResult extends AbstractTextSearchResult implements IEdito
 		return DLTKMatchFilter.allFilters();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.search.ui.ISearchResult#getQuery()
 	 */
 	@Override
@@ -170,10 +183,14 @@ public class DLTKSearchResult extends AbstractTextSearchResult implements IEdito
 	}
 
 	boolean addMatch(Match match, IMatchPresentation participant) {
-		Object element= match.getElement();
+		Object element = match.getElement();
 		if (fElementsToParticipants.get(element) != null) {
-			// TODO must access the participant id / label to properly report the error.
-			DLTKUIPlugin.log(new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(), 0, "A second search participant was found for an element", null)); //$NON-NLS-1$
+			// TODO must access the participant id / label to properly report
+			// the error.
+			DLTKUIPlugin.log(new Status(IStatus.WARNING,
+					DLTKUIPlugin.getPluginId(), 0,
+					"A second search participant was found for an element", //$NON-NLS-1$
+					null));
 			return false;
 		}
 		fElementsToParticipants.put(element, participant);
@@ -183,7 +200,7 @@ public class DLTKSearchResult extends AbstractTextSearchResult implements IEdito
 
 	@Override
 	public void removeAll() {
-		synchronized(this) {
+		synchronized (this) {
 			fElementsToParticipants.clear();
 		}
 		super.removeAll();
@@ -191,7 +208,7 @@ public class DLTKSearchResult extends AbstractTextSearchResult implements IEdito
 
 	@Override
 	public void removeMatch(Match match) {
-		synchronized(this) {
+		synchronized (this) {
 			if (getMatchCount(match.getElement()) == 1)
 				fElementsToParticipants.remove(match.getElement());
 		}

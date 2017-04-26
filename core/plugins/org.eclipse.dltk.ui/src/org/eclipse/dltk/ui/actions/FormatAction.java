@@ -46,7 +46,7 @@ public class FormatAction extends SelectionDispatchAction {
 
 	static class ModuleCollector implements IModelElementVisitor {
 
-		final List<ISourceModule> modules = new ArrayList<ISourceModule>();
+		final List<ISourceModule> modules = new ArrayList<>();
 
 		@Override
 		public boolean visit(IModelElement element) {
@@ -90,10 +90,12 @@ public class FormatAction extends SelectionDispatchAction {
 							final String lineDelimiter = TextUtilities
 									.getDefaultLineDelimiter(document);
 							final Map<String, String> preferences = formatterFactory
-									.retrievePreferences(new PreferencesLookupDelegate(
-											project));
+									.retrievePreferences(
+											new PreferencesLookupDelegate(
+													project));
 							final IScriptFormatter formatter = formatterFactory
-									.createFormatter(lineDelimiter, preferences);
+									.createFormatter(lineDelimiter,
+											preferences);
 							final TextEdit edit = formatter.format(source, 0,
 									source.length(), 0);
 							if (edit != null) {

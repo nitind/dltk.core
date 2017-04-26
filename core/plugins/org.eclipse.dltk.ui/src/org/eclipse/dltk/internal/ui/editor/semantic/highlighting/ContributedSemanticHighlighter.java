@@ -28,7 +28,8 @@ import org.eclipse.dltk.ui.editor.highlighting.ISemanticHighlighterExtension;
 import org.eclipse.dltk.ui.editor.highlighting.SemanticHighlighting;
 import org.eclipse.swt.graphics.RGB;
 
-public class ContributedSemanticHighlighter extends AbstractSemanticHighlighter {
+public class ContributedSemanticHighlighter
+		extends AbstractSemanticHighlighter {
 
 	private final String natureId;
 	private final ISemanticHighlighter[] highlighters;
@@ -52,7 +53,7 @@ public class ContributedSemanticHighlighter extends AbstractSemanticHighlighter 
 	}
 
 	private boolean initialized = false;
-	private final Map<String, SemanticHighlighting> highlightings = new HashMap<String, SemanticHighlighting>();
+	private final Map<String, SemanticHighlighting> highlightings = new HashMap<>();
 
 	private static class StdSemanticHighlighting extends SemanticHighlighting {
 
@@ -83,17 +84,17 @@ public class ContributedSemanticHighlighter extends AbstractSemanticHighlighter 
 
 	}
 
-	private static class SemanticHighlightingCollector extends
-			AbstractColoringPreferenceRequestor {
+	private static class SemanticHighlightingCollector
+			extends AbstractColoringPreferenceRequestor {
 
-		final Map<String, SemanticHighlighting> map = new HashMap<String, SemanticHighlighting>();
+		final Map<String, SemanticHighlighting> map = new HashMap<>();
 
 		@Override
 		public void addPreference(IColoringPreferenceKey key, String name,
 				RGB color, EnablementStyle enablementStyle,
 				FontStyle... fontStyles) {
-			map.put(key.getColorKey(), new StdSemanticHighlighting(key,
-					enablementStyle));
+			map.put(key.getColorKey(),
+					new StdSemanticHighlighting(key, enablementStyle));
 		}
 
 	}
@@ -139,8 +140,8 @@ public class ContributedSemanticHighlighter extends AbstractSemanticHighlighter 
 				}
 			}
 		}
-		return highlightings.values().toArray(
-				new SemanticHighlighting[highlightings.size()]);
+		return highlightings.values()
+				.toArray(new SemanticHighlighting[highlightings.size()]);
 	}
 
 }

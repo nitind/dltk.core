@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,7 +49,7 @@ public class EditorTextHoverDescriptor {
 
 	/**
 	 * Returns all editor text hovers contributed to the workbench.
-	 * 
+	 *
 	 * @deprecated
 	 */
 	@Deprecated
@@ -75,7 +75,7 @@ public class EditorTextHoverDescriptor {
 
 	/**
 	 * Computes the state mask for the given modifier string.
-	 * 
+	 *
 	 * @param modifiers
 	 *            the string with the modifiers, separated by '+', '-', ';', ','
 	 *            or '.'
@@ -119,12 +119,10 @@ public class EditorTextHoverDescriptor {
 				return (IScriptEditorTextHover) fElement
 						.createExecutableExtension(CLASS_ATTRIBUTE);
 			} catch (CoreException x) {
-				DLTKUIPlugin
-						.log(new Status(
-								IStatus.ERROR,
-								DLTKUIPlugin.getPluginId(),
-								0,
-								"DLTKHoverMessages.JavaTextHover_createTextHover", null)); //$NON-NLS-1$
+				DLTKUIPlugin.log(new Status(IStatus.ERROR,
+						DLTKUIPlugin.getPluginId(), 0,
+						"DLTKHoverMessages.JavaTextHover_createTextHover", //$NON-NLS-1$
+						null));
 			}
 		}
 		return null;
@@ -164,7 +162,7 @@ public class EditorTextHoverDescriptor {
 
 	/**
 	 * Returns the hover's description.
-	 * 
+	 *
 	 * @return the hover's description or <code>null</code> if not provided
 	 */
 	public String getDescription() {
@@ -176,8 +174,8 @@ public class EditorTextHoverDescriptor {
 	}
 
 	public boolean canActivatePlugIn() {
-		return Boolean.valueOf(
-				fElement.getAttribute(ACTIVATE_PLUG_IN_ATTRIBUTE))
+		return Boolean
+				.valueOf(fElement.getAttribute(ACTIVATE_PLUG_IN_ATTRIBUTE))
 				.booleanValue();
 	}
 
@@ -196,7 +194,7 @@ public class EditorTextHoverDescriptor {
 
 	private static EditorTextHoverDescriptor[] createDescriptors(
 			IConfigurationElement[] elements, String natureId) {
-		List<EditorTextHoverDescriptor> result = new ArrayList<EditorTextHoverDescriptor>(
+		List<EditorTextHoverDescriptor> result = new ArrayList<>(
 				elements.length);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
@@ -219,18 +217,18 @@ public class EditorTextHoverDescriptor {
 				.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS);
 		StringTokenizer tokenizer = new StringTokenizer(
 				compiledTextHoverModifiers, VALUE_SEPARATOR);
-		HashMap<String, String> idToModifier = new HashMap<String, String>(
+		HashMap<String, String> idToModifier = new HashMap<>(
 				tokenizer.countTokens() / 2);
 		while (tokenizer.hasMoreTokens()) {
 			String id = tokenizer.nextToken();
 			if (tokenizer.hasMoreTokens())
 				idToModifier.put(id, tokenizer.nextToken());
 		}
-		String compiledTextHoverModifierMasks = store
-				.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
+		String compiledTextHoverModifierMasks = store.getString(
+				PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
 		tokenizer = new StringTokenizer(compiledTextHoverModifierMasks,
 				VALUE_SEPARATOR);
-		HashMap<String, String> idToModifierMask = new HashMap<String, String>(
+		HashMap<String, String> idToModifierMask = new HashMap<>(
 				tokenizer.countTokens() / 2);
 		while (tokenizer.hasMoreTokens()) {
 			String id = tokenizer.nextToken();
@@ -254,8 +252,8 @@ public class EditorTextHoverDescriptor {
 			if (hovers[i].fStateMask == -1) {
 				// Fallback: use stored modifier masks
 				try {
-					hovers[i].fStateMask = Integer.parseInt(idToModifierMask
-							.get(hovers[i].getId()));
+					hovers[i].fStateMask = Integer
+							.parseInt(idToModifierMask.get(hovers[i].getId()));
 				} catch (NumberFormatException ex) {
 					hovers[i].fStateMask = -1;
 				}
@@ -272,7 +270,7 @@ public class EditorTextHoverDescriptor {
 
 	/**
 	 * Returns the configured modifier getStateMask for this hover.
-	 * 
+	 *
 	 * @return the hover modifier stateMask or -1 if no hover is configured
 	 */
 	public int getStateMask() {
@@ -281,7 +279,7 @@ public class EditorTextHoverDescriptor {
 
 	/**
 	 * Returns the modifier String as set in the preference store.
-	 * 
+	 *
 	 * @return the modifier string
 	 */
 	public String getModifierString() {
@@ -290,7 +288,7 @@ public class EditorTextHoverDescriptor {
 
 	/**
 	 * Returns whether this hover is enabled or not.
-	 * 
+	 *
 	 * @return <code>true</code> if enabled
 	 */
 	public boolean isEnabled() {
@@ -299,9 +297,9 @@ public class EditorTextHoverDescriptor {
 
 	/**
 	 * Returns this hover descriptors configuration element.
-	 * 
+	 *
 	 * @return the configuration element
-	 * 
+	 *
 	 */
 	public IConfigurationElement getConfigurationElement() {
 		return fElement;

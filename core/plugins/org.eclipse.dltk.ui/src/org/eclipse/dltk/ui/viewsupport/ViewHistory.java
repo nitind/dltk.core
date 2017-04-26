@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2011 IBM Corporation and others.
+ * Copyright (c) 2006, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * History support for a view.
- * 
+ *
  * @param <E>
  *            the type of elements managed by this history
  */
@@ -29,7 +29,7 @@ public abstract class ViewHistory<E> {
 	/**
 	 * Configure the history List action. Clients typically want to set a text
 	 * and an image.
-	 * 
+	 *
 	 * @param action
 	 *            the action
 	 */
@@ -38,7 +38,7 @@ public abstract class ViewHistory<E> {
 	/**
 	 * Configure the history drop down action. Clients typically want to set a
 	 * tooltip and an image.
-	 * 
+	 *
 	 * @param action
 	 *            the action
 	 */
@@ -101,7 +101,7 @@ public abstract class ViewHistory<E> {
 	 * @return a history drop down action, ready for inclusion in a view toolbar
 	 */
 	public final IAction createHistoryDropDownAction() {
-		return new HistoryDropDownAction<E>(this);
+		return new HistoryDropDownAction<>(this);
 	}
 
 	public abstract void addMenuEntries(MenuManager manager);

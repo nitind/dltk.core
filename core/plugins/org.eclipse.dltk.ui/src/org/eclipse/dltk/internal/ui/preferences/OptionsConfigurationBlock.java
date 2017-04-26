@@ -103,7 +103,7 @@ public abstract class OptionsConfigurationBlock {
 		if (fProject == null || hasProjectSpecificOptions(fProject)) {
 			fDisabledProjectSettings = null;
 		} else {
-			fDisabledProjectSettings = new HashMap<PreferenceKey, String>();
+			fDisabledProjectSettings = new HashMap<>();
 			for (PreferenceKey curr : getPreferenceKeys()) {
 				fDisabledProjectSettings.put(curr,
 						curr.getStoredValue(fLookupOrder, false, fManager));
@@ -113,7 +113,7 @@ public abstract class OptionsConfigurationBlock {
 
 	protected void addKeys(List<PreferenceKey> keys) {
 		Assert.isLegal(!fInitialized);
-		final Set<PreferenceKey> all = new LinkedHashSet<PreferenceKey>();
+		final Set<PreferenceKey> all = new LinkedHashSet<>();
 		Collections.addAll(all, fAllKeys);
 		all.addAll(keys);
 		if (all.size() != fAllKeys.length) {
@@ -265,7 +265,7 @@ public abstract class OptionsConfigurationBlock {
 				}
 				fDisabledProjectSettings = null;
 			} else {
-				fDisabledProjectSettings = new HashMap<PreferenceKey, String>();
+				fDisabledProjectSettings = new HashMap<>();
 				for (int i = 0; i < allKeys.length; i++) {
 					PreferenceKey curr = allKeys[i];
 					String oldSetting = curr.getStoredValue(fLookupOrder, false,
@@ -294,7 +294,7 @@ public abstract class OptionsConfigurationBlock {
 	protected boolean processChanges(IWorkbenchPreferenceContainer container) {
 		IScopeContext currContext = fLookupOrder[0];
 
-		List<PreferenceKey> changedOptions = new ArrayList<PreferenceKey>();
+		List<PreferenceKey> changedOptions = new ArrayList<>();
 		boolean needsBuild = getChanges(currContext, changedOptions);
 		if (changedOptions.isEmpty()) {
 			return true;
@@ -420,7 +420,7 @@ public abstract class OptionsConfigurationBlock {
 		return excomposite;
 	}
 
-	private List<ExpandableComposite> fExpandedComposites = new ArrayList<ExpandableComposite>();
+	private List<ExpandableComposite> fExpandedComposites = new ArrayList<>();
 
 	private static final String SETTINGS_EXPANDED = "expanded"; //$NON-NLS-1$
 

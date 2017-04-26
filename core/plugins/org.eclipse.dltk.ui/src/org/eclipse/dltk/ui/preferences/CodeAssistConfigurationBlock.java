@@ -35,13 +35,13 @@ public class CodeAssistConfigurationBlock extends AbstractConfigurationBlock {
 	public CodeAssistConfigurationBlock(PreferencePage mainPreferencePage,
 			OverlayPreferenceStore store, String... optionalPreferences) {
 		super(store, mainPreferencePage);
-		this.optionalPreferences = new HashSet<String>();
+		this.optionalPreferences = new HashSet<>();
 		Collections.addAll(this.optionalPreferences, optionalPreferences);
 		getPreferenceStore().addKeys(createOverlayStoreKeys());
 	}
 
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
-		ArrayList<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<OverlayPreferenceStore.OverlayKey>();
+		ArrayList<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<>();
 
 		getOverlayKeys(overlayKeys);
 
@@ -69,8 +69,8 @@ public class CodeAssistConfigurationBlock extends AbstractConfigurationBlock {
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
 				OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.CODEASSIST_SORTER));
-		if (optionalPreferences
-				.contains(PreferenceConstants.CODEASSIST_SHOW_VISIBLE_PROPOSALS)) {
+		if (optionalPreferences.contains(
+				PreferenceConstants.CODEASSIST_SHOW_VISIBLE_PROPOSALS)) {
 			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
 					OverlayPreferenceStore.BOOLEAN,
 					PreferenceConstants.CODEASSIST_SHOW_VISIBLE_PROPOSALS));
@@ -93,28 +93,22 @@ public class CodeAssistConfigurationBlock extends AbstractConfigurationBlock {
 
 		Composite composite;
 
-		composite = createSubsection(
-				control,
-				null,
+		composite = createSubsection(control, null,
 				PreferencesMessages.CodeAssistConfigurationBlock_insertionSection_title);
 		final GridLayout layout = GridLayoutFactory.swtDefaults().numColumns(2)
 				.create();
 		composite.setLayout(layout);
 		addInsertionSection(composite);
 
-		if (optionalPreferences
-				.contains(PreferenceConstants.CODEASSIST_SHOW_VISIBLE_PROPOSALS)) {
-			composite = createSubsection(
-					control,
-					null,
+		if (optionalPreferences.contains(
+				PreferenceConstants.CODEASSIST_SHOW_VISIBLE_PROPOSALS)) {
+			composite = createSubsection(control, null,
 					PreferencesMessages.CodeAssistConfigurationBlock_filteringSection_title);
 			composite.setLayout(layout);
 			addFilteringSection(composite);
 		}
 
-		composite = createSubsection(
-				control,
-				null,
+		composite = createSubsection(control, null,
 				PreferencesMessages.CodeAssistConfigurationBlock_autoactivationSection_title);
 		composite.setLayout(layout);
 		addAutoActivationSection(composite);
@@ -146,8 +140,7 @@ public class CodeAssistConfigurationBlock extends AbstractConfigurationBlock {
 	private Control autoActivation;
 
 	protected void addAutoActivationSection(Composite composite) {
-		final Button autoactivation = addCheckBox(
-				composite,
+		final Button autoactivation = addCheckBox(composite,
 				PreferencesMessages.DLTKEditorPreferencePage_enableAutoActivation,
 				PreferenceConstants.CODEASSIST_AUTOACTIVATION, 2);
 		autoactivation.addSelectionListener(new SelectionAdapter() {
@@ -157,16 +150,16 @@ public class CodeAssistConfigurationBlock extends AbstractConfigurationBlock {
 			}
 		});
 
-		Control[] ctrl = addLabelledTextField(
-				composite,
+		Control[] ctrl = addLabelledTextField(composite,
 				PreferencesMessages.DLTKEditorPreferencePage_autoActivationDelay,
-				PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY, 4, 2, true);
+				PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY, 4, 2,
+				true);
 		autoActivation = ctrl[1];
 	}
 
 	private void updateAutoactivationControls() {
-		boolean autoactivation = getPreferenceStore().getBoolean(
-				PreferenceConstants.CODEASSIST_AUTOACTIVATION);
+		boolean autoactivation = getPreferenceStore()
+				.getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION);
 		if (autoActivation != null) {
 			autoActivation.setEnabled(autoactivation);
 		}
@@ -175,8 +168,7 @@ public class CodeAssistConfigurationBlock extends AbstractConfigurationBlock {
 	protected void addInsertionSection(Composite composite) {
 		addCompletionRadioButtons(composite);
 
-		addCheckBox(
-				composite,
+		addCheckBox(composite,
 				PreferencesMessages.DLTKEditorPreferencePage_insertSingleProposalsAutomatically,
 				PreferenceConstants.CODEASSIST_AUTOINSERT, 2);
 	}
@@ -204,22 +196,23 @@ public class CodeAssistConfigurationBlock extends AbstractConfigurationBlock {
 
 		fCompletionInsertsRadioButton = new Button(completionComposite,
 				SWT.RADIO | SWT.LEFT);
-		fCompletionInsertsRadioButton
-				.setText(PreferencesMessages.DLTKEditorPreferencePage_completionInserts);
+		fCompletionInsertsRadioButton.setText(
+				PreferencesMessages.DLTKEditorPreferencePage_completionInserts);
 		fCompletionInsertsRadioButton.setLayoutData(new GridData());
 		fCompletionInsertsRadioButton
 				.addSelectionListener(completionSelectionListener);
 
 		fCompletionOverwritesRadioButton = new Button(completionComposite,
 				SWT.RADIO | SWT.LEFT);
-		fCompletionOverwritesRadioButton
-				.setText(PreferencesMessages.DLTKEditorPreferencePage_completionOverwrites);
+		fCompletionOverwritesRadioButton.setText(
+				PreferencesMessages.DLTKEditorPreferencePage_completionOverwrites);
 		fCompletionOverwritesRadioButton.setLayoutData(new GridData());
 		fCompletionOverwritesRadioButton
 				.addSelectionListener(completionSelectionListener);
 
 		Label label = new Label(completionComposite, SWT.NONE);
-		label.setText(PreferencesMessages.DLTKEditorPreferencePage_completionToggleHint);
+		label.setText(
+				PreferencesMessages.DLTKEditorPreferencePage_completionToggleHint);
 		GridData gd = new GridData();
 		gd.horizontalIndent = 20;
 		gd.horizontalSpan = 2;
@@ -227,8 +220,7 @@ public class CodeAssistConfigurationBlock extends AbstractConfigurationBlock {
 	}
 
 	protected void addFilteringSection(Composite composite) {
-		addCheckBox(
-				composite,
+		addCheckBox(composite,
 				PreferencesMessages.DLTKEditorPreferencePage_showOnlyProposalsVisibleInTheInvocationContext,
 				PreferenceConstants.CODEASSIST_SHOW_VISIBLE_PROPOSALS, 2);
 	}
@@ -236,8 +228,8 @@ public class CodeAssistConfigurationBlock extends AbstractConfigurationBlock {
 	@Override
 	protected void initializeFields() {
 		super.initializeFields();
-		boolean completionInserts = getPreferenceStore().getBoolean(
-				PreferenceConstants.CODEASSIST_INSERT_COMPLETION);
+		boolean completionInserts = getPreferenceStore()
+				.getBoolean(PreferenceConstants.CODEASSIST_INSERT_COMPLETION);
 		fCompletionInsertsRadioButton.setSelection(completionInserts);
 		fCompletionOverwritesRadioButton.setSelection(!completionInserts);
 

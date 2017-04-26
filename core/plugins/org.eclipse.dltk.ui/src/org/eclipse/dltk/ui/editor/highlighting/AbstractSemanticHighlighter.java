@@ -39,7 +39,7 @@ public abstract class AbstractSemanticHighlighter implements
 		ISemanticHighlightingUpdater, ISemanticHighlightingRequestor {
 
 	private IHighlightedPositionFactory positionFactory;
-	private Map<String, HighlightingStyle> highlightingStyles = new HashMap<String, HighlightingStyle>();
+	private Map<String, HighlightingStyle> highlightingStyles = new HashMap<>();
 
 	@Override
 	public void initialize(IHighlightedPositionFactory factory,
@@ -48,15 +48,15 @@ public abstract class AbstractSemanticHighlighter implements
 		this.highlightingStyles.clear();
 		if (styles != null) {
 			for (HighlightingStyle style : styles) {
-				this.highlightingStyles.put(style.getSemaHighlighting()
-						.getPreferenceKey(), style);
+				this.highlightingStyles.put(
+						style.getSemaHighlighting().getPreferenceKey(), style);
 			}
 		}
 	}
 
-	private final List<HighlightedPosition> newPositions = new ArrayList<HighlightedPosition>();
+	private final List<HighlightedPosition> newPositions = new ArrayList<>();
 	private int oldPositionCount = 0;
-	private final List<HighlightedPosition> oldPositions = new ArrayList<HighlightedPosition>();
+	private final List<HighlightedPosition> oldPositions = new ArrayList<>();
 
 	@Override
 	public UpdateResult reconcile(IModuleSource code,
@@ -70,10 +70,10 @@ public abstract class AbstractSemanticHighlighter implements
 				checkNewPositionOrdering();
 				final HighlightedPosition[] removed = getRemovedPositions();
 				if (DEBUG) {
-					System.out
-							.println("Add:" + newPositions.size() + " " + newPositions); //$NON-NLS-1$ //$NON-NLS-2$
-					System.out
-							.println("Remove:" + removed.length + " " + Arrays.asList(removed)); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out.println(
+							"Add:" + newPositions.size() + " " + newPositions); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out.println("Remove:" + removed.length + " " //$NON-NLS-1$ //$NON-NLS-2$
+							+ Arrays.asList(removed));
 				}
 				return new UpdateResult(getAddedPositions(), removed);
 			}
@@ -119,8 +119,8 @@ public abstract class AbstractSemanticHighlighter implements
 				final HighlightedPosition p = newPositions.get(i);
 				if (p.isEqual(start, len, hl)) {
 					if (DEBUG) {
-						System.err
-								.println("WARN: duplicate in new positions [" + start + "+" + len + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						System.err.println("WARN: duplicate in new positions [" //$NON-NLS-1$
+								+ start + "+" + len + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					return;
 				}
@@ -159,14 +159,14 @@ public abstract class AbstractSemanticHighlighter implements
 	protected void checkNewPositionOrdering() {
 		if (newPositions.isEmpty())
 			return;
-		Collections.sort(newPositions, (p1, p2) -> p1.getOffset() - p2.getOffset());
+		Collections.sort(newPositions,
+				(p1, p2) -> p1.getOffset() - p2.getOffset());
 		Position previous = null;
 		for (Iterator<HighlightedPosition> i = newPositions.iterator(); i
 				.hasNext();) {
 			final Position current = i.next();
-			if (previous != null
-					&& previous.getOffset() + previous.getLength() > current
-							.getOffset()) {
+			if (previous != null && previous.getOffset()
+					+ previous.getLength() > current.getOffset()) {
 				if (DEBUG) {
 					System.err.println("ERROR: unordered position " + current); //$NON-NLS-1$
 				}

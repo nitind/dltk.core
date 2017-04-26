@@ -28,50 +28,54 @@ import org.eclipse.swt.widgets.Display;
 /**
  * Table content provider for the hierarchical layout in the packages view.
  * <p>
- * XXX: The standard Java browsing part content provider needs and calls
- * the browsing part/view. This class currently doesn't need to do so
- * but might be required to later.
+ * XXX: The standard Java browsing part content provider needs and calls the
+ * browsing part/view. This class currently doesn't need to do so but might be
+ * required to later.
  * </p>
  */
-class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements IStructuredContentProvider {
+class PackagesViewFlatContentProvider extends LogicalPackagesProvider
+		implements IStructuredContentProvider {
 	PackagesViewFlatContentProvider(StructuredViewer viewer) {
 		super(viewer);
 	}
 
 	/*
-	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
+	 * @see
+	 * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
+	 * Object)
 	 */
 	public Object[] getChildren(Object parentElement) {
 
-		if(parentElement instanceof IModelElement){
-			IModelElement element= (IModelElement) parentElement;
+		if (parentElement instanceof IModelElement) {
+			IModelElement element = (IModelElement) parentElement;
 
-			int type= element.getElementType();
+			int type = element.getElementType();
 
 			try {
 				switch (type) {
-					case IModelElement.SCRIPT_PROJECT :
-						IScriptProject project= (IScriptProject) element;
-						IScriptFolder[] children= getPackageFragments(project.getScriptFolders());
-						if(isInCompoundState()) {
-							fMapToLogicalPackage.clear();
-							fMapToPackageFragments.clear();
-							return combineSamePackagesIntoLogialPackages(children);
-						} else
-							return children;
-
-					case IModelElement.PROJECT_FRAGMENT :
+				case IModelElement.SCRIPT_PROJECT:
+					IScriptProject project = (IScriptProject) element;
+					IScriptFolder[] children = getPackageFragments(
+							project.getScriptFolders());
+					if (isInCompoundState()) {
 						fMapToLogicalPackage.clear();
 						fMapToPackageFragments.clear();
-						IProjectFragment root= (IProjectFragment) element;
-						return root.getChildren();
+						return combineSamePackagesIntoLogialPackages(children);
+					} else
+						return children;
 
-					case IModelElement.SCRIPT_FOLDER :
-						//no children in flat view
-						break;
+				case IModelElement.PROJECT_FRAGMENT:
+					fMapToLogicalPackage.clear();
+					fMapToPackageFragments.clear();
+					IProjectFragment root = (IProjectFragment) element;
+					return root.getChildren();
 
-					default :
-						//do nothing, empty array returned
+				case IModelElement.SCRIPT_FOLDER:
+					// no children in flat view
+					break;
+
+				default:
+					// do nothing, empty array returned
 				}
 			} catch (ModelException e) {
 				return NO_CHILDREN;
@@ -84,14 +88,15 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements
 	/*
 	 * Weeds out packageFragments from external jars
 	 */
-	private IScriptFolder[] getPackageFragments(IScriptFolder[] iPackageFragments) {
-		List<IScriptFolder> list = new ArrayList<IScriptFolder>();
-		for (int i= 0; i < iPackageFragments.length; i++) {
-			IScriptFolder fragment= iPackageFragments[i];
-			IModelElement el= fragment.getParent();
+	private IScriptFolder[] getPackageFragments(
+			IScriptFolder[] iPackageFragments) {
+		List<IScriptFolder> list = new ArrayList<>();
+		for (int i = 0; i < iPackageFragments.length; i++) {
+			IScriptFolder fragment = iPackageFragments[i];
+			IModelElement el = fragment.getParent();
 			if (el instanceof IProjectFragment) {
-				IProjectFragment root= (IProjectFragment) el;
-				if(root.isArchive() && root.isExternal())
+				IProjectFragment root = (IProjectFragment) el;
+				if (root.isArchive() && root.isExternal())
 					continue;
 			}
 			list.add(fragment);
@@ -99,24 +104,23 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements
 		return list.toArray(new IScriptFolder[list.size()]);
 	}
 
-	/*
-	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-	 */
 	@Override
 	public Object[] getElements(Object inputElement) {
 		return getChildren(inputElement);
 	}
 
 	@Override
-	protected void processDelta(IModelElementDelta delta) throws ModelException {
+	protected void processDelta(IModelElementDelta delta)
+			throws ModelException {
 
-		int kind= delta.getKind();
-		final IModelElement element= delta.getElement();
+		int kind = delta.getKind();
+		final IModelElement element = delta.getElement();
 
 		if (isClassPathChange(delta)) {
-			Object input= fViewer.getInput();
+			Object input = fViewer.getInput();
 			if (input != null) {
-				if (fInputIsProject && input.equals(element.getScriptProject())) {
+				if (fInputIsProject
+						&& input.equals(element.getScriptProject())) {
 					postRefresh(input);
 					return;
 				} else if (!fInputIsProject && input.equals(element)) {
@@ -130,15 +134,15 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements
 		}
 
 		if (kind == IModelElementDelta.REMOVED) {
-			Object input= fViewer.getInput();
+			Object input = fViewer.getInput();
 			if (input != null && input.equals(element)) {
-					postRemove(input);
-					return;
+				postRemove(input);
+				return;
 			}
 		}
 
 		if (element instanceof IScriptFolder) {
-			final IScriptFolder frag= (IScriptFolder) element;
+			final IScriptFolder frag = (IScriptFolder) element;
 
 			if (kind == IModelElementDelta.REMOVED) {
 				removeElement(frag);
@@ -147,51 +151,56 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements
 				addElement(frag);
 
 			} else if (kind == IModelElementDelta.CHANGED) {
-				//just refresh
-				Object toBeRefreshed= element;
+				// just refresh
+				Object toBeRefreshed = element;
 
-				IScriptFolder pkgFragment= (IScriptFolder) element;
-				LogicalPackage logicalPkg= findLogicalPackage(pkgFragment);
-				//deal with packages that have been filtered and are now visible
+				IScriptFolder pkgFragment = (IScriptFolder) element;
+				LogicalPackage logicalPkg = findLogicalPackage(pkgFragment);
+				// deal with packages that have been filtered and are now
+				// visible
 				if (logicalPkg != null)
-					toBeRefreshed= findElementToRefresh(logicalPkg);
+					toBeRefreshed = findElementToRefresh(logicalPkg);
 				else
-					toBeRefreshed= findElementToRefresh(pkgFragment);
+					toBeRefreshed = findElementToRefresh(pkgFragment);
 
 				postRefresh(toBeRefreshed);
 			}
-			//in this view there will be no children of PackageFragment to refresh
+			// in this view there will be no children of PackageFragment to
+			// refresh
 			return;
 		}
 		processAffectedChildren(delta);
 	}
 
-	//test to see if element to be refreshed is being filtered out
-	//and if so refresh the viewers input element (JavaProject or PackageFragmentRoot)
+	// test to see if element to be refreshed is being filtered out
+	// and if so refresh the viewers input element (JavaProject or
+	// PackageFragmentRoot)
 	private Object findElementToRefresh(IScriptFolder fragment) {
 		if (fViewer.testFindItem(fragment) == null) {
-			if(fInputIsProject)
+			if (fInputIsProject)
 				return fragment.getScriptProject();
-			else return fragment.getParent();
+			else
+				return fragment.getParent();
 		}
 		return fragment;
 	}
 
-	//test to see if element to be refreshed is being filtered out
-	//and if so refresh the viewers input element (JavaProject or PackageFragmentRoot)
+	// test to see if element to be refreshed is being filtered out
+	// and if so refresh the viewers input element (JavaProject or
+	// PackageFragmentRoot)
 	private Object findElementToRefresh(LogicalPackage logicalPackage) {
 		if (fViewer.testFindItem(logicalPackage) == null) {
-			IScriptFolder fragment= logicalPackage.getScriptFolders()[0];
+			IScriptFolder fragment = logicalPackage.getScriptFolders()[0];
 			return fragment.getScriptProject();
 		}
 		return logicalPackage;
 	}
 
-
-	private void processAffectedChildren(IModelElementDelta delta) throws ModelException {
-		IModelElementDelta[] children= delta.getAffectedChildren();
-		for (int i= 0; i < children.length; i++) {
-			IModelElementDelta elementDelta= children[i];
+	private void processAffectedChildren(IModelElementDelta delta)
+			throws ModelException {
+		IModelElementDelta[] children = delta.getAffectedChildren();
+		for (int i = 0; i < children.length; i++) {
+			IModelElementDelta elementDelta = children[i];
 			processDelta(elementDelta);
 		}
 	}
@@ -205,7 +214,6 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements
 		});
 	}
 
-
 	private void postRemove(final Object object) {
 		postRunnable(() -> {
 			Control ctrl = fViewer.getControl();
@@ -216,43 +224,44 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements
 	}
 
 	private void postRunnable(final Runnable r) {
-		Control ctrl= fViewer.getControl();
+		Control ctrl = fViewer.getControl();
 		if (ctrl != null && !ctrl.isDisposed()) {
-		//	fBrowsingPart.setProcessSelectionEvents(false);
+			// fBrowsingPart.setProcessSelectionEvents(false);
 			try {
-				Display currentDisplay= Display.getCurrent();
-				if (currentDisplay != null && currentDisplay.equals(ctrl.getDisplay()))
+				Display currentDisplay = Display.getCurrent();
+				if (currentDisplay != null
+						&& currentDisplay.equals(ctrl.getDisplay()))
 					ctrl.getDisplay().syncExec(r);
 				else
 					ctrl.getDisplay().asyncExec(r);
 			} finally {
-		//		fBrowsingPart.setProcessSelectionEvents(true);
+				// fBrowsingPart.setProcessSelectionEvents(true);
 			}
 		}
 	}
 
 	private void removeElement(IScriptFolder frag) {
-		String key= getKey(frag);
-		LogicalPackage lp= (LogicalPackage)fMapToLogicalPackage.get(key);
+		String key = getKey(frag);
+		LogicalPackage lp = (LogicalPackage) fMapToLogicalPackage.get(key);
 
-		if(lp != null){
+		if (lp != null) {
 			lp.remove(frag);
-			//if you need to change the LogicalPackage to a PackageFragment
-			if(lp.getScriptFolders().length == 1){
-				IScriptFolder fragment= lp.getScriptFolders()[0];
+			// if you need to change the LogicalPackage to a PackageFragment
+			if (lp.getScriptFolders().length == 1) {
+				IScriptFolder fragment = lp.getScriptFolders()[0];
 				fMapToLogicalPackage.remove(key);
-				fMapToPackageFragments.put(key,fragment);
+				fMapToPackageFragments.put(key, fragment);
 
-				//@Improve: Should I replace this with a refresh of the parent?
+				// @Improve: Should I replace this with a refresh of the parent?
 				postRemove(lp);
 				postAdd(fragment);
-			} return;
+			}
+			return;
 		} else {
 			fMapToPackageFragments.remove(key);
 			postRemove(frag);
 		}
 	}
-
 
 	private void postRefresh(final Object element) {
 		postRunnable(() -> {
@@ -264,23 +273,24 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements
 	}
 
 	private void addElement(IScriptFolder frag) {
-		String key= getKey(frag);
-		LogicalPackage lp= (LogicalPackage)fMapToLogicalPackage.get(key);
+		String key = getKey(frag);
+		LogicalPackage lp = (LogicalPackage) fMapToLogicalPackage.get(key);
 
-		if(lp != null && lp.belongs(frag)){
+		if (lp != null && lp.belongs(frag)) {
 			lp.add(frag);
 			return;
 		}
 
-		IScriptFolder fragment= (IScriptFolder)fMapToPackageFragments.get(key);
-		if(fragment != null){
-			//must create a new LogicalPackage
-			if(!fragment.equals(frag)){
-				lp= new LogicalPackage(fragment);
+		IScriptFolder fragment = (IScriptFolder) fMapToPackageFragments
+				.get(key);
+		if (fragment != null) {
+			// must create a new LogicalPackage
+			if (!fragment.equals(frag)) {
+				lp = new LogicalPackage(fragment);
 				lp.add(frag);
 				fMapToLogicalPackage.put(key, lp);
 
-				//@Improve: should I replace this with a refresh?
+				// @Improve: should I replace this with a refresh?
 				postRemove(fragment);
 				postAdd(lp);
 

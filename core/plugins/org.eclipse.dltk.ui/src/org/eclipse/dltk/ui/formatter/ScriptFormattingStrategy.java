@@ -64,7 +64,7 @@ public class ScriptFormattingStrategy extends ContextBasedFormattingStrategy {
 	}
 
 	/** Jobs to be formatted by this strategy */
-	private final LinkedList<FormatJob> fJobs = new LinkedList<FormatJob>();
+	private final LinkedList<FormatJob> fJobs = new LinkedList<>();
 
 	/**
 	 * Creates a new java formatting strategy.

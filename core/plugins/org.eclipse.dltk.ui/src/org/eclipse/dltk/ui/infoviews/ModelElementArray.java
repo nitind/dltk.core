@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -67,7 +67,7 @@ public class ModelElementArray {
 	/**
 	 * Checks that all elements are {@link IModelElement#METHOD} and have the
 	 * same name.
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean isSingleMethodName() {
@@ -98,12 +98,12 @@ public class ModelElementArray {
 	 */
 	public String getContentDescription() {
 		if (isSingleMethodName()) {
-			return NLS
-					.bind(InfoViewMessages.ContentDescription_multipleMethodsWithSameName,
-							((IModelElement) elements[0]).getElementName());
+			return NLS.bind(
+					InfoViewMessages.ContentDescription_multipleMethodsWithSameName,
+					((IModelElement) elements[0]).getElementName());
 		}
 		final ScriptElementLabels labels = ScriptElementLabels.getDefault();
-		final Set<String> names = new HashSet<String>();
+		final Set<String> names = new HashSet<>();
 		for (int i = 0; i < elements.length; ++i) {
 			if (elements[i] instanceof IModelElement) {
 				names.add(labels.getElementLabel((IModelElement) elements[i],
@@ -115,8 +115,9 @@ public class ModelElementArray {
 		return sortAndJoin(names, ", ");//$NON-NLS-1$
 	}
 
-	private String sortAndJoin(final Set<String> names, final String separator) {
-		final List<String> nameList = new ArrayList<String>(names);
+	private String sortAndJoin(final Set<String> names,
+			final String separator) {
+		final List<String> nameList = new ArrayList<>(names);
 		Collections.sort(nameList);
 		return join(nameList, separator);
 	}
@@ -138,7 +139,7 @@ public class ModelElementArray {
 	 */
 	public String getTitleTooltip() {
 		final ScriptElementLabels labels = ScriptElementLabels.getDefault();
-		final Set<String> names = new HashSet<String>();
+		final Set<String> names = new HashSet<>();
 		for (int i = 0; i < elements.length; ++i) {
 			if (elements[i] instanceof IModelElement) {
 				names.add(labels.getElementLabel((IModelElement) elements[i],
@@ -155,12 +156,12 @@ public class ModelElementArray {
 	 * Joins the elements of the provided <code>Collection</code> into a single
 	 * String containing the provided elements.
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * No delimiter is added before or after the list. A <code>null</code>
 	 * separator is the same as an empty String ("").
 	 * </p>
-	 * 
+	 *
 	 * @param collection
 	 *            the <code>Collection</code> of values to join together, may be
 	 *            null

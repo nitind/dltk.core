@@ -41,7 +41,7 @@ public class ScriptCorrectionContext implements IScriptCorrectionContext {
 	@Override
 	public void addProposal(ICompletionProposal proposal) {
 		if (proposals == null) {
-			proposals = new ArrayList<ICompletionProposal>();
+			proposals = new ArrayList<>();
 		}
 		proposals.add(proposal);
 	}
@@ -75,8 +75,8 @@ public class ScriptCorrectionContext implements IScriptCorrectionContext {
 	 * @param module
 	 */
 	public ScriptCorrectionContext(
-			IQuickAssistInvocationContext invocationContext,
-			ITextEditor editor, ISourceModule module) {
+			IQuickAssistInvocationContext invocationContext, ITextEditor editor,
+			ISourceModule module) {
 		this.invocationContext = invocationContext;
 		this.editor = editor;
 		this.module = module;
@@ -117,7 +117,7 @@ public class ScriptCorrectionContext implements IScriptCorrectionContext {
 	public void setAttribute(String attributeName, Object value) {
 		if (value != null) {
 			if (attributes == null) {
-				attributes = new HashMap<String, Object>();
+				attributes = new HashMap<>();
 			}
 			attributes.put(attributeName, value);
 		} else {

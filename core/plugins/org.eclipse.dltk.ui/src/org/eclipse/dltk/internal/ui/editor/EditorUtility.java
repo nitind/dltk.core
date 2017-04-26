@@ -472,8 +472,8 @@ public class EditorUtility {
 	}
 
 	public static IEditorPart[] getDirtyEditors() {
-		Set<IEditorInput> inputs = new HashSet<IEditorInput>();
-		List<IEditorPart> result = new ArrayList<IEditorPart>(0);
+		Set<IEditorInput> inputs = new HashSet<>();
+		List<IEditorPart> result = new ArrayList<>(0);
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 		for (int i = 0; i < windows.length; i++) {
@@ -685,7 +685,7 @@ public class EditorUtility {
 					// r1.rightStart()<r2.rightStart() ->
 					// r1.rightEnd()<r2.rightStart
 
-					ArrayList<IRegion> regions = new ArrayList<IRegion>();
+					ArrayList<IRegion> regions = new ArrayList<>();
 					for (int i = 0; i < differences.length; i++) {
 						RangeDifference curr = differences[i];
 						if (curr.kind() == RangeDifference.CHANGE

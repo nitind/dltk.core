@@ -71,7 +71,7 @@ public class BPUserLibraryElement {
 	public BPUserLibraryElement(String name, IBuildpathContainer container,
 			IScriptProject project, Map<String, String> attributes) {
 		fName = name;
-		fChildren = new ArrayList<BPListElement>();
+		fChildren = new ArrayList<>();
 		if (container != null) {
 			IBuildpathEntry[] entries = container.getBuildpathEntries();
 			BPListElement[] res = new BPListElement[entries.length];
@@ -85,12 +85,13 @@ public class BPUserLibraryElement {
 				// ScriptUI.getLibraryJavadocLocation(curr.getPath()));
 				fChildren.add(elem);
 			}
-			fIsSystemLibrary = container.getKind() == IBuildpathContainer.K_SYSTEM;
+			fIsSystemLibrary = container
+					.getKind() == IBuildpathContainer.K_SYSTEM;
 		} else {
 			fIsSystemLibrary = false;
 		}
 		if (attributes != null)
-			fAttributes = new HashMap<String, String>(attributes);
+			fAttributes = new HashMap<>(attributes);
 	}
 
 	public BPUserLibraryElement(String name, boolean isSystemLibrary,
@@ -101,7 +102,7 @@ public class BPUserLibraryElement {
 	public BPUserLibraryElement(String name, boolean isSystemLibrary,
 			BPListElement[] children, Map<String, String> attributes) {
 		fName = name;
-		fChildren = new ArrayList<BPListElement>();
+		fChildren = new ArrayList<>();
 		if (children != null) {
 			for (int i = 0; i < children.length; i++) {
 				BPListElement child = children[i];
@@ -111,12 +112,11 @@ public class BPUserLibraryElement {
 		}
 		fIsSystemLibrary = isSystemLibrary;
 		if (attributes != null)
-			fAttributes = new HashMap<String, String>(attributes);
+			fAttributes = new HashMap<>(attributes);
 	}
 
 	public BPListElement[] getChildren() {
-		return fChildren.toArray(new BPListElement[fChildren
-				.size()]);
+		return fChildren.toArray(new BPListElement[fChildren.size()]);
 	}
 
 	public String getName() {
@@ -153,7 +153,7 @@ public class BPUserLibraryElement {
 	private List<BPListElement> moveUp(List<BPListElement> elements,
 			List<BPListElement> move) {
 		int nElements = elements.size();
-		List<BPListElement> res = new ArrayList<BPListElement>(nElements);
+		List<BPListElement> res = new ArrayList<>(nElements);
 		BPListElement floating = null;
 		for (int i = 0; i < nElements; i++) {
 			BPListElement curr = elements.get(i);
@@ -218,8 +218,8 @@ public class BPUserLibraryElement {
 
 	public boolean hasChanges(IBuildpathContainer oldContainer,
 			IScriptProject project) {
-		if (oldContainer == null
-				|| (oldContainer.getKind() == IBuildpathContainer.K_SYSTEM) != fIsSystemLibrary) {
+		if (oldContainer == null || (oldContainer
+				.getKind() == IBuildpathContainer.K_SYSTEM) != fIsSystemLibrary) {
 			return true;
 		}
 		IBuildpathEntry[] oldEntries = oldContainer.getBuildpathEntries();

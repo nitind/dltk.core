@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.
+ * Copyright (c) 2009, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -66,7 +66,7 @@ public class ProjectMetadataBackup {
 
 	}
 
-	private final Map<BackupKey, File> entries = new HashMap<BackupKey, File>();
+	private final Map<BackupKey, File> entries = new HashMap<>();
 
 	/**
 	 * @param projectLocation
@@ -124,19 +124,17 @@ public class ProjectMetadataBackup {
 						monitor.worked(2);
 						continue;
 					}
-					final IFileStore projectFile = EFS.getStore(
-							entry.getKey().location).getChild(
-							entry.getKey().filename);
-					projectFile.delete(EFS.NONE, new SubProgressMonitor(
-							monitor, 1));
-					copyFile(backup, projectFile, new SubProgressMonitor(
-							monitor, 1));
+					final IFileStore projectFile = EFS
+							.getStore(entry.getKey().location)
+							.getChild(entry.getKey().filename);
+					projectFile.delete(EFS.NONE,
+							new SubProgressMonitor(monitor, 1));
+					copyFile(backup, projectFile,
+							new SubProgressMonitor(monitor, 1));
 					backup.delete();
 				} catch (IOException e) {
-					IStatus status = new Status(
-							IStatus.ERROR,
-							DLTKUIPlugin.PLUGIN_ID,
-							IStatus.ERROR,
+					IStatus status = new Status(IStatus.ERROR,
+							DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
 							NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_project,
 							e);
 					throw new CoreException(status);
@@ -154,20 +152,18 @@ public class ProjectMetadataBackup {
 			copyFile(source, bak);
 			return bak;
 		} catch (IOException e) {
-			IStatus status = new Status(
+			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID,
 					IStatus.ERROR,
-					DLTKUIPlugin.PLUGIN_ID,
-					IStatus.ERROR,
-					Messages
-							.format(
-									NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup,
-									name), e);
+					Messages.format(
+							NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup,
+							name),
+					e);
 			throw new CoreException(status);
 		}
 	}
 
-	private void copyFile(IFileStore source, File target) throws IOException,
-			CoreException {
+	private void copyFile(IFileStore source, File target)
+			throws IOException, CoreException {
 		InputStream is = source.openInputStream(EFS.NONE, null);
 		FileOutputStream os = new FileOutputStream(target);
 		copyFile(is, os);

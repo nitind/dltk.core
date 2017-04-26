@@ -35,7 +35,8 @@ public class ProjectTemplateStore {
 	private final TemplateStore fInstanceStore;
 	private final TemplateStore fProjectStore;
 
-	public ProjectTemplateStore(ITemplateAccess templateAccess, IProject project) {
+	public ProjectTemplateStore(ITemplateAccess templateAccess,
+			IProject project) {
 		this.fTemplateAccess = templateAccess;
 		this.fInstanceStore = templateAccess.getTemplateStore();
 		if (project == null
@@ -89,9 +90,9 @@ public class ProjectTemplateStore {
 			return false;
 		}
 		final ITemplateAccessInternal internal = (ITemplateAccessInternal) fTemplateAccess;
-		final String pref = new ProjectScope(project).getNode(
-				internal.getPreferenceQualifier()).get(
-				internal.getPreferenceKey(), null);
+		final String pref = new ProjectScope(project)
+				.getNode(internal.getPreferenceQualifier())
+				.get(internal.getPreferenceKey(), null);
 		if (pref != null && pref.trim().length() > 0) {
 			Reader input = new StringReader(pref);
 			TemplateReaderWriter reader = new TemplateReaderWriter();
@@ -128,7 +129,7 @@ public class ProjectTemplateStore {
 		if (fProjectStore != null) {
 			fProjectStore.load();
 
-			Set<String> datas = new HashSet<String>();
+			Set<String> datas = new HashSet<>();
 			TemplatePersistenceData[] data = fProjectStore
 					.getTemplateData(false);
 			for (int i = 0; i < data.length; i++) {

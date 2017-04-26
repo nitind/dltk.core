@@ -41,7 +41,7 @@ public class FormatterControlManager
 	public FormatterControlManager(IPreferenceDelegate<String> delegate,
 			IStatusChangeListener listener) {
 		this.delegate = delegate;
-		this.bindingManager = new ControlBindingManager<String>(delegate, this);
+		this.bindingManager = new ControlBindingManager<>(delegate, this);
 		this.listener = listener;
 	}
 
@@ -92,7 +92,7 @@ public class FormatterControlManager
 		return text;
 	}
 
-	private final Map<Control, Label> labelAssociations = new HashMap<Control, Label>();
+	private final Map<Control, Label> labelAssociations = new HashMap<>();
 
 	/**
 	 * @param control

@@ -87,8 +87,8 @@ import org.eclipse.jface.viewers.Viewer;
  * out.
  * </p>
  */
-public class StandardModelElementContentProvider2 implements
-		ITreeContentProvider, IWorkingCopyProvider {
+public class StandardModelElementContentProvider2
+		implements ITreeContentProvider, IWorkingCopyProvider {
 
 	protected static final Object[] NO_CHILDREN = new Object[0];
 	protected boolean fProvideMembers;
@@ -261,7 +261,7 @@ public class StandardModelElementContentProvider2 implements
 			throws ModelException {
 		IModelElement[] fragments = root.getChildren();
 
-		List<IModelElement> newFragments = new ArrayList<IModelElement>();
+		List<IModelElement> newFragments = new ArrayList<>();
 		for (int i = 0; i < fragments.length; ++i) {
 			if (fragments[i] instanceof IScriptFolder) {
 				IScriptFolder scriptFolder = ((IScriptFolder) fragments[i]);
@@ -344,7 +344,8 @@ public class StandardModelElementContentProvider2 implements
 	 * Note: This method is for internal use only. Clients should not call this
 	 * method.
 	 */
-	protected Object[] getScriptProjects(IScriptModel jm) throws ModelException {
+	protected Object[] getScriptProjects(IScriptModel jm)
+			throws ModelException {
 		return jm.getScriptProjects();
 	}
 
@@ -403,7 +404,8 @@ public class StandardModelElementContentProvider2 implements
 			// We therefore exclude Java elements from the list
 			// of non-Java resources.
 			if (isFolderOnClasspath) {
-				if (javaProject.findProjectFragment(member.getFullPath()) == null) {
+				if (javaProject
+						.findProjectFragment(member.getFullPath()) == null) {
 					nonJavaResources.add(member);
 				}
 			} else if (!javaProject.isOnBuildpath(member)) {
@@ -420,13 +422,15 @@ public class StandardModelElementContentProvider2 implements
 	protected boolean isBuildPathChange(IModelElementDelta delta) {
 
 		// need to test the flags only for package fragment roots
-		if (delta.getElement().getElementType() != IModelElement.PROJECT_FRAGMENT)
+		if (delta.getElement()
+				.getElementType() != IModelElement.PROJECT_FRAGMENT)
 			return false;
 
 		int flags = delta.getFlags();
 		return (delta.getKind() == IModelElementDelta.CHANGED
 				&& ((flags & IModelElementDelta.F_ADDED_TO_BUILDPATH) != 0)
-				|| ((flags & IModelElementDelta.F_REMOVED_FROM_BUILDPATH) != 0) || ((flags & IModelElementDelta.F_REORDER) != 0));
+				|| ((flags & IModelElementDelta.F_REMOVED_FROM_BUILDPATH) != 0)
+				|| ((flags & IModelElementDelta.F_REORDER) != 0));
 	}
 
 	/**
@@ -448,8 +452,8 @@ public class StandardModelElementContentProvider2 implements
 		if (element instanceof IScriptFolder) {
 			IScriptFolder fragment = (IScriptFolder) element;
 			if (fragment.exists()
-					&& !(fragment.hasChildren() || (fForeignResources && fragment
-							.getForeignResources().length > 0))
+					&& !(fragment.hasChildren() || (fForeignResources
+							&& fragment.getForeignResources().length > 0))
 					&& fragment.hasSubfolders())
 				return true;
 		}

@@ -56,8 +56,8 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
  * Configures preferences.
  *
  */
-public abstract class AbstractConfigurationBlock implements
-		IPreferenceConfigurationBlock {
+public abstract class AbstractConfigurationBlock
+		implements IPreferenceConfigurationBlock {
 
 	protected static class FilePathValidator implements IInputValidator {
 		@Override
@@ -97,7 +97,7 @@ public abstract class AbstractConfigurationBlock implements
 		/** The preference setting for keeping no section open. */
 		private static final String __NONE = "__none"; //$NON-NLS-1$
 
-		private Set<ExpandableComposite> fSections = new HashSet<ExpandableComposite>();
+		private Set<ExpandableComposite> fSections = new HashSet<>();
 
 		private boolean fIsBeingManaged = false;
 
@@ -129,10 +129,12 @@ public abstract class AbstractConfigurationBlock implements
 							&& fDialogSettingsStore != null)
 						fDialogSettingsStore.setValue(fLastOpenKey, __NONE);
 				}
-				ExpandableComposite exComp = getParentExpandableComposite(source);
+				ExpandableComposite exComp = getParentExpandableComposite(
+						source);
 				if (exComp != null)
 					exComp.layout(true, true);
-				ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(source);
+				ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(
+						source);
 				if (parentScrolledComposite != null) {
 					parentScrolledComposite.reflow(true);
 				}
@@ -217,7 +219,8 @@ public abstract class AbstractConfigurationBlock implements
 		public Composite createSection(String label) {
 			Assert.isNotNull(fBody);
 			final ExpandableComposite excomposite = new ExpandableComposite(
-					fBody, SWT.NONE, ExpandableComposite.TWISTIE
+					fBody, SWT.NONE,
+					ExpandableComposite.TWISTIE
 							| ExpandableComposite.CLIENT_INDENT
 							| ExpandableComposite.COMPACT);
 			if (fFirstChild == null)
@@ -252,7 +255,7 @@ public abstract class AbstractConfigurationBlock implements
 
 	private OverlayPreferenceStore fStore;
 
-	private Map<Button, String> fCheckBoxes = new HashMap<Button, String>();
+	private Map<Button, String> fCheckBoxes = new HashMap<>();
 
 	private ArrayList fRadioButtons = new ArrayList();
 
@@ -303,7 +306,7 @@ public abstract class AbstractConfigurationBlock implements
 		}
 	};
 
-	private Map<Text, String> fTextFields = new HashMap<Text, String>();
+	private Map<Text, String> fTextFields = new HashMap<>();
 
 	private ModifyListener fTextFieldListener = e -> {
 		Text text = (Text) e.widget;
@@ -312,7 +315,8 @@ public abstract class AbstractConfigurationBlock implements
 
 	private ArrayList fNumberFields = new ArrayList();
 
-	private ModifyListener fNumberFieldListener = e -> numberFieldChanged((Text) e.widget);
+	private ModifyListener fNumberFieldListener = e -> numberFieldChanged(
+			(Text) e.widget);
 
 	/**
 	 * List of master/slave listeners when there's a dependency.
@@ -369,12 +373,13 @@ public abstract class AbstractConfigurationBlock implements
 	}
 
 	protected void updateSectionStyle(ExpandableComposite excomposite) {
-		excomposite.setFont(JFaceResources.getFontRegistry().getBold(
-				JFaceResources.DIALOG_FONT));
+		excomposite.setFont(JFaceResources.getFontRegistry()
+				.getBold(JFaceResources.DIALOG_FONT));
 	}
 
 	private void makeScrollableCompositeAware(Control control) {
-		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(control);
+		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(
+				control);
 		if (parentScrolledComposite != null) {
 			parentScrolledComposite.adaptChild(control);
 		}
@@ -385,7 +390,8 @@ public abstract class AbstractConfigurationBlock implements
 	}
 
 	protected Composite createComposite(Composite parent, Font font,
-			int columns, int hspan, int fill, int marginwidth, int marginheight) {
+			int columns, int hspan, int fill, int marginwidth,
+			int marginheight) {
 		return SWTFactory.createComposite(parent, font, columns, hspan, fill,
 				marginwidth, marginheight);
 	}
@@ -526,7 +532,8 @@ public abstract class AbstractConfigurationBlock implements
 		createDependency(master, new Control[] { slave });
 	}
 
-	protected void createDependency(final Button master, final Control[] slaves) {
+	protected void createDependency(final Button master,
+			final Control[] slaves) {
 		Assert.isTrue(slaves.length > 0);
 		indent(slaves[0]);
 		SelectionListener listener = new SelectionListener() {
@@ -645,18 +652,19 @@ public abstract class AbstractConfigurationBlock implements
 	private IStatus validatePositiveNumber(String number) {
 		StatusInfo status = new StatusInfo();
 		if (number.length() == 0) {
-			status.setError(PreferencesMessages.DLTKEditorPreferencePage_empty_input);
+			status.setError(
+					PreferencesMessages.DLTKEditorPreferencePage_empty_input);
 		} else {
 			try {
 				int value = Integer.parseInt(number);
 				if (value < 0)
-					status.setError(Messages
-							.format(PreferencesMessages.DLTKEditorPreferencePage_invalid_input,
-									number));
+					status.setError(Messages.format(
+							PreferencesMessages.DLTKEditorPreferencePage_invalid_input,
+							number));
 			} catch (NumberFormatException e) {
-				status.setError(Messages
-						.format(PreferencesMessages.DLTKEditorPreferencePage_invalid_input,
-								number));
+				status.setError(Messages.format(
+						PreferencesMessages.DLTKEditorPreferencePage_invalid_input,
+						number));
 			}
 		}
 		return status;

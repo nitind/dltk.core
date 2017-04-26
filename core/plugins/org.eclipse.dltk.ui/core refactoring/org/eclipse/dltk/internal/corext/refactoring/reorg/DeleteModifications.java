@@ -149,14 +149,14 @@ public class DeleteModifications extends RefactoringModifications {
 	public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
 			RefactoringProcessor owner, String[] natures,
 			SharableParticipants shared) {
-		List<RefactoringParticipant> result = new ArrayList<RefactoringParticipant>();
+		List<RefactoringParticipant> result = new ArrayList<>();
 		for (Iterator iter = fDelete.iterator(); iter.hasNext();) {
 			result.addAll(Arrays.asList(ParticipantManager
 					.loadDeleteParticipants(status, owner, iter.next(),
 							new DeleteArguments(), natures, shared)));
 		}
-		result.addAll(Arrays.asList(getResourceModifications().getParticipants(
-				status, owner, natures, shared)));
+		result.addAll(Arrays.asList(getResourceModifications()
+				.getParticipants(status, owner, natures, shared)));
 		return result.toArray(new RefactoringParticipant[result.size()]);
 	}
 
@@ -223,7 +223,8 @@ public class DeleteModifications extends RefactoringModifications {
 				IResource member = members[m];
 				if (member instanceof IFile) {
 					IFile file = (IFile) member;
-					if ("class".equals(file.getFileExtension()) && file.isDerived()) //$NON-NLS-1$
+					if ("class".equals(file.getFileExtension()) //$NON-NLS-1$
+							&& file.isDerived())
 						continue;
 					IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 							.getLanguageToolkit(pack);
@@ -231,8 +232,8 @@ public class DeleteModifications extends RefactoringModifications {
 						System.err
 								.println("TODO: Additional Check required..."); //$NON-NLS-1$
 					}
-					if (pack.isRootFolder()
-							&& (toolkit == null || (toolkit != null && (!DLTKContentTypeManager
+					if (pack.isRootFolder() && (toolkit == null
+							|| (toolkit != null && (!DLTKContentTypeManager
 									.isValidResourceForContentType(toolkit,
 											file)))))
 						continue;

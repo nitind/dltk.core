@@ -69,8 +69,8 @@ import org.eclipse.swt.graphics.Image;
  *
  *
  */
-public abstract class ScriptCompletionProposalCollector extends
-		CompletionRequestor implements ICompletionRequestorExtension {
+public abstract class ScriptCompletionProposalCollector
+		extends CompletionRequestor implements ICompletionRequestorExtension {
 	/**
 	 * Intermediate attribute of {@link CompletionProposal} used to limit the
 	 * number of displayed method parameters.
@@ -81,7 +81,8 @@ public abstract class ScriptCompletionProposalCollector extends
 			+ "CompletionProposal#ParameterLimit";
 
 	/** Tells whether this class is in debug mode. */
-	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.dltk.ui/debug/ResultCollector")); //$NON-NLS-1$//$NON-NLS-2$
+	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform //$NON-NLS-1$
+			.getDebugOption("org.eclipse.dltk.ui/debug/ResultCollector")); //$NON-NLS-1$
 
 	/** Triggers for method proposals without parameters. Do not modify. */
 	/** Triggers for variables. Do not modify. */
@@ -90,13 +91,13 @@ public abstract class ScriptCompletionProposalCollector extends
 	private final ImageDescriptorRegistry fRegistry = DLTKUIPlugin
 			.getImageDescriptorRegistry();
 
-	private final List<IScriptCompletionProposal> fScriptProposals = new ArrayList<IScriptCompletionProposal>();
+	private final List<IScriptCompletionProposal> fScriptProposals = new ArrayList<>();
 
-	private final List<CompletionProposal> fUnprocessedCompletionProposals = new ArrayList<CompletionProposal>();
+	private final List<CompletionProposal> fUnprocessedCompletionProposals = new ArrayList<>();
 
-	private final List<IScriptCompletionProposal> fKeywords = new ArrayList<IScriptCompletionProposal>();
+	private final List<IScriptCompletionProposal> fKeywords = new ArrayList<>();
 
-	private final Set<String> fSuggestedMethodNames = new HashSet<String>();
+	private final Set<String> fSuggestedMethodNames = new HashSet<>();
 
 	private final ISourceModule fSourceModule;
 
@@ -188,7 +189,8 @@ public abstract class ScriptCompletionProposalCollector extends
 	 */
 	public final ScriptContentAssistInvocationContext getInvocationContext() {
 		if (fInvocationContext == null) {
-			setInvocationContext(createScriptContentAssistInvocationContext(getSourceModule()));
+			setInvocationContext(createScriptContentAssistInvocationContext(
+					getSourceModule()));
 		}
 
 		return fInvocationContext;
@@ -204,8 +206,7 @@ public abstract class ScriptCompletionProposalCollector extends
 	 * {@inheritDoc}
 	 * <p>
 	 * Subclasses may replace, but usually should not need to. Consider
-	 * replacing
-	 * {@linkplain #createScriptCompletionProposal(CompletionProposal)
+	 * replacing {@linkplain #createScriptCompletionProposal(CompletionProposal)
 	 * createScriptCompletionProposal} instead.
 	 * </p>
 	 */
@@ -280,8 +281,8 @@ public abstract class ScriptCompletionProposalCollector extends
 	 */
 	public final IScriptCompletionProposal[] getScriptCompletionProposals() {
 		processUnprocessedProposals();
-		return fScriptProposals
-				.toArray(new IScriptCompletionProposal[fScriptProposals.size()]);
+		return fScriptProposals.toArray(
+				new IScriptCompletionProposal[fScriptProposals.size()]);
 	}
 
 	private void processUnprocessedProposals() {
@@ -302,12 +303,11 @@ public abstract class ScriptCompletionProposalCollector extends
 				// all signature processing method may throw IAEs
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=84657
 				// don't abort, but log and show all the valid proposals
-				DLTKUIPlugin
-						.log(new Status(
-								IStatus.ERROR,
-								DLTKUIPlugin.getPluginId(),
-								IStatus.OK,
-								"Exception when processing proposal for: " + String.valueOf(proposal.getCompletion()), e)); //$NON-NLS-1$
+				DLTKUIPlugin.log(new Status(IStatus.ERROR,
+						DLTKUIPlugin.getPluginId(), IStatus.OK,
+						"Exception when processing proposal for: " //$NON-NLS-1$
+								+ String.valueOf(proposal.getCompletion()),
+						e));
 			}
 
 		}
@@ -318,20 +318,24 @@ public abstract class ScriptCompletionProposalCollector extends
 	}
 
 	protected void processUnprocessedProposal(CompletionProposal proposal) {
-		if (proposal.getKind() == CompletionProposal.POTENTIAL_METHOD_DECLARATION) {
+		if (proposal
+				.getKind() == CompletionProposal.POTENTIAL_METHOD_DECLARATION) {
 			acceptPotentialMethodDeclaration(proposal);
 		} else {
 			if (proposal.getKind() == CompletionProposal.METHOD_REF
 					&& !isContextInformationMode()) {
 				final String[] params = proposal.findParameterNames(null);
 				final Integer requiredParamCount = (Integer) proposal
-						.getAttribute(CompletionProposal.ATTR_REQUIRED_PARAM_COUNT);
+						.getAttribute(
+								CompletionProposal.ATTR_REQUIRED_PARAM_COUNT);
 				if (params != null && requiredParamCount != null
 						&& params.length > requiredParamCount.intValue()) {
-					for (int i = requiredParamCount.intValue(); i <= params.length; ++i) {
+					for (int i = requiredParamCount
+							.intValue(); i <= params.length; ++i) {
 						final CompletionProposal copy = proposal.clone();
 						copy.setAttribute(ATTR_PARAM_LIMIT, i);
-						final IScriptCompletionProposal scriptProposal = createScriptCompletionProposal(copy);
+						final IScriptCompletionProposal scriptProposal = createScriptCompletionProposal(
+								copy);
 						if (scriptProposal != null) {
 							addProposal(scriptProposal, copy);
 						}
@@ -339,7 +343,8 @@ public abstract class ScriptCompletionProposalCollector extends
 					return;
 				}
 			}
-			final IScriptCompletionProposal scriptProposal = createScriptCompletionProposal(proposal);
+			final IScriptCompletionProposal scriptProposal = createScriptCompletionProposal(
+					proposal);
 			if (scriptProposal != null) {
 				addProposal(scriptProposal, proposal);
 			}
@@ -457,8 +462,8 @@ public abstract class ScriptCompletionProposalCollector extends
 			return createPackageProposal(proposal);
 		case CompletionProposal.TYPE_REF:
 			return createTypeProposal(proposal);
-			// case CompletionProposal.JAVADOC_TYPE_REF:
-			// return createJavadocLinkTypeProposal(proposal);
+		// case CompletionProposal.JAVADOC_TYPE_REF:
+		// return createJavadocLinkTypeProposal(proposal);
 		case CompletionProposal.FIELD_REF:
 			// case CompletionProposal.JAVADOC_FIELD_REF:
 			// case CompletionProposal.JAVADOC_VALUE_REF:
@@ -474,18 +479,18 @@ public abstract class ScriptCompletionProposalCollector extends
 		case CompletionProposal.LOCAL_VARIABLE_REF:
 		case CompletionProposal.VARIABLE_DECLARATION:
 			return createLocalVariableProposal(proposal);
-			// case CompletionProposal.ANNOTATION_ATTRIBUTE_REF:
-			// return createAnnotationAttributeReferenceProposal(proposal);
-			// case CompletionProposal.JAVADOC_BLOCK_TAG:
-			// case CompletionProposal.JAVADOC_PARAM_REF:
-			// return createJavadocSimpleProposal(proposal);
-			// case CompletionProposal.JAVADOC_INLINE_TAG:
-			// return createJavadocInlineTagProposal(proposal);
+		// case CompletionProposal.ANNOTATION_ATTRIBUTE_REF:
+		// return createAnnotationAttributeReferenceProposal(proposal);
+		// case CompletionProposal.JAVADOC_BLOCK_TAG:
+		// case CompletionProposal.JAVADOC_PARAM_REF:
+		// return createJavadocSimpleProposal(proposal);
+		// case CompletionProposal.JAVADOC_INLINE_TAG:
+		// return createJavadocInlineTagProposal(proposal);
 		case CompletionProposal.POTENTIAL_METHOD_DECLARATION:
 		default:
 			return new ScriptCompletionProposal(proposal.getCompletion(),
-					proposal.getReplaceStart(), proposal.getReplaceEnd()
-							- proposal.getReplaceStart(), null,
+					proposal.getReplaceStart(),
+					proposal.getReplaceEnd() - proposal.getReplaceStart(), null,
 					proposal.getName(), proposal.getRelevance());
 		}
 	}
@@ -501,7 +506,8 @@ public abstract class ScriptCompletionProposalCollector extends
 	 */
 	protected final IContextInformation createMethodContextInformation(
 			CompletionProposal methodProposal) {
-		Assert.isTrue(methodProposal.getKind() == CompletionProposal.METHOD_REF);
+		Assert.isTrue(
+				methodProposal.getKind() == CompletionProposal.METHOD_REF);
 		return new ProposalContextInformation(methodProposal);
 	}
 
@@ -606,8 +612,8 @@ public abstract class ScriptCompletionProposalCollector extends
 		// int completionEnd = proposal.getReplaceEnd();
 		// int relevance = computeRelevance(proposal);
 		try {
-			IModelElement element = fSourceModule.getElementAt(proposal
-					.getCompletionLocation());
+			IModelElement element = fSourceModule
+					.getElementAt(proposal.getCompletionLocation());
 			if (element != null) {
 				IType type = (IType) element.getAncestor(IModelElement.TYPE);
 				if (type != null) {
@@ -619,8 +625,8 @@ public abstract class ScriptCompletionProposalCollector extends
 					// completionStart, completionEnd - completionStart,
 					// relevance, fSuggestedMethodNames, fJavaProposals);
 					if (DLTKCore.DEBUG) {
-						System.out
-								.println("TODO: Add method completion proposal support here..."); //$NON-NLS-1$
+						System.out.println(
+								"TODO: Add method completion proposal support here..."); //$NON-NLS-1$
 					}
 				}
 			}
@@ -703,8 +709,8 @@ public abstract class ScriptCompletionProposalCollector extends
 		ScriptCompletionProposal scriptProposal;
 
 		CompletionProposalLabelProvider labelProvider = getLabelProvider();
-		Image image = getImage(getLabelProvider().createFieldImageDescriptor(
-				proposal));
+		Image image = getImage(
+				getLabelProvider().createFieldImageDescriptor(proposal));
 
 		if (labelProvider instanceof ICompletionProposalLabelProviderExtension) {
 
@@ -720,8 +726,8 @@ public abstract class ScriptCompletionProposalCollector extends
 		}
 
 		if (fScriptProject != null)
-			scriptProposal.setProposalInfo(new FieldProposalInfo(
-					fScriptProject, proposal));
+			scriptProposal.setProposalInfo(
+					new FieldProposalInfo(fScriptProject, proposal));
 		scriptProposal.setTriggerCharacters(getVarTrigger());
 		return scriptProposal;
 	}
@@ -736,8 +742,8 @@ public abstract class ScriptCompletionProposalCollector extends
 		ScriptCompletionProposal scriptProposal;
 
 		CompletionProposalLabelProvider labelProvider = getLabelProvider();
-		Image image = getImage(getLabelProvider().createImageDescriptor(
-				proposal));
+		Image image = getImage(
+				getLabelProvider().createImageDescriptor(proposal));
 
 		if (labelProvider instanceof ICompletionProposalLabelProviderExtension) {
 
@@ -752,8 +758,8 @@ public abstract class ScriptCompletionProposalCollector extends
 		}
 
 		if (fScriptProject != null) {
-			scriptProposal.setProposalInfo(new ProposalInfo(fScriptProject,
-					proposal.getName()));
+			scriptProposal.setProposalInfo(
+					new ProposalInfo(fScriptProject, proposal.getName()));
 		}
 
 		return scriptProposal;
@@ -769,8 +775,8 @@ public abstract class ScriptCompletionProposalCollector extends
 		ScriptCompletionProposal scriptProposal;
 
 		CompletionProposalLabelProvider labelProvider = getLabelProvider();
-		Image image = getImage(getLabelProvider().createImageDescriptor(
-				proposal));
+		Image image = getImage(
+				getLabelProvider().createImageDescriptor(proposal));
 
 		if (labelProvider instanceof ICompletionProposalLabelProviderExtension) {
 
@@ -822,8 +828,8 @@ public abstract class ScriptCompletionProposalCollector extends
 		ScriptCompletionProposal scriptProposal;
 
 		CompletionProposalLabelProvider labelProvider = getLabelProvider();
-		Image image = getImage(getLabelProvider().createLocalImageDescriptor(
-				proposal));
+		Image image = getImage(
+				getLabelProvider().createLocalImageDescriptor(proposal));
 
 		if (labelProvider instanceof ICompletionProposalLabelProviderExtension) {
 
@@ -832,8 +838,8 @@ public abstract class ScriptCompletionProposalCollector extends
 			scriptProposal = createScriptCompletionProposal(completion, start,
 					length, image, label, relevance, false);
 		} else {
-			String label = getLabelProvider().createSimpleLabelWithType(
-					proposal);
+			String label = getLabelProvider()
+					.createSimpleLabelWithType(proposal);
 			scriptProposal = createScriptCompletionProposal(completion, start,
 					length, image, label, relevance, false);
 		}
@@ -882,8 +888,8 @@ public abstract class ScriptCompletionProposalCollector extends
 
 		if (scriptProposal == null)
 			return null;
-		scriptProposal.setImage(getImage(getLabelProvider()
-				.createMethodImageDescriptor(proposal)));
+		scriptProposal.setImage(getImage(
+				getLabelProvider().createMethodImageDescriptor(proposal)));
 
 		ProposalInfo info = new MethodProposalInfo(fScriptProject, proposal);
 		scriptProposal.setProposalInfo(info);
@@ -895,7 +901,8 @@ public abstract class ScriptCompletionProposalCollector extends
 
 	private IScriptCompletionProposal createMethodReferenceProposal0(
 			CompletionProposal methodProposal) {
-		IScriptCompletionProposal proposal = createMethodReferenceProposal(methodProposal);
+		IScriptCompletionProposal proposal = createMethodReferenceProposal(
+				methodProposal);
 		if (proposal instanceof AbstractScriptCompletionProposal) {
 			adaptLength((AbstractScriptCompletionProposal) proposal,
 					methodProposal);
@@ -927,8 +934,8 @@ public abstract class ScriptCompletionProposalCollector extends
 		ScriptCompletionProposal scriptProposal;
 
 		CompletionProposalLabelProvider labelProvider = getLabelProvider();
-		Image image = getImage(getLabelProvider().createTypeImageDescriptor(
-				proposal));
+		Image image = getImage(
+				getLabelProvider().createTypeImageDescriptor(proposal));
 
 		if (labelProvider instanceof ICompletionProposalLabelProviderExtension) {
 
@@ -941,8 +948,8 @@ public abstract class ScriptCompletionProposalCollector extends
 			scriptProposal = createScriptCompletionProposal(completion, start,
 					length, image, label, relevance, false);
 		}
-		scriptProposal.setProposalInfo(new TypeProposalInfo(fScriptProject,
-				proposal));
+		scriptProposal.setProposalInfo(
+				new TypeProposalInfo(fScriptProject, proposal));
 
 		return scriptProposal;
 	}
@@ -983,7 +990,7 @@ public abstract class ScriptCompletionProposalCollector extends
 			}
 		} else {
 			if (attributes == null) {
-				attributes = new HashMap<Object, Object>();
+				attributes = new HashMap<>();
 			}
 			attributes.put(key, value);
 		}

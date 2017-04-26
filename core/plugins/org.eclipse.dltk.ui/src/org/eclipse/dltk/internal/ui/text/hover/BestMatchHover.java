@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,8 +27,8 @@ import org.eclipse.ui.IEditorPart;
 /**
  * Caution: this implementation is a layer breaker and contains some "shortcuts"
  */
-public class BestMatchHover extends AbstractScriptEditorTextHover implements
-		ITextHoverExtension, IInformationProviderExtension2 {
+public class BestMatchHover extends AbstractScriptEditorTextHover
+		implements ITextHoverExtension, IInformationProviderExtension2 {
 
 	private List<EditorTextHoverDescriptor> fTextHoverSpecifications = null;
 	private List<ITextHover> fInstantiatedTextHovers;
@@ -48,8 +48,8 @@ public class BestMatchHover extends AbstractScriptEditorTextHover implements
 	private void installTextHovers() {
 
 		// initialize lists - indicates that the initialization happened
-		fTextHoverSpecifications = new ArrayList<EditorTextHoverDescriptor>(8);
-		fInstantiatedTextHovers = new ArrayList<ITextHover>(8);
+		fTextHoverSpecifications = new ArrayList<>(8);
+		fInstantiatedTextHovers = new ArrayList<>(8);
 
 		// populate list
 		EditorTextHoverDescriptor[] hoverDescs = DLTKUIPlugin.getDefault()
@@ -57,8 +57,8 @@ public class BestMatchHover extends AbstractScriptEditorTextHover implements
 						getNatureId());
 		for (int i = 0; i < hoverDescs.length; i++) {
 			// ensure that we don't add ourselves to the list
-			if (!PreferenceConstants.ID_BESTMATCH_HOVER.equals(hoverDescs[i]
-					.getId()))
+			if (!PreferenceConstants.ID_BESTMATCH_HOVER
+					.equals(hoverDescs[i].getId()))
 				fTextHoverSpecifications.add(hoverDescs[i]);
 		}
 	}

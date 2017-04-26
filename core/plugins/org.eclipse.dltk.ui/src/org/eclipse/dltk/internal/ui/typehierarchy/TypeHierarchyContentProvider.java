@@ -38,8 +38,8 @@ import org.eclipse.jface.viewers.ViewerFilter;
  * must override 'getTypesInHierarchy'. Java delta processing is also performed
  * by the content provider
  */
-public abstract class TypeHierarchyContentProvider implements
-		ITreeContentProvider, IWorkingCopyProvider {
+public abstract class TypeHierarchyContentProvider
+		implements ITreeContentProvider, IWorkingCopyProvider {
 	protected static final Object[] NO_ELEMENTS = new Object[0];
 
 	protected TypeHierarchyLifeCycle fTypeHierarchy;
@@ -56,11 +56,12 @@ public abstract class TypeHierarchyContentProvider implements
 		fMemberFilter = null;
 		fWorkingSetFilter = null;
 		fMethodOverrideTester = null;
-		fTypeHierarchyLifeCycleListener = (typeHierarchyProvider, changedTypes) -> {
-if (changedTypes == null) {
-		fMethodOverrideTester = null;
-}
-};
+		fTypeHierarchyLifeCycleListener = (typeHierarchyProvider,
+				changedTypes) -> {
+			if (changedTypes == null) {
+				fMethodOverrideTester = null;
+			}
+		};
 		lifecycle.addChangedListener(fTypeHierarchyLifeCycleListener);
 	}
 
@@ -105,8 +106,8 @@ if (changedTypes == null) {
 		}
 	}
 
-	private boolean hasCompatibleMethod(IMethod filterMethod, IType typeToFindIn)
-			throws ModelException {
+	private boolean hasCompatibleMethod(IMethod filterMethod,
+			IType typeToFindIn) throws ModelException {
 		boolean filterMethodOverrides = initializeMethodOverrideTester(
 				filterMethod, typeToFindIn);
 		IMethod[] methods = typeToFindIn.getMethods();
@@ -177,7 +178,7 @@ if (changedTypes == null) {
 	}
 
 	protected void compactTypes(Collection<Object> types) {
-		final Map<String, Object> map = new HashMap<String, Object>();
+		final Map<String, Object> map = new HashMap<>();
 		for (Iterator i = types.iterator(); i.hasNext();) {
 			final Object item = i.next();
 			if (item instanceof IType) {
@@ -190,7 +191,7 @@ if (changedTypes == null) {
 				} else if (value instanceof List) {
 					((List<IType>) value).add(type);
 				} else {
-					List<Object> list = new ArrayList<Object>(4);
+					List<Object> list = new ArrayList<>(4);
 					list.add(value);
 					list.add(type);
 					map.put(qName, list);
@@ -198,15 +199,15 @@ if (changedTypes == null) {
 				i.remove();
 			}
 		}
-		final List<String> qNames = new ArrayList<String>(map.keySet());
+		final List<String> qNames = new ArrayList<>(map.keySet());
 		Collections.sort(qNames);
 		for (final String qName : qNames) {
 			final Object value = map.get(qName);
 			if (value instanceof List) {
 				@SuppressWarnings("unchecked")
 				final List<IType> list = (List<IType>) value;
-				types.add(new CumulativeType(qName, list.toArray(new IType[list
-						.size()])));
+				types.add(new CumulativeType(qName,
+						list.toArray(new IType[list.size()])));
 			} else {
 				types.add(value);
 			}
@@ -309,8 +310,8 @@ if (changedTypes == null) {
 		if (element instanceof IType) {
 			try {
 				IType type = (IType) element;
-				return hasTypeChildren(type)
-						|| (fMemberFilter != null && hasMemberFilterChildren(type));
+				return hasTypeChildren(type) || (fMemberFilter != null
+						&& hasMemberFilterChildren(type));
 			} catch (ModelException e) {
 				return false;
 			}

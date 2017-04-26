@@ -32,8 +32,8 @@ import org.eclipse.swt.widgets.Label;
 /**
  * Configures Script Editor folding preferences.
  */
-public abstract class FoldingConfigurationBlock implements
-		IPreferenceConfigurationBlock {
+public abstract class FoldingConfigurationBlock
+		implements IPreferenceConfigurationBlock {
 
 	private static class ErrorPreferences implements IFoldingPreferenceBlock {
 		private String fMessage;
@@ -104,7 +104,7 @@ public abstract class FoldingConfigurationBlock implements
 
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 
-		ArrayList<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<OverlayPreferenceStore.OverlayKey>();
+		ArrayList<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<>();
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
 				OverlayPreferenceStore.BOOLEAN,
@@ -186,8 +186,8 @@ public abstract class FoldingConfigurationBlock implements
 
 	protected void createCommentsFoldingCheckbox(Composite composite) {
 		fCommentsFoldingCheckbox = new Button(composite, SWT.CHECK);
-		fCommentsFoldingCheckbox
-				.setText(PreferencesMessages.FoldingConfigurationBlock_commentsEnable);
+		fCommentsFoldingCheckbox.setText(
+				PreferencesMessages.FoldingConfigurationBlock_commentsEnable);
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		fCommentsFoldingCheckbox.setLayoutData(gd);
 		fCommentsFoldingCheckbox.addSelectionListener(new SelectionAdapter() {
@@ -269,8 +269,8 @@ public abstract class FoldingConfigurationBlock implements
 		boolean enabled = fStore
 				.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
 		fFoldingCheckbox.setSelection(enabled);
-		boolean commentsEnabled = fStore
-				.getBoolean(PreferenceConstants.EDITOR_COMMENTS_FOLDING_ENABLED);
+		boolean commentsEnabled = fStore.getBoolean(
+				PreferenceConstants.EDITOR_COMMENTS_FOLDING_ENABLED);
 		if (fCommentsFoldingCheckbox != null) {
 			fCommentsFoldingCheckbox.setSelection(commentsEnabled);
 		}

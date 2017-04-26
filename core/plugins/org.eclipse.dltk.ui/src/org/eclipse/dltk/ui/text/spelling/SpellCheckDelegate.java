@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 NumberFour AG
+ * Copyright (c) 2011, 2017 NumberFour AG and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -30,12 +30,12 @@ public class SpellCheckDelegate {
 		}
 	}
 
-	private final Set<String> ignoredContentTypes = new HashSet<String>();
+	private final Set<String> ignoredContentTypes = new HashSet<>();
 
 	/**
 	 * returns the (sub-)regions to be checked in the specified partition or
 	 * <code>null</code> if partition shouldn't be checked at all.
-	 * 
+	 *
 	 * @param partition
 	 * @return
 	 */
@@ -49,7 +49,7 @@ public class SpellCheckDelegate {
 
 	/**
 	 * Returns the specified region as array of the length 1
-	 * 
+	 *
 	 * @param region
 	 * @return
 	 */

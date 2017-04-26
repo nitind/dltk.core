@@ -91,8 +91,8 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 	 */
 	private IPath currentPackagePath = null;
 
-	private class PackageFieldAdapter implements IStringButtonAdapter,
-			IDialogFieldListener {
+	private class PackageFieldAdapter
+			implements IStringButtonAdapter, IDialogFieldListener {
 
 		@Override
 		public void dialogFieldChanged(DialogField field) {
@@ -110,8 +110,8 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 		PackageFieldAdapter packageFieldAdapter = new PackageFieldAdapter();
 		fPackageDialogField = new StringButtonDialogField(packageFieldAdapter);
 		fPackageDialogField.setDialogFieldListener(packageFieldAdapter);
-		fPackageDialogField
-				.setButtonLabel(NewWizardMessages.NewSourceModuleInPackagePage_package_button);
+		fPackageDialogField.setButtonLabel(
+				NewWizardMessages.NewSourceModuleInPackagePage_package_button);
 		fPackageDialogField.setLabelText(getPackageLabel());
 
 		packageStatus = new StatusInfo();
@@ -132,7 +132,8 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 	 * finished with non-exisiting packages in case this is set to false.
 	 * Default value (after constrution) is false.
 	 */
-	public void setAutoCreateMissingPackages(boolean autoCreateMissingPackages) {
+	public void setAutoCreateMissingPackages(
+			boolean autoCreateMissingPackages) {
 		this.autoCreateMissingPackages = autoCreateMissingPackages;
 	}
 
@@ -156,7 +157,7 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 		if (currentPackagePath == null) {
 			fPackageDialogField.setText("");
 		} else {
-			String str = currentPackagePath.toString(); //$NON-NLS-1$
+			String str = currentPackagePath.toString(); // $NON-NLS-1$
 			fPackageDialogField.setText(str);
 		}
 		fPackageDialogField.setEnabled(canBeModified);
@@ -282,14 +283,12 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 				DLTKUIPlugin.log(e);
 			}
 			StatusInfo statusInfo = new StatusInfo();
-			statusInfo
-					.setError(NewWizardMessages.NewSourceModuleInPackagePage_error_ContainerIsNoSourceFolder);
+			statusInfo.setError(
+					NewWizardMessages.NewSourceModuleInPackagePage_error_ContainerIsNoSourceFolder);
 			status = statusInfo;
 		}
 		return status;
 	}
-
-
 
 	private void packageChangeControlPressed() {
 		IScriptFolder packageFolder = choosePackage();
@@ -299,12 +298,12 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 		IProjectFragment projectFragment = (IProjectFragment) packageFolder
 				.getAncestor(IModelElement.PROJECT_FRAGMENT);
 		if (projectFragment != null) {
-			IPath path = packageFolder.getPath().makeRelativeTo(
-					projectFragment.getPath());
+			IPath path = packageFolder.getPath()
+					.makeRelativeTo(projectFragment.getPath());
 			setPackage(path, true);
 		} else {
-			DLTKUIPlugin
-					.logErrorMessage("Illegal state, chosen package is not contained in a project fragment"); //$NON-NLS-N$
+			DLTKUIPlugin.logErrorMessage(
+					"Illegal state, chosen package is not contained in a project fragment"); // $NON-NLS-N$
 		}
 	}
 
@@ -330,9 +329,12 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 				getShell(), labelProvider);
 
 		dialog.setIgnoreCase(false);
-		dialog.setTitle(NewWizardMessages.NewSourceModuleInPackagePage_ChoosePackageDialog_title);
-		dialog.setMessage(NewWizardMessages.NewSourceModuleInPackagePage_ChoosePackageDialog_description);
-		dialog.setEmptyListMessage(NewWizardMessages.NewSourceModuleInPackagePage_ChoosePackageDialog_empty);
+		dialog.setTitle(
+				NewWizardMessages.NewSourceModuleInPackagePage_ChoosePackageDialog_title);
+		dialog.setMessage(
+				NewWizardMessages.NewSourceModuleInPackagePage_ChoosePackageDialog_description);
+		dialog.setEmptyListMessage(
+				NewWizardMessages.NewSourceModuleInPackagePage_ChoosePackageDialog_empty);
 		dialog.setElements(packages);
 		dialog.setHelpAvailable(false);
 
@@ -359,7 +361,7 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 	 * </p>
 	 */
 	protected IScriptFolder[] getAllPackages() {
-		Collection<IScriptFolder> packages = new ArrayList<IScriptFolder>();
+		Collection<IScriptFolder> packages = new ArrayList<>();
 		IProjectFragment sourceFolder = getProjectFragment();
 		if (sourceFolder != null) {
 			try {
@@ -376,7 +378,6 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 		return packages.toArray(new IScriptFolder[packages.size()]);
 	}
 
-
 	private void packageDialogFieldChanged() {
 		packageStatus = packageChanged();
 		// tell all others
@@ -391,7 +392,8 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 
 		String packName = getPackageText();
 		if (packName.length() == 0) {
-			status.setError(NewWizardMessages.NewPackageWizardPage_error_EnterName);
+			status.setError(
+					NewWizardMessages.NewPackageWizardPage_error_EnterName);
 			return status;
 		}
 
@@ -409,11 +411,13 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 					if (location != null) {
 						IFileStore store = EFS.getStore(location);
 						if (store.fetchInfo().exists()) {
-							status.setError(NewWizardMessages.NewPackageWizardPage_error_PackageExistsDifferentCase);
+							status.setError(
+									NewWizardMessages.NewPackageWizardPage_error_PackageExistsDifferentCase);
 						}
 					}
 					if (!status.isError() && !autoCreateMissingPackages) {
-						status.setError(NewWizardMessages.NewSourceModuleInPackagePage_error_PackageDoesNotExist);
+						status.setError(
+								NewWizardMessages.NewSourceModuleInPackagePage_error_PackageDoesNotExist);
 					}
 				}
 			} catch (CoreException e) {
@@ -423,8 +427,6 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 
 		return status;
 	}
-
-
 
 	/**
 	 * Hook method that gets called when a field on this page has changed. For

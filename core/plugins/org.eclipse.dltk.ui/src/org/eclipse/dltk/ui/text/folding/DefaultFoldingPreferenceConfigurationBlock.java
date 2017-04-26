@@ -29,8 +29,8 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  */
-public class DefaultFoldingPreferenceConfigurationBlock extends
-		ImprovedAbstractConfigurationBlock {
+public class DefaultFoldingPreferenceConfigurationBlock
+		extends ImprovedAbstractConfigurationBlock {
 
 	private static int DEFAULT_MIN_LINES = 2;
 
@@ -49,8 +49,8 @@ public class DefaultFoldingPreferenceConfigurationBlock extends
 
 	@Override
 	public Control createControl(Composite parent) {
-		Composite composite = SWTFactory.createComposite(parent, parent
-				.getFont(), 1, 1, GridData.FILL_BOTH);
+		Composite composite = SWTFactory.createComposite(parent,
+				parent.getFont(), 1, 1, GridData.FILL_BOTH);
 
 		Button enableFolding = SWTFactory.createCheckButton(composite,
 				PreferencesMessages.FoldingConfigurationBlock_enable);
@@ -66,14 +66,14 @@ public class DefaultFoldingPreferenceConfigurationBlock extends
 		tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		TabItem comments = new TabItem(tabFolder, SWT.NONE);
-		comments
-				.setText(PreferencesMessages.FoldingConfigurationBlock_docTabName);
+		comments.setText(
+				PreferencesMessages.FoldingConfigurationBlock_docTabName);
 		comments.setControl(documentationBlock.createControl((tabFolder)));
 
 		if (sourceCodeBlock != null) {
 			TabItem blocks = new TabItem(tabFolder, SWT.NONE);
-			blocks
-					.setText(PreferencesMessages.FoldingConfigurationBlock_srcTabName);
+			blocks.setText(
+					PreferencesMessages.FoldingConfigurationBlock_srcTabName);
 			blocks.setControl(sourceCodeBlock.createControl(tabFolder));
 		}
 
@@ -116,7 +116,7 @@ public class DefaultFoldingPreferenceConfigurationBlock extends
 
 	@Override
 	protected List<OverlayKey> createOverlayKeys() {
-		ArrayList<OverlayKey> keys = new ArrayList<OverlayKey>();
+		ArrayList<OverlayKey> keys = new ArrayList<>();
 
 		keys.add(new OverlayPreferenceStore.OverlayKey(
 				OverlayPreferenceStore.BOOLEAN,
@@ -154,19 +154,15 @@ public class DefaultFoldingPreferenceConfigurationBlock extends
 	}
 
 	private void createMinLines(Composite parent) {
-		Composite composite = SWTFactory.createComposite(parent, parent
-				.getFont(), 2, 1, GridData.FILL);
+		Composite composite = SWTFactory.createComposite(parent,
+				parent.getFont(), 2, 1, GridData.FILL);
 		((GridLayout) composite.getLayout()).marginWidth = 0;
 
 		int minLines = defaultMinLines();
 
-		SWTFactory
-				.createLabel(
-						composite,
-						NLS
-								.bind(
-										PreferencesMessages.FoldingConfigurationBlock_minLinesToEnableFolding,
-										Integer.valueOf(minLines)), 0, 1);
+		SWTFactory.createLabel(composite, NLS.bind(
+				PreferencesMessages.FoldingConfigurationBlock_minLinesToEnableFolding,
+				Integer.valueOf(minLines)), 0, 1);
 
 		Text textBox = SWTFactory.createText(composite, SWT.BORDER, 1,
 				Util.EMPTY_STRING);

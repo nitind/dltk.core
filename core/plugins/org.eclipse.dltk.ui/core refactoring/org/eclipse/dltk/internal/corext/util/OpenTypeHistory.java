@@ -56,7 +56,7 @@ public class OpenTypeHistory extends History implements IShutdownListener {
 	// private IDLTKUILanguageToolkit fToolkit = null;
 	TypeFilter fTypeFilter = null;
 
-	private static Map<IDLTKUILanguageToolkit, OpenTypeHistory> sToolkitHistory = new HashMap<IDLTKUILanguageToolkit, OpenTypeHistory>();
+	private static Map<IDLTKUILanguageToolkit, OpenTypeHistory> sToolkitHistory = new HashMap<>();
 
 	public static synchronized OpenTypeHistory getInstance(
 			IDLTKUILanguageToolkit toolkit) {
@@ -94,21 +94,22 @@ public class OpenTypeHistory extends History implements IShutdownListener {
 
 			switch (elem.getElementType()) {
 			case IModelElement.SCRIPT_PROJECT:
-				if (isRemoved
-						|| (isChanged && (delta.getFlags() & IModelElementDelta.F_CLOSED) != 0)) {
+				if (isRemoved || (isChanged && (delta.getFlags()
+						& IModelElementDelta.F_CLOSED) != 0)) {
 					return true;
 				}
 				return processChildrenDelta(delta);
 			case IModelElement.PROJECT_FRAGMENT:
-				if (isRemoved
-						|| (isChanged && ((delta.getFlags() & IModelElementDelta.F_ARCHIVE_CONTENT_CHANGED) != 0 || (delta
-								.getFlags() & IModelElementDelta.F_REMOVED_FROM_BUILDPATH) != 0))) {
+				if (isRemoved || (isChanged && ((delta.getFlags()
+						& IModelElementDelta.F_ARCHIVE_CONTENT_CHANGED) != 0
+						|| (delta.getFlags()
+								& IModelElementDelta.F_REMOVED_FROM_BUILDPATH) != 0))) {
 					return true;
 				}
 				return processChildrenDelta(delta);
 			case IModelElement.TYPE:
-				if (isChanged
-						&& (delta.getFlags() & IModelElementDelta.F_MODIFIERS) != 0) {
+				if (isChanged && (delta.getFlags()
+						& IModelElementDelta.F_MODIFIERS) != 0) {
 					return true;
 				}
 				// type children can be inner classes: fall through
@@ -124,9 +125,8 @@ public class OpenTypeHistory extends History implements IShutdownListener {
 					return false;
 				}
 
-				if (isRemoved
-						|| (isChanged && isUnknownStructuralChange(delta
-								.getFlags()))) {
+				if (isRemoved || (isChanged
+						&& isUnknownStructuralChange(delta.getFlags()))) {
 					return true;
 				}
 				return processChildrenDelta(delta);
@@ -198,7 +198,7 @@ public class OpenTypeHistory extends History implements IShutdownListener {
 		super(FILENAME
 				+ toolkit.getCoreToolkit().getNatureId().replace('.', '_')
 				+ ".xml", NODE_ROOT, NODE_TYPE_INFO); //$NON-NLS-1$
-		fTimestampMapping = new HashMap<TypeNameMatch, Long>();
+		fTimestampMapping = new HashMap<>();
 		fNeedsConsistencyCheck = true;
 		load();
 		fDeltaListener = new TypeHistoryDeltaListener();
@@ -255,7 +255,8 @@ public class OpenTypeHistory extends History implements IShutdownListener {
 		// Fetching the timestamp might not be cheap (remote file system
 		// external Jars. So check if we alreay have one.
 		if (!fTimestampMapping.containsKey(info)) {
-			fTimestampMapping.put(info, Long.valueOf(getContainerTimestamp(info)));
+			fTimestampMapping.put(info,
+					Long.valueOf(getContainerTimestamp(info)));
 		}
 		super.accessed(info);
 	}
@@ -265,10 +266,11 @@ public class OpenTypeHistory extends History implements IShutdownListener {
 		return (TypeNameMatch) super.remove(info);
 	}
 
-	public synchronized void replace(TypeNameMatch old, TypeNameMatch newMatch) {
+	public synchronized void replace(TypeNameMatch old,
+			TypeNameMatch newMatch) {
 		fTimestampMapping.remove(old);
-		fTimestampMapping.put(newMatch, Long.valueOf(
-				getContainerTimestamp(newMatch)));
+		fTimestampMapping.put(newMatch,
+				Long.valueOf(getContainerTimestamp(newMatch)));
 		super.remove(old);
 		super.accessed(newMatch);
 	}
@@ -288,7 +290,7 @@ public class OpenTypeHistory extends History implements IShutdownListener {
 	public synchronized TypeNameMatch[] getFilteredTypeInfos(
 			TypeInfoFilter filter) {
 		Collection<?> values = getValues();
-		List<TypeNameMatch> result = new ArrayList<TypeNameMatch>();
+		List<TypeNameMatch> result = new ArrayList<>();
 		for (Iterator<?> iter = values.iterator(); iter.hasNext();) {
 			TypeNameMatch type = (TypeNameMatch) iter.next();
 			if (type != null
@@ -336,7 +338,8 @@ public class OpenTypeHistory extends History implements IShutdownListener {
 						replace(type, SearchEngine.createTypeNameMatch(jType,
 								modifiers));
 					} else {
-						fTimestampMapping.put(type, Long.valueOf(currentTimestamp));
+						fTimestampMapping.put(type,
+								Long.valueOf(currentTimestamp));
 					}
 				}
 			} catch (ModelException e) {

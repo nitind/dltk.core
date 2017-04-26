@@ -230,7 +230,7 @@ public class WorkingSetModel {
 		fLocalWorkingSetManager = PlatformUI.getWorkbench()
 				.createLocalWorkingSetManager();
 		addListenersToWorkingSetManagers();
-		fActiveWorkingSets = new ArrayList<IWorkingSet>(2);
+		fActiveWorkingSets = new ArrayList<>(2);
 
 		if (memento == null || !restoreState(memento)) {
 			IWorkingSet others = fLocalWorkingSetManager.createWorkingSet(
@@ -346,7 +346,7 @@ public class WorkingSetModel {
 	}
 
 	public IWorkingSet[] getAllWorkingSets() {
-		List<IWorkingSet> result = new ArrayList<IWorkingSet>();
+		List<IWorkingSet> result = new ArrayList<>();
 		result.addAll(fActiveWorkingSets);
 		IWorkingSet[] locals = fLocalWorkingSetManager.getWorkingSets();
 		for (int i = 0; i < locals.length; i++) {
@@ -363,8 +363,7 @@ public class WorkingSetModel {
 	}
 
 	public void setActiveWorkingSets(IWorkingSet[] workingSets) {
-		fActiveWorkingSets = new ArrayList<IWorkingSet>(
-				Arrays.asList(workingSets));
+		fActiveWorkingSets = new ArrayList<>(Arrays.asList(workingSets));
 		fElementMapper.rebuild(getActiveWorkingSets());
 		fOthersWorkingSetUpdater.updateElements();
 		fireEvent(new PropertyChangeEvent(this,
@@ -443,8 +442,7 @@ public class WorkingSetModel {
 		} else if (IWorkingSetManager.CHANGE_WORKING_SET_REMOVE
 				.equals(property)) {
 			IWorkingSet workingSet = (IWorkingSet) event.getOldValue();
-			List<IWorkingSet> elements = new ArrayList<IWorkingSet>(
-					fActiveWorkingSets);
+			List<IWorkingSet> elements = new ArrayList<>(fActiveWorkingSets);
 			elements.remove(workingSet);
 			setActiveWorkingSets(
 					elements.toArray(new IWorkingSet[elements.size()]));

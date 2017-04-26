@@ -25,7 +25,7 @@ public class ControlBindingManager<KEY> {
 
 	private Map<Button, KEY> checkBoxControls;
 	private Map<Combo, KEY> comboControls;
-	private final Map<Combo, IComboSelectedValueProvider> comboValueProviders = new IdentityHashMap<Combo, IComboSelectedValueProvider>();
+	private final Map<Combo, IComboSelectedValueProvider> comboValueProviders = new IdentityHashMap<>();
 
 	private DependencyManager dependencyManager;
 
@@ -33,7 +33,7 @@ public class ControlBindingManager<KEY> {
 	private Map<Button, KEY> radioControls;
 
 	private Map<Text, KEY> textControls;
-	private final Map<Text, ITextConverter> textTransformers = new HashMap<Text, ITextConverter>();
+	private final Map<Text, ITextConverter> textTransformers = new HashMap<>();
 	private ValidatorManager validatorManager;
 
 	public static class DependencyMode {
@@ -49,10 +49,10 @@ public class ControlBindingManager<KEY> {
 
 	public ControlBindingManager(IPreferenceDelegate<KEY> delegate,
 			IStatusChangeListener listener) {
-		this.checkBoxControls = new HashMap<Button, KEY>();
-		this.comboControls = new HashMap<Combo, KEY>();
-		this.textControls = new HashMap<Text, KEY>();
-		this.radioControls = new HashMap<Button, KEY>();
+		this.checkBoxControls = new HashMap<>();
+		this.comboControls = new HashMap<>();
+		this.textControls = new HashMap<>();
+		this.radioControls = new HashMap<>();
 
 		this.validatorManager = new ValidatorManager();
 		this.dependencyManager = new DependencyManager();
@@ -66,8 +66,9 @@ public class ControlBindingManager<KEY> {
 
 			@Override
 			public String getValueAt(int index) {
-				return index >= 0 && index < combo.getItemCount() ? combo
-						.getItem(index) : null;
+				return index >= 0 && index < combo.getItemCount()
+						? combo.getItem(index)
+						: null;
 			}
 
 			@Override
@@ -126,7 +127,8 @@ public class ControlBindingManager<KEY> {
 		});
 	}
 
-	public void bindControl(final Button button, final KEY key, Control[] slaves) {
+	public void bindControl(final Button button, final KEY key,
+			Control[] slaves) {
 		if (key != null) {
 			checkBoxControls.put(button, key);
 		}
@@ -329,9 +331,9 @@ public class ControlBindingManager<KEY> {
 	}
 
 	/**
-     */
+	 */
 	class DependencyManager {
-		private List<SelectionListener> masterSlaveListeners = new ArrayList<SelectionListener>();
+		private List<SelectionListener> masterSlaveListeners = new ArrayList<>();
 
 		public void createDependency(final Button master,
 				final Control[] slaves, final DependencyMode mode) {

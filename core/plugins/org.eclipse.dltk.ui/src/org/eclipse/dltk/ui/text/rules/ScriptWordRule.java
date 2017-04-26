@@ -31,9 +31,9 @@ import org.eclipse.jface.text.rules.WordRule;
  * </p>
  *
  * <p>
- * If an <code>IScriptWordDetector</code> implementation is used, the rule
- * will also check that character prior to the word start character is valid for
- * the start of the word to occur. For instance, this could be used to prevent
+ * If an <code>IScriptWordDetector</code> implementation is used, the rule will
+ * also check that character prior to the word start character is valid for the
+ * start of the word to occur. For instance, this could be used to prevent
  * method names that also match builtin keywords from being hightlighted as
  * such.
  * </p>
@@ -56,7 +56,7 @@ public class ScriptWordRule implements IRule {
 	/** The column constraint */
 	protected int fColumn = UNDEFINED;
 	/** The table of predefined words and token for this rule */
-	protected Map<String, IToken> fWords = new HashMap<String, IToken>();
+	protected Map<String, IToken> fWords = new HashMap<>();
 	/** Buffer used for pattern detection */
 	private StringBuffer fBuffer = new StringBuffer();
 
@@ -64,7 +64,7 @@ public class ScriptWordRule implements IRule {
 
 	private int fLastSeenEnd = 0;
 	private String fLastSeen = Util.EMPTY_STRING;
-	private Map<String, IToken> fNext = new HashMap<String, IToken>();
+	private Map<String, IToken> fNext = new HashMap<>();
 
 	/**
 	 * Creates a rule which, with the help of an word detector, will return the
@@ -179,7 +179,8 @@ public class ScriptWordRule implements IRule {
 	@Override
 	public IToken evaluate(ICharacterScanner scanner) {
 		// don't unwind the scanner if we're at the beginning
-		if (fDetector instanceof IScriptWordDetector && scanner.getColumn() > 0) {
+		if (fDetector instanceof IScriptWordDetector
+				&& scanner.getColumn() > 0) {
 			scanner.unread();
 			int c = scanner.read();
 			if (!((IScriptWordDetector) fDetector).isPriorCharValid((char) c)) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 NumberFour AG
+ * Copyright (c) 2011, 2017 NumberFour AG and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -30,7 +30,7 @@ public class ReplacementBuffer {
 		}
 	}
 
-	final List<Argument> arguments = new ArrayList<Argument>();
+	final List<Argument> arguments = new ArrayList<>();
 
 	@Deprecated
 	public void addArgument(int offset, int length) {

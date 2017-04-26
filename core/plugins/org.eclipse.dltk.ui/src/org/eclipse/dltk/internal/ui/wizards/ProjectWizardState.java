@@ -24,8 +24,8 @@ public class ProjectWizardState implements IProjectWizardState {
 	private String externalLocation;
 	private String projectName;
 	private String mode;
-	private final Map<String, String> tooltips = new HashMap<String, String>();
-	private final Map<String, String> attributes = new HashMap<String, String>();
+	private final Map<String, String> tooltips = new HashMap<>();
+	private final Map<String, String> attributes = new HashMap<>();
 
 	public ProjectWizardState(String nature) {
 		this.nature = nature;

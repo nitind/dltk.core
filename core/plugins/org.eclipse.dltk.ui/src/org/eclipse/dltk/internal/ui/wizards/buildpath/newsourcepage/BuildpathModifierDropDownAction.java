@@ -19,156 +19,171 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
 /**
- * Drop down action for toolbars containing <code>BuildpathModifierAction</code>s.
- * The drop down action manages a list of actions that are displayed when invocing
- * the drop down. If there is at least one valid action, then the drop down action
- * itself will also be valid and invocing run will delegate the call to the
- * first valid action in the list.
+ * Drop down action for toolbars containing
+ * <code>BuildpathModifierAction</code>s. The drop down action manages a list of
+ * actions that are displayed when invocing the drop down. If there is at least
+ * one valid action, then the drop down action itself will also be valid and
+ * invocing run will delegate the call to the first valid action in the list.
  */
-public class BuildpathModifierDropDownAction extends BuildpathModifierAction implements IMenuCreator {
+public class BuildpathModifierDropDownAction extends BuildpathModifierAction
+		implements IMenuCreator {
 
-    /** The menu to be populated with items*/
-    private Menu fMenu;
-    /** A list of actions that will be used as
-     * drop down items*/
+	/** The menu to be populated with items */
+	private Menu fMenu;
+	/**
+	 * A list of actions that will be used as drop down items
+	 */
 	protected List<BuildpathModifierAction> fActions;
-    /** Index of the action that can be executed when clicking directly on the dropdown button.*/
-    private int fIndex;
+	/**
+	 * Index of the action that can be executed when clicking directly on the
+	 * dropdown button.
+	 */
+	private int fIndex;
 
-    /**
-     * Create a drop down action using the same descriptors as the provided action, but it's on
-     * tool tip text. The action will automatically be put in the list of actions that are
-     * managed by this drop down menu.
-     *
-     * @param action an action to be added to the dropdown menu
-     * @param text a label text for the action
-     * @param toolTipText the tooltip text for the drop down menu
-     */
-    public BuildpathModifierDropDownAction(BuildpathModifierAction action, String text, String toolTipText) {
-        super(action.getOperation(), action.getImageDescriptor(), action.getDisabledImageDescriptor(),
-                text, toolTipText, IAction.AS_DROP_DOWN_MENU);
-		fActions = new ArrayList<BuildpathModifierAction>();
-        fActions.add(action);
-        fIndex= 0;
-    }
+	/**
+	 * Create a drop down action using the same descriptors as the provided
+	 * action, but it's on tool tip text. The action will automatically be put
+	 * in the list of actions that are managed by this drop down menu.
+	 *
+	 * @param action
+	 *            an action to be added to the dropdown menu
+	 * @param text
+	 *            a label text for the action
+	 * @param toolTipText
+	 *            the tooltip text for the drop down menu
+	 */
+	public BuildpathModifierDropDownAction(BuildpathModifierAction action,
+			String text, String toolTipText) {
+		super(action.getOperation(), action.getImageDescriptor(),
+				action.getDisabledImageDescriptor(), text, toolTipText,
+				IAction.AS_DROP_DOWN_MENU);
+		fActions = new ArrayList<>();
+		fActions.add(action);
+		fIndex = 0;
+	}
 
-    /**
-     * Runs the first action of the list of managed actions that is valid.
-     */
-    @Override
+	/**
+	 * Runs the first action of the list of managed actions that is valid.
+	 */
+	@Override
 	public void run() {
 		BuildpathModifierAction action = fActions.get(fIndex);
-        action.run();
-    }
+		action.run();
+	}
 
-    @Override
+	@Override
 	public IMenuCreator getMenuCreator() {
-        return this;
-    }
+		return this;
+	}
 
-    @Override
+	@Override
 	public Menu getMenu(Control parent) {
-        if (fMenu != null) {
-            fMenu.dispose();
-        }
-        fMenu = new Menu(parent);
-        createEntries(fMenu);
-        return fMenu;
+		if (fMenu != null) {
+			fMenu.dispose();
+		}
+		fMenu = new Menu(parent);
+		createEntries(fMenu);
+		return fMenu;
 
-    }
+	}
 
-    @Override
+	@Override
 	public Menu getMenu(Menu parent) {
-        return fMenu;
-    }
+		return fMenu;
+	}
 
-    /**
-     * Add dynamically an action to the drop down menu.
-     *
-     * @param action the action to be added
-     */
-    public void addAction(BuildpathModifierAction action) {
-        fActions.add(action);
-    }
+	/**
+	 * Add dynamically an action to the drop down menu.
+	 *
+	 * @param action
+	 *            the action to be added
+	 */
+	public void addAction(BuildpathModifierAction action) {
+		fActions.add(action);
+	}
 
-    /**
-     * Add dynamically an array of actions to the
-     * drop down menu.
-     *
-     * @param actions an array of actions to be added
-     */
-    public void addActions(BuildpathModifierAction[] actions) {
-        for(int i= 0; i < actions.length; i++) {
-            addAction(actions[i]);
-        }
-    }
+	/**
+	 * Add dynamically an array of actions to the drop down menu.
+	 *
+	 * @param actions
+	 *            an array of actions to be added
+	 */
+	public void addActions(BuildpathModifierAction[] actions) {
+		for (int i = 0; i < actions.length; i++) {
+			addAction(actions[i]);
+		}
+	}
 
-    /**
-     * Remove an action from the drop down menu
-     *
-     * @param action the action to be removed
-     */
-    public void removeAction(BuildpathModifierAction action) {
-        fActions.remove(action);
-    }
+	/**
+	 * Remove an action from the drop down menu
+	 *
+	 * @param action
+	 *            the action to be removed
+	 */
+	public void removeAction(BuildpathModifierAction action) {
+		fActions.remove(action);
+	}
 
-    /**
-     * Get all actions within this drop down menu.
-     *
-     * @return an array of actions
-     */
-    public BuildpathModifierAction[] getActions() {
+	/**
+	 * Get all actions within this drop down menu.
+	 *
+	 * @return an array of actions
+	 */
+	public BuildpathModifierAction[] getActions() {
 		return fActions.toArray(new BuildpathModifierAction[fActions.size()]);
-    }
+	}
 
-    /**
-     * Populate the menu with the given action item
-     *
-     * @param parent the menu to add an action for
-     * @param action the action to be added
-     */
-    private void addActionToMenu(Menu parent, IAction action) {
-        ActionContributionItem item = new ActionContributionItem(action);
-        item.fill(parent, -1);
-    }
+	/**
+	 * Populate the menu with the given action item
+	 *
+	 * @param parent
+	 *            the menu to add an action for
+	 * @param action
+	 *            the action to be added
+	 */
+	private void addActionToMenu(Menu parent, IAction action) {
+		ActionContributionItem item = new ActionContributionItem(action);
+		item.fill(parent, -1);
+	}
 
-    /**
-     * Fill the menu with all actions
-     *
-     * @param menu the menu to be populated
-     */
-    private void createEntries(Menu menu) {
-        for(int i= 0; i < fActions.size(); i++) {
+	/**
+	 * Fill the menu with all actions
+	 *
+	 * @param menu
+	 *            the menu to be populated
+	 */
+	private void createEntries(Menu menu) {
+		for (int i = 0; i < fActions.size(); i++) {
 			IAction action = fActions.get(i);
-            addActionToMenu(menu, action);
-        }
-    }
+			addActionToMenu(menu, action);
+		}
+	}
 
-    @Override
+	@Override
 	public void dispose() {
-        if (fMenu != null) {
-            fMenu.dispose();
-            fMenu = null;
-        }
-    }
+		if (fMenu != null) {
+			fMenu.dispose();
+			fMenu = null;
+		}
+	}
 
-    /**
-     * Check all managed actions to find out if at least one is valid.
-     * The first valid action that is found will be used when calling
-     * <code>run()</code>.
-     *
-     * @return <code>true</code> if at least one of the managed actions is valid,
-     * <code>false</code> otherwise.
-     */
-    @Override
-	public boolean isValid(List selectedElements, int[] types) throws ModelException {
-        for(int i= 0; i < fActions.size(); i++) {
+	/**
+	 * Check all managed actions to find out if at least one is valid. The first
+	 * valid action that is found will be used when calling <code>run()</code>.
+	 *
+	 * @return <code>true</code> if at least one of the managed actions is
+	 *         valid, <code>false</code> otherwise.
+	 */
+	@Override
+	public boolean isValid(List selectedElements, int[] types)
+			throws ModelException {
+		for (int i = 0; i < fActions.size(); i++) {
 			BuildpathModifierAction action = fActions.get(i);
-            if(action.isValid(selectedElements, types)) {
-                fIndex= i;
-                return true;
-            }
-        }
-        return false;
-    }
+			if (action.isValid(selectedElements, types)) {
+				fIndex = i;
+				return true;
+			}
+		}
+		return false;
+	}
 }

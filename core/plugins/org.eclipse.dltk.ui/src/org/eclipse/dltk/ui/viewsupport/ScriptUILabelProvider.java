@@ -304,7 +304,7 @@ public class ScriptUILabelProvider
 
 	public void addLabelDecorator(ILabelDecorator decorator) {
 		if (fLabelDecorators == null) {
-			fLabelDecorators = new ArrayList<ILabelDecorator>(2);
+			fLabelDecorators = new ArrayList<>(2);
 		}
 		fLabelDecorators.add(decorator);
 	}

@@ -53,20 +53,20 @@ import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ISetSelectionTarget;
 
-public class AddFolderToBuildpathAction extends Action implements
-		ISelectionChangedListener {
+public class AddFolderToBuildpathAction extends Action
+		implements ISelectionChangedListener {
 
 	private final IWorkbenchSite fSite;
 	// IScriptProject || IPackageFrament || IFolder
 	private final List<Object> fSelectedElements;
 
 	public AddFolderToBuildpathAction(IWorkbenchSite site) {
-		super(
-				NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_AddSelSFToCP_label,
+		super(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_AddSelSFToCP_label,
 				DLTKPluginImages.DESC_OBJS_PACKFRAG_ROOT);
-		setToolTipText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_AddSelSFToCP_tooltip);
+		setToolTipText(
+				NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_AddSelSFToCP_tooltip);
 		fSite = site;
-		fSelectedElements = new ArrayList<Object>();
+		fSelectedElements = new ArrayList<>();
 	}
 
 	@Override
@@ -108,8 +108,8 @@ public class AddFolderToBuildpathAction extends Action implements
 					throw new InvocationTargetException(e);
 				}
 			};
-			PlatformUI.getWorkbench().getProgressService()
-					.run(true, false, runnable);
+			PlatformUI.getWorkbench().getProgressService().run(true, false,
+					runnable);
 		} catch (final InvocationTargetException e) {
 			if (e.getCause() instanceof CoreException) {
 				showExceptionDialog((CoreException) e.getCause());
@@ -122,12 +122,12 @@ public class AddFolderToBuildpathAction extends Action implements
 
 	private List<IModelElement> addToBuildpath(List<Object> elements,
 			IScriptProject project, boolean removeProjectFromBuildpath,
-			IProgressMonitor monitor) throws OperationCanceledException,
-			CoreException {
+			IProgressMonitor monitor)
+			throws OperationCanceledException, CoreException {
 		if (!DLTKLanguageManager.hasScriptNature(project.getProject())) {
 			StatusInfo rootStatus = new StatusInfo();
-			rootStatus
-					.setError(NewWizardMessages.BuildpathModifier_Error_NoNatures);
+			rootStatus.setError(
+					NewWizardMessages.BuildpathModifier_Error_NoNatures);
 			throw new CoreException(rootStatus);
 		}
 
@@ -147,7 +147,7 @@ public class AddFolderToBuildpathAction extends Action implements
 				monitor.worked(1);
 			}
 
-			List<BPListElement> newEntries = new ArrayList<BPListElement>();
+			List<BPListElement> newEntries = new ArrayList<>();
 			for (int i = 0; i < elements.size(); i++) {
 				Object element = elements.get(i);
 				BPListElement entry;
@@ -158,16 +158,17 @@ public class AddFolderToBuildpathAction extends Action implements
 				else
 					entry = BuildpathModifier.addToBuildpath(
 							(IModelElement) element, existingEntries,
-							newEntries, project, new SubProgressMonitor(
-									monitor, 1));
+							newEntries, project,
+							new SubProgressMonitor(monitor, 1));
 				newEntries.add(entry);
 			}
 
-			Set<BPListElement> modifiedSourceEntries = new HashSet<BPListElement>();
-			BuildPathBasePage.fixNestingConflicts(newEntries
-					.toArray(new BPListElement[newEntries.size()]),
-					existingEntries.toArray(new BPListElement[existingEntries
-							.size()]), modifiedSourceEntries);
+			Set<BPListElement> modifiedSourceEntries = new HashSet<>();
+			BuildPathBasePage.fixNestingConflicts(
+					newEntries.toArray(new BPListElement[newEntries.size()]),
+					existingEntries
+							.toArray(new BPListElement[existingEntries.size()]),
+					modifiedSourceEntries);
 
 			BuildpathModifier.setNewEntry(existingEntries, newEntries, project,
 					new SubProgressMonitor(monitor, 1));
@@ -175,7 +176,7 @@ public class AddFolderToBuildpathAction extends Action implements
 			BuildpathModifier.commitBuildPath(existingEntries, project,
 					new SubProgressMonitor(monitor, 1));
 
-			List<IModelElement> result = new ArrayList<IModelElement>();
+			List<IModelElement> result = new ArrayList<>();
 			for (int i = 0; i < newEntries.size(); i++) {
 				IBuildpathEntry entry = newEntries.get(i).getBuildpathEntry();
 				IModelElement root;
@@ -219,14 +220,13 @@ public class AddFolderToBuildpathAction extends Action implements
 				} else if (element instanceof IProject) {
 					IScriptProject scriptProject = DLTKCore
 							.create((IProject) element);
-					if (!scriptProject.isValid()
-							|| BuildpathModifier.isSourceFolder(scriptProject)) {
+					if (!scriptProject.isValid() || BuildpathModifier
+							.isSourceFolder(scriptProject)) {
 						return false;
 					}
 					fSelectedElements.add(scriptProject);
 				} else if (element instanceof IScriptFolder) {
-					int type = DialogPackageExplorerActionGroup.getType(
-							element,
+					int type = DialogPackageExplorerActionGroup.getType(element,
 							((IScriptFolder) element).getScriptProject());
 					if (type != DialogPackageExplorerActionGroup.PACKAGE_FRAGMENT
 							&& type != DialogPackageExplorerActionGroup.INCLUDED_FOLDER)
@@ -271,7 +271,7 @@ public class AddFolderToBuildpathAction extends Action implements
 			return;
 
 		// get all the view and editor parts
-		List<IWorkbenchPart> parts = new ArrayList<IWorkbenchPart>();
+		List<IWorkbenchPart> parts = new ArrayList<>();
 		IWorkbenchPartReference refs[] = page.getViewReferences();
 		for (int i = 0; i < refs.length; i++) {
 			IWorkbenchPart part = refs[i].getPart(false);
@@ -291,8 +291,7 @@ public class AddFolderToBuildpathAction extends Action implements
 			if (part instanceof ISetSelectionTarget)
 				target = (ISetSelectionTarget) part;
 			else
-				target = part
-						.getAdapter(ISetSelectionTarget.class);
+				target = part.getAdapter(ISetSelectionTarget.class);
 
 			if (target != null) {
 				// select and reveal resource

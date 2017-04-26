@@ -47,8 +47,8 @@ import org.eclipse.osgi.util.NLS;
  *
  * @since 3.0
  */
-public final class SaveParticipantRegistry extends
-		PriorityNatureExtensionManager<IPostSaveListener> {
+public final class SaveParticipantRegistry
+		extends PriorityNatureExtensionManager<IPostSaveListener> {
 
 	private static final IPostSaveListener[] EMPTY_ARRAY = new IPostSaveListener[0];
 
@@ -74,16 +74,17 @@ public final class SaveParticipantRegistry extends
 	 * @return the current enabled post save listeners according to the
 	 *         preferences
 	 */
-	public IPostSaveListener[] getEnabledPostSaveListeners(ISourceModule module) {
+	public IPostSaveListener[] getEnabledPostSaveListeners(
+			ISourceModule module) {
 		ArrayList<IPostSaveListener> result = null;
 		final IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 				.getLanguageToolkit(module);
 		if (toolkit != null) {
-			for (IPostSaveListener descriptor : getInstances(toolkit
-					.getNatureId())) {
+			for (IPostSaveListener descriptor : getInstances(
+					toolkit.getNatureId())) {
 				if (descriptor.isEnabled(module)) {
 					if (result == null) {
-						result = new ArrayList<IPostSaveListener>();
+						result = new ArrayList<>();
 					}
 					result.add(descriptor);
 				}
@@ -115,8 +116,8 @@ public final class SaveParticipantRegistry extends
 			IPostSaveListener[] listeners) throws CoreException {
 		String message = SaveParticipantMessages.SaveParticipantRegistry_needsChangedRegionFailed;
 		final MultiStatus errorStatus = new MultiStatus(DLTKUIPlugin.PLUGIN_ID,
-				IDLTKStatusConstants.EDITOR_CHANGED_REGION_CALCULATION,
-				message, null);
+				IDLTKStatusConstants.EDITOR_CHANGED_REGION_CALCULATION, message,
+				null);
 
 		try {
 			final boolean result[] = new boolean[] { false };
@@ -132,25 +133,22 @@ public final class SaveParticipantRegistry extends
 
 					@Override
 					public void handleException(Throwable ex) {
-						String msg = NLS
-								.bind("The save participant ''{0}'' caused an exception.", listener.getId()); //$NON-NLS-1$
-						DLTKUIPlugin
-								.log(new Status(
-										IStatus.ERROR,
-										DLTKUIPlugin.PLUGIN_ID,
-										IDLTKStatusConstants.EDITOR_POST_SAVE_NOTIFICATION,
-										msg, ex));
+						String msg = NLS.bind(
+								"The save participant ''{0}'' caused an exception.", //$NON-NLS-1$
+								listener.getId());
+						DLTKUIPlugin.log(new Status(IStatus.ERROR,
+								DLTKUIPlugin.PLUGIN_ID,
+								IDLTKStatusConstants.EDITOR_POST_SAVE_NOTIFICATION,
+								msg, ex));
 
 						final String participantName = listener.getName();
-						msg = NLS
-								.bind(SaveParticipantMessages.SaveParticipantRegistry_needsChangedRegionCausedException,
-										participantName, ex.toString());
-						errorStatus
-								.add(new Status(
-										IStatus.ERROR,
-										DLTKUIPlugin.PLUGIN_ID,
-										IDLTKStatusConstants.EDITOR_CHANGED_REGION_CALCULATION,
-										msg, null));
+						msg = NLS.bind(
+								SaveParticipantMessages.SaveParticipantRegistry_needsChangedRegionCausedException,
+								participantName, ex.toString());
+						errorStatus.add(new Status(IStatus.ERROR,
+								DLTKUIPlugin.PLUGIN_ID,
+								IDLTKStatusConstants.EDITOR_CHANGED_REGION_CALCULATION,
+								msg, null));
 					}
 
 				});

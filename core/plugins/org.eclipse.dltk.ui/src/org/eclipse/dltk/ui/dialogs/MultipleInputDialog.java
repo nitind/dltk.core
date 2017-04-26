@@ -44,10 +44,10 @@ public class MultipleInputDialog extends Dialog {
 
 	protected Composite panel;
 
-	protected List<FieldSummary> fieldList = new ArrayList<FieldSummary>();
-	protected List<Text> controlList = new ArrayList<Text>();
-	protected List<Validator> validators = new ArrayList<Validator>();
-	protected Map<String, Object> valueMap = new HashMap<String, Object>();
+	protected List<FieldSummary> fieldList = new ArrayList<>();
+	protected List<Text> controlList = new ArrayList<>();
+	protected List<Validator> validators = new ArrayList<>();
+	protected Map<String, Object> valueMap = new HashMap<>();
 
 	private String title;
 
@@ -111,14 +111,14 @@ public class MultipleInputDialog extends Dialog {
 
 	public void addBrowseField(String labelText, String initialValue,
 			boolean allowsEmpty) {
-		fieldList.add(new FieldSummary(BROWSE, labelText, initialValue,
-				allowsEmpty));
+		fieldList.add(
+				new FieldSummary(BROWSE, labelText, initialValue, allowsEmpty));
 	}
 
 	public void addTextField(String labelText, String initialValue,
 			boolean allowsEmpty) {
-		fieldList.add(new FieldSummary(TEXT, labelText, initialValue,
-				allowsEmpty));
+		fieldList.add(
+				new FieldSummary(TEXT, labelText, initialValue, allowsEmpty));
 	}
 
 	public void addVariablesField(String labelText, String initialValue,

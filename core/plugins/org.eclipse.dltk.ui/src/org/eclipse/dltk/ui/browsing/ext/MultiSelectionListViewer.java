@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Tree;
 
 public class MultiSelectionListViewer extends ScrolledComposite {
 	// Contain ListViewers
-	private List<TreeViewer> viewers = new ArrayList<TreeViewer>();
+	private List<TreeViewer> viewers = new ArrayList<>();
 	private int elements = 0;
 	private ColumnForm columnForm;
 	private ITreeContentProvider contentProvider;
@@ -85,12 +85,13 @@ public class MultiSelectionListViewer extends ScrolledComposite {
 		Tree tree = viewer.getTree();
 		if (!tree.isDisposed()) {
 			Rectangle bounds = tree.getBounds();
-//			Point origin = MultiSelectionListViewer.this.getOrigin();
-//			double step = ( origin.x - ( bounds.x + bounds.width ) ) / 10;
-//			for (int i = 0; i < 50; i++) {
-//				MultiSelectionListViewer.this.setOrigin(origin.x - (int)step*i, bounds.y);
-//				redraw();
-//			}
+			// Point origin = MultiSelectionListViewer.this.getOrigin();
+			// double step = ( origin.x - ( bounds.x + bounds.width ) ) / 10;
+			// for (int i = 0; i < 50; i++) {
+			// MultiSelectionListViewer.this.setOrigin(origin.x - (int)step*i,
+			// bounds.y);
+			// redraw();
+			// }
 		}
 		elementSelectionChanged(viewer.getSelection());
 	}
@@ -117,7 +118,8 @@ public class MultiSelectionListViewer extends ScrolledComposite {
 		}
 
 		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		public void inputChanged(Viewer viewer, Object oldInput,
+				Object newInput) {
 		}
 
 		@Override
@@ -222,7 +224,8 @@ public class MultiSelectionListViewer extends ScrolledComposite {
 		if (controlIndex < this.viewers.size()) {
 			TreeViewer prevViewer = viewers.get(controlIndex);
 			ISelection selection = prevViewer.getSelection();
-			if (selection != null && selection instanceof IStructuredSelection) {
+			if (selection != null
+					&& selection instanceof IStructuredSelection) {
 				IStructuredSelection sel = (IStructuredSelection) selection;
 				Object firstElement = sel.getFirstElement();
 				if (firstElement != null) {

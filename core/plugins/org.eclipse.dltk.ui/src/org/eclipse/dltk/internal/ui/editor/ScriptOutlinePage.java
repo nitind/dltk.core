@@ -142,7 +142,7 @@ public class ScriptOutlinePage extends Page
 				return children;
 			}
 
-			List<IModelElement> v = new ArrayList<IModelElement>();
+			List<IModelElement> v = new ArrayList<>();
 			for (int i = 0; i < children.length; i++) {
 				if (matches(children[i])) {
 					continue;
@@ -529,7 +529,7 @@ public class ScriptOutlinePage extends Page
 			ListenerList.IDENTITY);
 	private ListenerList<ISelectionChangedListener> fPostSelectionChangedListeners = new ListenerList<>(
 			ListenerList.IDENTITY);
-	private Hashtable<String, IAction> fActions = new Hashtable<String, IAction>();
+	private Hashtable<String, IAction> fActions = new Hashtable<>();
 
 	private TogglePresentationAction fTogglePresentation;
 

@@ -650,7 +650,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 			if (selected != null) {
 				// IWorkspaceRoot root =
 				// fCurrJProject.getProject().getWorkspace().getRoot();
-				ArrayList<BPListElement> res = new ArrayList<BPListElement>();
+				ArrayList<BPListElement> res = new ArrayList<>();
 				for (int i = 0; i < selected.length; i++) {
 					// IPath curr = selected[i];
 					res.add(new BPListElement(fCurrJProject,
@@ -673,7 +673,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 			if (selected != null) {
 				IWorkspaceRoot root = fCurrJProject.getProject().getWorkspace()
 						.getRoot();
-				ArrayList<BPListElement> res = new ArrayList<BPListElement>();
+				ArrayList<BPListElement> res = new ArrayList<>();
 				for (int i = 0; i < selected.length; i++) {
 					IPath curr = selected[i];
 					IResource resource = root.findMember(curr);
@@ -697,7 +697,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 					getShell(), fCurrJProject.getPath(),
 					getUsedArchiveFiles(existing));
 			if (selected != null) {
-				ArrayList<BPListElement> res = new ArrayList<BPListElement>();
+				ArrayList<BPListElement> res = new ArrayList<>();
 				for (int i = 0; i < selected.length; i++) {
 					IPath curr = selected[i];
 					IResource resource = root.findMember(curr);
@@ -723,7 +723,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 	}
 
 	private IPath[] getUsedContainers(BPListElement existing) {
-		ArrayList<IPath> res = new ArrayList<IPath>();
+		ArrayList<IPath> res = new ArrayList<>();
 		List cplist = fLibrariesList.getElements();
 		for (int i = 0; i < cplist.size(); i++) {
 			BPListElement elem = (BPListElement) cplist.get(i);
@@ -740,7 +740,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 	}
 
 	private IPath[] getUsedArchiveFiles(BPListElement existing) {
-		List<IPath> res = new ArrayList<IPath>();
+		List<IPath> res = new ArrayList<>();
 		List cplist = fLibrariesList.getElements();
 		for (int i = 0; i < cplist.size(); i++) {
 			BPListElement elem = (BPListElement) cplist.get(i);
@@ -766,7 +766,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 			IPath[] selected = BuildpathDialogAccess
 					.chooseExternalArchiveEntries(getShell(), environment);
 			if (selected != null) {
-				ArrayList<BPListElement> res = new ArrayList<BPListElement>();
+				ArrayList<BPListElement> res = new ArrayList<>();
 				for (int i = 0; i < selected.length; i++) {
 					res.add(new BPListElement(fCurrJProject,
 							IBuildpathEntry.BPE_LIBRARY, selected[i], null,

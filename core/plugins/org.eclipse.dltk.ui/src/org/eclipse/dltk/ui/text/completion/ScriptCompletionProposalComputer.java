@@ -34,17 +34,18 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Computes Script completion proposals and context infos.
  */
-public abstract class ScriptCompletionProposalComputer extends
-		AbstractScriptCompletionProposalComputer implements
-		IScriptCompletionProposalComputer {
+public abstract class ScriptCompletionProposalComputer
+		extends AbstractScriptCompletionProposalComputer
+		implements IScriptCompletionProposalComputer {
 
-	private static final class ContextInformationWrapper implements
-			IContextInformation, IContextInformationExtension {
+	private static final class ContextInformationWrapper
+			implements IContextInformation, IContextInformationExtension {
 
 		private final IContextInformation fContextInformation;
 		private int fPosition;
 
-		public ContextInformationWrapper(IContextInformation contextInformation) {
+		public ContextInformationWrapper(
+				IContextInformation contextInformation) {
 			fContextInformation = contextInformation;
 		}
 
@@ -75,8 +76,8 @@ public abstract class ScriptCompletionProposalComputer extends
 		@Override
 		public boolean equals(Object object) {
 			if (object instanceof ContextInformationWrapper)
-				return fContextInformation
-						.equals(((ContextInformationWrapper) object).fContextInformation);
+				return fContextInformation.equals(
+						((ContextInformationWrapper) object).fContextInformation);
 			else
 				return fContextInformation.equals(object);
 		}
@@ -89,8 +90,7 @@ public abstract class ScriptCompletionProposalComputer extends
 			IProgressMonitor monitor) {
 		List<ICompletionProposal> proposals = computeScriptCompletionProposals(
 				offset, context, monitor);
-		List<IContextInformation> result = new ArrayList<IContextInformation>(
-				proposals.size());
+		List<IContextInformation> result = new ArrayList<>(proposals.size());
 
 		for (ICompletionProposal proposal : proposals) {
 			IContextInformation contextInformation = proposal
@@ -113,32 +113,29 @@ public abstract class ScriptCompletionProposalComputer extends
 				&& !module.getScriptProject().isOnBuildpath(module)) {
 			IPreferenceStore store = DLTKUIPlugin.getDefault()
 					.getPreferenceStore();
-			boolean value = store
-					.getBoolean(PreferenceConstants.NOTIFICATION_NOT_ON_BUILDPATH_MESSAGE);
+			boolean value = store.getBoolean(
+					PreferenceConstants.NOTIFICATION_NOT_ON_BUILDPATH_MESSAGE);
 			if (!value) {
-				MessageDialog
-						.openInformation(
-								shell,
-								ScriptTextMessages.CompletionProcessor_error_notOnBuildPath_title,
-								ScriptTextMessages.CompletionProcessor_error_notOnBuildPath_message);
+				MessageDialog.openInformation(shell,
+						ScriptTextMessages.CompletionProcessor_error_notOnBuildPath_title,
+						ScriptTextMessages.CompletionProcessor_error_notOnBuildPath_message);
 			}
 			store.setValue(
 					PreferenceConstants.NOTIFICATION_NOT_ON_BUILDPATH_MESSAGE,
 					true);
 		} else
-			ErrorDialog
-					.openError(
-							shell,
-							ScriptTextMessages.CompletionProcessor_error_accessing_title,
-							ScriptTextMessages.CompletionProcessor_error_accessing_message,
-							e.getStatus());
+			ErrorDialog.openError(shell,
+					ScriptTextMessages.CompletionProcessor_error_accessing_title,
+					ScriptTextMessages.CompletionProcessor_error_accessing_message,
+					e.getStatus());
 	}
 
 	// Code template completion proposals for script language
 	protected List<ICompletionProposal> computeTemplateCompletionProposals(
 			int offset, ScriptContentAssistInvocationContext context,
 			IProgressMonitor monitor) {
-		TemplateCompletionProcessor templateProcessor = createTemplateProposalComputer(context);
+		TemplateCompletionProcessor templateProcessor = createTemplateProposalComputer(
+				context);
 		if (templateProcessor != null) {
 			ICompletionProposal[] proposals = templateProcessor
 					.computeCompletionProposals(context.getViewer(), offset);
@@ -238,7 +235,7 @@ public abstract class ScriptCompletionProposalComputer extends
 		if (context instanceof ScriptContentAssistInvocationContext) {
 			ScriptContentAssistInvocationContext scriptContext = (ScriptContentAssistInvocationContext) context;
 
-			List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
+			List<ICompletionProposal> proposals = new ArrayList<>();
 
 			// Language specific proposals (already sorted and etc.)
 			proposals.addAll(computeScriptCompletionProposals(
@@ -266,7 +263,8 @@ public abstract class ScriptCompletionProposalComputer extends
 		if (context instanceof ScriptContentAssistInvocationContext) {
 			ScriptContentAssistInvocationContext scriptContext = (ScriptContentAssistInvocationContext) context;
 
-			int contextInformationPosition = guessContextInformationPosition(scriptContext);
+			int contextInformationPosition = guessContextInformationPosition(
+					scriptContext);
 			List<IContextInformation> result = addContextInformations(
 					scriptContext, contextInformationPosition, monitor);
 			return result;

@@ -255,7 +255,7 @@ public class ScriptWorkingSetPage extends WizardPage
 	@Override
 	public void finish() {
 		String workingSetName = fWorkingSetName.getText();
-		ArrayList<IAdaptable> elements = new ArrayList<IAdaptable>(10);
+		ArrayList<IAdaptable> elements = new ArrayList<>(10);
 		findCheckedElements(elements, fTree.getInput());
 		if (fWorkingSet == null) {
 			IWorkingSetManager workingSetManager = PlatformUI.getWorkbench()

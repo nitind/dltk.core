@@ -78,7 +78,7 @@ public class RefreshAction extends SelectionDispatchAction {
 																// in selection
 			}
 
-			ArrayList<IResource> allResources = new ArrayList<IResource>(
+			ArrayList<IResource> allResources = new ArrayList<>(
 					selectedResources);
 			addWorkingSetResources(allResources);
 			return allResources;
@@ -114,10 +114,10 @@ public class RefreshAction extends SelectionDispatchAction {
 				Throwable targetException = e.getTargetException();
 				if (targetException instanceof CoreException)
 					throw (CoreException) targetException;
-				throw new CoreException(
-						new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID,
-								ActionMessages.RefreshAction_error_workbenchaction_message,
-								targetException));
+				throw new CoreException(new Status(IStatus.ERROR,
+						DLTKUIPlugin.PLUGIN_ID,
+						ActionMessages.RefreshAction_error_workbenchaction_message,
+						targetException));
 			} catch (InterruptedException e) {
 				throw new OperationCanceledException();
 			}
@@ -177,7 +177,7 @@ public class RefreshAction extends SelectionDispatchAction {
 
 	private void performRefresh(IStructuredSelection selection,
 			IProgressMonitor monitor)
-					throws CoreException, OperationCanceledException {
+			throws CoreException, OperationCanceledException {
 		monitor.beginTask(ActionMessages.RefreshAction_progressMessage, 2);
 
 		WrappedWorkbenchRefreshAction workbenchAction = new WrappedWorkbenchRefreshAction(
@@ -190,7 +190,7 @@ public class RefreshAction extends SelectionDispatchAction {
 	private void refreshScriptElements(IStructuredSelection selection,
 			SubProgressMonitor monitor) throws CoreException {
 		Object[] selectedElements = selection.toArray();
-		ArrayList<IModelElement> modelElements = new ArrayList<IModelElement>();
+		ArrayList<IModelElement> modelElements = new ArrayList<>();
 		for (int i = 0; i < selectedElements.length; i++) {
 			Object curr = selectedElements[i];
 			if (curr instanceof IProjectFragment) {

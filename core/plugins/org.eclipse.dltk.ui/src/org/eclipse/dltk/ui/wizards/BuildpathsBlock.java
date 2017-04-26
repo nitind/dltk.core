@@ -166,21 +166,21 @@ public class BuildpathsBlock {
 				/* 2 */null,
 				NewWizardMessages.BuildPathsBlock_buildpath_checkall_button,
 				NewWizardMessages.BuildPathsBlock_buildpath_uncheckall_button };
-		fBuildPathList = new CheckedListDialogField<BPListElement>(null,
-				buttonLabels, new BPListLabelProvider());
+		fBuildPathList = new CheckedListDialogField<>(null, buttonLabels,
+				new BPListLabelProvider());
 		fBuildPathList.setDialogFieldListener(adapter);
-		fBuildPathList
-				.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);
+		fBuildPathList.setLabelText(
+				NewWizardMessages.BuildPathsBlock_buildpath_label);
 		fBuildPathList.setUpButtonIndex(0);
 		fBuildPathList.setDownButtonIndex(1);
 		fBuildPathList.setCheckAllButtonIndex(3);
 		fBuildPathList.setUncheckAllButtonIndex(4);
 		fBuildPathDialogField = new StringButtonDialogField(adapter);
-		fBuildPathDialogField
-				.setButtonLabel(NewWizardMessages.BuildPathsBlock_buildpath_button);
+		fBuildPathDialogField.setButtonLabel(
+				NewWizardMessages.BuildPathsBlock_buildpath_button);
 		fBuildPathDialogField.setDialogFieldListener(adapter);
-		fBuildPathDialogField
-				.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);
+		fBuildPathDialogField.setLabelText(
+				NewWizardMessages.BuildPathsBlock_buildpath_label);
 		fBuildPathStatus = new StatusInfo();
 		fPathStatus = new StatusInfo();
 		fCurrScriptProject = null;
@@ -207,8 +207,8 @@ public class BuildpathsBlock {
 		TabItem item;
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_source);
-		item.setImage(DLTKPluginImages
-				.get(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT));
+		item.setImage(
+				DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT));
 		if (fUseNewPage) {
 			fSourceContainerPage = new NewSourceContainerWorkbookPage(
 					fBuildPathList, fRunnableContext, getPreferenceStore());
@@ -219,9 +219,10 @@ public class BuildpathsBlock {
 		item.setData(fSourceContainerPage);
 		item.setControl(fSourceContainerPage.getControl(folder));
 		IWorkbench workbench = DLTKUIPlugin.getDefault().getWorkbench();
-		Image projectImage = workbench.getSharedImages().getImage(
-				IDE.SharedImages.IMG_OBJ_PROJECT);
-		fProjectsPage = new ProjectsWorkbookPage(fBuildPathList, fPageContainer);
+		Image projectImage = workbench.getSharedImages()
+				.getImage(IDE.SharedImages.IMG_OBJ_PROJECT);
+		fProjectsPage = new ProjectsWorkbookPage(fBuildPathList,
+				fPageContainer);
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_projects);
 		item.setImage(projectImage);
@@ -288,7 +289,8 @@ public class BuildpathsBlock {
 	 *            - if the project is an existing script project - the buildpath
 	 *            entries of the existing project
 	 */
-	public void init(IScriptProject jproject, IBuildpathEntry[] buildpathEntries) {
+	public void init(IScriptProject jproject,
+			IBuildpathEntry[] buildpathEntries) {
 		fCurrScriptProject = jproject;
 		boolean projectExists = false;
 		List<BPListElement> newBuildpath = null;
@@ -306,7 +308,7 @@ public class BuildpathsBlock {
 		if (newBuildpath == null) {
 			newBuildpath = getDefaultBuildpath(jproject);
 		}
-		List<BPListElement> exportedEntries = new ArrayList<BPListElement>();
+		List<BPListElement> exportedEntries = new ArrayList<>();
 		for (int i = 0; i < newBuildpath.size(); i++) {
 			BPListElement curr = newBuildpath.get(i);
 			if (curr.isExported()
@@ -383,20 +385,19 @@ public class BuildpathsBlock {
 
 	private List<BPListElement> getExistingEntries(
 			IBuildpathEntry[] buildpathEntries) {
-		List<BPListElement> newBuildpath = new ArrayList<BPListElement>();
+		List<BPListElement> newBuildpath = new ArrayList<>();
 		for (int i = 0; i < buildpathEntries.length; i++) {
 			IBuildpathEntry curr = buildpathEntries[i];
-			newBuildpath.add(BPListElement.createFromExisting(curr,
-					fCurrScriptProject));
+			newBuildpath.add(
+					BPListElement.createFromExisting(curr, fCurrScriptProject));
 		}
 		return newBuildpath;
 	}
 
 	// -------- public api --------
 	/**
-	 * @return Returns the script project. Can return
-	 *         <code>null<code> if the page has not
-	 * been initialized.
+	 * @return Returns the script project. Can return <code>null<code> if the
+	 *         page has not been initialized.
 	 */
 	public IScriptProject getScriptProject() {
 		return fCurrScriptProject;
@@ -454,7 +455,7 @@ public class BuildpathsBlock {
 	}
 
 	private List<BPListElement> getDefaultBuildpath(IScriptProject jproj) {
-		List<BPListElement> list = new ArrayList<BPListElement>();
+		List<BPListElement> list = new ArrayList<>();
 		final IDLTKUILanguageToolkit toolkit = getUILanguageToolkit();
 		if (toolkit != null) {
 			final IResource srcFolder;
@@ -479,8 +480,8 @@ public class BuildpathsBlock {
 		return list;
 	}
 
-	private class BuildPathAdapter implements IStringButtonAdapter,
-			IDialogFieldListener {
+	private class BuildPathAdapter
+			implements IStringButtonAdapter, IDialogFieldListener {
 		// -------- IStringButtonAdapter --------
 		@Override
 		public void changeControlPressed(DialogField field) {
@@ -498,8 +499,8 @@ public class BuildpathsBlock {
 		if (field == fBuildPathDialogField) {
 			IContainer container = chooseContainer();
 			if (container != null) {
-				fBuildPathDialogField.setText(container.getFullPath()
-						.toString());
+				fBuildPathDialogField
+						.setText(container.getFullPath().toString());
 			}
 		}
 	}
@@ -520,8 +521,8 @@ public class BuildpathsBlock {
 	}
 
 	private IStatus findMostSevereStatus() {
-		return StatusUtil.getMostSevere(new IStatus[] { fPathStatus,
-				fBuildPathStatus });
+		return StatusUtil
+				.getMostSevere(new IStatus[] { fPathStatus, fBuildPathStatus });
 	}
 
 	/**
@@ -560,10 +561,9 @@ public class BuildpathsBlock {
 						NewWizardMessages.BuildPathsBlock_warning_EntryMissing,
 						entryMissing.getPath().toString()));
 			} else {
-				fPathStatus
-						.setWarning(Messages
-								.format(NewWizardMessages.BuildPathsBlock_warning_EntriesMissing,
-										String.valueOf(nEntriesMissing)));
+				fPathStatus.setWarning(Messages.format(
+						NewWizardMessages.BuildPathsBlock_warning_EntriesMissing,
+						String.valueOf(nEntriesMissing)));
 			}
 		}
 
@@ -577,8 +577,8 @@ public class BuildpathsBlock {
 			BPListElement currElement = elements.get(i);
 			entries[i] = currElement.getBuildpathEntry();
 		}
-		IModelStatus status = BuildpathEntry.validateBuildpath(
-				fCurrScriptProject, entries);
+		IModelStatus status = BuildpathEntry
+				.validateBuildpath(fCurrScriptProject, entries);
 		if (!status.isOK()) {
 			fBuildPathStatus.setError(status.getMessage());
 			return;
@@ -599,9 +599,8 @@ public class BuildpathsBlock {
 			if (!project.exists()) {
 				IProjectDescription desc = project.getWorkspace()
 						.newProjectDescription(project.getName());
-				if (locationURI != null
-						&& ResourcesPlugin.getWorkspace().getRoot()
-								.getLocationURI().equals(locationURI)) {
+				if (locationURI != null && ResourcesPlugin.getWorkspace()
+						.getRoot().getLocationURI().equals(locationURI)) {
 					locationURI = null;
 				}
 				desc.setLocationURI(locationURI);
@@ -639,7 +638,8 @@ public class BuildpathsBlock {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
-		monitor.setTaskName(NewWizardMessages.BuildPathsBlock_operationdesc_Script);
+		monitor.setTaskName(
+				NewWizardMessages.BuildPathsBlock_operationdesc_Script);
 		monitor.beginTask("", buildpathEntries.size() * 4 + 4); //$NON-NLS-1$
 		try {
 			IProject project = javaProject.getProject();
@@ -695,9 +695,8 @@ public class BuildpathsBlock {
 						}
 					} else {
 						if (projPath.isPrefixOf(orginalPath)) {
-							orginalPath = orginalPath
-									.removeFirstSegments(projPath
-											.segmentCount());
+							orginalPath = orginalPath.removeFirstSegments(
+									projPath.segmentCount());
 						}
 						IFolder orginalFolder = project.getFolder(orginalPath);
 						if (entry.getLinkTarget() == null) {
@@ -707,9 +706,8 @@ public class BuildpathsBlock {
 								IPath parentPath = entry.getPath()
 										.removeLastSegments(1);
 								if (projPath.isPrefixOf(parentPath)) {
-									parentPath = parentPath
-											.removeFirstSegments(projPath
-													.segmentCount());
+									parentPath = parentPath.removeFirstSegments(
+											projPath.segmentCount());
 								}
 								if (parentPath.segmentCount() > 0) {
 									IFolder parentFolder = project
@@ -729,9 +727,8 @@ public class BuildpathsBlock {
 										new SubProgressMonitor(monitor, 1));
 							}
 						} else {
-							if (!folder.exists()
-									|| !entry.getLinkTarget().equals(
-											entry.getOrginalLinkTarget())) {
+							if (!folder.exists() || !entry.getLinkTarget()
+									.equals(entry.getOrginalLinkTarget())) {
 								orginalFolder.delete(true,
 										new SubProgressMonitor(monitor, 1));
 								folder.createLink(entry.getLinkTarget(),
@@ -747,8 +744,8 @@ public class BuildpathsBlock {
 					throw new OperationCanceledException();
 				}
 			}
-			javaProject.setRawBuildpath(buildpath, new SubProgressMonitor(
-					monitor, 2));
+			javaProject.setRawBuildpath(buildpath,
+					new SubProgressMonitor(monitor, 2));
 		} finally {
 			monitor.done();
 		}
@@ -817,7 +814,7 @@ public class BuildpathsBlock {
 		ISelectionStatusValidator validator = new TypedElementSelectionValidator(
 				acceptedClasses, false);
 		IProject[] allProjects = fWorkspaceRoot.getProjects();
-		ArrayList<IProject> rejectedElements = new ArrayList<IProject>(
+		ArrayList<IProject> rejectedElements = new ArrayList<>(
 				allProjects.length);
 		IProject currProject = fCurrScriptProject.getProject();
 		for (int i = 0; i < allProjects.length; i++) {
@@ -830,11 +827,13 @@ public class BuildpathsBlock {
 		ILabelProvider lp = new WorkbenchLabelProvider();
 		ITreeContentProvider cp = new WorkbenchContentProvider();
 		IResource initSelection = null;
-		FolderSelectionDialog dialog = new FolderSelectionDialog(getShell(),
-				lp, cp);
-		dialog.setTitle(NewWizardMessages.BuildPathsBlock_ChooseOutputFolderDialog_title);
+		FolderSelectionDialog dialog = new FolderSelectionDialog(getShell(), lp,
+				cp);
+		dialog.setTitle(
+				NewWizardMessages.BuildPathsBlock_ChooseOutputFolderDialog_title);
 		dialog.setValidator(validator);
-		dialog.setMessage(NewWizardMessages.BuildPathsBlock_ChooseOutputFolderDialog_description);
+		dialog.setMessage(
+				NewWizardMessages.BuildPathsBlock_ChooseOutputFolderDialog_description);
 		dialog.addFilter(filter);
 		dialog.setInput(fWorkspaceRoot);
 		dialog.setInitialSelection(initSelection);
@@ -901,7 +900,7 @@ public class BuildpathsBlock {
 				}
 				BuildPathBasePage page = (BuildPathBasePage) fTabFolder
 						.getItem(pageIndex).getData();
-				List<Object> selection = new ArrayList<Object>(1);
+				List<Object> selection = new ArrayList<>(1);
 				selection.add(elementToSelect);
 				page.setSelection(selection, true);
 			}

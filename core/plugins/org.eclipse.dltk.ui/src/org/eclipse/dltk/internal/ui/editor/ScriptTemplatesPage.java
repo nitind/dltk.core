@@ -360,7 +360,7 @@ public class ScriptTemplatesPage extends AbstractTemplatesPage {
 	 */
 	@Override
 	protected String[] getContextTypeIds(IDocument document, int offset) {
-		final Set<String> ids = new HashSet<String>();
+		final Set<String> ids = new HashSet<>();
 		final Iterator<TemplateContextType> i = getContextTypeRegistry()
 				.contextTypes();
 		while (i.hasNext()) {

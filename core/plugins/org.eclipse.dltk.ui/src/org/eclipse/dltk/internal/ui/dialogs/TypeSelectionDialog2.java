@@ -84,12 +84,9 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 			if (text == null || text.length() == 0) {
 				getShell().setText(fTitle);
 			} else {
-				getShell()
-						.setText(
-								Messages
-										.format(
-												DLTKUIMessages.TypeSelectionDialog2_title_format,
-												new String[] { fTitle, text }));
+				getShell().setText(Messages.format(
+						DLTKUIMessages.TypeSelectionDialog2_title_format,
+						new String[] { fTitle, text }));
 			}
 		}
 	}
@@ -185,21 +182,17 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 					IStatus.ERROR, "", null); //$NON-NLS-1$
 		} else {
 			if (fValidator != null) {
-				List<IType> jElements = new ArrayList<IType>();
+				List<IType> jElements = new ArrayList<>();
 				for (int i = 0; i < selection.length; i++) {
 					IType type = selection[i].getType();
 					if (type != null) {
 						jElements.add(type);
 					} else {
-						status = new Status(
-								IStatus.ERROR,
-								DLTKUIPlugin.getPluginId(),
-								IStatus.ERROR,
-								Messages
-										.format(
-												DLTKUIMessages.TypeSelectionDialog_error_type_doesnot_exist,
-												selection[i]
-														.getFullyQualifiedName()),
+						status = new Status(IStatus.ERROR,
+								DLTKUIPlugin.getPluginId(), IStatus.ERROR,
+								Messages.format(
+										DLTKUIMessages.TypeSelectionDialog_error_type_doesnot_exist,
+										selection[i].getFullyQualifiedName()),
 								null);
 						break;
 					}
@@ -236,8 +229,9 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 				if (selection instanceof ITextSelection) {
 					String text = ((ITextSelection) selection).getText();
 					setInitialFilter(text);
-				}else if (selection instanceof IStructuredSelection) {
-					Object object = ((IStructuredSelection) selection).getFirstElement();
+				} else if (selection instanceof IStructuredSelection) {
+					Object object = ((IStructuredSelection) selection)
+							.getFirstElement();
 					if (object instanceof IModelElement) {
 						IModelElement element = (IModelElement) object;
 						String text = element.getElementName();
@@ -253,9 +247,8 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 		if (text != null) {
 			text = text.trim();
 			if (text.length() > 0 /*
-								 * TODO: Add validate source type
-								 * call
-								 */) {
+									 * TODO: Add validate source type call
+									 */) {
 				setFilter(text);
 			}
 		}
@@ -326,8 +319,8 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 		setResult(result);
 	}
 
-	private void ensureConsistency() throws InvocationTargetException,
-			InterruptedException {
+	private void ensureConsistency()
+			throws InvocationTargetException, InterruptedException {
 		// we only have to ensure history consistency here since the search
 		// engine
 		// takes care of working copies.
@@ -342,14 +335,14 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 				}
 				OpenTypeHistory history = OpenTypeHistory.getInstance(fToolkit);
 				if (fgFirstTime || history.isEmpty()) {
-					monitor
-							.beginTask(
-									DLTKUIMessages.TypeSelectionDialog_progress_consistency,
-									100);
+					monitor.beginTask(
+							DLTKUIMessages.TypeSelectionDialog_progress_consistency,
+							100);
 					if (history.needConsistencyCheck()) {
-						refreshSearchIndices(new SubProgressMonitor(monitor, 90));
-						history.checkConsistency(new SubProgressMonitor(
-								monitor, 10));
+						refreshSearchIndices(
+								new SubProgressMonitor(monitor, 90));
+						history.checkConsistency(
+								new SubProgressMonitor(monitor, 10));
 					} else {
 						refreshSearchIndices(monitor);
 					}
@@ -369,17 +362,15 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 			private void refreshSearchIndices(IProgressMonitor monitor)
 					throws InvocationTargetException {
 				try {
-					new SearchEngine().searchAllTypeNames(
-							null,
-							0,
+					new SearchEngine().searchAllTypeNames(null, 0,
 							// make sure we search a concrete name. This is
 							// faster according to Kent
 							"_______________".toCharArray(), //$NON-NLS-1$
 							SearchPattern.R_EXACT_MATCH
 									| SearchPattern.R_CASE_SENSITIVE,
-							IDLTKSearchConstants.FIELD, SearchEngine
-									.createWorkspaceScope(fToolkit
-											.getCoreToolkit()),
+							IDLTKSearchConstants.FIELD,
+							SearchEngine.createWorkspaceScope(
+									fToolkit.getCoreToolkit()),
 							new NopTypeNameRequestor(),
 							IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
 							monitor);

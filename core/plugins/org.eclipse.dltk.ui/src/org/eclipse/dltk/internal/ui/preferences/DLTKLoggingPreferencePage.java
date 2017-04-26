@@ -34,8 +34,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-public class DLTKLoggingPreferencePage extends PreferencePage implements
-		IWorkbenchPreferencePage {
+public class DLTKLoggingPreferencePage extends PreferencePage
+		implements IWorkbenchPreferencePage {
 
 	private static class Option {
 		final String id;
@@ -67,18 +67,18 @@ public class DLTKLoggingPreferencePage extends PreferencePage implements
 
 	@Override
 	protected Control createContents(Composite parent) {
-		viewer = CheckboxTableViewer.newCheckList(parent, SWT.BORDER
-				| SWT.FULL_SELECTION);
+		viewer = CheckboxTableViewer.newCheckList(parent,
+				SWT.BORDER | SWT.FULL_SELECTION);
 		viewer.setContentProvider(ArrayContentProvider.getInstance());
 		viewer.setLabelProvider(new OptionLableProvider());
 		final List<Option> options = collectOptions();
 		viewer.setInput(options);
-		final Set<String> optionIds = new HashSet<String>();
+		final Set<String> optionIds = new HashSet<>();
 		for (Option option : options) {
 			optionIds.add(option.id);
 		}
 		final Map<String, Boolean> state = DLTKLogging.getState(optionIds);
-		final List<Option> checked = new ArrayList<Option>();
+		final List<Option> checked = new ArrayList<>();
 		for (Option option : options) {
 			final Boolean value = state.get(option.id);
 			if (value != null && value.booleanValue()) {
@@ -90,10 +90,10 @@ public class DLTKLoggingPreferencePage extends PreferencePage implements
 	}
 
 	private List<Option> collectOptions() {
-		final IConfigurationElement[] elements = Platform
-				.getExtensionRegistry().getConfigurationElementsFor(
+		final IConfigurationElement[] elements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(
 						DLTKCore.PLUGIN_ID + ".loggingOptions"); //$NON-NLS-1$
-		final List<Option> options = new ArrayList<Option>();
+		final List<Option> options = new ArrayList<>();
 		for (IConfigurationElement element : elements) {
 			if ("loggingOption".equals(element.getName())) { //$NON-NLS-1$
 				final String id = element.getAttribute("id"); //$NON-NLS-1$
@@ -110,7 +110,7 @@ public class DLTKLoggingPreferencePage extends PreferencePage implements
 
 	private boolean saveValues() {
 		final Object input = viewer.getInput();
-		final Map<String, Boolean> state = new HashMap<String, Boolean>();
+		final Map<String, Boolean> state = new HashMap<>();
 		if (input instanceof List<?>) {
 			for (Iterator<?> i = ((List<?>) input).iterator(); i.hasNext();) {
 				final Object item = i.next();
@@ -119,7 +119,7 @@ public class DLTKLoggingPreferencePage extends PreferencePage implements
 				}
 			}
 		}
-		final Set<String> enabled = new HashSet<String>();
+		final Set<String> enabled = new HashSet<>();
 		for (Object checked : viewer.getCheckedElements()) {
 			if (checked instanceof Option) {
 				final Option option = (Option) checked;

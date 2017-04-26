@@ -70,26 +70,26 @@ public final class CompletionProposalComputerRegistry {
 	 * {@link String}, value type: {@linkplain List
 	 * List&lt;CompletionProposalComputerDescriptor&gt;}).
 	 */
-	private final Map<String, List<CompletionProposalComputerDescriptor>> fDescriptorsByPartition = new HashMap<String, List<CompletionProposalComputerDescriptor>>();
+	private final Map<String, List<CompletionProposalComputerDescriptor>> fDescriptorsByPartition = new HashMap<>();
 	/**
 	 * Unmodifiable versions of the sets stored in
 	 * <code>fDescriptorsByPartition</code> (key type: {@link String}, value
 	 * type: {@linkplain List List&lt;CompletionProposalComputerDescriptor&gt;}
 	 * ).
 	 */
-	private final Map<String, List<CompletionProposalComputerDescriptor>> fPublicDescriptorsByPartition = new HashMap<String, List<CompletionProposalComputerDescriptor>>();
+	private final Map<String, List<CompletionProposalComputerDescriptor>> fPublicDescriptorsByPartition = new HashMap<>();
 	/**
 	 * All descriptors (element type:
 	 * {@link CompletionProposalComputerDescriptor}).
 	 */
-	private final List<CompletionProposalComputerDescriptor> fDescriptors = new ArrayList<CompletionProposalComputerDescriptor>();
+	private final List<CompletionProposalComputerDescriptor> fDescriptors = new ArrayList<>();
 	/**
 	 * Unmodifiable view of <code>fDescriptors</code>
 	 */
 	private final List<CompletionProposalComputerDescriptor> fPublicDescriptors = Collections
 			.unmodifiableList(fDescriptors);
 
-	private final List<CompletionProposalCategory> fCategories = new ArrayList<CompletionProposalCategory>();
+	private final List<CompletionProposalCategory> fCategories = new ArrayList<>();
 	private final List<CompletionProposalCategory> fPublicCategories = Collections
 			.unmodifiableList(fCategories);
 	/**
@@ -137,8 +137,9 @@ public final class CompletionProposalComputerRegistry {
 		ensureExtensionPointRead();
 		List<CompletionProposalComputerDescriptor> result = fPublicDescriptorsByPartition
 				.get(partition);
-		return result != null ? result : Collections
-				.<CompletionProposalComputerDescriptor> emptyList();
+		return result != null ? result
+				: Collections
+						.<CompletionProposalComputerDescriptor> emptyList();
 	}
 
 	/**
@@ -208,12 +209,12 @@ public final class CompletionProposalComputerRegistry {
 	 */
 	public void reload() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		List<IConfigurationElement> elements = new ArrayList<IConfigurationElement>(
-				Arrays.asList(registry.getConfigurationElementsFor(DLTKUIPlugin
-						.getPluginId(), EXTENSION_POINT)));
+		List<IConfigurationElement> elements = new ArrayList<>(
+				Arrays.asList(registry.getConfigurationElementsFor(
+						DLTKUIPlugin.getPluginId(), EXTENSION_POINT)));
 
-		Map<String, List<CompletionProposalComputerDescriptor>> map = new HashMap<String, List<CompletionProposalComputerDescriptor>>();
-		List<CompletionProposalComputerDescriptor> all = new ArrayList<CompletionProposalComputerDescriptor>();
+		Map<String, List<CompletionProposalComputerDescriptor>> map = new HashMap<>();
+		List<CompletionProposalComputerDescriptor> all = new ArrayList<>();
 
 		List<CompletionProposalCategory> categories = getCategories(elements);
 		for (Iterator<IConfigurationElement> iter = elements.iterator(); iter
@@ -227,7 +228,7 @@ public final class CompletionProposalComputerRegistry {
 					List<CompletionProposalComputerDescriptor> list = map
 							.get(partition);
 					if (list == null) {
-						list = new ArrayList<CompletionProposalComputerDescriptor>();
+						list = new ArrayList<>();
 						map.put(partition, list);
 					}
 					list.add(desc);
@@ -241,12 +242,11 @@ public final class CompletionProposalComputerRegistry {
 				 * extension in the list and inform the user about it.
 				 */
 				Object[] args = { element.toString() };
-				String message = Messages
-						.format(
-								ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message,
-								args);
-				IStatus status = new Status(IStatus.WARNING, DLTKUIPlugin
-						.getPluginId(), IStatus.OK, message, x);
+				String message = Messages.format(
+						ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message,
+						args);
+				IStatus status = new Status(IStatus.WARNING,
+						DLTKUIPlugin.getPluginId(), IStatus.OK, message, x);
 				informUser(status);
 			}
 		}
@@ -269,8 +269,8 @@ public final class CompletionProposalComputerRegistry {
 					old.addAll(current);
 				} else {
 					fDescriptorsByPartition.put(partition, current);
-					fPublicDescriptorsByPartition.put(partition, Collections
-							.unmodifiableList(current));
+					fPublicDescriptorsByPartition.put(partition,
+							Collections.unmodifiableList(current));
 				}
 			}
 
@@ -284,11 +284,11 @@ public final class CompletionProposalComputerRegistry {
 		IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
 		String preference = store
 				.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
-		Set<String> disabled = new HashSet<String>();
+		Set<String> disabled = new HashSet<>();
 		StringTokenizer tok = new StringTokenizer(preference, "\0"); //$NON-NLS-1$
 		while (tok.hasMoreTokens())
 			disabled.add(tok.nextToken());
-		Map<String, Integer> ordered = new HashMap<String, Integer>();
+		Map<String, Integer> ordered = new HashMap<>();
 		preference = store
 				.getString(PreferenceConstants.CODEASSIST_CATEGORY_ORDER);
 		tok = new StringTokenizer(preference, "\0"); //$NON-NLS-1$
@@ -299,7 +299,7 @@ public final class CompletionProposalComputerRegistry {
 			ordered.put(id, Integer.valueOf(rank));
 		}
 
-		List<CompletionProposalCategory> categories = new ArrayList<CompletionProposalCategory>();
+		List<CompletionProposalCategory> categories = new ArrayList<>();
 		for (Iterator<IConfigurationElement> iter = elements.iterator(); iter
 				.hasNext();) {
 			IConfigurationElement element = iter.next();
@@ -326,12 +326,11 @@ public final class CompletionProposalComputerRegistry {
 				 * extension in the list and inform the user about it.
 				 */
 				Object[] args = { element.toString() };
-				String message = Messages
-						.format(
-								ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message,
-								args);
-				IStatus status = new Status(IStatus.WARNING, DLTKUIPlugin
-						.getPluginId(), IStatus.OK, message, x);
+				String message = Messages.format(
+						ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message,
+						args);
+				IStatus status = new Status(IStatus.WARNING,
+						DLTKUIPlugin.getPluginId(), IStatus.OK, message, x);
 				informUser(status);
 			}
 		}
@@ -352,29 +351,26 @@ public final class CompletionProposalComputerRegistry {
 		String title = ScriptTextMessages.CompletionProposalComputerRegistry_error_dialog_title;
 		CompletionProposalCategory category = descriptor.getCategory();
 		IContributor culprit = descriptor.getContributor();
-		Set<String> affectedPlugins = getAffectedContributors(category, culprit);
+		Set<String> affectedPlugins = getAffectedContributors(category,
+				culprit);
 
 		final String avoidHint;
 		final String culpritName = culprit == null ? null : culprit.getName();
 		if (affectedPlugins.isEmpty())
-			avoidHint = Messages
-					.format(
-							ScriptTextMessages.CompletionProposalComputerRegistry_messageAvoidanceHint,
-							new Object[] { culpritName,
-									category.getDisplayName() });
+			avoidHint = Messages.format(
+					ScriptTextMessages.CompletionProposalComputerRegistry_messageAvoidanceHint,
+					new Object[] { culpritName, category.getDisplayName() });
 		else
-			avoidHint = Messages
-					.format(
-							ScriptTextMessages.CompletionProposalComputerRegistry_messageAvoidanceHintWithWarning,
-							new Object[] { culpritName,
-									category.getDisplayName(),
-									toString(affectedPlugins) });
+			avoidHint = Messages.format(
+					ScriptTextMessages.CompletionProposalComputerRegistry_messageAvoidanceHintWithWarning,
+					new Object[] { culpritName, category.getDisplayName(),
+							toString(affectedPlugins) });
 
 		String message = status.getMessage();
 		// inlined from MessageDialog.openError
-		MessageDialog dialog = new MessageDialog(DLTKUIPlugin
-				.getActiveWorkbenchShell(), title, null /* default image */,
-				message, MessageDialog.ERROR,
+		MessageDialog dialog = new MessageDialog(
+				DLTKUIPlugin.getActiveWorkbenchShell(), title,
+				null /* default image */, message, MessageDialog.ERROR,
 				new String[] { IDialogConstants.OK_LABEL }, 0) {
 			@Override
 			protected Control createCustomArea(Composite parent) {
@@ -383,10 +379,9 @@ public final class CompletionProposalComputerRegistry {
 				link.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
-						PreferencesUtil
-								.createPreferenceDialogOn(
-										getShell(),
-										"org.eclipse.dltk.ui.preferences.CodeAssistPreferenceAdvanced", null, null).open(); //$NON-NLS-1$
+						PreferencesUtil.createPreferenceDialogOn(getShell(),
+								"org.eclipse.dltk.ui.preferences.CodeAssistPreferenceAdvanced", //$NON-NLS-1$
+								null, null).open();
 					}
 				});
 				GridData gridData = new GridData(SWT.FILL, SWT.BEGINNING, true,
@@ -412,7 +407,7 @@ public final class CompletionProposalComputerRegistry {
 	 */
 	private Set<String> getAffectedContributors(
 			CompletionProposalCategory category, IContributor culprit) {
-		Set<String> affectedPlugins = new HashSet<String>();
+		Set<String> affectedPlugins = new HashSet<>();
 		for (Iterator<CompletionProposalComputerDescriptor> it = getProposalComputerDescriptors()
 				.iterator(); it.hasNext();) {
 			CompletionProposalComputerDescriptor desc = it.next();

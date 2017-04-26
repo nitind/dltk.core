@@ -89,7 +89,7 @@ public class ScriptExpandHover extends AnnotationExpandHover {
 		if (model == null)
 			return null;
 
-		List<Annotation> exact = new ArrayList<Annotation>();
+		List<Annotation> exact = new ArrayList<>();
 		HashMap messagesAtPosition = new HashMap();
 
 		Iterator<Annotation> e = model.getAnnotationIterator();

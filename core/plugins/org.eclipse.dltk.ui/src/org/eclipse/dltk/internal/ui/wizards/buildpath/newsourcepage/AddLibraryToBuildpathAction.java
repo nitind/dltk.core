@@ -53,17 +53,17 @@ import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.part.ISetSelectionTarget;
 
-public class AddLibraryToBuildpathAction extends Action implements
-		ISelectionChangedListener {
+public class AddLibraryToBuildpathAction extends Action
+		implements ISelectionChangedListener {
 
 	private IScriptProject fSelectedProject;
 	private final IWorkbenchSite fSite;
 
 	public AddLibraryToBuildpathAction(IWorkbenchSite site) {
-		super(
-				NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_AddLibCP_label,
+		super(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_AddLibCP_label,
 				DLTKPluginImages.DESC_OBJS_LIBRARY);
-		setToolTipText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_AddLibCP_tooltip);
+		setToolTipText(
+				NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_AddLibCP_tooltip);
 		fSite = site;
 	}
 
@@ -127,12 +127,11 @@ public class AddLibraryToBuildpathAction extends Action implements
 				IBuildpathEntry[] selected = getNewEntries();
 				if (selected != null) {
 					try {
-						pm
-								.beginTask(
-										NewWizardMessages.BuildpathModifier_Monitor_AddToBuildpath,
-										4);
+						pm.beginTask(
+								NewWizardMessages.BuildpathModifier_Monitor_AddToBuildpath,
+								4);
 
-						List<BPListElement> addedEntries = new ArrayList<BPListElement>();
+						List<BPListElement> addedEntries = new ArrayList<>();
 						for (int i = 0; i < selected.length; i++) {
 							BPListElement listElement = BPListElement
 									.createFromExisting(selected[i], project);
@@ -143,11 +142,11 @@ public class AddLibraryToBuildpathAction extends Action implements
 						if (pm.isCanceled())
 							throw new InterruptedException();
 
-						List existingEntries = BuildpathModifier
+						List<BPListElement> existingEntries = BuildpathModifier
 								.getExistingEntries(project);
 						BuildpathModifier.setNewEntry(existingEntries,
-								addedEntries, project, new SubProgressMonitor(
-										pm, 1));
+								addedEntries, project,
+								new SubProgressMonitor(pm, 1));
 						if (pm.isCanceled())
 							throw new InterruptedException();
 
@@ -156,7 +155,8 @@ public class AddLibraryToBuildpathAction extends Action implements
 						if (pm.isCanceled())
 							throw new InterruptedException();
 
-						List result = new ArrayList(addedEntries.size());
+						List<BuildPathContainer> result = new ArrayList<>(
+								addedEntries.size());
 						for (int i = 0; i < addedEntries.size(); i++) {
 							result.add(new BuildPathContainer(project,
 									selected[i]));
@@ -232,7 +232,7 @@ public class AddLibraryToBuildpathAction extends Action implements
 			return;
 
 		// get all the view and editor parts
-		List parts = new ArrayList();
+		List<IWorkbenchPart> parts = new ArrayList<>();
 		IWorkbenchPartReference refs[] = page.getViewReferences();
 		for (int i = 0; i < refs.length; i++) {
 			IWorkbenchPart part = refs[i].getPart(false);
@@ -245,23 +245,22 @@ public class AddLibraryToBuildpathAction extends Action implements
 				parts.add(refs[i].getPart(false));
 		}
 
-		Iterator itr = parts.iterator();
+		Iterator<IWorkbenchPart> itr = parts.iterator();
 		while (itr.hasNext()) {
-			IWorkbenchPart part = (IWorkbenchPart) itr.next();
+			IWorkbenchPart part = itr.next();
 
 			// get the part's ISetSelectionTarget implementation
 			ISetSelectionTarget target = null;
 			if (part instanceof ISetSelectionTarget)
 				target = (ISetSelectionTarget) part;
 			else
-				target = part
-						.getAdapter(ISetSelectionTarget.class);
+				target = part.getAdapter(ISetSelectionTarget.class);
 
 			if (target != null) {
 				// select and reveal resource
 				final ISetSelectionTarget finalTarget = target;
-				page.getWorkbenchWindow().getShell().getDisplay().asyncExec(
-						() -> finalTarget.selectReveal(selection));
+				page.getWorkbenchWindow().getShell().getDisplay()
+						.asyncExec(() -> finalTarget.selectReveal(selection));
 			}
 		}
 	}

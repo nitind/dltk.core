@@ -39,8 +39,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 /**
  * Script element hyperlink detector.
  */
-public class ModelElementHyperlinkDetector implements IHyperlinkDetector,
-		IHyperlinkDetectorExtension {
+public class ModelElementHyperlinkDetector
+		implements IHyperlinkDetector, IHyperlinkDetectorExtension {
 
 	private ITextEditor fTextEditor;
 
@@ -56,8 +56,8 @@ public class ModelElementHyperlinkDetector implements IHyperlinkDetector,
 	}
 
 	@Override
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
-			IRegion region, boolean canShowMultipleHyperlinks) {
+	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region,
+			boolean canShowMultipleHyperlinks) {
 		if (region == null || !(fTextEditor instanceof ScriptEditor))
 			return null;
 
@@ -68,14 +68,14 @@ public class ModelElementHyperlinkDetector implements IHyperlinkDetector,
 
 		int offset = region.getOffset();
 
-		IModelElement input = EditorUtility.getEditorInputModelElement(
-				fTextEditor, false);
+		IModelElement input = EditorUtility
+				.getEditorInputModelElement(fTextEditor, false);
 		if (input == null)
 			return null;
 
 		try {
-			IDocument document = fTextEditor.getDocumentProvider().getDocument(
-					fTextEditor.getEditorInput());
+			IDocument document = fTextEditor.getDocumentProvider()
+					.getDocument(fTextEditor.getEditorInput());
 			IRegion wordRegion = ScriptWordFinder.findWord(document, offset);
 			if (wordRegion == null || wordRegion.getLength() == 0)
 				return null;
@@ -86,8 +86,7 @@ public class ModelElementHyperlinkDetector implements IHyperlinkDetector,
 			if (selection == null) {
 				return null;
 			}
-			final List<Object> elements = new ArrayList<Object>(
-					selection.size());
+			final List<Object> elements = new ArrayList<>(selection.size());
 			for (Object element : selection) {
 				if (element instanceof IModelElement) {
 					elements.add(element);

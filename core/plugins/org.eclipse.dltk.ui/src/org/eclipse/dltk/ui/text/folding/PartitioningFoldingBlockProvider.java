@@ -37,8 +37,8 @@ import org.eclipse.jface.text.rules.FastPartitioner;
  *
  * @since 2.0
  */
-public abstract class PartitioningFoldingBlockProvider implements
-		IFoldingBlockProvider {
+public abstract class PartitioningFoldingBlockProvider
+		implements IFoldingBlockProvider {
 
 	private final IPartitioningProvider partitioningProvider;
 
@@ -61,14 +61,14 @@ public abstract class PartitioningFoldingBlockProvider implements
 				.getInt(PreferenceConstants.EDITOR_FOLDING_LINES_LIMIT);
 		fDocsFolding = preferenceStore
 				.getBoolean(PreferenceConstants.EDITOR_DOCS_FOLDING_ENABLED);
-		fCommentsFolding = preferenceStore
-				.getBoolean(PreferenceConstants.EDITOR_COMMENTS_FOLDING_ENABLED);
-		fFoldNewLines = preferenceStore
-				.getBoolean(PreferenceConstants.EDITOR_COMMENT_FOLDING_JOIN_NEWLINES);
+		fCommentsFolding = preferenceStore.getBoolean(
+				PreferenceConstants.EDITOR_COMMENTS_FOLDING_ENABLED);
+		fFoldNewLines = preferenceStore.getBoolean(
+				PreferenceConstants.EDITOR_COMMENT_FOLDING_JOIN_NEWLINES);
 		fInitCollapseComments = preferenceStore
 				.getBoolean(PreferenceConstants.EDITOR_FOLDING_INIT_COMMENTS);
-		fInitCollapseHeaderComments = preferenceStore
-				.getBoolean(PreferenceConstants.EDITOR_FOLDING_INIT_HEADER_COMMENTS);
+		fInitCollapseHeaderComments = preferenceStore.getBoolean(
+				PreferenceConstants.EDITOR_FOLDING_INIT_HEADER_COMMENTS);
 		fInitCollapseDocs = preferenceStore
 				.getBoolean(PreferenceConstants.EDITOR_FOLDING_INIT_DOCS);
 	}
@@ -139,7 +139,7 @@ public abstract class PartitioningFoldingBlockProvider implements
 
 	private List<ITypedRegion> computePartitioning(Document d) {
 		// TODO TextUtilities.computePartitioning() ?
-		List<ITypedRegion> docRegionList = new ArrayList<ITypedRegion>();
+		List<ITypedRegion> docRegionList = new ArrayList<>();
 		int offset = 0;
 		for (;;) {
 			try {
@@ -165,15 +165,14 @@ public abstract class PartitioningFoldingBlockProvider implements
 			installDocumentStuff(document);
 			ITypedRegion start = null;
 			ITypedRegion lastRegion = null;
-			List<IRegion> regions = new ArrayList<IRegion>();
+			List<IRegion> regions = new ArrayList<>();
 			for (ITypedRegion region : computePartitioning(document)) {
 				if (region.getType().equals(partition)
 						&& startsAtLineBegin(document, region)) {
 					if (start == null)
 						start = region;
-				} else if (start != null
-						&& (isBlankRegion(document, region) || isEmptyRegion(
-								document, region)
+				} else if (start != null && (isBlankRegion(document, region)
+						|| isEmptyRegion(document, region)
 								&& isJoinCommentsSeparatedByEmptyLines())) {
 					// blanks or empty lines
 					// TODO introduce line limit for collapseEmptyLines() ?
@@ -183,9 +182,8 @@ public abstract class PartitioningFoldingBlockProvider implements
 						int offset0 = start.getOffset();
 						int length0 = lastRegion.getOffset()
 								+ lastRegion.getLength() - offset0 - 1;
-						length0 = contents
-								.substring(offset0, offset0 + length0).trim()
-								.length();
+						length0 = contents.substring(offset0, offset0 + length0)
+								.trim().length();
 						regions.add(new Region(offset0, length0));
 					}
 					start = null;
@@ -221,8 +219,9 @@ public abstract class PartitioningFoldingBlockProvider implements
 		for (IRegion region : regions) {
 			// TODO
 			Object element = null;
-			requestor.acceptBlock(region.getOffset(), region.getOffset()
-					+ region.getLength(), kind, element, collapse);
+			requestor.acceptBlock(region.getOffset(),
+					region.getOffset() + region.getLength(), kind, element,
+					collapse);
 		}
 	}
 

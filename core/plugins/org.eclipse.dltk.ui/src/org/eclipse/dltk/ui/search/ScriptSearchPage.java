@@ -68,8 +68,8 @@ import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
-public abstract class ScriptSearchPage extends DialogPage implements
-		ISearchPage, IDLTKSearchConstants {
+public abstract class ScriptSearchPage extends DialogPage
+		implements ISearchPage, IDLTKSearchConstants {
 
 	private static class SearchPatternData {
 		private int searchFor;
@@ -91,7 +91,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 
 		public SearchPatternData(int searchFor, int limitTo, String pattern,
 				boolean isCaseSensitive, IModelElement element, int scope,
-				IWorkingSet[] workingSets, boolean includeInterpreterEnvironment) {
+				IWorkingSet[] workingSets,
+				boolean includeInterpreterEnvironment) {
 			this.searchFor = searchFor;
 			this.limitTo = limitTo;
 			this.pattern = pattern;
@@ -144,8 +145,9 @@ public abstract class ScriptSearchPage extends DialogPage implements
 			settings.put("scope", scope); //$NON-NLS-1$
 			settings.put("pattern", pattern); //$NON-NLS-1$
 			settings.put("limitTo", limitTo); //$NON-NLS-1$
-			settings.put(
-					"modelElement", modelElement != null ? modelElement.getHandleIdentifier() : ""); //$NON-NLS-1$ //$NON-NLS-2$
+			settings.put("modelElement", //$NON-NLS-1$
+					modelElement != null ? modelElement.getHandleIdentifier()
+							: ""); //$NON-NLS-1$
 			settings.put("isCaseSensitive", isCaseSensitive); //$NON-NLS-1$
 			if (workingSets != null) {
 				String[] wsIds = new String[workingSets.length];
@@ -156,8 +158,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 			} else {
 				settings.put("workingSets", new String[0]); //$NON-NLS-1$
 			}
-			settings.put(
-					"includeInterpreterEnvironment", includeInterpreterEnvironment); //$NON-NLS-1$
+			settings.put("includeInterpreterEnvironment", //$NON-NLS-1$
+					includeInterpreterEnvironment);
 		}
 
 		public static SearchPatternData create(IDialogSettings settings) {
@@ -177,8 +179,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 			String[] wsIds = settings.getArray("workingSets"); //$NON-NLS-1$
 			IWorkingSet[] workingSets = null;
 			if (wsIds != null && wsIds.length > 0) {
-				IWorkingSetManager workingSetManager = PlatformUI
-						.getWorkbench().getWorkingSetManager();
+				IWorkingSetManager workingSetManager = PlatformUI.getWorkbench()
+						.getWorkingSetManager();
 				workingSets = new IWorkingSet[wsIds.length];
 				for (int i = 0; workingSets != null && i < wsIds.length; i++) {
 					workingSets[i] = workingSetManager.getWorkingSet(wsIds[i]);
@@ -200,7 +202,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 					includeInterpreterEnvironment = settings
 							.getBoolean("includeInterpreterEnvironment"); //$NON-NLS-1$
 				} else {
-					includeInterpreterEnvironment = forceIncludeInterpreterEnvironment(limitTo);
+					includeInterpreterEnvironment = forceIncludeInterpreterEnvironment(
+							limitTo);
 				}
 				return new SearchPatternData(searchFor, limitTo, pattern,
 						isCaseSensitive, elem, scope, workingSets,
@@ -255,14 +258,14 @@ public abstract class ScriptSearchPage extends DialogPage implements
 			// SearchMessages.SearchPage_limitTo_implementors,
 			SearchMessages.SearchPage_limitTo_references,
 			SearchMessages.SearchPage_limitTo_allOccurrences
-	// SearchMessages.SearchPage_limitTo_readReferences,
-	// SearchMessages.SearchPage_limitTo_writeReferences
+			// SearchMessages.SearchPage_limitTo_readReferences,
+			// SearchMessages.SearchPage_limitTo_writeReferences
 	};
 
 	private Button fIncludeInterpreterEnvironmentCheckbox;
 
 	public ScriptSearchPage() {
-		fPreviousSearchPatterns = new ArrayList<SearchPatternData>();
+		fPreviousSearchPatterns = new ArrayList<>();
 	}
 
 	@Override
@@ -283,8 +286,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 
 		switch (getContainer().getSelectedScope()) {
 		case ISearchPageContainer.WORKSPACE_SCOPE:
-			scopeDescription = factory
-					.getWorkspaceScopeDescription(includeInterpreterEnvironment);
+			scopeDescription = factory.getWorkspaceScopeDescription(
+					includeInterpreterEnvironment);
 			scope = factory.createWorkspaceScope(includeInterpreterEnvironment,
 					getLanguageToolkit());
 			break;
@@ -297,7 +300,7 @@ public abstract class ScriptSearchPage extends DialogPage implements
 					modelElements, includeInterpreterEnvironment);
 			break;
 		case ISearchPageContainer.SELECTED_PROJECTS_SCOPE: {
-			ArrayList<String> res = new ArrayList<String>();
+			ArrayList<String> res = new ArrayList<>();
 			String[] projectNames = getContainer().getSelectedProjectNames();
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			for (int i = 0; i < projectNames.length; i++) {
@@ -349,8 +352,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 	 * @param root
 	 * @param i
 	 */
-	private void getEnclosingProjects(ArrayList<String> res,
-			String projectName, IWorkspaceRoot root) {
+	private void getEnclosingProjects(ArrayList<String> res, String projectName,
+			IWorkspaceRoot root) {
 		if (res.contains(projectName))
 			return;
 		IScriptProject project = DLTKCore.create(root.getProject(projectName));
@@ -360,9 +363,10 @@ public abstract class ScriptSearchPage extends DialogPage implements
 				IBuildpathEntry[] resolvedBuildpath = project
 						.getResolvedBuildpath(true);
 				for (IBuildpathEntry buildpathEntry : resolvedBuildpath) {
-					if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-						getEnclosingProjects(res, buildpathEntry.getPath()
-								.lastSegment(), root);
+					if (buildpathEntry
+							.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+						getEnclosingProjects(res,
+								buildpathEntry.getPath().lastSegment(), root);
 					}
 				}
 			} catch (ModelException e) {
@@ -444,9 +448,9 @@ public abstract class ScriptSearchPage extends DialogPage implements
 			fPreviousSearchPatterns.remove(match);
 		}
 		match = new SearchPatternData(getSearchFor(), getLimitTo(), pattern,
-				fCaseSensitive.getSelection(), fModelElement, getContainer()
-						.getSelectedScope(), getContainer()
-						.getSelectedWorkingSets(),
+				fCaseSensitive.getSelection(), fModelElement,
+				getContainer().getSelectedScope(),
+				getContainer().getSelectedWorkingSets(),
 				fIncludeInterpreterEnvironmentCheckbox.getSelection());
 
 		fPreviousSearchPatterns.add(0, match); // insert on top
@@ -497,24 +501,24 @@ public abstract class ScriptSearchPage extends DialogPage implements
 
 		Label separator = new Label(result, SWT.NONE);
 		separator.setVisible(false);
-		GridData data = new GridData(GridData.FILL, GridData.FILL, false,
-				false, 2, 1);
+		GridData data = new GridData(GridData.FILL, GridData.FILL, false, false,
+				2, 1);
 		data.heightHint = convertHeightInCharsToPixels(1) / 3;
 		separator.setLayoutData(data);
 
 		Control searchFor = createSearchFor(result);
-		searchFor.setLayoutData(new GridData(GridData.FILL, GridData.FILL,
-				true, false, 1, 1));
+		searchFor.setLayoutData(
+				new GridData(GridData.FILL, GridData.FILL, true, false, 1, 1));
 
 		Control limitTo = createLimitTo(result);
-		limitTo.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true,
-				false, 1, 1));
+		limitTo.setLayoutData(
+				new GridData(GridData.FILL, GridData.FILL, true, false, 1, 1));
 
 		fIncludeInterpreterEnvironmentCheckbox = new Button(result, SWT.CHECK);
-		fIncludeInterpreterEnvironmentCheckbox
-				.setText(SearchMessages.SearchPage_searchInterpreterEnvironment_label);
-		fIncludeInterpreterEnvironmentCheckbox.setLayoutData(new GridData(
-				SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		fIncludeInterpreterEnvironmentCheckbox.setText(
+				SearchMessages.SearchPage_searchInterpreterEnvironment_label);
+		fIncludeInterpreterEnvironmentCheckbox.setLayoutData(
+				new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
 		// createParticipants(result);
 
@@ -562,8 +566,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 		// Pattern text + info
 		Label label = new Label(result, SWT.LEFT);
 		label.setText(SearchMessages.SearchPage_expression_label);
-		label.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false,
-				false, 2, 1));
+		label.setLayoutData(
+				new GridData(GridData.FILL, GridData.FILL, false, false, 2, 1));
 
 		// Pattern combo
 		fPattern = new Combo(result, SWT.SINGLE | SWT.BORDER);
@@ -595,8 +599,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 				fIsCaseSensitive = fCaseSensitive.getSelection();
 			}
 		});
-		fCaseSensitive.setLayoutData(new GridData(GridData.FILL, GridData.FILL,
-				false, false, 1, 1));
+		fCaseSensitive.setLayoutData(
+				new GridData(GridData.FILL, GridData.FILL, false, false, 1, 1));
 
 		return result;
 	}
@@ -613,9 +617,9 @@ public abstract class ScriptSearchPage extends DialogPage implements
 		if (fModelElement != null) {
 			return true;
 		}
-		return SearchPattern
-				.createPattern(getPattern(), getSearchFor(), getLimitTo(),
-						SearchPattern.R_EXACT_MATCH, getLanguageToolkit()) != null;
+		return SearchPattern.createPattern(getPattern(), getSearchFor(),
+				getLimitTo(), SearchPattern.R_EXACT_MATCH,
+				getLanguageToolkit()) != null;
 	}
 
 	@Override
@@ -688,8 +692,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 		// Fill with dummy radio buttons
 		Label filler = new Label(result, SWT.NONE);
 		filler.setVisible(false);
-		filler.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1,
-				1));
+		filler.setLayoutData(
+				new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 
 		return result;
 	}
@@ -766,7 +770,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 
 		fPattern.setText(initData.getPattern());
 
-		boolean forceIncludeInterpreterEnvironment = forceIncludeInterpreterEnvironment(getLimitTo());
+		boolean forceIncludeInterpreterEnvironment = forceIncludeInterpreterEnvironment(
+				getLimitTo());
 		fIncludeInterpreterEnvironmentCheckbox
 				.setEnabled(!forceIncludeInterpreterEnvironment);
 		fIncludeInterpreterEnvironmentCheckbox
@@ -775,7 +780,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 	}
 
 	private void updateUseInterpreterEnvironment() {
-		boolean forceIncludeInterpreterEnvironment = forceIncludeInterpreterEnvironment(getLimitTo());
+		boolean forceIncludeInterpreterEnvironment = forceIncludeInterpreterEnvironment(
+				getLimitTo());
 		fIncludeInterpreterEnvironmentCheckbox
 				.setEnabled(!forceIncludeInterpreterEnvironment);
 		boolean isSelected = true;
@@ -817,8 +823,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 			IWorkbenchAdapter adapter = ((IAdaptable) o)
 					.getAdapter(IWorkbenchAdapter.class);
 			if (adapter != null) {
-				return new SearchPatternData(TYPE, REFERENCES,
-						fIsCaseSensitive, adapter.getLabel(o), null, false);
+				return new SearchPatternData(TYPE, REFERENCES, fIsCaseSensitive,
+						adapter.getLabel(o), null, false);
 			}
 		}
 		return res;
@@ -840,9 +846,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 	private SearchPatternData determineInitValuesFrom(IModelElement element) {
 		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 				.getLanguageToolkit(element);
-		if (toolkit != null
-				&& !toolkit.getNatureId().equals(
-						getLanguageToolkit().getNatureId())) {
+		if (toolkit != null && !toolkit.getNatureId()
+				.equals(getLanguageToolkit().getNatureId())) {
 			return null;
 		}
 		DLTKSearchScopeFactory factory = DLTKSearchScopeFactory.getInstance();
@@ -873,8 +878,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 					isInsideInterpreterEnvironment);
 		case IModelElement.SOURCE_MODULE: {
 			if (DLTKCore.DEBUG) {
-				System.out
-						.println("TODO: DLTKSearchPage: Add init values for source module support."); //$NON-NLS-1$
+				System.out.println(
+						"TODO: DLTKSearchPage: Add init values for source module support."); //$NON-NLS-1$
 			}
 			// IType mainType= ((ISourceModule) element).
 			// if (mainType != null) {
@@ -886,8 +891,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 		}
 		case IModelElement.FIELD:
 			return new SearchPatternData(FIELD, REFERENCES, true,
-					PatternStrings.getFieldSignature((IField) element),
-					element, isInsideInterpreterEnvironment);
+					PatternStrings.getFieldSignature((IField) element), element,
+					isInsideInterpreterEnvironment);
 		case IModelElement.METHOD:
 			IMethod method = (IMethod) element;
 			int searchFor = /* method.isConstructor() ? CONSTRUCTOR : */METHOD;
@@ -911,9 +916,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 				i++;
 			}
 			if (i > 0) {
-				return new SearchPatternData(TYPE, REFERENCES,
-						fIsCaseSensitive, selectedText.substring(0, i), null,
-						true);
+				return new SearchPatternData(TYPE, REFERENCES, fIsCaseSensitive,
+						selectedText.substring(0, i), null, true);
 			}
 		}
 		return null;
@@ -923,8 +927,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 		if (!fPreviousSearchPatterns.isEmpty()) {
 			return fPreviousSearchPatterns.get(0);
 		}
-		return new SearchPatternData(TYPE, REFERENCES, fIsCaseSensitive,
-				"", null, false); //$NON-NLS-1$
+		return new SearchPatternData(TYPE, REFERENCES, fIsCaseSensitive, "", //$NON-NLS-1$
+				null, false);
 	}
 
 	@Override
@@ -996,8 +1000,8 @@ public abstract class ScriptSearchPage extends DialogPage implements
 		IDialogSettings s = getDialogSettings();
 		s.put(STORE_CASE_SENSITIVE, fIsCaseSensitive);
 
-		int historySize = Math
-				.min(fPreviousSearchPatterns.size(), HISTORY_SIZE);
+		int historySize = Math.min(fPreviousSearchPatterns.size(),
+				HISTORY_SIZE);
 		s.put(STORE_HISTORY_SIZE, historySize);
 		for (int i = 0; i < historySize; i++) {
 			IDialogSettings histSettings = s.addNewSection(STORE_HISTORY + i);

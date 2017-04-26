@@ -41,15 +41,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
-final class ScriptCorePreferenceBlock extends
-		ImprovedAbstractConfigurationBlock {
+final class ScriptCorePreferenceBlock
+		extends ImprovedAbstractConfigurationBlock {
 
 	private final class ReindexOperation implements IRunnableWithProgress {
 		@Override
 		public void run(IProgressMonitor monitor) {
 			try {
-				ResourcesPlugin.getWorkspace().build(
-						IncrementalProjectBuilder.FULL_BUILD, monitor);
+				ResourcesPlugin.getWorkspace()
+						.build(IncrementalProjectBuilder.FULL_BUILD, monitor);
 			} catch (CoreException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();
@@ -58,7 +58,8 @@ final class ScriptCorePreferenceBlock extends
 		}
 	}
 
-	ScriptCorePreferenceBlock(OverlayPreferenceStore store, PreferencePage page) {
+	ScriptCorePreferenceBlock(OverlayPreferenceStore store,
+			PreferencePage page) {
 		super(store, page);
 	}
 
@@ -83,12 +84,9 @@ final class ScriptCorePreferenceBlock extends
 				Messages.ScriptCorePreferenceBlock_editOptions, 2, 1,
 				GridData.FILL_HORIZONTAL);
 
-		bindControl(
-				SWTFactory.createCheckButton(
-						editorGroup,
-						PreferencesMessages.EditorPreferencePage_evaluateTemporaryProblems,
-						2),
-				PreferenceConstants.EDITOR_EVALUTE_TEMPORARY_PROBLEMS);
+		bindControl(SWTFactory.createCheckButton(editorGroup,
+				PreferencesMessages.EditorPreferencePage_evaluateTemporaryProblems,
+				2), PreferenceConstants.EDITOR_EVALUTE_TEMPORARY_PROBLEMS);
 		// Connection timeout
 		SWTFactory.createLabel(editorGroup,
 				Messages.ScriptCorePreferenceBlock_CodeAssistTimeout, 1);
@@ -101,22 +99,17 @@ final class ScriptCorePreferenceBlock extends
 				Messages.ScriptCorePreferenceBlock_UI_Options, 1, 1,
 				GridData.FILL_HORIZONTAL);
 
-		bindControl(
-				SWTFactory
-						.createCheckButton(
-								uiGroup,
-								Messages.EditorPreferencePage_ResourceShowError_InvalidResourceName),
+		bindControl(SWTFactory.createCheckButton(uiGroup,
+				Messages.EditorPreferencePage_ResourceShowError_InvalidResourceName),
 				PreferenceConstants.RESOURCE_SHOW_ERROR_INVALID_RESOURCE_NAME);
 
 		Group builderGroup = SWTFactory.createGroup(composite,
 				Messages.ScriptCorePreferenceBlock_Builder_Options, 2, 1,
 				GridData.FILL_HORIZONTAL);
 
-		SWTFactory
-				.createLabel(
-						builderGroup,
-						Messages.ScriptCorePreferenceBlock_Builder_CircularDependencies,
-						1);
+		SWTFactory.createLabel(builderGroup,
+				Messages.ScriptCorePreferenceBlock_Builder_CircularDependencies,
+				1);
 		circularBuildPathCombo = SWTFactory.createCombo(builderGroup,
 				SWT.READ_ONLY | SWT.BORDER, 0, names);
 		createReIndex(composite);
@@ -165,7 +158,7 @@ final class ScriptCorePreferenceBlock extends
 
 	@Override
 	protected List<OverlayKey> createOverlayKeys() {
-		ArrayList<OverlayKey> overlayKeys = new ArrayList<OverlayKey>();
+		ArrayList<OverlayKey> overlayKeys = new ArrayList<>();
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
 				OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.EDITOR_EVALUTE_TEMPORARY_PROBLEMS));
@@ -218,8 +211,8 @@ final class ScriptCorePreferenceBlock extends
 			final Preferences prefs = DLTKCore.getDefault()
 					.getPluginPreferences();
 			final String value = ids[buildPathIndex];
-			if (!value
-					.equals(prefs.getString(DLTKCore.CORE_CIRCULAR_BUILDPATH))) {
+			if (!value.equals(
+					prefs.getString(DLTKCore.CORE_CIRCULAR_BUILDPATH))) {
 				prefs.setValue(DLTKCore.CORE_CIRCULAR_BUILDPATH, value);
 			}
 		}

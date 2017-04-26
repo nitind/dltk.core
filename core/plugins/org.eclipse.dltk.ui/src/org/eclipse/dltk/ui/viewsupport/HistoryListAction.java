@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Control;
 /*package*/class HistoryListAction<E> extends Action {
 
 	private class HistoryListDialog extends StatusDialog {
-		private static final int MAX_MAX_ENTRIES= 100;
+		private static final int MAX_MAX_ENTRIES = 100;
 		private ListDialogField fHistoryList;
 		private StringDialogField fMaxEntriesField;
 		private int fMaxEntries;
@@ -58,11 +58,13 @@ import org.eclipse.swt.widgets.Control;
 		}
 
 		private void createHistoryList() {
-			IListAdapter adapter= new IListAdapter() {
+			IListAdapter adapter = new IListAdapter() {
 				@Override
-				public void customButtonPressed(ListDialogField field, int index) {
+				public void customButtonPressed(ListDialogField field,
+						int index) {
 					doCustomButtonPressed(index);
 				}
+
 				@Override
 				public void selectionChanged(ListDialogField field) {
 					doSelectionChanged();
@@ -73,9 +75,12 @@ import org.eclipse.swt.widgets.Control;
 					doDoubleClicked();
 				}
 			};
-			String[] buttonLabels= new String[] { DLTKUIMessages.HistoryListAction_remove, DLTKUIMessages.HistoryListAction_remove_all };
-			LabelProvider labelProvider= new TestRunLabelProvider();
-			fHistoryList= new ListDialogField(adapter, buttonLabels, labelProvider);
+			String[] buttonLabels = new String[] {
+					DLTKUIMessages.HistoryListAction_remove,
+					DLTKUIMessages.HistoryListAction_remove_all };
+			LabelProvider labelProvider = new TestRunLabelProvider();
+			fHistoryList = new ListDialogField(adapter, buttonLabels,
+					labelProvider);
 			fHistoryList.setLabelText(fHistory.getHistoryListDialogMessage());
 
 			List<E> historyEntries = fHistory.getHistoryEntries();
@@ -84,51 +89,59 @@ import org.eclipse.swt.widgets.Control;
 			E currentEntry = fHistory.getCurrentEntry();
 			ISelection sel;
 			if (currentEntry != null) {
-				sel= new StructuredSelection(currentEntry);
+				sel = new StructuredSelection(currentEntry);
 			} else {
-				sel= new StructuredSelection();
+				sel = new StructuredSelection();
 			}
 			fHistoryList.selectElements(sel);
 		}
 
 		private void createMaxEntriesField() {
-			fMaxEntriesField= new StringDialogField();
+			fMaxEntriesField = new StringDialogField();
 			fMaxEntriesField.setLabelText(fHistory.getMaxEntriesMessage());
 			fMaxEntriesField.setDialogFieldListener(field -> {
-				String maxString= fMaxEntriesField.getText();
+				String maxString = fMaxEntriesField.getText();
 				boolean valid;
 				try {
-					fMaxEntries= Integer.parseInt(maxString);
-					valid= fMaxEntries > 0 && fMaxEntries < MAX_MAX_ENTRIES;
+					fMaxEntries = Integer.parseInt(maxString);
+					valid = fMaxEntries > 0 && fMaxEntries < MAX_MAX_ENTRIES;
 				} catch (NumberFormatException e) {
-					valid= false;
+					valid = false;
 				}
 				if (valid)
 					updateStatus(StatusInfo.OK_STATUS);
 				else
-					updateStatus(new StatusInfo(IStatus.ERROR, Messages.format(DLTKUIMessages.HistoryListAction_max_entries_constraint, Integer.toString(MAX_MAX_ENTRIES))));
+					updateStatus(new StatusInfo(IStatus.ERROR, Messages.format(
+							DLTKUIMessages.HistoryListAction_max_entries_constraint,
+							Integer.toString(MAX_MAX_ENTRIES))));
 			});
-			fMaxEntriesField.setText(Integer.toString(fHistory.getMaxEntries()));
+			fMaxEntriesField
+					.setText(Integer.toString(fHistory.getMaxEntries()));
 		}
 
 		@Override
 		protected Control createDialogArea(Composite parent) {
 			initializeDialogUnits(parent);
 
-			Composite composite= (Composite) super.createDialogArea(parent);
+			Composite composite = (Composite) super.createDialogArea(parent);
 
-			Composite inner= new Composite(composite, SWT.NONE);
+			Composite inner = new Composite(composite, SWT.NONE);
 			inner.setLayoutData(new GridData(GridData.FILL_BOTH));
 			inner.setFont(composite.getFont());
 
-			LayoutUtil.doDefaultLayout(inner, new DialogField[] { fHistoryList, new Separator() }, true);
-			LayoutUtil.setHeightHint(fHistoryList.getListControl(null), convertHeightInCharsToPixels(12));
+			LayoutUtil.doDefaultLayout(inner,
+					new DialogField[] { fHistoryList, new Separator() }, true);
+			LayoutUtil.setHeightHint(fHistoryList.getListControl(null),
+					convertHeightInCharsToPixels(12));
 			LayoutUtil.setHorizontalGrabbing(fHistoryList.getListControl(null));
 
-			Composite additionalControls= new Composite(inner, SWT.NONE);
-			additionalControls.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-			LayoutUtil.doDefaultLayout(additionalControls, new DialogField[] { fMaxEntriesField }, false);
-			LayoutUtil.setHorizontalGrabbing(fMaxEntriesField.getTextControl(null));
+			Composite additionalControls = new Composite(inner, SWT.NONE);
+			additionalControls.setLayoutData(
+					new GridData(SWT.FILL, SWT.FILL, true, false));
+			LayoutUtil.doDefaultLayout(additionalControls,
+					new DialogField[] { fMaxEntriesField }, false);
+			LayoutUtil.setHorizontalGrabbing(
+					fMaxEntriesField.getTextControl(null));
 
 			applyDialogFont(composite);
 			return composite;
@@ -136,16 +149,16 @@ import org.eclipse.swt.widgets.Control;
 
 		private void doCustomButtonPressed(int index) {
 			switch (index) {
-				case 0: // remove
-					fHistoryList.removeElements(fHistoryList.getSelectedElements());
-					fHistoryList.selectFirstElement();
-					break;
+			case 0: // remove
+				fHistoryList.removeElements(fHistoryList.getSelectedElements());
+				fHistoryList.selectFirstElement();
+				break;
 
-				case 1: // remove all
-					fHistoryList.removeAllElements();
+			case 1: // remove all
+				fHistoryList.removeAllElements();
 
-				default:
-					break;
+			default:
+				break;
 			}
 		}
 
@@ -156,9 +169,9 @@ import org.eclipse.swt.widgets.Control;
 		private void doSelectionChanged() {
 			List<E> selected = fHistoryList.getSelectedElements();
 			if (selected.size() >= 1) {
-				fResult= selected.get(0);
+				fResult = selected.get(0);
 			} else {
-				fResult= null;
+				fResult = null;
 			}
 			fHistoryList.enableButton(0, selected.size() != 0);
 		}
@@ -184,7 +197,7 @@ import org.eclipse.swt.widgets.Control;
 	}
 
 	private final class TestRunLabelProvider extends LabelProvider {
-		private final HashMap<ImageDescriptor, Image> fImages = new HashMap<ImageDescriptor, Image>();
+		private final HashMap<ImageDescriptor, Image> fImages = new HashMap<>();
 
 		@Override
 		public String getText(Object element) {
@@ -202,7 +215,8 @@ import org.eclipse.swt.widgets.Control;
 			Image cached = fImages.get(imageDescriptor);
 			if (cached != null)
 				return cached;
-			Image image= imageDescriptor.createImage(fHistory.getShell().getDisplay());
+			Image image = imageDescriptor
+					.createImage(fHistory.getShell().getDisplay());
 			fImages.put(imageDescriptor, image);
 			return image;
 		}
@@ -220,18 +234,18 @@ import org.eclipse.swt.widgets.Control;
 
 	public HistoryListAction(ViewHistory history) {
 		super(null, IAction.AS_RADIO_BUTTON);
-		fHistory= history;
+		fHistory = history;
 		fHistory.configureHistoryListAction(this);
 	}
 
 	@Override
 	public void run() {
-		HistoryListDialog dialog= new HistoryListDialog();
+		HistoryListDialog dialog = new HistoryListDialog();
 		if (dialog.open() == Window.OK) {
-			fHistory.setHistoryEntries(dialog.getRemaining(), dialog.getResult());
+			fHistory.setHistoryEntries(dialog.getRemaining(),
+					dialog.getResult());
 			fHistory.setMaxEntries(dialog.getMaxEntries());
 		}
 	}
 
 }
-

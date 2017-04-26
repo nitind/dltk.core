@@ -209,22 +209,23 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 
 		fElementKinds = elementKinds;
 		fExtension = extension;
-		fFilterExtension = (extension == null) ? null : extension
-				.getFilterExtension();
+		fFilterExtension = (extension == null) ? null
+				: extension.getFilterExtension();
 		fSearchScope = scope;
 
 		if (extension != null) {
 			fValidator = extension.getSelectionValidator();
 		}
 
-		fTypeInfoUtil = new TypeInfoUtil(extension != null ? extension
-				.getImageProvider() : null);
+		fTypeInfoUtil = new TypeInfoUtil(
+				extension != null ? extension.getImageProvider() : null);
 
 		fTypeInfoLabelProvider = new TypeItemLabelProvider();
 
 		setListLabelProvider(fTypeInfoLabelProvider);
 		setListSelectionLabelDecorator(fTypeInfoLabelProvider);
-		setDetailsLabelProvider(new TypeItemDetailsLabelProvider(fTypeInfoUtil));
+		setDetailsLabelProvider(
+				new TypeItemDetailsLabelProvider(fTypeInfoUtil));
 
 		fTypeItemsComparator = new TypeItemsComparator();
 	}
@@ -245,19 +246,16 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 		if (text == null || text.length() == 0) {
 			getShell().setText(fTitle);
 		} else {
-			getShell()
-					.setText(
-							Messages
-									.format(
-											DLTKUIMessages.FilteredTypeSelectionDialog_titleFormat,
-											new String[] { fTitle, text }));
+			getShell().setText(Messages.format(
+					DLTKUIMessages.FilteredTypeSelectionDialog_titleFormat,
+					new String[] { fTitle, text }));
 		}
 	}
 
 	@Override
 	protected IDialogSettings getDialogSettings() {
-		IDialogSettings settings = DLTKUIPlugin.getDefault()
-				.getDialogSettings().getSection(DIALOG_SETTINGS);
+		IDialogSettings settings = DLTKUIPlugin.getDefault().getDialogSettings()
+				.getSection(DIALOG_SETTINGS);
 
 		if (settings == null) {
 			settings = DLTKUIPlugin.getDefault().getDialogSettings()
@@ -278,8 +276,8 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 			StringWriter writer = new StringWriter();
 			try {
 				memento.save(writer);
-				settings.put(WORKINGS_SET_SETTINGS, writer.getBuffer()
-						.toString());
+				settings.put(WORKINGS_SET_SETTINGS,
+						writer.getBuffer().toString());
 			} catch (IOException e) {
 				// don't do anything. Simply don't store the settings
 				DLTKUIPlugin.log(e);
@@ -330,19 +328,16 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 
 		if (fAllowScopeSwitching) {
 			fFilterActionGroup = new WorkingSetFilterActionGroup(getShell(),
-					DLTKUIPlugin.getActivePage(),
-					event -> {
+					DLTKUIPlugin.getActivePage(), event -> {
 						IWorkingSet ws = (IWorkingSet) event.getNewValue();
-						if (ws == null
-								|| (ws.isAggregateWorkingSet() && ws
-										.isEmpty())) {
+						if (ws == null || (ws.isAggregateWorkingSet()
+								&& ws.isEmpty())) {
 							setSearchScope(SearchEngine
 									.createWorkspaceScope(fToolkit));
 							setSubtitle(null);
 						} else {
-							setSearchScope(DLTKSearchScopeFactory
-									.getInstance().createSearchScope(ws,
-											true, fToolkit));
+							setSearchScope(DLTKSearchScopeFactory.getInstance()
+									.createSearchScope(ws, true, fToolkit));
 							setSubtitle(ws.getLabel());
 						}
 
@@ -397,12 +392,10 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 							.getScriptElementLabels();
 					String containerName = labels.getElementLabel(root,
 							ScriptElementLabels.ALL_FULLY_QUALIFIED);
-					String message = Messages
-							.format(
-									DLTKUIMessages.FilteredTypesSelectionDialog_dialogMessage,
-									new String[] {
-											typeInfo.getFullyQualifiedName(),
-											containerName });
+					String message = Messages.format(
+							DLTKUIMessages.FilteredTypesSelectionDialog_dialogMessage,
+							new String[] { typeInfo.getFullyQualifiedName(),
+									containerName });
 					MessageDialog.openError(getShell(), fTitle, message);
 					getSelectionHistory().remove(typeInfo);
 				}
@@ -519,17 +512,17 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 				typeSearchFilter);
 		String typePattern = itemsFilter.getPattern();
 
-		progressMonitor
-				.setTaskName(DLTKUIMessages.FilteredTypesSelectionDialog_searchJob_taskName);
+		progressMonitor.setTaskName(
+				DLTKUIMessages.FilteredTypesSelectionDialog_searchJob_taskName);
 
-		IType[] types = new ModelAccess().findTypes(typePattern, ModelAccess
-				.convertSearchRule(itemsFilter.getMatchRule()), 0,
+		IType[] types = new ModelAccess().findTypes(typePattern,
+				ModelAccess.convertSearchRule(itemsFilter.getMatchRule()), 0,
 				Modifiers.AccNameSpace, typeSearchFilter.getSearchScope(),
 				progressMonitor);
 		if (types != null) {
 			for (IType type : types) {
-				requestor.acceptTypeNameMatch(new DLTKSearchTypeNameMatch(type,
-						type.getFlags()));
+				requestor.acceptTypeNameMatch(
+						new DLTKSearchTypeNameMatch(type, type.getFlags()));
 			}
 		} else {
 
@@ -566,11 +559,10 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 						packPattern == null ? null : packPattern.toCharArray(),
 						typeSearchFilter.getPackageFlags(), // TODO:
 						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=176017
-						typePattern.toCharArray(),
-						matchRule, // TODO:
+						typePattern.toCharArray(), matchRule, // TODO:
 						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=176017
-						typeSearchFilter.getElementKind(), typeSearchFilter
-								.getSearchScope(), requestor,
+						typeSearchFilter.getElementKind(),
+						typeSearchFilter.getSearchScope(), requestor,
 						IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
 						progressMonitor);
 			} finally {
@@ -600,15 +592,12 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 		if (fValidator != null) {
 			IType type = ((TypeNameMatch) item).getType();
 			if (!type.exists())
-				return new Status(
+				return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(),
 						IStatus.ERROR,
-						DLTKUIPlugin.getPluginId(),
-						IStatus.ERROR,
-						Messages
-								.format(
-										DLTKUIMessages.FilteredTypesSelectionDialog_error_type_doesnot_exist,
-										((TypeNameMatch) item)
-												.getFullyQualifiedName()), null);
+						Messages.format(
+								DLTKUIMessages.FilteredTypesSelectionDialog_error_type_doesnot_exist,
+								((TypeNameMatch) item).getFullyQualifiedName()),
+						null);
 			Object[] elements = { type };
 			return fValidator.validate(elements);
 		} else
@@ -634,8 +623,8 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 		private IDLTKUILanguageToolkit tookit;
 
 		ConsistencyRunnable(IDLTKLanguageToolkit toolkit) {
-			this.tookit = DLTKUILanguageManager.getLanguageToolkit(toolkit
-					.getNatureId());
+			this.tookit = DLTKUILanguageManager
+					.getLanguageToolkit(toolkit.getNatureId());
 		}
 
 		@Override
@@ -649,14 +638,12 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 			OpenTypeHistory history = OpenTypeHistory.getInstance(tookit);
 			if (fgFirstTime || history.isEmpty()) {
 				if (history.needConsistencyCheck()) {
-					monitor
-							.beginTask(
-									DLTKUIMessages.TypeSelectionDialog_progress_consistency,
-									100);
+					monitor.beginTask(
+							DLTKUIMessages.TypeSelectionDialog_progress_consistency,
+							100);
 					refreshSearchIndices(new SubProgressMonitor(monitor, 90));
-					history
-							.checkConsistency(new SubProgressMonitor(monitor,
-									10));
+					history.checkConsistency(
+							new SubProgressMonitor(monitor, 10));
 				} else {
 					refreshSearchIndices(monitor);
 				}
@@ -678,15 +665,14 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 		private void refreshSearchIndices(IProgressMonitor monitor)
 				throws InvocationTargetException {
 			try {
-				new SearchEngine().searchAllTypeNames(
-						null,
-						0,
+				new SearchEngine().searchAllTypeNames(null, 0,
 						// make sure we search a concrete name. This is faster
 						// according to Kent
 						"_______________".toCharArray(), //$NON-NLS-1$
 						SearchPattern.RULE_EXACT_MATCH
 								| SearchPattern.RULE_CASE_SENSITIVE,
-						IDLTKSearchConstants.TYPE, SearchEngine
+						IDLTKSearchConstants.TYPE,
+						SearchEngine
 								.createWorkspaceScope(tookit.getCoreToolkit()),
 						new NopTypeNameRequestor(),
 						IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
@@ -701,12 +687,12 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 	public void reloadCache(boolean checkDuplicates, IProgressMonitor monitor) {
 		IProgressMonitor remainingMonitor;
 		if (ConsistencyRunnable.needsExecution(fToolkit)) {
-			monitor
-					.beginTask(
-							DLTKUIMessages.TypeSelectionDialog_progress_consistency,
-							10);
+			monitor.beginTask(
+					DLTKUIMessages.TypeSelectionDialog_progress_consistency,
+					10);
 			try {
-				ConsistencyRunnable runnable = new ConsistencyRunnable(fToolkit);
+				ConsistencyRunnable runnable = new ConsistencyRunnable(
+						fToolkit);
 				runnable.run(new SubProgressMonitor(monitor, 1));
 			} catch (InvocationTargetException e) {
 				ExceptionHandler.handle(e,
@@ -736,8 +722,8 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 	/**
 	 * A <code>LabelProvider</code> for (the table of) types.
 	 */
-	private class TypeItemLabelProvider extends LabelProvider implements
-			ILabelDecorator {
+	private class TypeItemLabelProvider extends LabelProvider
+			implements ILabelDecorator {
 
 		private boolean fContainerInfo;
 
@@ -821,8 +807,8 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 			fLabelProvider = new TypeNameMatchLabelProvider(
 					TypeNameMatchLabelProvider.SHOW_TYPE_ONLY
 							+ TypeNameMatchLabelProvider.SHOW_FULLYQUALIFIED,
-					DLTKUILanguageManager.getLanguageToolkit(fToolkit
-							.getNatureId()));
+					DLTKUILanguageManager
+							.getLanguageToolkit(fToolkit.getNatureId()));
 		}
 
 		@Override
@@ -861,15 +847,14 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 
 		public TypeInfoUtil(ITypeInfoImageProvider extension) {
 			fProviderExtension = extension;
-			List<String> locations = new ArrayList<String>();
-			List<String> labels = new ArrayList<String>();
+			List<String> locations = new ArrayList<>();
+			List<String> labels = new ArrayList<>();
 			IInterpreterInstallType[] installs = ScriptRuntime
 					.getInterpreterInstallTypes(fToolkit.getNatureId());
 			for (int i = 0; i < installs.length; i++) {
 				processInterpreterInstallType(installs[i], locations, labels);
 			}
-			fInstallLocations = locations
-					.toArray(new String[locations.size()]);
+			fInstallLocations = locations.toArray(new String[locations.size()]);
 			fVMNames = labels.toArray(new String[labels.size()]);
 
 		}
@@ -895,9 +880,9 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 							// on MacOS X install locations end in an additional
 							// "/Home" segment; remove it
 							if (isMac && filePath.endsWith(HOME_SUFFIX))
-								filePath = filePath.substring(0, filePath
-										.length()
-										- HOME_SUFFIX.length() + 1);
+								filePath = filePath.substring(0,
+										filePath.length() - HOME_SUFFIX.length()
+												+ 1);
 							locations.add(filePath);
 							labels.add(label);
 						}
@@ -915,10 +900,9 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 		}
 
 		private String getFormattedLabel(String name) {
-			return Messages
-					.format(
-							DLTKUIMessages.FilteredTypesSelectionDialog_library_name_format,
-							name);
+			return Messages.format(
+					DLTKUIMessages.FilteredTypesSelectionDialog_library_name_format,
+					name);
 		}
 
 		public String getText(Object element) {
@@ -984,7 +968,8 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 					.getScriptElementLabels();
 			labels.getProjectFragmentLabel(root,
 					ScriptElementLabels.ROOT_QUALIFIED
-							| ScriptElementLabels.ROOT_VARIABLE, buf);
+							| ScriptElementLabels.ROOT_VARIABLE,
+					buf);
 			return buf.toString();
 		}
 	}
@@ -1024,8 +1009,8 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 				ITypeInfoFilterExtension extension) {
 			super(new TypeSearchPattern());
 			fScope = scope;
-			fIsWorkspaceScope = scope == null ? false : scope
-					.equals(SearchEngine.createWorkspaceScope(fToolkit));
+			fIsWorkspaceScope = scope == null ? false
+					: scope.equals(SearchEngine.createWorkspaceScope(fToolkit));
 			fElemKind = elementKind;
 			fFilterExt = extension;
 			String stringPackage = ((TypeSearchPattern) patternMatcher)
@@ -1048,7 +1033,8 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 			if (fMyTypeFilterVersion != typeItemsFilter
 					.getMyTypeFilterVersion())
 				return false;
-			return getPattern().indexOf('.', filter.getPattern().length()) == -1;
+			return getPattern().indexOf('.',
+					filter.getPattern().length()) == -1;
 		}
 
 		@Override
@@ -1185,8 +1171,8 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 			String packPattern = null;
 			int index = stringPattern.lastIndexOf("."); //$NON-NLS-1$
 			if (index != -1) {
-				packPattern = evaluatePackagePattern(stringPattern.substring(0,
-						index));
+				packPattern = evaluatePackagePattern(
+						stringPattern.substring(0, index));
 				pattern = stringPattern.substring(index + 1);
 				if (pattern.length() == 0)
 					pattern = "**"; //$NON-NLS-1$
@@ -1270,7 +1256,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 				return;
 			if (new TypeFilter(DLTKUILanguageManager
 					.getLanguageToolkit(fToolkit.getNatureId()))
-					.isFiltered(match))
+							.isFiltered(match))
 				return;
 			if (!addedNames.contains(match.getTypeQualifiedName())) {
 				addedNames.add(match.getTypeQualifiedName());
@@ -1295,15 +1281,14 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 		 * Creates new instance of TypeItemsComparator
 		 */
 		public TypeItemsComparator() {
-			List<String> locations = new ArrayList<String>();
-			List<String> labels = new ArrayList<String>();
+			List<String> locations = new ArrayList<>();
+			List<String> labels = new ArrayList<>();
 			IInterpreterInstallType[] installs = ScriptRuntime
 					.getInterpreterInstallTypes();
 			for (int i = 0; i < installs.length; i++) {
 				processVMInstallType(installs[i], locations, labels);
 			}
-			fInstallLocations = locations
-					.toArray(new String[locations.size()]);
+			fInstallLocations = locations.toArray(new String[locations.size()]);
 			fVMNames = labels.toArray(new String[labels.size()]);
 		}
 
@@ -1344,10 +1329,9 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 		}
 
 		private String getFormattedLabel(String name) {
-			return NLS
-					.bind(
-							DLTKUIMessages.FilteredTypesSelectionDialog_library_name_format,
-							name);
+			return NLS.bind(
+					DLTKUIMessages.FilteredTypesSelectionDialog_library_name_format,
+					name);
 		}
 
 		@Override
@@ -1356,8 +1340,8 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 			TypeNameMatch leftInfo = (TypeNameMatch) left;
 			TypeNameMatch rightInfo = (TypeNameMatch) right;
 
-			int result = compareName(leftInfo.getSimpleTypeName(), rightInfo
-					.getSimpleTypeName());
+			int result = compareName(leftInfo.getSimpleTypeName(),
+					rightInfo.getSimpleTypeName());
 			if (result != 0)
 				return result;
 			result = compareTypeContainerName(leftInfo.getTypeContainerName(),
@@ -1404,8 +1388,8 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 
 		private int compareContainerName(TypeNameMatch leftType,
 				TypeNameMatch rightType) {
-			return getContainerName(leftType).compareTo(
-					getContainerName(rightType));
+			return getContainerName(leftType)
+					.compareTo(getContainerName(rightType));
 		}
 
 		private String getContainerName(TypeNameMatch type) {
@@ -1426,13 +1410,15 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 					.getScriptElementLabels();
 			labels.getProjectFragmentLabel(root,
 					ScriptElementLabels.ROOT_QUALIFIED
-							| ScriptElementLabels.ROOT_VARIABLE, buf);
+							| ScriptElementLabels.ROOT_VARIABLE,
+					buf);
 			return buf.toString();
 		}
 
 		private int getElementTypeCategory(TypeNameMatch type) {
 			try {
-				if (type.getProjectFragment().getKind() == IProjectFragment.K_SOURCE)
+				if (type.getProjectFragment()
+						.getKind() == IProjectFragment.K_SOURCE)
 					return 0;
 			} catch (ModelException e) {
 				DLTKUIPlugin.log(e);
@@ -1466,8 +1452,8 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 
 		@Override
 		public synchronized boolean remove(Object element) {
-			OpenTypeHistory.getInstance(getUIToolkit()).remove(
-					(TypeNameMatch) element);
+			OpenTypeHistory.getInstance(getUIToolkit())
+					.remove((TypeNameMatch) element);
 			return super.remove(element);
 		}
 
@@ -1495,8 +1481,8 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 			if (getReturnCode() == OK) {
 				Object[] items = getHistoryItems();
 				for (int i = 0; i < items.length; i++) {
-					OpenTypeHistory.getInstance(getUIToolkit()).accessed(
-							(TypeNameMatch) items[i]);
+					OpenTypeHistory.getInstance(getUIToolkit())
+							.accessed((TypeNameMatch) items[i]);
 				}
 			}
 		}

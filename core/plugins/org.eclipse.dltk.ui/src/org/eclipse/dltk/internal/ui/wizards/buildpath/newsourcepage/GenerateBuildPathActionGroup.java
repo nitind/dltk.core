@@ -115,11 +115,12 @@ public class GenerateBuildPathActionGroup extends ActionGroup {
 		}
 
 		// Needs to be public for the operation, will be protected later.
-		public abstract boolean selectionChanged(IStructuredSelection selection);
+		public abstract boolean selectionChanged(
+				IStructuredSelection selection);
 	}
 
-	private abstract static class CreateSourceFolderAction extends
-			OpenBuildPathWizardAction {
+	private abstract static class CreateSourceFolderAction
+			extends OpenBuildPathWizardAction {
 
 		private AddSourceFolderWizard fAddSourceFolderWizard;
 		private IScriptProject fSelectedProject;
@@ -135,8 +136,8 @@ public class GenerateBuildPathActionGroup extends ActionGroup {
 					IBuildpathEntry.BPE_SOURCE, false);
 			BPListElement[] existing = BPListElement
 					.createFromExisting(fSelectedProject);
-			boolean isProjectSrcFolder = BPListElement.isProjectSourceFolder(
-					existing, fSelectedProject);
+			boolean isProjectSrcFolder = BPListElement
+					.isProjectSourceFolder(existing, fSelectedProject);
 			fAddSourceFolderWizard = new AddSourceFolderWizard(existing,
 					newEntrie, fIsLinked, false, false, isProjectSrcFolder,
 					isProjectSrcFolder);
@@ -168,14 +169,16 @@ public class GenerateBuildPathActionGroup extends ActionGroup {
 
 	}
 
-	public static class CreateLocalSourceFolderAction extends
-			CreateSourceFolderAction {
+	public static class CreateLocalSourceFolderAction
+			extends CreateSourceFolderAction {
 
 		public CreateLocalSourceFolderAction() {
 			super(false);
 			setText(ActionMessages.OpenNewSourceFolderWizardAction_text2);
-			setDescription(ActionMessages.OpenNewSourceFolderWizardAction_description);
-			setToolTipText(ActionMessages.OpenNewSourceFolderWizardAction_tooltip);
+			setDescription(
+					ActionMessages.OpenNewSourceFolderWizardAction_description);
+			setToolTipText(
+					ActionMessages.OpenNewSourceFolderWizardAction_tooltip);
 			setImageDescriptor(DLTKPluginImages.DESC_TOOL_NEWPACKROOT);
 			if (DLTKCore.DEBUG) {
 				System.err.println("Add help support here..."); //$NON-NLS-1$
@@ -185,15 +188,18 @@ public class GenerateBuildPathActionGroup extends ActionGroup {
 		}
 	}
 
-	public static class CreateLinkedSourceFolderAction extends
-			CreateSourceFolderAction {
+	public static class CreateLinkedSourceFolderAction
+			extends CreateSourceFolderAction {
 
 		public CreateLinkedSourceFolderAction() {
 			super(true);
 			setText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_Link_label);
-			setToolTipText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_Link_tooltip);
-			setImageDescriptor(DLTKPluginImages.DESC_ELCL_ADD_LINKED_SOURCE_TO_BUILDPATH);
-			setDescription(NewWizardMessages.PackageExplorerActionGroup_FormText_createLinkedFolder);
+			setToolTipText(
+					NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_Link_tooltip);
+			setImageDescriptor(
+					DLTKPluginImages.DESC_ELCL_ADD_LINKED_SOURCE_TO_BUILDPATH);
+			setDescription(
+					NewWizardMessages.PackageExplorerActionGroup_FormText_createLinkedFolder);
 		}
 	}
 
@@ -205,10 +211,14 @@ public class GenerateBuildPathActionGroup extends ActionGroup {
 
 		public EditFilterAction() {
 			setText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_Edit_label);
-			setDescription(NewWizardMessages.PackageExplorerActionGroup_FormText_Edit);
-			setToolTipText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_Edit_tooltip);
-			setImageDescriptor(DLTKPluginImages.DESC_ELCL_CONFIGURE_BUILDPATH_FILTERS);
-			setDisabledImageDescriptor(DLTKPluginImages.DESC_DLCL_CONFIGURE_BUILDPATH_FILTERS);
+			setDescription(
+					NewWizardMessages.PackageExplorerActionGroup_FormText_Edit);
+			setToolTipText(
+					NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_Edit_tooltip);
+			setImageDescriptor(
+					DLTKPluginImages.DESC_ELCL_CONFIGURE_BUILDPATH_FILTERS);
+			setDisabledImageDescriptor(
+					DLTKPluginImages.DESC_DLCL_CONFIGURE_BUILDPATH_FILTERS);
 		}
 
 		@Override
@@ -252,7 +262,8 @@ public class GenerateBuildPathActionGroup extends ActionGroup {
 					if (ProjectFragment.getKind() == IProjectFragment.K_SOURCE
 							&& project != null
 							&& findElement((IModelElement) element,
-									BPListElement.createFromExisting(project)) != null) {
+									BPListElement.createFromExisting(
+											project)) != null) {
 						fSelectedProject = project;
 						fSelectedElement = (IModelElement) element;
 						return true;
@@ -313,7 +324,7 @@ public class GenerateBuildPathActionGroup extends ActionGroup {
 
 	private GenerateBuildPathActionGroup(IWorkbenchSite site) {
 		fSite = site;
-		fActions = new ArrayList<Action>();
+		fActions = new ArrayList<>();
 
 		final CreateLinkedSourceFolderAction addLinkedSourceFolderAction = new CreateLinkedSourceFolderAction();
 		fActions.add(addLinkedSourceFolderAction);
@@ -364,7 +375,8 @@ public class GenerateBuildPathActionGroup extends ActionGroup {
 		for (Iterator iter = fActions.iterator(); iter.hasNext();) {
 			Action action = (Action) iter.next();
 			if (action instanceof ISelectionChangedListener) {
-				provider.addSelectionChangedListener((ISelectionChangedListener) action);
+				provider.addSelectionChangedListener(
+						(ISelectionChangedListener) action);
 			}
 		}
 
@@ -461,7 +473,8 @@ public class GenerateBuildPathActionGroup extends ActionGroup {
 			for (Iterator<Action> iter = fActions.iterator(); iter.hasNext();) {
 				Action action = iter.next();
 				if (action instanceof ISelectionChangedListener)
-					provider.removeSelectionChangedListener((ISelectionChangedListener) action);
+					provider.removeSelectionChangedListener(
+							(ISelectionChangedListener) action);
 			}
 		}
 		fActions = null;

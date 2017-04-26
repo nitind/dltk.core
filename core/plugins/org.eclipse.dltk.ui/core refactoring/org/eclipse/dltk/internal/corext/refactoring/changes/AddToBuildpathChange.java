@@ -40,14 +40,15 @@ public class AddToBuildpathChange extends DLTKChange {
 		fEntryToAdd = entryToAdd;
 	}
 
-	public AddToBuildpathChange(IScriptProject project, String sourceFolderName) {
-		this(project, DLTKCore.newSourceEntry(project.getPath().append(
-				sourceFolderName)));
+	public AddToBuildpathChange(IScriptProject project,
+			String sourceFolderName) {
+		this(project, DLTKCore
+				.newSourceEntry(project.getPath().append(sourceFolderName)));
 	}
 
 	/**
 	 * Adds a new project class path entry to the project.
-	 * 
+	 *
 	 * @param project
 	 * @param newProjectEntry
 	 *            (must be absolute <code>IPath</code>)
@@ -87,20 +88,20 @@ public class AddToBuildpathChange extends DLTKChange {
 	public boolean validateBuildpath() throws ModelException {
 		IScriptProject scriptProject = getScriptProject();
 		IBuildpathEntry[] newClasspathEntries = getNewBuildpathEntries();
-		return BuildpathEntry.validateBuildpath(scriptProject,
-				newClasspathEntries).isOK();
+		return BuildpathEntry
+				.validateBuildpath(scriptProject, newClasspathEntries).isOK();
 	}
 
 	private IBuildpathEntry[] getNewBuildpathEntries() throws ModelException {
 		IBuildpathEntry[] entries = getScriptProject().getRawBuildpath();
-		List<IBuildpathEntry> cp = new ArrayList<IBuildpathEntry>(
-				entries.length + 1);
+		List<IBuildpathEntry> cp = new ArrayList<>(entries.length + 1);
 		cp.addAll(Arrays.asList(entries));
 		cp.add(fEntryToAdd);
 		return cp.toArray(new IBuildpathEntry[cp.size()]);
 	}
 
-	private static IBuildpathEntry createNewBuildpathEntry(int kind, IPath path) {
+	private static IBuildpathEntry createNewBuildpathEntry(int kind,
+			IPath path) {
 		switch (kind) {
 		case IBuildpathEntry.BPE_LIBRARY:
 			return DLTKCore.newLibraryEntry(path);

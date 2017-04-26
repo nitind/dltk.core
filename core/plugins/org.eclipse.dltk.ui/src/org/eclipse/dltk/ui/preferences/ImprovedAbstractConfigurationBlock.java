@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Text;
 /**
  * Configures preferences.
  */
-public abstract class ImprovedAbstractConfigurationBlock implements
-		IPreferenceConfigurationBlock, IPreferenceDelegate<String> {
+public abstract class ImprovedAbstractConfigurationBlock
+		implements IPreferenceConfigurationBlock, IPreferenceDelegate<String> {
 
 	private PreferencePage page;
 	private OverlayPreferenceStore store;
@@ -38,8 +38,7 @@ public abstract class ImprovedAbstractConfigurationBlock implements
 		this.page = page;
 		this.store = store;
 
-		bindManager = new ControlBindingManager<String>(this,
-				getStatusListener());
+		bindManager = new ControlBindingManager<>(this, getStatusListener());
 		addOverlayKeys();
 	}
 
@@ -172,8 +171,8 @@ public abstract class ImprovedAbstractConfigurationBlock implements
 	private void addOverlayKeys() {
 		List<OverlayKey> overlayKeys = createOverlayKeys();
 		if (overlayKeys != null) {
-			OverlayKey[] keys = overlayKeys.toArray(new OverlayKey[overlayKeys
-					.size()]);
+			OverlayKey[] keys = overlayKeys
+					.toArray(new OverlayKey[overlayKeys.size()]);
 			store.addKeys(keys);
 		}
 	}

@@ -276,7 +276,7 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 
 		@Override
 		public Object[] getElements(Object inputElement) {
-			List<String> categorys = new ArrayList<String>();
+			List<String> categorys = new ArrayList<>();
 			for (String cat : getCategories()) {
 				if (getElementsForCategory(cat).length > 0) {
 					categorys.add(cat);
@@ -366,7 +366,7 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 	/**
 	 * Highlighting color list
 	 */
-	protected final java.util.List<HighlightingColorListItem> fListModel = new ArrayList<HighlightingColorListItem>();
+	protected final java.util.List<HighlightingColorListItem> fListModel = new ArrayList<>();
 
 	/**
 	 * Highlighting color list viewer
@@ -419,7 +419,7 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 	protected abstract void setDocumentPartitioning(IDocument document);
 
 	protected Object[] getElementsForCategory(String entry) {
-		List<HighlightingColorListItem> elements = new ArrayList<HighlightingColorListItem>();
+		List<HighlightingColorListItem> elements = new ArrayList<>();
 		for (HighlightingColorListItem item : this.fListModel) {
 			if (entry.equals(item.getCategory())) {
 				elements.add(item);
@@ -434,7 +434,7 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 
 		fColorManager = new DLTKColorManager(false);
 
-		final Set<String> colorKeys = new HashSet<String>();
+		final Set<String> colorKeys = new HashSet<>();
 
 		final String[][] model = getSyntaxColorListModel();
 		for (int i = 0, n = model.length; i < n; i++) {
@@ -477,7 +477,7 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 
-		ArrayList<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<OverlayPreferenceStore.OverlayKey>();
+		ArrayList<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<>();
 
 		for (int i = 0, n = fListModel.size(); i < n; i++) {
 			HighlightingColorListItem item = fListModel.get(i);

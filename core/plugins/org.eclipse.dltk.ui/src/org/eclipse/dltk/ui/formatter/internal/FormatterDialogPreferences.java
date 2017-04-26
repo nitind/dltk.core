@@ -20,7 +20,7 @@ import org.eclipse.dltk.ui.preferences.IPreferenceDelegate;
 
 public class FormatterDialogPreferences implements IPreferenceDelegate<String> {
 
-	private final Map<String, String> preferences = new HashMap<String, String>();
+	private final Map<String, String> preferences = new HashMap<>();
 
 	@Override
 	public String getString(String key) {

@@ -25,32 +25,36 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.IUpdate;
 
-
 public class GoToNextPreviousMemberAction extends Action implements IUpdate {
 
-	public static final String NEXT_MEMBER= "GoToNextMember"; //$NON-NLS-1$
-	public static final String PREVIOUS_MEMBER= "GoToPreviousMember"; //$NON-NLS-1$
+	public static final String NEXT_MEMBER = "GoToNextMember"; //$NON-NLS-1$
+	public static final String PREVIOUS_MEMBER = "GoToPreviousMember"; //$NON-NLS-1$
 	private ScriptEditor fEditor;
 	private boolean fIsGotoNext;
 
-	public static GoToNextPreviousMemberAction newGoToNextMemberAction(ScriptEditor editor) {
-		String text= SelectionActionMessages.GotoNextMember_label;
+	public static GoToNextPreviousMemberAction newGoToNextMemberAction(
+			ScriptEditor editor) {
+		String text = SelectionActionMessages.GotoNextMember_label;
 		return new GoToNextPreviousMemberAction(editor, text, true);
 	}
 
-	public static GoToNextPreviousMemberAction newGoToPreviousMemberAction(ScriptEditor editor) {
-		String text= SelectionActionMessages.GotoPreviousMember_label;
+	public static GoToNextPreviousMemberAction newGoToPreviousMemberAction(
+			ScriptEditor editor) {
+		String text = SelectionActionMessages.GotoPreviousMember_label;
 		return new GoToNextPreviousMemberAction(editor, text, false);
 	}
 
-	private GoToNextPreviousMemberAction(ScriptEditor editor, String text, boolean isGotoNext) {
+	private GoToNextPreviousMemberAction(ScriptEditor editor, String text,
+			boolean isGotoNext) {
 		super(text);
-		fEditor= editor;
-		fIsGotoNext= isGotoNext;
-//		if (isGotoNext)
-//			PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IJavaHelpContextIds.GOTO_NEXT_MEMBER_ACTION);
-//		else
-//			PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IJavaHelpContextIds.GOTO_PREVIOUS_MEMBER_ACTION);
+		fEditor = editor;
+		fIsGotoNext = isGotoNext;
+		// if (isGotoNext)
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+		// IJavaHelpContextIds.GOTO_NEXT_MEMBER_ACTION);
+		// else
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+		// IJavaHelpContextIds.GOTO_PREVIOUS_MEMBER_ACTION);
 	}
 
 	/*
@@ -58,7 +62,7 @@ public class GoToNextPreviousMemberAction extends Action implements IUpdate {
 	 */
 	public GoToNextPreviousMemberAction(boolean isSelectNext) {
 		super(""); //$NON-NLS-1$
-		fIsGotoNext= isSelectNext;
+		fIsGotoNext = isSelectNext;
 	}
 
 	@Override
@@ -68,47 +72,54 @@ public class GoToNextPreviousMemberAction extends Action implements IUpdate {
 	}
 
 	@Override
-	public final  void run() {
-		ITextSelection selection= getTextSelection();
-		ISourceRange newRange= getNewSelectionRange(createSourceRange(selection), null);
+	public final void run() {
+		ITextSelection selection = getTextSelection();
+		ISourceRange newRange = getNewSelectionRange(
+				createSourceRange(selection), null);
 		// Check if new selection differs from current selection
-		if (selection.getOffset() == newRange.getOffset() && selection.getLength() == newRange.getLength())
+		if (selection.getOffset() == newRange.getOffset()
+				&& selection.getLength() == newRange.getLength())
 			return;
 		fEditor.selectAndReveal(newRange.getOffset(), newRange.getLength());
 	}
 
 	private IType[] getTypes() throws ModelException {
-		IEditorInput input= fEditor.getEditorInput();
-		return DLTKUIPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(input).getTypes();
+		IEditorInput input = fEditor.getEditorInput();
+		return DLTKUIPlugin.getDefault().getWorkingCopyManager()
+				.getWorkingCopy(input).getTypes();
 	}
 
 	private ITextSelection getTextSelection() {
-		return (ITextSelection)fEditor.getSelectionProvider().getSelection();
+		return (ITextSelection) fEditor.getSelectionProvider().getSelection();
 	}
 
-	public ISourceRange getNewSelectionRange(ISourceRange oldSourceRange, IType[] types) {
-		try{
+	public ISourceRange getNewSelectionRange(ISourceRange oldSourceRange,
+			IType[] types) {
+		try {
 			if (types == null)
-				types= getTypes();
-			Integer[] offsetArray= createOffsetArray(types);
+				types = getTypes();
+			Integer[] offsetArray = createOffsetArray(types);
 			if (offsetArray.length == 0)
 				return oldSourceRange;
 			Arrays.sort(offsetArray);
-			Integer oldOffset= Integer.valueOf(oldSourceRange.getOffset());
-			int index= Arrays.binarySearch(offsetArray, oldOffset);
+			Integer oldOffset = Integer.valueOf(oldSourceRange.getOffset());
+			int index = Arrays.binarySearch(offsetArray, oldOffset);
 
 			if (fIsGotoNext)
-				return createNewSourceRange(getNextOffset(index, offsetArray, oldOffset));
+				return createNewSourceRange(
+						getNextOffset(index, offsetArray, oldOffset));
 			else
-				return createNewSourceRange(getPreviousOffset(index, offsetArray, oldOffset));
+				return createNewSourceRange(
+						getPreviousOffset(index, offsetArray, oldOffset));
 
-	 	}	catch (ModelException e){
-	 		DLTKUIPlugin.log(e); //dialog would be too heavy here
-	 		return oldSourceRange;
-	 	}
+		} catch (ModelException e) {
+			DLTKUIPlugin.log(e); // dialog would be too heavy here
+			return oldSourceRange;
+		}
 	}
 
-	private static Integer getPreviousOffset(int index, Integer[] offsetArray, Integer oldOffset) {
+	private static Integer getPreviousOffset(int index, Integer[] offsetArray,
+			Integer oldOffset) {
 		if (index == -1)
 			return oldOffset;
 		if (index == 0)
@@ -116,67 +127,72 @@ public class GoToNextPreviousMemberAction extends Action implements IUpdate {
 		if (index > 0)
 			return offsetArray[index - 1];
 		Assert.isTrue(index < -1);
-		int absIndex= Math.abs(index);
+		int absIndex = Math.abs(index);
 		return offsetArray[absIndex - 2];
 	}
 
-	private static Integer getNextOffset(int index, Integer[] offsetArray, Integer oldOffset) {
+	private static Integer getNextOffset(int index, Integer[] offsetArray,
+			Integer oldOffset) {
 		if (index == -1)
 			return offsetArray[0];
 
-		if (index == 0){
+		if (index == 0) {
 			if (offsetArray.length != 1)
 				return offsetArray[1];
 			else
 				return offsetArray[0];
 		}
-		if (index > 0){
+		if (index > 0) {
 			if (index == offsetArray.length - 1)
 				return oldOffset;
 			return offsetArray[index + 1];
 		}
 		Assert.isTrue(index < -1);
-		int absIndex= Math.abs(index);
+		int absIndex = Math.abs(index);
 		if (absIndex > offsetArray.length)
 			return oldOffset;
 		else
 			return offsetArray[absIndex - 1];
 	}
 
-	private static ISourceRange createNewSourceRange(Integer offset){
+	private static ISourceRange createNewSourceRange(Integer offset) {
 		return new SourceRange(offset.intValue(), 0);
 	}
 
-	private static Integer[] createOffsetArray(IType[] types) throws ModelException {
-		List<Integer> result = new ArrayList<Integer>();
-		for (int i= 0; i < types.length; i++) {
-			IType iType= types[i];
+	private static Integer[] createOffsetArray(IType[] types)
+			throws ModelException {
+		List<Integer> result = new ArrayList<>();
+		for (int i = 0; i < types.length; i++) {
+			IType iType = types[i];
 			addOffset(result, iType.getNameRange().getOffset());
-			addOffset(result, iType.getSourceRange().getOffset() + iType.getSourceRange().getLength());
+			addOffset(result, iType.getSourceRange().getOffset()
+					+ iType.getSourceRange().getLength());
 			addMemberOffsetList(result, iType.getMethods());
 			addMemberOffsetList(result, iType.getFields());
-			//addMemberOffsetList(result, iType.getInitializers());
+			// addMemberOffsetList(result, iType.getInitializers());
 		}
 		return result.toArray(new Integer[result.size()]);
 	}
 
-	private static void addMemberOffsetList(List result, IMember[] members) throws ModelException {
-		for (int i= 0; i < members.length; i++) {
+	private static void addMemberOffsetList(List result, IMember[] members)
+			throws ModelException {
+		for (int i = 0; i < members.length; i++) {
 			addOffset(result, getOffset(members[i]));
 		}
 	}
 
 	private static int getOffset(IMember iMember) throws ModelException {
-		//special case
-//		if (iMember.getElementType() == IModelElement.INITIALIZER)
-//			return firstOpeningBraceOffset((IInitializer)iMember);
+		// special case
+		// if (iMember.getElementType() == IModelElement.INITIALIZER)
+		// return firstOpeningBraceOffset((IInitializer)iMember);
 
-		if (iMember.getNameRange() != null && iMember.getNameRange().getOffset() >= 0)
+		if (iMember.getNameRange() != null
+				&& iMember.getNameRange().getOffset() >= 0)
 			return iMember.getNameRange().getOffset();
 		return iMember.getSourceRange().getOffset();
 	}
 
-	//-- private helper methods
+	// -- private helper methods
 
 	private static ISourceRange createSourceRange(ITextSelection ts) {
 		return new SourceRange(ts.getOffset(), ts.getLength());

@@ -32,9 +32,9 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 
-public abstract class WorkingSetAwareContentProvider extends
-		ScriptExplorerContentProvider implements
-		IMultiElementTreeContentProvider {
+public abstract class WorkingSetAwareContentProvider
+		extends ScriptExplorerContentProvider
+		implements IMultiElementTreeContentProvider {
 
 	private WorkingSetModel fWorkingSetModel;
 	private IPropertyChangeListener fListener;
@@ -96,8 +96,7 @@ public abstract class WorkingSetAwareContentProvider extends
 				if (isKnownWorkingSet) {
 					result.add(element);
 				} else {
-					IProject project = element
-							.getAdapter(IProject.class);
+					IProject project = element.getAdapter(IProject.class);
 					if (project != null && project.exists()) {
 						IScriptProject jp = DLTKCore.create(project);
 						if (jp != null && jp.exists()) {
@@ -138,7 +137,7 @@ public abstract class WorkingSetAwareContentProvider extends
 			return new TreePath[] { path };
 		}
 		List modelParents = getModelPath(element);
-		List<TreePath> result = new ArrayList<TreePath>();
+		List<TreePath> result = new ArrayList<>();
 		for (int i = 0; i < modelParents.size(); i++) {
 			result.addAll(getTreePaths(modelParents, i));
 		}
@@ -160,8 +159,8 @@ public abstract class WorkingSetAwareContentProvider extends
 		return result;
 	}
 
-	private List/* <TreePath> */getTreePaths(List modelParents, int index) {
-		List result = new ArrayList();
+	private List<TreePath> getTreePaths(List modelParents, int index) {
+		List<TreePath> result = new ArrayList<>();
 		Object input = getViewerInput();
 		Object element = modelParents.get(index);
 		Object[] parents = fWorkingSetModel.getAllParents(element);
@@ -194,15 +193,15 @@ public abstract class WorkingSetAwareContentProvider extends
 	protected void augmentElementToRefresh(List toRefresh, int relation,
 			Object affectedElement) {
 		// we are refreshing the ScriptModel and are in working set mode.
-		if (DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot()).equals(
-				affectedElement)) {
+		if (DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot())
+				.equals(affectedElement)) {
 			toRefresh.remove(affectedElement);
 			toRefresh.add(fWorkingSetModel);
 		} else if (relation == GRANT_PARENT) {
 			Object parent = internalGetParent(affectedElement);
 			if (parent != null) {
-				toRefresh.addAll(Arrays.asList(fWorkingSetModel
-						.getAllParents(parent)));
+				toRefresh.addAll(
+						Arrays.asList(fWorkingSetModel.getAllParents(parent)));
 			}
 		}
 		List nonProjetTopLevelElemens = fWorkingSetModel

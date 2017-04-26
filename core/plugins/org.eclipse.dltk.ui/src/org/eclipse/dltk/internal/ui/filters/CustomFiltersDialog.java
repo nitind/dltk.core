@@ -326,7 +326,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 	 */
 	public String[] getEnabledFilterIds() {
 		Object[] result = getResult();
-		Set<String> enabledIds = new HashSet<String>(result.length);
+		Set<String> enabledIds = new HashSet<>(result.length);
 		for (int i = 0; i < result.length; i++)
 			enabledIds.add(((FilterDescriptor) result[i]).getId());
 		return enabledIds.toArray(new String[enabledIds.size()]);
@@ -349,8 +349,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 	private FilterDescriptor[] getEnabledFilterDescriptors() {
 		FilterDescriptor[] filterDescs = fBuiltInFilters;
-		List<FilterDescriptor> result = new ArrayList<FilterDescriptor>(
-				filterDescs.length);
+		List<FilterDescriptor> result = new ArrayList<>(filterDescs.length);
 		List<String> enabledFilterIds = Arrays.asList(fEnabledFilterIds);
 		for (int i = 0; i < filterDescs.length; i++) {
 			String id = filterDescs[i].getId();
@@ -365,7 +364,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		StringTokenizer tokenizer = new StringTokenizer(patterns, separator,
 				true);
 		int tokenCount = tokenizer.countTokens();
-		List<String> result = new ArrayList<String>(tokenCount);
+		List<String> result = new ArrayList<>(tokenCount);
 		boolean escape = false;
 		boolean append = false;
 		while (tokenizer.hasMoreTokens()) {

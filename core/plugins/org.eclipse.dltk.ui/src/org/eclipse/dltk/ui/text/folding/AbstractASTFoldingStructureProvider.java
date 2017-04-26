@@ -90,7 +90,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		private final ProjectionAnnotationModel fModel;
 		private final IDocument fDocument;
 		private final boolean fAllowCollapsing;
-		protected LinkedHashMap<Annotation, Position> fMap = new LinkedHashMap<Annotation, Position>();
+		protected LinkedHashMap<Annotation, Position> fMap = new LinkedHashMap<>();
 
 		public FoldingStructureComputationContext(IDocument document,
 				ProjectionAnnotationModel model, boolean allowCollapsing) {
@@ -726,9 +726,9 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	private void update(FoldingStructureComputationContext ctx) {
 		if (ctx == null)
 			return;
-		Map<Annotation, Position> additions = new HashMap<Annotation, Position>();
-		List<Annotation> deletions = new ArrayList<Annotation>();
-		List<Annotation> updates = new ArrayList<Annotation>();
+		Map<Annotation, Position> additions = new HashMap<>();
+		List<Annotation> deletions = new ArrayList<>();
+		List<Annotation> updates = new ArrayList<>();
 		if (!computeFoldingStructure(ctx)) {
 			return;
 		}
@@ -1138,7 +1138,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 
 	private Map<SourceRangeStamp, List<Tuple>> computeCurrentStructure(
 			FoldingStructureComputationContext ctx) {
-		Map<SourceRangeStamp, List<Tuple>> map = new HashMap<SourceRangeStamp, List<Tuple>>();
+		Map<SourceRangeStamp, List<Tuple>> map = new HashMap<>();
 		ProjectionAnnotationModel model = ctx.getModel();
 		Iterator<Annotation> e = model.getAnnotationIterator();
 		while (e.hasNext()) {
@@ -1148,7 +1148,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 				Position position = model.getPosition(ann);
 				List<Tuple> list = map.get(ann.getStamp());
 				if (list == null) {
-					list = new ArrayList<Tuple>(2);
+					list = new ArrayList<>(2);
 					map.put(ann.getStamp(), list);
 				}
 				list.add(new Tuple(ann, position));
@@ -1189,7 +1189,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		ProjectionAnnotationModel model = getModel();
 		if (model == null)
 			return;
-		List<Annotation> modified = new ArrayList<Annotation>();
+		List<Annotation> modified = new ArrayList<>();
 		Iterator<Annotation> iter = model.getAnnotationIterator();
 		while (iter.hasNext()) {
 			Annotation annotation = iter.next();
@@ -1229,7 +1229,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	}
 
 	protected static class FoldingASTVisitor extends ASTVisitor {
-		private final List<CodeBlock> result = new ArrayList<CodeBlock>();
+		private final List<CodeBlock> result = new ArrayList<>();
 		private final int offset;
 
 		protected FoldingASTVisitor(int offset) {
@@ -1472,7 +1472,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 				return new IRegion[0];
 			Document d = new Document(contents);
 			installDocumentStuff(d);
-			List<ITypedRegion> docRegionList = new ArrayList<ITypedRegion>();
+			List<ITypedRegion> docRegionList = new ArrayList<>();
 			int offset = 0;
 			for (;;) {
 				try {
@@ -1485,7 +1485,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 			}
 			ITypedRegion start = null;
 			ITypedRegion lastRegion = null;
-			List<IRegion> regions = new ArrayList<IRegion>();
+			List<IRegion> regions = new ArrayList<>();
 			for (ITypedRegion region : docRegionList) {
 				if (region.getType().equals(partition)
 						&& startsAtLineBegin(d, region)) {
@@ -1562,7 +1562,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	}
 
 	public static class MethodCollector implements IModelElementVisitor {
-		private final Map<SourceRange, IModelElement> methodByNameRange = new HashMap<SourceRange, IModelElement>();
+		private final Map<SourceRange, IModelElement> methodByNameRange = new HashMap<>();
 
 		@Override
 		public boolean visit(IModelElement element) {

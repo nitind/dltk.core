@@ -161,8 +161,7 @@ public class StandardModelElementContentProvider
 		final IModelContentProvider[] providers = UIModelProviderManager
 				.getContentProviders(getToolkitID(element));
 		if (providers.length > 0) {
-			final List<Object> elements = new ArrayList<Object>(
-					children.length + 2);
+			final List<Object> elements = new ArrayList<>(children.length + 2);
 			Collections.addAll(elements, children);
 			for (int i = 0; i < providers.length; i++) {
 				providers[i].provideModelChanges(element, elements, this);
@@ -315,7 +314,7 @@ public class StandardModelElementContentProvider
 			throws ModelException {
 		IModelElement[] fragments = root.getChildren();
 
-		List<IModelElement> newFragments = new ArrayList<IModelElement>();
+		List<IModelElement> newFragments = new ArrayList<>();
 		for (int i = 0; i < fragments.length; ++i) {
 			if (fragments[i] instanceof IScriptFolder) {
 				IScriptFolder scriptFolder = ((IScriptFolder) fragments[i]);
@@ -359,7 +358,7 @@ public class StandardModelElementContentProvider
 			return NO_CHILDREN;
 
 		IProjectFragment[] roots = project.getProjectFragments();
-		List<Object> list = new ArrayList<Object>(roots.length);
+		List<Object> list = new ArrayList<>(roots.length);
 		// filter out package fragments that correspond to projects and
 		// replace them with the package fragments directly
 		for (int i = 0; i < roots.length; i++) {
@@ -429,7 +428,7 @@ public class StandardModelElementContentProvider
 		if (javaProject == null || !javaProject.exists())
 			return members;
 		boolean isFolderOnClasspath = javaProject.isOnBuildpath(folder);
-		List<Object> nonJavaResources = new ArrayList<Object>();
+		List<Object> nonJavaResources = new ArrayList<>();
 		// Can be on classpath but as a member of non-java resource folder
 		for (int i = 0; i < members.length; i++) {
 			IResource member = members[i];

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,8 +38,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
  * in order not to eagerly load refactoring classes during action
  * initialization.
  * </p>
- * 
- * 
+ *
+ *
  */
 public final class RefactoringAvailabilityTester {
 
@@ -52,7 +52,7 @@ public final class RefactoringAvailabilityTester {
 	}
 
 	public static IModelElement[] getScriptElements(final Object[] elements) {
-		List<IModelElement> result = new ArrayList<IModelElement>();
+		List<IModelElement> result = new ArrayList<>();
 		for (int index = 0; index < elements.length; index++) {
 			if (elements[index] instanceof IModelElement)
 				result.add((IModelElement) elements[index]);
@@ -61,7 +61,7 @@ public final class RefactoringAvailabilityTester {
 	}
 
 	public static IResource[] getResources(final Object[] elements) {
-		List<IResource> result = new ArrayList<IResource>();
+		List<IResource> result = new ArrayList<>();
 		for (int index = 0; index < elements.length; index++) {
 			if (elements[index] instanceof IResource)
 				result.add((IResource) elements[index]);
@@ -225,8 +225,8 @@ public final class RefactoringAvailabilityTester {
 		return true;
 	}
 
-	public static boolean isDeleteAvailable(final IStructuredSelection selection)
-			throws ModelException {
+	public static boolean isDeleteAvailable(
+			final IStructuredSelection selection) throws ModelException {
 		if (!selection.isEmpty())
 			return isDeleteAvailable(selection.toArray());
 		return false;

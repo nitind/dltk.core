@@ -24,8 +24,8 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public abstract class AbstractDLTKUILanguageToolkit implements
-		IDLTKUILanguageToolkit {
+public abstract class AbstractDLTKUILanguageToolkit
+		implements IDLTKUILanguageToolkit {
 
 	@Override
 	public ScriptUILabelProvider createScriptUILabelProvider() {
@@ -56,12 +56,12 @@ public abstract class AbstractDLTKUILanguageToolkit implements
 	@Override
 	public IPreferenceStore getCombinedPreferenceStore() {
 		if (fCombinedPreferenceStore == null) {
-			final List<IPreferenceStore> scopes = new ArrayList<IPreferenceStore>();
+			final List<IPreferenceStore> scopes = new ArrayList<>();
 			scopes.add(getPreferenceStore());
 			final String qualifier = getCoreToolkit().getPreferenceQualifier();
 			if (qualifier != null) {
-				scopes.add(new EclipsePreferencesAdapter(
-						InstanceScope.INSTANCE, qualifier));
+				scopes.add(new EclipsePreferencesAdapter(InstanceScope.INSTANCE,
+						qualifier));
 			}
 			scopes.add(DLTKUIPlugin.getDefault().getPreferenceStore());
 			scopes.add(new EclipsePreferencesAdapter(InstanceScope.INSTANCE,

@@ -45,7 +45,7 @@ public class EnvironmentPathBlock {
 	/**
 	 * Environment to path association.
 	 */
-	private Map<IEnvironment, String> paths = new HashMap<IEnvironment, String>();
+	private Map<IEnvironment, String> paths = new HashMap<>();
 
 	private boolean useFolders = false;
 

@@ -147,7 +147,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor
 				.computeAffectedNaturs(fScriptElements);
 		String[] rNatures = ResourceProcessors
 				.computeAffectedNatures(fResources);
-		Set<String> result = new HashSet<String>();
+		Set<String> result = new HashSet<>();
 		result.addAll(Arrays.asList(jNatures));
 		result.addAll(Arrays.asList(rNatures));
 		return result.toArray(new String[result.size()]);
@@ -397,7 +397,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor
 	 */
 	private void addSubPackages() throws ModelException {
 
-		final Set<IModelElement> modelElements = new HashSet<IModelElement>();
+		final Set<IModelElement> modelElements = new HashSet<>();
 		for (int i = 0; i < fScriptElements.length; i++) {
 			if (fScriptElements[i] instanceof IScriptFolder) {
 				modelElements.addAll(
@@ -443,7 +443,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor
 		}
 
 		// new package list in the right sequence
-		final List<IScriptFolder> allFragmentsToDelete = new ArrayList<IScriptFolder>();
+		final List<IScriptFolder> allFragmentsToDelete = new ArrayList<>();
 
 		for (Iterator outerIter = initialPackagesToDelete.iterator(); outerIter
 				.hasNext();) {
@@ -472,7 +472,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor
 		}
 
 		// Remove resources in deleted packages; and the packages as well
-		final List<IModelElement> modelElements = new ArrayList<IModelElement>();
+		final List<IModelElement> modelElements = new ArrayList<>();
 		for (int i = 0; i < fScriptElements.length; i++) {
 			if (!(fScriptElements[i] instanceof IScriptFolder)) {
 				// remove children of deleted packages
@@ -486,7 +486,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor
 		modelElements.addAll(allFragmentsToDelete);
 
 		// Remove resources in deleted folders
-		final List<IResource> resources = new ArrayList<IResource>();
+		final List<IResource> resources = new ArrayList<>();
 		for (int i = 0; i < fResources.length; i++) {
 			IResource parent = fResources[i];
 			if (parent.getType() == IResource.FILE)
@@ -567,7 +567,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor
 
 	private void removeUnconfirmedReferencedArchiveFiles(IConfirmQuery query)
 			throws ModelException, OperationCanceledException {
-		List<IFile> filesToSkip = new ArrayList<IFile>(0);
+		List<IFile> filesToSkip = new ArrayList<>(0);
 		for (int i = 0; i < fResources.length; i++) {
 			IResource resource = fResources[i];
 			if (!(resource instanceof IFile))
@@ -594,7 +594,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor
 	private void removeUnconfirmedReferencedProjectFragments(
 			IConfirmQuery query)
 			throws ModelException, OperationCanceledException {
-		List<IModelElement> rootsToSkip = new ArrayList<IModelElement>(0);
+		List<IModelElement> rootsToSkip = new ArrayList<>(0);
 		for (int i = 0; i < fScriptElements.length; i++) {
 			IModelElement element = fScriptElements[i];
 			if (!(element instanceof IProjectFragment))
@@ -627,7 +627,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor
 		IConfirmQuery query = fDeleteQueries.createYesYesToAllNoNoToAllQuery(
 				queryTitle, true,
 				IReorgQueries.CONFIRM_DELETE_FOLDERS_CONTAINING_SOURCE_FOLDERS);
-		List<IResource> foldersToSkip = new ArrayList<IResource>(0);
+		List<IResource> foldersToSkip = new ArrayList<>(0);
 		for (int i = 0; i < fResources.length; i++) {
 			IResource resource = fResources[i];
 			if (resource instanceof IFolder) {
@@ -737,7 +737,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor
 	}
 
 	private Set<ISourceModule> getCusToEmpty() throws ModelException {
-		Set<ISourceModule> result = new HashSet<ISourceModule>();
+		Set<ISourceModule> result = new HashSet<>();
 		for (int i = 0; i < fScriptElements.length; i++) {
 			IModelElement element = fScriptElements[i];
 			ISourceModule module = ReorgUtils.getSourceModule(element);

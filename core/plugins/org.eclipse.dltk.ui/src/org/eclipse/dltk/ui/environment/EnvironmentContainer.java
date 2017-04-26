@@ -38,7 +38,7 @@ import org.omg.CORBA.Environment;
 public class EnvironmentContainer {
 
 	private boolean initialized = false;
-	private final Map<String, IEnvironment> environments = new HashMap<String, IEnvironment>();
+	private final Map<String, IEnvironment> environments = new HashMap<>();
 	private List<IEnvironment> environmentList = Collections.emptyList();
 
 	private IEnvironmentChangedListener listener = null;

@@ -554,7 +554,7 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 		return fContentAssistHistory;
 	}
 
-	private final Map<String, EditorTextHoverDescriptor[]> editorTextHoverDescriptorsByNature = new HashMap<String, EditorTextHoverDescriptor[]>();
+	private final Map<String, EditorTextHoverDescriptor[]> editorTextHoverDescriptorsByNature = new HashMap<>();
 
 	/**
 	 * Resets editor text hovers contributed to the workbench.

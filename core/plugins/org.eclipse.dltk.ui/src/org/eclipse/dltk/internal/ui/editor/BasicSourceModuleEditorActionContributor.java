@@ -8,9 +8,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.editor;
 
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,32 +31,31 @@ import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 
-
-
-public class BasicSourceModuleEditorActionContributor extends BasicScriptEditorActionContributor {
+public class BasicSourceModuleEditorActionContributor
+		extends BasicScriptEditorActionContributor {
 
 	/**
 	 * A menu listener that can remove itself from the menu it listens to.
 	 *
 	 */
-    private final class MenuListener implements IMenuListener {
-        private final IMenuManager fMenu;
+	private final class MenuListener implements IMenuListener {
+		private final IMenuManager fMenu;
 
 		public MenuListener(IMenuManager menu) {
-			fMenu= menu;
-        }
+			fMenu = menu;
+		}
 
 		@Override
 		public void menuAboutToShow(IMenuManager manager) {
-	    	for (int i= 0; i < fSpecificAssistActions.length; i++) {
-	            fSpecificAssistActions[i].update();
-	        }
-	    }
+			for (int i = 0; i < fSpecificAssistActions.length; i++) {
+				fSpecificAssistActions[i].update();
+			}
+		}
 
 		public void dispose() {
 			fMenu.removeMenuListener(this);
 		}
-    }
+	}
 
 	protected RetargetAction fRetargetContentAssist;
 	protected RetargetTextEditorAction fContentAssist;
@@ -70,27 +67,44 @@ public class BasicSourceModuleEditorActionContributor extends BasicScriptEditorA
 
 	private MenuListener fContentAssistMenuListener;
 
-
 	public BasicSourceModuleEditorActionContributor() {
 
-		fRetargetContentAssist= new RetargetAction(DLTKActionConstants.CONTENT_ASSIST,  ScriptEditorMessages.ContentAssistProposal_label);
-		fRetargetContentAssist.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-		fRetargetContentAssist.setImageDescriptor(DLTKPluginImages.DESC_ELCL_CODE_ASSIST);
-		fRetargetContentAssist.setDisabledImageDescriptor(DLTKPluginImages.DESC_DLCL_CODE_ASSIST);
+		fRetargetContentAssist = new RetargetAction(
+				DLTKActionConstants.CONTENT_ASSIST,
+				ScriptEditorMessages.ContentAssistProposal_label);
+		fRetargetContentAssist.setActionDefinitionId(
+				ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
+		fRetargetContentAssist
+				.setImageDescriptor(DLTKPluginImages.DESC_ELCL_CODE_ASSIST);
+		fRetargetContentAssist.setDisabledImageDescriptor(
+				DLTKPluginImages.DESC_DLCL_CODE_ASSIST);
 		markAsPartListener(fRetargetContentAssist);
 
-		fContentAssist= new RetargetTextEditorAction(ScriptEditorMessages.getBundleForConstructedKeys(), "ContentAssistProposal."); //$NON-NLS-1$
-		fContentAssist.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-		fContentAssist.setImageDescriptor(DLTKPluginImages.DESC_ELCL_CODE_ASSIST);
-		fContentAssist.setDisabledImageDescriptor(DLTKPluginImages.DESC_DLCL_CODE_ASSIST);
+		fContentAssist = new RetargetTextEditorAction(
+				ScriptEditorMessages.getBundleForConstructedKeys(),
+				"ContentAssistProposal."); //$NON-NLS-1$
+		fContentAssist.setActionDefinitionId(
+				ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
+		fContentAssist
+				.setImageDescriptor(DLTKPluginImages.DESC_ELCL_CODE_ASSIST);
+		fContentAssist.setDisabledImageDescriptor(
+				DLTKPluginImages.DESC_DLCL_CODE_ASSIST);
 
-		fContextInformation= new RetargetTextEditorAction(ScriptEditorMessages.getBundleForConstructedKeys(), "ContentAssistContextInformation."); //$NON-NLS-1$
-		fContextInformation.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_CONTEXT_INFORMATION);
+		fContextInformation = new RetargetTextEditorAction(
+				ScriptEditorMessages.getBundleForConstructedKeys(),
+				"ContentAssistContextInformation."); //$NON-NLS-1$
+		fContextInformation.setActionDefinitionId(
+				ITextEditorActionDefinitionIds.CONTENT_ASSIST_CONTEXT_INFORMATION);
 
-		fQuickAssistAction= new RetargetTextEditorAction(ScriptEditorMessages.getBundleForConstructedKeys(), "CorrectionAssistProposal."); //$NON-NLS-1$
-		fQuickAssistAction.setActionDefinitionId(ITextEditorActionDefinitionIds.QUICK_ASSIST);
+		fQuickAssistAction = new RetargetTextEditorAction(
+				ScriptEditorMessages.getBundleForConstructedKeys(),
+				"CorrectionAssistProposal."); //$NON-NLS-1$
+		fQuickAssistAction.setActionDefinitionId(
+				ITextEditorActionDefinitionIds.QUICK_ASSIST);
 
-		fChangeEncodingAction= new RetargetTextEditorAction(ScriptEditorMessages.getBundleForConstructedKeys(), "Editor.ChangeEncodingAction."); //$NON-NLS-1$
+		fChangeEncodingAction = new RetargetTextEditorAction(
+				ScriptEditorMessages.getBundleForConstructedKeys(),
+				"Editor.ChangeEncodingAction."); //$NON-NLS-1$
 	}
 
 	@Override
@@ -100,18 +114,24 @@ public class BasicSourceModuleEditorActionContributor extends BasicScriptEditorA
 		if (fContentAssistMenuListener != null)
 			fContentAssistMenuListener.dispose();
 
-		IMenuManager editMenu= menu.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
+		IMenuManager editMenu = menu
+				.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
 		if (editMenu != null) {
 			editMenu.add(fChangeEncodingAction);
-			IMenuManager caMenu= new MenuManager(ScriptEditorMessages.BasicEditorActionContributor_specific_content_assist_menu, "specific_content_assist"); //$NON-NLS-1$
-			editMenu.insertAfter(ITextEditorActionConstants.GROUP_ASSIST, caMenu);
+			IMenuManager caMenu = new MenuManager(
+					ScriptEditorMessages.BasicEditorActionContributor_specific_content_assist_menu,
+					"specific_content_assist"); //$NON-NLS-1$
+			editMenu.insertAfter(ITextEditorActionConstants.GROUP_ASSIST,
+					caMenu);
 
 			caMenu.add(fRetargetContentAssist);
-			Collection descriptors= CompletionProposalComputerRegistry.getDefault().getProposalCategories();
-			List<SpecificContentAssistAction> specificAssistActions = new ArrayList<SpecificContentAssistAction>(
+			List<CompletionProposalCategory> descriptors = CompletionProposalComputerRegistry
+					.getDefault().getProposalCategories();
+			List<SpecificContentAssistAction> specificAssistActions = new ArrayList<>(
 					descriptors.size());
-			for (Iterator it= descriptors.iterator(); it.hasNext();) {
-				final CompletionProposalCategory cat= (CompletionProposalCategory) it.next();
+			for (Iterator<CompletionProposalCategory> it = descriptors
+					.iterator(); it.hasNext();) {
+				final CompletionProposalCategory cat = it.next();
 				if (cat.hasComputers()) {
 					SpecificContentAssistAction caAction = new SpecificContentAssistAction(
 							cat);
@@ -123,13 +143,14 @@ public class BasicSourceModuleEditorActionContributor extends BasicScriptEditorA
 					new SpecificContentAssistAction[specificAssistActions
 							.size()]);
 			if (fSpecificAssistActions.length > 0) {
-				fContentAssistMenuListener= new MenuListener(caMenu);
+				fContentAssistMenuListener = new MenuListener(caMenu);
 				caMenu.addMenuListener(fContentAssistMenuListener);
 			}
 			caMenu.add(new Separator("context_info")); //$NON-NLS-1$
 			caMenu.add(fContextInformation);
 
-			editMenu.appendToGroup(ITextEditorActionConstants.GROUP_ASSIST, fQuickAssistAction);
+			editMenu.appendToGroup(ITextEditorActionConstants.GROUP_ASSIST,
+					fQuickAssistAction);
 		}
 	}
 
@@ -137,47 +158,56 @@ public class BasicSourceModuleEditorActionContributor extends BasicScriptEditorA
 	public void setActiveEditor(IEditorPart part) {
 		super.setActiveEditor(part);
 
-		ITextEditor textEditor= null;
+		ITextEditor textEditor = null;
 		if (part instanceof ITextEditor)
-			textEditor= (ITextEditor) part;
+			textEditor = (ITextEditor) part;
 
-		fContentAssist.setAction(getAction(textEditor, "ContentAssistProposal")); //$NON-NLS-1$
-		fContextInformation.setAction(getAction(textEditor, "ContentAssistContextInformation")); //$NON-NLS-1$
-		fQuickAssistAction.setAction(getAction(textEditor, ITextEditorActionConstants.QUICK_ASSIST));
+		fContentAssist
+				.setAction(getAction(textEditor, "ContentAssistProposal")); //$NON-NLS-1$
+		fContextInformation.setAction(
+				getAction(textEditor, "ContentAssistContextInformation")); //$NON-NLS-1$
+		fQuickAssistAction.setAction(
+				getAction(textEditor, ITextEditorActionConstants.QUICK_ASSIST));
 
 		if (fSpecificAssistActions != null) {
-			for (int i= 0; i < fSpecificAssistActions.length; i++) {
-				SpecificContentAssistAction assistAction= fSpecificAssistActions[i];
+			for (int i = 0; i < fSpecificAssistActions.length; i++) {
+				SpecificContentAssistAction assistAction = fSpecificAssistActions[i];
 				assistAction.setActiveEditor(part);
 			}
 		}
 
-		fChangeEncodingAction.setAction(getAction(textEditor, ITextEditorActionConstants.CHANGE_ENCODING));
+		fChangeEncodingAction.setAction(getAction(textEditor,
+				ITextEditorActionConstants.CHANGE_ENCODING));
 
-		IActionBars actionBars= getActionBars();
-		actionBars.setGlobalActionHandler(DLTKActionConstants.SHIFT_RIGHT, getAction(textEditor, "ShiftRight")); //$NON-NLS-1$
-		actionBars.setGlobalActionHandler(DLTKActionConstants.SHIFT_LEFT, getAction(textEditor, "ShiftLeft")); //$NON-NLS-1$
+		IActionBars actionBars = getActionBars();
+		actionBars.setGlobalActionHandler(DLTKActionConstants.SHIFT_RIGHT,
+				getAction(textEditor, "ShiftRight")); //$NON-NLS-1$
+		actionBars.setGlobalActionHandler(DLTKActionConstants.SHIFT_LEFT,
+				getAction(textEditor, "ShiftLeft")); //$NON-NLS-1$
 
-		actionBars.setGlobalActionHandler(IDEActionFactory.ADD_TASK.getId(), getAction(textEditor, IDEActionFactory.ADD_TASK.getId()));
-		actionBars.setGlobalActionHandler(IDEActionFactory.BOOKMARK.getId(), getAction(textEditor, IDEActionFactory.BOOKMARK.getId()));
+		actionBars.setGlobalActionHandler(IDEActionFactory.ADD_TASK.getId(),
+				getAction(textEditor, IDEActionFactory.ADD_TASK.getId()));
+		actionBars.setGlobalActionHandler(IDEActionFactory.BOOKMARK.getId(),
+				getAction(textEditor, IDEActionFactory.BOOKMARK.getId()));
 	}
 
 	@Override
 	public void init(IActionBars bars, IWorkbenchPage page) {
 		super.init(bars, page);
 		// register actions that have a dynamic editor.
-		bars.setGlobalActionHandler(DLTKActionConstants.CONTENT_ASSIST, fContentAssist);
+		bars.setGlobalActionHandler(DLTKActionConstants.CONTENT_ASSIST,
+				fContentAssist);
 	}
 
 	@Override
 	public void dispose() {
 		if (fRetargetContentAssist != null) {
 			fRetargetContentAssist.dispose();
-			fRetargetContentAssist= null;
+			fRetargetContentAssist = null;
 		}
 		if (fContentAssistMenuListener != null) {
 			fContentAssistMenuListener.dispose();
-			fContentAssistMenuListener= null;
+			fContentAssistMenuListener = null;
 		}
 		super.dispose();
 	}

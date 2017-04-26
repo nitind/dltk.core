@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Control;
  */
 public class ControlDecorationManager implements IControlDecorationManager {
 
-	private Map<Control, ControlDecoration> decorations = new IdentityHashMap<Control, ControlDecoration>();
+	private Map<Control, ControlDecoration> decorations = new IdentityHashMap<>();
 
 	@Override
 	public void show(Control control, IStatus status) {
@@ -56,10 +56,10 @@ public class ControlDecorationManager implements IControlDecorationManager {
 
 	protected Image getImageFor(IStatus status) {
 		final Image image = DLTKUIPlugin.getImageDescriptorRegistry().get(
-		// status.getSeverity() == IStatus.ERROR ?
+				// status.getSeverity() == IStatus.ERROR ?
 				DLTKPluginImages.DESC_OVR_ERROR
 		// : DLTKPluginImages.DESC_OVR_WARNING
-				);
+		);
 		return image;
 	}
 
@@ -87,11 +87,11 @@ public class ControlDecorationManager implements IControlDecorationManager {
 		// empty
 	}
 
-	private static class ControlDecorationManagerWorkingCopy implements
-			IControlDecorationManager {
+	private static class ControlDecorationManagerWorkingCopy
+			implements IControlDecorationManager {
 
 		private final ControlDecorationManager manager;
-		private Map<Control, ControlDecoration> activeDecorations = new IdentityHashMap<Control, ControlDecoration>();
+		private Map<Control, ControlDecoration> activeDecorations = new IdentityHashMap<>();
 
 		public ControlDecorationManagerWorkingCopy(
 				ControlDecorationManager manager) {

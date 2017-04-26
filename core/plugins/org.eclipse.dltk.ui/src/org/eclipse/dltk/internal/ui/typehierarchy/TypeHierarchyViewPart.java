@@ -223,7 +223,7 @@ public class TypeHierarchyViewPart extends ViewPart
 
 		fIsEnableMemberFilter = false;
 
-		fInputHistory = new ArrayList<IModelElement>();
+		fInputHistory = new ArrayList<>();
 		fAllViewers = null;
 
 		fViewActions = new ToggleViewAction[] {
@@ -1240,7 +1240,7 @@ public class TypeHierarchyViewPart extends ViewPart
 			List<?> selected = ((IStructuredSelection) sel).toList();
 			int nSelected = selected.size();
 			if (nSelected != 0) {
-				List<IType> types = new ArrayList<IType>(nSelected);
+				List<IType> types = new ArrayList<>(nSelected);
 				for (int i = nSelected - 1; i >= 0; i--) {
 					Object elem = selected.get(i);
 					if (elem instanceof IType) {

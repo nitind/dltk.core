@@ -65,16 +65,17 @@ public class ModelElementOccurrencesFinder implements IOccurrencesFinder {
 	@Override
 	public OccurrenceLocation[] getOccurrences() {
 		try {
-			final List<OccurrenceLocation> result = new ArrayList<IOccurrencesFinder.OccurrenceLocation>();
+			final List<OccurrenceLocation> result = new ArrayList<>();
 			new SearchEngine().search(pattern,
-					new SearchParticipant[] { SearchEngine
-							.getDefaultSearchParticipant() }, SearchEngine
-							.createSearchScope(module), new SearchRequestor() {
+					new SearchParticipant[] {
+							SearchEngine.getDefaultSearchParticipant() },
+					SearchEngine.createSearchScope(module),
+					new SearchRequestor() {
 						@Override
 						public void acceptSearchMatch(SearchMatch match)
 								throws CoreException {
-							result.add(new OccurrenceLocation(
-									match.getOffset(), match.getLength(),
+							result.add(new OccurrenceLocation(match.getOffset(),
+									match.getLength(),
 									occurrenceLocationDescription));
 						}
 					}, null);

@@ -141,13 +141,14 @@ public class SelectionConverter {
 	 *
 	 */
 	public static IModelElement[] codeResolveForked(IEditorPart editor,
-			boolean primaryOnly) throws InvocationTargetException,
-			InterruptedException {
+			boolean primaryOnly)
+			throws InvocationTargetException, InterruptedException {
 		return performForkedCodeResolve(getInput(editor, primaryOnly),
 				getTextSelection(editor));
 	}
 
-	public static Object[] resolveForked(IEditorPart editor, boolean primaryOnly)
+	public static Object[] resolveForked(IEditorPart editor,
+			boolean primaryOnly)
 			throws InvocationTargetException, InterruptedException {
 		return performForkedResolve(getInput(editor, primaryOnly),
 				getTextSelection(editor));
@@ -239,8 +240,8 @@ public class SelectionConverter {
 	}
 
 	private static Object[] performForkedResolve(final IModelElement input,
-			final ITextSelection selection) throws InvocationTargetException,
-			InterruptedException {
+			final ITextSelection selection)
+			throws InvocationTargetException, InterruptedException {
 		final class CodeResolveRunnable implements IRunnableWithProgress {
 			Object[] result;
 
@@ -269,8 +270,8 @@ public class SelectionConverter {
 			if (input instanceof ISourceModule) {
 				ScriptModelUtil.reconcile((ISourceModule) input);
 			}
-			IModelElement[] elements = ((ICodeAssist) input).codeSelect(
-					selection.getOffset(), selection.getLength());
+			IModelElement[] elements = ((ICodeAssist) input)
+					.codeSelect(selection.getOffset(), selection.getLength());
 			if (elements != null && elements.length > 0)
 				return elements;
 		}
@@ -286,8 +287,9 @@ public class SelectionConverter {
 			if (input instanceof ISourceModule) {
 				ScriptModelUtil.reconcile((ISourceModule) input);
 			}
-			Object[] elements = filterElements(((ICodeAssist) input)
-					.codeSelectAll(selection.getOffset(), selection.getLength()));
+			Object[] elements = filterElements(
+					((ICodeAssist) input).codeSelectAll(selection.getOffset(),
+							selection.getLength()));
 			if (elements != null && elements.length > 0)
 				return elements;
 		}
@@ -304,7 +306,7 @@ public class SelectionConverter {
 	public static Object[] filterElements(Iterable<Object> selection) {
 		if (selection == null)
 			return ScriptModelUtil.NO_ELEMENTS;
-		final List<Object> output = new ArrayList<Object>();
+		final List<Object> output = new ArrayList<>();
 		for (final Object element : selection) {
 			if (element instanceof IModelElement) {
 				output.add(element);

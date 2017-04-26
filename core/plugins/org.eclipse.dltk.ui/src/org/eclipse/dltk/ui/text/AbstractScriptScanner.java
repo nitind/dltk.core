@@ -61,7 +61,7 @@ public abstract class AbstractScriptScanner extends BufferedRuleBasedScanner
 	private IColorManager fColorManager;
 	private IPreferenceStore fPreferenceStore;
 
-	private Map<String, Token> fTokenMap = new HashMap<String, Token>();
+	private Map<String, Token> fTokenMap = new HashMap<>();
 	private String[] fPropertyNamesColor;
 	/**
 	 * Preference keys for boolean preferences which are <code>true</code>, iff
@@ -126,7 +126,8 @@ public abstract class AbstractScriptScanner extends BufferedRuleBasedScanner
 	/**
 	 * Creates an abstract script scanner.
 	 */
-	public AbstractScriptScanner(IColorManager manager, IPreferenceStore store) {
+	public AbstractScriptScanner(IColorManager manager,
+			IPreferenceStore store) {
 		super();
 		fColorManager = manager;
 		fPreferenceStore = store;
@@ -147,8 +148,10 @@ public abstract class AbstractScriptScanner extends BufferedRuleBasedScanner
 		for (int i = 0; i < length; i++) {
 			fPropertyNamesBold[i] = getBoldKey(fPropertyNamesColor[i]);
 			fPropertyNamesItalic[i] = getItalicKey(fPropertyNamesColor[i]);
-			fPropertyNamesStrikethrough[i] = getStrikethroughKey(fPropertyNamesColor[i]);
-			fPropertyNamesUnderline[i] = getUnderlineKey(fPropertyNamesColor[i]);
+			fPropertyNamesStrikethrough[i] = getStrikethroughKey(
+					fPropertyNamesColor[i]);
+			fPropertyNamesUnderline[i] = getUnderlineKey(
+					fPropertyNamesColor[i]);
 		}
 
 		fNeedsLazyColorLoading = Display.getCurrent() == null;
@@ -206,8 +209,7 @@ public abstract class AbstractScriptScanner extends BufferedRuleBasedScanner
 		if (fNeedsLazyColorLoading && Display.getCurrent() != null) {
 			for (int i = 0; i < fPropertyNamesColor.length; i++) {
 				addToken(fPropertyNamesColor[i], fPropertyNamesBold[i],
-						fPropertyNamesItalic[i],
-						fPropertyNamesStrikethrough[i],
+						fPropertyNamesItalic[i], fPropertyNamesStrikethrough[i],
 						fPropertyNamesUnderline[i]);
 			}
 			fNeedsLazyColorLoading = false;
@@ -216,10 +218,8 @@ public abstract class AbstractScriptScanner extends BufferedRuleBasedScanner
 
 	private void addTokenWithProxyAttribute(String colorKey, String boldKey,
 			String italicKey, String strikethroughKey, String underlineKey) {
-		fTokenMap.put(
-				colorKey,
-				new Token(createTextAttribute(null, boldKey, italicKey,
-						strikethroughKey, underlineKey)));
+		fTokenMap.put(colorKey, new Token(createTextAttribute(null, boldKey,
+				italicKey, strikethroughKey, underlineKey)));
 	}
 
 	private void addToken(String colorKey, String boldKey, String italicKey,
@@ -234,10 +234,8 @@ public abstract class AbstractScriptScanner extends BufferedRuleBasedScanner
 		}
 
 		if (!fNeedsLazyColorLoading)
-			fTokenMap.put(
-					colorKey,
-					new Token(createTextAttribute(colorKey, boldKey, italicKey,
-							strikethroughKey, underlineKey)));
+			fTokenMap.put(colorKey, new Token(createTextAttribute(colorKey,
+					boldKey, italicKey, strikethroughKey, underlineKey)));
 		else {
 			Token token = fTokenMap.get(colorKey);
 			if (token != null)
@@ -394,12 +392,13 @@ public abstract class AbstractScriptScanner extends BufferedRuleBasedScanner
 		Object data = token.getData();
 		if (data instanceof TextAttribute) {
 			TextAttribute oldAttr = (TextAttribute) data;
-			boolean activeValue = (oldAttr.getStyle() & styleAttribute) == styleAttribute;
+			boolean activeValue = (oldAttr.getStyle()
+					& styleAttribute) == styleAttribute;
 			if (activeValue != eventValue)
 				token.setData(new TextAttribute(oldAttr.getForeground(),
-						oldAttr.getBackground(), eventValue ? oldAttr
-								.getStyle() | styleAttribute : oldAttr
-								.getStyle() & ~styleAttribute));
+						oldAttr.getBackground(),
+						eventValue ? oldAttr.getStyle() | styleAttribute
+								: oldAttr.getStyle() & ~styleAttribute));
 		}
 	}
 

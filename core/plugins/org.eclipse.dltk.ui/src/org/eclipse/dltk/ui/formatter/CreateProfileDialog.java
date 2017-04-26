@@ -79,10 +79,14 @@ public class CreateProfileDialog extends StatusDialog {
 		GridData gd;
 
 		final GridLayout layout = new GridLayout(numColumns, false);
-		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
-		layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
-		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
-		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+		layout.marginHeight = convertVerticalDLUsToPixels(
+				IDialogConstants.VERTICAL_MARGIN);
+		layout.marginWidth = convertHorizontalDLUsToPixels(
+				IDialogConstants.HORIZONTAL_MARGIN);
+		layout.verticalSpacing = convertVerticalDLUsToPixels(
+				IDialogConstants.VERTICAL_SPACING);
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(
+				IDialogConstants.HORIZONTAL_SPACING);
 
 		final Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(layout);
@@ -168,7 +172,7 @@ public class CreateProfileDialog extends StatusDialog {
 		if (!getStatus().isOK())
 			return;
 
-		final Map<String, String> baseSettings = new HashMap<String, String>(
+		final Map<String, String> baseSettings = new HashMap<>(
 				(fSortedProfiles.get(fProfileCombo.getSelectionIndex()))
 						.getSettings());
 		final String profileName = fNameText.getText();

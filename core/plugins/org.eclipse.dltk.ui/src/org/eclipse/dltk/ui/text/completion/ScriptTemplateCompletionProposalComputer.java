@@ -28,9 +28,9 @@ import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
  *
  * @since 4.1
  */
-public abstract class ScriptTemplateCompletionProposalComputer extends
-		AbstractScriptCompletionProposalComputer implements
-		IScriptCompletionProposalComputer {
+public abstract class ScriptTemplateCompletionProposalComputer
+		extends AbstractScriptCompletionProposalComputer
+		implements IScriptCompletionProposalComputer {
 
 	@Override
 	public List<ICompletionProposal> computeCompletionProposals(
@@ -43,7 +43,8 @@ public abstract class ScriptTemplateCompletionProposalComputer extends
 		// if (unit == null)
 		// return Collections.emptyList();
 
-		final TemplateCompletionProcessor processor = createCompletionProcessor(scriptContext);
+		final TemplateCompletionProcessor processor = createCompletionProcessor(
+				scriptContext);
 		if (processor == null)
 			return Collections.emptyList();
 
@@ -51,7 +52,7 @@ public abstract class ScriptTemplateCompletionProposalComputer extends
 				.computeCompletionProposals(scriptContext.getViewer(),
 						scriptContext.getInvocationOffset());
 		updateTemplateProposalRelevance(scriptContext, templateProposals);
-		final List<ICompletionProposal> result = new ArrayList<ICompletionProposal>(
+		final List<ICompletionProposal> result = new ArrayList<>(
 				templateProposals.length);
 		Collections.addAll(result, templateProposals);
 		return result;

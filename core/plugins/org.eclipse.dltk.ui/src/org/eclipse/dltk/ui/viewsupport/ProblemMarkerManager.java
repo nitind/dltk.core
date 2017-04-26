@@ -107,7 +107,7 @@ public class ProblemMarkerManager implements IResourceChangeListener,
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
-		HashSet<IResource> changedElements = new HashSet<IResource>();
+		HashSet<IResource> changedElements = new HashSet<>();
 
 		try {
 			IResourceDelta delta = event.getDelta();

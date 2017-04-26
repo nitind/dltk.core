@@ -45,11 +45,11 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.IWorkbenchPartOrientation;
 
-public abstract class ScriptTemplateCompletionProcessor extends
-		TemplateCompletionProcessor {
+public abstract class ScriptTemplateCompletionProcessor
+		extends TemplateCompletionProcessor {
 
-	private static final class ProposalComparator implements
-			Comparator<TemplateProposal> {
+	private static final class ProposalComparator
+			implements Comparator<TemplateProposal> {
 		@Override
 		public int compare(TemplateProposal o1, TemplateProposal o2) {
 			return o2.getRelevance() - o1.getRelevance();
@@ -70,8 +70,10 @@ public abstract class ScriptTemplateCompletionProcessor extends
 		return this.context;
 	}
 
-	private static final String $_LINE_SELECTION = "${" + GlobalTemplateVariables.LineSelection.NAME + "}"; //$NON-NLS-1$ //$NON-NLS-2$
-	private static final String $_WORD_SELECTION = "${" + GlobalTemplateVariables.WordSelection.NAME + "}"; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String $_LINE_SELECTION = "${" //$NON-NLS-1$
+			+ GlobalTemplateVariables.LineSelection.NAME + "}"; //$NON-NLS-1$
+	private static final String $_WORD_SELECTION = "${" //$NON-NLS-1$
+			+ GlobalTemplateVariables.WordSelection.NAME + "}"; //$NON-NLS-1$
 
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
@@ -84,7 +86,7 @@ public abstract class ScriptTemplateCompletionProcessor extends
 		if (selection.getOffset() == offset)
 			offset = selection.getOffset() + selection.getLength();
 
-		List<TemplateProposal> matches = new ArrayList<TemplateProposal>();
+		List<TemplateProposal> matches = new ArrayList<>();
 
 		if (selection.getLength() == 0) {
 			String prefix = extractPrefix(viewer, offset);
@@ -98,8 +100,8 @@ public abstract class ScriptTemplateCompletionProcessor extends
 				return new ICompletionProposal[0];
 			// name of the selection variables {line, word}_selection
 			context.setVariable("selection", selection.getText()); //$NON-NLS-1$
-			Template[] templates = getTemplates(context.getContextType()
-					.getId());
+			Template[] templates = getTemplates(
+					context.getContextType().getId());
 			for (int i = 0; i != templates.length; i++) {
 				final Template template = templates[i];
 				try {
@@ -120,9 +122,10 @@ public abstract class ScriptTemplateCompletionProcessor extends
 				return new ICompletionProposal[0];
 			// name of the selection variables {line, word}_selection
 			context.setVariable("selection", selection.getText()); //$NON-NLS-1$
-			Template[] templates = getTemplates(context.getContextType()
-					.getId());
-			final boolean multipleLinesSelected = areMultipleLinesSelected(viewer);
+			Template[] templates = getTemplates(
+					context.getContextType().getId());
+			final boolean multipleLinesSelected = areMultipleLinesSelected(
+					viewer);
 			for (int i = 0; i != templates.length; i++) {
 				final Template template = templates[i];
 				try {
@@ -189,7 +192,8 @@ public abstract class ScriptTemplateCompletionProcessor extends
 	}
 
 	@Override
-	protected TemplateContext createContext(ITextViewer viewer, IRegion region) {
+	protected TemplateContext createContext(ITextViewer viewer,
+			IRegion region) {
 		TemplateContextType contextType = getContextType(viewer, region);
 		if (contextType instanceof ScriptTemplateContextType) {
 			IDocument document = viewer.getDocument();
@@ -220,8 +224,8 @@ public abstract class ScriptTemplateCompletionProcessor extends
 		if (editor instanceof IWorkbenchPartOrientation)
 			orientation = ((IWorkbenchPartOrientation) editor).getOrientation();
 		IDLTKLanguageToolkit toolkit = null;
-		toolkit = DLTKLanguageManager.getLanguageToolkit(getContext()
-				.getLanguageNatureID());
+		toolkit = DLTKLanguageManager
+				.getLanguageToolkit(getContext().getLanguageNatureID());
 		if ((toolkit == null) && (editor instanceof ScriptEditor))
 			toolkit = ((ScriptEditor) editor).getLanguageToolkit();
 		return new TemplateInformationControlCreator(orientation, toolkit);
@@ -233,8 +237,8 @@ public abstract class ScriptTemplateCompletionProcessor extends
 
 	@Override
 	protected Template[] getTemplates(String contextTypeId) {
-		return getTemplateAccess().getTemplateStore().getTemplates(
-				contextTypeId);
+		return getTemplateAccess().getTemplateStore()
+				.getTemplates(contextTypeId);
 	}
 
 	protected char[] getIgnore() {
@@ -245,8 +249,8 @@ public abstract class ScriptTemplateCompletionProcessor extends
 	protected TemplateContextType getContextType(ITextViewer viewer,
 			IRegion region) {
 		if (isValidLocation(viewer, region)) {
-			return getTemplateAccess().getContextTypeRegistry().getContextType(
-					getContextTypeId());
+			return getTemplateAccess().getContextTypeRegistry()
+					.getContextType(getContextTypeId());
 		}
 		return null;
 	}
@@ -287,8 +291,8 @@ public abstract class ScriptTemplateCompletionProcessor extends
 		final IDocument doc = viewer.getDocument();
 		final int regionEnd = region.getOffset() + region.getLength();
 		final IRegion line = doc.getLineInformationOfOffset(regionEnd);
-		final String s = doc
-				.get(line.getOffset(), regionEnd - line.getOffset());
+		final String s = doc.get(line.getOffset(),
+				regionEnd - line.getOffset());
 		final int spaceIndex = s.lastIndexOf(' ');
 		if (spaceIndex != -1) {
 			return s.substring(spaceIndex);

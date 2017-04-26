@@ -25,8 +25,8 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class ScriptCompositeReconcilingStrategy extends
-		CompositeReconcilingStrategy {
+public class ScriptCompositeReconcilingStrategy
+		extends CompositeReconcilingStrategy {
 	private ITextEditor fEditor;
 	private ScriptReconcilingStrategy fScriptStrategy;
 
@@ -39,18 +39,19 @@ public class ScriptCompositeReconcilingStrategy extends
 	 *            the document partitioning this strategy uses for configuration
 	 */
 	public ScriptCompositeReconcilingStrategy(ITextEditor editor,
-			String documentPartitioning, SpellCheckDelegate spellCheckDelegate) {
+			String documentPartitioning,
+			SpellCheckDelegate spellCheckDelegate) {
 		fEditor = editor;
 		fScriptStrategy = new ScriptReconcilingStrategy(editor);
-		final List<IReconcilingStrategy> strategies = new ArrayList<IReconcilingStrategy>();
+		final List<IReconcilingStrategy> strategies = new ArrayList<>();
 		strategies.add(fScriptStrategy);
 		if (spellCheckDelegate != null) {
 			final IDLTKLanguageToolkit toolkit = ScriptUtils
 					.getLanguageToolkit(editor);
 			if (toolkit != null) {
 				final IContentType contentType = Platform
-						.getContentTypeManager().getContentType(
-								toolkit.getLanguageContentType());
+						.getContentTypeManager()
+						.getContentType(toolkit.getLanguageContentType());
 				if (contentType != null) {
 					strategies.add(new ScriptSpellingReconcileStrategy(editor,
 							documentPartitioning, contentType,

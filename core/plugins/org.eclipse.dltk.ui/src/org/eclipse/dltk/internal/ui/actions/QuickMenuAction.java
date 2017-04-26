@@ -100,14 +100,14 @@ public abstract class QuickMenuAction extends Action {
 	}
 
 	/**
-	 * Returns the shortcut assigned to the sub menu or <code>null</code> if
-	 * no short cut is assigned.
+	 * Returns the shortcut assigned to the sub menu or <code>null</code> if no
+	 * short cut is assigned.
 	 *
 	 * @return the shortcut as a human readable string or <code>null</code>
 	 */
 	private String getShortcutString() {
-		IBindingService bindingService = PlatformUI
-				.getWorkbench().getAdapter(IBindingService.class);
+		IBindingService bindingService = PlatformUI.getWorkbench()
+				.getAdapter(IBindingService.class);
 		if (bindingService == null)
 			return null;
 		return bindingService
@@ -139,10 +139,10 @@ public abstract class QuickMenuAction extends Action {
 					clientArea.y + clientArea.height / 2);
 		}
 		Rectangle shellArea = focus.getShell().getClientArea();
-		if (!shellArea.contains(focus.getShell().toControl(
-				focus.toDisplay(result)))) {
-			result = new Point(shellArea.x + shellArea.width / 2, shellArea.y
-					+ shellArea.height / 2);
+		if (!shellArea.contains(
+				focus.getShell().toControl(focus.toDisplay(result)))) {
+			result = new Point(shellArea.x + shellArea.width / 2,
+					shellArea.y + shellArea.height / 2);
 		}
 		return focus.toDisplay(result);
 	}
@@ -187,9 +187,11 @@ public abstract class QuickMenuAction extends Action {
 			Rectangle bounds = items[0].getBounds();
 			Rectangle intersect = clientArea.intersection(bounds);
 			if (intersect != null && intersect.height == bounds.height) {
-				return new Point(Math.max(0, bounds.x
-						+ getAvarageCharWith(tree) * CHAR_INDENT), bounds.y
-						+ bounds.height);
+				return new Point(
+						Math.max(0,
+								bounds.x + getAvarageCharWith(tree)
+										* CHAR_INDENT),
+						bounds.y + bounds.height);
 			} else {
 				return null;
 			}
@@ -199,8 +201,9 @@ public abstract class QuickMenuAction extends Action {
 				rectangles[i] = items[i].getBounds();
 			}
 			Point cursorLocation = tree.getDisplay().getCursorLocation();
-			Point result = findBestLocation(getIncludedPositions(rectangles,
-					clientArea), tree.toControl(cursorLocation));
+			Point result = findBestLocation(
+					getIncludedPositions(rectangles, clientArea),
+					tree.toControl(cursorLocation));
 			if (result != null)
 				result.x = result.x + getAvarageCharWith(tree) * CHAR_INDENT;
 			return result;
@@ -229,9 +232,12 @@ public abstract class QuickMenuAction extends Action {
 			Rectangle iBounds = items[0].getImageBounds(0);
 			Rectangle intersect = clientArea.intersection(bounds);
 			if (intersect != null && intersect.height == bounds.height) {
-				return new Point(Math.max(0, bounds.x + iBounds.width
-						+ getAvarageCharWith(table) * CHAR_INDENT), bounds.y
-						+ bounds.height);
+				return new Point(
+						Math.max(0,
+								bounds.x + iBounds.width
+										+ getAvarageCharWith(table)
+												* CHAR_INDENT),
+						bounds.y + bounds.height);
 			} else {
 				return null;
 			}
@@ -243,11 +249,12 @@ public abstract class QuickMenuAction extends Action {
 			}
 			Rectangle iBounds = items[0].getImageBounds(0);
 			Point cursorLocation = table.getDisplay().getCursorLocation();
-			Point result = findBestLocation(getIncludedPositions(rectangles,
-					clientArea), table.toControl(cursorLocation));
+			Point result = findBestLocation(
+					getIncludedPositions(rectangles, clientArea),
+					table.toControl(cursorLocation));
 			if (result != null)
-				result.x = result.x + iBounds.width + getAvarageCharWith(table)
-						* CHAR_INDENT;
+				result.x = result.x + iBounds.width
+						+ getAvarageCharWith(table) * CHAR_INDENT;
 			return result;
 		}
 		}
@@ -255,13 +262,13 @@ public abstract class QuickMenuAction extends Action {
 
 	private Point[] getIncludedPositions(Rectangle[] rectangles,
 			Rectangle widgetBounds) {
-		List<Point> result = new ArrayList<Point>();
+		List<Point> result = new ArrayList<>();
 		for (int i = 0; i < rectangles.length; i++) {
 			Rectangle rectangle = rectangles[i];
 			Rectangle intersect = widgetBounds.intersection(rectangle);
 			if (intersect != null && intersect.height == rectangle.height) {
-				result.add(new Point(intersect.x, intersect.y
-						+ intersect.height));
+				result.add(
+						new Point(intersect.x, intersect.y + intersect.height));
 			}
 		}
 		return result.toArray(new Point[result.size()]);

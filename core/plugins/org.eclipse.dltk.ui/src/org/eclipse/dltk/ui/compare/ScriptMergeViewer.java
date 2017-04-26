@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class ScriptMergeViewer extends TextMergeViewer {
 
-	private static final Stack<IDLTKUILanguageToolkit> toolkitStorage = new Stack<IDLTKUILanguageToolkit>();
+	private static final Stack<IDLTKUILanguageToolkit> toolkitStorage = new Stack<>();
 
 	/*
 	 * Unfortunately, super constructor creates controls and calls getTitle().
@@ -61,7 +61,8 @@ public class ScriptMergeViewer extends TextMergeViewer {
 	 * @param title
 	 */
 	public ScriptMergeViewer(Composite parent,
-			CompareConfiguration configuration, IDLTKUILanguageToolkit toolkit) {
+			CompareConfiguration configuration,
+			IDLTKUILanguageToolkit toolkit) {
 		super(parent, pushToolkit(toolkit), configuration);
 		popToolkit();
 		this.fToolkit = toolkit;
@@ -69,8 +70,8 @@ public class ScriptMergeViewer extends TextMergeViewer {
 
 	public ScriptMergeViewer(Composite parent,
 			CompareConfiguration configuration, String natureId) {
-		this(parent, configuration, DLTKUILanguageManager
-				.getLanguageToolkit(natureId));
+		this(parent, configuration,
+				DLTKUILanguageManager.getLanguageToolkit(natureId));
 	}
 
 	protected IDLTKUILanguageToolkit getToolkit() {
@@ -87,8 +88,8 @@ public class ScriptMergeViewer extends TextMergeViewer {
 
 	@Override
 	public String getTitle() {
-		return NLS.bind("{0} Compare", getToolkit().getCoreToolkit()
-				.getLanguageName());
+		return NLS.bind("{0} Compare",
+				getToolkit().getCoreToolkit().getLanguageName());
 	}
 
 	@Override
@@ -101,8 +102,8 @@ public class ScriptMergeViewer extends TextMergeViewer {
 			return;
 		}
 		final SourceViewer sourceViewer = (SourceViewer) textViewer;
-		sourceViewer.configure(tools.createSourceViewerConfiguraton(
-				getPreferenceStore(), null));
+		sourceViewer.configure(tools
+				.createSourceViewerConfiguraton(getPreferenceStore(), null));
 	}
 
 	@Override

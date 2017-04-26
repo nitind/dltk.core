@@ -66,8 +66,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.PreferenceLinkArea;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-public abstract class AbstractFormatterSelectionBlock extends
-		AbstractOptionsBlock {
+public abstract class AbstractFormatterSelectionBlock
+		extends AbstractOptionsBlock {
 
 	protected abstract IFormatterModifyDialogOwner createDialogOwner();
 
@@ -95,8 +95,9 @@ public abstract class AbstractFormatterSelectionBlock extends
 	public AbstractFormatterSelectionBlock(IStatusChangeListener context,
 			IProject project, PreferenceKey formatterKey, String natureId,
 			IWorkbenchPreferenceContainer container) {
-		super(context, project, collectPreferenceKeys(TEMP_LIST, natureId,
-				formatterKey), container);
+		super(context, project,
+				collectPreferenceKeys(TEMP_LIST, natureId, formatterKey),
+				container);
 		factories = TEMP_LIST
 				.toArray(new IScriptFormatterFactory[TEMP_LIST.size()]);
 		TEMP_LIST = new ArrayList();
@@ -106,18 +107,18 @@ public abstract class AbstractFormatterSelectionBlock extends
 		return getProfileManager(getSelectedExtension());
 	}
 
-	protected IProfileManager getProfileManager(IScriptFormatterFactory factory) {
+	protected IProfileManager getProfileManager(
+			IScriptFormatterFactory factory) {
 		IProfileManager manager = profileByFactory.get(factory);
 		if (manager == null) {
-			List<IProfile> allProfiles = new ArrayList<IProfile>();
+			List<IProfile> allProfiles = new ArrayList<>();
 			List<IProfile> buitinProfiles = factory.getBuiltInProfiles();
 			if (buitinProfiles != null && buitinProfiles.size() > 0) {
 				allProfiles.addAll(buitinProfiles);
 			} else {
-				DLTKUIPlugin
-						.logErrorMessage(NLS
-								.bind(FormatterMessages.AbstractFormatterSelectionBlock_noBuiltInProfiles,
-										factory.getId()));
+				DLTKUIPlugin.logErrorMessage(NLS.bind(
+						FormatterMessages.AbstractFormatterSelectionBlock_noBuiltInProfiles,
+						factory.getId()));
 			}
 			allProfiles.addAll(factory.getCustomProfiles());
 			manager = factory.createProfileManager(allProfiles);
@@ -150,17 +151,16 @@ public abstract class AbstractFormatterSelectionBlock extends
 				}
 			}
 		}
-		String name = getProfileName(
-				manager.getSortedProfiles(),
+		String name = getProfileName(manager.getSortedProfiles(),
 				FormatterMessages.AbstractFormatterSelectionBlock_activeProfileName);
-		IProfile profile = manager.create(ProfileKind.CUSTOM, name,
-				preferences, factory.getId(), factory.getProfileVersioner()
-						.getCurrentVersion());
+		IProfile profile = manager.create(ProfileKind.CUSTOM, name, preferences,
+				factory.getId(),
+				factory.getProfileVersioner().getCurrentVersion());
 		manager.setSelected(profile);
 	}
 
 	protected String getProfileName(List<IProfile> profiles, String prefix) {
-		HashSet<String> names = new HashSet<String>(profiles.size());
+		HashSet<String> names = new HashSet<>(profiles.size());
 		for (IProfile profile : profiles) {
 			names.add(profile.getName());
 		}
@@ -199,7 +199,7 @@ public abstract class AbstractFormatterSelectionBlock extends
 		IScriptFormatterFactory factory = getSelectedExtension();
 		IProfileManager manager = getProfileManager(factory);
 		IProfile profile = manager.getSelected();
-		Map<String, String> settings = new HashMap<String, String>();
+		Map<String, String> settings = new HashMap<>();
 		if (profile != null) {
 			settings.putAll(profile.getSettings());
 		}
@@ -227,7 +227,7 @@ public abstract class AbstractFormatterSelectionBlock extends
 
 	protected static PreferenceKey[] collectPreferenceKeys(List factories,
 			String natureId, PreferenceKey formatterKey) {
-		List<PreferenceKey> result = new ArrayList<PreferenceKey>();
+		List<PreferenceKey> result = new ArrayList<>();
 		result.add(formatterKey);
 		IDLTKContributedExtension[] extensions = ScriptFormatterManager
 				.getInstance().getContributions(natureId);
@@ -291,15 +291,13 @@ public abstract class AbstractFormatterSelectionBlock extends
 
 		createFormatterSection(fComposite, numColumns, fPixConv);
 
-		final Group group = SWTFactory
-				.createGroup(
-						fComposite,
-						FormatterMessages.AbstractFormatterSelectionBlock_profilesGroup,
-						numColumns, numColumns, GridData.FILL_BOTH);
+		final Group group = SWTFactory.createGroup(fComposite,
+				FormatterMessages.AbstractFormatterSelectionBlock_profilesGroup,
+				numColumns, numColumns, GridData.FILL_BOTH);
 
 		Label profileLabel = new Label(group, SWT.NONE);
-		profileLabel
-				.setText(FormatterMessages.AbstractFormatterSelectionBlock_activeProfile);
+		profileLabel.setText(
+				FormatterMessages.AbstractFormatterSelectionBlock_activeProfile);
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, false);
 		data.horizontalSpan = numColumns;
 		profileLabel.setLayoutData(data);
@@ -335,8 +333,7 @@ public abstract class AbstractFormatterSelectionBlock extends
 				editButtonPressed();
 			}
 		});
-		fDeleteButton = createButton(
-				group,
+		fDeleteButton = createButton(group,
 				FormatterMessages.AbstractFormatterSelectionBlock_removeProfile,
 				GridData.HORIZONTAL_ALIGN_BEGINNING);
 		fDeleteButton.addSelectionListener(new SelectionListener() {
@@ -354,8 +351,7 @@ public abstract class AbstractFormatterSelectionBlock extends
 			protected void doDelete() {
 				IProfileManager profileManager = getProfileManager();
 				IProfile selected = profileManager.getSelected();
-				if (MessageDialog.openQuestion(
-						group.getShell(),
+				if (MessageDialog.openQuestion(group.getShell(),
 						FormatterMessages.AbstractFormatterSelectionBlock_confirmRemoveLabel,
 						NLS.bind(
 								FormatterMessages.AbstractFormatterSelectionBlock_confirmRemoveMessage,
@@ -384,9 +380,9 @@ public abstract class AbstractFormatterSelectionBlock extends
 
 			protected void createNewProfile() {
 				IScriptFormatterFactory formatterFactory = getSelectedExtension();
-				final CreateProfileDialog p = new CreateProfileDialog(group
-						.getShell(), getProfileManager(), formatterFactory
-						.getProfileVersioner());
+				final CreateProfileDialog p = new CreateProfileDialog(
+						group.getShell(), getProfileManager(),
+						formatterFactory.getProfileVersioner());
 				if (p.open() != Window.OK)
 					return;
 
@@ -399,8 +395,7 @@ public abstract class AbstractFormatterSelectionBlock extends
 			}
 		});
 
-		fLoadButton = createButton(
-				group,
+		fLoadButton = createButton(group,
 				FormatterMessages.AbstractFormatterSelectionBlock_importProfile,
 				GridData.HORIZONTAL_ALIGN_END);
 		fLoadButton.addSelectionListener(new SelectionListener() {
@@ -418,7 +413,8 @@ public abstract class AbstractFormatterSelectionBlock extends
 			protected void doImport() {
 				final FileDialog dialog = new FileDialog(group.getShell(),
 						SWT.OPEN);
-				dialog.setText(FormatterMessages.AbstractFormatterSelectionBlock_importProfileLabel);
+				dialog.setText(
+						FormatterMessages.AbstractFormatterSelectionBlock_importProfileLabel);
 				dialog.setFilterExtensions(new String[] { "*.xml" }); //$NON-NLS-1$
 				final String path = dialog.open();
 				if (path == null)
@@ -431,10 +427,9 @@ public abstract class AbstractFormatterSelectionBlock extends
 				try {
 					profiles = store.readProfilesFromFile(file);
 				} catch (CoreException e) {
-					DLTKUIPlugin
-							.logErrorMessage(
-									FormatterMessages.AbstractFormatterSelectionBlock_notValidProfile,
-									e);
+					DLTKUIPlugin.logErrorMessage(
+							FormatterMessages.AbstractFormatterSelectionBlock_notValidProfile,
+							e);
 				}
 				if (profiles == null || profiles.isEmpty())
 					return;
@@ -446,10 +441,10 @@ public abstract class AbstractFormatterSelectionBlock extends
 				if (!versioner.getFormatterId()
 						.equals(profile.getFormatterId())) {
 					final String title = FormatterMessages.AbstractFormatterSelectionBlock_importProfileLabel;
-					final String message = NLS
-							.bind(FormatterMessages.AbstractFormatterSelectionBlock_notValidFormatter,
-									versioner.getFormatterId(),
-									profile.getFormatterId());
+					final String message = NLS.bind(
+							FormatterMessages.AbstractFormatterSelectionBlock_notValidFormatter,
+							versioner.getFormatterId(),
+							profile.getFormatterId());
 					MessageDialog.openError(group.getShell(), title, message);
 					return;
 				}
@@ -467,8 +462,8 @@ public abstract class AbstractFormatterSelectionBlock extends
 					if (aeDialog.open() != Window.OK)
 						return;
 				}
-				((IProfile.ICustomProfile) profile).setVersion(versioner
-						.getCurrentVersion());
+				((IProfile.ICustomProfile) profile)
+						.setVersion(versioner.getCurrentVersion());
 				profileManager.addProfile(profile);
 				updateComboFromProfiles();
 				applyPreferences();
@@ -497,7 +492,8 @@ public abstract class AbstractFormatterSelectionBlock extends
 		if (index == -1 && factories.length != 0) {
 			index = 0;
 			for (int i = 1; i < factories.length; i++) {
-				if (factories[i].getPriority() > factories[index].getPriority()) {
+				if (factories[i].getPriority() > factories[index]
+						.getPriority()) {
 					index = i;
 				}
 			}
@@ -505,8 +501,7 @@ public abstract class AbstractFormatterSelectionBlock extends
 		}
 
 		if (factories.length > 1) {
-			createLabel(
-					composite,
+			createLabel(composite,
 					FormatterMessages.AbstractFormatterSelectionBlock_formatterLabel,
 					numColumns);
 			fFactoryCombo = createProfileCombo(composite, numColumns,
@@ -556,8 +551,8 @@ public abstract class AbstractFormatterSelectionBlock extends
 				numColumns);
 		fPreviewViewer = createPreview(composite);
 
-		final GridData gd = new GridData(GridData.FILL_VERTICAL
-				| GridData.HORIZONTAL_ALIGN_FILL);
+		final GridData gd = new GridData(
+				GridData.FILL_VERTICAL | GridData.HORIZONTAL_ALIGN_FILL);
 		gd.horizontalSpan = numColumns;
 		gd.verticalSpan = 7;
 		gd.heightHint = 100;
@@ -569,8 +564,8 @@ public abstract class AbstractFormatterSelectionBlock extends
 	}
 
 	protected final void updateSelection() {
-		IProfile selected = getProfileManager().getSortedProfiles().get(
-				fProfileCombo.getSelectionIndex());
+		IProfile selected = getProfileManager().getSortedProfiles()
+				.get(fProfileCombo.getSelectionIndex());
 		getProfileManager().setSelected(selected);
 		updateButtons();
 		applyPreferences();
@@ -737,9 +732,9 @@ public abstract class AbstractFormatterSelectionBlock extends
 
 	private int selectedFactory;
 	private IScriptFormatterFactory[] factories;
-	private Map<IScriptFormatterFactory, IProfileManager> profileByFactory = new HashMap<IScriptFormatterFactory, IProfileManager>();
+	private Map<IScriptFormatterFactory, IProfileManager> profileByFactory = new HashMap<>();
 	protected SourceViewer fPreviewViewer;
 
-	private static List<IScriptFormatterFactory> TEMP_LIST = new ArrayList<IScriptFormatterFactory>();
+	private static List<IScriptFormatterFactory> TEMP_LIST = new ArrayList<>();
 
 }

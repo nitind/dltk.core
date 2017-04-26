@@ -1,11 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.ui.viewsupport;
 
@@ -29,7 +29,7 @@ import org.eclipse.ui.PlatformUI;
 public class StorageLabelProvider extends LabelProvider {
 	private IEditorRegistry fEditorRegistry = null;
 
-	private Map<String, Image> fImageMap = new HashMap<String, Image>(10);
+	private Map<String, Image> fImageMap = new HashMap<>(10);
 
 	private Image fDefaultImage;
 
@@ -39,11 +39,6 @@ public class StorageLabelProvider extends LabelProvider {
 		return fEditorRegistry;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ILabelProvider#getImage
-	 */
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof ISourceModule) {
@@ -55,11 +50,6 @@ public class StorageLabelProvider extends LabelProvider {
 		return super.getImage(element);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ILabelProvider#getText
-	 */
 	@Override
 	public String getText(Object element) {
 		if (element instanceof IStorage)
@@ -68,11 +58,6 @@ public class StorageLabelProvider extends LabelProvider {
 		return super.getText(element);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see IBaseLabelProvider#dispose
-	 */
 	@Override
 	public void dispose() {
 		if (fImageMap != null) {

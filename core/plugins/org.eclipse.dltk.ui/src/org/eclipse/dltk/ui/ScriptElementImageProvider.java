@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -86,7 +86,7 @@ public class ScriptElementImageProvider {
 	 * Returns the icon for a given element. The icon depends on the element
 	 * type and element properties. If configured, overlay icons are constructed
 	 * for <code>ISourceReference</code>s.
-	 * 
+	 *
 	 * @param flags
 	 *            Flags as defined by the ScriptImageLabelProvider
 	 */
@@ -144,7 +144,7 @@ public class ScriptElementImageProvider {
 	 * Creates {@link ILabelProvider} objects from configuration elements.
 	 */
 	private static void createProviders(IConfigurationElement[] elements) {
-		labelProviders = new HashMap<String, ILabelProvider>();
+		labelProviders = new HashMap<>();
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			try {
@@ -162,7 +162,8 @@ public class ScriptElementImageProvider {
 		if (labelProviders == null) {
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 			IConfigurationElement[] elements = registry
-					.getConfigurationElementsFor(LABELPROVIDERS_EXTENSION_POINT);
+					.getConfigurationElementsFor(
+							LABELPROVIDERS_EXTENSION_POINT);
 			createProviders(elements);
 		}
 		IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager
@@ -194,7 +195,8 @@ public class ScriptElementImageProvider {
 		Point size = useSmallSize(flags) ? SMALL_SIZE : BIG_SIZE;
 		ImageDescriptor descr = getBaseImageDescriptor(element, flags);
 		if (descr != null) {
-			return new ScriptElementImageDescriptor(descr, adornmentFlags, size);
+			return new ScriptElementImageDescriptor(descr, adornmentFlags,
+					size);
 		} else {
 			return null;
 		}
@@ -286,14 +288,13 @@ public class ScriptElementImageProvider {
 					return DESC_OBJ_PROJECT;
 				}
 				return DESC_OBJ_PROJECT_CLOSED;
-				// return DESC_OBJ_PROJECT;
+			// return DESC_OBJ_PROJECT;
 
 			case IModelElement.SCRIPT_MODEL:
 				// return DLTKPluginImages.DESC_OBJS_JAVA_MODEL;
 				return null;
 			}
-			Assert.isTrue(
-					false,
+			Assert.isTrue(false,
 					DLTKUIMessages.ScriptImageLabelprovider_assert_wrongImage
 							+ "(" + element.getElementType() + ","
 							+ element.getElementName() + ")");

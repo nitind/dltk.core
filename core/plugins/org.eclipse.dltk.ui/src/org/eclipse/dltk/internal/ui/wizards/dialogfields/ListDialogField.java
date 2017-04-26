@@ -132,7 +132,7 @@ public class ListDialogField<E> extends DialogField {
 		fListViewerAdapter = new ListViewerAdapter();
 		fParentElement = this;
 
-		fElements = new ArrayList<E>(10);
+		fElements = new ArrayList<>(10);
 
 		fButtonLabels = buttonLabels;
 		if (fButtonLabels != null) {
@@ -593,7 +593,7 @@ public class ListDialogField<E> extends DialogField {
 	 * Sets the elements shown in the list.
 	 */
 	public void setElements(Collection<E> elements) {
-		fElements = new ArrayList<E>(elements);
+		fElements = new ArrayList<>(elements);
 		if (isOkToUse(fTableControl)) {
 			fTable.refresh();
 		}
@@ -605,7 +605,7 @@ public class ListDialogField<E> extends DialogField {
 	 * can be modified by the user.
 	 */
 	public List<E> getElements() {
-		return new ArrayList<E>(fElements);
+		return new ArrayList<>(fElements);
 	}
 
 	/**
@@ -690,7 +690,7 @@ public class ListDialogField<E> extends DialogField {
 
 		if (nElements > 0) {
 			// filter duplicated
-			ArrayList<E> elementsToAdd = new ArrayList<E>(nElements);
+			ArrayList<E> elementsToAdd = new ArrayList<>(nElements);
 
 			for (int i = 0; i < nElements; i++) {
 				E elem = elements.get(i);
@@ -816,7 +816,7 @@ public class ListDialogField<E> extends DialogField {
 
 	private List<E> moveUp(List<E> elements, List<E> move) {
 		int nElements = elements.size();
-		List<E> res = new ArrayList<E>(nElements);
+		List<E> res = new ArrayList<>(nElements);
 		E floating = null;
 		for (int i = 0; i < nElements; i++) {
 			E curr = elements.get(i);
@@ -850,7 +850,7 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	private List<E> reverse(List<E> p) {
-		List<E> reverse = new ArrayList<E>(p.size());
+		List<E> reverse = new ArrayList<>(p.size());
 		for (int i = p.size() - 1; i >= 0; i--) {
 			reverse.add(p.get(i));
 		}
@@ -902,7 +902,7 @@ public class ListDialogField<E> extends DialogField {
 	 * Returns the selected elements.
 	 */
 	public List<E> getSelectedElements() {
-		List<E> result = new ArrayList<E>();
+		List<E> result = new ArrayList<>();
 		if (isOkToUse(fTableControl)) {
 			ISelection selection = fTable.getSelection();
 			if (selection instanceof IStructuredSelection) {

@@ -200,7 +200,7 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 	}
 
 	protected void updateFoldersList() {
-		ArrayList<BPListElement> folders = new ArrayList<BPListElement>();
+		ArrayList<BPListElement> folders = new ArrayList<>();
 
 		List<?> cpelements = fBuildpathList.getElements();
 		for (int i = 0; i < cpelements.size(); i++) {
