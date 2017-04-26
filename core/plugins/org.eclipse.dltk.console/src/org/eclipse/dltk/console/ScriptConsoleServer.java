@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,7 +31,7 @@ public class ScriptConsoleServer implements Runnable {
 
 	private int port;
 
-	private final Map handlers;
+	private final Map<String, ConsoleRequest> handlers;
 
 	protected ScriptConsoleServer() {
 		this.port = DEFAULT_PORT;
@@ -53,7 +53,7 @@ public class ScriptConsoleServer implements Runnable {
 			}
 		}
 
-		handlers = new HashMap();
+		handlers = new HashMap<>();
 
 		(new Thread(this)).start();
 	}
@@ -93,7 +93,7 @@ public class ScriptConsoleServer implements Runnable {
 						ConsoleRequest request = null;
 
 						synchronized (handlers) {
-							request = (ConsoleRequest) handlers.get(id);
+							request = handlers.get(id);
 							while (request == null) {
 								try {
 									handlers.wait();

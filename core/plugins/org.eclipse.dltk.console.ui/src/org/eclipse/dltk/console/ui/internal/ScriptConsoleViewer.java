@@ -71,7 +71,7 @@ public class ScriptConsoleViewer extends TextConsoleViewer implements IScriptCon
 
 		private AnsiColorHelper ansiHelper = new AnsiColorHelper();
 
-		private List<ScriptConsoleViewer> viewerList = new ArrayList<ScriptConsoleViewer>();
+		private List<ScriptConsoleViewer> viewerList = new ArrayList<>();
 
 		private void addViewer(ScriptConsoleViewer viewer) {
 			viewerList.add(viewer);

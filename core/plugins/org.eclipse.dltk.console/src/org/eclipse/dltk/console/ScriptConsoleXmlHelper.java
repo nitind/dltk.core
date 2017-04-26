@@ -1,11 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.console;
 
@@ -76,10 +76,10 @@ public final class ScriptConsoleXmlHelper {
 		return null;
 	}
 
-	protected static List parseCompletionList(Node completionNode) {
+	protected static List<ScriptConsoleCompletionProposal> parseCompletionList(Node completionNode) {
 		NodeList children = completionNode.getChildNodes();
 
-		List completions = new ArrayList();
+		List<ScriptConsoleCompletionProposal> completions = new ArrayList<>();
 		for (int i = 0; i < children.getLength(); ++i) {
 			Node node = children.item(i);
 
@@ -139,7 +139,7 @@ public final class ScriptConsoleXmlHelper {
 				for (int j = 0; j < list2.getLength(); ++j) {
 					Node n2 = list2.item(j);
 					if (isElement(n2, "completion")) { //$NON-NLS-1$
-						List completions = parseCompletionList(n2);
+						List<ScriptConsoleCompletionProposal> completions = parseCompletionList(n2);
 						return new ShellResponse(completions);
 					} else if (isElement(n2, "description")) { //$NON-NLS-1$
 						if (n2.getChildNodes().getLength() == 0) {

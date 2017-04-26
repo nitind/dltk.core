@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.console;
 
@@ -22,7 +21,7 @@ public class ScriptConsoleHistory {
 	 * since empty line is added to keep the value of the currently selected
 	 * line.
 	 */
-	private final List lines = new ArrayList();
+	private final List<String> lines = new ArrayList<>();
 
 	public ScriptConsoleHistory() {
 		lines.add(Util.EMPTY_STRING);
@@ -30,7 +29,7 @@ public class ScriptConsoleHistory {
 
 	/**
 	 * The index of the current item.
-	 * 
+	 *
 	 * Invariant:
 	 * <code>selection &gt;= 0 &gt;&gt; selection < lines.size()</code>
 	 */
@@ -48,7 +47,7 @@ public class ScriptConsoleHistory {
 
 	/**
 	 * Adds the specified line to the top of the history
-	 * 
+	 *
 	 * @param line
 	 */
 	public void add(String line) {
@@ -62,7 +61,7 @@ public class ScriptConsoleHistory {
 	/**
 	 * Moves the selection to the previous item. Returns <code>true</code> on
 	 * success or <code>false</code> otherwise.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean prev() {
@@ -76,7 +75,7 @@ public class ScriptConsoleHistory {
 	/**
 	 * Moves the selection to the next item. Returns <code>true</code> on
 	 * success or <code>false</code> otherwise.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean next() {
@@ -89,16 +88,16 @@ public class ScriptConsoleHistory {
 
 	/**
 	 * Returns the text of the currently selected line.
-	 * 
+	 *
 	 * @return
 	 */
 	public String get() {
-		return (String) lines.get(selection);
+		return lines.get(selection);
 	}
 
 	/**
 	 * Updates the text of the currently selected line
-	 * 
+	 *
 	 * @param line
 	 */
 	public void updateSelectedLine(String line) {
