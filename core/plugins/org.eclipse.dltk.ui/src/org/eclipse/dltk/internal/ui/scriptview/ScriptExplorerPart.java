@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -75,7 +75,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IElementComparer;
-import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -148,9 +147,6 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 
 	public static final int PROJECTS_AS_ROOTS = 1;
 	public static final int WORKING_SETS_AS_ROOTS = 2;
-
-	@Deprecated
-	public final static String VIEW_ID = DLTKUIPlugin.ID_SCRIPT_EXPLORER;
 
 	// Persistence tags.
 	private static final String TAG_LAYOUT = "layout"; //$NON-NLS-1$
@@ -256,13 +252,6 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			super.add(parentElement, childElements);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 *
-		 * @see
-		 * org.eclipse.jface.viewers.AbstractTreeViewer#internalRefresh(java
-		 * .lang.Object, boolean)
-		 */
 		@Override
 		protected void internalRefresh(Object element, boolean updateLabels) {
 			try {
@@ -1429,20 +1418,6 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		}
 	}
 
-	/**
-	 * Sets the decorator for the package explorer.
-	 *
-	 * @param decorator
-	 *            a label decorator or <code>null</code> for no decorations.
-	 * @deprecated To be removed
-	 */
-	@Deprecated
-	public void setLabelDecorator(ILabelDecorator decorator) {
-	}
-
-	/*
-	 * @see IPropertyChangeListener#propertyChange(PropertyChangeEvent)
-	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (fViewer == null) {

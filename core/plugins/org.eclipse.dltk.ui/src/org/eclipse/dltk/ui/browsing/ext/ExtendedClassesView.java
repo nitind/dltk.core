@@ -230,15 +230,16 @@ public class ExtendedClassesView extends ViewPart
 	}
 
 	protected void createActions() {
-		fActionGroups = new CompositeActionGroup(new ActionGroup[] {
-				new NewWizardsActionGroup(this.getSite()),
-				fOpenEditorGroup = new OpenEditorActionGroup(this),
-				new OpenViewActionGroup(this),
-				fCCPActionGroup = new CCPActionGroup(this),
-				// new GenerateActionGroup(this),
-				new RefactorActionGroup(this), new ImportActionGroup(this),
-				fBuildActionGroup = new BuildActionGroup(this),
-				new SearchActionGroup(this, this.fToolkit) });
+		fActionGroups = new CompositeActionGroup(
+				new ActionGroup[] { new NewWizardsActionGroup(this.getSite()),
+						fOpenEditorGroup = new OpenEditorActionGroup(this),
+						new OpenViewActionGroup(this),
+						fCCPActionGroup = new CCPActionGroup(this),
+						// new GenerateActionGroup(this),
+						new RefactorActionGroup(this, null),
+						new ImportActionGroup(this),
+						fBuildActionGroup = new BuildActionGroup(this),
+						new SearchActionGroup(this, this.fToolkit) });
 
 		// fToggleLinkingAction = new ToggleLinkingAction(this);
 	}

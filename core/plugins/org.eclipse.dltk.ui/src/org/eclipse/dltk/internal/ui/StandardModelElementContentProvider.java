@@ -88,8 +88,8 @@ import org.eclipse.jface.viewers.Viewer;
  * </p>
  *
  */
-public class StandardModelElementContentProvider implements
-		ITreeContentProvider, IWorkingCopyProvider {
+public class StandardModelElementContentProvider
+		implements ITreeContentProvider, IWorkingCopyProvider {
 
 	protected static final Object[] NO_CHILDREN = new Object[0];
 	protected boolean fProvideMembers;
@@ -139,34 +139,9 @@ public class StandardModelElementContentProvider implements
 		fProvideMembers = b;
 	}
 
-	/**
-	 * @deprecated Since 3.0 compilation unit children are always provided as
-	 *             working copies. The Java model does not support the
-	 *             'original' mode anymore.
-	 */
-	@Deprecated
-	public boolean getProvideWorkingCopy() {
-		return fProvideWorkingCopy;
-	}
-
-	/**
-	 * @deprecated Since 3.0 compilation unit children are always provided from
-	 *             the working copy. The Java model offers a unified world and
-	 *             does not support the 'original' mode anymore.
-	 */
-	@Deprecated
-	public void setProvideWorkingCopy(boolean b) {
-		fProvideWorkingCopy = b;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see IWorkingCopyProvider#providesWorkingCopies()
-	 */
 	@Override
 	public boolean providesWorkingCopies() {
-		return getProvideWorkingCopy();
+		return fProvideWorkingCopy;
 	}
 
 	@Override
@@ -409,7 +384,8 @@ public class StandardModelElementContentProvider implements
 	 * Note: This method is for internal use only. Clients should not call this
 	 * method.
 	 */
-	protected Object[] getScriptProjects(IScriptModel jm) throws ModelException {
+	protected Object[] getScriptProjects(IScriptModel jm)
+			throws ModelException {
 		return jm.getScriptProjects();
 	}
 
@@ -462,7 +438,8 @@ public class StandardModelElementContentProvider implements
 			// We therefore exclude Java elements from the list
 			// of non-Java resources.
 			if (isFolderOnClasspath) {
-				if (javaProject.findProjectFragment(member.getFullPath()) == null) {
+				if (javaProject
+						.findProjectFragment(member.getFullPath()) == null) {
 					nonJavaResources.add(member);
 				}
 			} else if (!javaProject.isOnBuildpath(member)) {
@@ -479,13 +456,15 @@ public class StandardModelElementContentProvider implements
 	protected boolean isBuildPathChange(IModelElementDelta delta) {
 
 		// need to test the flags only for package fragment roots
-		if (delta.getElement().getElementType() != IModelElement.PROJECT_FRAGMENT)
+		if (delta.getElement()
+				.getElementType() != IModelElement.PROJECT_FRAGMENT)
 			return false;
 
 		int flags = delta.getFlags();
 		return (delta.getKind() == IModelElementDelta.CHANGED
 				&& ((flags & IModelElementDelta.F_ADDED_TO_BUILDPATH) != 0)
-				|| ((flags & IModelElementDelta.F_REMOVED_FROM_BUILDPATH) != 0) || ((flags & IModelElementDelta.F_REORDER) != 0));
+				|| ((flags & IModelElementDelta.F_REMOVED_FROM_BUILDPATH) != 0)
+				|| ((flags & IModelElementDelta.F_REORDER) != 0));
 	}
 
 	/**
@@ -507,8 +486,8 @@ public class StandardModelElementContentProvider implements
 		if (element instanceof IScriptFolder) {
 			IScriptFolder fragment = (IScriptFolder) element;
 			if (fragment.exists()
-					&& !(fragment.hasChildren() || fragment
-							.getForeignResources().length > 0)
+					&& !(fragment.hasChildren()
+							|| fragment.getForeignResources().length > 0)
 					&& fragment.hasSubfolders())
 				return true;
 		}
@@ -569,15 +548,15 @@ public class StandardModelElementContentProvider implements
 			if (parent instanceof IScriptFolder
 					&& parent.getPath().equals(parent.getParent().getPath())
 					// unless source path is root of project path
-					&& !parent.getPath().equals(
-							parent.getScriptProject().getPath())) {
+					&& !parent.getPath()
+							.equals(parent.getScriptProject().getPath())) {
 				return parent.getParent();
 			}
 			return parent;
 		} /*
-		 * else if (element instanceof IJarEntryResource) { return
-		 * ((IJarEntryResource) element).getParent(); }
-		 */
+			 * else if (element instanceof IJarEntryResource) { return
+			 * ((IJarEntryResource) element).getParent(); }
+			 */
 		return null;
 	}
 

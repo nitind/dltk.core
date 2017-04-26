@@ -940,8 +940,8 @@ public class TypeHierarchyViewPart extends ViewPart
 						new OpenEditorActionGroup(this),
 						new OpenViewActionGroup(this), new CCPActionGroup(this),
 						// new GenerateActionGroup(this),
-						new RefactorActionGroup(
-								this) /*
+						new RefactorActionGroup(this,
+								null) /*
 										 * , new DLTKSearchActionGroup(this,
 										 * getLanguageToolkit())
 										 */

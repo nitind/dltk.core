@@ -198,11 +198,6 @@ public class RefactorActionGroup extends ActionGroup {
 		installQuickAccessAction();
 	}
 
-	@Deprecated
-	public RefactorActionGroup(IViewPart part) {
-		this(part, null);
-	}
-
 	/**
 	 * Creates a new <code>RefactorActionGroup</code>. The action requires that
 	 * the selection provided by the page's selection provider is of type <code>

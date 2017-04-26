@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,8 +25,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 
-/**
- */
 public class BuildpathContainerWizard extends Wizard {
 
 	private BuildpathContainerDescriptor fPageDesc;
@@ -74,27 +72,10 @@ public class BuildpathContainerWizard extends Wizard {
 		setWindowTitle(title);
 	}
 
-	/**
-	 * @deprecated use getNewEntries()
-	 */
-	@Deprecated
-	public IBuildpathEntry getNewEntry() {
-		IBuildpathEntry[] entries = getNewEntries();
-		if (entries != null) {
-			return entries[0];
-		}
-		return null;
-	}
-
 	public IBuildpathEntry[] getNewEntries() {
 		return fNewEntries;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see IWizard#performFinish()
-	 */
 	@Override
 	public boolean performFinish() {
 		if (fContainerPage != null) {
@@ -105,7 +86,8 @@ public class BuildpathContainerWizard extends Wizard {
 							.getNewContainers();
 				} else {
 					IBuildpathEntry entry = fContainerPage.getSelection();
-					fNewEntries = (entry != null) ? new IBuildpathEntry[] { entry }
+					fNewEntries = (entry != null)
+							? new IBuildpathEntry[] { entry }
 							: null;
 				}
 				return true;
@@ -114,11 +96,6 @@ public class BuildpathContainerWizard extends Wizard {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see IWizard#addPages()
-	 */
 	@Override
 	public void addPages() {
 		if (fPageDesc != null) {
@@ -187,8 +164,8 @@ public class BuildpathContainerWizard extends Wizard {
 		}
 
 		if (containerPage instanceof IBuildpathContainerPageExtension) {
-			((IBuildpathContainerPageExtension) containerPage).initialize(
-					fCurrProject, fCurrBuildpath);
+			((IBuildpathContainerPageExtension) containerPage)
+					.initialize(fCurrProject, fCurrBuildpath);
 		}
 
 		containerPage.setSelection(fEntryToEdit);
@@ -196,11 +173,6 @@ public class BuildpathContainerWizard extends Wizard {
 		return containerPage;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see IWizard#getNextPage(IWizardPage)
-	 */
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if (page == fSelectionWizardPage) {
@@ -241,11 +213,6 @@ public class BuildpathContainerWizard extends Wizard {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.Wizard#dispose()
-	 */
 	@Override
 	public void dispose() {
 		if (fSelectionWizardPage != null) {
@@ -258,11 +225,6 @@ public class BuildpathContainerWizard extends Wizard {
 		super.dispose();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see IWizard#canFinish()
-	 */
 	@Override
 	public boolean canFinish() {
 		if (fSelectionWizardPage != null) {

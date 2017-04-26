@@ -32,22 +32,6 @@ public class ScriptAnnotationIterator implements Iterator<Annotation> {
 	 *
 	 * @param model
 	 *            the annotation model
-	 * @param skipIrrelevants
-	 *            whether to skip irrelevant annotations
-	 * @param returnAllAnnotations
-	 *            Whether to return non IJavaAnnotations as well
-	 */
-	@Deprecated
-	public ScriptAnnotationIterator(IAnnotationModel model,
-			boolean skipIrrelevants, boolean returnAllAnnotations) {
-		this(model, returnAllAnnotations);
-	}
-
-	/**
-	 * Returns a new JavaAnnotationIterator.
-	 *
-	 * @param model
-	 *            the annotation model
 	 * @param returnAllAnnotations
 	 *            Whether to return non IJavaAnnotations as well
 	 */

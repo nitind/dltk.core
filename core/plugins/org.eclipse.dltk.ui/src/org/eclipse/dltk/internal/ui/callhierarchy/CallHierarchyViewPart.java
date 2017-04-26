@@ -958,7 +958,7 @@ public class CallHierarchyViewPart extends ViewPart
 				new ActionGroup[] { new OpenEditorActionGroup(this),
 						new OpenViewActionGroup(this), new CCPActionGroup(this),
 						// new GenerateActionGroup(this),
-						new RefactorActionGroup(this),
+						new RefactorActionGroup(this, null),
 						// new DLTKSearchActionGroup(this),
 						fSearchScopeActions, fFiltersActionGroup });
 	}

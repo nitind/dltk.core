@@ -137,22 +137,23 @@ public abstract class OptionsConfigurationBlock {
 
 	protected void validateValuePresenceFor(PreferenceKey key) {
 		if (key.getStoredValue(fLookupOrder, false, fManager) == null) {
-			DLTKUIPlugin
-					.logErrorMessage("preference option missing: " + key + " (" + this.getClass().getName() + ')'); //$NON-NLS-1$//$NON-NLS-2$
+			DLTKUIPlugin.logErrorMessage("preference option missing: " + key //$NON-NLS-1$
+					+ " (" + this.getClass().getName() + ')'); //$NON-NLS-1$
 		}
 	}
 
 	private int getRebuildCount() {
-		return fManager.getWorkingCopy(
-				DefaultScope.INSTANCE.getNode(DLTKUIPlugin.PLUGIN_ID)).getInt(
-				REBUILD_COUNT_KEY, 0);
+		return fManager
+				.getWorkingCopy(
+						DefaultScope.INSTANCE.getNode(DLTKUIPlugin.PLUGIN_ID))
+				.getInt(REBUILD_COUNT_KEY, 0);
 	}
 
 	private void incrementRebuildCount() {
 		fRebuildCount++;
 		fManager.getWorkingCopy(
-				DefaultScope.INSTANCE.getNode(DLTKUIPlugin.PLUGIN_ID)).putInt(
-				REBUILD_COUNT_KEY, fRebuildCount);
+				DefaultScope.INSTANCE.getNode(DLTKUIPlugin.PLUGIN_ID))
+				.putInt(REBUILD_COUNT_KEY, fRebuildCount);
 	}
 
 	protected PreferenceKey[] getPreferenceKeys() {
@@ -164,7 +165,8 @@ public abstract class OptionsConfigurationBlock {
 			IScopeContext projectContext = new ProjectScope(project);
 			PreferenceKey[] allKeys = getPreferenceKeys();
 			for (int i = 0; i < allKeys.length; i++) {
-				if (allKeys[i].getStoredValue(projectContext, fManager) != null) {
+				if (allKeys[i].getStoredValue(projectContext,
+						fManager) != null) {
 					return true;
 				}
 			}
@@ -233,8 +235,8 @@ public abstract class OptionsConfigurationBlock {
 			if (val == null) {
 				if (oldVal != null) {
 					changedSettings.add(key);
-					needsBuild |= !oldVal.equals(key.getStoredValue(
-							fLookupOrder, true, fManager));
+					needsBuild |= !oldVal.equals(
+							key.getStoredValue(fLookupOrder, true, fManager));
 				} else if (completeSettings) {
 					key.setStoredValue(currContext,
 							key.getStoredValue(fLookupOrder, true, fManager),
@@ -244,9 +246,8 @@ public abstract class OptionsConfigurationBlock {
 				}
 			} else if (!val.equals(oldVal)) {
 				changedSettings.add(key);
-				needsBuild |= oldVal != null
-						|| !val.equals(key.getStoredValue(fLookupOrder, true,
-								fManager));
+				needsBuild |= oldVal != null || !val.equals(
+						key.getStoredValue(fLookupOrder, true, fManager));
 			}
 		}
 		return needsBuild;
@@ -267,8 +268,8 @@ public abstract class OptionsConfigurationBlock {
 				fDisabledProjectSettings = new HashMap<PreferenceKey, String>();
 				for (int i = 0; i < allKeys.length; i++) {
 					PreferenceKey curr = allKeys[i];
-					String oldSetting = curr.getStoredValue(fLookupOrder,
-							false, fManager);
+					String oldSetting = curr.getStoredValue(fLookupOrder, false,
+							fManager);
 					fDisabledProjectSettings.put(curr, oldSetting);
 					// clear project settings
 					curr.setStoredValue(fLookupOrder[0], null, fManager);
@@ -313,10 +314,11 @@ public abstract class OptionsConfigurationBlock {
 			if (prompt != null) {
 				MessageDialog dialog = new MessageDialog(getShell(),
 						prompt.getTitle(), null, prompt.getMessage(),
-						MessageDialog.QUESTION, new String[] {
-								IDialogConstants.YES_LABEL,
+						MessageDialog.QUESTION,
+						new String[] { IDialogConstants.YES_LABEL,
 								IDialogConstants.NO_LABEL,
-								IDialogConstants.CANCEL_LABEL }, 2);
+								IDialogConstants.CANCEL_LABEL },
+						2);
 				int res = dialog.open();
 				if (res == 0) {
 					doBuild = true;
@@ -360,8 +362,8 @@ public abstract class OptionsConfigurationBlock {
 		PreferenceKey[] allKeys = getPreferenceKeys();
 		for (int i = 0; i < allKeys.length; i++) {
 			PreferenceKey curr = allKeys[i];
-			String origValue = curr
-					.getStoredValue(fLookupOrder, true, fManager);
+			String origValue = curr.getStoredValue(fLookupOrder, true,
+					fManager);
 			setValue(curr, origValue);
 		}
 	}
@@ -384,16 +386,8 @@ public abstract class OptionsConfigurationBlock {
 	 * @return
 	 */
 	protected IPreferenceChangeRebuildPrompt getPreferenceChangeRebuildPrompt(
-			boolean workspaceSettings, Collection<PreferenceKey> changedOptions) {
-		return null;
-	}
-
-	/**
-	 * @deprecated
-	 * @see #getPreferenceChangeRebuildPrompt(boolean, Collection)
-	 */
-	@Deprecated
-	protected final String[] getFullBuildDialogStrings(boolean workspaceSettings) {
+			boolean workspaceSettings,
+			Collection<PreferenceKey> changedOptions) {
 		return null;
 	}
 
@@ -411,8 +405,8 @@ public abstract class OptionsConfigurationBlock {
 						| ExpandableComposite.CLIENT_INDENT);
 		excomposite.setText(label);
 		excomposite.setExpanded(false);
-		excomposite.setFont(JFaceResources.getFontRegistry().getBold(
-				JFaceResources.DIALOG_FONT));
+		excomposite.setFont(JFaceResources.getFontRegistry()
+				.getBold(JFaceResources.DIALOG_FONT));
 		excomposite.setLayoutData(new GridData(GridData.FILL, GridData.FILL,
 				true, false, nColumns, 1));
 		excomposite.addExpansionListener(new ExpansionAdapter() {
@@ -437,8 +431,8 @@ public abstract class OptionsConfigurationBlock {
 				excomposite.setExpanded(i == 0); // only expand the first node
 													// by default
 			} else {
-				excomposite.setExpanded(settings.getBoolean(SETTINGS_EXPANDED
-						+ String.valueOf(i)));
+				excomposite.setExpanded(settings
+						.getBoolean(SETTINGS_EXPANDED + String.valueOf(i)));
 			}
 		}
 	}
@@ -452,7 +446,8 @@ public abstract class OptionsConfigurationBlock {
 	}
 
 	private void makeScrollableCompositeAware(Control control) {
-		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(control);
+		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(
+				control);
 		if (parentScrolledComposite != null) {
 			parentScrolledComposite.adaptChild(control);
 		}
@@ -470,7 +465,8 @@ public abstract class OptionsConfigurationBlock {
 	}
 
 	protected final void expandedStateChanged(ExpandableComposite expandable) {
-		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(expandable);
+		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(
+				expandable);
 		if (parentScrolledComposite != null) {
 			parentScrolledComposite.reflow(true);
 		}
