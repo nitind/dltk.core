@@ -122,8 +122,7 @@ public class TestSupport {
 		try {
 			final Method runMethod = testCase.getClass().getMethod(
 					testCase.getName(), NO_PARAMS);
-			if (runMethod.getAnnotation(Skip.class) != null
-					|| runMethod.getAnnotation(Ignore.class) != null) {
+			if (runMethod.getAnnotation(Ignore.class) != null) {
 				return true;
 			}
 		} catch (NoSuchMethodException e) {
