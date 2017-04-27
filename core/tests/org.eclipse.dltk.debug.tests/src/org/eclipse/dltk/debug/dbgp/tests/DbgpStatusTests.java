@@ -8,20 +8,22 @@
  *******************************************************************************/
 package org.eclipse.dltk.debug.dbgp.tests;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.dltk.dbgp.IDbgpStatus;
 import org.eclipse.dltk.dbgp.internal.DbgpStatus;
 import org.junit.Test;
 
-public class DbgpStatusTests extends TestCase {
-	@Test	
+public class DbgpStatusTests {
+	@Test
 	public void testConstruction() {
 		IDbgpStatus s = DbgpStatus.parse("running", "ok");
-		
+
 		assertTrue(s.isRunning());
 		assertTrue(s.reasonOk());
 	}
+
 	@Test
 	public void testEquals() {
 		IDbgpStatus a = DbgpStatus.parse("running", "ok");

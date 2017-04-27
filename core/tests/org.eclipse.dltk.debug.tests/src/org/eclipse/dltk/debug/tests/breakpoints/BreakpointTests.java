@@ -2,11 +2,8 @@ package org.eclipse.dltk.debug.tests.breakpoints;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URLEncoder;
-
-import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
@@ -16,6 +13,8 @@ import org.eclipse.dltk.debug.core.model.IScriptLineBreakpoint;
 import org.eclipse.dltk.debug.tests.AbstractDebugTests;
 import org.eclipse.dltk.internal.debug.core.model.AbstractScriptBreakpoint;
 import org.eclipse.dltk.internal.debug.core.model.ScriptLineBreakpoint;
+
+import junit.framework.TestSuite;
 
 public class BreakpointTests extends AbstractDebugTests {
 	public static TestSuite suite() {
@@ -32,16 +31,9 @@ public class BreakpointTests extends AbstractDebugTests {
 	public void setUpSuite() throws Exception {
 		super.setUpSuite();
 
-		IResource resource = scriptProject.getProject().findMember(
-				"src/test.rb");
+		IResource resource = scriptProject.getProject().findMember("src/test.rb");
 
-		breakpoint = new ScriptLineBreakpoint("test_debug_model", resource,
-				resource.getLocation(), 1, -1, -1, true);
-	}
-
-	@Override
-	public void tearDownSuite() throws Exception {
-		super.tearDownSuite();
+		breakpoint = new ScriptLineBreakpoint("test_debug_model", resource, resource.getLocation(), 1, -1, -1, true);
 	}
 
 	// Helper methods
@@ -51,18 +43,11 @@ public class BreakpointTests extends AbstractDebugTests {
 	}
 
 	private static IDbgpSession createDbgpSessionMock() {
-		final InvocationHandler handler = new InvocationHandler() {
-
-			@Override
-			public Object invoke(Object proxy, Method method, Object[] args)
-					throws Throwable {
-				throw new UnsupportedOperationException("Mock called "
-						+ method.getName());
-			}
-
+		final InvocationHandler handler = (proxy, method, args) -> {
+			throw new UnsupportedOperationException("Mock called " + method.getName());
 		};
-		return (IDbgpSession) Proxy.newProxyInstance(BreakpointTests.class
-				.getClassLoader(), new Class[] { IDbgpSession.class }, handler);
+		return (IDbgpSession) Proxy.newProxyInstance(BreakpointTests.class.getClassLoader(),
+				new Class[] { IDbgpSession.class }, handler);
 	}
 
 	// Real tests
@@ -104,7 +89,7 @@ public class BreakpointTests extends AbstractDebugTests {
 	}
 
 	public void testMakeUri() throws UnsupportedEncodingException {
-		assertEquals("file:///" + URLEncoder.encode("[1]", "UTF-8"), String
-				.valueOf(AbstractScriptBreakpoint.makeUri(new Path("[1]"))));
+		assertEquals("file:///" + URLEncoder.encode("[1]", "UTF-8"),
+				String.valueOf(AbstractScriptBreakpoint.makeUri(new Path("[1]"))));
 	}
 }

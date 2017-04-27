@@ -1,5 +1,8 @@
 package org.eclipse.dltk.internal.debug.tests;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -9,16 +12,16 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.dltk.internal.debug.core.model.VariableNameComparator;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class VariableNameComparatorTest extends TestCase {
+public class VariableNameComparatorTest {
 
 	protected ArrayList<IVariable> list;
 	protected VariableNameComparator comparator;
 
-	@Override
-	protected void setUp() {
+	@Before
+	public void setUp() {
 		comparator = new VariableNameComparator();
 		if (list == null)
 			list = new ArrayList<>();
@@ -32,18 +35,16 @@ public class VariableNameComparatorTest extends TestCase {
 		IVariable[] tmp = new IVariable[list.size()];
 
 		Arrays.sort(list.toArray(tmp), comparator);
-
-		assertEquals(expectedListNames.length, tmp.length);
-
-		boolean ok = true;
-		for (int i = 0; i < tmp.length && ok; i++) {
-			ok = expectedListNames[i].equals(tmp[i].getName());
+		String[] tmpNames = new String[tmp.length];
+		for (int i = 0; i < tmp.length; i++) {
+			tmpNames[i] = tmp[i].getName();
 		}
 
-		if (!ok)
-			failNotEquals("Sorted list has unexpected value;", Arrays.asList(expectedListNames), Arrays.asList(tmp));
+		assertEquals(expectedListNames.length, tmp.length);
+		assertArrayEquals(expectedListNames, tmpNames);
 	}
 
+	@Test
 	public void testStringVariables1() throws DebugException {
 		list.add(getNewVariable("b"));
 		list.add(getNewVariable("c"));
@@ -52,6 +53,7 @@ public class VariableNameComparatorTest extends TestCase {
 		assertSortedListNamesEqual("a", "b", "c");
 	}
 
+	@Test
 	public void testIntVariables1() throws DebugException {
 		list.add(getNewVariable("3"));
 		list.add(getNewVariable("2"));
@@ -60,6 +62,7 @@ public class VariableNameComparatorTest extends TestCase {
 		assertSortedListNamesEqual("1", "2", "3");
 	}
 
+	@Test
 	public void testIntVariables2() throws DebugException {
 		list.add(getNewVariable("115"));
 		list.add(getNewVariable("2"));
@@ -68,6 +71,7 @@ public class VariableNameComparatorTest extends TestCase {
 		assertSortedListNamesEqual("2", "003", "115");
 	}
 
+	@Test
 	public void testMixedVariables1() throws DebugException {
 		list.add(getNewVariable("b"));
 		list.add(getNewVariable("4"));
@@ -86,6 +90,7 @@ public class VariableNameComparatorTest extends TestCase {
 		assertSortedListNamesEqual("4", "5", "6", "114", "116", "2a", "2a", "2a", "a", "b", "c");
 	}
 
+	@Test
 	public void testMixedVariables2() throws DebugException {
 		// 33 items, enough to trigger merges in Java's Tim-sort alg. (< 32
 		// doesn't do merges)
