@@ -4,10 +4,10 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.eclipse.dltk</groupId>
-		<artifactId>dltk</artifactId>
+		<groupId>org.eclipse.dltk.core</groupId>
+		<artifactId>all</artifactId>
 		<version>5.7.2-SNAPSHOT</version>
-		<relativePath>../../org.eclipse.dltk.releng/build/pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<groupId>org.eclipse.dltk.rse</groupId>
 	<artifactId>rse</artifactId>
