@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc. and others.
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -51,8 +51,8 @@ import org.eclipse.dltk.ui.preferences.PreferenceKey;
 /**
  * Abstract base class for the {@link IScriptFormatterFactory} implementations.
  */
-public abstract class AbstractScriptFormatterFactory extends
-		DLTKContributedExtension implements IScriptFormatterFactory {
+public abstract class AbstractScriptFormatterFactory
+		extends DLTKContributedExtension implements IScriptFormatterFactory {
 
 	protected IProfileVersioner versioner;
 
@@ -76,59 +76,51 @@ public abstract class AbstractScriptFormatterFactory extends
 
 	@Override
 	public List<IProfile> getBuiltInProfiles() {
-		final List<IProfile> profiles = new ArrayList<IProfile>();
+		final List<IProfile> profiles = new ArrayList<>();
 
 		final IProfileVersioner versioner = getProfileVersioner();
 		final Map<String, String> defaults = loadDefaultSettings();
 		profiles.addAll(loadContributedProfiles(versioner, defaults));
-		final BuiltInProfile profile = new BuiltInProfile(
-				getDefaultProfileID(), getDefaultProfileName(), defaults, 1000,
-				getId(), versioner.getCurrentVersion());
+		final BuiltInProfile profile = new BuiltInProfile(getDefaultProfileID(),
+				getDefaultProfileName(), defaults, 1000, getId(),
+				versioner.getCurrentVersion());
 		profiles.add(profile);
 		return profiles;
 	}
 
 	private Collection<? extends IProfile> loadContributedProfiles(
 			IProfileVersioner versioner, Map<String, String> defaults) {
-		final IConfigurationElement[] elements = Platform
-				.getExtensionRegistry().getConfigurationElementsFor(
-						ScriptFormatterManager.EXTPOINT);
+		final IConfigurationElement[] elements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(ScriptFormatterManager.EXTPOINT);
 		final ProfileStore profileStore = new ProfileStore(versioner, defaults);
-		final List<IProfile> profiles = new ArrayList<IProfile>();
+		final List<IProfile> profiles = new ArrayList<>();
 		for (IConfigurationElement element : elements) {
 			if ("profiles".equals(element.getName())) {
-				final URL url = Platform.getBundle(
-						element.getContributor().getName()).getEntry(
-						element.getAttribute("resource"));
+				final URL url = Platform
+						.getBundle(element.getContributor().getName())
+						.getEntry(element.getAttribute("resource"));
 				if (url == null) {
 					// TODO log
 					continue;
 				}
 				int priority;
 				try {
-					priority = Integer.parseInt(element
-							.getAttribute("priority"));
+					priority = Integer
+							.parseInt(element.getAttribute("priority"));
 				} catch (NumberFormatException e) {
 					priority = 0;
 				}
 				try {
-					final InputStream stream = url.openStream();
-					try {
+					try (final InputStream stream = url.openStream()) {
 						final List<IProfile> loaded = profileStore
 								.readProfilesFromStream(stream);
 						for (IProfile profile : loaded) {
 							if (getId().equals(profile.getFormatterId()))
-								profiles.add(new BuiltInProfile(
-										profile.getID(), profile.getName(),
+								profiles.add(new BuiltInProfile(profile.getID(),
+										profile.getName(),
 										profile.getSettings(), priority,
-										profile.getFormatterId(), profile
-												.getVersion()));
-						}
-					} finally {
-						try {
-							stream.close();
-						} catch (IOException e) {
-							// ignore
+										profile.getFormatterId(),
+										profile.getVersion()));
 						}
 					}
 				} catch (IOException e) {
@@ -179,7 +171,7 @@ public abstract class AbstractScriptFormatterFactory extends
 	}
 
 	public Map<String, String> loadDefaultSettings() {
-		Map<String, String> settings = new HashMap<String, String>();
+		Map<String, String> settings = new HashMap<>();
 		PreferenceKey[] keys = getPreferenceKeys();
 		if (keys != null) {
 			for (int i = 0; i < keys.length; i++) {
@@ -200,9 +192,9 @@ public abstract class AbstractScriptFormatterFactory extends
 			IPreferencesLookupDelegate delegate) {
 		final PreferenceKey activeProfileKey = getActiveProfileKey();
 		if (activeProfileKey != null) {
-			final String profileId = delegate
-					.getString(activeProfileKey.getQualifier(),
-							activeProfileKey.getName());
+			final String profileId = delegate.getString(
+					activeProfileKey.getQualifier(),
+					activeProfileKey.getName());
 			if (profileId != null && profileId.length() != 0) {
 				for (IProfile profile : getBuiltInProfiles()) {
 					if (profileId.equals(profile.getID())) {
@@ -216,13 +208,14 @@ public abstract class AbstractScriptFormatterFactory extends
 				}
 			}
 		}
-		final Map<String, String> result = new HashMap<String, String>();
+		final Map<String, String> result = new HashMap<>();
 		final PreferenceKey[] keys = getPreferenceKeys();
 		if (keys != null) {
 			for (int i = 0; i < keys.length; ++i) {
 				final PreferenceKey prefKey = keys[i];
 				final String key = prefKey.getName();
-				result.put(key, delegate.getString(prefKey.getQualifier(), key));
+				result.put(key,
+						delegate.getString(prefKey.getQualifier(), key));
 			}
 		}
 		return result;

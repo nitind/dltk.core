@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     xored software, Inc. - initial API and Implementation (Yuri Strot) 
+ *     xored software, Inc. - initial API and Implementation (Yuri Strot)
  *******************************************************************************/
 package org.eclipse.dltk.formatter.profile;
 
@@ -37,7 +37,7 @@ public class CustomProfile extends Profile implements IProfile.ICustomProfile {
 
 	@Override
 	public Map<String, String> getSettings() {
-		return new HashMap<String, String>(fSettings);
+		return new HashMap<>(fSettings);
 	}
 
 	@Override
@@ -51,14 +51,6 @@ public class CustomProfile extends Profile implements IProfile.ICustomProfile {
 	public String getID() {
 		return fName;
 	}
-
-	// public void setManager(ProfileManager profileManager) {
-	// fManager = profileManager;
-	// }
-	//
-	// public ProfileManager getManager() {
-	// return fManager;
-	// }
 
 	@Override
 	public int getVersion() {

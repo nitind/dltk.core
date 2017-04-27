@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc. and others.
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -32,7 +32,7 @@ public class FormatterWriter implements IFormatterWriter {
 	private boolean lineStarted = false;
 	private char lastChar = 0;
 	private int lineNumber = 0;
-	private final List<IFormatterCallback> newLineCallbacks = new ArrayList<IFormatterCallback>();
+	private final List<IFormatterCallback> newLineCallbacks = new ArrayList<>();
 
 	private final String lineDelimiter;
 	private final IFormatterDocument document;
@@ -65,7 +65,8 @@ public class FormatterWriter implements IFormatterWriter {
 	}
 
 	@Override
-	public void write(IFormatterContext context, int startOffset, int endOffset) {
+	public void write(IFormatterContext context, int startOffset,
+			int endOffset) {
 		if (!excludes.isExcluded(startOffset, endOffset)) {
 			if (endOffset > startOffset) {
 				write(context, document.get(startOffset, endOffset));
@@ -92,7 +93,8 @@ public class FormatterWriter implements IFormatterWriter {
 
 	private void trimTrailingSpaces(boolean keepTrimmed) {
 		int length = writer.length();
-		while (length > 0 && FormatterUtils.isSpace(writer.charAt(length - 1))) {
+		while (length > 0
+				&& FormatterUtils.isSpace(writer.charAt(length - 1))) {
 			--length;
 		}
 		if (keepTrimmed) {
@@ -182,28 +184,26 @@ public class FormatterWriter implements IFormatterWriter {
 					}
 					if (wrapLength > 0 && offset > wrapLength) {
 						int begin = start;
-						while (begin < writer.length()
-								&& FormatterUtils.isSpace(writer.charAt(begin))) {
+						while (begin < writer.length() && FormatterUtils
+								.isSpace(writer.charAt(begin))) {
 							++begin;
 						}
 						if (begin < writer.length()
 								&& writer.charAt(begin) == '#') {
 							++begin;
 						}
-						while (begin < writer.length()
-								&& FormatterUtils.isSpace(writer.charAt(begin))) {
+						while (begin < writer.length() && FormatterUtils
+								.isSpace(writer.charAt(begin))) {
 							++begin;
 						}
 						int wordBegin = writer.length();
-						while (wordBegin > begin
-								&& !FormatterUtils.isSpace(writer
-										.charAt(wordBegin - 1))) {
+						while (wordBegin > begin && !FormatterUtils
+								.isSpace(writer.charAt(wordBegin - 1))) {
 							--wordBegin;
 						}
 						int prevWordEnd = wordBegin;
-						while (prevWordEnd > begin
-								&& FormatterUtils.isSpace(writer
-										.charAt(prevWordEnd - 1))) {
+						while (prevWordEnd > begin && FormatterUtils
+								.isSpace(writer.charAt(prevWordEnd - 1))) {
 							--prevWordEnd;
 						}
 						if (prevWordEnd > begin) {
@@ -281,8 +281,8 @@ public class FormatterWriter implements IFormatterWriter {
 				writer.append(ch);
 			}
 		} else {
-			if (!preserveSpaces && context.isIndenting()
-					&& !context.isComment() && FormatterUtils.isSpace(ch)) {
+			if (!preserveSpaces && context.isIndenting() && !context.isComment()
+					&& FormatterUtils.isSpace(ch)) {
 				if (writer.charAt(writer.length() - 1) != ' ') {
 					writer.append(' ');
 				}
@@ -376,7 +376,8 @@ public class FormatterWriter implements IFormatterWriter {
 	/**
 	 * @since 2.0
 	 */
-	protected void writeIndent(IFormatterContext context, StringBuilder buffer) {
+	protected void writeIndent(IFormatterContext context,
+			StringBuilder buffer) {
 		indentGenerator.generateIndent(context.getIndent(), buffer);
 	}
 

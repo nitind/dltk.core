@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     xored software, Inc. - initial API and Implementation (Yuri Strot) 
+ *     xored software, Inc. - initial API and Implementation (Yuri Strot)
  *******************************************************************************/
 package org.eclipse.dltk.formatter.profile;
 
@@ -45,15 +45,15 @@ public class ProfileManager implements IProfileManager {
 
 	/**
 	 * Create and initialize a new profile manager.
-	 * 
+	 *
 	 * @param profiles
 	 *            Initial custom profiles (List of type
 	 *            <code>CustomProfile</code>)
 	 * @param profileVersioner
 	 */
 	public ProfileManager(List<IProfile> profiles) {
-		fProfiles = new HashMap<String, IProfile>();
-		fProfilesByName = new ArrayList<IProfile>();
+		fProfiles = new HashMap<>();
+		fProfilesByName = new ArrayList<>();
 		for (final IProfile profile : profiles) {
 			fProfiles.put(profile.getID(), profile);
 			fProfilesByName.add(profile);
@@ -69,9 +69,9 @@ public class ProfileManager implements IProfileManager {
 	 * Unless the set of profiles has been modified between the two calls, the
 	 * sequence is guaranteed to correspond to the one returned by
 	 * <code>getSortedNames</code>.
-	 * 
+	 *
 	 * @return a list of elements of type <code>Profile</code>
-	 * 
+	 *
 	 * @see #getSortedDisplayNames()
 	 */
 	@Override
@@ -84,7 +84,7 @@ public class ProfileManager implements IProfileManager {
 	 * alphabetically. Unless the set of profiles has been modified between the
 	 * two calls, the sequence is guaranteed to correspond to the one returned
 	 * by <code>getSortedProfiles</code>.
-	 * 
+	 *
 	 * @return All names, sorted alphabetically
 	 * @see #getSortedProfiles()
 	 */
@@ -100,7 +100,7 @@ public class ProfileManager implements IProfileManager {
 
 	/**
 	 * Get the profile for this profile id.
-	 * 
+	 *
 	 * @param ID
 	 *            The profile ID
 	 * @return The profile with the given ID or <code>null</code>
@@ -185,9 +185,9 @@ public class ProfileManager implements IProfileManager {
 		if (trimmed.equals(profile.getName()))
 			return profile;
 		if (profile.isBuiltInProfile()) {
-			CustomProfile newProfile = new CustomProfile(trimmed, profile
-					.getSettings(), profile.getFormatterId(), profile
-					.getVersion());
+			CustomProfile newProfile = new CustomProfile(trimmed,
+					profile.getSettings(), profile.getFormatterId(),
+					profile.getVersion());
 			addProfile(newProfile);
 			fDirty = true;
 			return newProfile;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc. and others.
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -36,7 +36,7 @@ public class FormatterContext implements IFormatterContext, Cloneable {
 	private boolean comment = false;
 	private boolean wrapping = false;
 	private int blankLines = 0;
-	private final List<PathEntry> path = new ArrayList<PathEntry>();
+	private final List<PathEntry> path = new ArrayList<>();
 
 	public FormatterContext(int indent) {
 		this.indent = indent;

@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     xored software, Inc. - initial API and Implementation (Yuri Strot) 
+ *     xored software, Inc. - initial API and Implementation (Yuri Strot)
  *******************************************************************************/
 package org.eclipse.dltk.formatter.profile;
 
@@ -91,16 +91,16 @@ public class ProfileStore implements IProfileStore {
 				fFormatter = attributes
 						.getValue(XML_ATTRIBUTE_PROFILE_FORMATTER);
 				try {
-					fVersion = Integer.parseInt(attributes
-							.getValue(XML_ATTRIBUTE_VERSION));
+					fVersion = Integer.parseInt(
+							attributes.getValue(XML_ATTRIBUTE_VERSION));
 				} catch (NumberFormatException ex) {
 					throw new SAXException(ex);
 				}
 
-				fSettings = new HashMap<String, String>(200);
+				fSettings = new HashMap<>(200);
 
 			} else if (qName.equals(XML_NODE_ROOT)) {
-				fProfiles = new ArrayList<IProfile>();
+				fProfiles = new ArrayList<>();
 			}
 		}
 
@@ -179,8 +179,8 @@ public class ProfileStore implements IProfileStore {
 			throws CoreException {
 		if (profiles != null && profiles.length() > 0) {
 			byte[] bytes = profiles.getBytes(StandardCharsets.UTF_8);
-			InputStream is = new ByteArrayInputStream(bytes);
-			try {
+
+			try (InputStream is = new ByteArrayInputStream(bytes)) {
 				List<IProfile> res = readProfilesFromStream(is);
 				if (res != null) {
 					for (int i = 0; i < res.size(); i++) {
@@ -188,11 +188,7 @@ public class ProfileStore implements IProfileStore {
 					}
 				}
 				return res;
-			} finally {
-				try {
-					is.close();
-				} catch (IOException e) { /* ignore */
-				}
+			} catch (IOException e) {
 			}
 		}
 		return null;
@@ -207,7 +203,7 @@ public class ProfileStore implements IProfileStore {
 	/**
 	 * Read the available profiles from the internal XML file and return them as
 	 * collection or <code>null</code> if the file is not a profile file.
-	 * 
+	 *
 	 * @param file
 	 *            The file to read from
 	 * @return returns a list of <code>CustomProfile</code> or <code>null</code>
@@ -215,16 +211,8 @@ public class ProfileStore implements IProfileStore {
 	 */
 	@Override
 	public List<IProfile> readProfilesFromFile(File file) throws CoreException {
-		try {
-			final FileInputStream reader = new FileInputStream(file);
-			try {
-				return readProfilesFromStream(reader);
-			} finally {
-				try {
-					reader.close();
-				} catch (IOException e) { /* ignore */
-				}
-			}
+		try (final FileInputStream reader = new FileInputStream(file)) {
+			return readProfilesFromStream(reader);
 		} catch (IOException e) {
 			throw createException(e,
 					ProfilesMessages.ProfileStore_readingProblems);
@@ -234,7 +222,7 @@ public class ProfileStore implements IProfileStore {
 	/**
 	 * Load profiles from a XML stream and add them to a map or
 	 * <code>null</code> if the source is not a profile store.
-	 * 
+	 *
 	 * @param inputSource
 	 *            The input stream
 	 * @return returns a list of <code>CustomProfile</code> or <code>null</code>
@@ -263,7 +251,7 @@ public class ProfileStore implements IProfileStore {
 
 	/**
 	 * Write the available profiles to the internal XML file.
-	 * 
+	 *
 	 * @param profiles
 	 *            List of <code>CustomProfile</code>
 	 * @param file
@@ -275,17 +263,8 @@ public class ProfileStore implements IProfileStore {
 	@Override
 	public void writeProfilesToFile(Collection<IProfile> profiles, File file)
 			throws CoreException {
-		final OutputStream stream;
-		try {
-			stream = new FileOutputStream(file);
-			try {
-				writeProfilesToStream(profiles, stream, ENCODING, versioner);
-			} finally {
-				try {
-					stream.close();
-				} catch (IOException e) { /* ignore */
-				}
-			}
+		try (final OutputStream stream = new FileOutputStream(file)) {
+			writeProfilesToStream(profiles, stream, ENCODING, versioner);
 		} catch (IOException e) {
 			throw createException(e,
 					ProfilesMessages.ProfileStore_serializingProblems);
@@ -294,7 +273,7 @@ public class ProfileStore implements IProfileStore {
 
 	/**
 	 * Save profiles to an XML stream
-	 * 
+	 *
 	 * @param profiles
 	 *            the list of <code>CustomProfile</code>
 	 * @param stream
@@ -318,8 +297,8 @@ public class ProfileStore implements IProfileStore {
 
 			for (final IProfile profile : profiles) {
 				if (!profile.isBuiltInProfile()) {
-					final Element profileElement = createProfileElement(
-							profile, document, versioner);
+					final Element profileElement = createProfileElement(profile,
+							document, versioner);
 					rootElement.appendChild(profileElement);
 				}
 			}
@@ -329,8 +308,8 @@ public class ProfileStore implements IProfileStore {
 			transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
 			transformer.setOutputProperty(OutputKeys.ENCODING, encoding);
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-			transformer.transform(new DOMSource(document), new StreamResult(
-					stream));
+			transformer.transform(new DOMSource(document),
+					new StreamResult(stream));
 		} catch (TransformerException e) {
 			throw createException(e,
 					ProfilesMessages.ProfileStore_serializingProblems);
@@ -353,7 +332,8 @@ public class ProfileStore implements IProfileStore {
 		element.setAttribute(XML_ATTRIBUTE_VERSION,
 				Integer.toString(profile.getVersion()));
 
-		for (Map.Entry<String, String> entry : profile.getSettings().entrySet()) {
+		for (Map.Entry<String, String> entry : profile.getSettings()
+				.entrySet()) {
 			final String key = entry.getKey();
 			final String value = entry.getValue();
 			if (value != null) {
@@ -375,8 +355,9 @@ public class ProfileStore implements IProfileStore {
 	/*
 	 * Creates a UI exception for logging purposes
 	 */
-	private static DLTKUIException createException(Throwable t, String message) {
-		return new DLTKUIException(new Status(IStatus.ERROR,
-				DLTKUIPlugin.PLUGIN_ID, message, t));
+	private static DLTKUIException createException(Throwable t,
+			String message) {
+		return new DLTKUIException(
+				new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, message, t));
 	}
 }

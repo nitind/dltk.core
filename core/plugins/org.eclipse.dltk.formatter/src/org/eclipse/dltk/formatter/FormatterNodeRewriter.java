@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 xored software, Inc.
+ * Copyright (c) 2009, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -18,8 +18,8 @@ public abstract class FormatterNodeRewriter {
 
 	protected void mergeTextNodes(IFormatterContainerNode root) {
 		final List<IFormatterNode> body = root.getBody();
-		final List<IFormatterNode> newBody = new ArrayList<IFormatterNode>();
-		final List<IFormatterNode> texts = new ArrayList<IFormatterNode>();
+		final List<IFormatterNode> newBody = new ArrayList<>();
+		final List<IFormatterNode> texts = new ArrayList<>();
 		for (final IFormatterNode node : body) {
 			if (isPlainTextNode(node)) {
 				if (!texts.isEmpty()
@@ -54,8 +54,8 @@ public abstract class FormatterNodeRewriter {
 		if (texts.size() > 1) {
 			final IFormatterNode first = texts.get(0);
 			final IFormatterNode last = texts.get(texts.size() - 1);
-			newBody.add(new FormatterTextNode(first.getDocument(), first
-					.getStartOffset(), last.getEndOffset()));
+			newBody.add(new FormatterTextNode(first.getDocument(),
+					first.getStartOffset(), last.getEndOffset()));
 		} else {
 			newBody.addAll(texts);
 		}
@@ -79,7 +79,7 @@ public abstract class FormatterNodeRewriter {
 
 	}
 
-	private final List<CommentInfo> comments = new ArrayList<CommentInfo>();
+	private final List<CommentInfo> comments = new ArrayList<>();
 
 	protected void addComment(int startOffset, int endOffset, Object object) {
 		comments.add(new CommentInfo(startOffset, endOffset, object));
@@ -87,13 +87,13 @@ public abstract class FormatterNodeRewriter {
 
 	protected void insertComments(IFormatterContainerNode root) {
 		final List<IFormatterNode> body = root.getBody();
-		final List<IFormatterNode> newBody = new ArrayList<IFormatterNode>();
+		final List<IFormatterNode> newBody = new ArrayList<>();
 		boolean changes = false;
 		for (final IFormatterNode node : body) {
 			if (isPlainTextNode(node)) {
 				if (hasComments(node.getStartOffset(), node.getEndOffset())) {
-					selectValidRanges(root.getDocument(),
-							node.getStartOffset(), node.getEndOffset(), newBody);
+					selectValidRanges(root.getDocument(), node.getStartOffset(),
+							node.getEndOffset(), newBody);
 					changes = true;
 				} else {
 					newBody.add(node);
@@ -129,13 +129,12 @@ public abstract class FormatterNodeRewriter {
 			if (start <= comment.endOffset && comment.startOffset <= end) {
 				if (start < comment.startOffset) {
 					int validEnd = Math.min(end, comment.startOffset);
-					result
-							.add(new FormatterTextNode(document, start,
-									validEnd));
+					result.add(
+							new FormatterTextNode(document, start, validEnd));
 					start = comment.startOffset;
 				}
-				result.add(createCommentNode(document, start, Math.min(
-						comment.endOffset, end), comment.object));
+				result.add(createCommentNode(document, start,
+						Math.min(comment.endOffset, end), comment.object));
 				start = comment.endOffset;
 				if (start > end) {
 					break;

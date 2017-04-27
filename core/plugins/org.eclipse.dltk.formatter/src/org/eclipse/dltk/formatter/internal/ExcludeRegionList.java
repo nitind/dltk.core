@@ -22,7 +22,7 @@ import org.eclipse.jface.text.Region;
 
 public class ExcludeRegionList {
 
-	private final List<IRegion> excludes = new ArrayList<IRegion>();
+	private final List<IRegion> excludes = new ArrayList<>();
 
 	public boolean isExcluded(int start, int end) {
 		if (!excludes.isEmpty()) {
@@ -37,7 +37,7 @@ public class ExcludeRegionList {
 	}
 
 	public IRegion[] selectValidRanges(int start, int end) {
-		final List<Region> result = new ArrayList<Region>();
+		final List<Region> result = new ArrayList<>();
 		for (final IRegion region : excludes) {
 			final int regionEnd = region.getOffset() + region.getLength();
 			if (start <= regionEnd && region.getOffset() <= end) {
@@ -70,7 +70,8 @@ public class ExcludeRegionList {
 				final int rEnd = r.getOffset() + r.getLength();
 				if (r.getOffset() <= end && start <= rEnd) {
 					if (region.getOffset() >= r.getOffset()
-							&& region.getOffset() + region.getLength() <= rEnd) {
+							&& region.getOffset()
+									+ region.getLength() <= rEnd) {
 						// new region is inside one of the old regions
 						return;
 					}
@@ -95,6 +96,7 @@ public class ExcludeRegionList {
 		Collections.sort(excludes, REGION_COMPARATOR);
 	}
 
-	private static final Comparator<IRegion> REGION_COMPARATOR = (o1, o2) -> o1.getOffset() - o2.getOffset();
+	private static final Comparator<IRegion> REGION_COMPARATOR = (o1,
+			o2) -> o1.getOffset() - o2.getOffset();
 
 }

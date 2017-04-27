@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -15,7 +15,7 @@ import java.util.Stack;
 
 public class AbstractFormatterNodeBuilder {
 
-	private final Stack<IFormatterContainerNode> stack = new Stack<IFormatterContainerNode>();
+	private final Stack<IFormatterContainerNode> stack = new Stack<>();
 
 	protected void start(IFormatterContainerNode root) {
 		stack.clear();
@@ -40,7 +40,8 @@ public class AbstractFormatterNodeBuilder {
 		return node;
 	}
 
-	private void advanceParent(IFormatterContainerNode parentNode, final int pos) {
+	private void advanceParent(IFormatterContainerNode parentNode,
+			final int pos) {
 		if (parentNode.getEndOffset() < pos) {
 			parentNode.addChild(createTextNode(parentNode.getDocument(),
 					parentNode.getEndOffset(), pos));
@@ -60,8 +61,8 @@ public class AbstractFormatterNodeBuilder {
 			throw new IllegalStateException();
 		}
 		if (bodyEnd > 0 && expected.getEndOffset() < bodyEnd) {
-			expected.addChild(createTextNode(expected.getDocument(), expected
-					.getEndOffset(), bodyEnd));
+			expected.addChild(createTextNode(expected.getDocument(),
+					expected.getEndOffset(), bodyEnd));
 		}
 	}
 

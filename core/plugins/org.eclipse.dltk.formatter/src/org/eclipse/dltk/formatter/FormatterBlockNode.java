@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2016 xored software, Inc. and others.
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FormatterBlockNode extends AbstractFormatterNode implements
-		IFormatterContainerNode {
+public class FormatterBlockNode extends AbstractFormatterNode
+		implements IFormatterContainerNode {
 
 	/**
 	 * @param document
@@ -25,7 +25,7 @@ public class FormatterBlockNode extends AbstractFormatterNode implements
 		super(document);
 	}
 
-	private final List<IFormatterNode> body = new ArrayList<IFormatterNode>();
+	private final List<IFormatterNode> body = new ArrayList<>();
 
 	protected void acceptNodes(final List<IFormatterNode> nodes,
 			IFormatterContext context, IFormatterWriter visitor)
