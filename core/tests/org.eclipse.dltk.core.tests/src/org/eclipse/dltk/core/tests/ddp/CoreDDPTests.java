@@ -8,6 +8,9 @@
  *******************************************************************************/
 package org.eclipse.dltk.core.tests.ddp;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -16,7 +19,6 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.expressions.NumericLiteral;
 import org.eclipse.dltk.ast.references.SimpleReference;
-import org.eclipse.dltk.core.tests.model.SuiteOfTestCases;
 import org.eclipse.dltk.ti.DefaultTypeInferencer;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
@@ -25,18 +27,9 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.junit.Test;
 
-import junit.framework.Test;
-
-public class CoreDDPTests extends SuiteOfTestCases {
-
-	public CoreDDPTests(String name) {
-		super(name);
-	}
-
-	public static Test suite() {
-		return new Suite(CoreDDPTests.class);
-	}
+public class CoreDDPTests {
 
 	private static final class FixedAnswerGoalEvaluator extends GoalEvaluator {
 		private final IEvaluatedType answer;
@@ -138,6 +131,7 @@ public class CoreDDPTests extends SuiteOfTestCases {
 
 	}
 
+	@Test
 	public void testSimple() throws Exception {
 		// y = 2; x = y; x?
 		final Expression x = new SimpleReference(0, 0, "x");
@@ -168,6 +162,7 @@ public class CoreDDPTests extends SuiteOfTestCases {
 		assertTrue(answer instanceof MyNum);
 	}
 
+	@Test
 	public void testCycles() throws Exception {
 		final Expression x = new SimpleReference(0, 0, "x");
 		final Expression y = new SimpleReference(0, 0, "y");

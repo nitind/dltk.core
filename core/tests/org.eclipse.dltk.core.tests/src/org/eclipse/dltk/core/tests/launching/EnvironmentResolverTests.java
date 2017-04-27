@@ -1,19 +1,18 @@
 package org.eclipse.dltk.core.tests.launching;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.dltk.core.tests.model.SuiteOfTestCases;
 import org.eclipse.dltk.internal.launching.EnvironmentResolver;
 import org.eclipse.dltk.launching.EnvironmentVariable;
+import org.junit.Test;
 
-import junit.framework.Test;
-
-public class EnvironmentResolverTests extends SuiteOfTestCases {
-	public EnvironmentResolverTests(String name) {
-		super(name);
-	}
-
+public class EnvironmentResolverTests {
+	@Test
 	public void testEnvironmentResolve001() {
 		Map<String, String> env = new HashMap<>();
 		EnvironmentVariable[] vars = new EnvironmentVariable[] { mk("A", "a") };
@@ -22,6 +21,7 @@ public class EnvironmentResolverTests extends SuiteOfTestCases {
 		test(resolve, "A", "a");
 	}
 
+	@Test
 	public void testEnvironmentResolve002() {
 		Map<String, String> env = new HashMap<>();
 		EnvironmentVariable[] vars = new EnvironmentVariable[] { mk("A", "a"),
@@ -33,6 +33,7 @@ public class EnvironmentResolverTests extends SuiteOfTestCases {
 		test(resolve, "B", "a$Ac");
 	}
 
+	@Test
 	public void testEnvironmentResolve002a() {
 		Map<String, String> env = new HashMap<>();
 		EnvironmentVariable[] vars = new EnvironmentVariable[] { mk("A", "a"),
@@ -43,6 +44,7 @@ public class EnvironmentResolverTests extends SuiteOfTestCases {
 		test(resolve, "B", "aa:c");
 	}
 
+	@Test
 	public void testEnvironmentResolve003() {
 		Map<String, String> env = new HashMap<>();
 		EnvironmentVariable[] vars = new EnvironmentVariable[] {
@@ -54,6 +56,7 @@ public class EnvironmentResolverTests extends SuiteOfTestCases {
 		test(resolve, "ATS_EASY", "/Develop/cisco/ats5.0.0/ats_easy");
 	}
 
+	@Test
 	public void testEnvironmentResolve004() {
 		Map<String, String> env = new HashMap<>();
 		env.put("PATH", "/bin:/usr/bin");
@@ -64,6 +67,7 @@ public class EnvironmentResolverTests extends SuiteOfTestCases {
 		test(resolve, "PATH", "/sbin:/bin:/usr/bin");
 	}
 
+	@Test
 	public void testEnvironmentResolve005() {
 		Map<String, String> env = new HashMap<>();
 		env.put("PATH", "/bin:/usr/bin");
@@ -80,6 +84,7 @@ public class EnvironmentResolverTests extends SuiteOfTestCases {
 		test(resolve, "a4", "A4A3A2A1");
 	}
 
+	@Test
 	public void testEnvironmentResolve006() {
 		Map<String, String> env = new HashMap<>();
 		env.put("PATH", "/bin:/usr/bin");
@@ -92,6 +97,7 @@ public class EnvironmentResolverTests extends SuiteOfTestCases {
 		assertEquals(resolve.length, 0);
 	}
 
+	@Test
 	public void testEnvironmentResolve007() {
 		Map<String, String> env = new HashMap<>();
 		env.put("PATH", "/bin:/usr/bin");
@@ -104,6 +110,7 @@ public class EnvironmentResolverTests extends SuiteOfTestCases {
 		test(resolve, "a2", "a2");
 	}
 
+	@Test
 	public void testEnvironmentResolve008() {
 		Map<String, String> env = new HashMap<>();
 		env.put("PATH", "/bin:/usr/bin");
@@ -116,6 +123,7 @@ public class EnvironmentResolverTests extends SuiteOfTestCases {
 		test(resolve, "a2", "alla{/sbii/bin/:/bin:/usr/bin}");
 	}
 
+	@Test
 	public void testEnvironmentResolve008a() {
 		Map<String, String> env = new HashMap<>();
 		EnvironmentVariable[] vars = new EnvironmentVariable[] {
@@ -147,9 +155,5 @@ public class EnvironmentResolverTests extends SuiteOfTestCases {
 			}
 		}
 		fail("Not found " + environmentVariable.toString());
-	}
-
-	public static Test suite() {
-		return new Suite(EnvironmentResolverTests.class);
 	}
 }
