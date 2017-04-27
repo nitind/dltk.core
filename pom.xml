@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.eclipse.dltk</groupId>
+		<artifactId>dltk.build.all</artifactId>
+		<version>5.7.2-SNAPSHOT</version>
+		<relativePath>../org.eclipse.dltk.releng/pom.xml</relativePath>
+	</parent>
+	<groupId>org.eclipse.dltk.core</groupId>
+	<artifactId>all</artifactId>
+	<packaging>pom</packaging>
+	<properties>
+		<tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/dltk/org.eclipse.dltk.core.git</tycho.scmUrl>
+	</properties>
+
+	<modules>
+		<module>core</module>
+		<module>rse</module>
+		<module>mylyn</module>
+	</modules>
+</project>
