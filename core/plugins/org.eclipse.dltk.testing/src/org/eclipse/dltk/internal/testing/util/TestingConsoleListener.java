@@ -14,7 +14,6 @@ import org.eclipse.ui.console.TextConsole;
 
 public class TestingConsoleListener implements IConsoleListener {
 	private final String launchKey;
-	private final ILaunch launch;
 	private final ITestingProcessor processor;
 	private boolean initialized = false;
 	private boolean finalized = false;
@@ -22,7 +21,6 @@ public class TestingConsoleListener implements IConsoleListener {
 	public TestingConsoleListener(String launchKey, ILaunch launch,
 			ITestingProcessor processor) {
 		this.launchKey = launchKey;
-		this.launch = launch;
 		this.processor = processor;
 	}
 
@@ -44,19 +42,16 @@ public class TestingConsoleListener implements IConsoleListener {
 			if (console instanceof org.eclipse.debug.ui.console.IConsole) {
 				org.eclipse.debug.ui.console.IConsole pc = (org.eclipse.debug.ui.console.IConsole) console;
 				IProcess process = pc.getProcess();
-				if (process != null
-						&& launchKey.equals(process.getLaunch().getAttribute(
-								DLTKTestingConstants.LAUNCH_ATTR_KEY))) {
+				if (process != null && launchKey.equals(process.getLaunch()
+						.getAttribute(DLTKTestingConstants.LAUNCH_ATTR_KEY))) {
 					process((TextConsole) console);
 					initialized = true;
 				}
 			} else if (console instanceof ScriptDebugConsole) {
 				ScriptDebugConsole cl = (ScriptDebugConsole) console;
 				ILaunch launch2 = cl.getLaunch();
-				if (launch2 != null
-						&& launchKey
-								.equals(launch2
-										.getAttribute(DLTKTestingConstants.LAUNCH_ATTR_KEY))) {
+				if (launch2 != null && launchKey.equals(launch2
+						.getAttribute(DLTKTestingConstants.LAUNCH_ATTR_KEY))) {
 					process(cl);
 					initialized = true;
 				}
@@ -83,7 +78,8 @@ public class TestingConsoleListener implements IConsoleListener {
 			}
 
 			@Override
-			public synchronized void lineAppended(IRegion region, String content) {
+			public synchronized void lineAppended(IRegion region,
+					String content) {
 				if (first) {
 					first = false;
 					processor.start();
@@ -128,7 +124,7 @@ public class TestingConsoleListener implements IConsoleListener {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void install() {
 		if (initialized) {

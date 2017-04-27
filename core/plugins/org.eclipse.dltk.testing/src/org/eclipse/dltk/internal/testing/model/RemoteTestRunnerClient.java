@@ -12,9 +12,6 @@
  *******************************************************************************/
 package org.eclipse.dltk.internal.testing.model;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -217,14 +214,6 @@ public class RemoteTestRunnerClient
 	private ITestRunListener2[] fListeners;
 
 	/**
-	 * The server socket
-	 */
-	// private ServerSocket fServerSocket;
-	// private Socket fSocket;
-	// private int fPort= -1;
-	private PrintWriter fWriter;
-	private BufferedReader fBufferedReader;
-	/**
 	 * The protocol version
 	 */
 	private String fVersion;
@@ -242,8 +231,6 @@ public class RemoteTestRunnerClient
 	 * The kind of failure of the test that is currently reported as failed
 	 */
 	private int fFailureKind;
-
-	private boolean fDebug = false;
 
 	/**
 	 * Reads the message stream from the RemoteTestRunner
@@ -273,10 +260,6 @@ public class RemoteTestRunnerClient
 		// fWriter.println(MessageIds.TEST_STOP);
 		// fWriter.flush();
 		// }
-	}
-
-	private String readMessage(BufferedReader in) throws IOException {
-		return in.readLine();
 	}
 
 	private void receiveMessage(String message) {
@@ -482,22 +465,6 @@ public class RemoteTestRunnerClient
 							fFailedTest, fFailedTrace.toString(),
 							fExpectedResult.toString(),
 							fActualResult.toString(), fFailedCode);
-				}
-			});
-		}
-	}
-
-	private void notifyTestRunTerminated() {
-		// fix for 77771 RemoteTestRunnerClient doing work after junit shutdown
-		// [JUnit]
-		if (DLTKTestingPlugin.isStopped())
-			return;
-		for (int i = 0; i < fListeners.length; i++) {
-			final ITestRunListener2 listener = fListeners[i];
-			SafeRunner.run(new ListenerSafeRunnable() {
-				@Override
-				public void run() {
-					listener.testRunTerminated();
 				}
 			});
 		}

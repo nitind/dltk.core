@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,8 @@ import java.util.List;
 import org.eclipse.dltk.testing.model.ITestElement;
 import org.eclipse.dltk.testing.model.ITestElementContainer;
 
-public abstract class TestContainerElement extends TestElement implements
-		ITestElementContainer {
+public abstract class TestContainerElement extends TestElement
+		implements ITestElementContainer {
 
 	private List<TestElement> fChildren;
 	private Status fChildrenStatus;
@@ -30,12 +30,9 @@ public abstract class TestContainerElement extends TestElement implements
 	public TestContainerElement(TestContainerElement parent, String id,
 			String testName, int childrenCount) {
 		super(parent, id, testName);
-		fChildren = new ArrayList<TestElement>(childrenCount);
+		fChildren = new ArrayList<>(childrenCount);
 	}
 
-	/*
-	 * @see org.eclipse.jdt.junit.ITestElement#getTestResult()
-	 */
 	@Override
 	public Result getTestResult(boolean includeChildren) {
 		if (includeChildren) {
@@ -45,16 +42,10 @@ public abstract class TestContainerElement extends TestElement implements
 		}
 	}
 
-	/*
-	 * @see org.eclipse.jdt.junit.ITestSuiteElement#getSuiteTypeName()
-	 */
 	public String getSuiteTypeName() {
 		return getTestName();
 	}
 
-	/*
-	 * @see org.eclipse.jdt.junit.model.ITestSuiteElement#getChildren()
-	 */
 	@Override
 	public ITestElement[] getChildren() {
 		return fChildren.toArray(new ITestElement[fChildren.size()]);
@@ -77,8 +68,8 @@ public abstract class TestContainerElement extends TestElement implements
 	}
 
 	private Status getCumulatedStatus() {
-		TestElement[] children = fChildren.toArray(new TestElement[fChildren
-				.size()]);
+		TestElement[] children = fChildren
+				.toArray(new TestElement[fChildren.size()]);
 		// copy list to avoid concurreny problems
 		if (children.length == 0)
 			return getSuiteStatus();
@@ -127,7 +118,8 @@ public abstract class TestContainerElement extends TestElement implements
 		// finally, set RUNNING_FAILURE/ERROR if child has failed but suite has
 		// not failed:
 		if (childStatus.isFailure()) {
-			if (fChildrenStatus == null || !fChildrenStatus.isErrorOrFailure()) {
+			if (fChildrenStatus == null
+					|| !fChildrenStatus.isErrorOrFailure()) {
 				internalSetChildrenStatus(Status.RUNNING_FAILURE);
 				return;
 			}
@@ -142,7 +134,7 @@ public abstract class TestContainerElement extends TestElement implements
 	private void internalSetChildrenStatus(Status status) {
 		if (fChildrenStatus == status)
 			return;
-		
+
 		if (status == Status.RUNNING) {
 			if (fTime >= 0.0d) {
 				// re-running child: ignore change
@@ -155,7 +147,7 @@ public abstract class TestContainerElement extends TestElement implements
 				fTime = endTime + fTime;
 			}
 		}
-		
+
 		fChildrenStatus = status;
 		TestContainerElement parent = getParent();
 		if (parent != null)
@@ -169,8 +161,8 @@ public abstract class TestContainerElement extends TestElement implements
 		if (index > 0) {
 			className = className.substring(index + 1);
 		}
-		return className
-				+ ": " + getSuiteTypeName() + " : " + super.toString() + " (" + fChildren.size() + ")"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		return className + ": " + getSuiteTypeName() + " : " + super.toString() //$NON-NLS-1$//$NON-NLS-2$
+				+ " (" + fChildren.size() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,19 +13,16 @@ package org.eclipse.dltk.internal.testing.ui;
 
 import java.util.ArrayList;
 
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
-
 import org.eclipse.dltk.internal.testing.model.TestCaseElement;
 import org.eclipse.dltk.internal.testing.model.TestContainerElement;
 import org.eclipse.dltk.internal.testing.model.TestRoot;
 import org.eclipse.dltk.internal.testing.model.TestSuiteElement;
 import org.eclipse.dltk.testing.model.ITestElement;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 
-
-
-
-public class TestSessionTableContentProvider implements IStructuredContentProvider {
+public class TestSessionTableContentProvider
+		implements IStructuredContentProvider {
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -33,15 +30,15 @@ public class TestSessionTableContentProvider implements IStructuredContentProvid
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		ArrayList all= new ArrayList();
+		ArrayList<Object> all = new ArrayList<>();
 		addAll(all, (TestRoot) inputElement);
 		return all.toArray();
 	}
 
-	private void addAll(ArrayList all, TestContainerElement suite) {
-		ITestElement[] children= suite.getChildren();
-		for (int i= 0; i < children.length; i++) {
-			ITestElement element= children[i];
+	private void addAll(ArrayList<Object> all, TestContainerElement suite) {
+		ITestElement[] children = suite.getChildren();
+		for (int i = 0; i < children.length; i++) {
+			ITestElement element = children[i];
 			if (element instanceof TestContainerElement) {
 				final TestContainerElement container = (TestContainerElement) element;
 				if (element instanceof TestSuiteElement) {

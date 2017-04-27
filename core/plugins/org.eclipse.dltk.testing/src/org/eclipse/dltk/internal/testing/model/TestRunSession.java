@@ -828,19 +828,6 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			}
 		}
 
-		public void testFailed(int status, String testId, String testName,
-				String trace) {
-			testFailed(status, testId, testName, trace, null, null, -1);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 *
-		 * @see
-		 * org.eclipse.jdt.internal.junit.model.ITestRunListener2#testFailed(
-		 * int, java.lang.String, java.lang.String, java.lang.String,
-		 * java.lang.String, java.lang.String)
-		 */
 		@Override
 		public void testFailed(int statusCode, String testId, String testName,
 				String trace, String expected, String actual, int code) {
@@ -871,19 +858,6 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 			return string;
 		}
 
-		public void testReran(String testId, String testClass, String testName,
-				int status, String trace) {
-			testReran(testId, testClass, testName, status, trace, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-
-		/*
-		 * (non-Javadoc)
-		 *
-		 * @see
-		 * org.eclipse.jdt.internal.junit.model.ITestRunListener2#testReran(java
-		 * .lang.String, java.lang.String, java.lang.String, int,
-		 * java.lang.String, java.lang.String, java.lang.String)
-		 */
 		@Override
 		public void testReran(String testId, String className, String testName,
 				int statusCode, String trace, String expectedResult,
@@ -1005,11 +979,6 @@ public class TestRunSession implements ITestRunSession, ITestSession {
 		return testRunnerUI;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.jdt.junit.model.ITestElement#getElapsedTimeInSeconds()
-	 */
 	@Override
 	public double getElapsedTimeInSeconds() {
 		if (fTestRoot == null)

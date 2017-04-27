@@ -24,7 +24,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
@@ -411,25 +410,10 @@ public final class DLTKTestingModel implements ITestingModel {
 	 */
 	public static void exportTestRunSession(TestRunSession testRunSession,
 			File file) throws CoreException {
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream(file);
+		try (FileOutputStream out = new FileOutputStream(file)) {
 			exportTestRunSession(testRunSession, out);
-
-		} catch (IOException e) {
+		} catch (IOException | TransformerException e) {
 			throwExportError(file, e);
-		} catch (TransformerConfigurationException e) {
-			throwExportError(file, e);
-		} catch (TransformerException e) {
-			throwExportError(file, e);
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e2) {
-					DLTKTestingPlugin.log(e2);
-				}
-			}
 		}
 	}
 
