@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.util;
 
@@ -25,7 +24,7 @@ public class ResourceUtil {
 	}
 
 	public static IFile[] getFiles(ISourceModule[] cus) {
-		List<IResource> files = new ArrayList<IResource>(cus.length);
+		List<IResource> files = new ArrayList<>(cus.length);
 		for (int i = 0; i < cus.length; i++) {
 			IResource resource = ResourceUtil.getResource(cus[i]);
 			if (resource != null && resource.getType() == IResource.FILE)
@@ -45,9 +44,9 @@ public class ResourceUtil {
 	// ----- other ------------------------------
 
 	/**
-	 * Finds an <code>IResource</code> for a given <code>ISourceModule</code>.
-	 * If the parameter is a working copy then the <code>IResource</code> for
-	 * the original element is returned.
+	 * Finds an <code>IResource</code> for a given <code>ISourceModule</code>. If
+	 * the parameter is a working copy then the <code>IResource</code> for the
+	 * original element is returned.
 	 */
 	public static IResource getResource(ISourceModule cu) {
 		return cu.getResource();

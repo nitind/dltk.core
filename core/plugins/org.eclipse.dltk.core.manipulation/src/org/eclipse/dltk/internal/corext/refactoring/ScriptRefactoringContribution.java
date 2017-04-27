@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring;
 
@@ -18,22 +17,19 @@ import org.eclipse.ltk.core.refactoring.RefactoringContribution;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 
 /**
- * Partial implementation of ascriptrefactoring contribution.
- * 
-	 *
+ * Partial implementation of a script refactoring contribution.
  */
 public abstract class ScriptRefactoringContribution extends RefactoringContribution {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public final RefactoringDescriptor createDescriptor(final String id, final String project, final String description, final String comment, final Map arguments, final int flags) {
+	@Override
+	public final RefactoringDescriptor createDescriptor(final String id, final String project, final String description,
+			final String comment, final Map<String, String> arguments, final int flags) {
 		return new ScriptRefactoringDescriptor(this, id, project, description, comment, arguments, flags);
 	}
 
 	/**
 	 * Creates the a new refactoring instance.
-	 * 
+	 *
 	 * @param descriptor
 	 *            the refactoring descriptor
 	 * @return the refactoring, or <code>null</code>
@@ -42,10 +38,8 @@ public abstract class ScriptRefactoringContribution extends RefactoringContribut
 	 */
 	public abstract Refactoring createRefactoring(RefactoringDescriptor descriptor) throws CoreException;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public final Map retrieveArgumentMap(final RefactoringDescriptor descriptor) {
+	@Override
+	public final Map<String, String> retrieveArgumentMap(final RefactoringDescriptor descriptor) {
 		Assert.isNotNull(descriptor);
 		if (descriptor instanceof ScriptRefactoringDescriptor)
 			return ((ScriptRefactoringDescriptor) descriptor).getArguments();

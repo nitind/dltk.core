@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,102 +37,68 @@ import org.eclipse.ltk.core.refactoring.RefactoringCore;
  */
 public final class RenameModelElementDescriptor extends ScriptRefactoringDescriptor {
 
-	/** The delegate attribute */
-	private static final String ATTRIBUTE_DELEGATE= "delegate"; //$NON-NLS-1$
-
-	/** The deprecate attribute */
-	private static final String ATTRIBUTE_DEPRECATE= "deprecate"; //$NON-NLS-1$
-
-	/** The hierarchical attribute */
-	private static final String ATTRIBUTE_HIERARCHICAL= "hierarchical"; //$NON-NLS-1$
-
-	/** The match strategy attribute */
-	private static final String ATTRIBUTE_MATCH_STRATEGY= "matchStrategy"; //$NON-NLS-1$
-
-	/** The parameter attribute */
-	private static final String ATTRIBUTE_PARAMETER= "parameter"; //$NON-NLS-1$
-
-	/** The patterns attribute */
-	private static final String ATTRIBUTE_PATTERNS= "patterns"; //$NON-NLS-1$
-
-	/** The qualified attribute */
-	private static final String ATTRIBUTE_QUALIFIED= "qualified"; //$NON-NLS-1$
-
-	/** The rename getter attribute */
-	private static final String ATTRIBUTE_RENAME_GETTER= "getter"; //$NON-NLS-1$
-
-	/** The rename setter attribute */
-	private static final String ATTRIBUTE_RENAME_SETTER= "setter"; //$NON-NLS-1$
-
-	/** The similar declarations attribute */
-	private static final String ATTRIBUTE_SIMILAR_DECLARATIONS= "similarDeclarations"; //$NON-NLS-1$
-
-	/** The textual matches attribute */
-	private static final String ATTRIBUTE_TEXTUAL_MATCHES= "textual"; //$NON-NLS-1$
+	/**
+	 * Similar declaration updating strategy which finds exact names and embedded
+	 * names as well (value: <code>2</code>).
+	 */
+	public static final int STRATEGY_EMBEDDED = 2;
 
 	/**
-	 * Similar declaration updating strategy which finds exact names and
-	 * embedded names as well (value: <code>2</code>).
+	 * Similar declaration updating strategy which finds exact names only (value:
+	 * <code>1</code>).
 	 */
-	public static final int STRATEGY_EMBEDDED= 2;
+	public static final int STRATEGY_EXACT = 1;
 
 	/**
-	 * Similar declaration updating strategy which finds exact names only
-	 * (value: <code>1</code>).
+	 * Similar declaration updating strategy which finds exact names, embedded names
+	 * and name suffixes (value: <code>3</code>).
 	 */
-	public static final int STRATEGY_EXACT= 1;
+	public static final int STRATEGY_SUFFIX = 3;
 
-	/**
-	 * Similar declaration updating strategy which finds exact names, embedded
-	 * names and name suffixes (value: <code>3</code>).
-	 */
-	public static final int STRATEGY_SUFFIX= 3;
-
-	//private static final String RENAME_RESOURCE= IJavascriptRefactorings.RENAME_RESOURCE;
-
+	// private static final String RENAME_RESOURCE=
+	// IJavascriptRefactorings.RENAME_RESOURCE;
 
 	/** The delegate attribute */
-	//private boolean fDelegate= false;
+	// private boolean fDelegate= false;
 
 	/** The deprecate attribute */
-	//private boolean fDeprecate= false;
+	// private boolean fDeprecate= false;
 
 	/** The hierarchical attribute */
-	//private boolean fHierarchical= false;
+	// private boolean fHierarchical= false;
 
 	/**
-	 * The java element attribute.
-	 * WARNING: may not exist, see comment in
+	 * The java element attribute. WARNING: may not exist, see comment in
 	 * {@link ScriptRefactoringDescriptor#handleToElement(org.eclipse.jdt.core.WorkingCopyOwner, String, String, boolean)}.
 	 */
-	private IModelElement fModelElement= null;
+	private IModelElement fModelElement = null;
 
 	/** The match strategy */
-	//private int fMatchStrategy= STRATEGY_EXACT;
+	// private int fMatchStrategy= STRATEGY_EXACT;
 
 	/** The name attribute */
-	private String fName= null;
+	private String fName = null;
 
 	/** The patterns attribute */
-	//private String fPatterns= null;
+	// private String fPatterns= null;
 
 	/** The qualified attribute */
-	//private boolean fQualified= false;
+	// private boolean fQualified= false;
 
 	/** The references attribute */
-	private boolean fReferences= false;
+	private boolean fReferences = false;
 
 	/** The rename getter attribute */
-	//private boolean fRenameGetter= false;
+	// private boolean fRenameGetter= false;
 
 	/** The rename setter attribute */
-	//private boolean fRenameSetter= false;
+	// private boolean fRenameSetter= false;
 
 	/** The similar declarations attribute */
-	//private boolean fSimilarDeclarations= false;
+	// private boolean fSimilarDeclarations= false;
 
 	/** The textual attribute */
-	//private boolean fTextual= false;
+	// private boolean fTextual= false;
 
 	/**
 	 * Creates a new refactoring descriptor.
@@ -153,88 +119,69 @@ public final class RenameModelElementDescriptor extends ScriptRefactoringDescrip
 	 *            the ID of this descriptor
 	 * @param project
 	 *            the non-empty name of the project associated with this
-	 *            refactoring, or <code>null</code> for a workspace
-	 *            refactoring
+	 *            refactoring, or <code>null</code> for a workspace refactoring
 	 * @param description
 	 *            a non-empty human-readable description of the particular
 	 *            refactoring instance
 	 * @param comment
-	 *            the human-readable comment of the particular refactoring
-	 *            instance, or <code>null</code> for no comment
+	 *            the human-readable comment of the particular refactoring instance,
+	 *            or <code>null</code> for no comment
 	 * @param arguments
-	 * 			  a map of arguments that will be persisted and describes
-	 * 			  all settings for this refactoring
+	 *            a map of arguments that will be persisted and describes all
+	 *            settings for this refactoring
 	 * @param flags
 	 *            the flags of the refactoring descriptor
 	 *
-	 * @throws IllegalArgumentException if the argument map contains invalid keys/values
+	 * @throws IllegalArgumentException
+	 *             if the argument map contains invalid keys/values
 	 *
 	 * @since 1.2
 	 */
-	public RenameModelElementDescriptor(String id, String project, String description, String comment, Map arguments, int flags) {
+	public RenameModelElementDescriptor(String id, String project, String description, String comment,
+			Map<String, String> arguments, int flags) {
 		super(id, project, description, comment, arguments, flags);
 		Assert.isLegal(checkId(id), "Refactoring id is not a rename refactoring id"); //$NON-NLS-1$
-		fName= RefactoringDescriptorUtil.getString(fArguments, ATTRIBUTE_NAME);
-		/*if (getID().equals(IJavascriptRefactorings.RENAME_TYPE_PARAMETER)) {
-			fModelElement= RefactoringDescriptorUtil.getModelElement(fArguments, ATTRIBUTE_INPUT, getProject());
-			String parameterName= RefactoringDescriptorUtil.getString(fArguments, ATTRIBUTE_PARAMETER);
-			if (fModelElement instanceof IType) {
-				fModelElement= ((IType) fModelElement).getTypeParameter(parameterName);
-			}
-			if (fModelElement instanceof IMethod) {
-				fModelElement=((IMethod) fModelElement).getTypeParameter(parameterName);
-			}
-		} else*/
-			fModelElement= RefactoringDescriptorUtil.getModelElement(fArguments, ATTRIBUTE_INPUT, getProject());
-		//final int type= fModelElement.getElementType();
-		//if (type != IModelElement.SCRIPT_FOLDER)
-			fReferences= RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_REFERENCES, fReferences);
-		/*if (type == IModelElement.FIELD) {
-			fRenameGetter= RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_RENAME_GETTER, fRenameGetter);
-			fRenameSetter= RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_RENAME_SETTER, fRenameSetter);
-		}
-		switch (type) {
-			case IModelElement.PROJECT_FRAGMENT:
-			case IModelElement.TYPE:
-			case IModelElement.FIELD:
-				fTextual= RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_TEXTUAL_MATCHES, fTextual);
-				break;
-			default:
-				break;
-		}
-		switch (type) {
-			case IModelElement.METHOD:
-			case IModelElement.FIELD:
-				fDeprecate= RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_DEPRECATE, fDeprecate);
-				fDelegate= RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_DELEGATE, fDelegate);
-				break;
-			default:
-				break;
-		}
-		switch (type) {
-			case IModelElement.PROJECT_FRAGMENT:
-			case IModelElement.TYPE:
-				fQualified= RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_QUALIFIED, fQualified);
-				fPatterns= RefactoringDescriptorUtil.getString(fArguments, ATTRIBUTE_PATTERNS, true);
-				break;
-			default:
-				break;
-		}
-		switch (type) {
-			case IModelElement.TYPE:
-				fSimilarDeclarations= RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_SIMILAR_DECLARATIONS, fSimilarDeclarations);
-				fMatchStrategy= RefactoringDescriptorUtil.getInt(fArguments, ATTRIBUTE_MATCH_STRATEGY, fMatchStrategy);
-				break;
-			default:
-				break;
-		}
-		switch (type) {
-			case IModelElement.PROJECT_FRAGMENT:
-				fHierarchical= RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_HIERARCHICAL, fHierarchical);
-				break;
-			default:
-				break;
-		}*/
+		fName = RefactoringDescriptorUtil.getString(fArguments, ATTRIBUTE_NAME);
+		/*
+		 * if (getID().equals(IJavascriptRefactorings.RENAME_TYPE_PARAMETER)) {
+		 * fModelElement= RefactoringDescriptorUtil.getModelElement(fArguments,
+		 * ATTRIBUTE_INPUT, getProject()); String parameterName=
+		 * RefactoringDescriptorUtil.getString(fArguments, ATTRIBUTE_PARAMETER); if
+		 * (fModelElement instanceof IType) { fModelElement= ((IType)
+		 * fModelElement).getTypeParameter(parameterName); } if (fModelElement
+		 * instanceof IMethod) { fModelElement=((IMethod)
+		 * fModelElement).getTypeParameter(parameterName); } } else
+		 */
+		fModelElement = RefactoringDescriptorUtil.getModelElement(fArguments, ATTRIBUTE_INPUT, getProject());
+		// final int type= fModelElement.getElementType();
+		// if (type != IModelElement.SCRIPT_FOLDER)
+		fReferences = RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_REFERENCES, fReferences);
+		/*
+		 * if (type == IModelElement.FIELD) { fRenameGetter=
+		 * RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_RENAME_GETTER,
+		 * fRenameGetter); fRenameSetter=
+		 * RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_RENAME_SETTER,
+		 * fRenameSetter); } switch (type) { case IModelElement.PROJECT_FRAGMENT: case
+		 * IModelElement.TYPE: case IModelElement.FIELD: fTextual=
+		 * RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_TEXTUAL_MATCHES,
+		 * fTextual); break; default: break; } switch (type) { case
+		 * IModelElement.METHOD: case IModelElement.FIELD: fDeprecate=
+		 * RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_DEPRECATE,
+		 * fDeprecate); fDelegate= RefactoringDescriptorUtil.getBoolean(fArguments,
+		 * ATTRIBUTE_DELEGATE, fDelegate); break; default: break; } switch (type) { case
+		 * IModelElement.PROJECT_FRAGMENT: case IModelElement.TYPE: fQualified=
+		 * RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_QUALIFIED,
+		 * fQualified); fPatterns= RefactoringDescriptorUtil.getString(fArguments,
+		 * ATTRIBUTE_PATTERNS, true); break; default: break; } switch (type) { case
+		 * IModelElement.TYPE: fSimilarDeclarations=
+		 * RefactoringDescriptorUtil.getBoolean(fArguments,
+		 * ATTRIBUTE_SIMILAR_DECLARATIONS, fSimilarDeclarations); fMatchStrategy=
+		 * RefactoringDescriptorUtil.getInt(fArguments, ATTRIBUTE_MATCH_STRATEGY,
+		 * fMatchStrategy); break; default: break; } switch (type) { case
+		 * IModelElement.PROJECT_FRAGMENT: fHierarchical=
+		 * RefactoringDescriptorUtil.getBoolean(fArguments, ATTRIBUTE_HIERARCHICAL,
+		 * fHierarchical); break; default: break; }
+		 */
 	}
 
 	/**
@@ -246,111 +193,86 @@ public final class RenameModelElementDescriptor extends ScriptRefactoringDescrip
 	 */
 	private boolean checkId(final String id) {
 		Assert.isNotNull(id);
-/*		if (id.equals(IJavascriptRefactorings.RENAME_COMPILATION_UNIT))
-			return true;
-		else if (id.equals(IJavascriptRefactorings.RENAME_ENUM_CONSTANT))
-			return true;
-		else if (id.equals(IJavascriptRefactorings.RENAME_FIELD))
-			return true;
-		else if (id.equals(IJavascriptRefactorings.RENAME_JAVA_PROJECT))
-			return true;
-		else if (id.equals(IJavascriptRefactorings.RENAME_LOCAL_VARIABLE))
-			return true;
-		else if (id.equals(IJavascriptRefactorings.RENAME_METHOD))
-			return true;
-		else if (id.equals(IJavascriptRefactorings.RENAME_PACKAGE))
-			return true;
-		else if (id.equals(RENAME_RESOURCE))
-			return true;
-		else if (id.equals(IJavascriptRefactorings.RENAME_SOURCE_FOLDER))
-			return true;
-		else if (id.equals(IJavascriptRefactorings.RENAME_TYPE))
-			return true;
-		else if (id.equals(IJavascriptRefactorings.RENAME_TYPE_PARAMETER))
-			return true;
-		return false;*/
+		/*
+		 * if (id.equals(IJavascriptRefactorings.RENAME_COMPILATION_UNIT)) return true;
+		 * else if (id.equals(IJavascriptRefactorings.RENAME_ENUM_CONSTANT)) return
+		 * true; else if (id.equals(IJavascriptRefactorings.RENAME_FIELD)) return true;
+		 * else if (id.equals(IJavascriptRefactorings.RENAME_JAVA_PROJECT)) return true;
+		 * else if (id.equals(IJavascriptRefactorings.RENAME_LOCAL_VARIABLE)) return
+		 * true; else if (id.equals(IJavascriptRefactorings.RENAME_METHOD)) return true;
+		 * else if (id.equals(IJavascriptRefactorings.RENAME_PACKAGE)) return true; else
+		 * if (id.equals(RENAME_RESOURCE)) return true; else if
+		 * (id.equals(IJavascriptRefactorings.RENAME_SOURCE_FOLDER)) return true; else
+		 * if (id.equals(IJavascriptRefactorings.RENAME_TYPE)) return true; else if
+		 * (id.equals(IJavascriptRefactorings.RENAME_TYPE_PARAMETER)) return true;
+		 * return false;
+		 */
 		return true;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void populateArgumentMap() {
 		super.populateArgumentMap();
 		RefactoringDescriptorUtil.setString(fArguments, ATTRIBUTE_NAME, fName);
-		/*if (getID().equals(IJavascriptRefactorings.RENAME_TYPE_PARAMETER)) {
-			final ITypeParameter parameter= (ITypeParameter) fModelElement;
-			ScriptRefactoringDescriptor.setModelElement(fArguments, ATTRIBUTE_INPUT, getProject(), parameter.getDeclaringMember());
-			ScriptRefactoringDescriptor.setString(fArguments, ATTRIBUTE_PARAMETER, parameter.getElementName());
-		} else*/
-			RefactoringDescriptorUtil.setModelElement(fArguments, ATTRIBUTE_INPUT, getProject(), fModelElement);
-		/*final int type= fModelElement.getElementType();
-		if (type != IModelElement.SCRIPT_FOLDER)*/
-			RefactoringDescriptorUtil.setBoolean(fArguments, ATTRIBUTE_REFERENCES, fReferences);
-		/*if (type == IModelElement.FIELD) {
-			RefactoringDescriptorUtil.setBoolean(fArguments, ATTRIBUTE_RENAME_GETTER, fRenameGetter);
-			RefactoringDescriptorUtil.setBoolean(fArguments, ATTRIBUTE_RENAME_SETTER, fRenameSetter);
-		}
-		switch (type) {
-			case IModelElement.PROJECT_FRAGMENT:
-			case IModelElement.TYPE:
-			case IModelElement.FIELD:
-				ScriptRefactoringDescriptor.setBoolean(fArguments, ATTRIBUTE_TEXTUAL_MATCHES, fTextual);
-				break;
-			default:
-				break;
-		}
-		switch (type) {
-			case IModelElement.METHOD:
-			case IModelElement.FIELD:
-				ScriptRefactoringDescriptor.setBoolean(fArguments, ATTRIBUTE_DEPRECATE, fDeprecate);
-				ScriptRefactoringDescriptor.setBoolean(fArguments, ATTRIBUTE_DELEGATE, fDelegate);
-				break;
-			default:
-				break;
-		}
-		switch (type) {
-			case IModelElement.PROJECT_FRAGMENT:
-			case IModelElement.TYPE:
-				ScriptRefactoringDescriptor.setBoolean(fArguments, ATTRIBUTE_QUALIFIED, fQualified);
-				ScriptRefactoringDescriptor.setString(fArguments, ATTRIBUTE_PATTERNS, fPatterns);
-				break;
-			default:
-				break;
-		}
-		switch (type) {
-			case IModelElement.TYPE:
-				ScriptRefactoringDescriptor.setBoolean(fArguments, ATTRIBUTE_SIMILAR_DECLARATIONS, fSimilarDeclarations);
-				ScriptRefactoringDescriptor.setInt(fArguments, ATTRIBUTE_MATCH_STRATEGY, fMatchStrategy);
-				break;
-			default:
-				break;
-		}
-		switch (type) {
-			case IModelElement.PROJECT_FRAGMENT:
-				ScriptRefactoringDescriptor.setBoolean(fArguments, ATTRIBUTE_HIERARCHICAL, fHierarchical);
-				break;
-			default:
-				break;
-		}*/
+		/*
+		 * if (getID().equals(IJavascriptRefactorings.RENAME_TYPE_PARAMETER)) { final
+		 * ITypeParameter parameter= (ITypeParameter) fModelElement;
+		 * ScriptRefactoringDescriptor.setModelElement(fArguments, ATTRIBUTE_INPUT,
+		 * getProject(), parameter.getDeclaringMember());
+		 * ScriptRefactoringDescriptor.setString(fArguments, ATTRIBUTE_PARAMETER,
+		 * parameter.getElementName()); } else
+		 */
+		RefactoringDescriptorUtil.setModelElement(fArguments, ATTRIBUTE_INPUT, getProject(), fModelElement);
+		/*
+		 * final int type= fModelElement.getElementType(); if (type !=
+		 * IModelElement.SCRIPT_FOLDER)
+		 */
+		RefactoringDescriptorUtil.setBoolean(fArguments, ATTRIBUTE_REFERENCES, fReferences);
+		/*
+		 * if (type == IModelElement.FIELD) {
+		 * RefactoringDescriptorUtil.setBoolean(fArguments, ATTRIBUTE_RENAME_GETTER,
+		 * fRenameGetter); RefactoringDescriptorUtil.setBoolean(fArguments,
+		 * ATTRIBUTE_RENAME_SETTER, fRenameSetter); } switch (type) { case
+		 * IModelElement.PROJECT_FRAGMENT: case IModelElement.TYPE: case
+		 * IModelElement.FIELD: ScriptRefactoringDescriptor.setBoolean(fArguments,
+		 * ATTRIBUTE_TEXTUAL_MATCHES, fTextual); break; default: break; } switch (type)
+		 * { case IModelElement.METHOD: case IModelElement.FIELD:
+		 * ScriptRefactoringDescriptor.setBoolean(fArguments, ATTRIBUTE_DEPRECATE,
+		 * fDeprecate); ScriptRefactoringDescriptor.setBoolean(fArguments,
+		 * ATTRIBUTE_DELEGATE, fDelegate); break; default: break; } switch (type) { case
+		 * IModelElement.PROJECT_FRAGMENT: case IModelElement.TYPE:
+		 * ScriptRefactoringDescriptor.setBoolean(fArguments, ATTRIBUTE_QUALIFIED,
+		 * fQualified); ScriptRefactoringDescriptor.setString(fArguments,
+		 * ATTRIBUTE_PATTERNS, fPatterns); break; default: break; } switch (type) { case
+		 * IModelElement.TYPE: ScriptRefactoringDescriptor.setBoolean(fArguments,
+		 * ATTRIBUTE_SIMILAR_DECLARATIONS, fSimilarDeclarations);
+		 * ScriptRefactoringDescriptor.setInt(fArguments, ATTRIBUTE_MATCH_STRATEGY,
+		 * fMatchStrategy); break; default: break; } switch (type) { case
+		 * IModelElement.PROJECT_FRAGMENT:
+		 * ScriptRefactoringDescriptor.setBoolean(fArguments, ATTRIBUTE_HIERARCHICAL,
+		 * fHierarchical); break; default: break; }
+		 */
 	}
 
 	/**
 	 * Determines whether the delegate for a Script element should be declared as
 	 * deprecated.
 	 * <p>
-	 * Note: Deprecation of the delegate is currently applicable to the Script elements
-	 * {@link IMethod} and {@link IField}. The default is to not deprecate the
-	 * delegate.
+	 * Note: Deprecation of the delegate is currently applicable to the Script
+	 * elements {@link IMethod} and {@link IField}. The default is to not deprecate
+	 * the delegate.
 	 * </p>
 	 *
 	 * @param deprecate
-	 *            <code>true</code> to deprecate the delegate,
-	 *            <code>false</code> otherwise
+	 *            <code>true</code> to deprecate the delegate, <code>false</code>
+	 *            otherwise
 	 */
-//	public void setDeprecateDelegate(final boolean deprecate) {
-//		fDeprecate= deprecate;
-//	}
+	// public void setDeprecateDelegate(final boolean deprecate) {
+	// fDeprecate= deprecate;
+	// }
 
 	/**
 	 * Sets the file name patterns to use during qualified name updating.
@@ -360,23 +282,24 @@ public final class RenameModelElementDescriptor extends ScriptRefactoringDescrip
 	 * string) and '?' (any character) may be used.
 	 * </p>
 	 * <p>
-	 * Note: If file name patterns are set, qualified name updating must be
-	 * enabled by calling {@link #setUpdateQualifiedNames(boolean)}.
+	 * Note: If file name patterns are set, qualified name updating must be enabled
+	 * by calling {@link #setUpdateQualifiedNames(boolean)}.
 	 * </p>
 	 * <p>
 	 * Note: Qualified name updating is currently applicable to the Script elements
-	 * {@link IPackageFragment} and {@link IType}. The default is to use no
-	 * file name patterns (meaning that all files are processed).
+	 * {@link IPackageFragment} and {@link IType}. The default is to use no file
+	 * name patterns (meaning that all files are processed).
 	 * </p>
 	 *
 	 * @param patterns
 	 *            the non-empty file name patterns string
 	 */
-//	public void setFileNamePatterns(final String patterns) {
-//		Assert.isNotNull(patterns);
-//		Assert.isLegal(!"".equals(patterns), "Pattern must not be empty"); //$NON-NLS-1$ //$NON-NLS-2$
-//		fPatterns= patterns;
-//	}
+	// public void setFileNamePatterns(final String patterns) {
+	// Assert.isNotNull(patterns);
+	// Assert.isLegal(!"".equals(patterns), "Pattern must not be empty");
+	// //$NON-NLS-1$ //$NON-NLS-2$
+	// fPatterns= patterns;
+	// }
 
 	/**
 	 * Sets the Script element to be renamed.
@@ -391,46 +314,46 @@ public final class RenameModelElementDescriptor extends ScriptRefactoringDescrip
 	 */
 	public void setModelElement(final IModelElement element) {
 		Assert.isNotNull(element);
-		fModelElement= element;
+		fModelElement = element;
 	}
 
 	/**
-	 * Determines whether the the original Script element should be kept as
-	 * delegate to the renamed one.
+	 * Determines whether the the original Script element should be kept as delegate
+	 * to the renamed one.
 	 * <p>
-	 * Note: Keeping of original elements as delegates is currently applicable to the Script
-	 * elements {@link IMethod} and {@link IField}. The default is to not keep
-	 * the original as delegate.
+	 * Note: Keeping of original elements as delegates is currently applicable to
+	 * the Script elements {@link IMethod} and {@link IField}. The default is to not
+	 * keep the original as delegate.
 	 * </p>
 	 *
 	 * @param delegate
 	 *            <code>true</code> to keep the original, <code>false</code>
 	 *            otherwise
 	 */
-//	public void setKeepOriginal(final boolean delegate) {
-//		fDelegate= delegate;
-//	}
+	// public void setKeepOriginal(final boolean delegate) {
+	// fDelegate= delegate;
+	// }
 
 	/**
-	 * Determines which strategy should be used during similar declaration
-	 * updating.
+	 * Determines which strategy should be used during similar declaration updating.
 	 * <p>
-	 * Valid arguments are {@link #STRATEGY_EXACT}, {@link #STRATEGY_EMBEDDED}
-	 * or {@link #STRATEGY_SUFFIX}.
+	 * Valid arguments are {@link #STRATEGY_EXACT}, {@link #STRATEGY_EMBEDDED} or
+	 * {@link #STRATEGY_SUFFIX}.
 	 * </p>
 	 * <p>
-	 * Note: Similar declaration updating is currently applicable to Script elements of type
-	 * {@link IType}. The default is to use the {@link #STRATEGY_EXACT} match
-	 * strategy.
+	 * Note: Similar declaration updating is currently applicable to Script elements
+	 * of type {@link IType}. The default is to use the {@link #STRATEGY_EXACT}
+	 * match strategy.
 	 * </p>
 	 *
 	 * @param strategy
 	 *            the match strategy to use
 	 */
-//	public void setMatchStrategy(final int strategy) {
-//		Assert.isLegal(strategy == STRATEGY_EXACT || strategy == STRATEGY_EMBEDDED || strategy == STRATEGY_SUFFIX, "Wrong match strategy argument"); //$NON-NLS-1$
-//		fMatchStrategy= strategy;
-//	}
+	// public void setMatchStrategy(final int strategy) {
+	// Assert.isLegal(strategy == STRATEGY_EXACT || strategy == STRATEGY_EMBEDDED ||
+	// strategy == STRATEGY_SUFFIX, "Wrong match strategy argument"); //$NON-NLS-1$
+	// fMatchStrategy= strategy;
+	// }
 
 	/**
 	 * Sets the new name to rename the Script element to.
@@ -441,7 +364,7 @@ public final class RenameModelElementDescriptor extends ScriptRefactoringDescrip
 	public void setNewName(final String name) {
 		Assert.isNotNull(name);
 		Assert.isLegal(!"".equals(name), "Name must not be empty"); //$NON-NLS-1$//$NON-NLS-2$
-		fName= name;
+		fName = name;
 	}
 
 	/**
@@ -456,11 +379,12 @@ public final class RenameModelElementDescriptor extends ScriptRefactoringDescrip
 	 * </p>
 	 *
 	 * @param project
-	 *            the non-empty project name to set, or <code>null</code> for
-	 *            the workspace
+	 *            the non-empty project name to set, or <code>null</code> for the
+	 *            workspace
 	 *
 	 * @see #getProject()
 	 */
+	@Override
 	public void setProject(final String project) {
 		super.setProject(project);
 	}
@@ -468,59 +392,59 @@ public final class RenameModelElementDescriptor extends ScriptRefactoringDescrip
 	/**
 	 * Determines whether getter methods for the Script element should be renamed.
 	 * <p>
-	 * Note: Renaming of getter methods is applicable for {@link IField}
-	 * elements which do not represent enum constants only. The default is to
-	 * not rename any getter methods.
+	 * Note: Renaming of getter methods is applicable for {@link IField} elements
+	 * which do not represent enum constants only. The default is to not rename any
+	 * getter methods.
 	 * </p>
 	 *
 	 * @param rename
-	 *            <code>true</code> to rename getter methods,
-	 *            <code>false</code> otherwise
+	 *            <code>true</code> to rename getter methods, <code>false</code>
+	 *            otherwise
 	 */
-//	public void setRenameGetters(final boolean rename) {
-//		fRenameGetter= rename;
-//	}
+	// public void setRenameGetters(final boolean rename) {
+	// fRenameGetter= rename;
+	// }
 
 	/**
 	 * Determines whether setter methods for the Script element should be renamed.
 	 * <p>
-	 * Note: Renaming of setter methods is applicable for {@link IField}
-	 * elements which do not represent enum constants only. The default is to
-	 * not rename any setter methods.
+	 * Note: Renaming of setter methods is applicable for {@link IField} elements
+	 * which do not represent enum constants only. The default is to not rename any
+	 * setter methods.
 	 * </p>
 	 *
 	 * @param rename
-	 *            <code>true</code> to rename setter methods,
-	 *            <code>false</code> otherwise
+	 *            <code>true</code> to rename setter methods, <code>false</code>
+	 *            otherwise
 	 */
-//	public void setRenameSetters(final boolean rename) {
-//		fRenameSetter= rename;
-//	}
+	// public void setRenameSetters(final boolean rename) {
+	// fRenameSetter= rename;
+	// }
 
 	/**
 	 * Determines whether other Script elements in the hierarchy of the input
 	 * element should be renamed as well.
 	 * <p>
 	 * Note: Hierarchical updating is currently applicable for Script elements of
-	 * type {@link IPackageFragment}. The default is to not update Script
-	 * elements hierarchically.
+	 * type {@link IPackageFragment}. The default is to not update Script elements
+	 * hierarchically.
 	 * </p>
 	 *
 	 * @param update
-	 *            <code>true</code> to update hierarchically,
-	 *            <code>false</code> otherwise
+	 *            <code>true</code> to update hierarchically, <code>false</code>
+	 *            otherwise
 	 */
-//	public void setUpdateHierarchy(final boolean update) {
-//		fHierarchical= update;
-//	}
+	// public void setUpdateHierarchy(final boolean update) {
+	// fHierarchical= update;
+	// }
 
 	/**
 	 * Determines whether qualified names of the Script element should be renamed.
 	 * <p>
-	 * Qualified name updating adapts fully qualified names of the Script element
-	 * to be renamed in non-Script text files. Clients may specify file name
-	 * patterns by calling {@link #setFileNamePatterns(String)} to constrain the
-	 * set of text files to be processed.
+	 * Qualified name updating adapts fully qualified names of the Script element to
+	 * be renamed in non-Script text files. Clients may specify file name patterns
+	 * by calling {@link #setFileNamePatterns(String)} to constrain the set of text
+	 * files to be processed.
 	 * </p>
 	 * <p>
 	 * Note: Qualified name updating is currently applicable to the Script elements
@@ -529,18 +453,18 @@ public final class RenameModelElementDescriptor extends ScriptRefactoringDescrip
 	 * </p>
 	 *
 	 * @param update
-	 *            <code>true</code> to update qualified names,
-	 *            <code>false</code> otherwise
+	 *            <code>true</code> to update qualified names, <code>false</code>
+	 *            otherwise
 	 */
-//	public void setUpdateQualifiedNames(final boolean update) {
-//		fQualified= update;
-//	}
+	// public void setUpdateQualifiedNames(final boolean update) {
+	// fQualified= update;
+	// }
 
 	/**
 	 * Determines whether references to the Script element should be renamed.
 	 * <p>
-	 * Note: Reference updating is currently applicable to all Script element types except
-	 * {@link IPackageFragmentRoot}. The default is to not update references.
+	 * Note: Reference updating is currently applicable to all Script element types
+	 * except {@link IPackageFragmentRoot}. The default is to not update references.
 	 * </p>
 	 *
 	 * @param update
@@ -548,119 +472,89 @@ public final class RenameModelElementDescriptor extends ScriptRefactoringDescrip
 	 *            otherwise
 	 */
 	public void setUpdateReferences(final boolean update) {
-		fReferences= update;
+		fReferences = update;
 	}
 
 	/**
 	 * Determines whether similar declarations of the Script element should be
 	 * updated.
 	 * <p>
-	 * Note: Similar declaration updating is currently applicable to Script elements of type
-	 * {@link IType}. The default is to not update similar declarations.
+	 * Note: Similar declaration updating is currently applicable to Script elements
+	 * of type {@link IType}. The default is to not update similar declarations.
 	 * </p>
 	 *
 	 * @param update
 	 *            <code>true</code> to update similar declarations,
 	 *            <code>false</code> otherwise
 	 */
-//	public void setUpdateSimilarDeclarations(final boolean update) {
-//		fSimilarDeclarations= update;
-//	}
+	// public void setUpdateSimilarDeclarations(final boolean update) {
+	// fSimilarDeclarations= update;
+	// }
 
 	/**
 	 * Determines whether textual occurrences of the Script element should be
 	 * renamed.
 	 * <p>
-	 * Textual occurrence updating adapts textual occurrences of the Script
-	 * element to be renamed in Script comments and Script strings.
+	 * Textual occurrence updating adapts textual occurrences of the Script element
+	 * to be renamed in Script comments and Script strings.
 	 * </p>
 	 * <p>
-	 * Note: Textual occurrence updating is currently applicable to the Script elements
-	 * {@link IPackageFragment}, {@link IType} and {@link IField}. The default
-	 * is to not rename textual occurrences.
+	 * Note: Textual occurrence updating is currently applicable to the Script
+	 * elements {@link IPackageFragment}, {@link IType} and {@link IField}. The
+	 * default is to not rename textual occurrences.
 	 * </p>
 	 *
 	 * @param update
 	 *            <code>true</code> to update occurrences, <code>false</code>
 	 *            otherwise
 	 */
-//	public void setUpdateTextualOccurrences(final boolean update) {
-//		fTextual= update;
-//	}
+	// public void setUpdateTextualOccurrences(final boolean update) {
+	// fTextual= update;
+	// }
 
 	/**
 	 * {@inheritDoc}
 	 */
-/*	public RefactoringStatus validateDescriptor() {
-		RefactoringStatus status=new RefactoringStatus();
-		if (fName == null || "".equals(fName)) //$NON-NLS-1$
-			status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameResourceDescriptor_no_new_name));
-		if (fModelElement == null)
-			status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameModelElementDescriptor_no_java_element));
-		else {
-			final int type= fModelElement.getElementType();
-			if (type == IModelElement.JAVA_PROJECT && getProject() != null)
-				status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameModelElementDescriptor_project_constraint));
-			if (type == IModelElement.PACKAGE_FRAGMENT_ROOT && fReferences)
-				status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameModelElementDescriptor_reference_constraint));
-			if (fTextual) {
-				switch (type) {
-					case IModelElement.PACKAGE_FRAGMENT:
-					case IModelElement.TYPE:
-					case IModelElement.FIELD:
-						break;
-					default:
-						status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameModelElementDescriptor_textual_constraint));
-				}
-			}
-			if (fDeprecate) {
-				switch (type) {
-					case IModelElement.METHOD:
-					case IModelElement.FIELD:
-						break;
-					default:
-						status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameModelElementDescriptor_deprecation_constraint));
-				}
-			}
-			if (fDelegate) {
-				switch (type) {
-					case IModelElement.METHOD:
-					case IModelElement.FIELD:
-						break;
-					default:
-						status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameModelElementDescriptor_delegate_constraint));
-				}
-			}
-			if (fRenameGetter || fRenameSetter) {
-				if (type != IModelElement.FIELD)
-					status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameModelElementDescriptor_accessor_constraint));
-			}
-			if (fQualified) {
-				switch (type) {
-					case IModelElement.PACKAGE_FRAGMENT:
-					case IModelElement.TYPE:
-						break;
-					default:
-						status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameModelElementDescriptor_qualified_constraint));
-				}
-			}
-			if (fSimilarDeclarations) {
-				switch (type) {
-					case IModelElement.TYPE:
-						break;
-					default:
-						status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameModelElementDescriptor_similar_constraint));
-				}
-			}
-			if (fHierarchical) {
-				switch (type) {
-					case IModelElement.PACKAGE_FRAGMENT:
-						break;
-					default:
-						status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameModelElementDescriptor_hierarchical_constraint));
-				}
-			}
-		}
-		return status;
-	}*/
+	/*
+	 * public RefactoringStatus validateDescriptor() { RefactoringStatus status=new
+	 * RefactoringStatus(); if (fName == null || "".equals(fName)) //$NON-NLS-1$
+	 * status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.
+	 * RenameResourceDescriptor_no_new_name)); if (fModelElement == null)
+	 * status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.
+	 * RenameModelElementDescriptor_no_java_element)); else { final int type=
+	 * fModelElement.getElementType(); if (type == IModelElement.JAVA_PROJECT &&
+	 * getProject() != null)
+	 * status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.
+	 * RenameModelElementDescriptor_project_constraint)); if (type ==
+	 * IModelElement.PACKAGE_FRAGMENT_ROOT && fReferences)
+	 * status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.
+	 * RenameModelElementDescriptor_reference_constraint)); if (fTextual) { switch
+	 * (type) { case IModelElement.PACKAGE_FRAGMENT: case IModelElement.TYPE: case
+	 * IModelElement.FIELD: break; default:
+	 * status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.
+	 * RenameModelElementDescriptor_textual_constraint)); } } if (fDeprecate) {
+	 * switch (type) { case IModelElement.METHOD: case IModelElement.FIELD: break;
+	 * default:
+	 * status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.
+	 * RenameModelElementDescriptor_deprecation_constraint)); } } if (fDelegate) {
+	 * switch (type) { case IModelElement.METHOD: case IModelElement.FIELD: break;
+	 * default:
+	 * status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.
+	 * RenameModelElementDescriptor_delegate_constraint)); } } if (fRenameGetter ||
+	 * fRenameSetter) { if (type != IModelElement.FIELD)
+	 * status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.
+	 * RenameModelElementDescriptor_accessor_constraint)); } if (fQualified) {
+	 * switch (type) { case IModelElement.PACKAGE_FRAGMENT: case IModelElement.TYPE:
+	 * break; default:
+	 * status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.
+	 * RenameModelElementDescriptor_qualified_constraint)); } } if
+	 * (fSimilarDeclarations) { switch (type) { case IModelElement.TYPE: break;
+	 * default:
+	 * status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.
+	 * RenameModelElementDescriptor_similar_constraint)); } } if (fHierarchical) {
+	 * switch (type) { case IModelElement.PACKAGE_FRAGMENT: break; default:
+	 * status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.
+	 * RenameModelElementDescriptor_hierarchical_constraint)); } } } return status;
+	 * }
+	 */
 }

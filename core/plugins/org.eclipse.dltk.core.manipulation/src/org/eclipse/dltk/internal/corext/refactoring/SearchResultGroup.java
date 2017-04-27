@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,10 +29,10 @@ public class SearchResultGroup {
 	private final IResource fResource;
 	private final List<SearchMatch> fSearchMatches;
 
-	public SearchResultGroup(IResource res, SearchMatch[] matches){
+	public SearchResultGroup(IResource res, SearchMatch[] matches) {
 		Assert.isNotNull(matches);
-		fResource= res;
-		fSearchMatches= new ArrayList<SearchMatch>(Arrays.asList(matches));
+		fResource = res;
+		fSearchMatches = new ArrayList<>(Arrays.asList(matches));
 	}
 
 	public void add(SearchMatch match) {
@@ -48,25 +48,26 @@ public class SearchResultGroup {
 		return Collections.unmodifiableList(fSearchMatches);
 	}
 
-	public static IResource[] getResources(SearchResultGroup[] searchResultGroups){
-		Set<IResource> resourceSet= new HashSet<IResource>(searchResultGroups.length);
-		for (int i= 0; i < searchResultGroups.length; i++) {
+	public static IResource[] getResources(SearchResultGroup[] searchResultGroups) {
+		Set<IResource> resourceSet = new HashSet<>(searchResultGroups.length);
+		for (int i = 0; i < searchResultGroups.length; i++) {
 			resourceSet.add(searchResultGroups[i].getResource());
 		}
 		return resourceSet.toArray(new IResource[resourceSet.size()]);
 	}
 
-	public ISourceModule getSourceModule(){
+	public ISourceModule getSourceModule() {
 		if (getSearchResults() == null || getSearchResults().size() == 0)
 			return null;
 		return SearchUtils.getSourceModule(getSearchResults().get(0));
 	}
 
+	@Override
 	public String toString() {
-		StringBuffer buf= new StringBuffer(fResource.getFullPath().toString());
+		StringBuffer buf = new StringBuffer(fResource.getFullPath().toString());
 		buf.append('\n');
-		for (int i= 0; i < fSearchMatches.size(); i++) {
-			SearchMatch match= fSearchMatches.get(i);
+		for (int i = 0; i < fSearchMatches.size(); i++) {
+			SearchMatch match = fSearchMatches.get(i);
 			buf.append("  ").append(match.getOffset()).append(", ").append(match.getLength()); //$NON-NLS-1$//$NON-NLS-2$
 			buf.append(match.getAccuracy() == SearchMatch.A_ACCURATE ? "; acc" : "; inacc"); //$NON-NLS-1$//$NON-NLS-2$
 			if (match.isInsideDocComment())

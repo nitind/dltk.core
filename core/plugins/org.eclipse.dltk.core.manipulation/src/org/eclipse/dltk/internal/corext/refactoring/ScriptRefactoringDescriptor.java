@@ -1,18 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -38,112 +36,111 @@ import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringArguments;
 
-
 /**
  * Descriptor object of a script refactoring.
- * 
-	 *
+ *
+ *
  */
 public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 
 	/**
 	 * Predefined argument called <code>element&lt;Number&gt;</code>.
 	 * <p>
-	 * This argument should be used to describe the elements being refactored.
-	 * The value of this argument does not necessarily have to uniquely identify
-	 * the elements. However, it must be possible to uniquely identify the
-	 * elements using the value of this argument in conjunction with the values
-	 * of the other user-defined attributes.
+	 * This argument should be used to describe the elements being refactored. The
+	 * value of this argument does not necessarily have to uniquely identify the
+	 * elements. However, it must be possible to uniquely identify the elements
+	 * using the value of this argument in conjunction with the values of the other
+	 * user-defined attributes.
 	 * </p>
 	 * <p>
-	 * The element arguments are simply distinguished by appending a number to
-	 * the argument name, e.g. element1. The indices of this argument are non
+	 * The element arguments are simply distinguished by appending a number to the
+	 * argument name, e.g. element1. The indices of this argument are non
 	 * zero-based.
 	 * </p>
 	 */
-	public static final String ATTRIBUTE_ELEMENT= "element"; //$NON-NLS-1$
+	public static final String ATTRIBUTE_ELEMENT = "element"; //$NON-NLS-1$
 
 	/**
 	 * Predefined argument called <code>input</code>.
 	 * <p>
-	 * This argument should be used to describe the element being refactored.
-	 * The value of this argument does not necessarily have to uniquely identify
-	 * the input element. However, it must be possible to uniquely identify the
-	 * input element using the value of this argument in conjunction with the
-	 * values of the other user-defined attributes.
+	 * This argument should be used to describe the element being refactored. The
+	 * value of this argument does not necessarily have to uniquely identify the
+	 * input element. However, it must be possible to uniquely identify the input
+	 * element using the value of this argument in conjunction with the values of
+	 * the other user-defined attributes.
 	 * </p>
 	 */
-	public static final String ATTRIBUTE_INPUT= "input"; //$NON-NLS-1$
+	public static final String ATTRIBUTE_INPUT = "input"; //$NON-NLS-1$
 
 	/**
 	 * Predefined argument called <code>name</code>.
 	 * <p>
-	 * This argument should be used to name the element being refactored. The
-	 * value of this argument may be shown in the user interface.
+	 * This argument should be used to name the element being refactored. The value
+	 * of this argument may be shown in the user interface.
 	 * </p>
 	 */
-	public static final String ATTRIBUTE_NAME= "name"; //$NON-NLS-1$
+	public static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
 
 	/**
 	 * Predefined argument called <code>references</code>.
 	 * <p>
-	 * This argument should be used to describe whether references to the
-	 * elements being refactored should be updated as well. The value of this
-	 * argument is either <code>"true"</code> or <code>"false"</code>.
+	 * This argument should be used to describe whether references to the elements
+	 * being refactored should be updated as well. The value of this argument is
+	 * either <code>"true"</code> or <code>"false"</code>.
 	 * </p>
 	 */
-	public static final String ATTRIBUTE_REFERENCES= "references"; //$NON-NLS-1$
+	public static final String ATTRIBUTE_REFERENCES = "references"; //$NON-NLS-1$
 
 	/**
 	 * Predefined argument called <code>selection</code>.
 	 * <p>
-	 * This argument should be used to describe user input selections within a
-	 * text file. The value of this argument has the format "offset length".
+	 * This argument should be used to describe user input selections within a text
+	 * file. The value of this argument has the format "offset length".
 	 * </p>
 	 */
-	public static final String ATTRIBUTE_SELECTION= "selection"; //$NON-NLS-1$
+	public static final String ATTRIBUTE_SELECTION = "selection"; //$NON-NLS-1$
 
 	/** The version attribute */
-	private static final String ATTRIBUTE_VERSION= "version"; //$NON-NLS-1$
+	private static final String ATTRIBUTE_VERSION = "version"; //$NON-NLS-1$
 
 	/**
 	 * Constant describing the deprecation resolving flag.
 	 * <p>
 	 * Clients should set this flag to indicate that the refactoring can used to
-	 * resolve deprecation problems of members. Refactorings which can run on
-	 * binary targets, but require a source attachment to work correctly, should
-	 * set the <code>ARCHIVE_SOURCE_ATTACHMENT</code> flag as well.
+	 * resolve deprecation problems of members. Refactorings which can run on binary
+	 * targets, but require a source attachment to work correctly, should set the
+	 * <code>ARCHIVE_SOURCE_ATTACHMENT</code> flag as well.
 	 * </p>
 	 */
-	public static final int DEPRECATION_RESOLVING= 1 << 17;
+	public static final int DEPRECATION_RESOLVING = 1 << 17;
 
 	/**
 	 * Constant describing the archive importable flag.
 	 * <p>
-	 * Clients should set this flag to indicate that the refactoring can be
-	 * imported from a archive file. If this flag is set,
-	 * <code>ARCHIVE_REFACTORABLE</code> should be set as well.
+	 * Clients should set this flag to indicate that the refactoring can be imported
+	 * from a archive file. If this flag is set, <code>ARCHIVE_REFACTORABLE</code>
+	 * should be set as well.
 	 * </p>
 	 */
-	public static final int ARCHIVE_IMPORTABLE= 1 << 16;
+	public static final int ARCHIVE_IMPORTABLE = 1 << 16;
 
 	/**
 	 * Constant describing the jar refactorable flag.
 	 * <p>
 	 * Clients should set this flag to indicate that the refactoring can be
-	 * performed on a JAR file. Refactorings which can run on binary targets,
-	 * but require a source attachment to work correctly, should set the
+	 * performed on a JAR file. Refactorings which can run on binary targets, but
+	 * require a source attachment to work correctly, should set the
 	 * <code>JAR_SOURCE_ATTACHMENT</code> flag as well.
 	 * </p>
 	 */
-	public static final int ARCHIVE_REFACTORABLE= 1 << 19;
-	
+	public static final int ARCHIVE_REFACTORABLE = 1 << 19;
+
 	/** The version value 1.0 */
-	private static final String VALUE_VERSION_1_0= "1.0"; //$NON-NLS-1$
+	private static final String VALUE_VERSION_1_0 = "1.0"; //$NON-NLS-1$
 
 	/**
 	 * Converts the specified element to an input handle.
-	 * 
+	 *
 	 * @param project
 	 *            the project, or <code>null</code> for the workspace
 	 * @param element
@@ -151,9 +148,9 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	 * @return a corresponding input handle
 	 */
 	public static String elementToHandle(final String project, final IModelElement element) {
-		final String handle= element.getHandleIdentifier();
+		final String handle = element.getHandleIdentifier();
 		if (project != null && !(element instanceof IScriptProject)) {
-			final String id= element.getScriptProject().getHandleIdentifier();
+			final String id = element.getScriptProject().getHandleIdentifier();
 			return handle.substring(id.length());
 		}
 		return handle;
@@ -161,7 +158,7 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 
 	/**
 	 * Converts an input handle back to the corresponding script element.
-	 * 
+	 *
 	 * @param project
 	 *            the project, or <code>null</code> for the workspace
 	 * @param handle
@@ -175,7 +172,7 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 
 	/**
 	 * Converts an input handle back to the corresponding script element.
-	 * 
+	 *
 	 * @param project
 	 *            the project, or <code>null</code> for the workspace
 	 * @param handle
@@ -192,7 +189,7 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 
 	/**
 	 * Converts an input handle back to the corresponding script element.
-	 * 
+	 *
 	 * @param owner
 	 *            the working copy owner
 	 * @param project
@@ -205,29 +202,31 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	 * @return the corresponding script element, or <code>null</code> if no such
 	 *         element exists
 	 */
-	public static IModelElement handleToElement(final WorkingCopyOwner owner, final String project, final String handle, final boolean check) {
-		IModelElement element= null;
+	public static IModelElement handleToElement(final WorkingCopyOwner owner, final String project, final String handle,
+			final boolean check) {
+		IModelElement element = null;
 		if (owner != null)
-			element= DLTKCore.create(handle, owner);
+			element = DLTKCore.create(handle, owner);
 		else
-			element= DLTKCore.create(handle);
+			element = DLTKCore.create(handle);
 		if (element == null && project != null) {
-			final IScriptProject scriptProject= DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot()).getScriptProject(project);
-			final String identifier= scriptProject.getHandleIdentifier();
+			final IScriptProject scriptProject = DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot())
+					.getScriptProject(project);
+			final String identifier = scriptProject.getHandleIdentifier();
 			if (owner != null)
-				element= DLTKCore.create(identifier + handle, owner);
+				element = DLTKCore.create(identifier + handle, owner);
 			else
-				element= DLTKCore.create(identifier + handle);
+				element = DLTKCore.create(identifier + handle);
 		}
 		if (DLTKCore.DEBUG) {
 			System.err.println("TODo: ScriptRefactoringDescriptor add find Methods member in types..."); //$NON-NLS-1$
 		}
-//		if (check && element instanceof IMethod) {
-//			final IMethod method= (IMethod) element;
-//			final IMethod[] methods= method.getDeclaringType().findMethods(method);
-//			if (methods != null && methods.length > 0)
-//				element= methods[0];
-//		}
+		// if (check && element instanceof IMethod) {
+		// final IMethod method= (IMethod) element;
+		// final IMethod[] methods= method.getDeclaringType().findMethods(method);
+		// if (methods != null && methods.length > 0)
+		// element= methods[0];
+		// }
 		if (element != null && (!check || element.exists()))
 			return element;
 		return null;
@@ -236,20 +235,20 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	/**
 	 * Converts an input handle with the given prefix back to the corresponding
 	 * resource.
-	 * 
+	 *
 	 * @param project
 	 *            the project, or <code>null</code> for the workspace
 	 * @param handle
 	 *            the input handle
-	 * 
-	 * @return the corresponding resource, or <code>null</code> if no such
-	 *         resource exists
+	 *
+	 * @return the corresponding resource, or <code>null</code> if no such resource
+	 *         exists
 	 */
 	public static IResource handleToResource(final String project, final String handle) {
-		final IWorkspaceRoot root= ResourcesPlugin.getWorkspace().getRoot();
+		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		if ("".equals(handle)) //$NON-NLS-1$
 			return null;
-		final IPath path= Path.fromPortableString(handle);
+		final IPath path = Path.fromPortableString(handle);
 		if (path == null)
 			return null;
 		if (project != null && !"".equals(project)) //$NON-NLS-1$
@@ -259,12 +258,12 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 
 	/**
 	 * Converts the specified resource to an input handle.
-	 * 
+	 *
 	 * @param project
 	 *            the project, or <code>null</code> for the workspace
 	 * @param resource
 	 *            the resource
-	 * 
+	 *
 	 * @return the input handle
 	 */
 	public static String resourceToHandle(final String project, final IResource resource) {
@@ -274,14 +273,14 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	}
 
 	/** The map of arguments (element type: &lt;String, String&gt;) */
-	protected final Map fArguments;
+	protected final Map<String, String> fArguments;
 
 	/** The refactoring contribution, or <code>null</code> */
 	private ScriptRefactoringContribution fContribution;
 
 	/**
 	 * Creates a new script refactoring descriptor.
-	 * 
+	 *
 	 * @param contribution
 	 *            the refactoring contribution, or <code>null</code>
 	 * @param id
@@ -297,11 +296,13 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	 * @param flags
 	 *            the flags
 	 */
-	public ScriptRefactoringDescriptor(final ScriptRefactoringContribution contribution, final String id, final String project, final String description, final String comment, final Map arguments, final int flags) {
+	public ScriptRefactoringDescriptor(final ScriptRefactoringContribution contribution, final String id,
+			final String project, final String description, final String comment, final Map<String, String> arguments,
+			final int flags) {
 		super(id, project, description, comment, flags);
 		Assert.isNotNull(arguments);
-		fContribution= contribution;
-		fArguments= arguments;
+		fContribution = contribution;
+		fArguments = arguments;
 	}
 
 	/**
@@ -311,12 +312,13 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	 *            the unique id of the refactoring
 	 */
 	protected ScriptRefactoringDescriptor(final String id) {
-		this(id, null, DescriptorMessages.ScriptRefactoringDescriptor_not_available, null, new HashMap(), RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE);
+		this(id, null, DescriptorMessages.ScriptRefactoringDescriptor_not_available, null, new HashMap<>(),
+				RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE);
 	}
 
 	/**
 	 * Creates a new script refactoring descriptor.
-	 * 
+	 *
 	 * @param id
 	 *            the unique id of the refactoring
 	 * @param project
@@ -330,56 +332,60 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	 * @param flags
 	 *            the flags
 	 */
-	public ScriptRefactoringDescriptor(final String id, final String project, final String description, final String comment, final Map arguments, final int flags) {
+	public ScriptRefactoringDescriptor(final String id, final String project, final String description,
+			final String comment, final Map<String, String> arguments, final int flags) {
 		this(null, id, project, description, comment, arguments, flags);
 	}
 
 	/**
 	 * Creates refactoring arguments for this refactoring descriptor.
-	 * 
+	 *
 	 * @return the refactoring arguments
 	 */
 	public RefactoringArguments createArguments() {
-		final ScriptRefactoringArguments arguments= new ScriptRefactoringArguments(getProject());
-		for (final Iterator iterator= fArguments.entrySet().iterator(); iterator.hasNext();) {
-			final Map.Entry entry= (Entry) iterator.next();
-			final String name= (String) entry.getKey();
-			final String value= (String) entry.getValue();
+		final ScriptRefactoringArguments arguments = new ScriptRefactoringArguments(getProject());
+		for (final Iterator<Map.Entry<String, String>> iterator = fArguments.entrySet().iterator(); iterator
+				.hasNext();) {
+			final Map.Entry<String, String> entry = iterator.next();
+			final String name = entry.getKey();
+			final String value = entry.getValue();
 			if (name != null && !"".equals(name) && value != null) //$NON-NLS-1$
 				arguments.setAttribute(name, value);
 		}
 		return arguments;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public Refactoring createRefactoring(final RefactoringStatus status) throws CoreException {
-		Refactoring refactoring= null;
+		Refactoring refactoring = null;
 		if (fContribution != null)
-			refactoring= fContribution.createRefactoring(this);
+			refactoring = fContribution.createRefactoring(this);
 		else {
-			final RefactoringContribution contribution= RefactoringCore.getRefactoringContribution(getID());
+			final RefactoringContribution contribution = RefactoringCore.getRefactoringContribution(getID());
 			if (contribution instanceof ScriptRefactoringContribution) {
-				fContribution= (ScriptRefactoringContribution) contribution;
-				refactoring= fContribution.createRefactoring(this);
+				fContribution = (ScriptRefactoringContribution) contribution;
+				refactoring = fContribution.createRefactoring(this);
 			}
 		}
 		if (refactoring != null) {
 			if (refactoring instanceof IScriptableRefactoring) {
-				final RefactoringStatus result= ((IScriptableRefactoring) refactoring).initialize(createArguments());
+				final RefactoringStatus result = ((IScriptableRefactoring) refactoring).initialize(createArguments());
 				if (result.hasFatalError())
-					throw new CoreException(new Status(IStatus.ERROR, ScriptManipulation.ID_PLUGIN, 0, result.getMessageMatchingSeverity(RefactoringStatus.FATAL), null));
+					throw new CoreException(new Status(IStatus.ERROR, ScriptManipulation.ID_PLUGIN, 0,
+							result.getMessageMatchingSeverity(RefactoringStatus.FATAL), null));
 				status.merge(result);
 			} else
-				throw new CoreException(new Status(IStatus.ERROR, ScriptManipulation.ID_PLUGIN, 0, Messages.format(DescriptorMessages.ScriptRefactoringDescriptor_no_resulting_descriptor, getDescription()), null));
+				throw new CoreException(new Status(IStatus.ERROR, ScriptManipulation.ID_PLUGIN, 0,
+						Messages.format(DescriptorMessages.ScriptRefactoringDescriptor_no_resulting_descriptor,
+								getDescription()),
+						null));
 		}
 		return refactoring;
 	}
 
 	/**
 	 * Converts the specified element to an input handle.
-	 * 
+	 *
 	 * @param element
 	 *            the element
 	 * @return a corresponding input handle
@@ -391,17 +397,18 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 
 	/**
 	 * Returns the argument map
-	 * 
+	 *
 	 * @return the argument map.
 	 */
-	public Map getArguments() {
+	public Map<String, String> getArguments() {
 		populateArgumentMap();
-		return new HashMap(fArguments);
+		return new HashMap<>(fArguments);
 	}
-	
+
 	/**
 	 * Populates the refactoring descriptor argument map based on the specified
-	 * arguments. Subclasses should extend and add their arguments to {@link #fArguments}.
+	 * arguments. Subclasses should extend and add their arguments to
+	 * {@link #fArguments}.
 	 */
 	protected void populateArgumentMap() {
 		fArguments.put(ATTRIBUTE_VERSION, VALUE_VERSION_1_0);
@@ -409,7 +416,7 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 
 	/**
 	 * Returns the refactoring contribution.
-	 * 
+	 *
 	 * @return the refactoring contribution, or <code>null</code>
 	 */
 	public ScriptRefactoringContribution getContribution() {

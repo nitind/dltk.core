@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,8 +21,7 @@ import org.eclipse.dltk.core.IScriptProject;
  */
 public class ScriptProcessors {
 
-	public static String[] computeAffectedNatures(IModelElement element)
-			throws CoreException {
+	public static String[] computeAffectedNatures(IModelElement element) throws CoreException {
 		if (element instanceof IMember) {
 			// IMember member= (IMember)element;
 
@@ -31,9 +30,8 @@ public class ScriptProcessors {
 		return ResourceProcessors.computeAffectedNatures(project.getProject());
 	}
 
-	public static String[] computeAffectedNaturs(IModelElement[] elements)
-			throws CoreException {
-		Set<String> result = new HashSet<String>();
+	public static String[] computeAffectedNaturs(IModelElement[] elements) throws CoreException {
+		Set<String> result = new HashSet<>();
 		for (int i = 0; i < elements.length; i++) {
 			String[] natures = computeAffectedNatures(elements[i]);
 			for (int j = 0; j < natures.length; j++) {

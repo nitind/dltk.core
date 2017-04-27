@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,7 @@ import org.osgi.framework.BundleContext;
  */
 public class ScriptManipulationPlugin extends Plugin {
 
-	//The shared instance.
+	// The shared instance.
 	private static ScriptManipulationPlugin fgDefault;
 
 	/**
@@ -32,16 +32,12 @@ public class ScriptManipulationPlugin extends Plugin {
 		fgDefault = this;
 	}
 
-	/* (non-Scriptdoc)
-	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
-	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 	}
 
-	/* (non-Scriptdoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		fgDefault = null;
@@ -73,12 +69,13 @@ public class ScriptManipulationPlugin extends Plugin {
 			logErrorMessage(message);
 			return;
 		}
-		MultiStatus multi= new MultiStatus(getPluginId(), IStatusConstants.INTERNAL_ERROR, message, null);
+		MultiStatus multi = new MultiStatus(getPluginId(), IStatusConstants.INTERNAL_ERROR, message, null);
 		multi.add(status);
 		log(multi);
 	}
 
 	public static void log(Throwable e) {
-		log(new Status(IStatus.ERROR, getPluginId(), IStatusConstants.INTERNAL_ERROR, ScriptManipulationMessages.ScriptManipulationMessages_internalError, e));
+		log(new Status(IStatus.ERROR, getPluginId(), IStatusConstants.INTERNAL_ERROR,
+				ScriptManipulationMessages.ScriptManipulationMessages_internalError, e));
 	}
 }

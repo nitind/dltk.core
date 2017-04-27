@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,23 +25,23 @@ import org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor;
 import org.eclipse.ltk.core.refactoring.participants.SharableParticipants;
 import org.eclipse.ltk.core.refactoring.participants.ValidateEditChecker;
 
-
 public abstract class RefactoringModifications {
 
 	private ResourceModifications fResourceModifications;
 
 	public RefactoringModifications() {
-		fResourceModifications= new ResourceModifications();
+		fResourceModifications = new ResourceModifications();
 	}
-	
+
 	public ResourceModifications getResourceModifications() {
 		return fResourceModifications;
 	}
-	
-	public abstract RefactoringParticipant[] loadParticipants(RefactoringStatus status, RefactoringProcessor owner, String[] natures, SharableParticipants shared);
+
+	public abstract RefactoringParticipant[] loadParticipants(RefactoringStatus status, RefactoringProcessor owner,
+			String[] natures, SharableParticipants shared);
 
 	public abstract void buildDelta(IResourceChangeDescriptionFactory builder);
-	
+
 	public void buildValidateEdits(ValidateEditChecker checker) {
 		// Default implementation does nothing.
 	}
@@ -49,14 +49,14 @@ public abstract class RefactoringModifications {
 	protected void createIncludingParents(IContainer container) {
 		while (container != null && !(container.exists() || getResourceModifications().willExist(container))) {
 			getResourceModifications().addCreate(container);
-			container= container.getParent();
+			container = container.getParent();
 		}
 	}
 
 	protected IResource[] collectResourcesOfInterest(IScriptFolder source) throws CoreException {
 		IModelElement[] children = source.getChildren();
-		int childOfInterest = IModelElement.SOURCE_MODULE;		
-		ArrayList<IResource> result = new ArrayList<IResource>(children.length);
+		int childOfInterest = IModelElement.SOURCE_MODULE;
+		ArrayList<IResource> result = new ArrayList<>(children.length);
 		for (int i = 0; i < children.length; i++) {
 			IModelElement child = children[i];
 			if (child.getElementType() == childOfInterest && child.getResource() != null) {
@@ -65,22 +65,22 @@ public abstract class RefactoringModifications {
 		}
 		// Gather non-java resources
 		Object[] nonScriptResources = source.getForeignResources();
-		for (int i= 0; i < nonScriptResources.length; i++) {
-			Object element= nonScriptResources[i];
+		for (int i = 0; i < nonScriptResources.length; i++) {
+			Object element = nonScriptResources[i];
 			if (element instanceof IResource) {
 				result.add((IResource) element);
 			}
 		}
 		return result.toArray(new IResource[result.size()]);
 	}
-	
+
 	protected IFile getBuildpathFile(IResource resource) {
-		IProject project= resource.getProject();
+		IProject project = resource.getProject();
 		if (project == null)
 			return null;
-		IResource result= project.findMember(".classpath"); //$NON-NLS-1$
+		IResource result = project.findMember(".classpath"); //$NON-NLS-1$
 		if (result instanceof IFile)
-			return (IFile)result;
+			return (IFile) result;
 		return null;
 	}
 }
