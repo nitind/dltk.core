@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 NumberFour AG
+ * Copyright (c) 2013, 2017 NumberFour AG and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -58,9 +58,9 @@ public class SetContainerEventsTest extends Assert {
 		ProblemTestUtil.assertNoProblems(project.get());
 	}
 
-	final List<IModelElementDelta> added = new ArrayList<IModelElementDelta>();
-	final List<IModelElementDelta> changed = new ArrayList<IModelElementDelta>();
-	final List<IModelElementDelta> removed = new ArrayList<IModelElementDelta>();
+	final List<IModelElementDelta> added = new ArrayList<>();
+	final List<IModelElementDelta> changed = new ArrayList<>();
+	final List<IModelElementDelta> removed = new ArrayList<>();
 
 	final IElementChangedListener listener = new IElementChangedListener() {
 		@Override
@@ -99,7 +99,7 @@ public class SetContainerEventsTest extends Assert {
 
 	// @Test
 	// Disabled due to http://eclip.se/458130
-	public void setContainer() throws ModelException,IOException {
+	public void setContainer() throws ModelException, IOException {
 		final File folder1 = temp.newFolder("folder1");
 		DLTKCore.addElementChangedListener(listener,
 				IResourceChangeEvent.POST_CHANGE);
@@ -119,12 +119,13 @@ public class SetContainerEventsTest extends Assert {
 	}
 
 	@Test
-	public void changeContainer() throws ModelException,IOException {
+	public void changeContainer() throws ModelException, IOException {
 		final File folder1 = temp.newFolder("folder1");
 		final File folder2 = temp.newFolder("folder2");
 		DLTKCore.setBuildpathContainer(TestContainer2.CONTAINER_ID,
 				new IScriptProject[] { project.getScriptProject() },
-				new IBuildpathContainer[] { new TestContainer2(folder1) }, null);
+				new IBuildpathContainer[] { new TestContainer2(folder1) },
+				null);
 		DLTKCore.addElementChangedListener(listener,
 				IResourceChangeEvent.POST_CHANGE);
 		try {
@@ -145,10 +146,10 @@ public class SetContainerEventsTest extends Assert {
 		assertEquals(0, removed.size());
 		assertEquals(2, changed.size());
 		assertEquals(project.getScriptProject(), changed.get(0).getElement());
-		assertEquals("folder2",
-				((IProjectFragment) changed.get(1).getElement()).getPath()
-						.lastSegment());
-		assertTrue((changed.get(1).getFlags() & IModelElementDelta.F_ADDED_TO_BUILDPATH) != 0);
+		assertEquals("folder2", ((IProjectFragment) changed.get(1).getElement())
+				.getPath().lastSegment());
+		assertTrue((changed.get(1).getFlags()
+				& IModelElementDelta.F_ADDED_TO_BUILDPATH) != 0);
 	}
 
 }

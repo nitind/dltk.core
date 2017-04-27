@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -124,7 +124,8 @@ public class DOMSerializer {
 				for (int i = 0; i < children.length; i++) {
 					serializeNode(children[i], writer, indentLevel + indent);
 				}
-				if (children[children.length - 1].getNodeType() == Node.ELEMENT_NODE) {
+				if (children[children.length - 1]
+						.getNodeType() == Node.ELEMENT_NODE) {
 					writer.write(indentLevel);
 				}
 				writer.write("</" + name + ">");
@@ -189,7 +190,8 @@ public class DOMSerializer {
 			String attributeSeperator = " ";
 			// If we only have one attribute write it on the same line
 			// otherwise indent
-			if (displayAttributesOnSeperateLine && attributes.getLength() != 1) {
+			if (displayAttributesOnSeperateLine
+					&& attributes.getLength() != 1) {
 				attributeSeperator = lineSeparator + indentLevel + indent;
 			}
 			// Double indentLevel to match parent element and then one
@@ -205,7 +207,7 @@ public class DOMSerializer {
 	private Node[] collectChildren(Node parent) {
 		final NodeList children = parent.getChildNodes();
 		if (children != null && children.getLength() > 0) {
-			final List<Node> result = new ArrayList<Node>();
+			final List<Node> result = new ArrayList<>();
 			for (int i = 0; i < children.getLength(); i++) {
 				final Node child = children.item(i);
 				if (child == null) {
@@ -218,7 +220,7 @@ public class DOMSerializer {
 				result.add(child);
 			}
 			if (!result.isEmpty()) {
-				return (Node[]) result.toArray(new Node[result.size()]);
+				return result.toArray(new Node[result.size()]);
 			}
 		}
 		return null;

@@ -1,19 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.tests.ddp;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-
-import junit.framework.Test;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -29,12 +26,14 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 
-public class CoreDDPTests extends SuiteOfTestCases {	
+import junit.framework.Test;
+
+public class CoreDDPTests extends SuiteOfTestCases {
 
 	public CoreDDPTests(String name) {
 		super(name);
 	}
-	
+
 	public static Test suite() {
 		return new Suite(CoreDDPTests.class);
 	}
@@ -45,7 +44,7 @@ public class CoreDDPTests extends SuiteOfTestCases {
 		private FixedAnswerGoalEvaluator(IGoal goal, IEvaluatedType answer) {
 			super(goal);
 			this.answer = answer;
-		}		
+		}
 
 		@Override
 		public Object produceResult() {
@@ -58,36 +57,39 @@ public class CoreDDPTests extends SuiteOfTestCases {
 		}
 
 		@Override
-		public IGoal[] subGoalDone(IGoal goal2, Object result, GoalState state) {
+		public IGoal[] subGoalDone(IGoal goal2, Object result,
+				GoalState state) {
 			return IGoal.NO_GOALS;
 		}
-				
-		
+
 	}
 
-	private static final class SingleDependentGoalEvaluator extends GoalEvaluator {
+	private static final class SingleDependentGoalEvaluator
+			extends GoalEvaluator {
 		private final IEvaluatedType answer;
 
 		private final IGoal[] dependents;
 
-//		private int state = 0;
-		
+		// private int state = 0;
+
 		private int produceCalls = 0;
-		
+
 		private int produceTypeCalls = 0;
 
-		private SingleDependentGoalEvaluator(IGoal goal, IGoal dependent, IEvaluatedType answer) {
+		private SingleDependentGoalEvaluator(IGoal goal, IGoal dependent,
+				IEvaluatedType answer) {
 			super(goal);
 			this.dependents = new IGoal[] { dependent };
 			this.answer = answer;
 		}
 
-		private SingleDependentGoalEvaluator(IGoal goal, IGoal[] dependents, Object answer) {
+		private SingleDependentGoalEvaluator(IGoal goal, IGoal[] dependents,
+				Object answer) {
 			super(goal);
 			this.dependents = dependents;
 			this.answer = (IEvaluatedType) answer;
 		}
-	
+
 		@Override
 		public IGoal[] init() {
 			++produceCalls;
@@ -95,9 +97,11 @@ public class CoreDDPTests extends SuiteOfTestCases {
 		}
 
 		@Override
-		public IGoal[] subGoalDone(IGoal goal2, Object result, GoalState _state) {
+		public IGoal[] subGoalDone(IGoal goal2, Object result,
+				GoalState _state) {
 			++produceCalls;
-			assertTrue(result instanceof MyNum || _state == GoalState.RECURSIVE);			
+			assertTrue(
+					result instanceof MyNum || _state == GoalState.RECURSIVE);
 			return IGoal.NO_GOALS;
 		}
 
@@ -106,16 +110,12 @@ public class CoreDDPTests extends SuiteOfTestCases {
 			++produceTypeCalls;
 			return answer;
 		}
-		
+
 		public void assertState() {
 			assertEquals(1, produceTypeCalls);
 			assertEquals(1 + dependents.length, produceCalls);
 		}
 
-		public int getProduceCalls() {
-			return produceCalls;
-		}
-		
 	}
 
 	class MyNum implements IEvaluatedType {
@@ -144,25 +144,20 @@ public class CoreDDPTests extends SuiteOfTestCases {
 		final Expression y = new SimpleReference(0, 0, "y");
 		final Expression num = new NumericLiteral(0, 0, 0);
 
-		IGoalEvaluatorFactory factory = new IGoalEvaluatorFactory() {
-
-			@Override
-			public GoalEvaluator createEvaluator(IGoal goal) {
-				if (goal instanceof ExpressionTypeGoal) {
-					ExpressionTypeGoal egoal = (ExpressionTypeGoal) goal;
-					ASTNode expr = egoal.getExpression();
-					if (expr == x)
-						return new SingleDependentGoalEvaluator(goal, new ExpressionTypeGoal(null, y),
-								new MyNum());
-					if (expr == y)
-						return new SingleDependentGoalEvaluator(goal, new ExpressionTypeGoal(null, num),
-								new MyNum());
-					if (expr == num)
-						return new FixedAnswerGoalEvaluator(goal, new MyNum());
-				}
-				return null;
+		IGoalEvaluatorFactory factory = goal -> {
+			if (goal instanceof ExpressionTypeGoal) {
+				ExpressionTypeGoal egoal = (ExpressionTypeGoal) goal;
+				ASTNode expr = egoal.getExpression();
+				if (expr == x)
+					return new SingleDependentGoalEvaluator(goal,
+							new ExpressionTypeGoal(null, y), new MyNum());
+				if (expr == y)
+					return new SingleDependentGoalEvaluator(goal,
+							new ExpressionTypeGoal(null, num), new MyNum());
+				if (expr == num)
+					return new FixedAnswerGoalEvaluator(goal, new MyNum());
 			}
-
+			return null;
 		};
 
 		final ITypeInferencer man = new DefaultTypeInferencer(factory);
@@ -177,9 +172,9 @@ public class CoreDDPTests extends SuiteOfTestCases {
 		final Expression x = new SimpleReference(0, 0, "x");
 		final Expression y = new SimpleReference(0, 0, "y");
 		final Expression z = new SimpleReference(0, 0, "z");
-		final Expression num = new NumericLiteral(0,0,0);
-		
-		final Collection<GoalEvaluator> evaluators = new ArrayList<GoalEvaluator>();
+		final Expression num = new NumericLiteral(0, 0, 0);
+
+		final Collection<GoalEvaluator> evaluators = new ArrayList<>();
 		IGoalEvaluatorFactory factory = new IGoalEvaluatorFactory() {
 
 			public GoalEvaluator createEvaluator2(IGoal goal) {
@@ -187,28 +182,33 @@ public class CoreDDPTests extends SuiteOfTestCases {
 					ExpressionTypeGoal egoal = (ExpressionTypeGoal) goal;
 					ASTNode expr = egoal.getExpression();
 					if (expr == x)
-						return new SingleDependentGoalEvaluator(goal, new IGoal[] {
-								new ExpressionTypeGoal(null, y), new ExpressionTypeGoal(null, z) }, new MyNum());
+						return new SingleDependentGoalEvaluator(goal,
+								new IGoal[] { new ExpressionTypeGoal(null, y),
+										new ExpressionTypeGoal(null, z) },
+								new MyNum());
 					if (expr == y)
 						return new SingleDependentGoalEvaluator(goal,
-								new IGoal[] { new ExpressionTypeGoal(null, z) }, new MyNum());
+								new IGoal[] { new ExpressionTypeGoal(null, z) },
+								new MyNum());
 					if (expr == z)
-						return new SingleDependentGoalEvaluator(goal, new IGoal[] {
-								new ExpressionTypeGoal(null, num), new ExpressionTypeGoal(null, y) }, new MyNum());
+						return new SingleDependentGoalEvaluator(goal,
+								new IGoal[] { new ExpressionTypeGoal(null, num),
+										new ExpressionTypeGoal(null, y) },
+								new MyNum());
 					if (expr == num)
 						return new FixedAnswerGoalEvaluator(goal, new MyNum());
 				}
 				return null;
 			}
-			
+
 			@Override
 			public GoalEvaluator createEvaluator(IGoal goal) {
 				GoalEvaluator result = createEvaluator2(goal);
-				if (result != null) 
+				if (result != null)
 					evaluators.add(result);
 				return result;
 			}
-			
+
 		};
 
 		final ITypeInferencer man = new DefaultTypeInferencer(factory);
@@ -217,8 +217,9 @@ public class CoreDDPTests extends SuiteOfTestCases {
 		IEvaluatedType answer = man.evaluateType(rootGoal, -1);
 
 		assertTrue(answer instanceof MyNum);
-		for (Iterator<GoalEvaluator> iter = evaluators.iterator(); iter.hasNext();) {
-			GoalEvaluator ev = (GoalEvaluator) iter.next();
+		for (Iterator<GoalEvaluator> iter = evaluators.iterator(); iter
+				.hasNext();) {
+			GoalEvaluator ev = iter.next();
 			if (ev instanceof SingleDependentGoalEvaluator) {
 				SingleDependentGoalEvaluator sdge = (SingleDependentGoalEvaluator) ev;
 				sdge.assertState();

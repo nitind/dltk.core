@@ -76,8 +76,8 @@ public class SourceModuleInfoCacheTest extends Assert {
 		assertNotNull(SourceParserUtil.parse(module, null));
 		assertThat(module, IS_CACHED);
 		assertEquals(1, getCache().size());
-		((IFile) module.getResource()).create(new ByteArrayInputStream(
-				new byte[0]), false, null);
+		((IFile) module.getResource())
+				.create(new ByteArrayInputStream(new byte[0]), false, null);
 		// assertEquals(0, getCache().size());
 		assertThat(module, not(IS_CACHED));
 	}
@@ -176,7 +176,7 @@ public class SourceModuleInfoCacheTest extends Assert {
 		final IScriptFolder folder = project.getScriptFolder("src", "folder1");
 		assertNotNull(folder);
 		final int capacity = getCache().capacity();
-		final List<ISourceModule> modules = new ArrayList<ISourceModule>();
+		final List<ISourceModule> modules = new ArrayList<>();
 		project.getWorkspace().run(monitor -> {
 			for (int i = 0; i < capacity; ++i) {
 				modules.add(folder.createSourceModule("m" + i + ".txt", "",

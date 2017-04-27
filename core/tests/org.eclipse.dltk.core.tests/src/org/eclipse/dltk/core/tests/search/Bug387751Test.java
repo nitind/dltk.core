@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 NumberFour AG
+ * Copyright (c) 2012, 2017 NumberFour AG and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -27,7 +27,6 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IModelElementVisitor;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
@@ -96,8 +95,8 @@ public class Bug387751Test extends Assert {
 				SearchEngine.createSearchScope(project.getScriptProject()),
 				"Foo");
 		assertEquals(1, types.size());
-		assertEquals(project.getSourceModule("", "test.txt"), types.get(0)
-				.getSourceModule());
+		assertEquals(project.getSourceModule("", "test.txt"),
+				types.get(0).getSourceModule());
 	}
 
 	/**
@@ -105,8 +104,8 @@ public class Bug387751Test extends Assert {
 	 * the project
 	 */
 	@Test
-	public void searchExternalLibraryProjectScope() throws IOException,
-			CoreException {
+	public void searchExternalLibraryProjectScope()
+			throws IOException, CoreException {
 		final IFile file = project.getFile("test.txt");
 		addExternalLibraryFromFile(file, file.getName());
 		file.delete(true, null);
@@ -127,8 +126,8 @@ public class Bug387751Test extends Assert {
 	 * the external module
 	 */
 	@Test
-	public void searchExternalLibraryModuleScope() throws IOException,
-			CoreException {
+	public void searchExternalLibraryModuleScope()
+			throws IOException, CoreException {
 		final IFile file = project.getFile("test.txt");
 		addExternalLibraryFromFile(file, file.getName());
 		file.delete(true, null);
@@ -155,8 +154,8 @@ public class Bug387751Test extends Assert {
 		addExternalLibraryFromFile(file, "tests/" + file.getName());
 		file.delete(true, null);
 		addBuildpathEntry(project.getScriptProject(), DLTKCore.newLibraryEntry(
-				getFullPath(temp.getRoot()), BuildpathEntry.NO_ACCESS_RULES,
-				BuildpathEntry.NO_EXTRA_ATTRIBUTES, BuildpathEntry.INCLUDE_ALL,
+				getFullPath(temp.getRoot()), IBuildpathEntry.NO_ACCESS_RULES,
+				IBuildpathEntry.NO_EXTRA_ATTRIBUTES, BuildpathEntry.INCLUDE_ALL,
 				new IPath[] { new Path("tests/") }, false /* not exported */,
 				true));
 
@@ -172,10 +171,10 @@ public class Bug387751Test extends Assert {
 
 	private List<IType> searchAllTypeNames(final IDLTKSearchScope scope,
 			final String name) throws ModelException {
-		final List<IType> types = new ArrayList<IType>();
+		final List<IType> types = new ArrayList<>();
 		new SearchEngine((WorkingCopyOwner) null).searchAllTypeNames(null, 0,
-				name.toCharArray(), SearchPattern.R_EXACT_MATCH
-						| SearchPattern.R_CASE_SENSITIVE,
+				name.toCharArray(),
+				SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE,
 				IDLTKSearchConstants.TYPE, scope, new TypeNameMatchRequestor() {
 					@Override
 					public void acceptTypeNameMatch(TypeNameMatch match) {
@@ -186,15 +185,12 @@ public class Bug387751Test extends Assert {
 	}
 
 	private List<ISourceModule> listModules() throws ModelException {
-		final List<ISourceModule> modules = new ArrayList<ISourceModule>();
-		project.getScriptProject().accept(new IModelElementVisitor() {
-			@Override
-			public boolean visit(IModelElement element) {
-				if (element instanceof ISourceModule) {
-					modules.add((ISourceModule) element);
-				}
-				return element.getElementType() < IModelElement.SOURCE_MODULE;
+		final List<ISourceModule> modules = new ArrayList<>();
+		project.getScriptProject().accept(element -> {
+			if (element instanceof ISourceModule) {
+				modules.add((ISourceModule) element);
 			}
+			return element.getElementType() < IModelElement.SOURCE_MODULE;
 		});
 		return modules;
 	}
@@ -202,19 +198,12 @@ public class Bug387751Test extends Assert {
 	private void addExternalLibraryFromFile(IFile file, String filename)
 			throws IOException, CoreException {
 		final File externalFile = new File(temp.getRoot(), filename);
-		final InputStream input = file.getContents();
-		try {
+
+		try (final InputStream input = file.getContents()) {
 			Util.copy(externalFile, input);
-		} finally {
-			try {
-				input.close();
-			} catch (IOException e) {
-				// ignore
-			}
 		}
-		addBuildpathEntry(project.getScriptProject(),
-				DLTKCore.newExtLibraryEntry(getFullPath(externalFile
-						.getParentFile())));
+		addBuildpathEntry(project.getScriptProject(), DLTKCore
+				.newExtLibraryEntry(getFullPath(externalFile.getParentFile())));
 	}
 
 	private IPath getFullPath(File file) {
@@ -224,7 +213,7 @@ public class Bug387751Test extends Assert {
 
 	private void addBuildpathEntry(IScriptProject scriptProject,
 			IBuildpathEntry entry) throws ModelException {
-		final List<IBuildpathEntry> buildpath = new ArrayList<IBuildpathEntry>();
+		final List<IBuildpathEntry> buildpath = new ArrayList<>();
 		buildpath.add(entry);
 		Collections.addAll(buildpath, scriptProject.getRawBuildpath());
 		scriptProject.setRawBuildpath(

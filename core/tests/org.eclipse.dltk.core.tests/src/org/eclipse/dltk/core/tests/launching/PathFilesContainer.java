@@ -31,7 +31,8 @@ public class PathFilesContainer {
 		accept(visitor, -1, monitor);
 	}
 
-	public void accept(IFileVisitor visitor, int deep, IProgressMonitor monitor) {
+	public void accept(IFileVisitor visitor, int deep,
+			IProgressMonitor monitor) {
 		if (monitor.isCanceled()) {
 			return;
 		}
@@ -44,7 +45,7 @@ public class PathFilesContainer {
 		final Iterator<?> it = env.keySet().iterator();
 		while (it.hasNext()) {
 			final String name = (String) it.next();
-			if (name.compareToIgnoreCase(PATH) == 0) { //$NON-NLS-1$
+			if (name.compareToIgnoreCase(PATH) == 0) { // $NON-NLS-1$
 				path = (String) env.get(name);
 			}
 		}
@@ -54,18 +55,20 @@ public class PathFilesContainer {
 		}
 
 		// Folder list
-		final String separator = Platform.getOS().equals(Platform.OS_WIN32) ? ";" : ":"; //$NON-NLS-1$ $NON-NLS-1$
+		final String separator = Platform.getOS().equals(Platform.OS_WIN32)
+				? ";" //$NON-NLS-1$
+				: ":"; // $NON-NLS-1$
 
-		final List<IPath> folders = new ArrayList<IPath>();
+		final List<IPath> folders = new ArrayList<>();
 		String[] res = path.split(separator);
 		for (int i = 0; i < res.length; i++) {
 			folders.add(Path.fromOSString(res[i]));
 		}
 
-		ArrayList<IFileHandle> searchedFiles = new ArrayList<IFileHandle>();
+		ArrayList<IFileHandle> searchedFiles = new ArrayList<>();
 		final Iterator<IPath> iter = folders.iterator();
 		while (iter.hasNext()) {
-			final IPath folder = (IPath) iter.next();
+			final IPath folder = iter.next();
 
 			if (folder != null) {
 				IFileHandle f = environment.getFile(folder);
@@ -80,9 +83,9 @@ public class PathFilesContainer {
 	 * Searches the specified directory recursively for installed Interpreters,
 	 * adding each detected Interpreter to the <code>found</code> list. Any
 	 * directories specified in the <code>ignore</code> are not traversed.
-	 * 
+	 *
 	 * @param visitor
-	 * 
+	 *
 	 * @param ry
 	 * @param found
 	 * @param types
@@ -92,7 +95,8 @@ public class PathFilesContainer {
 	 * @param searchedFiles
 	 */
 	protected void visitFolder(IFileVisitor visitor, IFileHandle directory,
-			IProgressMonitor monitor, int deep, ArrayList<IFileHandle> searchedFiles) {
+			IProgressMonitor monitor, int deep,
+			ArrayList<IFileHandle> searchedFiles) {
 		if (deep == 0) {
 			return;
 		}
@@ -110,7 +114,7 @@ public class PathFilesContainer {
 			return;
 		}
 
-		List<?> subDirs = new ArrayList<Object>();
+		List<?> subDirs = new ArrayList<>();
 		for (int i = 0; i < childFiles.length; i++) {
 			if (monitor.isCanceled()) {
 				return;

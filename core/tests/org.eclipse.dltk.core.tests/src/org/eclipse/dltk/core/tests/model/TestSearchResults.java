@@ -31,7 +31,7 @@ public class TestSearchResults extends SearchRequestor {
 		matches.add(match);
 	}
 
-	private List<SearchMatch> matches = new ArrayList<SearchMatch>();
+	private List<SearchMatch> matches = new ArrayList<>();
 
 	public int size() {
 		return matches.size();
@@ -47,8 +47,8 @@ public class TestSearchResults extends SearchRequestor {
 
 	public void assertSourceModule(String name) {
 		if (locate(ISourceModule.class, name, true) == null) {
-			Assert.fail("Not found " + name + ":"
-					+ ISourceModule.class.getName());
+			Assert.fail(
+					"Not found " + name + ":" + ISourceModule.class.getName());
 		}
 	}
 
@@ -78,8 +78,8 @@ public class TestSearchResults extends SearchRequestor {
 			Class<? extends IModelElement> modelElementClass,
 			String modelElementName, boolean allowAncestorCheck) {
 		Assert.assertNotNull(modelElementClass);
-		Assert.assertTrue(IModelElement.class
-				.isAssignableFrom(modelElementClass));
+		Assert.assertTrue(
+				IModelElement.class.isAssignableFrom(modelElementClass));
 		for (final SearchMatch match : matches) {
 			final IModelElement element;
 			if (modelElementClass.isInstance(match.getElement())) {

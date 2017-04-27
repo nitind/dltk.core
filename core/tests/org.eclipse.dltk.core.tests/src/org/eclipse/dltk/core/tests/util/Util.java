@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.tests.util;
 
@@ -25,10 +24,10 @@ public class Util {
 
 	/**
 	 * Generate a display string from the given String.
-	 * 
+	 *
 	 * @param inputString
 	 *            the given input string
-	 * 
+	 *
 	 */
 	public static String displayString(String inputString) {
 		return displayString(inputString, 0);
@@ -51,43 +50,43 @@ public class Util {
 	 * <p>
 	 * Example of use: <o>
 	 * <li>
-	 * 
+	 *
 	 * <pre>
 	 * input string = &quot;abc\ndef\tghi&quot;,
 	 * indent = 3
 	 * result = &quot;\&quot;\t\t\tabc\\n&quot; +
 	 * 			&quot;\t\t\tdef\tghi\&quot;&quot;
 	 * </pre>
-	 * 
+	 *
 	 * </li>
 	 * <li>
-	 * 
+	 *
 	 * <pre>
 	 * input string = &quot;abc\ndef\tghi\n&quot;,
 	 * indent = 3
 	 * result = &quot;\&quot;\t\t\tabc\\n&quot; +
 	 * 			&quot;\t\t\tdef\tghi\\n\&quot;&quot;
 	 * </pre>
-	 * 
+	 *
 	 * </li>
 	 * <li>
-	 * 
+	 *
 	 * <pre>
 	 * input string = &quot;abc\r\ndef\tghi\r\n&quot;,
 	 * indent = 3
 	 * result = &quot;\&quot;\t\t\tabc\\r\\n&quot; +
 	 * 			&quot;\t\t\tdef\tghi\\r\\n\&quot;&quot;
 	 * </pre>
-	 * 
+	 *
 	 * </li>
 	 * </ol>
 	 * </p>
-	 * 
+	 *
 	 * @param inputString
 	 *            the given input string
 	 * @param indent
 	 *            number of tabs are added at the begining of each line.
-	 * 
+	 *
 	 * @return the displayed string
 	 */
 	public static String displayString(String inputString, int indent) {
@@ -205,44 +204,39 @@ public class Util {
 	public static void unzip(String zipPath, String destDirPath)
 			throws IOException {
 
-		InputStream zipIn = new FileInputStream(zipPath);
-		byte[] buf = new byte[8192];
-		File destDir = new File(destDirPath);
-		ZipInputStream zis = new ZipInputStream(zipIn);
-		FileOutputStream fos = null;
-		try {
-			ZipEntry zEntry;
-			while ((zEntry = zis.getNextEntry()) != null) {
-				// if it is empty directory, create it
-				if (zEntry.isDirectory()) {
-					new File(destDir, zEntry.getName()).mkdirs();
-					continue;
-				}
-				// if it is a file, extract it
-				File outFile = new File(destDir, zEntry.getName());
-				// create directory for a file
-				outFile.getParentFile().mkdirs();
-				// write file
-				fos = new FileOutputStream(outFile);
-				int n = 0;
-				while ((n = zis.read(buf)) >= 0) {
-					fos.write(buf, 0, n);
-				}
-				fos.close();
-			}
-		} catch (IOException ioe) {
-			if (fos != null) {
+		try (InputStream zipIn = new FileInputStream(zipPath)) {
+			byte[] buf = new byte[8192];
+			File destDir = new File(destDirPath);
+			try (ZipInputStream zis = new ZipInputStream(zipIn)) {
+				FileOutputStream fos = null;
 				try {
-					fos.close();
-				} catch (IOException ioe2) {
+					ZipEntry zEntry;
+					while ((zEntry = zis.getNextEntry()) != null) {
+						// if it is empty directory, create it
+						if (zEntry.isDirectory()) {
+							new File(destDir, zEntry.getName()).mkdirs();
+							continue;
+						}
+						// if it is a file, extract it
+						File outFile = new File(destDir, zEntry.getName());
+						// create directory for a file
+						outFile.getParentFile().mkdirs();
+						// write file
+						fos = new FileOutputStream(outFile);
+						int n = 0;
+						while ((n = zis.read(buf)) >= 0) {
+							fos.write(buf, 0, n);
+						}
+						fos.close();
+					}
+				} catch (IOException ioe) {
+					if (fos != null) {
+						try {
+							fos.close();
+						} catch (IOException ioe2) {
+						}
+					}
 				}
-			}
-		} finally {
-			try {
-				zipIn.close();
-				if (zis != null)
-					zis.close();
-			} catch (IOException ioe) {
 			}
 		}
 	}
@@ -262,8 +256,8 @@ public class Util {
 			} else if (files[i].isFile()) {
 				BufferedInputStream input;
 				try {
-					input = new BufferedInputStream(new FileInputStream(
-							files[i]));
+					input = new BufferedInputStream(
+							new FileInputStream(files[i]));
 					org.eclipse.dltk.compiler.util.Util.copy(child, input);
 					input.close();
 				} catch (FileNotFoundException e) {

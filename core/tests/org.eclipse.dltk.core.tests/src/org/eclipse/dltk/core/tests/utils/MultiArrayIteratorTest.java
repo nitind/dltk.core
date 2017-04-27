@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 NumberFour AG
+ * Copyright (c) 2012, 2017 NumberFour AG and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -26,7 +26,7 @@ import org.junit.Test;
 public class MultiArrayIteratorTest extends Assert {
 
 	private static <E> List<E> toList(Iterator<E> iterator) {
-		final List<E> list = new ArrayList<E>();
+		final List<E> list = new ArrayList<>();
 		while (iterator.hasNext()) {
 			list.add(iterator.next());
 		}
@@ -36,20 +36,22 @@ public class MultiArrayIteratorTest extends Assert {
 	@Test
 	public void both() {
 		assertEquals(Arrays.asList("A", "B"),
-				toList(new MultiArrayIterator<String>(new String[] { "A" },
+				toList(new MultiArrayIterator<>(new String[] { "A" },
 						new String[] { "B" })));
 	}
 
 	@Test
 	public void firstEmpty() {
-		assertEquals(Arrays.asList("B"), toList(new MultiArrayIterator<String>(
-				new String[] {}, new String[] { "B" })));
+		assertEquals(Arrays.asList("B"),
+				toList(new MultiArrayIterator<>(new String[] {},
+						new String[] { "B" })));
 	}
 
 	@Test
 	public void secondEmpty() {
-		assertEquals(Arrays.asList("A"), toList(new MultiArrayIterator<String>(
-				new String[] { "A" }, new String[] {})));
+		assertEquals(Arrays.asList("A"),
+				toList(new MultiArrayIterator<>(new String[] { "A" },
+						new String[] {})));
 	}
 
 }

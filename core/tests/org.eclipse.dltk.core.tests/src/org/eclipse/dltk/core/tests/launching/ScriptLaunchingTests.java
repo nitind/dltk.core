@@ -76,7 +76,7 @@ public abstract class ScriptLaunchingTests extends AbstractModelTests {
 	/**
 	 * Should return predefined interpreters. Used with
 	 * hasPredefinedInterpreters method as true.
-	 * 
+	 *
 	 * @return Not null array of interpreter installs.
 	 */
 	protected IInterpreterInstall[] getPredefinedInterpreterInstalls() {
@@ -118,11 +118,11 @@ public abstract class ScriptLaunchingTests extends AbstractModelTests {
 			@Override
 			public boolean getAttribute(String attributeName,
 					boolean defaultValue) throws CoreException {
-				if (attributeName
-						.equals(ScriptLaunchConfigurationConstants.ATTR_DEFAULT_BUILDPATH)) {
+				if (attributeName.equals(
+						ScriptLaunchConfigurationConstants.ATTR_DEFAULT_BUILDPATH)) {
 					return true;
-				} else if (attributeName
-						.equals(ILaunchManager.ATTR_APPEND_ENVIRONMENT_VARIABLES)) {
+				} else if (attributeName.equals(
+						ILaunchManager.ATTR_APPEND_ENVIRONMENT_VARIABLES)) {
 					return true;
 				}
 
@@ -132,31 +132,31 @@ public abstract class ScriptLaunchingTests extends AbstractModelTests {
 			@Override
 			public int getAttribute(String attributeName, int defaultValue)
 					throws CoreException {
-				if (attributeName
-						.equals(ScriptLaunchConfigurationConstants.ATTR_DLTK_DBGP_WAITING_TIMEOUT)) {
+				if (attributeName.equals(
+						ScriptLaunchConfigurationConstants.ATTR_DLTK_DBGP_WAITING_TIMEOUT)) {
 					return 10000;
 				}
 				return defaultValue;
 			}
 
 			@Override
-			public List getAttribute(String attributeName, List defaultValue)
-					throws CoreException {
+			public List<String> getAttribute(String attributeName,
+					List<String> defaultValue) throws CoreException {
 				return defaultValue;
 			}
 
 			@Override
-			public Set getAttribute(String attributeName, Set defaultValue)
-					throws CoreException {
+			public Set<String> getAttribute(String attributeName,
+					Set<String> defaultValue) throws CoreException {
 				return defaultValue;
 			}
 
 			@Override
-			public Map getAttribute(String attributeName, Map defaultValue)
-					throws CoreException {
+			public Map<String, String> getAttribute(String attributeName,
+					Map<String, String> defaultValue) throws CoreException {
 				if (attributeName
 						.equals(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES)) {
-					Map<Object, Object> env = new HashMap<Object, Object>();
+					Map<String, String> env = new HashMap<>();
 					configureEnvironment(env);
 					return env;
 				}
@@ -164,33 +164,33 @@ public abstract class ScriptLaunchingTests extends AbstractModelTests {
 			}
 
 			@Override
-			public String getAttribute(String attributeName, String defaultValue)
-					throws CoreException {
+			public String getAttribute(String attributeName,
+					String defaultValue) throws CoreException {
 
-				if (attributeName
-						.equals(ScriptLaunchConfigurationConstants.ATTR_MAIN_SCRIPT_NAME)) {
+				if (attributeName.equals(
+						ScriptLaunchConfigurationConstants.ATTR_MAIN_SCRIPT_NAME)) {
 					return script;
-				} else if (attributeName
-						.equals(ScriptLaunchConfigurationConstants.ATTR_PROJECT_NAME)) {
+				} else if (attributeName.equals(
+						ScriptLaunchConfigurationConstants.ATTR_PROJECT_NAME)) {
 					return projectName;
-				} else if (attributeName
-						.equals(ScriptLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY)) {
+				} else if (attributeName.equals(
+						ScriptLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY)) {
 					return null;
-				} else if (attributeName
-						.equals(ScriptLaunchConfigurationConstants.ATTR_SCRIPT_ARGUMENTS)) {
+				} else if (attributeName.equals(
+						ScriptLaunchConfigurationConstants.ATTR_SCRIPT_ARGUMENTS)) {
 					return arguments;
-				} else if (attributeName
-						.equals(ScriptLaunchConfigurationConstants.ATTR_INTERPRETER_ARGUMENTS)) {
+				} else if (attributeName.equals(
+						ScriptLaunchConfigurationConstants.ATTR_INTERPRETER_ARGUMENTS)) {
 					return "";
-				} else if (attributeName
-						.equals(ScriptLaunchConfigurationConstants.ATTR_SCRIPT_NATURE)) {
+				} else if (attributeName.equals(
+						ScriptLaunchConfigurationConstants.ATTR_SCRIPT_NATURE)) {
 					return natureId;
 				}
 				return defaultValue;
 			}
 
 			@Override
-			public Map getAttributes() throws CoreException {
+			public Map<String, Object> getAttributes() throws CoreException {
 				return null;
 			}
 
@@ -201,8 +201,8 @@ public abstract class ScriptLaunchingTests extends AbstractModelTests {
 
 			@Override
 			public IFile getFile() {
-				return ScriptLaunchingTests.this.getFile(projectName + '/'
-						+ script);
+				return ScriptLaunchingTests.this
+						.getFile(projectName + '/' + script);
 			}
 
 			@Override
@@ -221,7 +221,7 @@ public abstract class ScriptLaunchingTests extends AbstractModelTests {
 			}
 
 			@Override
-			public Set getModes() throws CoreException {
+			public Set<String> getModes() throws CoreException {
 				return null;
 			}
 
@@ -231,7 +231,7 @@ public abstract class ScriptLaunchingTests extends AbstractModelTests {
 			}
 
 			@Override
-			public ILaunchDelegate getPreferredDelegate(Set modes)
+			public ILaunchDelegate getPreferredDelegate(Set<String> modes)
 					throws CoreException {
 				return null;
 			}
@@ -312,7 +312,7 @@ public abstract class ScriptLaunchingTests extends AbstractModelTests {
 	}
 
 	public IInterpreterInstall[] searchInstalls(String natureId) {
-		final List<IInterpreterInstall> installs = new ArrayList<IInterpreterInstall>();
+		final List<IInterpreterInstall> installs = new ArrayList<>();
 		final InterpreterSearcher searcher = new InterpreterSearcher();
 
 		searcher.search(EnvironmentManager.getLocalEnvironment(), natureId,
@@ -345,8 +345,7 @@ public abstract class ScriptLaunchingTests extends AbstractModelTests {
 			}
 		}
 
-		return (IInterpreterInstall[]) installs
-				.toArray(new IInterpreterInstall[installs.size()]);
+		return installs.toArray(new IInterpreterInstall[installs.size()]);
 	}
 
 	public void internalTestRequiredInterpreterAvailable(String name) {
@@ -401,8 +400,8 @@ public abstract class ScriptLaunchingTests extends AbstractModelTests {
 			final String stdoutTest = Long.toString(time) + "_stdout";
 			final String stderrTest = Long.toString(time) + "_stderr";
 
-			final ILaunchConfiguration configuration = createLaunchConfiguration(stdoutTest
-					+ " " + stderrTest);
+			final ILaunchConfiguration configuration = createLaunchConfiguration(
+					stdoutTest + " " + stderrTest);
 
 			final ILaunch launch = new Launch(configuration,
 					ILaunchManager.RUN_MODE, null);
@@ -640,8 +639,8 @@ public abstract class ScriptLaunchingTests extends AbstractModelTests {
 
 	protected IInterpreterInstall createInstall(String path, String id,
 			IInterpreterInstallType type) {
-		IFileHandle file = EnvironmentManager.getLocalEnvironment().getFile(
-				new Path(path));
+		IFileHandle file = EnvironmentManager.getLocalEnvironment()
+				.getFile(new Path(path));
 		if (!file.exists()) {
 			return null;
 		}
@@ -657,8 +656,8 @@ public abstract class ScriptLaunchingTests extends AbstractModelTests {
 		return install;
 	}
 
-	protected void createAddInstall(List<IInterpreterInstall> installs, String path, String id,
-			IInterpreterInstallType type) {
+	protected void createAddInstall(List<IInterpreterInstall> installs,
+			String path, String id, IInterpreterInstallType type) {
 		IInterpreterInstall install = createInstall(path, id, type);
 		if (install != null) {
 			installs.add(install);

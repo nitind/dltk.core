@@ -152,11 +152,10 @@ public class CodeAssistUtil {
 	private CodeAssistUtil calculateOffset(String marker, boolean last,
 			boolean after) {
 		final String text = module.getSource();
-		final int offset = last ? text.lastIndexOf(marker) : text
-				.indexOf(marker);
-		Assert.assertTrue(
-				NLS.bind("Pattern \"{0}\" not found in {1}", marker,
-						module.getName()), offset != -1);
+		final int offset = last ? text.lastIndexOf(marker)
+				: text.indexOf(marker);
+		Assert.assertTrue(NLS.bind("Pattern \"{0}\" not found in {1}", marker,
+				module.getName()), offset != -1);
 		this.offset = offset + (after ? marker.length() : 0);
 		return this;
 	}
@@ -213,7 +212,8 @@ public class CodeAssistUtil {
 			}
 			final CompletionProposal[] sorted = proposals
 					.toArray(new CompletionProposal[proposals.size()]);
-			Arrays.sort(sorted, (pr, pr1) -> pr.getName().compareTo(pr1.getName()));
+			Arrays.sort(sorted,
+					(pr, pr1) -> pr.getName().compareTo(pr1.getName()));
 			final String[] sortedNames = new String[names.length];
 			System.arraycopy(names, 0, sortedNames, 0, names.length);
 			Arrays.sort(sortedNames);
@@ -230,8 +230,8 @@ public class CodeAssistUtil {
 			for (int i = 0, size = proposals.size(); i < size; ++i) {
 				final CompletionProposal proposal = proposals.get(i);
 				String name = proposal.getName();
-				if (withKinds
-						&& proposal.getKind() == CompletionProposal.METHOD_REF) {
+				if (withKinds && proposal
+						.getKind() == CompletionProposal.METHOD_REF) {
 					name += "()";
 				}
 				list.add(name);
@@ -241,9 +241,9 @@ public class CodeAssistUtil {
 
 		public void assertEquals(String... expectedProposalNames) {
 			if (!compareProposalNames(expectedProposalNames)) {
-				Assert.assertEquals(new StringList(expectedProposalNames)
-						.sort().toString(), exractProposalNames(false).sort()
-						.toString());
+				Assert.assertEquals(
+						new StringList(expectedProposalNames).sort().toString(),
+						exractProposalNames(false).sort().toString());
 			}
 		}
 
@@ -258,8 +258,8 @@ public class CodeAssistUtil {
 					return proposal;
 				}
 			}
-			throw new IllegalArgumentException(NLS.bind(
-					"\"{0}\" completion proposal not found", name));
+			throw new IllegalArgumentException(
+					NLS.bind("\"{0}\" completion proposal not found", name));
 		}
 
 		/**
@@ -280,7 +280,7 @@ public class CodeAssistUtil {
 	}
 
 	public CodeCompletionResult codeComplete(ICompletionEngine engine) {
-		final List<CompletionProposal> proposals = new ArrayList<CompletionProposal>();
+		final List<CompletionProposal> proposals = new ArrayList<>();
 		engine.setRequestor(new TestCompletionRequestor(proposals));
 		engine.complete(getModuleSource(), offset(), 0);
 		return new CodeCompletionResult(proposals);
@@ -290,13 +290,13 @@ public class CodeAssistUtil {
 	 * Performs code completion in this source module.
 	 */
 	public CodeCompletionResult codeComplete() throws ModelException {
-		final List<CompletionProposal> proposals = new ArrayList<CompletionProposal>();
+		final List<CompletionProposal> proposals = new ArrayList<>();
 		module.codeComplete(offset(), new TestCompletionRequestor(proposals));
 		return new CodeCompletionResult(proposals);
 	}
 
 	public Object[] codeSelectAll(ISelectionEngine engine) {
-		final List<Object> elements = new ArrayList<Object>();
+		final List<Object> elements = new ArrayList<>();
 		engine.setRequestor(new ISelectionRequestor() {
 			@Override
 			public void acceptModelElement(IModelElement element) {
@@ -322,7 +322,7 @@ public class CodeAssistUtil {
 	}
 
 	public IModelElement[] codeSelect(ISelectionEngine engine) {
-		final List<IModelElement> elements = new ArrayList<IModelElement>();
+		final List<IModelElement> elements = new ArrayList<>();
 		engine.setRequestor(new ISelectionRequestor() {
 
 			@Override

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.tests.model;
 
@@ -34,7 +33,7 @@ public class TestBuffer implements IBuffer {
 	@Override
 	public void addBufferChangedListener(IBufferChangedListener listener) {
 		if (this.changeListeners == null) {
-			this.changeListeners = new ArrayList<IBufferChangedListener>(5);
+			this.changeListeners = new ArrayList<>(5);
 		}
 		if (!this.changeListeners.contains(listener)) {
 			this.changeListeners.add(listener);
@@ -58,8 +57,7 @@ public class TestBuffer implements IBuffer {
 			BufferChangedEvent event = null;
 			event = new BufferChangedEvent(this, 0, 0, null);
 			for (int i = 0, size = this.changeListeners.size(); i < size; ++i) {
-				IBufferChangedListener listener = (IBufferChangedListener) this.changeListeners
-						.get(i);
+				IBufferChangedListener listener = this.changeListeners.get(i);
 				listener.bufferChanged(event);
 			}
 			this.changeListeners = null;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2016 NumberFour AG
+ * Copyright (c) 2011, 2017 NumberFour AG and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -18,25 +18,25 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.dltk.core.tests.model.AbstractModelTests;
 import org.eclipse.dltk.core.tests.model.SuiteOfTestCases;
 import org.eclipse.dltk.core.tests.model.SuiteOfTestCases.Suite;
 import org.eclipse.dltk.internal.core.ModelManager;
 
+import junit.extensions.TestSetup;
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 /**
  * A decorator for tests to initialize workspace project before executing the
  * tests. Use as follows:
- * 
+ *
  * <pre>
- * suite.addTest(new BundledProjectSetup(MyPluginActivator.PLUGIN_ID, &quot;myProject&quot;,
- * 		new TestSuite(MyTests.class)));
+ * suite.addTest(new BundledProjectSetup(MyPluginActivator.PLUGIN_ID,
+ * 		&quot;myProject&quot;, new TestSuite(MyTests.class)));
  * </pre>
- * 
+ *
  * where <code>myProject</code> is the folder with the preconfigured project
  * located at <code>bundleRoot/workspace/myProject</code>
  */
@@ -45,7 +45,7 @@ public class BundledProjectSetup extends TestSetup {
 	public static class Builder {
 
 		private String bundleName;
-		private List<String> projectNames = new ArrayList<String>();
+		private List<String> projectNames = new ArrayList<>();
 		private boolean build;
 		private boolean disableIndexer;
 
@@ -70,14 +70,14 @@ public class BundledProjectSetup extends TestSetup {
 				return createSuite(testClasses[0]);
 			} else {
 				final TestSuite result = new TestSuite();
-				final List<String> names = new ArrayList<String>();
+				final List<String> names = new ArrayList<>();
 				for (Class<?> clazz : testClasses) {
 					final Test suite = createSuite(clazz);
 					result.addTest(suite);
 					names.add(clazz.getName());
 				}
-				result.setName(findLongestCommonPrefix(names
-						.toArray(new String[names.size()])) + "*.tests");
+				result.setName(findLongestCommonPrefix(
+						names.toArray(new String[names.size()])) + "*.tests");
 				return result;
 			}
 		}
@@ -135,12 +135,13 @@ public class BundledProjectSetup extends TestSetup {
 	private final boolean build;
 	private final boolean disableIndexer;
 
-	public BundledProjectSetup(String bundleName, String projectName, Test test) {
+	public BundledProjectSetup(String bundleName, String projectName,
+			Test test) {
 		this(bundleName, projectName, test, false);
 	}
 
-	public BundledProjectSetup(String bundleName, String projectName,
-			Test test, boolean build) {
+	public BundledProjectSetup(String bundleName, String projectName, Test test,
+			boolean build) {
 		this(bundleName, new String[] { projectName }, test, build);
 	}
 
@@ -171,12 +172,12 @@ public class BundledProjectSetup extends TestSetup {
 		if (build) {
 			final long start = System.currentTimeMillis();
 			for (String projectName : projectNames) {
-				getProject(projectName).build(
-						IncrementalProjectBuilder.FULL_BUILD, null);
+				getProject(projectName)
+						.build(IncrementalProjectBuilder.FULL_BUILD, null);
 			}
-			System.out.println((System.currentTimeMillis() - start)
-					+ " ms to build " + Arrays.asList(projectNames)
-					+ " project(s)");
+			System.out.println(
+					(System.currentTimeMillis() - start) + " ms to build "
+							+ Arrays.asList(projectNames) + " project(s)");
 		}
 	}
 

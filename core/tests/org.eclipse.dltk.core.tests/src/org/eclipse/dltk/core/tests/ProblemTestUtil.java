@@ -54,8 +54,8 @@ public class ProblemTestUtil extends Assert {
 	 * Returns problem identifier from the specified problem marker.
 	 */
 	public static IProblemIdentifier getProblemId(final IMarker problem) {
-		return DefaultProblemIdentifier.decode(problem.getAttribute(
-				IScriptModelMarker.ID, null));
+		return DefaultProblemIdentifier
+				.decode(problem.getAttribute(IScriptModelMarker.ID, null));
 	}
 
 	/**
@@ -78,7 +78,8 @@ public class ProblemTestUtil extends Assert {
 	/**
 	 * Asserts the expected number of problems in the specified array.
 	 */
-	public static void assertProblemCount(int expectedCount, IMarker[] problems) {
+	public static void assertProblemCount(int expectedCount,
+			IMarker[] problems) {
 		assertEquals(toString(problems), expectedCount, problems.length);
 	}
 
@@ -107,7 +108,7 @@ public class ProblemTestUtil extends Assert {
 	 *         "message1,message2,message3"
 	 */
 	public static String toString(IMarker[] markers) {
-		final List<String> text = new ArrayList<String>();
+		final List<String> text = new ArrayList<>();
 		for (IMarker marker : markers) {
 			text.add(toString(marker));
 		}
@@ -121,8 +122,8 @@ public class ProblemTestUtil extends Assert {
 		final IFile file = (IFile) marker.getResource();
 		final int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0) - 1;
 		assertTrue("Marker doesn't have line number", lineNumber >= 0);
-		final String[] lines = TextUtils.splitLines(new CharArraySequence(Util
-				.getResourceContentsAsCharArray(file)));
+		final String[] lines = TextUtils.splitLines(new CharArraySequence(
+				Util.getResourceContentsAsCharArray(file)));
 		return lines[lineNumber];
 	}
 

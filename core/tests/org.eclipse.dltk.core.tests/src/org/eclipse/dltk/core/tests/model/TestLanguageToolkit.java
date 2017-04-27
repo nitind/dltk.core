@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.tests.model;
 
@@ -20,16 +19,16 @@ import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.internal.core.util.Messages;
 import org.eclipse.osgi.util.NLS;
 
-public class TestLanguageToolkit extends AbstractLanguageToolkit implements
-		IDLTKLanguageToolkit {
+public class TestLanguageToolkit extends AbstractLanguageToolkit {
 	private static TestLanguageToolkit toolkit = new TestLanguageToolkit();
 
 	private IStatus validateSourceModule(String name) {
 		if (isScriptLikeFileName(name)) {
 			return IModelStatus.VERIFIED_OK;
 		}
-		return new Status(IStatus.ERROR, "TEST", -1, NLS.bind(
-				Messages.convention_unit_notScriptName, "txt", "Test"), null);
+		return new Status(IStatus.ERROR, "TEST", -1,
+				NLS.bind(Messages.convention_unit_notScriptName, "txt", "Test"),
+				null);
 	}
 
 	@Override

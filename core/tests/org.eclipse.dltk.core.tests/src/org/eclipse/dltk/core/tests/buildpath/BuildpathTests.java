@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
-
-import junit.framework.Test;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -51,9 +49,12 @@ import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.utils.CorePrinter;
 
+import junit.framework.Test;
+
 public class BuildpathTests extends ModifyingResourceTests {
 
-	private static final String[] TEST_NATURE = new String[] { "org.eclipse.dltk.core.tests.testnature" };
+	private static final String[] TEST_NATURE = new String[] {
+			"org.eclipse.dltk.core.tests.testnature" };
 
 	private static final String BUILDPATH_PRJ_0 = "Buildpath0";
 
@@ -118,7 +119,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 			String expectedEncoded, IBuildpathEntry entry) {
 		IScriptProject project = getScriptProject(projectName);
 		String encoded = project.encodeBuildpathEntry(entry);
-		assertSourceEquals("Unexpected encoded entry", expectedEncoded, encoded);
+		assertSourceEquals("Unexpected encoded entry", expectedEncoded,
+				encoded);
 		IBuildpathEntry decoded = project.decodeBuildpathEntry(encoded);
 		assertEquals("Unexpected decoded entry", entry, decoded);
 	}
@@ -132,7 +134,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 		assertEquals(expected, actual);
 	}
 
-	protected void assertStatus(String message, String expected, IStatus status) {
+	protected void assertStatus(String message, String expected,
+			IStatus status) {
 		String actual = status.getMessage();
 		if (!expected.equals(actual)) {
 			// System.out.print(Util.displayString(actual, 2));
@@ -144,9 +147,9 @@ public class BuildpathTests extends ModifyingResourceTests {
 	protected File createFile(File parent, String name, String content)
 			throws IOException {
 		File file = new File(parent, name);
-		FileOutputStream out = new FileOutputStream(file);
-		out.write(content.getBytes());
-		out.close();
+		try (FileOutputStream out = new FileOutputStream(file)) {
+			out.write(content.getBytes());
+		}
 		/*
 		 * Need to change the time stamp to realize that the file has been
 		 * modified
@@ -197,7 +200,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 	}
 
 	public void test001() throws ModelException {
-		ScriptProject project = (ScriptProject) getScriptProject(BUILDPATH_PRJ_0);
+		ScriptProject project = (ScriptProject) getScriptProject(
+				BUILDPATH_PRJ_0);
 		assertNotNull(project);
 		IBuildpathEntry entrys[] = project.getRawBuildpath();
 		assertEquals(3, entrys.length);
@@ -219,10 +223,10 @@ public class BuildpathTests extends ModifyingResourceTests {
 				.getChildren();
 		assertEquals(2, folderChildren.length);
 		assertTrue(folderChildren[0] instanceof ISourceModule);
-		assertEquals("X.txt", ((ISourceModule) (folderChildren[0]))
-				.getElementName());
-		assertEquals("X2.txt", ((ISourceModule) (folderChildren[1]))
-				.getElementName());
+		assertEquals("X.txt",
+				((ISourceModule) (folderChildren[0])).getElementName());
+		assertEquals("X2.txt",
+				((ISourceModule) (folderChildren[1])).getElementName());
 		assertTrue(folderChildren[1] instanceof ISourceModule);
 
 		children = fr1.getChildren();
@@ -231,13 +235,15 @@ public class BuildpathTests extends ModifyingResourceTests {
 		folderChildren = ((IScriptFolder) children[0]).getChildren();
 		assertEquals(1, folderChildren.length);
 		assertTrue(folderChildren[0] instanceof ISourceModule);
-		assertEquals("X3.txt", ((ISourceModule) (folderChildren[0]))
-				.getElementName());
+		assertEquals("X3.txt",
+				((ISourceModule) (folderChildren[0])).getElementName());
 	}
 
 	public void test002() throws ModelException {
-		ScriptProject project = (ScriptProject) getScriptProject(BUILDPATH_PRJ_0);
-		ScriptProject project2 = (ScriptProject) getScriptProject(BUILDPATH_PRJ_1);
+		ScriptProject project = (ScriptProject) getScriptProject(
+				BUILDPATH_PRJ_0);
+		ScriptProject project2 = (ScriptProject) getScriptProject(
+				BUILDPATH_PRJ_1);
 		assertNotNull(project);
 		IProjectFragment fragments[] = project.getProjectFragments();
 		IBuildpathEntry entrys[] = project.getResolvedBuildpath();
@@ -253,12 +259,14 @@ public class BuildpathTests extends ModifyingResourceTests {
 
 	/**
 	 * Testie container test
-	 * 
+	 *
 	 * @throws ModelException
 	 */
 	public void test003() throws ModelException {
-		ScriptProject project = (ScriptProject) getScriptProject(BUILDPATH_PRJ_0);
-		ScriptProject project2 = (ScriptProject) getScriptProject(BUILDPATH_PRJ_1);
+		ScriptProject project = (ScriptProject) getScriptProject(
+				BUILDPATH_PRJ_0);
+		ScriptProject project2 = (ScriptProject) getScriptProject(
+				BUILDPATH_PRJ_1);
 		assertNotNull(project);
 		IProjectFragment fragments[] = project.getProjectFragments();
 		IBuildpathEntry entrys[] = project.getResolvedBuildpath();
@@ -274,7 +282,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 
 	/**
 	 * Library BuildpathEntry test
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void test004() throws Exception {
@@ -302,25 +310,25 @@ public class BuildpathTests extends ModifyingResourceTests {
 
 	/**
 	 * External folder Library BuildpathEntry test
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void test005() throws Exception {
 		try {
-			URL url = ModelTestsPlugin.getDefault().getBundle().getEntry(
-					"workspace/Buildpath3");
+			URL url = ModelTestsPlugin.getDefault().getBundle()
+					.getEntry("workspace/Buildpath3");
 			URL res = FileLocator.resolve(url);
 			IPath filePath = new Path(res.getFile());
 			IScriptProject proj = this.createScriptProject("P", TEST_NATURE,
 					new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
 			IEnvironment env = LocalEnvironment.getInstance();
-			newCP[originalCP.length] = DLTKCore
-					.newExtLibraryEntry(EnvironmentPathUtils.getFullPath(env,
-							filePath));
+			newCP[originalCP.length] = DLTKCore.newExtLibraryEntry(
+					EnvironmentPathUtils.getFullPath(env, filePath));
 
 			IModelStatus status = BuildpathEntry.validateBuildpath(proj, newCP);
 
@@ -342,18 +350,19 @@ public class BuildpathTests extends ModifyingResourceTests {
 
 	public void test006() throws Exception {
 		try {
-			URL url = ModelTestsPlugin.getDefault().getBundle().getEntry(
-					"/workspace/Buildpath3");
+			URL url = ModelTestsPlugin.getDefault().getBundle()
+					.getEntry("/workspace/Buildpath3");
 			URL res = FileLocator.resolve(url);
 
-			IPath localPath = new Path("Testie").append(res.getFile()
-					.substring(1));
+			IPath localPath = new Path("Testie")
+					.append(res.getFile().substring(1));
 			IPath contPath = localPath;
 			IScriptProject proj = this.createScriptProject("P", TEST_NATURE,
 					new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
 			newCP[originalCP.length] = DLTKCore.newContainerEntry(contPath);
 
@@ -380,8 +389,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testEncodeDecodeEntry01() {
 		assertEncodeDecodeEntry("P",
-				"<buildpathentry kind=\"src\" path=\"src\"/>\n", DLTKCore
-						.newSourceEntry(new Path("/P/src")));
+				"<buildpathentry kind=\"src\" path=\"src\"/>\n",
+				DLTKCore.newSourceEntry(new Path("/P/src")));
 	}
 
 	/*
@@ -389,18 +398,17 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 * encoded and decoded.
 	 */
 	public void testEncodeDecodeEntry02() {
-		assertEncodeDecodeEntry(
-				"P",
+		assertEncodeDecodeEntry("P",
 				"<buildpathentry excluding=\"**/X.java\" including=\"**/Y.java\" kind=\"src\" path=\"src\">\n"
 						+ "	<attributes>\n"
 						+ "		<attribute name=\"attrName\" value=\"some value\"/>\n"
-						+ "	</attributes>\n" + "</buildpathentry>\n", DLTKCore
-						.newSourceEntry(new Path("/P/src"),
-								new IPath[] { new Path("**/Y.java") },
-								new IPath[] { new Path("**/X.java") },
-								new IBuildpathAttribute[] { DLTKCore
-										.newBuildpathAttribute("attrName",
-												"some value") }));
+						+ "	</attributes>\n" + "</buildpathentry>\n",
+				DLTKCore.newSourceEntry(new Path("/P/src"),
+						new IPath[] { new Path("**/Y.java") },
+						new IPath[] { new Path("**/X.java") },
+						new IBuildpathAttribute[] {
+								DLTKCore.newBuildpathAttribute("attrName",
+										"some value") }));
 	}
 
 	/*
@@ -408,8 +416,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testEncodeDecodeEntry03() {
 		assertEncodeDecodeEntry("P1",
-				"<buildpathentry kind=\"prj\" path=\"/P2\"/>\n", DLTKCore
-						.newProjectEntry(new Path("/P2")));
+				"<buildpathentry kind=\"prj\" path=\"/P2\"/>\n",
+				DLTKCore.newProjectEntry(new Path("/P2")));
 	}
 
 	/**
@@ -425,13 +433,14 @@ public class BuildpathTests extends ModifyingResourceTests {
 			// create container
 			DLTKCore.setBuildpathContainer(new Path("container/default"),
 					new IScriptProject[] { proj },
-					new IBuildpathContainer[] { new TestContainer(new Path(
-							"container/default"), new IBuildpathEntry[] {}) },
+					new IBuildpathContainer[] {
+							new TestContainer(new Path("container/default"),
+									new IBuildpathEntry[] {}) },
 					null);
 
 			// set P's Buildpath with this container
-			IBuildpathEntry container = DLTKCore.newContainerEntry(new Path(
-					"container/default"), true);
+			IBuildpathEntry container = DLTKCore
+					.newContainerEntry(new Path("container/default"), true);
 			proj.setRawBuildpath(new IBuildpathEntry[] { container }, null);
 
 			assertDeltas("Unexpected delta",
@@ -452,8 +461,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 			createScriptProject("P1i", TEST_NATURE, new String[] { "" });
 			IScriptProject proj = createScriptProject("P2i", TEST_NATURE,
 					new String[] { "" }, new String[] { "/P1i/src1/src2" });
-			assertMarkers(
-					"Unexpected markers",
+			assertMarkers("Unexpected markers",
 					"Illegal path for required project: '/P1i/src1/src2' in project P2i",
 					proj);
 		} finally {
@@ -471,7 +479,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 					new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
 			newCP[originalCP.length] = newCP[0];
 
@@ -492,11 +501,12 @@ public class BuildpathTests extends ModifyingResourceTests {
 					new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
 			IEnvironment env = LocalEnvironment.getInstance();
-			IPath libPath = EnvironmentPathUtils.getFullPath(env, new Path(
-					"/opt2"));
+			IPath libPath = EnvironmentPathUtils.getFullPath(env,
+					new Path("/opt2"));
 			newCP[originalCP.length] = DLTKCore.newExtLibraryEntry(libPath);
 
 			IModelStatus status = BuildpathEntry.validateBuildpathEntry(proj,
@@ -505,7 +515,9 @@ public class BuildpathTests extends ModifyingResourceTests {
 			assertStatus("should detect not pressent folders",
 					"Required library cannot denote external folder or archive: \'"
 							+ EnvironmentPathUtils.getLocalPath(libPath)
-									.toString() + "\' for project Pv0", status);
+									.toString()
+							+ "\' for project Pv0",
+					status);
 		} finally {
 			AbstractModelTests.deleteProject("Pv0");
 		}
@@ -520,7 +532,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 					new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
 			newCP[originalCP.length] = DLTKCore.newSourceEntry(new Path("/P"));
 
@@ -543,10 +556,11 @@ public class BuildpathTests extends ModifyingResourceTests {
 					new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
-			newCP[originalCP.length] = DLTKCore.newLibraryEntry(new Path(
-					"/P/src/lib"));
+			newCP[originalCP.length] = DLTKCore
+					.newLibraryEntry(new Path("/P/src/lib"));
 
 			IModelStatus status = BuildpathEntry.validateBuildpath(proj, newCP);
 
@@ -595,23 +609,23 @@ public class BuildpathTests extends ModifyingResourceTests {
 		try {
 
 			p = new IScriptProject[] {
-					this.createScriptProject("P0v", TEST_NATURE, new String[] {
-							"src0", "src1" }),
+					this.createScriptProject("P0v", TEST_NATURE,
+							new String[] { "src0", "src1" }),
 					this.createScriptProject("P1v", TEST_NATURE,
 							new String[] { "src1" }), };
 
-			DLTKCore
-					.setBuildpathContainer(new Path("container/default"),
-							new IScriptProject[] { p[0] },
-							new IBuildpathContainer[] { new TestContainer(
-									new Path("container/default"),
-									new IBuildpathEntry[] { DLTKCore
-											.newSourceEntry(new Path(
-													"/P0v/src0")) }) }, null);
+			DLTKCore.setBuildpathContainer(new Path("container/default"),
+					new IScriptProject[] { p[0] },
+					new IBuildpathContainer[] { new TestContainer(
+							new Path("container/default"),
+							new IBuildpathEntry[] { DLTKCore
+									.newSourceEntry(new Path("/P0v/src0")) }) },
+					null);
 
 			IBuildpathEntry[] newBuildpath = new IBuildpathEntry[] {
 					DLTKCore.newSourceEntry(new Path("/P0v/src1")),
-					DLTKCore.newContainerEntry(new Path("container/default")), };
+					DLTKCore.newContainerEntry(
+							new Path("container/default")), };
 
 			// validate Buildpath
 			IModelStatus status = BuildpathEntry.validateBuildpath(p[0],
@@ -649,8 +663,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 
 			IModelStatus status = BuildpathEntry.validateBuildpath(p[0],
 					newBuildpath);
-			assertStatus(
-					"should have detected nested source folder",
+			assertStatus("should have detected nested source folder",
 					"Cannot nest \'P0/src\' inside \'P0\'. To enable the nesting exclude \'src/\' from \'P0\'",
 					status);
 		} finally {
@@ -668,7 +681,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 					new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
 			newCP[originalCP.length] = DLTKCore.newSourceEntry(new Path("/P"),
 					new IPath[] { new Path("src/") });
@@ -693,7 +707,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 					new String[] {});
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
 			newCP[originalCP.length] = DLTKCore.newSourceEntry(new Path("/P"),
 					new IPath[] { new Path("lib/") });
@@ -718,7 +733,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 					new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
 			newCP[originalCP.length] = DLTKCore.newSourceEntry(new Path("/P"),
 					new IPath[] { new Path("**/src") });
@@ -742,12 +758,13 @@ public class BuildpathTests extends ModifyingResourceTests {
 					new String[] {});
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
-			newCP[originalCP.length] = DLTKCore.newSourceEntry(new Path(
-					"/P/src"), new IPath[] { new Path("**/src") });
+			newCP[originalCP.length] = DLTKCore.newSourceEntry(
+					new Path("/P/src"), new IPath[] { new Path("**/src") });
 
-			Map<String, String> options = new Hashtable<String, String>(5);
+			Map<String, String> options = new Hashtable<>(5);
 			options.put(DLTKCore.CORE_ENABLE_BUILDPATH_EXCLUSION_PATTERNS,
 					DLTKCore.DISABLED);
 			proj.setOptions(options);
@@ -772,13 +789,15 @@ public class BuildpathTests extends ModifyingResourceTests {
 					new String[] {});
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 2];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 2];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
 			newCP[originalCP.length] = DLTKCore.newSourceEntry(new Path("/P/"),
 					new IPath[] { new Path("src/") },
 					BuildpathEntry.EXCLUDE_NONE);
-			newCP[originalCP.length + 1] = DLTKCore.newSourceEntry(new Path(
-					"/P/src"), new IPath[0], BuildpathEntry.EXCLUDE_NONE);
+			newCP[originalCP.length + 1] = DLTKCore.newSourceEntry(
+					new Path("/P/src"), new IPath[0],
+					BuildpathEntry.EXCLUDE_NONE);
 
 			IModelStatus status = BuildpathEntry.validateBuildpath(proj, newCP);
 
@@ -800,7 +819,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 					new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
 			newCP[originalCP.length] = DLTKCore.newSourceEntry(new Path("/P"),
 					new IPath[] { new Path("src/") }, new IPath[0], null);
@@ -826,7 +846,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 					new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
 			newCP[originalCP.length] = DLTKCore.newSourceEntry(new Path("/P"),
 					new IPath[] { new Path("**/src") }, new Path[0], null);
@@ -848,13 +869,14 @@ public class BuildpathTests extends ModifyingResourceTests {
 					new String[] {});
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
-			newCP[originalCP.length] = DLTKCore.newSourceEntry(new Path(
-					"/P/src"), new IPath[] { new Path("**/src") }, new Path[0],
-					null);
+			newCP[originalCP.length] = DLTKCore.newSourceEntry(
+					new Path("/P/src"), new IPath[] { new Path("**/src") },
+					new Path[0], null);
 
-			Map<String, String> options = new Hashtable<String, String>(5);
+			Map<String, String> options = new Hashtable<>(5);
 			options.put(DLTKCore.CORE_ENABLE_BUILDPATH_EXCLUSION_PATTERNS,
 					DLTKCore.DISABLED);
 			proj.setOptions(options);
@@ -882,7 +904,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 					DLTKCore.DISABLED);
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
-			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
+			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length
+					+ 1];
 			System.arraycopy(originalCP, 0, newCP, 0, originalCP.length);
 			newCP[originalCP.length] = DLTKCore.newSourceEntry(new Path("/P"));
 
@@ -927,18 +950,20 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 * not break the model. The buildpath should contain the entry, but the root
 	 * should not appear in the children.
 	 */
-	public void testBuildpathWithNonExistentProjectEntry() throws CoreException {
+	public void testBuildpathWithNonExistentProjectEntry()
+			throws CoreException {
 		try {
 			IScriptProject project = this.createScriptProject("P", TEST_NATURE,
 					new String[] { "src" });
 			IBuildpathEntry[] originalPath = project.getRawBuildpath();
 			IProjectFragment[] originalRoots = project.getProjectFragments();
 
-			IBuildpathEntry[] newPath = new IBuildpathEntry[originalPath.length + 1];
+			IBuildpathEntry[] newPath = new IBuildpathEntry[originalPath.length
+					+ 1];
 			System.arraycopy(originalPath, 0, newPath, 0, originalPath.length);
 
-			IBuildpathEntry newEntry = DLTKCore.newProjectEntry(new Path(
-					"/NoProject"), false);
+			IBuildpathEntry newEntry = DLTKCore
+					.newProjectEntry(new Path("/NoProject"), false);
 			newPath[originalPath.length] = newEntry;
 
 			project.setRawBuildpath(newPath, null);
@@ -947,16 +972,16 @@ public class BuildpathTests extends ModifyingResourceTests {
 			assertTrue("should be the same length",
 					getPath.length == newPath.length);
 			for (int i = 0; i < getPath.length; i++) {
-				assertTrue("entries should be the same", getPath[i]
-						.equals(newPath[i]));
+				assertTrue("entries should be the same",
+						getPath[i].equals(newPath[i]));
 			}
 
 			IProjectFragment[] newRoots = project.getProjectFragments();
 			assertTrue("Should be the same number of roots",
 					originalRoots.length == newRoots.length);
 			for (int i = 0; i < newRoots.length; i++) {
-				assertTrue("roots should be the same", originalRoots[i]
-						.equals(newRoots[i]));
+				assertTrue("roots should be the same",
+						originalRoots[i].equals(newRoots[i]));
 			}
 		} finally {
 			AbstractModelTests.deleteProject("P");
@@ -975,11 +1000,12 @@ public class BuildpathTests extends ModifyingResourceTests {
 			IBuildpathEntry[] originalPath = project.getRawBuildpath();
 			IProjectFragment[] originalRoots = project.getProjectFragments();
 
-			IBuildpathEntry[] newPath = new IBuildpathEntry[originalPath.length + 1];
+			IBuildpathEntry[] newPath = new IBuildpathEntry[originalPath.length
+					+ 1];
 			System.arraycopy(originalPath, 0, newPath, 0, originalPath.length);
 
-			IBuildpathEntry newEntry = DLTKCore.newSourceEntry(new Path(
-					"/P/moreSource"));
+			IBuildpathEntry newEntry = DLTKCore
+					.newSourceEntry(new Path("/P/moreSource"));
 			newPath[originalPath.length] = newEntry;
 
 			project.setRawBuildpath(newPath, null);
@@ -988,16 +1014,16 @@ public class BuildpathTests extends ModifyingResourceTests {
 			assertTrue("should be the same length",
 					getPath.length == newPath.length);
 			for (int i = 0; i < getPath.length; i++) {
-				assertTrue("entries should be the same", getPath[i]
-						.equals(newPath[i]));
+				assertTrue("entries should be the same",
+						getPath[i].equals(newPath[i]));
 			}
 
 			IProjectFragment[] newRoots = project.getProjectFragments();
 			assertTrue("Should be the same number of roots",
 					originalRoots.length == newRoots.length);
 			for (int i = 0; i < newRoots.length; i++) {
-				assertTrue("roots should be the same", originalRoots[i]
-						.equals(newRoots[i]));
+				assertTrue("roots should be the same",
+						originalRoots[i].equals(newRoots[i]));
 			}
 		} finally {
 			AbstractModelTests.deleteProject("P");
@@ -1023,8 +1049,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 			int length = originalP2CP.length;
 			IBuildpathEntry[] newCP = new IBuildpathEntry[length + 1];
 			System.arraycopy(originalP2CP, 0, newCP, 0, length);
-			newCP[length] = DLTKCore.newProjectEntry(p1.getProject()
-					.getFullPath(), false);
+			newCP[length] = DLTKCore
+					.newProjectEntry(p1.getProject().getFullPath(), false);
 			p2.setRawBuildpath(newCP, null);
 			waitForAutoBuild(); // wait for markers to be created
 			assertEquals(0, numberOfBuildpathProblems(p1));
@@ -1085,16 +1111,16 @@ public class BuildpathTests extends ModifyingResourceTests {
 			int length = originalP2CP.length;
 			IBuildpathEntry[] newCP = new IBuildpathEntry[length + 1];
 			System.arraycopy(originalP2CP, 0, newCP, 0, length);
-			newCP[length] = DLTKCore.newProjectEntry(p1.getProject()
-					.getFullPath(), false);
+			newCP[length] = DLTKCore
+					.newProjectEntry(p1.getProject().getFullPath(), false);
 			p2.setRawBuildpath(newCP, null);
 
 			// Add P3 as a prerequesite of P1
 			length = originalP1CP.length;
 			newCP = new IBuildpathEntry[length + 1];
 			System.arraycopy(originalP1CP, 0, newCP, 0, length);
-			newCP[length] = DLTKCore.newProjectEntry(p3.getProject()
-					.getFullPath(), false);
+			newCP[length] = DLTKCore
+					.newProjectEntry(p3.getProject().getFullPath(), false);
 			p1.setRawBuildpath(newCP, null);
 
 			waitForAutoBuild(); // wait for cycle markers to be created
@@ -1119,15 +1145,16 @@ public class BuildpathTests extends ModifyingResourceTests {
 					TEST_NATURE, new String[] { "" });
 			project.getProject().getFolder("src").create(true, true, null);
 			// find folder & test it
-			final IScriptFolder folder = project.findScriptFolder(new Path(
-					"/A_/src"));
+			final IScriptFolder folder = project
+					.findScriptFolder(new Path("/A_/src"));
 			assertNotNull(folder);
 			assertTrue(folder.exists());
 			// change buildpath
-			final IBuildpathEntry entry1 = DLTKCore.newSourceEntry(new Path(
-					"/A_/src"));
-			final IBuildpathEntry entry2 = DLTKCore.newSourceEntry(new Path(
-					"/A_"), new IPath[0], new IPath[] { new Path("src/") });
+			final IBuildpathEntry entry1 = DLTKCore
+					.newSourceEntry(new Path("/A_/src"));
+			final IBuildpathEntry entry2 = DLTKCore.newSourceEntry(
+					new Path("/A_"), new IPath[0],
+					new IPath[] { new Path("src/") });
 			project.setRawBuildpath(new IBuildpathEntry[] { entry1, entry2 },
 					null);
 			// test folder after change
@@ -1194,30 +1221,32 @@ public class BuildpathTests extends ModifyingResourceTests {
 		try {
 			startDeltas();
 			IProjectFragment oldRoot = getProjectFragment("P1c", "");
-			IBuildpathEntry projectEntry = DLTKCore.newProjectEntry(new Path(
-					"/P2c"), false);
-			IBuildpathEntry[] newBuildpath = new IBuildpathEntry[] { projectEntry };
+			IBuildpathEntry projectEntry = DLTKCore
+					.newProjectEntry(new Path("/P2c"), false);
+			IBuildpathEntry[] newBuildpath = new IBuildpathEntry[] {
+					projectEntry };
 			project.setRawBuildpath(newBuildpath, null);
 			project.getProjectFragments();
 			IModelElementDelta removedDelta = getDeltaFor(oldRoot, true);
 			assertDeltas("Unexpected delta",
-					"<project root>[*]: {REMOVED FROM BUILDPATH}", removedDelta);
+					"<project root>[*]: {REMOVED FROM BUILDPATH}",
+					removedDelta);
 		} finally {
 			stopDeltas();
 			this.deleteProjects(new String[] { "P1c", "P2c" });
 		}
 	}
 
-	public void testGetProjectFragmentByResource() throws CoreException,
-			IOException {
+	public void testGetProjectFragmentByResource()
+			throws CoreException, IOException {
 		try {
 			setUpScriptProject(BUILDPATH_PRJ_4);
 			String folderName = "library";
 			IModelElement element = DLTKCore.create(getWorkspaceRoot()
 					.getFolder(new Path(BUILDPATH_PRJ_4 + "/" + folderName)));
 			assertNotNull(element);
-			assertEquals(IModelElement.PROJECT_FRAGMENT, element
-					.getElementType());
+			assertEquals(IModelElement.PROJECT_FRAGMENT,
+					element.getElementType());
 			assertEquals(folderName, element.getElementName());
 		} finally {
 			deleteProject(BUILDPATH_PRJ_4);

@@ -35,33 +35,39 @@ public class UserLibraryTests {
 		TEMPLATE += "	<archive path=\"org.eclipse.dltk.core.environment.localEnvironment/:{0}\"/>\n";
 		TEMPLATE += "</userlibrary>\n";
 	}
+
 	@Test
 	public void testSerializationSystemLibrary() throws IOException {
 		String path = "/segment01";
 
-		IBuildpathEntry[] entries = new IBuildpathEntry[] { createBuildpathEntry(path) };
+		IBuildpathEntry[] entries = new IBuildpathEntry[] {
+				createBuildpathEntry(path) };
 
 		String output = UserLibrary.serialize(entries, true);
 
 		assertEquals(output, createXML(path, true));
 	}
+
 	@Test
 	public void testSerializationNotSystemLibrary() throws IOException {
 		String path = "/segment01/segment02";
 
-		IBuildpathEntry[] entries = new IBuildpathEntry[] { createBuildpathEntry(path) };
+		IBuildpathEntry[] entries = new IBuildpathEntry[] {
+				createBuildpathEntry(path) };
 
 		String output = UserLibrary.serialize(entries, false);
 
 		assertEquals(output, createXML(path, false));
 	}
+
 	@Test
 	public void testSerializationAttributes() throws IOException {
 		String path = "/segment01/segment02";
 
-		IBuildpathEntry[] entries = new IBuildpathEntry[] { createBuildpathEntry(path) };
+		IBuildpathEntry[] entries = new IBuildpathEntry[] {
+				createBuildpathEntry(path) };
 
-		Map<String, String> attributes = new HashMap<String, String>();
+		Map<String, String> attributes = new HashMap<>();
 		attributes.put("libraryVersion", "1.0.0");
 		attributes.put("builtin", "true");
 		String output = UserLibrary.serialize(entries, false, attributes);
@@ -70,6 +76,7 @@ public class UserLibraryTests {
 		attributesOutput += "__attribute__libraryVersion=\"1.0.0\" ";
 		assertEquals(output, createXML(path, false, attributesOutput));
 	}
+
 	@Test
 	public void testDeserializationSystemLibrary() throws IOException {
 		String path = "/library/path";
@@ -83,6 +90,7 @@ public class UserLibraryTests {
 		assertEquals(userLibrary.isSystemLibrary(), true);
 		assertEquals(userLibrary.getAttributes().size(), 0);
 	}
+
 	@Test
 	public void testDeserializationNotSystemLibrary() throws IOException {
 		String path = "/library/path";
@@ -96,6 +104,7 @@ public class UserLibraryTests {
 		assertEquals(userLibrary.isSystemLibrary(), false);
 		assertEquals(userLibrary.getAttributes().size(), 0);
 	}
+
 	@Test
 	public void testDeserializationAttributes() throws IOException {
 		String path = "/library/path";
@@ -107,7 +116,7 @@ public class UserLibraryTests {
 		StringReader reader = new StringReader(xml);
 		UserLibrary userLibrary = UserLibrary.createFromString(reader);
 
-		Map<String, String> attributes = new HashMap<String, String>();
+		Map<String, String> attributes = new HashMap<>();
 		attributes.put("libraryVersion", "1.0.0");
 		attributes.put("builtin", "true");
 
@@ -129,8 +138,8 @@ public class UserLibraryTests {
 
 	private String createXML(String path, boolean isSystemLibrary,
 			String attributes) {
-		return MessageFormat
-				.format(TEMPLATE, path, isSystemLibrary, attributes);
+		return MessageFormat.format(TEMPLATE, path, isSystemLibrary,
+				attributes);
 	}
 
 }

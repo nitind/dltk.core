@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.tests;
 
@@ -32,8 +31,8 @@ public class FileUtil {
 		}
 		final File[] files = source.listFiles();
 		if (files == null) {
-			throw new IllegalStateException("Source directory " + source
-					+ " doesn't exist");
+			throw new IllegalStateException(
+					"Source directory " + source + " doesn't exist");
 		}
 		for (int i = 0; i < files.length; i++) {
 			final File sourceChild = files[i];
@@ -59,28 +58,13 @@ public class FileUtil {
 	 * destination file).
 	 */
 	public static void copyFile(File src, File dest) throws IOException {
-		InputStream in = null;
-		OutputStream out = null;
 		byte[] buffer = new byte[12 * 1024];
 		int read;
 
-		try {
-			in = new FileInputStream(src);
-
-			try {
-				out = new FileOutputStream(dest);
-
-				while ((read = in.read(buffer)) != -1) {
-					out.write(buffer, 0, read);
-				}
-			} finally {
-				if (out != null) {
-					out.close();
-				}
-			}
-		} finally {
-			if (in != null) {
-				in.close();
+		try (InputStream in = new FileInputStream(src);
+				OutputStream out = new FileOutputStream(dest)) {
+			while ((read = in.read(buffer)) != -1) {
+				out.write(buffer, 0, read);
 			}
 		}
 	}

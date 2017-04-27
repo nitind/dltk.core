@@ -40,12 +40,12 @@ import org.junit.rules.TestRule;
 /**
  * The ProjectSetup Rule provides convenient way of creating workspace project
  * based on prepared template in JUnit4 tests:
- * 
+ *
  * <pre>
  * &#064;ClassRule
  * public static final ProjectSetup PROJECT = new ProjectSetup(....);
  * </pre>
- * 
+ *
  * In JUnit versions before 4.9 &#064;ClassRule was not available, so instead of
  * it, {@link #create(ProjectSetup...)} and {@link #delete(ProjectSetup...)}
  * methods should be called manually from the methods annotated with
@@ -87,7 +87,7 @@ public class ProjectSetup extends AbstractProjectSetup {
 		/**
 		 * Specifies the exclusion path, those files will be excluded during
 		 * initial project creation, but can be created individually later.
-		 * 
+		 *
 		 * @see #createFile(String, Option)
 		 */
 		public static Option exclude(String path) {
@@ -153,7 +153,7 @@ public class ProjectSetup extends AbstractProjectSetup {
 			Option option, Option... restOptions) {
 		this.workspaceSetup = workspaceSetup;
 		this.projectName = projectName;
-		this.options = new HashSet<Option>();
+		this.options = new HashSet<>();
 		this.options.add(option);
 		Collections.addAll(this.options, restOptions);
 		if (hasOption(Option.INDEXER_DISABLED)
@@ -198,10 +198,10 @@ public class ProjectSetup extends AbstractProjectSetup {
 			throws IOException, CoreException {
 		final File source = getSourceDirectory();
 		if (!source.isDirectory()) {
-			throw new IllegalStateException(NLS.bind(
-					"Source directory \"{0}\" doesn't exist", source));
+			throw new IllegalStateException(
+					NLS.bind("Source directory \"{0}\" doesn't exist", source));
 		}
-		final Set<File> excludes = new HashSet<File>();
+		final Set<File> excludes = new HashSet<>();
 		for (Option option : options) {
 			if (option instanceof ExcludeOption) {
 				final File exclude = new File(source,
@@ -216,8 +216,8 @@ public class ProjectSetup extends AbstractProjectSetup {
 		final File target = getWorkspaceRoot().getLocation()
 				.append(workspaceProjectName).toFile();
 		FileUtil.copyDirectory(source, target, excludes);
-		final IProject project = getWorkspaceRoot().getProject(
-				workspaceProjectName);
+		final IProject project = getWorkspaceRoot()
+				.getProject(workspaceProjectName);
 		ResourcesPlugin.getWorkspace().run(monitor -> {
 			project.create(null);
 			if (!hasOption(Option.CLOSED)) {
@@ -287,15 +287,16 @@ public class ProjectSetup extends AbstractProjectSetup {
 	 */
 	@Override
 	public IProject get() {
-		Assert.assertNotNull("ProjectSetup " + getProjectName()
-				+ " not initialized", project);
+		Assert.assertNotNull(
+				"ProjectSetup " + getProjectName() + " not initialized",
+				project);
 		return project;
 	}
 
 	/**
 	 * Creates the specified file from the source project. Typical use case is
 	 * creation of the files which were excluded initially.
-	 * 
+	 *
 	 * @param filename
 	 *            project related filename
 	 * @param option
@@ -306,8 +307,8 @@ public class ProjectSetup extends AbstractProjectSetup {
 			throws CoreException {
 		final File sourceFile = new File(getSourceDirectory(), filename);
 		if (!sourceFile.isFile()) {
-			throw new IllegalArgumentException(NLS.bind(
-					"Source file {0} doesn't exist", sourceFile));
+			throw new IllegalArgumentException(
+					NLS.bind("Source file {0} doesn't exist", sourceFile));
 		}
 		final IFile file = getFile(filename);
 		final FileInputStream input;

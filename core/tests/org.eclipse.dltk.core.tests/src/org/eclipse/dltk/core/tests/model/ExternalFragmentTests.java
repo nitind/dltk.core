@@ -172,7 +172,7 @@ public class ExternalFragmentTests extends AbstractModelTests {
 
 	public static class FolderHandle extends AbstractFileHandle {
 
-		private final Collection<String> children = new ArrayList<String>();
+		private final Collection<String> children = new ArrayList<>();
 
 		public FolderHandle(IEnvironment environment, IPath path) {
 			super(environment, path);
@@ -184,10 +184,10 @@ public class ExternalFragmentTests extends AbstractModelTests {
 		public boolean isDirectory() {
 			return true;
 		}
-		
+
 		@Override
 		public IFileHandle[] getChildren() {
-			ArrayList<IFileHandle> rv = new ArrayList<IFileHandle>();
+			ArrayList<IFileHandle> rv = new ArrayList<>();
 			for (String name : children)
 				rv.add(getEnvironment().getFile(getPath().append(name)));
 			return rv.toArray(new IFileHandle[0]);
@@ -201,7 +201,6 @@ public class ExternalFragmentTests extends AbstractModelTests {
 		public void addChild(String name) {
 			children.add(name);
 		}
-
 
 	}
 
@@ -230,8 +229,8 @@ public class ExternalFragmentTests extends AbstractModelTests {
 		private final byte[] content;
 		private final Charset charset;
 
-		public FileHandle(IEnvironment environment, IPath path,
-				byte[] content, Charset charset) {
+		public FileHandle(IEnvironment environment, IPath path, byte[] content,
+				Charset charset) {
 			super(environment, path);
 			this.content = content;
 			this.charset = charset;
@@ -254,9 +253,8 @@ public class ExternalFragmentTests extends AbstractModelTests {
 
 	}
 
-
 	class Environment extends PlatformObject implements IEnvironment {
-		private final Map<IPath, IFileHandle> files = new HashMap<IPath, IFileHandle>();
+		private final Map<IPath, IFileHandle> files = new HashMap<>();
 
 		@Override
 		public boolean isLocal() {
@@ -370,13 +368,12 @@ public class ExternalFragmentTests extends AbstractModelTests {
 		Environment env = new Environment();
 		Path path = new Path("X.txt");
 		env.put(new FileHandle(env, path, content.getBytes(charset), charset));
-		Closeable environmentUnsetter = EnvironmentProvider.setEnvironment(env);
-		try {
+
+		try (Closeable environmentUnsetter = EnvironmentProvider
+				.setEnvironment(env)) {
 			ISourceModule module = getSourceModule(PRJ_NAME, "testEnv/:/",
 					path);
 			Assert.assertEquals(content, module.getSource());
-		} finally {
-			environmentUnsetter.close();
 		}
 	}
 }

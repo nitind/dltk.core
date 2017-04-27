@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.tests.model;
 
@@ -16,6 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.eclipse.dltk.core.tests.TestSupport;
+
 import junit.framework.AssertionFailedError;
 import junit.framework.Protectable;
 import junit.framework.Test;
@@ -23,8 +24,6 @@ import junit.framework.TestCase;
 import junit.framework.TestListener;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
-
-import org.eclipse.dltk.core.tests.TestSupport;
 
 /**
  * A test case class that can be set up (using the setUpSuite() method) and tore
@@ -51,7 +50,7 @@ public abstract class SuiteOfTestCases extends TestCase {
 		/**
 		 * Creates a new suite on the given class. Only the methods specified in
 		 * the second parameter and included in the suite.
-		 * 
+		 *
 		 * @param theClass
 		 * @param methodNames
 		 */
@@ -119,18 +118,15 @@ public abstract class SuiteOfTestCases extends TestCase {
 
 		@Override
 		public void run(final TestResult result) {
-			Protectable p = new Protectable() {
-				@Override
-				public void protect() throws Exception {
-					try {
-						// run suite (first test run will setup the suite)
-						superRun(result);
-					} finally {
-						// tear down the suite
-						if (Suite.this.currentTestCase != null) {
-							// protect against empty test suite
-							Suite.this.currentTestCase.tearDownSuite();
-						}
+			Protectable p = () -> {
+				try {
+					// run suite (first test run will setup the suite)
+					superRun(result);
+				} finally {
+					// tear down the suite
+					if (Suite.this.currentTestCase != null) {
+						// protect against empty test suite
+						Suite.this.currentTestCase.tearDownSuite();
 					}
 				}
 			};
@@ -176,7 +172,7 @@ public abstract class SuiteOfTestCases extends TestCase {
 	}
 
 	Suite parentSuite;
-	private final static Map<String, Suite> initializedSuites = new HashMap<String, Suite>();
+	private final static Map<String, Suite> initializedSuites = new HashMap<>();
 
 	public SuiteOfTestCases(String name) {
 		super(name);
@@ -197,11 +193,11 @@ public abstract class SuiteOfTestCases extends TestCase {
 	/**
 	 * Convenience method for subclasses of {@link SuiteOfTestCases}, identical
 	 * to
-	 * 
+	 *
 	 * <pre>
 	 * TestSupport.notYetImplemented(this);
 	 * </pre>
-	 * 
+	 *
 	 * @see TestSupport#notYetImplemented(junit.framework.TestCase)
 	 * @return <false> when not itself already in the call stack
 	 */
@@ -242,12 +238,7 @@ public abstract class SuiteOfTestCases extends TestCase {
 					}
 				};
 				result.addListener(listener);
-				result.runProtected(this, new Protectable() {
-					@Override
-					public void protect() throws Throwable {
-						setUpSuite();
-					}
-				});
+				result.runProtected(this, () -> setUpSuite());
 				result.removeListener(listener);
 				if (errors.get()) {
 					return;

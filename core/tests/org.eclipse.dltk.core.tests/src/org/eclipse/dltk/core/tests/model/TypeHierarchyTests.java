@@ -26,7 +26,8 @@ import org.eclipse.dltk.internal.core.hierarchy.TypeHierarchy;
 
 public class TypeHierarchyTests extends ModifyingResourceTests {
 	private static boolean DEBUG = false;
-	private static final String[] TEST_NATURE = new String[] { "org.eclipse.dltk.core.tests.testnature" };
+	private static final String[] TEST_NATURE = new String[] {
+			"org.eclipse.dltk.core.tests.testnature" };
 
 	private ISourceModule cu = null;
 	private ISourceModule copy = null;
@@ -38,8 +39,8 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		}
 	}
 
-	private final Set<IType> expectedExploredClasses = new HashSet<IType>();
-	private final Set<IType> expectedCyclicClasses = new HashSet<IType>();
+	private final Set<IType> expectedExploredClasses = new HashSet<>();
+	private final Set<IType> expectedCyclicClasses = new HashSet<>();
 	private final FakeTypeHierarchy typeHierarchy = new FakeTypeHierarchy();
 	private boolean useCacheSuperclass = true;
 
@@ -60,9 +61,7 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		useCacheSuperclass = true;
 		try {
 
-			this.createScriptProject("P", TEST_NATURE, new String[] {
-					"src"
-			} );
+			this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			this.createFolder("P/src/x/y");
 			this.createFile("P/src/x/y/Z.txt", "");
 			this.cu = this.getSourceModule("P/src/x/y/Z.txt");
@@ -111,8 +110,9 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		}
 	}
 
-	private Map<String, SourceType> createFakeTypes(char begin, char end, ModelElement modelElement) {
-		Map<String, SourceType> types = new HashMap<String, SourceType>();
+	private Map<String, SourceType> createFakeTypes(char begin, char end,
+			ModelElement modelElement) {
+		Map<String, SourceType> types = new HashMap<>();
 		for (char i = begin; i <= end; i++) {
 			String name = Character.toString(i);
 			types.put(name, new SourceType(modelElement, name));
@@ -120,8 +120,8 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		return types;
 	}
 
-	private void populate(SourceType parent, boolean isParentOnCyclicPath, SourceType child,
-			boolean isChildOnCyclicPath) {
+	private void populate(SourceType parent, boolean isParentOnCyclicPath,
+			SourceType child, boolean isChildOnCyclicPath) {
 		assertNotNull(parent);
 		assertNotNull(child);
 
@@ -147,7 +147,7 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 	}
 
 	private void print(Set<IType> classPaths) {
-		Set<IType> sortedClassPaths = new TreeSet<IType>((arg0, arg1) -> {
+		Set<IType> sortedClassPaths = new TreeSet<>((arg0, arg1) -> {
 			if (arg0 == arg1 || arg0.equals(arg1)) {
 				return 0;
 			}
@@ -169,54 +169,70 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		System.out.println();
 	}
 
-	private void exploreAllGraphThroughSubclasses(SourceType type, boolean doReset) {
+	private void exploreAllGraphThroughSubclasses(SourceType type,
+			boolean doReset) {
 		assertNotNull(type);
 		if (doReset) {
 			typeHierarchy.resetClassPaths();
 		}
 		typeHierarchy.getSubclasses(type);
 		printCurrentState();
-		assertEquals(typeHierarchy.getExploredClasses(), expectedExploredClasses);
+		assertEquals(typeHierarchy.getExploredClasses(),
+				expectedExploredClasses);
 		assertEquals(typeHierarchy.getCyclicClasses(), expectedCyclicClasses);
 	}
 
-	private void exploreAllGraphThroughSuperclasses(SourceType type, boolean doReset) {
+	private void exploreAllGraphThroughSuperclasses(SourceType type,
+			boolean doReset) {
 		assertNotNull(type);
 		if (doReset) {
 			typeHierarchy.resetClassPaths();
 		}
 		typeHierarchy.getSuperclass(type);
 		printCurrentState();
-		assertEquals(typeHierarchy.getExploredClasses(), expectedExploredClasses);
+		assertEquals(typeHierarchy.getExploredClasses(),
+				expectedExploredClasses);
 		assertEquals(typeHierarchy.getCyclicClasses(), expectedCyclicClasses);
 	}
 
-	private void explorePartialGraphThroughSubclasses(SourceType type, boolean doReset) {
+	private void explorePartialGraphThroughSubclasses(SourceType type,
+			boolean doReset) {
 		assertNotNull(type);
 		if (doReset) {
 			typeHierarchy.resetClassPaths();
 		}
 		typeHierarchy.getSubclasses(type);
 		printCurrentState();
-		assertTrue(!expectedExploredClasses.contains(type) || !typeHierarchy.getExploredClasses().isEmpty());
-		assertTrue(typeHierarchy.getExploredClasses().containsAll(typeHierarchy.getCyclicClasses()));
-		assertTrue(expectedExploredClasses.containsAll(typeHierarchy.getExploredClasses()));
-		assertTrue(expectedExploredClasses.containsAll(typeHierarchy.getCyclicClasses()));
-		assertTrue(expectedCyclicClasses.containsAll(typeHierarchy.getCyclicClasses()));
+		assertTrue(!expectedExploredClasses.contains(type)
+				|| !typeHierarchy.getExploredClasses().isEmpty());
+		assertTrue(typeHierarchy.getExploredClasses()
+				.containsAll(typeHierarchy.getCyclicClasses()));
+		assertTrue(expectedExploredClasses
+				.containsAll(typeHierarchy.getExploredClasses()));
+		assertTrue(expectedExploredClasses
+				.containsAll(typeHierarchy.getCyclicClasses()));
+		assertTrue(expectedCyclicClasses
+				.containsAll(typeHierarchy.getCyclicClasses()));
 	}
 
-	private void explorePartialGraphThroughSuperclasses(SourceType type, boolean doReset) {
+	private void explorePartialGraphThroughSuperclasses(SourceType type,
+			boolean doReset) {
 		assertNotNull(type);
 		if (doReset) {
 			typeHierarchy.resetClassPaths();
 		}
 		typeHierarchy.getSuperclass(type);
 		printCurrentState();
-		assertTrue(!expectedExploredClasses.contains(type) || !typeHierarchy.getExploredClasses().isEmpty());
-		assertTrue(typeHierarchy.getExploredClasses().containsAll(typeHierarchy.getCyclicClasses()));
-		assertTrue(expectedExploredClasses.containsAll(typeHierarchy.getExploredClasses()));
-		assertTrue(expectedExploredClasses.containsAll(typeHierarchy.getCyclicClasses()));
-		assertTrue(expectedCyclicClasses.containsAll(typeHierarchy.getCyclicClasses()));
+		assertTrue(!expectedExploredClasses.contains(type)
+				|| !typeHierarchy.getExploredClasses().isEmpty());
+		assertTrue(typeHierarchy.getExploredClasses()
+				.containsAll(typeHierarchy.getCyclicClasses()));
+		assertTrue(expectedExploredClasses
+				.containsAll(typeHierarchy.getExploredClasses()));
+		assertTrue(expectedExploredClasses
+				.containsAll(typeHierarchy.getCyclicClasses()));
+		assertTrue(expectedCyclicClasses
+				.containsAll(typeHierarchy.getCyclicClasses()));
 	}
 
 	public void testCyclicHierarchy001() throws Exception {
@@ -225,38 +241,45 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		assertTrue(p instanceof ModelElement);
 
 		typeHierarchy.resetClassPaths();
-		Map<String, SourceType> types = createFakeTypes('A', 'U', (ModelElement) p);
+		Map<String, SourceType> types = createFakeTypes('A', 'U',
+				(ModelElement) p);
 
-		//* Class hierarchy representation, "(c)" means that the relevant class in on a cyclic path
-		//*
-		//*                                                                      +------+
-		//*                                                                      |  L   |
-		//*                                                                      +------+
-		//*                                                                        ^
-		//*                                                                        |                      +-------------------------------------+
-		//*                                                                        |                      v                                     |
-		//*     +------+     +------+     +------+     +------+     +------+     +------+     +---+     +------+     +---+     +---+     +---+  |
-		//*  +> | B(c) | <-- | A(c) | --> | H(c) | --> |      | --> | J(c) | --> | K(c) | --> | O | --> | P(c) | --> | R | --> | S | --> | U |  |
-		//*  |  +------+     +------+     +------+     |      |     +------+     +------+     +---+     +------+     +---+     +---+     +---+  |
-		//*  |    |            ^                       |      |                    |                      |            |                   ^    |
-		//*  |    |            +---------------------- | I(c) | <------------------+                      |            |                   |    |
-		//*  |    v                                    |      |                                           v            v                   |    |
-		//*  |  +------+                               |      |                                         +------+     +---+                 |    |
-		//*  |  | C(c) | <------------------+       +- |      | --------------+                         | Q(c) |     | T | ----------------+    |
-		//*  |  +------+                    |       |  +------+               |                         +------+     +---+                      |
-		//*  |    |                         |       |                         |                           |                                     |
-		//*  |    |                         |       |    +------------+       |                           |                                     |
-		//*  |    v                         |       |    v            |       |                           |                                     |
-		//*  |  +------+     +------+     +------+  |  +------+     +------+  |                           |                                     |
-		//*  +- | D(c) | --> | E(c) | --> | F(c) |  +> | M(c) | --> | N(c) |  |                           +-------------------------------------+
-		//*     +------+     +------+     +------+     +------+     +------+  |
-		//*                    |            ^                                 |
-		//*                    |            +---------------------------------+
-		//*                    v
-		//*                  +------+
-		//*                  |  G   |
-		//*                  +------+
-		//*
+		// * Class hierarchy representation, "(c)" means that the relevant class
+		// in on a cyclic path
+		// *
+		// * +------+
+		// * | L |
+		// * +------+
+		// * ^
+		// * | +-------------------------------------+
+		// * | v |
+		// * +------+ +------+ +------+ +------+ +------+ +------+ +---+
+		// +------+ +---+ +---+ +---+ |
+		// * +> | B(c) | <-- | A(c) | --> | H(c) | --> | | --> | J(c) | --> |
+		// K(c) | --> | O | --> | P(c) | --> | R | --> | S | --> | U | |
+		// * | +------+ +------+ +------+ | | +------+ +------+ +---+ +------+
+		// +---+ +---+ +---+ |
+		// * | | ^ | | | | | ^ |
+		// * | | +---------------------- | I(c) | <------------------+ | | | |
+		// * | v | | v v | |
+		// * | +------+ | | +------+ +---+ | |
+		// * | | C(c) | <------------------+ +- | | --------------+ | Q(c) | | T
+		// | ----------------+ |
+		// * | +------+ | | +------+ | +------+ +---+ |
+		// * | | | | | | |
+		// * | | | | +------------+ | | |
+		// * | v | | v | | | |
+		// * | +------+ +------+ +------+ | +------+ +------+ | | |
+		// * +- | D(c) | --> | E(c) | --> | F(c) | +> | M(c) | --> | N(c) | |
+		// +-------------------------------------+
+		// * +------+ +------+ +------+ +------+ +------+ |
+		// * | ^ |
+		// * | +---------------------------------+
+		// * v
+		// * +------+
+		// * | G |
+		// * +------+
+		// *
 		populate(types.get("A"), true, types.get("B"), true);
 		populate(types.get("B"), true, types.get("C"), true);
 		populate(types.get("C"), true, types.get("D"), true);
@@ -317,20 +340,22 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		assertTrue(p instanceof ModelElement);
 
 		typeHierarchy.resetClassPaths();
-		Map<String, SourceType> types = createFakeTypes('A', 'Z', (ModelElement) p);
+		Map<String, SourceType> types = createFakeTypes('A', 'Z',
+				(ModelElement) p);
 
-		//* Class hierarchy representation, "(c)" means that the relevant class in on a cyclic path
-		//*
-		//*     +------+     +---+     +---+
-		//*  +> | W(c) | --> | V | --> | H |
-		//*  |  +------+     +---+     +---+
-		//*  |    |
-		//*  |    |
-		//*  |    v
-		//*  |  +------+
-		//*  +- | X(c) |
-		//*     +------+
-		//*
+		// * Class hierarchy representation, "(c)" means that the relevant class
+		// in on a cyclic path
+		// *
+		// * +------+ +---+ +---+
+		// * +> | W(c) | --> | V | --> | H |
+		// * | +------+ +---+ +---+
+		// * | |
+		// * | |
+		// * | v
+		// * | +------+
+		// * +- | X(c) |
+		// * +------+
+		// *
 		populate(types.get("W"), true, types.get("X"), true);
 		populate(types.get("W"), true, types.get("V"), false);
 		populate(types.get("V"), false, types.get("H"), false);
@@ -359,26 +384,28 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		assertTrue(p instanceof ModelElement);
 
 		typeHierarchy.resetClassPaths();
-		Map<String, SourceType> types = createFakeTypes('A', 'F', (ModelElement) p);
+		Map<String, SourceType> types = createFakeTypes('A', 'F',
+				(ModelElement) p);
 
-		//* Class hierarchy representation, "(c)" means that the relevant class in on a cyclic path
-		//*
-		//*                     +---+
-		//*                     | F |
-		//*                     +---+
-		//*                       ^
-		//*                       |
-		//*                       |
-		//* +---+     +---+     +---+     +---+
-		//* | A | --> | B | --> | D | --> | E |
-		//* +---+     +---+     +---+     +---+
-		//*   |                   ^
-		//*   |                   |
-		//*   v                   |
-		//* +---+                 |
-		//* | C | ----------------+
-		//* +---+
-		//*
+		// * Class hierarchy representation, "(c)" means that the relevant class
+		// in on a cyclic path
+		// *
+		// * +---+
+		// * | F |
+		// * +---+
+		// * ^
+		// * |
+		// * |
+		// * +---+ +---+ +---+ +---+
+		// * | A | --> | B | --> | D | --> | E |
+		// * +---+ +---+ +---+ +---+
+		// * | ^
+		// * | |
+		// * v |
+		// * +---+ |
+		// * | C | ----------------+
+		// * +---+
+		// *
 		populate(types.get("A"), false, types.get("B"), false);
 		populate(types.get("A"), false, types.get("C"), false);
 		populate(types.get("B"), false, types.get("D"), false);
@@ -435,24 +462,27 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		assertTrue(p instanceof ModelElement);
 
 		typeHierarchy.resetClassPaths();
-		Map<String, SourceType> types = createFakeTypes('A', 'H', (ModelElement) p);
+		Map<String, SourceType> types = createFakeTypes('A', 'H',
+				(ModelElement) p);
 
-		//* Class hierarchy representation, "(c)" means that the relevant class in on a cyclic path
-		//*
-		//*                +---------------------------------------------------+
-		//*                v                                                   |
-		//* +------+     +------+     +------+     +------+     +------+     +------+
-		//* | A(c) | --> | B(c) | --> | C(c) | --> | G(c) | --> | H(c) | --> | F(c) |
-		//* +------+     +------+     +------+     +------+     +------+     +------+
-		//*   ^                         |
-		//*   |                         |
-		//*   |                         v
-		//*   |                       +------+     +------+
-		//*   |                       | D(c) | --> | E(c) |
-		//*   |                       +------+     +------+
-		//*   |                                      |
-		//*   +--------------------------------------+
-		//*
+		// * Class hierarchy representation, "(c)" means that the relevant class
+		// in on a cyclic path
+		// *
+		// * +---------------------------------------------------+
+		// * v |
+		// * +------+ +------+ +------+ +------+ +------+ +------+
+		// * | A(c) | --> | B(c) | --> | C(c) | --> | G(c) | --> | H(c) | --> |
+		// F(c) |
+		// * +------+ +------+ +------+ +------+ +------+ +------+
+		// * ^ |
+		// * | |
+		// * | v
+		// * | +------+ +------+
+		// * | | D(c) | --> | E(c) |
+		// * | +------+ +------+
+		// * | |
+		// * +--------------------------------------+
+		// *
 		populate(types.get("A"), true, types.get("B"), true);
 		populate(types.get("B"), true, types.get("C"), true);
 		populate(types.get("C"), true, types.get("D"), true);

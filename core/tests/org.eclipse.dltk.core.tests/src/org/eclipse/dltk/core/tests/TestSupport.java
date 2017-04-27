@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2017 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -23,20 +23,21 @@ import junit.framework.TestCase;
 public class TestSupport {
 
 	/**
-	 * Runs the calling JUnit test again and fails only if it unexpectedly runs.<br>
-	 * 
+	 * Runs the calling JUnit test again and fails only if it unexpectedly
+	 * runs.<br>
+	 *
 	 * This is helpful for tests that don't currently work but should work one
 	 * day, when the tested functionality has been implemented.<br>
-	 * 
+	 *
 	 * The right way to use it is:
-	 * 
+	 *
 	 * <pre>
 	 * public void testXXX() {
 	 *   if (TestSupport.notYetImplemented(this)) return;
 	 *   ... the real (now failing) unit test
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * @return <false> when not itself already in the call stack
 	 */
 	public static boolean notYetImplemented(Object caller) {
@@ -73,7 +74,7 @@ public class TestSupport {
 
 	/**
 	 * Finds from the call stack the active running JUnit test case
-	 * 
+	 *
 	 * @return the test case method
 	 * @throws RuntimeException
 	 *             if no method could be found.
@@ -103,7 +104,7 @@ public class TestSupport {
 
 	/**
 	 * Test if the method is a junit test.
-	 * 
+	 *
 	 * @param method
 	 *            the method
 	 * @return <code>true</code> if this is a junit test.
@@ -112,16 +113,16 @@ public class TestSupport {
 		return method.getReturnType().equals(Void.TYPE)
 				&& Modifier.isPublic(method.getModifiers())
 				&& (method.getParameterTypes().length == 0
-						&& method.getName().startsWith("test") || method
-						.getAnnotation(Test.class) != null);
+						&& method.getName().startsWith("test")
+						|| method.getAnnotation(Test.class) != null);
 	}
 
-	private static final ThreadLocal<Boolean> notYetImplementedFlag = new ThreadLocal<Boolean>();
+	private static final ThreadLocal<Boolean> notYetImplementedFlag = new ThreadLocal<>();
 
 	public static boolean ignored(TestCase testCase) {
 		try {
-			final Method runMethod = testCase.getClass().getMethod(
-					testCase.getName(), NO_PARAMS);
+			final Method runMethod = testCase.getClass()
+					.getMethod(testCase.getName(), NO_PARAMS);
 			if (runMethod.getAnnotation(Ignore.class) != null) {
 				return true;
 			}

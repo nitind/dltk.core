@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.core.tests.model;
 
@@ -17,11 +16,11 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.junit.Assert;
 
 public class CompletionTestsRequestor extends CompletionRequestor {
-	private Vector<String> fElements = new Vector<String>();
-	private Vector<String> fCompletions = new Vector<String>();
-	private Vector<String> fRelevances = new Vector<String>();
-	private Vector<String> fCompletionStart = new Vector<String>();
-	private Vector<String> fCompletionEnd = new Vector<String>();
+	private Vector<String> fElements = new Vector<>();
+	private Vector<String> fCompletions = new Vector<>();
+	private Vector<String> fRelevances = new Vector<>();
+	private Vector<String> fCompletionStart = new Vector<>();
+	private Vector<String> fCompletionEnd = new Vector<>();
 
 	public boolean fDebug = false;
 
