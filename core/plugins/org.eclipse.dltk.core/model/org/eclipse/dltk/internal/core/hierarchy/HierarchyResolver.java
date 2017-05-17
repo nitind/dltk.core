@@ -172,7 +172,7 @@ public class HierarchyResolver {
 			}
 
 			// Cache this type for further searches
-			String elementName = type.getElementName();
+			String elementName = type.getTypeQualifiedName(delimiter);
 			Set<IType> set = tmpCache.get(elementName);
 			if (set == null) {
 				set = new HashSet<>();
