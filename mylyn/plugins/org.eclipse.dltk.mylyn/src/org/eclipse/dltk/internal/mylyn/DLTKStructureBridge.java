@@ -8,14 +8,12 @@
  * Contributors:
  *     Tasktop Technologies - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.dltk.internal.mylyn;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -41,12 +39,8 @@ import org.eclipse.mylyn.commons.core.StatusHandler;
 import org.eclipse.mylyn.context.core.AbstractContextStructureBridge;
 import org.eclipse.mylyn.context.core.ContextCore;
 import org.eclipse.mylyn.context.core.IInteractionElement;
-import org.eclipse.ui.internal.WorkingSet;
-import org.eclipse.ui.views.markers.internal.ConcreteMarker;
+import org.eclipse.ui.IWorkingSet;
 
-/**
- * @author Mik Kersten
- */
 public class DLTKStructureBridge extends AbstractContextStructureBridge {
 
 	public final static String CONTENT_TYPE = "DLTK"; //$NON-NLS-1$
@@ -146,38 +140,9 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 				if (adapter instanceof IModelElement) {
 					return ((IModelElement) adapter).getHandleIdentifier();
 				}
-//			} else if (isWtpClass(object)) {
-//				return getWtpElementHandle(object);
 			}
 		}
 		return null;
-	}
-
-//	/**
-//	 * TODO: remove after WTP 1.5.1 is generally available
-//	 */
-//	private String getWtpElementHandle(Object object) {
-//		Class<?> objectClass = object.getClass();
-//		try {
-//			Method getProjectMethod = objectClass.getMethod("getProject", new Class[0]); //$NON-NLS-1$
-//			Object javaProject = getProjectMethod.invoke(object, new Object[0]);
-//			if (javaProject instanceof IScriptProject) {
-//				return ((IModelElement) javaProject).getHandleIdentifier();
-//			}
-//		} catch (Exception e) {
-//			// ignore
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
-
-	private boolean isWtpClass(Object object) {
-		try {
-			return object != null && object.getClass().getSimpleName().equals("CompressedJavaProject"); //$NON-NLS-1$
-		} catch (Throwable t) {
-			// could have malformed name, see bug 165065
-			return false;
-		}
 	}
 
 	@Override
@@ -210,8 +175,7 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 		}
 
 		boolean accepts = object instanceof IModelElement || object instanceof ProjectFragmentContainer
-//				|| object instanceof ClassPathContainer.RequiredProjectWrapper || object instanceof JarEntryFile
-				|| object instanceof IProjectFragment || object instanceof WorkingSet || isWtpClass(object);
+				|| object instanceof IProjectFragment;
 
 		return accepts;
 	}
@@ -239,9 +203,9 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 					}
 				}
 			}
-		} else if (object instanceof WorkingSet) {
+		} else if (object instanceof IWorkingSet) {
 			try {
-				WorkingSet workingSet = (WorkingSet) object;
+				IWorkingSet workingSet = (IWorkingSet) object;
 				IAdaptable[] elements = workingSet.getElements();
 				for (IAdaptable adaptable : elements) {
 					IInteractionElement interactionElement = ContextCore.getContextManager()
@@ -267,10 +231,8 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public String getHandleForOffsetInObject(Object object, int offset) {
 		IMarker marker;
-		if (object instanceof ConcreteMarker) {
-			marker = ((ConcreteMarker) object).getMarker();
-		} else if (object instanceof Marker) {
-			marker = (Marker) object;
+		if (object instanceof IMarker) {
+			marker = (IMarker) object;
 		} else {
 			return null;
 		}
@@ -304,18 +266,11 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 						lineNumber = ((Integer) lineNumberAttribute).intValue();
 					}
 					if (lineNumber != -1) {
-						// could do finer granularity by uncommenting what's below, see bug 132092
-//						Document document = new Document(compilationUnit.getSource());
-//						IRegion region = document.getLineInformation(lineNumber);
-//						javaElement = compilationUnit.getElementAt(region.getOffset());
 						javaElement = compilationUnit;
 					}
 				}
 
 				if (javaElement != null) {
-//					if (javaElement instanceof IImportDeclaration) {
-//						javaElement = javaElement.getParent().getParent();
-//					}
 					return javaElement.getHandleIdentifier();
 				} else {
 					return null;
@@ -354,16 +309,11 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 				return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_INFINITE, null);
 			case IModelElement.SCRIPT_FOLDER:
 			case IModelElement.SOURCE_MODULE:
-//			case IModelElement.CLASS_FILE:
 				return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
 			case IModelElement.PACKAGE_DECLARATION:
-//			case IModelElement.IMPORT_DECLARATION:
-//			case IModelElement.IMPORT_CONTAINER:
 			case IModelElement.TYPE:
-//			case IModelElement.INITIALIZER:
 			case IModelElement.METHOD:
 			case IModelElement.FIELD:
-//			case IModelElement.LOCAL_VARIABLE:
 				ISourceModule cu = (ISourceModule) element.getAncestor(IModelElement.SCRIPT_MODEL);
 				if (cu != null) {
 					return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
