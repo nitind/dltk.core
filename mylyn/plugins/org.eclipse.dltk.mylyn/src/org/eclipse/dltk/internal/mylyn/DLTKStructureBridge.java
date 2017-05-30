@@ -251,11 +251,8 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 			}
 			if (compilationUnit != null) {
 				// first try to resolve the character start, then the line number if not present
-				int charStart = 0;
-				Object attribute = marker.getAttribute(IMarker.CHAR_START, 0);
-				if (attribute instanceof Integer) {
-					charStart = ((Integer) attribute).intValue();
-				}
+				int attribute = marker.getAttribute(IMarker.CHAR_START, 0);
+				int charStart = ((Integer) attribute).intValue();
 				IModelElement javaElement = null;
 				if (charStart != -1) {
 					javaElement = compilationUnit.getElementAt(charStart);

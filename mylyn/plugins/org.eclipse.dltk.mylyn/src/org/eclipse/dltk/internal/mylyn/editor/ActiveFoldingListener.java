@@ -88,10 +88,6 @@ public class ActiveFoldingListener extends AbstractContextListener {
 		DLTKUiBridgePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(PREFERENCE_LISTENER);
 	}
 
-	public static void resetProjection(IEditorPart javaEditor) {
-		// XXX 3.2 ignore for 3.2, leave for 3.1?
-	}
-
 	public void updateFolding() {
 		if (!enabled || !ContextCore.getContextManager().isContextActive()) {
 			if (editor instanceof ScriptEditor) {

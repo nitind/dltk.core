@@ -91,45 +91,7 @@ public class FocusedDLTKAllProposalComputer extends ScriptCompletionProposalComp
 
 	@Override
 	protected ScriptCompletionProposalCollector createCollector(ScriptContentAssistInvocationContext context) {
-		ScriptCompletionProposalCollector collector = null;
-		// FIXME super.createCollector(context);
-		if (collector == null) {
-			return null;
-		}
-//		collector.setIgnored(CompletionProposal.ANNOTATION_ATTRIBUTE_REF, false);
-//		collector.setIgnored(CompletionProposal.ANONYMOUS_CLASS_DECLARATION, false);
-		try {
-			collector.setIgnored(ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION, false);
-		} catch (IllegalArgumentException e) {
-			// ignore
-		}
-		collector.setIgnored(CompletionProposal.FIELD_REF, false);
-		try {
-			collector.setIgnored(FIELD_REF_WITH_CASTED_RECEIVER, false);
-		} catch (IllegalArgumentException e) {
-			// ignore
-		}
-		collector.setIgnored(CompletionProposal.KEYWORD, false);
-		collector.setIgnored(CompletionProposal.LABEL_REF, false);
-		collector.setIgnored(CompletionProposal.LOCAL_VARIABLE_REF, false);
-		collector.setIgnored(CompletionProposal.METHOD_DECLARATION, false);
-		collector.setIgnored(CompletionProposal.METHOD_NAME_REFERENCE, false);
-		collector.setIgnored(CompletionProposal.METHOD_REF, false);
-		try {
-			collector.setIgnored(CONSTRUCTOR_INVOCATION, false);
-		} catch (IllegalArgumentException e) {
-			// ignore
-		}
-		try {
-			collector.setIgnored(METHOD_REF_WITH_CASTED_RECEIVER, false);
-		} catch (IllegalArgumentException e) {
-			// ignore
-		}
-		collector.setIgnored(CompletionProposal.PACKAGE_REF, false);
-		collector.setIgnored(CompletionProposal.POTENTIAL_METHOD_DECLARATION, false);
-		collector.setIgnored(CompletionProposal.VARIABLE_DECLARATION, false);
-		collector.setIgnored(CompletionProposal.TYPE_REF, false);
-		return collector;
+		return null;
 	}
 
 	@Override
@@ -149,27 +111,6 @@ public class FocusedDLTKAllProposalComputer extends ScriptCompletionProposalComp
 	// renamed, since guessMethodContextInformationPosition(ContentAssistInvocationContext) is final
 	protected final int guessMethodContextInformationPosition2(ContentAssistInvocationContext context) {
 		final int contextPosition = context.getInvocationOffset();
-
-//		IDocument document = context.getDocument();
-//		ScriptHeuristicScanner scanner = new ScriptHeuristicScanner(document);
-//		int bound = Math.max(-1, contextPosition - 200);
-//
-//		// try the innermost scope of parentheses that looks like a method call
-//		int pos = contextPosition - 1;
-//		do {
-//			int paren = scanner.findOpeningPeer(pos, bound, '(', ')');
-//			if (paren == ScriptHeuristicScanner.NOT_FOUND) {
-//				break;
-//			}
-//			int token = scanner.previousToken(paren - 1, bound);
-//			// next token must be a method name (identifier) or the closing angle of a
-//			// constructor call of a parameterized type.
-//			if (token == Symbols.TokenIDENT || token == Symbols.TokenGREATERTHAN) {
-//				return paren + 1;
-//			}
-//			pos = paren - 1;
-//		} while (true);
-
 		return contextPosition;
 	}
 

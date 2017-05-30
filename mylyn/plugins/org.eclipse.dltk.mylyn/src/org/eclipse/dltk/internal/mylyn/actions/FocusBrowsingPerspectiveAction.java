@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.internal.mylyn.DLTKUiBridgePlugin;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -100,10 +99,6 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 					+ "\" view tree viewer", e)); //$NON-NLS-1$
 		}
 		return null;
-	}
-
-	public void propertyChange(PropertyChangeEvent event) {
-		// TODO Auto-generated method stub
 	}
 
 }

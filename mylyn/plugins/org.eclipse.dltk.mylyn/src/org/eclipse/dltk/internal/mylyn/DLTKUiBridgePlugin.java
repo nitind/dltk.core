@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.internal.mylyn.editor.ActiveFoldingListener;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.PreferenceConstants;
@@ -178,7 +177,6 @@ public class DLTKUiBridgePlugin extends AbstractUIPlugin {
 					if (part != null && part instanceof ScriptEditor) {
 						ScriptEditor editor = (ScriptEditor) part;
 						editorTracker.registerEditor(editor);
-						ActiveFoldingListener.resetProjection(editor);
 					}
 				}
 			}
