@@ -174,7 +174,7 @@ public class DLTKUiBridgePlugin extends AbstractUIPlugin {
 				IEditorReference[] references = page.getEditorReferences();
 				for (IEditorReference reference : references) {
 					IEditorPart part = reference.getEditor(false);
-					if (part != null && part instanceof ScriptEditor) {
+					if (part instanceof ScriptEditor) {
 						ScriptEditor editor = (ScriptEditor) part;
 						editorTracker.registerEditor(editor);
 					}

@@ -96,8 +96,7 @@ public class DLTKEditingMonitor extends AbstractUserInteractionMonitor {
 					boolean selectionResolved = false;
 					if (selectedElement instanceof IMethod && lastSelectedElement instanceof IMethod) {
 						// navigation between two elements
-						if (lastResolvedElement != null && lastSelectedElement != null
-								&& lastResolvedElement.equals(selectedElement)
+						if (lastResolvedElement != null && lastResolvedElement.equals(selectedElement)
 								&& !lastSelectedElement.equals(lastResolvedElement)) {
 							super.handleNavigation(part, selectedElement, DLTKReferencesProvider.ID,
 									contributeToContext);

@@ -59,20 +59,18 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 
 		if (elementToSelect != null) {
 			StructuredSelection currentSelection = (StructuredSelection) viewer.getSelection();
-			if (currentSelection.size() <= 1) {
-				if (elementToSelect instanceof IMember) {
-					if (viewer.getContentProvider() instanceof StandardModelElementContentProvider) {
-						if (!((StandardModelElementContentProvider) viewer.getContentProvider()).getProvideMembers()) {
-							elementToSelect = ((IMember) elementToSelect).getSourceModule();
-							return new StructuredSelection(elementToSelect);
-						}
+			if (currentSelection.size() <= 1 && elementToSelect instanceof IMember) {
+				if (viewer.getContentProvider() instanceof StandardModelElementContentProvider) {
+					if (!((StandardModelElementContentProvider) viewer.getContentProvider()).getProvideMembers()) {
+						elementToSelect = ((IMember) elementToSelect).getSourceModule();
+						return new StructuredSelection(elementToSelect);
 					}
+				}
 
-					for (ViewerFilter filter : Arrays.asList(viewer.getFilters())) {
-						if (filter instanceof DLTKDeclarationsFilter) {
-							elementToSelect = ((IMember) elementToSelect).getSourceModule();
-							return new StructuredSelection(elementToSelect);
-						}
+				for (ViewerFilter filter : Arrays.asList(viewer.getFilters())) {
+					if (filter instanceof DLTKDeclarationsFilter) {
+						elementToSelect = ((IMember) elementToSelect).getSourceModule();
+						return new StructuredSelection(elementToSelect);
 					}
 				}
 			}
@@ -109,25 +107,6 @@ public class FocusPackageExplorerAction extends AbstractAutoFocusViewAction {
 						actionItem.getAction().setEnabled(enabled);
 					}
 				}
-				// NOTE: turning off dynamically contributed filter items is not currently feasible
-//				else if (item instanceof ContributionItem) {
-//					ContributionItem contributionItem = (ContributionItem) item;
-//
-//					if (contributionItem.getClass().getSimpleName().equals("FilterActionMenuContributionItem")) {
-//						try {
-//							Class<?> clazz = contributionItem.getClass();
-//							Field field = clazz.getDeclaredField("fActionGroup");
-//							field.setAccessible(true);
-//							Object object = field.get(contributionItem);
-//							if (object instanceof CustomFiltersActionGroup) {
-//								CustomFiltersActionGroup group = (CustomFiltersActionGroup) object;
-//								group.setFilters(new String[] { });
-//							}
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//						}
-//					}
-//				}
 			}
 		}
 	}

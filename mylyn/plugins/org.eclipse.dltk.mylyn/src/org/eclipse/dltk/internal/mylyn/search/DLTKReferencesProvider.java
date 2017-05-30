@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 Tasktop Technologies and others.
+ * Copyright (c) 2004, 2017 Tasktop Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,16 +30,12 @@ public class DLTKReferencesProvider extends AbstractJavaRelationProvider {
 
 	@Override
 	protected boolean acceptResultElement(IModelElement element) {
-//		if (element instanceof IImportDeclaration) {
-//			return false;
-//		}
 		if (element instanceof IMethod) {
 			IMethod method = (IMethod) element;
 			if (method.getElementName().startsWith("test")) { //$NON-NLS-1$
 				return false; // HACK
-			} else {
-				return true;
 			}
+			return true;
 		}
 		return false;
 	}

@@ -159,9 +159,8 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 		IModelElement element = (IModelElement) getObjectForHandle(handle);
 		if ((element instanceof IMember || element instanceof IType) && element.exists()) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
@@ -170,8 +169,8 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 	@Override
 	public boolean acceptsObject(Object object) {
 		if (object instanceof IResource) {
-			Object adapter = ((IResource) object).getAdapter(IModelElement.class);
-			return adapter instanceof IModelElement;
+			IModelElement adapter = ((IResource) object).getAdapter(IModelElement.class);
+			return adapter != null;
 		}
 
 		boolean accepts = object instanceof IModelElement || object instanceof ProjectFragmentContainer
@@ -224,8 +223,7 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 
 	@Override
 	public boolean isDocument(String handle) {
-		IModelElement element = (IModelElement) getObjectForHandle(handle);
-		return element instanceof ISourceModule/* || element instanceof IClassFile*/;
+		return getObjectForHandle(handle) instanceof ISourceModule;
 	}
 
 	@Override
@@ -257,11 +255,8 @@ public class DLTKStructureBridge extends AbstractContextStructureBridge {
 				if (charStart != -1) {
 					javaElement = compilationUnit.getElementAt(charStart);
 				} else {
-					int lineNumber = 0;
-					Object lineNumberAttribute = marker.getAttribute(IMarker.LINE_NUMBER, 0);
-					if (lineNumberAttribute instanceof Integer) {
-						lineNumber = ((Integer) lineNumberAttribute).intValue();
-					}
+					Integer lineNumberAttribute = marker.getAttribute(IMarker.LINE_NUMBER, 0);
+					int lineNumber = lineNumberAttribute.intValue();
 					if (lineNumber != -1) {
 						javaElement = compilationUnit;
 					}

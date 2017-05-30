@@ -48,11 +48,10 @@ public class InterestUpdateDeltaListener implements IElementChangedListener {
 			IModelElement added = null;
 			IModelElement removed = null;
 			for (IModelElementDelta child : delta) {
-				if (child.getElement() instanceof ISourceModule) {
-					if (((ISourceModule) child.getElement()).getOwner() != null) {
-						// see bug 195361, do not reduce interest of temporary working copy
-						return;
-					}
+				if (child.getElement() instanceof ISourceModule
+						&& ((ISourceModule) child.getElement()).getOwner() != null) {
+					// see bug 195361, do not reduce interest of temporary working copy
+					return;
 				}
 
 				if (child.getKind() == IModelElementDelta.ADDED) {

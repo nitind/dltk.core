@@ -110,8 +110,7 @@ public class FocusedDLTKAllProposalComputer extends ScriptCompletionProposalComp
 
 	// renamed, since guessMethodContextInformationPosition(ContentAssistInvocationContext) is final
 	protected final int guessMethodContextInformationPosition2(ContentAssistInvocationContext context) {
-		final int contextPosition = context.getInvocationOffset();
-		return contextPosition;
+		return context.getInvocationOffset();
 	}
 
 	@Override

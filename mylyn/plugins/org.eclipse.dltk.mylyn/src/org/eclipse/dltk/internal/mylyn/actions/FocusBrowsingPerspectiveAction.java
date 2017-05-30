@@ -40,9 +40,6 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 	private final String[] viewNames = { "org.eclipse.jdt.ui.MembersView", "org.eclipse.jdt.ui.PackagesView", //$NON-NLS-1$ //$NON-NLS-2$
 			"org.eclipse.jdt.ui.TypesView" }; //$NON-NLS-1$
 
-	private final String[] classNames = { "org.eclipse.jdt.internal.ui.browsing.MembersView", //$NON-NLS-1$
-			"org.eclipse.jdt.internal.ui.browsing.PackagesView", "org.eclipse.jdt.internal.ui.browsing.TypesView" }; //$NON-NLS-1$ //$NON-NLS-2$
-
 	private IWorkbenchWindow initWindow;
 
 	public FocusBrowsingPerspectiveAction() {
@@ -60,8 +57,8 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 	@Override
 	public List<StructuredViewer> getViewers() {
 		List<StructuredViewer> viewers = new ArrayList<>();
-		for (int i = 0; i < viewNames.length; i++) {
-			StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewNames[i], classNames[i]);
+		for (String viewName : viewNames) {
+			StructuredViewer viewer = getBrowsingViewerFromActivePerspective(viewName);
 			if (viewer != null) {
 				viewers.add(viewer);
 			}
@@ -69,7 +66,7 @@ public class FocusBrowsingPerspectiveAction extends AbstractFocusViewAction impl
 		return viewers;
 	}
 
-	private StructuredViewer getBrowsingViewerFromActivePerspective(String id, String className) {
+	private StructuredViewer getBrowsingViewerFromActivePerspective(String id) {
 		IWorkbenchPage activePage = initWindow.getActivePage();
 		if (activePage == null) {
 			return null;
