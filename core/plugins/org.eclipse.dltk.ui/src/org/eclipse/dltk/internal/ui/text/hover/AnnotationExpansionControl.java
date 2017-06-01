@@ -242,15 +242,6 @@ public class AnnotationExpansionControl implements IInformationControl,
 												// fInput.fAnnotations[0])
 				item.defaultSelected();
 		}
-
-		/*
-		 * @see
-		 * org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.
-		 * MouseEvent)
-		 */
-		// public void mouseDown(MouseEvent e) {
-		// super.mouseDown(e);
-		// }
 	}
 
 	/**
@@ -300,8 +291,6 @@ public class AnnotationExpansionControl implements IInformationControl,
 	}
 
 	/**
-	 *
-	 *
 	 * @since 3.0
 	 */
 	public class LinearLayouter {
@@ -367,9 +356,6 @@ public class AnnotationExpansionControl implements IInformationControl,
 	 */
 	private final class HoverManager extends AbstractInformationControlManager {
 
-		/**
-		 *
-		 */
 		public HoverManager() {
 			super(parent -> new DefaultInformationControl(parent));
 
@@ -756,16 +742,17 @@ public class AnnotationExpansionControl implements IInformationControl,
 		}
 
 		// create modified styles (with background)
-		List shadedRanges = new ArrayList(undoRanges.size());
-		for (Iterator it = undoRanges.iterator(); it.hasNext();) {
-			StyleRange range = (StyleRange) ((StyleRange) it.next()).clone();
+		List<StyleRange> shadedRanges = new ArrayList<>(undoRanges.size());
+		for (Iterator<StyleRange> it = undoRanges.iterator(); it.hasNext();) {
+			StyleRange range = (StyleRange) it.next().clone();
 			shadedRanges.add(range);
 			range.background = getHighlightColor(disp);
 		}
 
 		// set the ranges one by one
-		for (Iterator iter = shadedRanges.iterator(); iter.hasNext();) {
-			text.setStyleRange((StyleRange) iter.next());
+		for (Iterator<StyleRange> iter = shadedRanges.iterator(); iter
+				.hasNext();) {
+			text.setStyleRange(iter.next());
 
 		}
 
