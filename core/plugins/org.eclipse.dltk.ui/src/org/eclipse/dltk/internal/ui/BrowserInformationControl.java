@@ -239,10 +239,6 @@ public class BrowserInformationControl extends AbstractInformationControl
 				fSymbolicFontName, true);
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.AbstractInformationControl#createContent(org.
-	 * eclipse .swt.widgets.Composite)
-	 */
 	@Override
 	protected void createContent(Composite parent) {
 		fBrowser = new Browser(parent, SWT.NONE);
@@ -360,9 +356,6 @@ public class BrowserInformationControl extends AbstractInformationControl
 			listener.inputChanged(fInput);
 	}
 
-	/*
-	 * @see IInformationControl#setVisible(boolean)
-	 */
 	@Override
 	public void setVisible(boolean visible) {
 		Shell shell = getShell();
@@ -477,9 +470,9 @@ public class BrowserInformationControl extends AbstractInformationControl
 		fTextLayout.setText(text);
 		fTextLayout.setWidth(sizeConstraints == null ? SWT.DEFAULT
 				: sizeConstraints.x - trim.width);
-		Iterator iter = presentation.getAllStyleRangeIterator();
+		Iterator<StyleRange> iter = presentation.getAllStyleRangeIterator();
 		while (iter.hasNext()) {
-			StyleRange sr = (StyleRange) iter.next();
+			StyleRange sr = iter.next();
 			if (sr.fontStyle == SWT.BOLD)
 				fTextLayout.setStyle(fBoldStyle, sr.start,
 						sr.start + sr.length - 1);
@@ -621,11 +614,6 @@ public class BrowserInformationControl extends AbstractInformationControl
 			fDelayedInputChangeListener.inputChanged(newInput);
 	}
 
-	/*
-	 * @see java.lang.Object#toString()
-	 *
-	 * @since 3.4
-	 */
 	@Override
 	public String toString() {
 		String style = (getShell().getStyle() & SWT.RESIZE) == 0 ? "fixed" //$NON-NLS-1$
@@ -640,10 +628,6 @@ public class BrowserInformationControl extends AbstractInformationControl
 		return fInput;
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.IInformationControlExtension5#
-	 * computeSizeConstraints (int, int)
-	 */
 	@Override
 	public Point computeSizeConstraints(int widthInChars, int heightInChars) {
 		if (fSymbolicFontName == null)
