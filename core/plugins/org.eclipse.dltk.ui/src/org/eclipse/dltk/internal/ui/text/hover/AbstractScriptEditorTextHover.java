@@ -200,32 +200,6 @@ public abstract class AbstractScriptEditorTextHover
 	}
 
 	/**
-	 * Returns the tool tip affordance string.
-	 *
-	 * @return the affordance string or <code>null</code> if disabled or no key
-	 *         binding is defined
-	 *
-	 */
-	// protected String getTooltipAffordanceString() {
-	// if (this.getPreferenceStore() == null) {
-	// return "{0}";
-	// }
-	// if (fBindingService == null
-	// || !getPreferenceStore().getBoolean(
-	// PreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE))
-	// return null;
-	//
-	// String keySequence = fBindingService
-	// .getBestActiveBindingFormattedFor(IScriptEditorActionDefinitionIds.
-	// SHOW_DOCUMENTATION);
-	// if (keySequence == null)
-	// return null;
-	//
-	// return Messages.format(
-	// ScriptHoverMessages.ScriptTextHover_makeStickyHint,
-	// keySequence == null ? "" : keySequence); //$NON-NLS-1$
-	// }
-	/**
 	 * Returns the style sheet.
 	 *
 	 *

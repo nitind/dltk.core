@@ -1,12 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  *******************************************************************************/
-
 package org.eclipse.dltk.internal.ui.text.hover;
 
 import java.util.Iterator;
@@ -36,10 +35,10 @@ import org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess;
 
 /**
  * Abstract super class for annotation hovers.
- * 
+ *
  */
-public abstract class AbstractAnnotationHover extends
-		AbstractScriptEditorTextHover {
+public abstract class AbstractAnnotationHover
+		extends AbstractScriptEditorTextHover {
 
 	protected DefaultMarkerAnnotationAccess fAnnotationAccess = new DefaultMarkerAnnotationAccess();
 	protected boolean fAllAnnotations;
@@ -63,9 +62,6 @@ public abstract class AbstractAnnotationHover extends
 		return buffer.toString();
 	}
 
-	/*
-	 * @see ITextHover#getHoverInfo(ITextViewer, IRegion)
-	 */
 	@Override
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		IPath path;
@@ -108,10 +104,8 @@ public abstract class AbstractAnnotationHover extends
 
 				int l = fAnnotationAccess.getLayer(a);
 
-				if (l >= layer
-						&& p != null
-						&& p.overlapsWith(hoverRegion.getOffset(),
-								hoverRegion.getLength())) {
+				if (l >= layer && p != null && p.overlapsWith(
+						hoverRegion.getOffset(), hoverRegion.getLength())) {
 					String msg = getMessageFromAnnotation(a);
 					if (msg != null && msg.trim().length() > 0) {
 						if (message != null) {
@@ -150,7 +144,8 @@ public abstract class AbstractAnnotationHover extends
 		return a.getText();
 	}
 
-	protected static boolean isActive(IPreferenceStore store, String preference) {
+	protected static boolean isActive(IPreferenceStore store,
+			String preference) {
 		return preference != null && store.getBoolean(preference);
 	}
 
@@ -209,12 +204,13 @@ public abstract class AbstractAnnotationHover extends
 
 	/**
 	 * Returns the annotation preference for the given annotation.
-	 * 
+	 *
 	 * @param annotation
 	 *            the annotation
 	 * @return the annotation preference or <code>null</code> if none
 	 */
-	protected AnnotationPreference getAnnotationPreference(Annotation annotation) {
+	protected AnnotationPreference getAnnotationPreference(
+			Annotation annotation) {
 		if (annotation.isMarkedDeleted()) {
 			return null;
 		}
