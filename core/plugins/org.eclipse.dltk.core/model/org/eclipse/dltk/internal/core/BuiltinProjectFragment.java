@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,13 +35,8 @@ import org.eclipse.dltk.internal.core.util.Util;
 
 /**
  * Project fragment for buildpath script folders and modules.
- * 
- * @author haiodo
- * 
  */
 public class BuiltinProjectFragment extends ProjectFragment {
-	public final static ArrayList EMPTY_LIST = new ArrayList();
-
 	static final Object INTERPRETER_CONTAINER = "org.eclipse.dltk.launching.INTERPRETER_CONTAINER"; //$NON-NLS-1$
 
 	protected final IPath fPath;
@@ -64,7 +59,8 @@ public class BuiltinProjectFragment extends ProjectFragment {
 			IBuildpathEntry[] entries = project.getRawBuildpath();
 			IPath containerPath = null;
 			for (int i = 0; i < entries.length; i++) {
-				if (entries[i].getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+				if (entries[i]
+						.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 					IPath path = entries[i].getPath();
 					if (path.segment(0).equals(INTERPRETER_CONTAINER)) {
 						containerPath = entries[i].getPath();
@@ -76,8 +72,8 @@ public class BuiltinProjectFragment extends ProjectFragment {
 				return null;
 			}
 			IBuildpathContainer buildpathContainer = ModelManager
-					.getModelManager().getBuildpathContainer(containerPath,
-							project);
+					.getModelManager()
+					.getBuildpathContainer(containerPath, project);
 			if (buildpathContainer != null
 					&& buildpathContainer instanceof IBuildpathContainerExtension) {
 				return ((IBuildpathContainerExtension) buildpathContainer)
@@ -102,13 +98,13 @@ public class BuiltinProjectFragment extends ProjectFragment {
 	@Override
 	protected boolean computeChildren(OpenableElementInfo info, Map newElements)
 			throws ModelException {
-		ArrayList vChildren = new ArrayList(5);
-		ArrayList vForeign = new ArrayList(5);
+		ArrayList<IModelElement> vChildren = new ArrayList<>(5);
 		char[][] inclusionPatterns = fullInclusionPatternChars();
 		char[][] exclusionPatterns = fullExclusionPatternChars();
-		computeFolderChildren(this.fPath, !Util.isExcluded(this.fPath,
-				inclusionPatterns, exclusionPatterns, true), vChildren,
-				vForeign, newElements, inclusionPatterns, exclusionPatterns);
+		computeFolderChildren(this.fPath,
+				!Util.isExcluded(this.fPath, inclusionPatterns,
+						exclusionPatterns, true),
+				vChildren, newElements, inclusionPatterns, exclusionPatterns);
 		IModelElement[] children = new IModelElement[vChildren.size()];
 		vChildren.toArray(children);
 		info.setChildren(children);
@@ -118,18 +114,19 @@ public class BuiltinProjectFragment extends ProjectFragment {
 	/**
 	 * Starting at this folder, create folders and add them to the collection of
 	 * children.
-	 * 
+	 *
 	 * @param newElements
-	 * 
+	 *
 	 * @exception ModelException
 	 *                The resource associated with this project fragment does
 	 *                not exist
 	 */
 	protected void computeFolderChildren(IPath path, boolean isIncluded,
-			ArrayList vChildren, ArrayList vForeign, Map newElements,
+			ArrayList<IModelElement> vChildren, Map newElements,
 			char[][] inclusionPatterns, char[][] exclusionPatterns)
 			throws ModelException {
-		BuiltinScriptFolder fldr = (BuiltinScriptFolder) getScriptFolder(Path.EMPTY);
+		BuiltinScriptFolder fldr = (BuiltinScriptFolder) getScriptFolder(
+				Path.EMPTY);
 		vChildren.add(fldr);
 		if (this.builtinProvider == null) {
 			return;
@@ -157,8 +154,8 @@ public class BuiltinProjectFragment extends ProjectFragment {
 			for (int i = 0; i < children.length; ++i) {
 				IModelElement child = children[i];
 				if (child.getElementType() == SCRIPT_FOLDER
-						&& ((IScriptFolder) child).getElementName().equals(
-								portablePath)) {
+						&& ((IScriptFolder) child).getElementName()
+								.equals(portablePath)) {
 					return ((IScriptFolder) child);
 				}
 			}
@@ -327,12 +324,12 @@ public class BuiltinProjectFragment extends ProjectFragment {
 		// try to guest map from internal element.
 		if (rawEntry != null
 				&& rawEntry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
-			IBuildpathContainer container = DLTKCore.getBuildpathContainer(
-					rawEntry.getPath(), project);
+			IBuildpathContainer container = DLTKCore
+					.getBuildpathContainer(rawEntry.getPath(), project);
 			IBuildpathEntry entrys[] = container.getBuildpathEntries();
 			for (int i = 0; i < entrys.length; ++i) {
-				if (entrys[i].getPath().equals(
-						new Path(this.getPath().segment(0)))) {
+				if (entrys[i].getPath()
+						.equals(new Path(this.getPath().segment(0)))) {
 					return entrys[i];
 				}
 			}

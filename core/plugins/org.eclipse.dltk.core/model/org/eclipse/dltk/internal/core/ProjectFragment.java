@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -91,7 +91,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	/**
 	 * Compares two objects for equality; for <code>ProjectFragments</code>s,
 	 * equality is having the same parent, same resources, and occurrence count.
-	 * 
+	 *
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -169,7 +169,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 
 	/**
 	 * Compute the project fragment children of this project fragment.
-	 * 
+	 *
 	 * @exception ModelException
 	 *                The resource associated with this project fragment does
 	 *                not exist
@@ -186,18 +186,19 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 			IResource underlyingResource = this.getResource();
 			if (underlyingResource.getType() == IResource.FOLDER
 					|| underlyingResource.getType() == IResource.PROJECT) {
-				ArrayList vChildren = new ArrayList(5);
+				ArrayList<IModelElement> vChildren = new ArrayList<>(5);
 				IContainer rootFolder = (IContainer) underlyingResource;
 				char[][] inclusionPatterns = this.fullInclusionPatternChars();
 				char[][] exclusionPatterns = this.fullExclusionPatternChars();
-				this.computeFolderChildren(rootFolder, !Util.isExcluded(
-						rootFolder, inclusionPatterns, exclusionPatterns),
+				this.computeFolderChildren(rootFolder,
+						!Util.isExcluded(rootFolder, inclusionPatterns,
+								exclusionPatterns),
 						Path.EMPTY, vChildren, inclusionPatterns,
 						exclusionPatterns);
 				// IModelElement[] children = new
 				// IModelElement[vChildren.size()];
 				// vChildren.toArray(children);
-				List childrenSet = vChildren;
+				List<IModelElement> childrenSet = vChildren;
 				// Call for extra model providers
 				IDLTKLanguageToolkit toolkit = DLTKLanguageManager
 						.getLanguageToolkit(this);
@@ -210,7 +211,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 						}
 					}
 				}
-				info.setChildren((IModelElement[]) childrenSet
+				info.setChildren(childrenSet
 						.toArray(new IModelElement[childrenSet.size()]));
 			}
 		} catch (ModelException e) {
@@ -224,14 +225,15 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	/**
 	 * Starting at this folder, create folders and add them to the collection of
 	 * children.
-	 * 
+	 *
 	 * @exception ModelException
 	 *                The resource associated with this project fragment does
 	 *                not exist
 	 */
 	protected void computeFolderChildren(IContainer folder, boolean isIncluded,
-			IPath path, ArrayList vChildren, char[][] inclusionPatterns,
-			char[][] exclusionPatterns) throws ModelException {
+			IPath path, ArrayList<IModelElement> vChildren,
+			char[][] inclusionPatterns, char[][] exclusionPatterns)
+			throws ModelException {
 		if (isIncluded) {
 			IScriptFolder pkg = this.getScriptFolder(path);
 			vChildren.add(pkg);
@@ -249,8 +251,8 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 				case IResource.FOLDER:
 					if (Util.isValidFolderNameForPackage(folder, memberName)) {
 						if (scriptProject.contains(member)) {
-							IPath newPath = path.append(manager
-									.intern(memberName));
+							IPath newPath = path
+									.append(manager.intern(memberName));
 							boolean isMemberIncluded = !Util.isExcluded(member,
 									inclusionPatterns, exclusionPatterns);
 							this.computeFolderChildren((IFolder) member,
@@ -263,8 +265,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 					// inclusion filter may only include files, in which
 					// case we still want to include the immediate parent
 					// package (lazily)
-					if (!hasIncluded
-							&& Util.isValidSourceModule(this, member)
+					if (!hasIncluded && Util.isValidSourceModule(this, member)
 							&& !Util.isExcluded(member, inclusionPatterns,
 									exclusionPatterns)) {
 						hasIncluded = true;
@@ -295,8 +296,8 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 			if (providers != null) {
 				boolean provides = false;
 				for (int i = 0; i < providers.length; i++) {
-					if (providers[i].isModelChangesProvidedFor(this, path
-							.segment(0))) {
+					if (providers[i].isModelChangesProvidedFor(this,
+							path.segment(0))) {
 						provides = true;
 						break;
 					}
@@ -383,8 +384,8 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 
 	@Override
 	public void printNode(CorePrinter output) {
-		output
-				.formatPrint("ScriptProject fragment:" + this.getPath().toOSString()); //$NON-NLS-1$
+		output.formatPrint(
+				"ScriptProject fragment:" + this.getPath().toOSString()); //$NON-NLS-1$
 		output.indent();
 		try {
 			IModelElement modelElements[] = this.getChildren();
@@ -412,8 +413,8 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	@Override
 	public Object[] getForeignResources() throws ModelException {
 		return ((ProjectFragmentInfo) this.getElementInfo())
-				.getForeignResources(this.getScriptProject(), this
-						.getResource(), this);
+				.getForeignResources(this.getScriptProject(),
+						this.getResource(), this);
 	}
 
 	/*
@@ -551,9 +552,8 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	public void copy(IPath destination, int updateResourceFlags,
 			int updateModelFlags, IBuildpathEntry sibling,
 			IProgressMonitor monitor) throws ModelException {
-		CopyProjectFragmentOperation op = new CopyProjectFragmentOperation(
-				this, destination, updateResourceFlags, updateModelFlags,
-				sibling);
+		CopyProjectFragmentOperation op = new CopyProjectFragmentOperation(this,
+				destination, updateResourceFlags, updateModelFlags, sibling);
 		op.runOperation(monitor);
 	}
 
@@ -561,9 +561,8 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	public void move(IPath destination, int updateResourceFlags,
 			int updateModelFlags, IBuildpathEntry sibling,
 			IProgressMonitor monitor) throws ModelException {
-		MoveProjectFragmentOperation op = new MoveProjectFragmentOperation(
-				this, destination, updateResourceFlags, updateModelFlags,
-				sibling);
+		MoveProjectFragmentOperation op = new MoveProjectFragmentOperation(this,
+				destination, updateResourceFlags, updateModelFlags, sibling);
 		op.runOperation(monitor);
 	}
 
