@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -38,12 +39,12 @@ public class ScriptDocumentationAccess {
 			DOCUMENTATION_PROVIDERS_EXTENSION_POINT,
 			IScriptDocumentationProvider.class) {
 		@Override
-		protected void initializeDescriptors(java.util.List<Object> descriptors) {
+		protected void initializeDescriptors(List<Object> descriptors) {
 			Collections.sort(descriptors, new Comparator<Object>() {
 				int priority(IConfigurationElement element) {
 					try {
-						return Integer.parseInt(element
-								.getAttribute("priority"));
+						return Integer
+								.parseInt(element.getAttribute("priority"));
 					} catch (NumberFormatException e) {
 						return 0;
 					}
@@ -168,55 +169,52 @@ public class ScriptDocumentationAccess {
 	public static IDocumentationResponse getDocumentation(String nature,
 			final Object member, final IAdaptable context) {
 		return merge(nature, (Operation2) provider -> {
-if (provider instanceof IScriptDocumentationProviderExtension2) {
-		final IScriptDocumentationProviderExtension2 ext = (IScriptDocumentationProviderExtension2) provider;
-		final IDocumentationResponse response = ext
-				.getDocumentationFor(member);
-		if (response != null && response.getTitle() == null) {
-			final IScriptDocumentationTitleAdapter titleAdapter = AdaptUtils
-					.getAdapter(context,
-							IScriptDocumentationTitleAdapter.class);
-			if (titleAdapter != null) {
-				final String title = titleAdapter.getTitle(member);
-				// TODO (alex) image
-				if (title != null && title.length() != 0) {
-					return new DocumentationResponseDelegate(
-							response) {
-						@Override
-						public String getTitle() {
-							return title;
-						}
+			if (provider instanceof IScriptDocumentationProviderExtension2) {
+				final IScriptDocumentationProviderExtension2 ext = (IScriptDocumentationProviderExtension2) provider;
+				final IDocumentationResponse response = ext
+						.getDocumentationFor(member);
+				if (response != null && response.getTitle() == null) {
+					final IScriptDocumentationTitleAdapter titleAdapter = AdaptUtils
+							.getAdapter(context,
+									IScriptDocumentationTitleAdapter.class);
+					if (titleAdapter != null) {
+						final String title = titleAdapter.getTitle(member);
+						// TODO (alex) image
+						if (title != null && title.length() != 0) {
+							return new DocumentationResponseDelegate(response) {
+								@Override
+								public String getTitle() {
+									return title;
+								}
 
-						private boolean imageEvaluated;
-						private ImageDescriptor image;
+								private boolean imageEvaluated;
+								private ImageDescriptor image;
 
-						@Override
-						public ImageDescriptor getImage() {
-							final ImageDescriptor result = super
-									.getImage();
-							if (result != null) {
-								return result;
-							}
-							if (!imageEvaluated) {
-								image = titleAdapter
-										.getImage(member);
-								imageEvaluated = true;
-							}
-							return image;
+								@Override
+								public ImageDescriptor getImage() {
+									final ImageDescriptor result = super.getImage();
+									if (result != null) {
+										return result;
+									}
+									if (!imageEvaluated) {
+										image = titleAdapter.getImage(member);
+										imageEvaluated = true;
+									}
+									return image;
+								}
+							};
 						}
-					};
+					}
 				}
+				return response;
+			} else if (member instanceof IMember) {
+				final IMember m = (IMember) member;
+				return DocumentationUtils.wrap(member, context,
+						provider.getInfo(m, true, true));
+			} else {
+				return null;
 			}
-		}
-		return response;
-} else if (member instanceof IMember) {
-		final IMember m = (IMember) member;
-		return DocumentationUtils.wrap(member, context,
-				provider.getInfo(m, true, true));
-} else {
-		return null;
-}
-});
+		});
 	}
 
 	/**
