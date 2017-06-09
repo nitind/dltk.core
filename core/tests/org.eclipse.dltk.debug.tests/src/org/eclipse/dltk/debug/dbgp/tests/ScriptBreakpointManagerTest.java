@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ *******************************************************************************/
 package org.eclipse.dltk.debug.dbgp.tests;
 
 import static org.mockito.Mockito.verify;
@@ -33,7 +41,8 @@ public class ScriptBreakpointManagerTest {
 	private static final URI outputURI = URI.create("outputURI");
 
 	private final IScriptDebugTarget target = Mockito.mock(IScriptDebugTarget.class);
-	private final IScriptBreakpointPathMapperExtension pathMapper = Mockito.mock(IScriptBreakpointPathMapperExtension.class);
+	private final IScriptBreakpointPathMapperExtension pathMapper = Mockito
+			.mock(IScriptBreakpointPathMapperExtension.class);
 	private final IScriptBreakpointLineMapper lineMapper = Mockito.mock(IScriptBreakpointLineMapper.class);
 	private final IBreakpointManager breakpointManager = Mockito.mock(IBreakpointManager.class);
 	private final IDbgpSession session = Mockito.mock(IDbgpSession.class);
@@ -55,9 +64,7 @@ public class ScriptBreakpointManagerTest {
 			DbgpBreakpointConfig config = (DbgpBreakpointConfig) invocation.getArguments()[2];
 			config.setLineNo(config.getLineNo() + 10);
 			return null;
-		})
-				.when(lineMapper)
-				.toDebuggerBreakpoint(Matchers.any(), Matchers.anyInt(), Matchers.any());
+		}).when(lineMapper).toDebuggerBreakpoint(Matchers.any(), Matchers.anyInt(), Matchers.any());
 
 		when(pathMapper.map(inputUri)).thenReturn(outputURI);
 	}
@@ -67,7 +74,8 @@ public class ScriptBreakpointManagerTest {
 		IScriptLineBreakpoint scriptBreakpoint = Mockito.mock(IScriptLineBreakpoint.class);
 		when(scriptBreakpoint.getResourceURI()).thenReturn(inputUri);
 		when(scriptBreakpoint.getLineNumber()).thenReturn(5);
-		when(coreCommands.setLineBreakpoint(Matchers.eq(outputURI), Matchers.eq(15), Matchers.any())).thenReturn("bpId");
+		when(coreCommands.setLineBreakpoint(Matchers.eq(outputURI), Matchers.eq(15), Matchers.any()))
+				.thenReturn("bpId");
 
 		ScriptBreakpointManager subject = createSubject();
 		subject.breakpointAdded(scriptBreakpoint);
@@ -87,7 +95,8 @@ public class ScriptBreakpointManagerTest {
 		IScriptWatchpoint scriptBreakpoint = Mockito.mock(IScriptWatchpoint.class);
 		when(scriptBreakpoint.getResourceURI()).thenReturn(inputUri);
 		when(scriptBreakpoint.getLineNumber()).thenReturn(5);
-		when(coreCommands.setWatchBreakpoint(Matchers.eq(outputURI), Matchers.eq(15), Matchers.any())).thenReturn("bpId");
+		when(coreCommands.setWatchBreakpoint(Matchers.eq(outputURI), Matchers.eq(15), Matchers.any()))
+				.thenReturn("bpId");
 
 		ScriptBreakpointManager subject = createSubject();
 		subject.breakpointAdded(scriptBreakpoint);
@@ -134,11 +143,8 @@ public class ScriptBreakpointManagerTest {
 	}
 
 	private ScriptBreakpointManager createSubject() {
-		ScriptBreakpointManager rv = new ScriptBreakpointManager(
-				target,
-				pathMapper,
-				lineMapper,
-				breakpointManager, ignored -> debugToolkit);
+		ScriptBreakpointManager rv = new ScriptBreakpointManager(target, pathMapper, lineMapper, breakpointManager,
+				ignored -> debugToolkit);
 		rv.initializeSession(session, new NullProgressMonitor());
 		return rv;
 	}
