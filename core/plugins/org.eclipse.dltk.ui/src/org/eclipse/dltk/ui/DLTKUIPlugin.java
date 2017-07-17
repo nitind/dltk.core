@@ -746,6 +746,8 @@ public class DLTKUIPlugin extends AbstractUIPlugin {
 			FileStoreEditorInput input) {
 		final ISourceModule[] modules = new ISourceModule[1];
 		final IPath filePath = URIUtil.toPath(input.getURI());
+		if (filePath == null)
+			return null;
 		IScriptModel scriptModel = DLTKCore
 				.create(ResourcesPlugin.getWorkspace().getRoot());
 		try {

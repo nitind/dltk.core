@@ -20,6 +20,7 @@ import org.eclipse.dltk.core.IBuffer;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IModelStatus;
 import org.eclipse.dltk.core.IModelStatusConstants;
+import org.eclipse.dltk.core.IOpenable;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
@@ -71,14 +72,18 @@ public class CommitWorkingCopyOperation extends ModelOperation {
 	protected void executeOperation() throws ModelException {
 		try {
 			beginTask(Messages.workingCopy_commit, 2);
-			SourceModule workingCopy = getSourceModule();
 
-			if (ExternalScriptProject.EXTERNAL_PROJECT_NAME.equals(workingCopy
-					.getScriptProject().getElementName())) {
+			IOpenable openable = (IOpenable) getElementToProcess();
+			if (ExternalScriptProject.EXTERNAL_PROJECT_NAME
+					.equals(openable
+							.getScriptProject().getElementName())) {
 				// case of a working copy without a resource
-				workingCopy.getBuffer().save(this.progressMonitor, this.force);
+				openable.getBuffer().save(this.progressMonitor,
+						this.force);
 				return;
 			}
+
+			SourceModule workingCopy = getSourceModule();
 
 			ISourceModule primary = workingCopy.getPrimary();
 			boolean isPrimary = workingCopy.isPrimary();
@@ -91,10 +96,12 @@ public class CommitWorkingCopyOperation extends ModelOperation {
 			if (isPrimary
 					|| (root instanceof ProjectFragment
 							&& ((ProjectFragment) root).validateOnBuildpath()
-									.isOK() && isIncluded
+									.isOK()
+							&& isIncluded
 							&& resource.isAccessible() && Util
-							.isValidSourceModule(workingCopy, workingCopy
-									.getResource()))) {
+									.isValidSourceModule(workingCopy,
+											workingCopy
+													.getResource()))) {
 
 				// force opening so that the delta builder can get the old info
 				if (!isPrimary && !primary.isOpen()) {

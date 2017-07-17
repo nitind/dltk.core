@@ -1389,25 +1389,32 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 		try {
 
 			IDocument document = info.fTextFileBuffer.getDocument();
+			boolean isSynchronized = true;
+
 			IResource resource = info.fCopy.getResource();
+			if (resource != null) {
 
-			Assert.isTrue(resource instanceof IFile);
+				Assert.isTrue(resource instanceof IFile);
 
-			boolean isSynchronized = resource
-					.isSynchronized(IResource.DEPTH_ZERO);
-			/*
-			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=98327 Make sure
-			 * file gets save in commit() if the underlying file has been
-			 * deleted
-			 */
-			if (!isSynchronized && isDeleted(element))
-				info.fTextFileBuffer.setDirty(true);
+				isSynchronized = resource
+						.isSynchronized(IResource.DEPTH_ZERO);
+				/*
+				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=98327 Make sure
+				 * file gets save in commit() if the underlying file has been
+				 * deleted
+				 */
+				if (!isSynchronized && isDeleted(element))
+					info.fTextFileBuffer.setDirty(true);
 
-			if (!resource.exists()) {
-				// underlying resource has been deleted, just recreate file,
-				// ignore the rest
-				createFileFromDocument(monitor, (IFile) resource, document);
-				return;
+				if (!resource.exists()) {
+					// underlying resource has been deleted, just recreate
+					// file,
+					// ignore the rest
+					createFileFromDocument(monitor, (IFile) resource,
+							document);
+					return;
+				}
+
 			}
 
 			if (fSavePolicy != null)
@@ -1487,12 +1494,14 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 				if (unit != null
 						&& info.fModel instanceof AbstractMarkerAnnotationModel) {
 					IResource r = unit.getResource();
-					IMarker[] markers = r.findMarkers(IMarker.MARKER, true,
-							IResource.DEPTH_ZERO);
-					if (markers != null && markers.length > 0) {
-						AbstractMarkerAnnotationModel model = (AbstractMarkerAnnotationModel) info.fModel;
-						for (int i = 0; i < markers.length; i++)
-							model.updateMarker(document, markers[i], null);
+					if (r != null) {
+						IMarker[] markers = r.findMarkers(IMarker.MARKER, true,
+								IResource.DEPTH_ZERO);
+						if (markers != null && markers.length > 0) {
+							AbstractMarkerAnnotationModel model = (AbstractMarkerAnnotationModel) info.fModel;
+							for (int i = 0; i < markers.length; i++)
+								model.updateMarker(document, markers[i], null);
+						}
 					}
 				}
 			}

@@ -228,6 +228,10 @@ public class EditorUtility {
 
 	private static IEditorInput getEditorInput(IModelElement element) {
 		while (element != null) {
+			IEditorInput adapter = element.getAdapter(IEditorInput.class);
+			if (adapter != null) {
+				return adapter;
+			}
 			if (element instanceof IExternalSourceModule) {
 				ISourceModule unit = ((ISourceModule) element).getPrimary();
 				if (unit instanceof IStorage) {
