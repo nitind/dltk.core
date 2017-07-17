@@ -5,10 +5,11 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IModelElementDelta;
 import org.eclipse.dltk.core.IProblemRequestor;
@@ -51,16 +52,19 @@ public class BecomeWorkingCopyOperation extends ModelOperation {
 			delta.added(workingCopy);
 			addDelta(delta);
 		} else {
-			if (workingCopy.getResource().isAccessible()) {
+			IResource resource = workingCopy.getResource();
+			if (resource != null && resource.isAccessible()) {
 				// report a F_PRIMARY_WORKING_COPY change delta for a primary
 				// working copy
-				ModelElementDelta delta = new ModelElementDelta(this.getModel());
+				ModelElementDelta delta = new ModelElementDelta(
+						this.getModel());
 				delta.changed(workingCopy,
 						IModelElementDelta.F_PRIMARY_WORKING_COPY);
 				addDelta(delta);
 			} else {
 				// report an ADDED delta
-				ModelElementDelta delta = new ModelElementDelta(this.getModel());
+				ModelElementDelta delta = new ModelElementDelta(
+						this.getModel());
 				delta.added(workingCopy,
 						IModelElementDelta.F_PRIMARY_WORKING_COPY);
 				addDelta(delta);

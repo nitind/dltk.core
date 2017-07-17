@@ -203,8 +203,18 @@ public class SourceModule extends AbstractSourceModule
 			return false;
 		}
 
-		return ((SourceModuleElementInfo) info).timestamp != getResource()
-				.getModificationStamp();
+		return ((SourceModuleElementInfo) info).timestamp != getOriginTimestamp();
+	}
+
+	/**
+	 * Last modification stamp of underlying resource.
+	 *
+	 * @return modification stamp of underlying resource, IResource.NULL_STAMP
+	 *         if deleted
+	 */
+	@Override
+	protected long getOriginTimestamp() {
+		return getResource().getModificationStamp();
 	}
 
 	@Override
@@ -392,8 +402,7 @@ public class SourceModule extends AbstractSourceModule
 	protected void updateTimeStamp(SourceModule original)
 			throws ModelException {
 		// XXX: should be an interface method
-		long timeStamp = ((IFile) original.getResource())
-				.getModificationStamp();
+		long timeStamp = original.getOriginTimestamp();
 		if (timeStamp == IResource.NULL_STAMP) {
 			throw new ModelException(
 					new ModelStatus(IModelStatusConstants.INVALID_RESOURCE));

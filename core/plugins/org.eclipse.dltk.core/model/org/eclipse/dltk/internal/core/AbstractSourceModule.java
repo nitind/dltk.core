@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -548,17 +547,9 @@ public abstract class AbstractSourceModule extends Openable
 			printNode(printer);
 			printer.flush();
 		}
-		// update timestamp (might be IResource.NULL_STAMP if original does
-		// not exist)
-		if (underlyingResource == null) {
-			underlyingResource = getResource();
-		}
-		// underlying resource is null in the case of a working copy out of
-		// workspace
-		if (underlyingResource != null) {
-			moduleInfo.timestamp = ((IFile) underlyingResource)
-					.getModificationStamp();
-		}
+		moduleInfo.timestamp = underlyingResource != null
+				? underlyingResource.getLocalTimeStamp()
+				: getOriginTimestamp();
 		// We need to update children contents using model providers
 		// Call for extra model providers
 		final IDLTKLanguageToolkit toolkit = DLTKLanguageManager
@@ -624,7 +615,7 @@ public abstract class AbstractSourceModule extends Openable
 		// create buffer
 		final BufferManager bufManager = getBufferManager();
 		final boolean isWorkingCopy = isWorkingCopy();
-		IBuffer buffer = isWorkingCopy ? this.owner.createBuffer(this)
+		IBuffer buffer = isWorkingCopy ? createBuffer()
 				: BufferManager.createBuffer(this);
 		if (buffer == null) {
 			return null;
@@ -687,6 +678,10 @@ public abstract class AbstractSourceModule extends Openable
 		}
 
 		return buffer;
+	}
+
+	protected IBuffer createBuffer() {
+		return this.owner.createBuffer(this);
 	}
 
 	@Override
@@ -788,5 +783,9 @@ public abstract class AbstractSourceModule extends Openable
 	@Override
 	public ISourceRange getNameRange() throws ModelException {
 		return null;
+	}
+
+	protected long getOriginTimestamp() {
+		return IResource.NULL_STAMP;
 	}
 }

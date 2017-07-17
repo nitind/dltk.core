@@ -275,11 +275,13 @@ public class ProblemsLabelDecorator
 	private IAnnotationModel isInScriptAnnotationModel(ISourceModule original) {
 		if (original.isWorkingCopy()) {
 			if (original instanceof SourceModule) {
-				FileEditorInput editorInput = new FileEditorInput(
-						(IFile) original.getResource());
-				return DLTKUIPlugin.getDefault()
-						.getSourceModuleDocumentProvider()
-						.getAnnotationModel(editorInput);
+				IFile file = (IFile) original.getResource();
+				if (file != null) {
+					FileEditorInput editorInput = new FileEditorInput(file);
+					return DLTKUIPlugin.getDefault()
+							.getSourceModuleDocumentProvider()
+							.getAnnotationModel(editorInput);
+				}
 			} else if (original instanceof IExternalSourceModule) {
 				ExternalStorageEditorInput editorInput = new ExternalStorageEditorInput(
 						(IExternalSourceModule) original);

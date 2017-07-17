@@ -8,9 +8,10 @@
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
-import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IModelElementDelta;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 
 /**
@@ -37,12 +38,14 @@ public class DiscardWorkingCopyOperation extends ModelOperation {
 			}
 			if (!workingCopy.isPrimary()) {
 				// report removedscriptdelta for a non-primary working copy
-				ModelElementDelta delta = new ModelElementDelta(this.getModel());
+				ModelElementDelta delta = new ModelElementDelta(
+						this.getModel());
 				delta.removed(workingCopy);
 				addDelta(delta);
 				removeReconcileDelta(workingCopy);
 			} else {
-				if (workingCopy.getResource().isAccessible()) {
+				IResource resource = workingCopy.getResource();
+				if (resource != null && resource.isAccessible()) {
 					// report a F_PRIMARY_WORKING_COPY change delta for a
 					// primary working copy
 					ModelElementDelta delta = new ModelElementDelta(this
