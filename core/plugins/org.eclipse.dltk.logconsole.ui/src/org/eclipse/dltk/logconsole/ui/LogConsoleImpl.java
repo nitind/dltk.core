@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -52,7 +52,7 @@ public class LogConsoleImpl extends IOConsole {
 		super.dispose();
 	}
 
-	private final Map<ILogConsoleStream, IOConsoleOutputStream> streams = new HashMap<ILogConsoleStream, IOConsoleOutputStream>();
+	private final Map<ILogConsoleStream, IOConsoleOutputStream> streams = new HashMap<>();
 
 	protected void println(ILogConsoleStream stream, String message)
 			throws IOException {
@@ -79,12 +79,10 @@ public class LogConsoleImpl extends IOConsole {
 			} else {
 				final Display display = PlatformUI.getWorkbench().getDisplay();
 				if (!display.isDisposed())
-					display.asyncExec(new Runnable() {
-						public void run() {
-							if (!display.isDisposed())
-								outputStream.setColor(display
-										.getSystemColor(SWT.COLOR_RED));
-						}
+					display.asyncExec(() -> {
+						if (!display.isDisposed())
+							outputStream.setColor(display
+									.getSystemColor(SWT.COLOR_RED));
 					});
 			}
 		}

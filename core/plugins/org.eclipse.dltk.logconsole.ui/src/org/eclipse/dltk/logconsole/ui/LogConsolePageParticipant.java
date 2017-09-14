@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -21,15 +21,19 @@ import org.eclipse.ui.part.IPageBookViewPage;
 
 public class LogConsolePageParticipant implements IConsolePageParticipant {
 
+	@Override
 	public void activated() {
 	}
 
+	@Override
 	public void deactivated() {
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public void init(IPageBookViewPage page, IConsole console) {
 		Assert.isLegal(console instanceof LogConsoleImpl);
 		IActionBars bars = page.getSite().getActionBars();
@@ -38,7 +42,8 @@ public class LogConsolePageParticipant implements IConsolePageParticipant {
 				new CloseLogConsoleAction(console));
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	@Override
+	public <T> T getAdapter(Class<T> adapter) {
 		return null;
 	}
 }

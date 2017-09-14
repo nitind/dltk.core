@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -53,12 +53,13 @@ public class DefaultLogConsole extends AbstractLogConsole {
 
 	}
 
-	protected final List<LogItem> items = new ArrayList<LogItem>();
+	protected final List<LogItem> items = new ArrayList<>();
 	protected int writePos = 0;
 
 	private static final int LIMIT = 1000;
 	private static final int PURGE = LIMIT / 4;
 
+	@Override
 	public void println(ILogConsoleStream stream, Object message) {
 		if (message == null) {
 			return;
@@ -66,6 +67,7 @@ public class DefaultLogConsole extends AbstractLogConsole {
 		print(new LogItem(stream, currentTimeMillis(), null, message));
 	}
 
+	@Override
 	public void println(ILogCategory category, Object message) {
 		if (message == null) {
 			return;
@@ -79,7 +81,7 @@ public class DefaultLogConsole extends AbstractLogConsole {
 			items.add(item);
 			if (items.size() > LIMIT) {
 				// TODO (alex) keep list of pages and drop the whole page(s)
-				items.removeAll(new ArrayList<LogItem>(items.subList(0, PURGE)));
+				items.removeAll(new ArrayList<>(items.subList(0, PURGE)));
 				if (writePos > PURGE) {
 					writePos -= PURGE;
 				} else {
@@ -93,6 +95,7 @@ public class DefaultLogConsole extends AbstractLogConsole {
 	}
 
 	private final Job writeJob = new Job("") {
+		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
 				execute();
