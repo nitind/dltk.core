@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -70,7 +70,7 @@ public class LogConsoleFactoryManager {
 
 	public synchronized List<FactoryDescriptor> getDescriptors() {
 		if (descriptors == null) {
-			descriptors = new ArrayList<FactoryDescriptor>();
+			descriptors = new ArrayList<>();
 			for (IConfigurationElement element : Platform
 					.getExtensionRegistry().getConfigurationElementsFor(
 							"org.eclipse.dltk.logconsole")) {

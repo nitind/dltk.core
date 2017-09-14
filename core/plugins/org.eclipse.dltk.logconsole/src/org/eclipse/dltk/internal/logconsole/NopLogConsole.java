@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -22,9 +22,11 @@ public class NopLogConsole extends AbstractLogConsole {
 		super(consoleType, identifier);
 	}
 
+	@Override
 	public void println(ILogConsoleStream stream, Object message) {
 	}
 
+	@Override
 	public void println(ILogCategory category, Object message) {
 	}
 

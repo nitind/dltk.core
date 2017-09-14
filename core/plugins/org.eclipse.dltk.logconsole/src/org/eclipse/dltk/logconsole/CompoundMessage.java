@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 NumberFour AG
+ * Copyright (c) 2011, 2017 NumberFour AG
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -18,7 +18,7 @@ import java.util.List;
 public class CompoundMessage {
 	private final Object header;
 
-	private final List<Object> contents = new ArrayList<Object>();
+	private final List<Object> contents = new ArrayList<>();
 
 	public CompoundMessage(Object header) {
 		this.header = header;

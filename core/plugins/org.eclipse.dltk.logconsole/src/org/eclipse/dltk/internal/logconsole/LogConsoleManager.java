@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2017 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -22,6 +22,7 @@ import org.eclipse.dltk.logconsole.LogConsoleType;
 
 public class LogConsoleManager implements ILogConsoleManager {
 
+	@Override
 	public ILogConsole getConsole(LogConsoleType consoleType) {
 		return getConsole(consoleType, null);
 	}
@@ -65,8 +66,9 @@ public class LogConsoleManager implements ILogConsoleManager {
 
 	private final Object lock = new Object();
 
-	private final Map<ConsoleKey, ILogConsole> consoles = new HashMap<ConsoleKey, ILogConsole>();
+	private final Map<ConsoleKey, ILogConsole> consoles = new HashMap<>();
 
+	@Override
 	public ILogConsole getConsole(LogConsoleType consoleType, Object identifier) {
 		final ConsoleKey key = new ConsoleKey(consoleType, identifier);
 		synchronized (lock) {
@@ -101,8 +103,9 @@ public class LogConsoleManager implements ILogConsoleManager {
 		return new NopLogConsole(key.consoleType, key.identifier);
 	}
 
+	@Override
 	public ILogConsole[] list(LogConsoleType consoleType) {
-		final List<ILogConsole> result = new ArrayList<ILogConsole>();
+		final List<ILogConsole> result = new ArrayList<>();
 		synchronized (lock) {
 			for (Map.Entry<ConsoleKey, ILogConsole> entry : consoles.entrySet()) {
 				if (consoleType.equals(entry.getKey().consoleType)) {
