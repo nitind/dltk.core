@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -83,11 +83,10 @@ public class PackageExplorerShowInTests extends TestCase {
 		final ISourceModule cu= pack.createSourceModule("A.txt", "package p;\nclass A {\n\n}", true, null);
 		
 		IAdaptable adaptable= new IAdaptable() {
-			@SuppressWarnings("unchecked")
 			@Override
 			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == IModelElement.class)
-					return (T) cu;
+					return adapter.cast(cu);
 				else
 					return null;
 			}
@@ -108,7 +107,7 @@ public class PackageExplorerShowInTests extends TestCase {
 			@Override
 			public <T> T getAdapter(Class<T> adapter) {
 				if (adapter == IResource.class)
-					return (T) cu.getResource();
+					return adapter.cast(cu.getResource());
 				else
 					return null;
 			}

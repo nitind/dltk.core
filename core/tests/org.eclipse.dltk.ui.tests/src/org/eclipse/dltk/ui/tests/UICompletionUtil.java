@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 NumberFour AG
+ * Copyright (c) 2012, 2018 NumberFour AG
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -122,7 +122,7 @@ public class UICompletionUtil {
 			throw new AssertionError(e);
 		}
 
-		final List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
+		final List<ICompletionProposal> proposals = new ArrayList<>();
 		for (CompletionProposalCategory cat : CompletionProposalComputerRegistry
 				.getDefault().getProposalCategories()) {
 			proposals.addAll(cat.computeCompletionProposals(context,

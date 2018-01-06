@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2017 xored software, Inc. and others.
+ * Copyright (c) 2008, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -48,7 +48,7 @@ public class TodoHighlightingTest {
 		TestScriptCommentScanner scanner = createScanner(tags, true);
 		scanner.setText(data);
 		final IToken todoToken = scanner.getToken(TODO_KEY);
-		List<TokenPos> result = new ArrayList<TokenPos>();
+		List<TokenPos> result = new ArrayList<>();
 		IToken t;
 		while (!(t = scanner.nextToken()).isEOF()) {
 			if (t.equals(todoToken)) {
