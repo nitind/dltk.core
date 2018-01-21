@@ -1,5 +1,7 @@
 package org.eclipse.dltk.ui.templates;
 
+import java.util.function.Supplier;
+
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -13,12 +15,19 @@ import org.eclipse.jface.text.templates.TemplateException;
 import org.eclipse.jface.text.templates.TemplateProposal;
 import org.eclipse.swt.graphics.Image;
 
-public class ScriptTemplateProposal extends TemplateProposal implements
-		ICompletionProposalExtension4 {
+public class ScriptTemplateProposal extends TemplateProposal implements ICompletionProposalExtension4 {
+	private Supplier<Image> fImageFactory;
+	private Image fComputedImage;
 
-	public ScriptTemplateProposal(Template template, TemplateContext context,
-			IRegion region, Image image, int relevance) {
+	public ScriptTemplateProposal(Template template, TemplateContext context, IRegion region, Image image,
+			int relevance) {
 		super(template, context, region, image, relevance);
+	}
+
+	public ScriptTemplateProposal(Template template, TemplateContext context, IRegion region, Supplier<Image> image,
+			int relevance) {
+		super(template, context, region, null, relevance);
+		fImageFactory = image;
 	}
 
 	private boolean isRelevanceOverriden;
@@ -30,6 +39,14 @@ public class ScriptTemplateProposal extends TemplateProposal implements
 	@Override
 	public int getRelevance() {
 		return isRelevanceOverriden ? relevanceOverride : super.getRelevance();
+	}
+
+	public void setImageFactory(Supplier<Image> factory) {
+		fImageFactory = factory;
+	}
+
+	public Supplier<Image> getImageFactory() {
+		return fImageFactory;
 	}
 
 	public void setRelevance(int value) {
@@ -50,10 +67,8 @@ public class ScriptTemplateProposal extends TemplateProposal implements
 
 				// restore indenting
 				IDocument document = scriptContext.getDocument();
-				String indenting = ScriptTemplateContext.calculateIndent(
-						document, scriptContext.getStart());
-				String delimeter = TextUtilities
-						.getDefaultLineDelimiter(document);
+				String indenting = ScriptTemplateContext.calculateIndent(document, scriptContext.getStart());
+				String delimeter = TextUtilities.getDefaultLineDelimiter(document);
 
 				String info = templateBuffer.getString();
 				return info.replaceAll(delimeter + indenting, delimeter);
@@ -97,6 +112,19 @@ public class ScriptTemplateProposal extends TemplateProposal implements
 	@Override
 	public String toString() {
 		return getDisplayString();
+	}
+
+	@Override
+	public Image getImage() {
+		if (fComputedImage != null) {
+			return fComputedImage;
+		}
+		if (fImageFactory != null) {
+			fComputedImage = fImageFactory.get();
+			return fComputedImage;
+		}
+
+		return super.getImage();
 	}
 
 }

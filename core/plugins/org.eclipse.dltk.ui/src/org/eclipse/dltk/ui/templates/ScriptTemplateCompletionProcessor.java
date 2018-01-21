@@ -41,14 +41,13 @@ import org.eclipse.jface.text.templates.TemplateProposal;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.IWorkbenchPartOrientation;
 
-public abstract class ScriptTemplateCompletionProcessor
-		extends TemplateCompletionProcessor {
+public abstract class ScriptTemplateCompletionProcessor extends TemplateCompletionProcessor {
 
-	private static final class ProposalComparator
-			implements Comparator<TemplateProposal> {
+	private static final class ProposalComparator implements Comparator<TemplateProposal> {
 		@Override
 		public int compare(TemplateProposal o1, TemplateProposal o2) {
 			return o2.getRelevance() - o1.getRelevance();
@@ -59,8 +58,7 @@ public abstract class ScriptTemplateCompletionProcessor
 
 	private final ScriptContentAssistInvocationContext context;
 
-	public ScriptTemplateCompletionProcessor(
-			ScriptContentAssistInvocationContext context) {
+	public ScriptTemplateCompletionProcessor(ScriptContentAssistInvocationContext context) {
 		Assert.isNotNull(context);
 		this.context = context;
 	}
@@ -74,12 +72,24 @@ public abstract class ScriptTemplateCompletionProcessor
 	private static final String $_WORD_SELECTION = "${" //$NON-NLS-1$
 			+ GlobalTemplateVariables.WordSelection.NAME + "}"; //$NON-NLS-1$
 
-	@Override
-	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
-			int offset) {
+	protected ITextSelection getTextSelection(ITextViewer viewer) {
+		final ITextSelection[] selection = new ITextSelection[1];
+		Runnable getSelection = () -> {
+			selection[0] = (ITextSelection) viewer.getSelectionProvider().getSelection();
+		};
+		if (Display.getCurrent() != null) {
+			getSelection.run();
+		} else {
+			Display.getDefault().syncExec(getSelection);
+		}
 
-		ITextSelection selection = (ITextSelection) viewer
-				.getSelectionProvider().getSelection();
+		return selection[0];
+	}
+
+	@Override
+	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
+
+		ITextSelection selection = getTextSelection(viewer);
 
 		// adjust offset to end of normalized selection
 		if (selection.getOffset() == offset)
@@ -92,15 +102,13 @@ public abstract class ScriptTemplateCompletionProcessor
 			if (!isValidPrefix(prefix)) {
 				return new ICompletionProposal[0];
 			}
-			IRegion region = new Region(offset - prefix.length(),
-					prefix.length());
+			IRegion region = new Region(offset - prefix.length(), prefix.length());
 			TemplateContext context = createContext(viewer, region);
 			if (context == null)
 				return new ICompletionProposal[0];
 			// name of the selection variables {line, word}_selection
 			context.setVariable("selection", selection.getText()); //$NON-NLS-1$
-			Template[] templates = getTemplates(
-					context.getContextType().getId());
+			Template[] templates = getTemplates(context.getContextType().getId());
 			for (int i = 0; i != templates.length; i++) {
 				final Template template = templates[i];
 				try {
@@ -109,22 +117,19 @@ public abstract class ScriptTemplateCompletionProcessor
 					continue;
 				}
 				if (isMatchingTemplate(template, prefix, context)) {
-					matches.add((TemplateProposal) createProposal(template,
-							context, region, getRelevance(template, prefix)));
+					matches.add((TemplateProposal) createProposal(template, context, region,
+							getRelevance(template, prefix)));
 				}
 			}
 		} else {
-			IRegion region = new Region(offset - selection.getLength(),
-					selection.getLength());
+			IRegion region = new Region(offset - selection.getLength(), selection.getLength());
 			TemplateContext context = createContext(viewer, region);
 			if (context == null)
 				return new ICompletionProposal[0];
 			// name of the selection variables {line, word}_selection
 			context.setVariable("selection", selection.getText()); //$NON-NLS-1$
-			Template[] templates = getTemplates(
-					context.getContextType().getId());
-			final boolean multipleLinesSelected = areMultipleLinesSelected(
-					viewer);
+			Template[] templates = getTemplates(context.getContextType().getId());
+			final boolean multipleLinesSelected = areMultipleLinesSelected(viewer);
 			for (int i = 0; i != templates.length; i++) {
 				final Template template = templates[i];
 				try {
@@ -132,12 +137,9 @@ public abstract class ScriptTemplateCompletionProcessor
 				} catch (TemplateException e) {
 					continue;
 				}
-				if (!multipleLinesSelected
-						&& template.getPattern().indexOf($_WORD_SELECTION) != -1
-						|| (multipleLinesSelected && template.getPattern()
-								.indexOf($_LINE_SELECTION) != -1)) {
-					matches.add((TemplateProposal) createProposal(template,
-							context, region, getRelevance(template)));
+				if (!multipleLinesSelected && template.getPattern().indexOf($_WORD_SELECTION) != -1
+						|| (multipleLinesSelected && template.getPattern().indexOf($_LINE_SELECTION) != -1)) {
+					matches.add((TemplateProposal) createProposal(template, context, region, getRelevance(template)));
 				}
 			}
 		}
@@ -153,12 +155,11 @@ public abstract class ScriptTemplateCompletionProcessor
 	}
 
 	/**
-	 * Returns <code>true</code> if one line is completely selected or if
-	 * multiple lines are selected. Being completely selected means that all
-	 * characters except the new line characters are selected.
+	 * Returns <code>true</code> if one line is completely selected or if multiple
+	 * lines are selected. Being completely selected means that all characters
+	 * except the new line characters are selected.
 	 *
-	 * @param viewer
-	 *                   the text viewer
+	 * @param viewer the text viewer
 	 * @return <code>true</code> if one or multiple lines are selected
 	 * @since 2.1
 	 */
@@ -173,8 +174,7 @@ public abstract class ScriptTemplateCompletionProcessor
 			int startLine = document.getLineOfOffset(s.x);
 			int endLine = document.getLineOfOffset(s.x + s.y);
 			IRegion line = document.getLineInformation(startLine);
-			return startLine != endLine
-					|| (s.x == line.getOffset() && s.y == line.getLength());
+			return startLine != endLine || (s.x == line.getOffset() && s.y == line.getLength());
 		} catch (BadLocationException x) {
 			return false;
 		}
@@ -184,15 +184,12 @@ public abstract class ScriptTemplateCompletionProcessor
 		return prefix.length() != 0;
 	}
 
-	protected boolean isMatchingTemplate(Template template, String prefix,
-			TemplateContext context) {
-		return template.getName().startsWith(prefix)
-				&& template.matches(prefix, context.getContextType().getId());
+	protected boolean isMatchingTemplate(Template template, String prefix, TemplateContext context) {
+		return template.getName().startsWith(prefix) && template.matches(prefix, context.getContextType().getId());
 	}
 
 	@Override
-	protected TemplateContext createContext(ITextViewer viewer,
-			IRegion region) {
+	protected TemplateContext createContext(ITextViewer viewer, IRegion region) {
 		TemplateContextType contextType = getContextType(viewer, region);
 		if (contextType instanceof ScriptTemplateContextType) {
 			IDocument document = viewer.getDocument();
@@ -201,18 +198,17 @@ public abstract class ScriptTemplateCompletionProcessor
 			if (sourceModule == null) {
 				return null;
 			}
-			return ((ScriptTemplateContextType) contextType).createContext(
-					document, region.getOffset(), region.getLength(),
-					sourceModule);
+			return ((ScriptTemplateContextType) contextType).createContext(document, region.getOffset(),
+					region.getLength(), sourceModule);
 		}
 		return null;
 	}
 
 	@Override
-	protected ICompletionProposal createProposal(Template template,
-			TemplateContext context, IRegion region, int relevance) {
+	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region,
+			int relevance) {
 		return new ScriptTemplateProposal(template, context, region,
-				getImage(template), relevance);
+				() -> ScriptTemplateCompletionProcessor.this.getImage(template), relevance);
 	}
 
 	protected IInformationControlCreator getInformationControlCreator() {
@@ -223,8 +219,7 @@ public abstract class ScriptTemplateCompletionProcessor
 		if (editor instanceof IWorkbenchPartOrientation)
 			orientation = ((IWorkbenchPartOrientation) editor).getOrientation();
 		IDLTKLanguageToolkit toolkit = null;
-		toolkit = DLTKLanguageManager
-				.getLanguageToolkit(getContext().getLanguageNatureID());
+		toolkit = DLTKLanguageManager.getLanguageToolkit(getContext().getLanguageNatureID());
 		if ((toolkit == null) && (editor instanceof ScriptEditor))
 			toolkit = ((ScriptEditor) editor).getLanguageToolkit();
 		return new TemplateInformationControlCreator(orientation, toolkit);
@@ -236,8 +231,7 @@ public abstract class ScriptTemplateCompletionProcessor
 
 	@Override
 	protected Template[] getTemplates(String contextTypeId) {
-		return getTemplateAccess().getTemplateStore()
-				.getTemplates(contextTypeId);
+		return getTemplateAccess().getTemplateStore().getTemplates(contextTypeId);
 	}
 
 	protected char[] getIgnore() {
@@ -245,11 +239,9 @@ public abstract class ScriptTemplateCompletionProcessor
 	}
 
 	@Override
-	protected TemplateContextType getContextType(ITextViewer viewer,
-			IRegion region) {
+	protected TemplateContextType getContextType(ITextViewer viewer, IRegion region) {
 		if (isValidLocation(viewer, region)) {
-			return getTemplateAccess().getContextTypeRegistry()
-					.getContextType(getContextTypeId());
+			return getTemplateAccess().getContextTypeRegistry().getContextType(getContextTypeId());
 		}
 		return null;
 	}
@@ -285,13 +277,11 @@ public abstract class ScriptTemplateCompletionProcessor
 		return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_TEMPLATE);
 	}
 
-	protected String getTrigger(ITextViewer viewer, IRegion region)
-			throws BadLocationException {
+	protected String getTrigger(ITextViewer viewer, IRegion region) throws BadLocationException {
 		final IDocument doc = viewer.getDocument();
 		final int regionEnd = region.getOffset() + region.getLength();
 		final IRegion line = doc.getLineInformationOfOffset(regionEnd);
-		final String s = doc.get(line.getOffset(),
-				regionEnd - line.getOffset());
+		final String s = doc.get(line.getOffset(), regionEnd - line.getOffset());
 		final int spaceIndex = s.lastIndexOf(' ');
 		if (spaceIndex != -1) {
 			return s.substring(spaceIndex);
@@ -300,11 +290,9 @@ public abstract class ScriptTemplateCompletionProcessor
 	}
 
 	/**
-	 * Returns the relevance of a template. The default implementation returns
-	 * zero.
+	 * Returns the relevance of a template. The default implementation returns zero.
 	 *
-	 * @param template
-	 *                     the template to compute the relevance for
+	 * @param template the template to compute the relevance for
 	 * @return the relevance of <code>template</code>
 	 */
 	protected int getRelevance(Template template) {

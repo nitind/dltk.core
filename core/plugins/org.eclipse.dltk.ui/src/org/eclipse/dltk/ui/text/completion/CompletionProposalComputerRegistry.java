@@ -39,6 +39,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
@@ -66,21 +67,19 @@ public final class CompletionProposalComputerRegistry {
 	}
 
 	/**
-	 * The sets of descriptors, grouped by partition type (key type:
-	 * {@link String}, value type: {@linkplain List
+	 * The sets of descriptors, grouped by partition type (key type: {@link String},
+	 * value type: {@linkplain List
 	 * List&lt;CompletionProposalComputerDescriptor&gt;}).
 	 */
 	private final Map<String, List<CompletionProposalComputerDescriptor>> fDescriptorsByPartition = new HashMap<>();
 	/**
 	 * Unmodifiable versions of the sets stored in
-	 * <code>fDescriptorsByPartition</code> (key type: {@link String}, value
-	 * type: {@linkplain List List&lt;CompletionProposalComputerDescriptor&gt;}
-	 * ).
+	 * <code>fDescriptorsByPartition</code> (key type: {@link String}, value type:
+	 * {@linkplain List List&lt;CompletionProposalComputerDescriptor&gt;} ).
 	 */
 	private final Map<String, List<CompletionProposalComputerDescriptor>> fPublicDescriptorsByPartition = new HashMap<>();
 	/**
-	 * All descriptors (element type:
-	 * {@link CompletionProposalComputerDescriptor}).
+	 * All descriptors (element type: {@link CompletionProposalComputerDescriptor}).
 	 */
 	private final List<CompletionProposalComputerDescriptor> fDescriptors = new ArrayList<>();
 	/**
@@ -90,8 +89,7 @@ public final class CompletionProposalComputerRegistry {
 			.unmodifiableList(fDescriptors);
 
 	private final List<CompletionProposalCategory> fCategories = new ArrayList<>();
-	private final List<CompletionProposalCategory> fPublicCategories = Collections
-			.unmodifiableList(fCategories);
+	private final List<CompletionProposalCategory> fPublicCategories = Collections.unmodifiableList(fCategories);
 	/**
 	 * <code>true</code> if this registry has been loaded.
 	 */
@@ -104,62 +102,54 @@ public final class CompletionProposalComputerRegistry {
 	}
 
 	/**
-	 * Returns the list of {@link CompletionProposalComputerDescriptor}s
-	 * describing all extensions to the
-	 * <code>javaCompletionProposalComputer</code> extension point for the given
-	 * partition type.
+	 * Returns the list of {@link CompletionProposalComputerDescriptor}s describing
+	 * all extensions to the <code>javaCompletionProposalComputer</code> extension
+	 * point for the given partition type.
 	 * <p>
 	 * A valid partition is either one of the constants defined in
 	 * {@link org.eclipse.dltk.ui.text.IJavaPartitions} or
-	 * {@link org.eclipse.jface.text.IDocument#DEFAULT_CONTENT_TYPE}. An empty
-	 * list is returned if there are no extensions for the given partition.
+	 * {@link org.eclipse.jface.text.IDocument#DEFAULT_CONTENT_TYPE}. An empty list
+	 * is returned if there are no extensions for the given partition.
 	 * </p>
 	 * <p>
-	 * The returned list is read-only and is sorted in the order that the
-	 * extensions were read in. There are no duplicate elements in the returned
-	 * list. The returned list may change if plug-ins are loaded or unloaded
-	 * while the application is running or if an extension violates the API
-	 * contract of
-	 * {@link org.eclipse.dltk.ui.text.java.IScriptCompletionProposalComputer}.
-	 * When computing proposals, it is therefore imperative to copy the returned
-	 * list before iterating over it.
+	 * The returned list is read-only and is sorted in the order that the extensions
+	 * were read in. There are no duplicate elements in the returned list. The
+	 * returned list may change if plug-ins are loaded or unloaded while the
+	 * application is running or if an extension violates the API contract of
+	 * {@link org.eclipse.dltk.ui.text.java.IScriptCompletionProposalComputer}. When
+	 * computing proposals, it is therefore imperative to copy the returned list
+	 * before iterating over it.
 	 * </p>
 	 *
-	 * @param partition
-	 *            the partition type for which to retrieve the computer
-	 *            descriptors
+	 * @param partition the partition type for which to retrieve the computer
+	 *                  descriptors
 	 * @return the list of extensions to the
-	 *         <code>javaCompletionProposalComputer</code> extension point
-	 *         (element type: {@link CompletionProposalComputerDescriptor})
+	 *         <code>javaCompletionProposalComputer</code> extension point (element
+	 *         type: {@link CompletionProposalComputerDescriptor})
 	 */
-	List<CompletionProposalComputerDescriptor> getProposalComputerDescriptors(
-			String partition) {
+	List<CompletionProposalComputerDescriptor> getProposalComputerDescriptors(String partition) {
 		ensureExtensionPointRead();
-		List<CompletionProposalComputerDescriptor> result = fPublicDescriptorsByPartition
-				.get(partition);
-		return result != null ? result
-				: Collections
-						.<CompletionProposalComputerDescriptor> emptyList();
+		List<CompletionProposalComputerDescriptor> result = fPublicDescriptorsByPartition.get(partition);
+		return result != null ? result : Collections.<CompletionProposalComputerDescriptor>emptyList();
 	}
 
 	/**
-	 * Returns the list of {@link CompletionProposalComputerDescriptor}s
-	 * describing all extensions to the
-	 * <code>javaCompletionProposalComputer</code> extension point.
+	 * Returns the list of {@link CompletionProposalComputerDescriptor}s describing
+	 * all extensions to the <code>javaCompletionProposalComputer</code> extension
+	 * point.
 	 * <p>
-	 * The returned list is read-only and is sorted in the order that the
-	 * extensions were read in. There are no duplicate elements in the returned
-	 * list. The returned list may change if plug-ins are loaded or unloaded
-	 * while the application is running or if an extension violates the API
-	 * contract of
-	 * {@link org.eclipse.dltk.ui.text.java.IScriptCompletionProposalComputer}.
-	 * When computing proposals, it is therefore imperative to copy the returned
-	 * list before iterating over it.
+	 * The returned list is read-only and is sorted in the order that the extensions
+	 * were read in. There are no duplicate elements in the returned list. The
+	 * returned list may change if plug-ins are loaded or unloaded while the
+	 * application is running or if an extension violates the API contract of
+	 * {@link org.eclipse.dltk.ui.text.java.IScriptCompletionProposalComputer}. When
+	 * computing proposals, it is therefore imperative to copy the returned list
+	 * before iterating over it.
 	 * </p>
 	 *
 	 * @return the list of extensions to the
-	 *         <code>javaCompletionProposalComputer</code> extension point
-	 *         (element type: {@link CompletionProposalComputerDescriptor})
+	 *         <code>javaCompletionProposalComputer</code> extension point (element
+	 *         type: {@link CompletionProposalComputerDescriptor})
 	 */
 	List<CompletionProposalComputerDescriptor> getProposalComputerDescriptors() {
 		ensureExtensionPointRead();
@@ -171,15 +161,15 @@ public final class CompletionProposalComputerRegistry {
 	 * <code>javaCompletionProposalComputer</code> extension point.
 	 * <p>
 	 * <p>
-	 * The returned list is read-only and is sorted in the order that the
-	 * extensions were read in. There are no duplicate elements in the returned
-	 * list. The returned list may change if plug-ins are loaded or unloaded
-	 * while the application is running.
+	 * The returned list is read-only and is sorted in the order that the extensions
+	 * were read in. There are no duplicate elements in the returned list. The
+	 * returned list may change if plug-ins are loaded or unloaded while the
+	 * application is running.
 	 * </p>
 	 *
 	 * @return list of proposal categories contributed to the
-	 *         <code>javaCompletionProposalComputer</code> extension point
-	 *         (element type: {@link CompletionProposalCategory})
+	 *         <code>javaCompletionProposalComputer</code> extension point (element
+	 *         type: {@link CompletionProposalCategory})
 	 */
 	public List<CompletionProposalCategory> getProposalCategories() {
 		ensureExtensionPointRead();
@@ -203,30 +193,27 @@ public final class CompletionProposalComputerRegistry {
 	/**
 	 * Reloads the extensions to the extension point.
 	 * <p>
-	 * This method can be called more than once in order to reload from a
-	 * changed extension registry.
+	 * This method can be called more than once in order to reload from a changed
+	 * extension registry.
 	 * </p>
 	 */
 	public void reload() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		List<IConfigurationElement> elements = new ArrayList<>(
-				Arrays.asList(registry.getConfigurationElementsFor(
-						DLTKUIPlugin.getPluginId(), EXTENSION_POINT)));
+				Arrays.asList(registry.getConfigurationElementsFor(DLTKUIPlugin.getPluginId(), EXTENSION_POINT)));
 
 		Map<String, List<CompletionProposalComputerDescriptor>> map = new HashMap<>();
 		List<CompletionProposalComputerDescriptor> all = new ArrayList<>();
 
 		List<CompletionProposalCategory> categories = getCategories(elements);
-		for (Iterator<IConfigurationElement> iter = elements.iterator(); iter
-				.hasNext();) {
+		for (Iterator<IConfigurationElement> iter = elements.iterator(); iter.hasNext();) {
 			IConfigurationElement element = iter.next();
 			try {
-				CompletionProposalComputerDescriptor desc = new CompletionProposalComputerDescriptor(
-						element, this, categories);
+				CompletionProposalComputerDescriptor desc = new CompletionProposalComputerDescriptor(element, this,
+						categories);
 				final Set<String> partitions = desc.getPartitions();
 				for (String partition : partitions) {
-					List<CompletionProposalComputerDescriptor> list = map
-							.get(partition);
+					List<CompletionProposalComputerDescriptor> list = map.get(partition);
 					if (list == null) {
 						list = new ArrayList<>();
 						map.put(partition, list);
@@ -237,16 +224,14 @@ public final class CompletionProposalComputerRegistry {
 
 			} catch (InvalidRegistryObjectException x) {
 				/*
-				 * Element is not valid any longer as the contributing plug-in
-				 * was unloaded or for some other reason. Do not include the
-				 * extension in the list and inform the user about it.
+				 * Element is not valid any longer as the contributing plug-in was unloaded or
+				 * for some other reason. Do not include the extension in the list and inform
+				 * the user about it.
 				 */
 				Object[] args = { element.toString() };
-				String message = Messages.format(
-						ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message,
+				String message = Messages.format(ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message,
 						args);
-				IStatus status = new Status(IStatus.WARNING,
-						DLTKUIPlugin.getPluginId(), IStatus.OK, message, x);
+				IStatus status = new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(), IStatus.OK, message, x);
 				informUser(status);
 			}
 		}
@@ -260,17 +245,14 @@ public final class CompletionProposalComputerRegistry {
 			fPublicDescriptorsByPartition.keySet().retainAll(partitions);
 			for (Iterator<String> it = partitions.iterator(); it.hasNext();) {
 				String partition = it.next();
-				List<CompletionProposalComputerDescriptor> old = fDescriptorsByPartition
-						.get(partition);
-				List<CompletionProposalComputerDescriptor> current = map
-						.get(partition);
+				List<CompletionProposalComputerDescriptor> old = fDescriptorsByPartition.get(partition);
+				List<CompletionProposalComputerDescriptor> current = map.get(partition);
 				if (old != null) {
 					old.clear();
 					old.addAll(current);
 				} else {
 					fDescriptorsByPartition.put(partition, current);
-					fPublicDescriptorsByPartition.put(partition,
-							Collections.unmodifiableList(current));
+					fPublicDescriptorsByPartition.put(partition, Collections.unmodifiableList(current));
 				}
 			}
 
@@ -279,18 +261,15 @@ public final class CompletionProposalComputerRegistry {
 		}
 	}
 
-	private List<CompletionProposalCategory> getCategories(
-			List<IConfigurationElement> elements) {
+	private List<CompletionProposalCategory> getCategories(List<IConfigurationElement> elements) {
 		IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
-		String preference = store
-				.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
+		String preference = store.getString(PreferenceConstants.CODEASSIST_EXCLUDED_CATEGORIES);
 		Set<String> disabled = new HashSet<>();
 		StringTokenizer tok = new StringTokenizer(preference, "\0"); //$NON-NLS-1$
 		while (tok.hasMoreTokens())
 			disabled.add(tok.nextToken());
 		Map<String, Integer> ordered = new HashMap<>();
-		preference = store
-				.getString(PreferenceConstants.CODEASSIST_CATEGORY_ORDER);
+		preference = store.getString(PreferenceConstants.CODEASSIST_CATEGORY_ORDER);
 		tok = new StringTokenizer(preference, "\0"); //$NON-NLS-1$
 		while (tok.hasMoreTokens()) {
 			StringTokenizer inner = new StringTokenizer(tok.nextToken(), ":"); //$NON-NLS-1$
@@ -300,15 +279,13 @@ public final class CompletionProposalComputerRegistry {
 		}
 
 		List<CompletionProposalCategory> categories = new ArrayList<>();
-		for (Iterator<IConfigurationElement> iter = elements.iterator(); iter
-				.hasNext();) {
+		for (Iterator<IConfigurationElement> iter = elements.iterator(); iter.hasNext();) {
 			IConfigurationElement element = iter.next();
 			try {
 				if (element.getName().equals("proposalCategory")) { //$NON-NLS-1$
 					iter.remove(); // remove from list to leave only computers
 
-					CompletionProposalCategory category = new CompletionProposalCategory(
-							element, this);
+					CompletionProposalCategory category = new CompletionProposalCategory(element, this);
 					categories.add(category);
 					category.setIncluded(!disabled.contains(category.getId()));
 					Integer rank = ordered.get(category.getId());
@@ -321,16 +298,14 @@ public final class CompletionProposalComputerRegistry {
 				}
 			} catch (InvalidRegistryObjectException x) {
 				/*
-				 * Element is not valid any longer as the contributing plug-in
-				 * was unloaded or for some other reason. Do not include the
-				 * extension in the list and inform the user about it.
+				 * Element is not valid any longer as the contributing plug-in was unloaded or
+				 * for some other reason. Do not include the extension in the list and inform
+				 * the user about it.
 				 */
 				Object[] args = { element.toString() };
-				String message = Messages.format(
-						ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message,
+				String message = Messages.format(ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message,
 						args);
-				IStatus status = new Status(IStatus.WARNING,
-						DLTKUIPlugin.getPluginId(), IStatus.OK, message, x);
+				IStatus status = new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(), IStatus.OK, message, x);
 				informUser(status);
 			}
 		}
@@ -340,76 +315,72 @@ public final class CompletionProposalComputerRegistry {
 	/**
 	 * Log the status and inform the user about a misbehaving extension.
 	 *
-	 * @param descriptor
-	 *            the descriptor of the misbehaving extension
-	 * @param status
-	 *            a status object that will be logged
+	 * @param descriptor the descriptor of the misbehaving extension
+	 * @param status     a status object that will be logged
 	 */
-	void informUser(CompletionProposalComputerDescriptor descriptor,
-			IStatus status) {
+	void informUser(CompletionProposalComputerDescriptor descriptor, IStatus status) {
 		DLTKUIPlugin.log(status);
 		String title = ScriptTextMessages.CompletionProposalComputerRegistry_error_dialog_title;
 		CompletionProposalCategory category = descriptor.getCategory();
 		IContributor culprit = descriptor.getContributor();
-		Set<String> affectedPlugins = getAffectedContributors(category,
-				culprit);
+		Set<String> affectedPlugins = getAffectedContributors(category, culprit);
 
 		final String avoidHint;
 		final String culpritName = culprit == null ? null : culprit.getName();
 		if (affectedPlugins.isEmpty())
-			avoidHint = Messages.format(
-					ScriptTextMessages.CompletionProposalComputerRegistry_messageAvoidanceHint,
+			avoidHint = Messages.format(ScriptTextMessages.CompletionProposalComputerRegistry_messageAvoidanceHint,
 					new Object[] { culpritName, category.getDisplayName() });
 		else
 			avoidHint = Messages.format(
 					ScriptTextMessages.CompletionProposalComputerRegistry_messageAvoidanceHintWithWarning,
-					new Object[] { culpritName, category.getDisplayName(),
-							toString(affectedPlugins) });
+					new Object[] { culpritName, category.getDisplayName(), toString(affectedPlugins) });
 
 		String message = status.getMessage();
 		// inlined from MessageDialog.openError
-		MessageDialog dialog = new MessageDialog(
-				DLTKUIPlugin.getActiveWorkbenchShell(), title,
-				null /* default image */, message, MessageDialog.ERROR,
-				new String[] { IDialogConstants.OK_LABEL }, 0) {
-			@Override
-			protected Control createCustomArea(Composite parent) {
-				Link link = new Link(parent, SWT.NONE);
-				link.setText(avoidHint);
-				link.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						PreferencesUtil.createPreferenceDialogOn(getShell(),
-								"org.eclipse.dltk.ui.preferences.CodeAssistPreferenceAdvanced", //$NON-NLS-1$
-								null, null).open();
-					}
-				});
-				GridData gridData = new GridData(SWT.FILL, SWT.BEGINNING, true,
-						false);
-				gridData.widthHint = this.getMinimumMessageWidth();
-				link.setLayoutData(gridData);
-				return link;
-			}
+		Runnable openPopup = () -> {
+			MessageDialog dialog = new MessageDialog(DLTKUIPlugin.getActiveWorkbenchShell(), title,
+					null /* default image */, message, MessageDialog.ERROR, new String[] { IDialogConstants.OK_LABEL },
+					0) {
+				@Override
+				protected Control createCustomArea(Composite parent) {
+					Link link = new Link(parent, SWT.NONE);
+					link.setText(avoidHint);
+					link.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							PreferencesUtil.createPreferenceDialogOn(getShell(),
+									"org.eclipse.dltk.ui.preferences.CodeAssistPreferenceAdvanced", //$NON-NLS-1$
+									null, null).open();
+						}
+					});
+					GridData gridData = new GridData(SWT.FILL, SWT.BEGINNING, true, false);
+					gridData.widthHint = this.getMinimumMessageWidth();
+					link.setLayoutData(gridData);
+					return link;
+				}
+			};
+			dialog.open();
 		};
-		dialog.open();
+		if (Display.getCurrent() != null) {
+			openPopup.run();
+		} else {
+			Display.getDefault().syncExec(openPopup);
+		}
 	}
 
 	/**
 	 * Returns the names of contributors affected by disabling a category.
 	 *
-	 * @param category
-	 *            the category that would be disabled
-	 * @param culprit
-	 *            the cuprit plug-in, which is not included in the returned list
-	 * @return the names of the contributors other than <code>culprit</code>
-	 *         that contribute to <code>category</code> (element type:
-	 *         {@link String})
+	 * @param category the category that would be disabled
+	 * @param culprit  the cuprit plug-in, which is not included in the returned
+	 *                 list
+	 * @return the names of the contributors other than <code>culprit</code> that
+	 *         contribute to <code>category</code> (element type: {@link String})
 	 */
-	private Set<String> getAffectedContributors(
-			CompletionProposalCategory category, IContributor culprit) {
+	private Set<String> getAffectedContributors(CompletionProposalCategory category, IContributor culprit) {
 		Set<String> affectedPlugins = new HashSet<>();
-		for (Iterator<CompletionProposalComputerDescriptor> it = getProposalComputerDescriptors()
-				.iterator(); it.hasNext();) {
+		for (Iterator<CompletionProposalComputerDescriptor> it = getProposalComputerDescriptors().iterator(); it
+				.hasNext();) {
 			CompletionProposalComputerDescriptor desc = it.next();
 			CompletionProposalCategory cat = desc.getCategory();
 			if (cat.equals(category)) {
@@ -431,7 +402,6 @@ public final class CompletionProposalComputerRegistry {
 		DLTKUIPlugin.log(status);
 		String title = ScriptTextMessages.CompletionProposalComputerRegistry_error_dialog_title;
 		String message = status.getMessage();
-		MessageDialog.openError(DLTKUIPlugin.getActiveWorkbenchShell(), title,
-				message);
+		MessageDialog.openError(DLTKUIPlugin.getActiveWorkbenchShell(), title, message);
 	}
 }

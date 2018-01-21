@@ -29,23 +29,21 @@ import org.eclipse.jface.text.contentassist.IContextInformationExtension;
 import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
  * Computes Script completion proposals and context infos.
  */
-public abstract class ScriptCompletionProposalComputer
-		extends AbstractScriptCompletionProposalComputer
+public abstract class ScriptCompletionProposalComputer extends AbstractScriptCompletionProposalComputer
 		implements IScriptCompletionProposalComputer {
 
-	private static final class ContextInformationWrapper
-			implements IContextInformation, IContextInformationExtension {
+	private static final class ContextInformationWrapper implements IContextInformation, IContextInformationExtension {
 
 		private final IContextInformation fContextInformation;
 		private int fPosition;
 
-		public ContextInformationWrapper(
-				IContextInformation contextInformation) {
+		public ContextInformationWrapper(IContextInformation contextInformation) {
 			fContextInformation = contextInformation;
 		}
 
@@ -76,8 +74,7 @@ public abstract class ScriptCompletionProposalComputer
 		@Override
 		public boolean equals(Object object) {
 			if (object instanceof ContextInformationWrapper) {
-				return fContextInformation.equals(
-						((ContextInformationWrapper) object).fContextInformation);
+				return fContextInformation.equals(((ContextInformationWrapper) object).fContextInformation);
 			}
 			return fContextInformation.equals(object);
 		}
@@ -85,19 +82,15 @@ public abstract class ScriptCompletionProposalComputer
 
 	private String fErrorMessage;
 
-	private List<IContextInformation> addContextInformations(
-			ScriptContentAssistInvocationContext context, int offset,
+	private List<IContextInformation> addContextInformations(ScriptContentAssistInvocationContext context, int offset,
 			IProgressMonitor monitor) {
-		List<ICompletionProposal> proposals = computeScriptCompletionProposals(
-				offset, context, monitor);
+		List<ICompletionProposal> proposals = computeScriptCompletionProposals(offset, context, monitor);
 		List<IContextInformation> result = new ArrayList<>(proposals.size());
 
 		for (ICompletionProposal proposal : proposals) {
-			IContextInformation contextInformation = proposal
-					.getContextInformation();
+			IContextInformation contextInformation = proposal.getContextInformation();
 			if (contextInformation != null) {
-				ContextInformationWrapper wrapper = new ContextInformationWrapper(
-						contextInformation);
+				ContextInformationWrapper wrapper = new ContextInformationWrapper(contextInformation);
 				wrapper.setContextInformationPosition(offset);
 				result.add(wrapper);
 			}
@@ -105,40 +98,37 @@ public abstract class ScriptCompletionProposalComputer
 		return result;
 	}
 
-	private void handleCodeCompletionException(ModelException e,
-			ScriptContentAssistInvocationContext context) {
+	private void handleCodeCompletionException(ModelException e, ScriptContentAssistInvocationContext context) {
 		ISourceModule module = context.getSourceModule();
-		Shell shell = context.getViewer().getTextWidget().getShell();
-		if (e.isDoesNotExist()
-				&& !module.getScriptProject().isOnBuildpath(module)) {
-			IPreferenceStore store = DLTKUIPlugin.getDefault()
-					.getPreferenceStore();
-			boolean value = store.getBoolean(
-					PreferenceConstants.NOTIFICATION_NOT_ON_BUILDPATH_MESSAGE);
-			if (!value) {
-				MessageDialog.openInformation(shell,
-						ScriptTextMessages.CompletionProcessor_error_notOnBuildPath_title,
-						ScriptTextMessages.CompletionProcessor_error_notOnBuildPath_message);
+		Runnable openDialog = () -> {
+			Shell shell = context.getViewer().getTextWidget().getShell();
+			if (e.isDoesNotExist() && !module.getScriptProject().isOnBuildpath(module)) {
+				IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
+				boolean value = store.getBoolean(PreferenceConstants.NOTIFICATION_NOT_ON_BUILDPATH_MESSAGE);
+				if (!value) {
+					MessageDialog.openInformation(shell,
+							ScriptTextMessages.CompletionProcessor_error_notOnBuildPath_title,
+							ScriptTextMessages.CompletionProcessor_error_notOnBuildPath_message);
+				}
+				store.setValue(PreferenceConstants.NOTIFICATION_NOT_ON_BUILDPATH_MESSAGE, true);
+			} else {
+				ErrorDialog.openError(shell, ScriptTextMessages.CompletionProcessor_error_accessing_title,
+						ScriptTextMessages.CompletionProcessor_error_accessing_message, e.getStatus());
 			}
-			store.setValue(
-					PreferenceConstants.NOTIFICATION_NOT_ON_BUILDPATH_MESSAGE,
-					true);
-		} else
-			ErrorDialog.openError(shell,
-					ScriptTextMessages.CompletionProcessor_error_accessing_title,
-					ScriptTextMessages.CompletionProcessor_error_accessing_message,
-					e.getStatus());
+		};
+		if (Display.getCurrent() != null) {
+			openDialog.run();
+		} else {
+			Display.getDefault().asyncExec(openDialog);
+		}
 	}
 
 	// Code template completion proposals for script language
-	protected List<ICompletionProposal> computeTemplateCompletionProposals(
-			int offset, ScriptContentAssistInvocationContext context,
-			IProgressMonitor monitor) {
-		TemplateCompletionProcessor templateProcessor = createTemplateProposalComputer(
-				context);
+	protected List<ICompletionProposal> computeTemplateCompletionProposals(int offset,
+			ScriptContentAssistInvocationContext context, IProgressMonitor monitor) {
+		TemplateCompletionProcessor templateProcessor = createTemplateProposalComputer(context);
 		if (templateProcessor != null) {
-			ICompletionProposal[] proposals = templateProcessor
-					.computeCompletionProposals(context.getViewer(), offset);
+			ICompletionProposal[] proposals = templateProcessor.computeCompletionProposals(context.getViewer(), offset);
 			if (proposals != null && proposals.length != 0) {
 				updateTemplateProposalRelevance(context, proposals);
 			}
@@ -149,9 +139,8 @@ public abstract class ScriptCompletionProposalComputer
 	}
 
 	// Script language specific completion proposals like types or keywords
-	protected List<ICompletionProposal> computeScriptCompletionProposals(
-			int offset, ScriptContentAssistInvocationContext context,
-			IProgressMonitor monitor) {
+	protected List<ICompletionProposal> computeScriptCompletionProposals(int offset,
+			ScriptContentAssistInvocationContext context, IProgressMonitor monitor) {
 
 		// Source module getting
 		ISourceModule sourceModule = context.getSourceModule();
@@ -166,9 +155,16 @@ public abstract class ScriptCompletionProposalComputer
 		}
 
 		collector.setInvocationContext(context);
-		Point selection = context.getViewer().getSelectedRange();
-		if (selection.y > 0) {
-			collector.setReplacementLength(selection.y);
+		Runnable collectLength = () -> {
+			Point selection = context.getViewer().getSelectedRange();
+			if (selection.y > 0) {
+				collector.setReplacementLength(selection.y);
+			}
+		};
+		if (Display.getCurrent() != null) {
+			collectLength.run();
+		} else {
+			Display.getDefault().syncExec(collectLength);
 		}
 
 		// Filling collector with proposals
@@ -180,8 +176,7 @@ public abstract class ScriptCompletionProposalComputer
 							+ element.getClass());
 				}
 			}
-			int timeout = DLTKUIPlugin.getDefault().getPreferenceStore()
-					.getInt(PreferenceConstants.CODEASSIST_TIMEOUT);
+			int timeout = DLTKUIPlugin.getDefault().getPreferenceStore().getInt(PreferenceConstants.CODEASSIST_TIMEOUT);
 			collector.startCompletion();
 			sourceModule.codeComplete(offset, collector, timeout);
 			collector.endCompletion();
@@ -189,8 +184,7 @@ public abstract class ScriptCompletionProposalComputer
 			handleCodeCompletionException(e, context);
 		}
 
-		ICompletionProposal[] proposals = collector
-				.getScriptCompletionProposals();
+		ICompletionProposal[] proposals = collector.getScriptCompletionProposals();
 
 		// Checking proposals
 		if (proposals.length == 0) {
@@ -215,22 +209,21 @@ public abstract class ScriptCompletionProposalComputer
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	/*
-	 * public List computeContextInformation(ContentAssistInvocationContext
-	 * context, IProgressMonitor monitor) { if (context instanceof
-	 * ScriptContentAssistInvocationContext) {
-	 * ScriptContentAssistInvocationContext scriptContext=
-	 * (ScriptContentAssistInvocationContext) context;
+	 * public List computeContextInformation(ContentAssistInvocationContext context,
+	 * IProgressMonitor monitor) { if (context instanceof
+	 * ScriptContentAssistInvocationContext) { ScriptContentAssistInvocationContext
+	 * scriptContext= (ScriptContentAssistInvocationContext) context;
 	 *
 	 * int contextInformationPosition=
 	 * guessContextInformationPosition(scriptContext); List result=
-	 * addContextInformations(scriptContext, contextInformationPosition,
-	 * monitor); return result; } return Collections.EMPTY_LIST; }
+	 * addContextInformations(scriptContext, contextInformationPosition, monitor);
+	 * return result; } return Collections.EMPTY_LIST; }
 	 */
 
 	// Completion proposals
 	@Override
-	public List<ICompletionProposal> computeCompletionProposals(
-			ContentAssistInvocationContext context, IProgressMonitor monitor) {
+	public List<ICompletionProposal> computeCompletionProposals(ContentAssistInvocationContext context,
+			IProgressMonitor monitor) {
 
 		if (context instanceof ScriptContentAssistInvocationContext) {
 			ScriptContentAssistInvocationContext scriptContext = (ScriptContentAssistInvocationContext) context;
@@ -238,12 +231,10 @@ public abstract class ScriptCompletionProposalComputer
 			List<ICompletionProposal> proposals = new ArrayList<>();
 
 			// Language specific proposals (already sorted and etc.)
-			proposals.addAll(computeScriptCompletionProposals(
-					context.getInvocationOffset(), scriptContext, monitor));
+			proposals.addAll(computeScriptCompletionProposals(context.getInvocationOffset(), scriptContext, monitor));
 
 			// Template proposals (already sorted and etc.)
-			proposals.addAll(computeTemplateCompletionProposals(
-					context.getInvocationOffset(), scriptContext, monitor));
+			proposals.addAll(computeTemplateCompletionProposals(context.getInvocationOffset(), scriptContext, monitor));
 
 			return proposals;
 		}
@@ -251,22 +242,20 @@ public abstract class ScriptCompletionProposalComputer
 		return Collections.emptyList();
 	}
 
-	protected int guessContextInformationPosition(
-			ContentAssistInvocationContext context) {
+	protected int guessContextInformationPosition(ContentAssistInvocationContext context) {
 		return context.getInvocationOffset();
 	}
 
 	@Override
-	public List<IContextInformation> computeContextInformation(
-			ContentAssistInvocationContext context, IProgressMonitor monitor) {//
+	public List<IContextInformation> computeContextInformation(ContentAssistInvocationContext context,
+			IProgressMonitor monitor) {//
 
 		if (context instanceof ScriptContentAssistInvocationContext) {
 			ScriptContentAssistInvocationContext scriptContext = (ScriptContentAssistInvocationContext) context;
 
-			int contextInformationPosition = guessContextInformationPosition(
-					scriptContext);
-			List<IContextInformation> result = addContextInformations(
-					scriptContext, contextInformationPosition, monitor);
+			int contextInformationPosition = guessContextInformationPosition(scriptContext);
+			List<IContextInformation> result = addContextInformations(scriptContext, contextInformationPosition,
+					monitor);
 			return result;
 		}
 		return Collections.emptyList();
@@ -312,11 +301,9 @@ public abstract class ScriptCompletionProposalComputer
 	 * template support.
 	 * </p>
 	 */
-	protected TemplateCompletionProcessor createTemplateProposalComputer(
-			ScriptContentAssistInvocationContext context) {
+	protected TemplateCompletionProcessor createTemplateProposalComputer(ScriptContentAssistInvocationContext context) {
 		return null;
 	}
 
-	protected abstract ScriptCompletionProposalCollector createCollector(
-			ScriptContentAssistInvocationContext context);
+	protected abstract ScriptCompletionProposalCollector createCollector(ScriptContentAssistInvocationContext context);
 }

@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.function.Supplier;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.FileLocator;
@@ -42,6 +43,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IPositionUpdater;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.ITextViewerExtension5;
@@ -75,6 +77,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.TextStyle;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -83,11 +86,9 @@ import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 import org.osgi.framework.Bundle;
 
 @SuppressWarnings("restriction")
-public abstract class AbstractScriptCompletionProposal
-		implements IScriptCompletionProposal, ICompletionProposalExtension,
-		ICompletionProposalExtension2, ICompletionProposalExtension3,
-		ICompletionProposalExtension5, ICompletionProposalExtension6,
-		ICompletionProposalExtension7 {
+public abstract class AbstractScriptCompletionProposal implements IScriptCompletionProposal,
+		ICompletionProposalExtension, ICompletionProposalExtension2, ICompletionProposalExtension3,
+		ICompletionProposalExtension5, ICompletionProposalExtension6, ICompletionProposalExtension7 {
 
 	/**
 	 * A class to simplify tracking a reference position in a document.
@@ -97,22 +98,18 @@ public abstract class AbstractScriptCompletionProposal
 		/** The reference position category name. */
 		private static final String CATEGORY = "reference_position"; //$NON-NLS-1$
 		/** The position updater of the reference position. */
-		private final IPositionUpdater fPositionUpdater = new DefaultPositionUpdater(
-				CATEGORY);
+		private final IPositionUpdater fPositionUpdater = new DefaultPositionUpdater(CATEGORY);
 		/** The reference position. */
 		private final Position fPosition = new Position(0);
 
 		/**
-		 * Called before document changes occur. It must be followed by a call
-		 * to postReplace().
+		 * Called before document changes occur. It must be followed by a call to
+		 * postReplace().
 		 *
-		 * @param document
-		 *                     the document on which to track the reference
-		 *                     position.
+		 * @param document the document on which to track the reference position.
 		 *
 		 */
-		public void preReplace(IDocument document, int offset)
-				throws BadLocationException {
+		public void preReplace(IDocument document, int offset) throws BadLocationException {
 			fPosition.setOffset(offset);
 			try {
 				document.addPositionCategory(CATEGORY);
@@ -126,12 +123,10 @@ public abstract class AbstractScriptCompletionProposal
 		}
 
 		/**
-		 * Called after the document changed occurred. It must be preceded by a
-		 * call to preReplace().
+		 * Called after the document changed occurred. It must be preceded by a call to
+		 * preReplace().
 		 *
-		 * @param document
-		 *                     the document on which to track the reference
-		 *                     position.
+		 * @param document the document on which to track the reference position.
 		 */
 		public int postReplace(IDocument document) {
 			try {
@@ -158,13 +153,11 @@ public abstract class AbstractScriptCompletionProposal
 		}
 
 		@Override
-		public ExitFlags doExit(LinkedModeModel environment, VerifyEvent event,
-				int offset, int length) {
+		public ExitFlags doExit(LinkedModeModel environment, VerifyEvent event, int offset, int length) {
 
 			if (event.character == fExitCharacter) {
 				if (environment.anyPositionContains(offset)) {
-					return new ExitFlags(ILinkedModeListener.UPDATE_CARET,
-							false);
+					return new ExitFlags(ILinkedModeListener.UPDATE_CARET, false);
 				}
 				return new ExitFlags(ILinkedModeListener.UPDATE_CARET, true);
 			}
@@ -179,8 +172,7 @@ public abstract class AbstractScriptCompletionProposal
 				if (offset > 0) {
 					try {
 						if (fDocument.getChar(offset - 1) == '{')
-							return new ExitFlags(ILinkedModeListener.EXIT_ALL,
-									true);
+							return new ExitFlags(ILinkedModeListener.EXIT_ALL, true);
 					} catch (BadLocationException e) {
 					}
 				}
@@ -198,6 +190,7 @@ public abstract class AbstractScriptCompletionProposal
 	private int fReplacementLength;
 	private int fCursorPosition;
 	private Image fImage;
+	private Supplier<Image> fImageFactory;
 	private IContextInformation fContextInformation;
 	private ICompletionProposalInfo fProposalInfo;
 	private char[] fTriggerCharacters;
@@ -231,9 +224,8 @@ public abstract class AbstractScriptCompletionProposal
 	/**
 	 * Sets the trigger characters.
 	 *
-	 * @param triggerCharacters
-	 *                              The set of characters which can trigger the
-	 *                              application of this completion proposal
+	 * @param triggerCharacters The set of characters which can trigger the
+	 *                          application of this completion proposal
 	 */
 	public void setTriggerCharacters(char[] triggerCharacters) {
 		fTriggerCharacters = triggerCharacters;
@@ -242,17 +234,15 @@ public abstract class AbstractScriptCompletionProposal
 	/**
 	 * Sets the proposal info.
 	 *
-	 * @param proposalInfo
-	 *                         The additional information associated with this
-	 *                         proposal or <code>null</code>
+	 * @param proposalInfo The additional information associated with this proposal
+	 *                     or <code>null</code>
 	 */
 	public void setProposalInfo(ICompletionProposalInfo proposalInfo) {
 		fProposalInfo = proposalInfo;
 	}
 
 	/**
-	 * Returns the additional proposal info, or <code>null</code> if none
-	 * exists.
+	 * Returns the additional proposal info, or <code>null</code> if none exists.
 	 *
 	 * @return the additional proposal info, or <code>null</code> if none exists
 	 */
@@ -261,12 +251,10 @@ public abstract class AbstractScriptCompletionProposal
 	}
 
 	/**
-	 * Sets the cursor position relative to the insertion offset. By default
-	 * this is the length of the completion string (Cursor positioned after the
-	 * completion)
+	 * Sets the cursor position relative to the insertion offset. By default this is
+	 * the length of the completion string (Cursor positioned after the completion)
 	 *
-	 * @param cursorPosition
-	 *                           The cursorPosition to set
+	 * @param cursorPosition The cursorPosition to set
 	 */
 	public void setCursorPosition(int cursorPosition) {
 		Assert.isTrue(cursorPosition >= 0);
@@ -280,16 +268,14 @@ public abstract class AbstractScriptCompletionProposal
 	@Override
 	public final void apply(IDocument document) {
 		// not used any longer
-		apply(document, (char) 0,
-				getReplacementOffset() + getReplacementLength());
+		apply(document, (char) 0, getReplacementOffset() + getReplacementLength());
 	}
 
 	@Override
 	public void apply(IDocument document, char trigger, int offset) {
 		try {
 			// patch replacement length
-			int delta = offset
-					- (getReplacementOffset() + getReplacementLength());
+			int delta = offset - (getReplacementOffset() + getReplacementLength());
 			if (delta > 0)
 				setReplacementLength(getReplacementLength() + delta);
 
@@ -301,18 +287,15 @@ public abstract class AbstractScriptCompletionProposal
 			String replacement = getReplacementString();
 
 			// reference position just at the end of the document change.
-			int referenceOffset = getReplacementOffset()
-					+ getReplacementLength();
+			int referenceOffset = getReplacementOffset() + getReplacementLength();
 			final ReferenceTracker referenceTracker = new ReferenceTracker();
 			referenceTracker.preReplace(document, referenceOffset);
 
-			replace(document, getReplacementOffset(), getReplacementLength(),
-					replacement);
+			replace(document, getReplacementOffset(), getReplacementLength(), replacement);
 			postReplace(document);
 
 			referenceOffset = referenceTracker.postReplace(document);
-			setReplacementOffset(referenceOffset
-					- (replacement == null ? 0 : replacement.length()));
+			setReplacementOffset(referenceOffset - (replacement == null ? 0 : replacement.length()));
 
 			// PR 47097
 			if (isSmartTrigger)
@@ -333,8 +316,7 @@ public abstract class AbstractScriptCompletionProposal
 		String replacement = getReplacementString();
 
 		// fix for PR #5533. Assumes that no eating takes place.
-		if (getCursorPosition() > 0
-				&& getCursorPosition() <= replacement.length()
+		if (getCursorPosition() > 0 && getCursorPosition() <= replacement.length()
 				&& replacement.charAt(getCursorPosition() - 1) != trigger) {
 			StringBuilder buffer = new StringBuilder(replacement);
 			buffer.insert(getCursorPosition(), trigger);
@@ -353,19 +335,18 @@ public abstract class AbstractScriptCompletionProposal
 	 * @param referenceOffset
 	 * @throws BadLocationException
 	 */
-	protected void handleSmartTrigger(IDocument document, char trigger,
-			int referenceOffset) throws BadLocationException {
+	protected void handleSmartTrigger(IDocument document, char trigger, int referenceOffset)
+			throws BadLocationException {
 	}
 
-	protected final void replace(IDocument document, int offset, int length,
-			String string) throws BadLocationException {
+	protected final void replace(IDocument document, int offset, int length, String string)
+			throws BadLocationException {
 		if (!document.get(offset, length).equals(string))
 			document.replace(offset, length, string);
 	}
 
 	@Override
-	public void apply(ITextViewer viewer, char trigger, int stateMask,
-			int offset) {
+	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
 
 		IDocument document = viewer.getDocument();
 		if (fTextViewer == null)
@@ -400,11 +381,9 @@ public abstract class AbstractScriptCompletionProposal
 		fToggleEating = false;
 	}
 
-	protected void applyAutoClose(char trigger, IDocument document)
-			throws BadLocationException {
+	protected void applyAutoClose(char trigger, IDocument document) throws BadLocationException {
 		if (trigger == '(' && autocloseBrackets()) {
-			document.replace(getReplacementOffset() + getCursorPosition(), 0,
-					")"); //$NON-NLS-1$
+			document.replace(getReplacementOffset() + getCursorPosition(), 0, ")"); //$NON-NLS-1$
 			setUpLinkedMode(document, ')');
 		}
 	}
@@ -435,8 +414,7 @@ public abstract class AbstractScriptCompletionProposal
 	/**
 	 * Sets the javadoc attribute.
 	 *
-	 * @param isInDoc
-	 *                    <code>true</code> if the proposal is within javadoc
+	 * @param isInDoc <code>true</code> if the proposal is within javadoc
 	 */
 	protected void setInDoc(boolean isInDoc) {
 		fIsInDoc = isInDoc;
@@ -455,9 +433,8 @@ public abstract class AbstractScriptCompletionProposal
 	/**
 	 * Sets the context information.
 	 *
-	 * @param contextInformation
-	 *                               The context information associated with
-	 *                               this proposal
+	 * @param contextInformation The context information associated with this
+	 *                           proposal
 	 */
 	public void setContextInformation(IContextInformation contextInformation) {
 		fContextInformation = contextInformation;
@@ -486,32 +463,28 @@ public abstract class AbstractScriptCompletionProposal
 	}
 
 	@Override
-	public StyledString getStyledDisplayString(IDocument document, int offset,
-			BoldStylerProvider boldStylerProvider) {
+	public StyledString getStyledDisplayString(IDocument document, int offset, BoldStylerProvider boldStylerProvider) {
 		StyledString styledDisplayString = new StyledString();
 		styledDisplayString.append(getStyledDisplayString());
 
 		String pattern = getPatternToEmphasizeMatch(document, offset);
 		if (pattern != null && pattern.length() > 0) {
 			String displayString = styledDisplayString.getString();
-			boolean isJavadocTag = isInDoc() && displayString.charAt(0) == '@'
-					&& pattern.charAt(0) == '@';
+			boolean isJavadocTag = isInDoc() && displayString.charAt(0) == '@' && pattern.charAt(0) == '@';
 			if (isJavadocTag) {
 				displayString = displayString.substring(1);
 				pattern = pattern.substring(1);
 			}
 			int patternMatchRule = getPatternMatchRule(pattern, displayString);
-			int[] matchingRegions = SearchPattern.getMatchingRegions(pattern,
-					displayString, patternMatchRule);
+			int[] matchingRegions = SearchPattern.getMatchingRegions(pattern, displayString, patternMatchRule);
 			if (isJavadocTag && matchingRegions != null) {
-				Strings.markMatchingRegions(styledDisplayString, 0,
-						new int[] { 0, 1 }, boldStylerProvider.getBoldStyler());
+				Strings.markMatchingRegions(styledDisplayString, 0, new int[] { 0, 1 },
+						boldStylerProvider.getBoldStyler());
 				for (int i = 0; i < matchingRegions.length; i += 2) {
 					matchingRegions[i]++;
 				}
 			}
-			Strings.markMatchingRegions(styledDisplayString, 0, matchingRegions,
-					boldStylerProvider.getBoldStyler());
+			Strings.markMatchingRegions(styledDisplayString, 0, matchingRegions, boldStylerProvider.getBoldStyler());
 		}
 		return styledDisplayString;
 	}
@@ -523,25 +496,21 @@ public abstract class AbstractScriptCompletionProposal
 		} catch (StringIndexOutOfBoundsException e) {
 			String message = "Error retrieving proposal text.\nDisplay string:\n" //$NON-NLS-1$
 					+ string + "\nPattern:\n" + pattern; //$NON-NLS-1$
-			DLTKUIPlugin.log(new Status(IStatus.ERROR,
-					DLTKUIPlugin.getPluginId(), IStatus.OK, message, e));
+			DLTKUIPlugin.log(new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), IStatus.OK, message, e));
 			return -1;
 		}
 		if (start.equalsIgnoreCase(pattern)) {
 			return SearchPattern.R_PREFIX_MATCH;
-		} else if (isCamelCaseMatching() && CharOperation
-				.camelCaseMatch(pattern.toCharArray(), string.toCharArray())) {
+		} else if (isCamelCaseMatching() && CharOperation.camelCaseMatch(pattern.toCharArray(), string.toCharArray())) {
 			return SearchPattern.R_CAMELCASE_MATCH;
-		} else if (isSubstringMatching() && CharOperation
-				.substringMatch(pattern.toCharArray(), string.toCharArray())) {
+		} else if (isSubstringMatching() && CharOperation.substringMatch(pattern.toCharArray(), string.toCharArray())) {
 			return SearchPattern.R_SUBSTRING_MATCH;
 		} else {
 			return -1;
 		}
 	}
 
-	protected String getPatternToEmphasizeMatch(IDocument document,
-			int offset) {
+	protected String getPatternToEmphasizeMatch(IDocument document, int offset) {
 		int start = getPrefixCompletionStart(document, offset);
 		int patternLength = offset - start;
 		String pattern = null;
@@ -565,8 +534,7 @@ public abstract class AbstractScriptCompletionProposal
 
 	@Override
 	public String getAdditionalProposalInfo() {
-		final Object info = getAdditionalProposalInfo(
-				new NullProgressMonitor());
+		final Object info = getAdditionalProposalInfo(new NullProgressMonitor());
 		return info != null ? info.toString() : null;
 	}
 
@@ -598,8 +566,7 @@ public abstract class AbstractScriptCompletionProposal
 			if (url != null) {
 				try {
 					url = FileLocator.toFileURL(url);
-					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(url.openStream()));
+					BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
 					StringBuffer buffer = new StringBuffer(200);
 					String line = reader.readLine();
 					while (line != null) {
@@ -615,8 +582,8 @@ public abstract class AbstractScriptCompletionProposal
 		}
 		String css = fgCSSStyles;
 		if (css != null) {
-			FontData fontData = JFaceResources.getFontRegistry().getFontData(
-					PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT)[0];
+			FontData fontData = JFaceResources.getFontRegistry()
+					.getFontData(PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT)[0];
 			css = HTMLPrinter.convertTopLevelFont(css, fontData);
 		}
 		return css;
@@ -641,8 +608,7 @@ public abstract class AbstractScriptCompletionProposal
 	/**
 	 * Sets the replacement offset.
 	 *
-	 * @param replacementOffset
-	 *                              The replacement offset to set
+	 * @param replacementOffset The replacement offset to set
 	 */
 	public void setReplacementOffset(int replacementOffset) {
 		Assert.isTrue(replacementOffset >= 0);
@@ -650,8 +616,7 @@ public abstract class AbstractScriptCompletionProposal
 	}
 
 	@Override
-	public int getPrefixCompletionStart(IDocument document,
-			int completionOffset) {
+	public int getPrefixCompletionStart(IDocument document, int completionOffset) {
 		return getReplacementOffset();
 	}
 
@@ -667,8 +632,7 @@ public abstract class AbstractScriptCompletionProposal
 	/**
 	 * Sets the replacement length.
 	 *
-	 * @param replacementLength
-	 *                              The replacementLength to set
+	 * @param replacementLength The replacementLength to set
 	 */
 	public void setReplacementLength(int replacementLength) {
 		Assert.isTrue(replacementLength >= 0);
@@ -687,8 +651,7 @@ public abstract class AbstractScriptCompletionProposal
 	/**
 	 * Sets the replacement string.
 	 *
-	 * @param replacementString
-	 *                              The replacement string to set
+	 * @param replacementString The replacement string to set
 	 */
 	public void setReplacementString(String replacementString) {
 		Assert.isNotNull(replacementString);
@@ -696,8 +659,7 @@ public abstract class AbstractScriptCompletionProposal
 	}
 
 	@Override
-	public CharSequence getPrefixCompletionText(IDocument document,
-			int completionOffset) {
+	public CharSequence getPrefixCompletionText(IDocument document, int completionOffset) {
 		if (!isCamelCaseMatching())
 			return getReplacementString();
 
@@ -707,17 +669,27 @@ public abstract class AbstractScriptCompletionProposal
 
 	@Override
 	public Image getImage() {
+		if (fImage == null && fImageFactory != null) {
+			setImage(fImageFactory.get());
+		}
 		return fImage;
 	}
 
 	/**
 	 * Sets the image.
 	 *
-	 * @param image
-	 *                  The image to set
+	 * @param image The image to set
 	 */
 	public void setImage(Image image) {
 		fImage = image;
+	}
+
+	public void setImageFactory(Supplier<Image> factory) {
+		fImageFactory = factory;
+	}
+
+	public Supplier<Image> getImageFactory() {
+		return fImageFactory;
 	}
 
 	@Override
@@ -726,8 +698,7 @@ public abstract class AbstractScriptCompletionProposal
 	}
 
 	@Override
-	public boolean validate(IDocument document, int offset,
-			DocumentEvent event) {
+	public boolean validate(IDocument document, int offset, DocumentEvent event) {
 
 		if (offset < getReplacementOffset())
 			return false;
@@ -736,8 +707,7 @@ public abstract class AbstractScriptCompletionProposal
 
 		if (validated && event != null) {
 			// adapt replacement range to document change
-			int delta = (event.fText == null ? 0 : event.fText.length())
-					- event.fLength;
+			int delta = (event.fText == null ? 0 : event.fText.length()) - event.fLength;
 			final int newLength = Math.max(getReplacementLength() + delta, 0);
 			setReplacementLength(newLength);
 		}
@@ -747,26 +717,25 @@ public abstract class AbstractScriptCompletionProposal
 
 	/**
 	 * Checks whether <code>prefix</code> is a valid prefix for this proposal.
-	 * Usually, while code completion is in progress, the user types and edits
-	 * the prefix in the document in order to filter the proposal list. From
-	 * {@link #validate(IDocument, int, DocumentEvent) }, the current prefix in
-	 * the document is extracted and this method is called to find out whether
-	 * the proposal is still valid.
+	 * Usually, while code completion is in progress, the user types and edits the
+	 * prefix in the document in order to filter the proposal list. From
+	 * {@link #validate(IDocument, int, DocumentEvent) }, the current prefix in the
+	 * document is extracted and this method is called to find out whether the
+	 * proposal is still valid.
 	 * <p>
-	 * The default implementation checks if <code>prefix</code> is a prefix of
-	 * the proposal's {@link #getDisplayString() display string} using the
+	 * The default implementation checks if <code>prefix</code> is a prefix of the
+	 * proposal's {@link #getDisplayString() display string} using the
 	 * {@link #isPrefix(String, String) } method.
 	 * </p>
 	 *
-	 * @param prefix
-	 *                   the current prefix in the document
-	 * @return <code>true</code> if <code>prefix</code> is a valid prefix of
-	 *         this proposal
+	 * @param prefix the current prefix in the document
+	 * @return <code>true</code> if <code>prefix</code> is a valid prefix of this
+	 *         proposal
 	 */
 	protected boolean isValidPrefix(String prefix) {
 		/*
-		 * See http://dev.eclipse.org/bugs/show_bug.cgi?id=17667 why we do not
-		 * use the replacement string. String word= fReplacementString;
+		 * See http://dev.eclipse.org/bugs/show_bug.cgi?id=17667 why we do not use the
+		 * replacement string. String word= fReplacementString;
 		 */
 		return isPrefix(prefix, TextProcessor.deprocess(getDisplayString()));
 	}
@@ -787,8 +756,7 @@ public abstract class AbstractScriptCompletionProposal
 	/**
 	 * Sets the proposal's relevance.
 	 *
-	 * @param relevance
-	 *                      The relevance to set
+	 * @param relevance The relevance to set
 	 */
 	public void setRelevance(int relevance) {
 		fRelevance = relevance;
@@ -820,8 +788,7 @@ public abstract class AbstractScriptCompletionProposal
 	 *
 	 */
 	protected boolean isPrefix(String prefix, String string) {
-		if (prefix == null || string == null
-				|| prefix.length() > string.length())
+		if (prefix == null || string == null || prefix.length() > string.length())
 			return false;
 		fPatternMatchRule = getPatternMatchRule(prefix, string);
 		return fPatternMatchRule != -1;
@@ -829,23 +796,19 @@ public abstract class AbstractScriptCompletionProposal
 
 	/**
 	 * Matches <code>prefix</code> against <code>string</code> and replaces the
-	 * matched region by prefix. Case is preserved as much as possible. This
-	 * method returns <code>string</code> if camel case completion is disabled.
-	 * Examples when camel case completion is enabled:
+	 * matched region by prefix. Case is preserved as much as possible. This method
+	 * returns <code>string</code> if camel case completion is disabled. Examples
+	 * when camel case completion is enabled:
 	 * <ul>
 	 * <li>getCamelCompound("NuPo", "NullPointerException") ->
 	 * "NuPointerException"</li>
-	 * <li>getCamelCompound("NuPoE", "NullPointerException") ->
-	 * "NuPoException"</li>
+	 * <li>getCamelCompound("NuPoE", "NullPointerException") -> "NuPoException"</li>
 	 * <li>getCamelCompound("hasCod", "hashCode") -> "hasCode"</li>
 	 * </ul>
 	 *
-	 * @param prefix
-	 *                   the prefix to match against
-	 * @param string
-	 *                   the string to match
-	 * @return a compound of prefix and any postfix taken from
-	 *         <code>string</code>
+	 * @param prefix the prefix to match against
+	 * @param string the string to match
+	 * @return a compound of prefix and any postfix taken from <code>string</code>
 	 *
 	 */
 	protected final String getCamelCaseCompound(String prefix, String string) {
@@ -861,8 +824,7 @@ public abstract class AbstractScriptCompletionProposal
 		final char[] stringChars = string.toCharArray();
 
 		for (int i = 1; i <= stringChars.length; i++)
-			if (CharOperation.camelCaseMatch(patternChars, 0,
-					patternChars.length, stringChars, 0, i))
+			if (CharOperation.camelCaseMatch(patternChars, 0, patternChars.length, stringChars, 0, i))
 				return prefix + string.substring(i);
 
 		// Not a camel case match at all.
@@ -883,8 +845,7 @@ public abstract class AbstractScriptCompletionProposal
 	}
 
 	protected boolean insertCompletion() {
-		return getPreferenceStore()
-				.getBoolean(PreferenceConstants.CODEASSIST_INSERT_COMPLETION);
+		return getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_INSERT_COMPLETION);
 	}
 
 	protected Color getForegroundColor(StyledText text) {
@@ -922,16 +883,13 @@ public abstract class AbstractScriptCompletionProposal
 
 					ITextViewerExtension5 extension = (ITextViewerExtension5) viewer;
 					IRegion modelRange = extension.widgetRange2ModelRange(
-							new Region(fRememberedStyleRange.start,
-									fRememberedStyleRange.length));
+							new Region(fRememberedStyleRange.start, fRememberedStyleRange.length));
 					if (modelRange != null)
-						viewer2.invalidateTextPresentation(
-								modelRange.getOffset(), modelRange.getLength());
+						viewer2.invalidateTextPresentation(modelRange.getOffset(), modelRange.getLength());
 
 				} else {
 					viewer2.invalidateTextPresentation(
-							fRememberedStyleRange.start
-									+ viewer.getVisibleRegion().getOffset(),
+							fRememberedStyleRange.start + viewer.getVisibleRegion().getOffset(),
 							fRememberedStyleRange.length);
 				}
 
@@ -963,8 +921,7 @@ public abstract class AbstractScriptCompletionProposal
 		}
 
 		int offset = widgetCaret;
-		int length = getReplacementOffset() + getReplacementLength()
-				- modelCaret;
+		int length = getReplacementOffset() + getReplacementLength() - modelCaret;
 
 		Color foreground = getForegroundColor(text);
 		Color background = getBackgroundColor(text);
@@ -973,8 +930,7 @@ public abstract class AbstractScriptCompletionProposal
 		int fontStyle = range != null ? range.fontStyle : SWT.NORMAL;
 
 		repairPresentation(viewer);
-		fRememberedStyleRange = new StyleRange(offset, length, foreground,
-				background, fontStyle);
+		fRememberedStyleRange = new StyleRange(offset, length, foreground, background, fontStyle);
 		if (range != null) {
 			fRememberedStyleRange.strikeout = range.strikeout;
 			fRememberedStyleRange.underline = range.underline;
@@ -1014,8 +970,7 @@ public abstract class AbstractScriptCompletionProposal
 		if (fCreator == null) {
 			DocumentationHover.PresenterControlCreator presenterControlCreator = new DocumentationHover.PresenterControlCreator(
 					getSite());
-			fCreator = new DocumentationHover.HoverControlCreator(
-					presenterControlCreator, true);
+			fCreator = new DocumentationHover.HoverControlCreator(presenterControlCreator, true);
 		}
 		return fCreator;
 	}
@@ -1048,13 +1003,11 @@ public abstract class AbstractScriptCompletionProposal
 
 	/**
 	 * Sets up a simple linked mode at {@link #getCursorPosition()} and an exit
-	 * policy that will exit the mode when <code>closingCharacter</code> is
-	 * typed and an exit position at <code>getCursorPosition() + 1</code>.
+	 * policy that will exit the mode when <code>closingCharacter</code> is typed
+	 * and an exit position at <code>getCursorPosition() + 1</code>.
 	 *
-	 * @param document
-	 *                             the document
-	 * @param closingCharacter
-	 *                             the exit character
+	 * @param document         the document
+	 * @param closingCharacter the exit character
 	 */
 	protected void setUpLinkedMode(IDocument document, char closingCharacter) {
 		if (getTextViewer() != null && autocloseBrackets()) {
@@ -1062,15 +1015,13 @@ public abstract class AbstractScriptCompletionProposal
 			int exit = getReplacementOffset() + getReplacementString().length();
 			try {
 				LinkedPositionGroup group = new LinkedPositionGroup();
-				group.addPosition(new LinkedPosition(document, offset, 0,
-						LinkedPositionGroup.NO_STOP));
+				group.addPosition(new LinkedPosition(document, offset, 0, LinkedPositionGroup.NO_STOP));
 
 				LinkedModeModel model = new LinkedModeModel();
 				model.addGroup(group);
 				model.forceInstall();
 
-				LinkedModeUI ui = new EditorLinkedModeUI(model,
-						getTextViewer());
+				LinkedModeUI ui = new EditorLinkedModeUI(model, getTextViewer());
 				ui.setSimpleMode(true);
 				ui.setExitPolicy(new ExitPolicy(closingCharacter, document));
 				ui.setExitPosition(getTextViewer(), exit, 0, Integer.MAX_VALUE);
@@ -1083,8 +1034,7 @@ public abstract class AbstractScriptCompletionProposal
 	}
 
 	protected boolean autocloseBrackets() {
-		return getPreferenceStore()
-				.getBoolean(PreferenceConstants.EDITOR_CLOSE_BRACKETS);
+		return getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_CLOSE_BRACKETS);
 	}
 
 	protected void setDisplayString(String string) {
@@ -1118,8 +1068,7 @@ public abstract class AbstractScriptCompletionProposal
 	/**
 	 * Returns a deep copy of the given styles string.
 	 */
-	public static StyledString copyStyledString(
-			final StyledString displayString) {
+	public static StyledString copyStyledString(final StyledString displayString) {
 		final StyledString copy = new StyledString(displayString.getString());
 		for (final StyleRange range : displayString.getStyleRanges()) {
 			copy.setStyle(range.start, range.length, new Styler() {
@@ -1135,5 +1084,19 @@ public abstract class AbstractScriptCompletionProposal
 			});
 		}
 		return copy;
+	}
+
+	protected ITextSelection getTextSelection(ITextViewer viewer) {
+		final ITextSelection[] selection = new ITextSelection[1];
+		Runnable getSelection = () -> {
+			selection[0] = (ITextSelection) viewer.getSelectionProvider().getSelection();
+		};
+		if (Display.getCurrent() != null) {
+			getSelection.run();
+		} else {
+			Display.getDefault().syncExec(getSelection);
+		}
+
+		return selection[0];
 	}
 }

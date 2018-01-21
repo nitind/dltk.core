@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.DLTKUIMessages;
@@ -54,6 +55,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -264,7 +266,7 @@ public abstract class ContentAssistProcessor implements IContentAssistProcessor 
 		List<CompletionProposalCategory> providers = getCategories();
 		for (CompletionProposalCategory cat : providers) {
 			List<ICompletionProposal> computed = cat.computeCompletionProposals(context, fPartition,
-					new SubProgressMonitor(monitor, 1));
+					SubMonitor.convert(monitor, 1));
 			proposalSet.addAll(computed);
 			if (fErrorMessage == null) {
 				fErrorMessage = cat.getErrorMessage();
@@ -411,8 +413,18 @@ public abstract class ContentAssistProcessor implements IContentAssistProcessor 
 		}
 
 		int iteration = fRepetition % fCategoryIteration.size();
-		fAssistant.setStatusMessage(createIterationMessage());
-		fAssistant.setEmptyMessage(createEmptyMessage());
+		String message = createIterationMessage();
+		String emptyMessage = createEmptyMessage();
+		if (Display.getCurrent() != null) {
+			fAssistant.setStatusMessage(message);
+			fAssistant.setEmptyMessage(emptyMessage);
+		} else {
+			Display.getDefault().syncExec(() -> {
+				fAssistant.setStatusMessage(message);
+				fAssistant.setEmptyMessage(emptyMessage);
+			});
+		}
+
 		fRepetition++;
 
 		// fAssistant.setShowMessage(fRepetition % 2 != 0);
