@@ -830,6 +830,17 @@ public class ModelManager implements ISaveParticipant {
 						break;
 				}
 			}
+			if (element == null) {
+				// not on buildpath - make the root its folder
+				IProjectFragment root = project.getProjectFragment(Path.EMPTY);
+				element = root.getScriptFolder(folder.getProjectRelativePath());
+				if (VERBOSE) {
+					System.out.println(
+							"WARNING : creating dir outside buildpath (" //$NON-NLS-1$
+									+ Thread.currentThread() + "): " //$NON-NLS-1$
+									+ folder.getFullPath());
+				}
+			}
 		} else {
 			element = determineIfOnBuildpath(folder, project);
 		}
