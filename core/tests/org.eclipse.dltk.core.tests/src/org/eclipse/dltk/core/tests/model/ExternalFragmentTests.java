@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,7 +21,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.PlatformObject;
-import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
@@ -359,7 +359,7 @@ public class ExternalFragmentTests extends AbstractModelTests {
 	}
 
 	public void testUtfLocale() throws ModelException, IOException {
-		Charset charset = Charset.forName(Util.UTF_8);
+		Charset charset = StandardCharsets.UTF_8;
 		checkCharsetFlow(charset, "Русский текст2");
 	}
 
