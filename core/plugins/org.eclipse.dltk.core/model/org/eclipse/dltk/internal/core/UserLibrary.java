@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -126,7 +127,8 @@ public class UserLibrary {
 			boolean isSystemLibrary, Map<String, String> attributes)
 			throws IOException {
 		ByteArrayOutputStream s = new ByteArrayOutputStream();
-		OutputStreamWriter writer = new OutputStreamWriter(s, "UTF8"); //$NON-NLS-1$
+		OutputStreamWriter writer = new OutputStreamWriter(s,
+				StandardCharsets.UTF_8); // $NON-NLS-1$
 		XMLWriter xmlWriter = new XMLWriter(writer,
 				null/*
 					 * use the workspace line delimiter

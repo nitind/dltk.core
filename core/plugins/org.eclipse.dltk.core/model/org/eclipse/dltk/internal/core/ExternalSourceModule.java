@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@ package org.eclipse.dltk.internal.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
@@ -91,7 +92,7 @@ public class ExternalSourceModule extends AbstractExternalSourceModule {
 		IProjectFragment projectFragment = this.getProjectFragment();
 		if (charset == null) {
 			if (projectFragment.isArchive())
-				charset = Charset.forName(Util.UTF_8);
+				charset = StandardCharsets.UTF_8;
 		}
 		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		long length = 0;
