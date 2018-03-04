@@ -12,22 +12,16 @@ package org.eclipse.dltk.internal.core.index.lucene;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.Set;
 
-import org.apache.lucene.index.DocValues;
 import org.apache.lucene.index.LeafReaderContext;
 import org.apache.lucene.index.NumericDocValues;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.search.ConstantScoreScorer;
-import org.apache.lucene.search.DocIdSet;
-import org.apache.lucene.search.DocIdSetIterator;
-import org.apache.lucene.search.DocValuesDocIdSet;
-import org.apache.lucene.search.Explanation;
+import org.apache.lucene.search.ConstantScoreWeight;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Scorer;
+import org.apache.lucene.search.TwoPhaseIterator;
 import org.apache.lucene.search.Weight;
-import org.apache.lucene.util.Bits;
 import org.eclipse.dltk.ast.Modifiers;
 
 /**
@@ -79,84 +73,39 @@ public class BitFlagsQuery extends Query {
 	}
 
 	@Override
-	public Weight createWeight(IndexSearcher searcher, boolean needsScores)
-			throws IOException {
-		return new Weight(this) {
-			@Override
-			public void extractTerms(Set<Term> terms) {
-				// Ignore
-			}
-
-			@Override
-			public void normalize(float norm, float topLevelBoost) {
-				// Ignore
-			}
-
-			@Override
-			public float getValueForNormalization() throws IOException {
-				return 0;
-			}
-
-			@Override
-			public Explanation explain(LeafReaderContext context, int doc)
-					throws IOException {
-				final Scorer scorer = scorer(context);
-				final boolean match = (scorer != null
-						&& scorer.iterator().advance(doc) == doc);
-				if (match) {
-					assert scorer.score() == 0;
-					return Explanation.match(0, "Match on id" + doc); //$NON-NLS-1$
-				} else {
-					return Explanation.match(0, "No match on id" + doc); //$NON-NLS-1$
-				}
-			}
+	public Weight createWeight(IndexSearcher searcher, boolean needsScores,
+			float boost) throws IOException {
+		return new ConstantScoreWeight(this, 10) {
 
 			@Override
 			public Scorer scorer(LeafReaderContext context) throws IOException {
-				final DocIdSet set = getDocIdSet(context,
-						context.reader().getLiveDocs());
-				if (set == null) {
+
+				NumericDocValues fields = context.reader()
+						.getNumericDocValues(IndexFields.NDV_FLAGS);
+				if (fields == null) {
 					return null;
 				}
-				final DocIdSetIterator iterator = set.iterator();
-				if (iterator == null) {
-					return null;
-				}
-				return new ConstantScoreScorer(this, 0, iterator);
-			}
-		};
+				TwoPhaseIterator iterator = new TwoPhaseIterator(fields) {
 
-	}
+					@Override
+					public boolean matches() throws IOException {
+						long flags = fields.longValue();
+						if (fTrueFlags != 0 && (flags & fTrueFlags) == 0) {
+							return false;
+						}
+						if (fFalseFlags != 0 && (flags & fFalseFlags) != 0) {
+							return false;
+						}
+						return true;
+					}
 
-	/**
-	 * Finds and returns matching doc ID set.
-	 * 
-	 * @param context
-	 * @param acceptDocs
-	 * @return matching doc ID set
-	 * @throws IOException
-	 */
-	protected DocIdSet getDocIdSet(final LeafReaderContext context,
-			Bits acceptDocs) throws IOException {
-		final NumericDocValues numDocValues = DocValues
-				.getNumeric(context.reader(), IndexFields.NDV_FLAGS);
-		return new DocValuesDocIdSet(context.reader().maxDoc(), acceptDocs) {
-			@Override
-			protected boolean matchDoc(int doc) {
-				long flags = numDocValues.get(doc);
-				if (fTrueFlags != 0) {
-					if ((flags & fTrueFlags) == 0) {
-						return false;
+					@Override
+					public float matchCost() {
+						return 2;
 					}
-				}
-				if (fFalseFlags != 0) {
-					if ((flags & fFalseFlags) != 0) {
-						return false;
-					}
-				}
-				return true;
+				};
+				return new ConstantScoreScorer(this, 10, iterator);
 			}
 		};
 	}
-
 }

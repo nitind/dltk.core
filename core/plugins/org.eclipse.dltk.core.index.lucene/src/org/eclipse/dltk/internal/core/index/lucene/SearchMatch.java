@@ -48,18 +48,18 @@ public class SearchMatch {
 	 * @param doc
 	 * @param metadata
 	 */
-	public SearchMatch(String container, int elementType, int offset,
-			int length, int nameOffset, int nameLength, int flags,
+	public SearchMatch(String container, long elementType, long offset,
+			long length, long nameOffset, long nameLength, long flags,
 			String elementName, String path, String parent, String qualifier,
 			String doc, String metadata) {
 		super();
 		this.container = container;
-		this.elementType = elementType;
-		this.offset = offset;
-		this.length = length;
-		this.nameOffset = nameOffset;
-		this.nameLength = nameLength;
-		this.flags = flags;
+		this.elementType = (int) elementType;
+		this.offset = (int) offset;
+		this.length = (int) length;
+		this.nameOffset = (int) nameOffset;
+		this.nameLength = (int) nameLength;
+		this.flags = (int) flags;
 		this.elementName = elementName;
 		this.path = path;
 		this.parent = parent;

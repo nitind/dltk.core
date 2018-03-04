@@ -130,7 +130,7 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 
 		@Override
 		public boolean needsScores() {
-			return true;
+			return false;
 		}
 
 		@Override
@@ -152,9 +152,9 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 				}
 			}
 			return new LeafCollector() {
+
 				@Override
 				public void setScorer(Scorer scorer) throws IOException {
-					// ignore
 				}
 
 				@Override
@@ -179,10 +179,18 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 					getStringValue(BDV_METADATA, docId)));
 		}
 
-		private int getNumericValue(String field, int docId) {
+		private long getNumericValue(String field, int docId) {
 			NumericDocValues docValues = fDocNumericValues.get(field);
 			if (docValues != null) {
-				return (int) docValues.get(docId);
+				try {
+					docValues.advanceExact(docId);
+					if (!docValues.advanceExact(docId)) {
+						return 0;
+					}
+					return docValues.longValue();
+				} catch (IOException e) {
+					Logger.logException(e);
+				}
 			}
 			return 0;
 		}
@@ -190,12 +198,21 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 		private String getStringValue(String field, int docId) {
 			BinaryDocValues docValues = fDocBinaryValues.get(field);
 			if (docValues != null) {
-				BytesRef bytesRef = docValues.get(docId);
-				if (bytesRef.length > 0)
-					return bytesRef.utf8ToString();
+				try {
+					if (!docValues.advanceExact(docId)) {
+						return null;
+					}
+					BytesRef bytesRef = docValues.binaryValue();
+					if (bytesRef.length > 0)
+						return bytesRef.utf8ToString();
+				} catch (IOException e) {
+					Logger.logException(e);
+				}
+
 			}
 			return null;
 		}
+
 	}
 
 	@Override
@@ -291,8 +308,9 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 		List<SearchMatch> results = new ArrayList<>();
 		for (String container : SearchScope.getContainers(scope)) {
 			SearcherManager searcherManager = LuceneManager.INSTANCE
-					.findIndexSearcher(container, searchForRefs
-							? IndexType.REFERENCES : IndexType.DECLARATIONS,
+					.findIndexSearcher(container,
+							searchForRefs ? IndexType.REFERENCES
+									: IndexType.DECLARATIONS,
 							elementType);
 			try {
 				indexSearcher = searcherManager.acquire();

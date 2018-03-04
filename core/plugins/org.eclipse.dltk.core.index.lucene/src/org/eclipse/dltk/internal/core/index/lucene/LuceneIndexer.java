@@ -14,9 +14,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-import org.apache.lucene.document.Document;
+import org.apache.lucene.index.BinaryDocValues;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.LeafReader;
 import org.apache.lucene.index.LeafReaderContext;
@@ -50,9 +49,6 @@ public class LuceneIndexer extends AbstractIndexer {
 
 	private static final class TimestampsCollector implements Collector {
 
-		private static final Set<String> fFields = Collections
-				.singleton(IndexFields.F_PATH);
-
 		private final Map<String, Long> fResult;
 
 		public TimestampsCollector(Map<String, Long> result) {
@@ -68,19 +64,22 @@ public class LuceneIndexer extends AbstractIndexer {
 		public LeafCollector getLeafCollector(LeafReaderContext context)
 				throws IOException {
 			final LeafReader reader = context.reader();
-			final NumericDocValues timestampField = context.reader()
+			final NumericDocValues timestampField = reader
 					.getNumericDocValues(IndexFields.NDV_TIMESTAMP);
+			final BinaryDocValues pathField = reader
+					.getBinaryDocValues(IndexFields.F_PATH);
 			return new LeafCollector() {
 				@Override
 				public void setScorer(Scorer scorer) throws IOException {
-					// ignore
 				}
 
 				@Override
 				public void collect(int docId) throws IOException {
-					Document document = reader.document(docId, fFields);
-					fResult.put(document.get(IndexFields.F_PATH),
-							timestampField.get(docId));
+					if (timestampField.advanceExact(docId)
+							&& pathField.advanceExact(docId)) {
+						fResult.put(pathField.binaryValue().utf8ToString(),
+								timestampField.longValue());
+					}
 				}
 			};
 		}
