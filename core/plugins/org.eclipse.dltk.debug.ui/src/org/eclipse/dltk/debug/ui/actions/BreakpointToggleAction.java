@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,7 +42,7 @@ public abstract class BreakpointToggleAction
 	@Override
 	public void run(IAction action) {
 		IStructuredSelection selection = getStructuredSelection();
-		Iterator itr = selection.iterator();
+		Iterator<?> itr = selection.iterator();
 		while (itr.hasNext()) {
 			try {
 				IScriptBreakpoint breakpoint = (IScriptBreakpoint) itr.next();
@@ -84,7 +84,7 @@ public abstract class BreakpointToggleAction
 	/**
 	 * Returns if the action is a checkable action. i.e. if we should bother
 	 * updating checked state
-	 * 
+	 *
 	 * @return if the action is a checkable action
 	 *
 	 * @since 3.3
@@ -114,9 +114,9 @@ public abstract class BreakpointToggleAction
 
 	/**
 	 * Allows the current structured selection to be set
-	 * 
+	 *
 	 * @param selection
-	 *            the new selection
+	 *                      the new selection
 	 */
 	protected void setStructuredSelection(IStructuredSelection selection) {
 		fSelection = selection;
@@ -125,7 +125,7 @@ public abstract class BreakpointToggleAction
 	/**
 	 * Returns if the underlying action should be enabled for the given
 	 * selection
-	 * 
+	 *
 	 * @param selection
 	 * @return if the underlying action should be enabled for the given
 	 *         selection
@@ -148,7 +148,7 @@ public abstract class BreakpointToggleAction
 
 	/**
 	 * Returns the underlying <code>IAction</code> for this delegate
-	 * 
+	 *
 	 * @return the underlying <code>IAction</code> for this delegate
 	 */
 	protected IAction getAction() {
@@ -157,9 +157,9 @@ public abstract class BreakpointToggleAction
 
 	/**
 	 * Allows the underlying <code>IAction</code> for this delegate to be set
-	 * 
+	 *
 	 * @param action
-	 *            the new action to set for this delegate
+	 *                   the new action to set for this delegate
 	 */
 	protected void setAction(IAction action) {
 		fAction = action;
@@ -195,7 +195,7 @@ public abstract class BreakpointToggleAction
 
 	/**
 	 * Returns the <code>IWorkbenchPart</code> this delegate is associated with
-	 * 
+	 *
 	 * @return the <code>IWorkbenchPart</code> this delegate is associated with
 	 */
 	protected IWorkbenchPart getPart() {
@@ -204,9 +204,9 @@ public abstract class BreakpointToggleAction
 
 	/**
 	 * Allows the <code>IWorkbenchPart</code> to be set for this delegate
-	 * 
+	 *
 	 * @param part
-	 *            the new part to set
+	 *                 the new part to set
 	 */
 	protected void setPart(IWorkbenchPart part) {
 		fPart = part;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,16 +28,16 @@ public class DbgpDataTypeCommands extends DbgpBaseCommands
 
 	private static final String TAG_MAP = "map"; //$NON-NLS-1$
 
-	private final Map converter;
+	private final Map<String, Integer> converter;
 
 	private Integer typeToInteger(String type) {
-		return (Integer) converter.get(type);
+		return converter.get(type);
 	}
 
 	public DbgpDataTypeCommands(IDbgpCommunicator communicator) {
 		super(communicator);
 
-		converter = new HashMap();
+		converter = new HashMap<>();
 		converter.put("bool", Integer.valueOf(BOOL_TYPE)); //$NON-NLS-1$
 		converter.put("int", Integer.valueOf(INT_TYPE)); //$NON-NLS-1$
 		converter.put("float", Integer.valueOf(FLOAT_TYPE)); //$NON-NLS-1$
@@ -50,11 +50,11 @@ public class DbgpDataTypeCommands extends DbgpBaseCommands
 	}
 
 	@Override
-	public Map getTypeMap() throws DbgpException {
+	public Map<String, Integer> getTypeMap() throws DbgpException {
 		DbgpRequest request = createRequest(TYPEMAP_GET_COMMAND);
 		Element element = communicate(request);
 
-		Map result = new HashMap();
+		Map<String, Integer> result = new HashMap<>();
 
 		NodeList maps = element.getElementsByTagName(TAG_MAP);
 

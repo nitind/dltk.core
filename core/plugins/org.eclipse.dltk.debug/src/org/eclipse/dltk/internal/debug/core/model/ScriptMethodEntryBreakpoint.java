@@ -107,9 +107,9 @@ public class ScriptMethodEntryBreakpoint extends ScriptLineBreakpoint
 
 	@Override
 	public String[] getUpdatableAttributes() {
-		List all = new ArrayList();
+		List<String> all = new ArrayList<>();
 		all.addAll(Arrays.asList(super.getUpdatableAttributes()));
 		all.addAll(Arrays.asList(UPDATABLE_ATTRS));
-		return (String[]) all.toArray(new String[all.size()]);
+		return all.toArray(new String[all.size()]);
 	}
 }

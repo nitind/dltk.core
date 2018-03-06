@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -98,8 +98,8 @@ public class ScriptBreakpointManager
 		return makeExpression(watchpoint, debugToolkit);
 	}
 
-	protected String makeExpression(
-			IScriptWatchpoint watchpoint) throws CoreException {
+	protected String makeExpression(IScriptWatchpoint watchpoint)
+			throws CoreException {
 		final IDLTKDebugToolkit debugToolkit = debugToolkitByModelId
 				.apply(watchpoint.getModelIdentifier());
 		return makeExpression(watchpoint, debugToolkit);
@@ -199,7 +199,7 @@ public class ScriptBreakpointManager
 			IScriptSpawnpoint spawnpoint) throws DbgpException, CoreException {
 		if (!target.supportsBreakpoint(spawnpoint))
 			return;
-		final IDbgpSpawnpointCommands commands = (IDbgpSpawnpointCommands) session
+		final IDbgpSpawnpointCommands commands = session
 				.get(IDbgpSpawnpointCommands.class);
 		final IDbgpSpawnpoint p = commands.setSpawnpoint(
 				bpPathMapper.map(spawnpoint.getResourceURI()),
@@ -270,8 +270,8 @@ public class ScriptBreakpointManager
 				final DbgpBreakpointConfig config = createBreakpointConfig(
 						breakpoint);
 				if (breakpoint instanceof IScriptWatchpoint) {
-					config.setExpression(makeExpression(
-							(IScriptWatchpoint) breakpoint));
+					config.setExpression(
+							makeExpression((IScriptWatchpoint) breakpoint));
 				}
 				commands.updateBreakpoint(id, config);
 			}
@@ -400,7 +400,7 @@ public class ScriptBreakpointManager
 
 	private static void changeSpawnpoint(final IDbgpSession session,
 			IScriptSpawnpoint spawnpoint) throws DbgpException, CoreException {
-		final IDbgpSpawnpointCommands commands = (IDbgpSpawnpointCommands) session
+		final IDbgpSpawnpointCommands commands = session
 				.get(IDbgpSpawnpointCommands.class);
 		if (commands != null) {
 			final String id = spawnpoint.getId(session);
@@ -412,7 +412,7 @@ public class ScriptBreakpointManager
 
 	protected void removeSpawnpoint(final IDbgpSession session,
 			IScriptSpawnpoint spawnpoint) throws DbgpException, CoreException {
-		final IDbgpSpawnpointCommands commands = (IDbgpSpawnpointCommands) session
+		final IDbgpSpawnpointCommands commands = session
 				.get(IDbgpSpawnpointCommands.class);
 		if (commands != null) {
 			final String id = spawnpoint.getId(session);
@@ -538,8 +538,7 @@ public class ScriptBreakpointManager
 
 	private static class TemporaryBreakpoint implements IDebugEventSetListener {
 		final ScriptBreakpointManager manager;
-		final Map<IDbgpSession, String> ids = new IdentityHashMap<>(
-				1);
+		final Map<IDbgpSession, String> ids = new IdentityHashMap<>(1);
 
 		/**
 		 * @param manager
@@ -630,9 +629,10 @@ public class ScriptBreakpointManager
 	 * @see IBreakpointListener#breakpointChanged(IBreakpoint, IMarkerDelta)
 	 * @param breakpoint
 	 * @param delta
-	 *            if delta is <code>null</code> then there was a call to
-	 *            BreakPointManager.fireBreakpointChanged(IBreakpoint
-	 *            breakpoint), so see it as a major change.
+	 *                       if delta is <code>null</code> then there was a call
+	 *                       to
+	 *                       BreakPointManager.fireBreakpointChanged(IBreakpoint
+	 *                       breakpoint), so see it as a major change.
 	 */
 	@Override
 	public void breakpointChanged(final IBreakpoint breakpoint,

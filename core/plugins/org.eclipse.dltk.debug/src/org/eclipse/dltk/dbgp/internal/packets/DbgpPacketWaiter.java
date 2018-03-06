@@ -4,12 +4,12 @@ import java.util.LinkedList;
 
 public final class DbgpPacketWaiter {
 	private static final String DBGP_PACKET_RECEIVER_PACKET_WAITER_TERMINATED = Messages.DbgpPacketReceiver_packetWaiterTerminated;
-	private final LinkedList queue;
+	private final LinkedList<DbgpPacket> queue;
 	private boolean terminated;
 
 	public DbgpPacketWaiter() {
 		terminated = false;
-		this.queue = new LinkedList();
+		this.queue = new LinkedList<>();
 	}
 
 	public synchronized void put(DbgpPacket obj) {
@@ -27,7 +27,7 @@ public final class DbgpPacketWaiter {
 					DBGP_PACKET_RECEIVER_PACKET_WAITER_TERMINATED);
 		}
 
-		return (DbgpPacket) queue.removeFirst();
+		return queue.removeFirst();
 	}
 
 	public synchronized void terminate() {

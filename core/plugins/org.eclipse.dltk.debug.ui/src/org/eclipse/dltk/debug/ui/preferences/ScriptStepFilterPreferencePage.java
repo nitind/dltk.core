@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -137,7 +137,7 @@ public class ScriptStepFilterPreferencePage extends PreferencePage
 	 * handles the filter button being clicked
 	 *
 	 * @param event
-	 *            the clicked event
+	 *                  the clicked event
 	 */
 	private void handleFilterViewerKeyPress(KeyEvent event) {
 		if (event.character == SWT.DEL && event.stateMask == 0) {
@@ -216,7 +216,7 @@ public class ScriptStepFilterPreferencePage extends PreferencePage
 	 * <code>fUseStepFiltersButton</code> according to the passed boolean
 	 *
 	 * @param enabled
-	 *            the new enablement status of the page's widgets
+	 *                    the new enablement status of the page's widgets
 	 * @since 3.2
 	 */
 	protected void setPageEnablement(boolean enabled) {
@@ -234,7 +234,7 @@ public class ScriptStepFilterPreferencePage extends PreferencePage
 	 * Creates the button for the step filter options
 	 *
 	 * @param container
-	 *            the parent container
+	 *                      the parent container
 	 */
 	private void createStepFilterButtons(Composite container) {
 		initializeDialogUnits(container);
@@ -400,8 +400,8 @@ public class ScriptStepFilterPreferencePage extends PreferencePage
 	public boolean performOk() {
 		DebugPlugin.setUseStepFilters(fUseStepFiltersButton.getSelection());
 		IPreferenceStore store = getPreferenceStore();
-		ArrayList active = new ArrayList();
-		ArrayList inactive = new ArrayList();
+		ArrayList<String> active = new ArrayList<>();
+		ArrayList<String> inactive = new ArrayList<>();
 		String name = ""; //$NON-NLS-1$
 		Filter[] filters = getAllFiltersFromTable();
 		for (int i = 0; i < filters.length; i++) {
@@ -414,12 +414,12 @@ public class ScriptStepFilterPreferencePage extends PreferencePage
 				inactive.add(name + modifiers);
 			}
 		}
-		String pref = ScriptDebugOptionsManager.serializeList(
-				(String[]) active.toArray(new String[active.size()]));
+		String pref = ScriptDebugOptionsManager
+				.serializeList(active.toArray(new String[active.size()]));
 		store.setValue(IDLTKDebugUIPreferenceConstants.PREF_ACTIVE_FILTERS_LIST,
 				pref);
-		pref = ScriptDebugOptionsManager.serializeList(
-				(String[]) inactive.toArray(new String[inactive.size()]));
+		pref = ScriptDebugOptionsManager
+				.serializeList(inactive.toArray(new String[inactive.size()]));
 		store.setValue(
 				IDLTKDebugUIPreferenceConstants.PREF_INACTIVE_FILTERS_LIST,
 				pref);
@@ -440,9 +440,9 @@ public class ScriptStepFilterPreferencePage extends PreferencePage
 	 * adds a single filter to the viewer
 	 *
 	 * @param filter
-	 *            the new filter to add
+	 *                    the new filter to add
 	 * @param checked
-	 *            the checked state of the new filter
+	 *                    the checked state of the new filter
 	 * @since 3.2
 	 */
 	protected void addFilter(String filter, boolean checked, int modifiers) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,10 +34,10 @@ public class DbgpStatus implements IDbgpStatus {
 
 	public static final Integer STATUS_BREAK = Integer.valueOf(4);
 
-	private static final Map statusParser = new TreeMap(
+	private static final Map<String, Integer> statusParser = new TreeMap<>(
 			String.CASE_INSENSITIVE_ORDER);
 
-	private static final Map reasonParser = new TreeMap(
+	private static final Map<String, Integer> reasonParser = new TreeMap<>(
 			String.CASE_INSENSITIVE_ORDER);
 
 	static {
@@ -54,8 +54,8 @@ public class DbgpStatus implements IDbgpStatus {
 	}
 
 	public static IDbgpStatus parse(String status, String reason) {
-		return new DbgpStatus((Integer) statusParser.get(status),
-				(Integer) reasonParser.get(reason));
+		return new DbgpStatus(statusParser.get(status),
+				reasonParser.get(reason));
 	}
 
 	private final Integer status;

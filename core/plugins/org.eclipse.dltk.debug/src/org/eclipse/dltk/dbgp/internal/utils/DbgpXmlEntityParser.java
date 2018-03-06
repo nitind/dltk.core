@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007, 2011 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.dbgp.internal.utils;
 
@@ -60,7 +59,7 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 	private static final String ATTR_WHERE = "where"; //$NON-NLS-1$
 
 	private static Element[] getChildElements(Element elem, String name) {
-		final List<Element> result = new ArrayList<Element>();
+		final List<Element> result = new ArrayList<>();
 		final NodeList children = elem.getChildNodes();
 		for (int i = 0, length = children.getLength(); i < length; ++i) {
 			final Node childNode = children.item(i);
@@ -97,7 +96,7 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 
 		/**
 		 * TODO Check ATTR_TYPE who knows when.
-		 * 
+		 *
 		 * According to the http://xdebug.org/docs-dbgp.php#stack-get
 		 * <code>Valid values are "file" or "eval"</code>, but Tcl debugger also
 		 * sends "source" and "console".
@@ -106,9 +105,8 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 
 		final String where = element.getAttribute(ATTR_WHERE);
 
-		return new DbgpStackLevel(fileUri, where, level, lineNumber,
-				lineNumber, methodName, beginLine, beginColumn, endLine,
-				endColumn);
+		return new DbgpStackLevel(fileUri, where, level, lineNumber, lineNumber,
+				methodName, beginLine, beginColumn, endLine, endColumn);
 	}
 
 	private static final String FILE_SCHEME_PREFIX = DLTKDebugConstants.FILE_SCHEME
@@ -138,16 +136,16 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 			}
 		}
 		try {
-			return new URI(DLTKDebugConstants.UNKNOWN_SCHEME,
-					Util.EMPTY_STRING, Util.EMPTY_STRING, fileName);
+			return new URI(DLTKDebugConstants.UNKNOWN_SCHEME, Util.EMPTY_STRING,
+					Util.EMPTY_STRING, fileName);
 		} catch (URISyntaxException e) {
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
 			}
 		}
 		try {
-			return new URI(DLTKDebugConstants.UNKNOWN_SCHEME,
-					Util.EMPTY_STRING, Util.EMPTY_STRING, "unknown");//$NON-NLS-1$
+			return new URI(DLTKDebugConstants.UNKNOWN_SCHEME, Util.EMPTY_STRING,
+					Util.EMPTY_STRING, "unknown");//$NON-NLS-1$
 		} catch (URISyntaxException e) {
 			throw new IllegalArgumentException(e.getMessage());
 		}
@@ -196,8 +194,8 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 		// Children count
 		int childrenCount = -1;
 		if (property.hasAttribute(ATTR_NUMCHILDREN)) {
-			childrenCount = Integer.parseInt(property
-					.getAttribute(ATTR_NUMCHILDREN));
+			childrenCount = Integer
+					.parseInt(property.getAttribute(ATTR_NUMCHILDREN));
 		}
 
 		// Page
@@ -403,8 +401,8 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 			return parseBase64Content(element);
 		}
 
-		throw new AssertionError(NLS.bind(
-				Messages.DbgpXmlEntityParser_invalidEncoding, encoding));
+		throw new AssertionError(NLS
+				.bind(Messages.DbgpXmlEntityParser_invalidEncoding, encoding));
 	}
 
 }

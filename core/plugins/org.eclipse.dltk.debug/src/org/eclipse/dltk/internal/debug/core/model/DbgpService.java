@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2017 xored software, Inc. and others.
+ * Copyright (c) 2008, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -41,7 +41,8 @@ public class DbgpService
 
 	private DbgpServer server;
 
-	private final Map acceptors = Collections.synchronizedMap(new HashMap());
+	private final Map<String, IDbgpThreadAcceptor> acceptors = Collections
+			.synchronizedMap(new HashMap<>());
 
 	private int serverPort;
 
@@ -124,7 +125,7 @@ public class DbgpService
 
 	@Override
 	public IDbgpThreadAcceptor unregisterAcceptor(String id) {
-		return (IDbgpThreadAcceptor) acceptors.remove(id);
+		return acceptors.remove(id);
 	}
 
 	public void restart(int newPort) {
@@ -162,7 +163,7 @@ public class DbgpService
 	public void clientConnected(IDbgpSession session) {
 		final IDbgpSessionInfo info = session.getInfo();
 		if (info != null) {
-			final IDbgpThreadAcceptor acceptor = (IDbgpThreadAcceptor) acceptors
+			final IDbgpThreadAcceptor acceptor = acceptors
 					.get(info.getIdeKey());
 			if (acceptor != null) {
 				acceptor.acceptDbgpThread(session, new NullProgressMonitor());

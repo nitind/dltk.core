@@ -38,8 +38,8 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 
 	private static HotCodeReplaceManager instance = null;
 
-	private ArrayList fHotSwapTargets = new ArrayList();
-	private ArrayList fNoHotSwapTargets = new ArrayList();
+	private ArrayList<IScriptDebugTarget> fHotSwapTargets = new ArrayList<>();
+	private ArrayList<IScriptDebugTarget> fNoHotSwapTargets = new ArrayList<>();
 	private ListenerList<IHotCodeReplaceListener> fHotCodeReplaceListeners = new ListenerList<>();
 
 	public static synchronized HotCodeReplaceManager getDefault() {
@@ -182,7 +182,7 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 	 * replace.
 	 */
 	private IScriptDebugTarget[] getHotSwapTargets() {
-		return (IScriptDebugTarget[]) fHotSwapTargets
+		return fHotSwapTargets
 				.toArray(new IScriptDebugTarget[fHotSwapTargets.size()]);
 	}
 
@@ -191,7 +191,7 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 	 * code replace.
 	 */
 	private IScriptDebugTarget[] getNoHotSwapTargets() {
-		return (IScriptDebugTarget[]) fNoHotSwapTargets
+		return fNoHotSwapTargets
 				.toArray(new IScriptDebugTarget[fNoHotSwapTargets.size()]);
 	}
 
@@ -295,7 +295,7 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 		/**
 		 * The collection of changed class files.
 		 */
-		protected ArrayList fFiles = new ArrayList();
+		protected ArrayList<IResource> fFiles = new ArrayList<>();
 
 		/**
 		 * Answers whether children should be visited.
@@ -329,7 +329,7 @@ public class HotCodeReplaceManager implements IResourceChangeListener,
 		 * Answers a collection of changed files
 		 */
 		public IResource[] getChangedFiles() {
-			return (IResource[]) fFiles.toArray(new IResource[fFiles.size()]);
+			return fFiles.toArray(new IResource[fFiles.size()]);
 		}
 	}
 }

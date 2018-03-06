@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -171,10 +171,6 @@ public class ScriptDebugTargetTest {
 		Assert.assertEquals(15, frame.getLineNumber());
 		Assert.assertEquals(100, frame.getCharStart());
 		Assert.assertEquals(301, frame.getCharEnd());
-	}
-
-	private ScriptDebugTarget createSubject() {
-		return new ScriptDebugTarget("testModelId", dbgpService, "testSessionId", launch, null, options);
 	}
 
 	private static void join() {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2017 xored software, Inc. and others.
+ * Copyright (c) 2008, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -40,9 +40,9 @@ public class AbstractDbgpServiceTests {
 	protected static final int MAX_PORT = 0xFFFF;
 
 	/**
-	 * Creates socket and connects it to the specified port. If connection could
-	 * not be performed the error is thrown. Successfully connected socket is
-	 * added to the {@link #sockets} and closed in {@link #tearDown()}
+	 * Creates socket and connects it to the specified port. If connection could not
+	 * be performed the error is thrown. Successfully connected socket is added to
+	 * the {@link #sockets} and closed in {@link #tearDown()}
 	 *
 	 * @param port
 	 * @return con
@@ -89,9 +89,9 @@ public class AbstractDbgpServiceTests {
 	}
 
 	/**
-	 * Active sockets - list is cleared in {@link #tearDown()}. We do not want
-	 * to close sockets as the corresponding {@link IDbgpSession} could be
-	 * terminated before we processed the connection.
+	 * Active sockets - list is cleared in {@link #tearDown()}. We do not want to
+	 * close sockets as the corresponding {@link IDbgpSession} could be terminated
+	 * before we processed the connection.
 	 */
 	private final List<Socket> sockets = new ArrayList<>();
 
@@ -113,8 +113,8 @@ public class AbstractDbgpServiceTests {
 	}
 
 	/**
-	 * Closes the specified socket and catch possible errors. So it could be
-	 * safely used in finally statements and keep original exception if any.
+	 * Closes the specified socket and catch possible errors. So it could be safely
+	 * used in finally statements and keep original exception if any.
 	 *
 	 * @param socket
 	 */

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,9 +63,9 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 
 	/**
 	 * @param search
-	 *            the elements to search for a main script
+	 *                   the elements to search for a main script
 	 * @param mode
-	 *            the mode to launch in
+	 *                   the mode to launch in
 	 */
 	public void searchAndLaunch(Object[] search, String mode,
 			String selectMessage, String emptyMessage) {
@@ -98,9 +98,9 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 	 * Prompts the user to select a type from the given types.
 	 *
 	 * @param types
-	 *            the types to choose from
+	 *                  the types to choose from
 	 * @param title
-	 *            the selection dialog title
+	 *                  the selection dialog title
 	 *
 	 * @return the selected type or <code>null</code> if none.
 	 */
@@ -169,8 +169,7 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 		try {
 			ILaunchConfiguration[] configs = DebugPlugin.getDefault()
 					.getLaunchManager().getLaunchConfigurations(configType);
-			candidateConfigs = new ArrayList<>(
-					configs.length);
+			candidateConfigs = new ArrayList<>(configs.length);
 			for (int i = 0; i < configs.length; i++) {
 				ILaunchConfiguration config = configs[i];
 				if (config.getAttribute(
@@ -220,10 +219,8 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 		ILaunchConfigurationWorkingCopy wc = null;
 		try {
 			ILaunchConfigurationType configType = getConfigurationType();
-			wc = configType.newInstance(null,
-					getLaunchManager()
-							.generateUniqueLaunchConfigurationNameFrom(
-									script.getName()));
+			wc = configType.newInstance(null, getLaunchManager()
+					.generateLaunchConfigurationName(script.getName()));
 			wc.setAttribute(
 					ScriptLaunchConfigurationConstants.ATTR_SCRIPT_NATURE,
 					getNatureId());
@@ -286,7 +283,7 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 	 * Returns the model elements corresponding to the given objects.
 	 *
 	 * @param objects
-	 *            selected objects
+	 *                    selected objects
 	 * @return corresponding Script elements
 	 */
 	private IResource[] getScriptResources(Object[] objects,
@@ -342,14 +339,14 @@ public abstract class AbstractScriptLaunchShortcut implements ILaunchShortcut {
 	 * elements.
 	 *
 	 * @param elements
-	 *            scope to search for launchable types
+	 *                     scope to search for launchable types
 	 * @param context
-	 *            progess reporting context
+	 *                     progess reporting context
 	 * @return launchable types, possibly empty
 	 * @exception InterruptedException
-	 *                if the search is cancelled
-	 * @exception org.eclipse.core.runtime.CoreException
-	 *                if the search fails
+	 *                                     if the search is cancelled
+	 * @exception                      org.eclipse.core.runtime.CoreException
+	 *                                     if the search fails
 	 */
 	protected IResource[] findScripts(final Object[] elements,
 			IRunnableContext context)

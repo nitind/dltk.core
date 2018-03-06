@@ -16,7 +16,7 @@ public class ScriptDebugElementAdapterFactory implements IAdapterFactory {
 
 	private static ScriptDebugElementAdapterFactory instance;
 	// assume only 1 plugin installed
-	private final HashMap<String, ScriptVariableLabelProvider> variableLabelProviders = new HashMap<String, ScriptVariableLabelProvider>(
+	private final HashMap<String, ScriptVariableLabelProvider> variableLabelProviders = new HashMap<>(
 			1, 1);
 
 	// private static final IElementLabelProvider fgLPVariable = new

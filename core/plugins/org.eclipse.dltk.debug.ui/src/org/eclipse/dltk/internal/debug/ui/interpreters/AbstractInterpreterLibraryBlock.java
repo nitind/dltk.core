@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,11 +9,7 @@
 package org.eclipse.dltk.internal.debug.ui.interpreters;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -91,7 +87,7 @@ public abstract class AbstractInterpreterLibraryBlock
 	 * Creates and returns the source lookup control.
 	 *
 	 * @param parent
-	 *            the parent widget of this control
+	 *                   the parent widget of this control
 	 */
 	public Control createControl(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);
@@ -230,9 +226,9 @@ public abstract class AbstractInterpreterLibraryBlock
 	 * Creates and returns a button
 	 *
 	 * @param parent
-	 *            parent widget
+	 *                   parent widget
 	 * @param label
-	 *            label
+	 *                   label
 	 * @return Button
 	 */
 	protected Button createPushButton(Composite parent, String label) {
@@ -459,7 +455,7 @@ public abstract class AbstractInterpreterLibraryBlock
 				fEnabledButton.setEnabled(
 						fLibraryContentProvider.canEnable(selection));
 			}
-			for (Iterator iter = selection.iterator(); iter.hasNext();) {
+			for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 				Object element = iter.next();
 				Object lib;
 				lib = element;
@@ -486,9 +482,9 @@ public abstract class AbstractInterpreterLibraryBlock
 	 * install and type.
 	 *
 	 * @param Interpreter
-	 *            Interpreter or <code>null</code> if none
+	 *                        Interpreter or <code>null</code> if none
 	 * @param type
-	 *            type of Interpreter install
+	 *                        type of Interpreter install
 	 */
 
 	public void initializeFrom(IInterpreterInstall Interpreter,
@@ -622,42 +618,5 @@ public abstract class AbstractInterpreterLibraryBlock
 		fLibraryContentProvider.initialize(getHomeDirectory(),
 				fDialog.getEnvironmentVariables(), false);
 		update();
-	}
-
-	private boolean equals(EnvironmentVariable[] a, EnvironmentVariable[] b) {
-		Map vars = new HashMap();
-		if (a.length != b.length) {
-			return false;
-		}
-		for (int i = 0; i < a.length; i++) {
-			vars.put(a[i].getName(), a[i]);
-		}
-		for (int i = 0; i < b.length; i++) {
-			EnvironmentVariable v = (EnvironmentVariable) vars
-					.get(b[i].getName());
-			if (v == null) {
-				return false;
-			}
-			if (!v.getValue().equals(b[i].getValue())) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private boolean equals(LibraryLocation[] a, LibraryLocation[] b) {
-		Set libs = new HashSet();
-		if (a.length != b.length) {
-			return false;
-		}
-		for (int i = 0; i < a.length; i++) {
-			libs.add(a[i]);
-		}
-		for (int i = 0; i < b.length; i++) {
-			if (!libs.contains(b[i])) {
-				return false;
-			}
-		}
-		return true;
 	}
 }

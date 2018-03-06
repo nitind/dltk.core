@@ -8,6 +8,7 @@ import org.eclipse.dltk.debug.ui.IDLTKDebugUIPreferenceConstants;
 import org.eclipse.dltk.ui.preferences.IPreferenceConfigurationBlock;
 import org.eclipse.dltk.ui.preferences.ImprovedAbstractConfigurationBlock;
 import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore;
+import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore.OverlayKey;
 import org.eclipse.dltk.ui.util.SWTFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
@@ -91,8 +92,8 @@ public class ScriptDetailFormattersPreferencePage
 		}
 
 		@Override
-		protected List createOverlayKeys() {
-			ArrayList keys = new ArrayList(1);
+		protected List<OverlayKey> createOverlayKeys() {
+			ArrayList<OverlayKey> keys = new ArrayList<>(1);
 			keys.add(new OverlayPreferenceStore.OverlayKey(
 					OverlayPreferenceStore.STRING,
 					IDLTKDebugUIPreferenceConstants.PREF_SHOW_DETAILS));

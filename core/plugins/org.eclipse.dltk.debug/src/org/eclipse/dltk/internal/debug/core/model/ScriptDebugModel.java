@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.core.model;
 
@@ -30,24 +29,23 @@ public class ScriptDebugModel {
 				.findToolkitForResource(resource);
 		if (toolkit != null) {
 			String natureId = toolkit.getNatureId();
-			return ScriptDebugManager.getInstance().getDebugModelByNature(
-					natureId);
+			return ScriptDebugManager.getInstance()
+					.getDebugModelByNature(natureId);
 		}
 		return null;
 	}
 
-	public static IScriptLineBreakpoint createLineBreakpoint(
-			IResource resource, IPath path, int lineNumber, int charStart,
-			int charEnd, boolean register, Map attributes) throws CoreException {
+	public static IScriptLineBreakpoint createLineBreakpoint(IResource resource,
+			IPath path, int lineNumber, int charStart, int charEnd,
+			boolean register) throws CoreException {
 
 		return new ScriptLineBreakpoint(getDebugModelId(resource), resource,
 				path, lineNumber, charStart, charEnd, register);
 	}
 
 	public static IScriptLineBreakpoint createLineBreakpoint(
-			String debugModelId, IResource resource, IPath path,
-			int lineNumber, int charStart, int charEnd, boolean register,
-			Map attributes) throws CoreException {
+			String debugModelId, IResource resource, IPath path, int lineNumber,
+			int charStart, int charEnd, boolean register) throws CoreException {
 
 		return new ScriptLineBreakpoint(debugModelId, resource, path,
 				lineNumber, charStart, charEnd, register);
@@ -55,14 +53,14 @@ public class ScriptDebugModel {
 
 	public static IScriptSpawnpoint createSpawnpoint(String debugModelId,
 			IResource resource, IPath path, int lineNumber, int charStart,
-			int charEnd, boolean register, Map attributes) throws CoreException {
+			int charEnd, boolean register) throws CoreException {
 		return new ScriptSpawnpoint(debugModelId, resource, path, lineNumber,
 				charStart, charEnd, register);
 	}
 
 	public static IScriptMethodEntryBreakpoint createMethodEntryBreakpoint(
 			IResource resource, IPath path, int lineNumber, int charStart,
-			int charEnd, boolean register, Map attributes, String methodName)
+			int charEnd, boolean register, String methodName)
 			throws CoreException {
 
 		return new ScriptMethodEntryBreakpoint(getDebugModelId(resource),
@@ -79,10 +77,10 @@ public class ScriptDebugModel {
 
 	public static ScriptExceptionBreakpoint createExceptionBreakpoint(
 			String debugModelId, IResource resource, String typename,
-			boolean caught, boolean uncaught, boolean register, Map attributes)
-			throws CoreException {
+			boolean caught, boolean uncaught, boolean register,
+			Map<String, Object> attributes) throws CoreException {
 		if (attributes == null)
-			attributes = new HashMap();
+			attributes = new HashMap<>();
 
 		return new ScriptExceptionBreakpoint(debugModelId, resource, typename,
 				caught, uncaught, register, attributes);

@@ -33,9 +33,9 @@ public class ScriptDetailFormattersManager implements IPropertyChangeListener {
 	private static final String SCRIPT_DETAIL_FORMATTER_EXTENSION = DLTKDebugUIPlugin.PLUGIN_ID
 			+ ".scriptDetailFormatter"; //$NON-NLS-1$
 
-	private static HashMap managerInstances = new HashMap();
+	private static HashMap<String, ScriptDetailFormattersManager> managerInstances = new HashMap<>();
 	private static final String CANNOT_EVALUATE = Messages.ScriptDetailFormattersManager_cantEvaluateDetails;
-	private HashMap formatters = new HashMap();
+	private HashMap<String, DetailFormatter> formatters = new HashMap<>();
 	private DetailFormatter defaultFormatter = null;
 
 	/**
@@ -46,8 +46,7 @@ public class ScriptDetailFormattersManager implements IPropertyChangeListener {
 	 * @return default detail formatters manager.
 	 */
 	static public ScriptDetailFormattersManager getDefault(String natureId) {
-		ScriptDetailFormattersManager instance = (ScriptDetailFormattersManager) managerInstances
-				.get(natureId);
+		ScriptDetailFormattersManager instance = managerInstances.get(natureId);
 		if (instance == null) {
 			instance = new ScriptDetailFormattersManager(natureId);
 			managerInstances.put(natureId, instance);
@@ -137,8 +136,7 @@ public class ScriptDetailFormattersManager implements IPropertyChangeListener {
 	}
 
 	public DetailFormatter getDetailFormatter(IScriptValue value) {
-		DetailFormatter formatter = (DetailFormatter) formatters
-				.get(value.getType().getName());
+		DetailFormatter formatter = formatters.get(value.getType().getName());
 		if (formatter == null)
 			formatter = getDefaultFormatter();
 		return formatter;

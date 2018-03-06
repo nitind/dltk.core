@@ -3,7 +3,7 @@ package org.eclipse.dltk.internal.debug.ui;
 /**
  * Information about a detail formatter.
  */
-public class DetailFormatter implements Comparable {
+public class DetailFormatter implements Comparable<DetailFormatter> {
 
 	private boolean fEnabled;
 
@@ -19,7 +19,7 @@ public class DetailFormatter implements Comparable {
 
 	/**
 	 * Indicate if this pretty should be used or not.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean isEnabled() {
@@ -28,7 +28,7 @@ public class DetailFormatter implements Comparable {
 
 	/**
 	 * Returns the code snippet.
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getSnippet() {
@@ -37,7 +37,7 @@ public class DetailFormatter implements Comparable {
 
 	/**
 	 * Returns the type name.
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getTypeName() {
@@ -46,9 +46,9 @@ public class DetailFormatter implements Comparable {
 
 	/**
 	 * Sets the enabled flag.
-	 * 
+	 *
 	 * @param enabled
-	 *            the new value of the flag
+	 *                    the new value of the flag
 	 */
 	public void setEnabled(boolean enabled) {
 		fEnabled = enabled;
@@ -56,9 +56,9 @@ public class DetailFormatter implements Comparable {
 
 	/**
 	 * Sets the code snippet.
-	 * 
+	 *
 	 * @param snippet
-	 *            the snippet to set
+	 *                    the snippet to set
 	 */
 	public void setSnippet(String snippet) {
 		fSnippet = snippet;
@@ -66,24 +66,23 @@ public class DetailFormatter implements Comparable {
 
 	/**
 	 * Sets the type name.
-	 * 
+	 *
 	 * @param typeName
-	 *            the type name to set
+	 *                     the type name to set
 	 */
 	public void setTypeName(String typeName) {
 		fTypeName = typeName;
 	}
 
 	@Override
-	public int compareTo(Object another) {
-		DetailFormatter detailFormatter = (DetailFormatter) another;
+	public int compareTo(DetailFormatter another) {
 		if (fTypeName == null) {
-			if (detailFormatter.fTypeName == null) {
+			if (another.fTypeName == null) {
 				return 0;
 			}
-			return detailFormatter.fTypeName.compareTo(fTypeName);
+			return another.fTypeName.compareTo(fTypeName);
 		}
-		return fTypeName.compareTo(detailFormatter.fTypeName);
+		return fTypeName.compareTo(another.fTypeName);
 	}
 
 }

@@ -30,8 +30,8 @@ public class ScriptDebugManager {
 		return instance;
 	}
 
-	private final HashMap natureToInfoMap;
-	private final HashMap modelToNatureMap;
+	private final HashMap<String, Info> natureToInfoMap;
+	private final HashMap<String, String> modelToNatureMap;
 
 	private static class Info {
 		public final String debugModelId;
@@ -50,8 +50,9 @@ public class ScriptDebugManager {
 
 	private void loadExtenstionPoints() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtension[] extensions = registry.getExtensionPoint(
-				SCRIPT_DEBUG_MODEL_EXT_POINT).getExtensions();
+		IExtension[] extensions = registry
+				.getExtensionPoint(SCRIPT_DEBUG_MODEL_EXT_POINT)
+				.getExtensions();
 
 		for (int i = 0; i < extensions.length; i++) {
 			IExtension extension = extensions[i];
@@ -79,7 +80,8 @@ public class ScriptDebugManager {
 				if (comparatorId != null) {
 					try {
 						comparator = (Comparator) element
-								.createExecutableExtension(VARIABLE_NAME_COMPARATOR);
+								.createExecutableExtension(
+										VARIABLE_NAME_COMPARATOR);
 					} catch (CoreException e) {
 						DLTKDebugPlugin.log(e);
 					}
@@ -114,18 +116,18 @@ public class ScriptDebugManager {
 	}
 
 	protected Info getInfo(String natureId) {
-		return (Info) natureToInfoMap.get(natureId);
+		return natureToInfoMap.get(natureId);
 	}
 
 	protected ScriptDebugManager() {
-		natureToInfoMap = new HashMap();
-		modelToNatureMap = new HashMap();
+		natureToInfoMap = new HashMap<>();
+		modelToNatureMap = new HashMap<>();
 
 		loadExtenstionPoints();
 	}
 
 	public String getNatureByDebugModel(String debugModelId) {
-		return (String) modelToNatureMap.get(debugModelId);
+		return modelToNatureMap.get(debugModelId);
 	}
 
 	public String getDebugModelByNature(String natureId) {
@@ -144,8 +146,10 @@ public class ScriptDebugManager {
 		return getInfo(natureId).comparator;
 	}
 
-	public Comparator getVariableNameComparatorByDebugModel(String debugModelId) {
-		return getVariableNameComparatorByNature(getNatureByDebugModel(debugModelId));
+	public Comparator getVariableNameComparatorByDebugModel(
+			String debugModelId) {
+		return getVariableNameComparatorByNature(
+				getNatureByDebugModel(debugModelId));
 	}
 
 	public IDLTKDebugToolkit getDebugToolkitByNature(String natureId) {

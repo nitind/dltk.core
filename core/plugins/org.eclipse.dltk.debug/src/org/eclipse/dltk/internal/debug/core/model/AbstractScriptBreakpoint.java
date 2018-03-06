@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,7 +89,7 @@ public abstract class AbstractScriptBreakpoint extends Breakpoint
 
 	private String debugModelId;
 
-	protected void addScriptBreakpointAttributes(Map attributes,
+	protected void addScriptBreakpointAttributes(Map<String, Object> attributes,
 			String debugModelId, boolean enabled) {
 		this.debugModelId = debugModelId;
 		attributes.put(IBreakpoint.ID, debugModelId);
@@ -121,13 +121,14 @@ public abstract class AbstractScriptBreakpoint extends Breakpoint
 		int hitCount = -1;
 	}
 
-	private final Map sessions = new IdentityHashMap(1);
+	private final Map<IDbgpSession, PerSessionInfo> sessions = new IdentityHashMap<>(
+			1);
 
 	@Override
 	public String getId(IDbgpSession session) {
 		final PerSessionInfo info;
 		synchronized (sessions) {
-			info = (PerSessionInfo) sessions.get(session);
+			info = sessions.get(session);
 		}
 		return info != null ? info.identifier : null;
 	}
@@ -135,7 +136,7 @@ public abstract class AbstractScriptBreakpoint extends Breakpoint
 	@Override
 	public void setId(IDbgpSession session, String identifier) {
 		synchronized (sessions) {
-			PerSessionInfo info = (PerSessionInfo) sessions.get(session);
+			PerSessionInfo info = sessions.get(session);
 			if (info == null) {
 				info = new PerSessionInfo();
 				sessions.put(session, info);
@@ -148,7 +149,7 @@ public abstract class AbstractScriptBreakpoint extends Breakpoint
 	public String removeId(IDbgpSession session) {
 		final PerSessionInfo info;
 		synchronized (sessions) {
-			info = (PerSessionInfo) sessions.remove(session);
+			info = sessions.remove(session);
 		}
 		return info != null ? info.identifier : null;
 	}
@@ -164,7 +165,7 @@ public abstract class AbstractScriptBreakpoint extends Breakpoint
 	public String[] getIdentifiers() {
 		final PerSessionInfo[] infos;
 		synchronized (sessions) {
-			infos = (PerSessionInfo[]) sessions.values()
+			infos = sessions.values()
 					.toArray(new PerSessionInfo[sessions.size()]);
 		}
 		int count = 0;
@@ -191,7 +192,7 @@ public abstract class AbstractScriptBreakpoint extends Breakpoint
 	public void setHitCount(IDbgpSession session, int value)
 			throws CoreException {
 		synchronized (sessions) {
-			PerSessionInfo info = (PerSessionInfo) sessions.get(session);
+			PerSessionInfo info = sessions.get(session);
 			if (info == null) {
 				info = new PerSessionInfo();
 				sessions.put(session, info);
@@ -204,7 +205,7 @@ public abstract class AbstractScriptBreakpoint extends Breakpoint
 	public int getHitCount(IDbgpSession session) throws CoreException {
 		final PerSessionInfo info;
 		synchronized (sessions) {
-			info = (PerSessionInfo) sessions.get(session);
+			info = sessions.get(session);
 		}
 		return info != null ? info.hitCount : -1;
 	}
@@ -239,8 +240,9 @@ public abstract class AbstractScriptBreakpoint extends Breakpoint
 				return -1;
 			}
 			int result = 0;
-			for (Iterator i = sessions.values().iterator(); i.hasNext();) {
-				PerSessionInfo info = (PerSessionInfo) i.next();
+			for (Iterator<PerSessionInfo> i = sessions.values().iterator(); i
+					.hasNext();) {
+				PerSessionInfo info = i.next();
 				if (info.hitCount > 0) {
 					result += info.hitCount;
 				}

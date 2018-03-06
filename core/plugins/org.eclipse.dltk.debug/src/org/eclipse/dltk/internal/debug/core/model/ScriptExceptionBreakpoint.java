@@ -62,30 +62,31 @@ public class ScriptExceptionBreakpoint extends AbstractScriptBreakpoint
 	 * and uncaught specify where the exception should cause thread suspensions
 	 * - that is, in caught and/or uncaught locations. Checked indicates if the
 	 * given exception is a checked exception.
-	 * 
+	 *
 	 * @param resource
-	 *            the resource on which to create the associated breakpoint
-	 *            marker
+	 *                          the resource on which to create the associated
+	 *                          breakpoint marker
 	 * @param exceptionName
-	 *            the fully qualified name of the exception for which to create
-	 *            the breakpoint
+	 *                          the fully qualified name of the exception for
+	 *                          which to create the breakpoint
 	 * @param caught
-	 *            whether to suspend in caught locations
+	 *                          whether to suspend in caught locations
 	 * @param uncaught
-	 *            whether to suspend in uncaught locations
+	 *                          whether to suspend in uncaught locations
 	 * @param checked
-	 *            whether the exception is a checked exception
+	 *                          whether the exception is a checked exception
 	 * @param add
-	 *            whether to add this breakpoint to the breakpoint manager
+	 *                          whether to add this breakpoint to the breakpoint
+	 *                          manager
 	 * @return a Java exception breakpoint
 	 * @exception DebugException
-	 *                if unable to create the associated marker due to a lower
-	 *                level exception.
+	 *                               if unable to create the associated marker
+	 *                               due to a lower level exception.
 	 */
 	public ScriptExceptionBreakpoint(final String debugModelId,
 			final IResource resource, final String exceptionName,
 			final boolean caught, final boolean uncaught, final boolean add,
-			final Map attributes) throws DebugException {
+			final Map<String, Object> attributes) throws DebugException {
 		IWorkspaceRunnable wr = monitor -> {
 			// create the marker
 			setMarker(resource.createMarker(SCRIPT_EXCEPTION_BREAKPOINT));
@@ -175,7 +176,7 @@ public class ScriptExceptionBreakpoint extends AbstractScriptBreakpoint
 	 * Sets the name of the exception that was last hit
 	 *
 	 * @param name
-	 *            fully qualified exception name
+	 *                 fully qualified exception name
 	 */
 	protected void setExceptionTypeName(String name) {
 		fExceptionName = name;

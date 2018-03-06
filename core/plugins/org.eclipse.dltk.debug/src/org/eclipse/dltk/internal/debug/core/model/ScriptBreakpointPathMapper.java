@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2017 xored software, Inc. and others.
+ * Copyright (c) 2008, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -23,7 +23,7 @@ import org.eclipse.dltk.debug.core.DLTKDebugPlugin;
 
 public class ScriptBreakpointPathMapper
 		implements IScriptBreakpointPathMapperExtension {
-	private HashMap cache;
+	private HashMap<URI, URI> cache;
 	private String mapTo;
 	private IScriptProject scriptProject;
 	private boolean stripSrcFolders;
@@ -34,7 +34,7 @@ public class ScriptBreakpointPathMapper
 		this.scriptProject = project;
 		this.stripSrcFolders = stripSrcFolders;
 
-		this.cache = new HashMap();
+		this.cache = new HashMap<>();
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class ScriptBreakpointPathMapper
 
 		// check the cache
 		if (cache.containsKey(uri)) {
-			return (URI) cache.get(uri);
+			return cache.get(uri);
 		}
 
 		// now for the fun ;)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2017 xored software, Inc. and others.
+ * Copyright (c) 2008, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -53,7 +53,7 @@ public class ScriptSpawnpoint extends ScriptLineBreakpoint
 			setMarker(resource.createMarker(getMarkerId()));
 
 			// add attributes
-			final Map attributes = new HashMap();
+			final Map<String, Object> attributes = new HashMap<>();
 			addScriptBreakpointAttributes(attributes, debugModelId, true);
 			addLineBreakpointAttributes(attributes, path, lineNumber, charStart,
 					charEnd);

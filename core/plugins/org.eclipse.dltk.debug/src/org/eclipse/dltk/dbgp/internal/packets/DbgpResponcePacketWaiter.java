@@ -3,11 +3,11 @@ package org.eclipse.dltk.dbgp.internal.packets;
 import java.util.HashMap;
 
 public final class DbgpResponcePacketWaiter {
-	private final HashMap map;
+	private final HashMap<Integer, DbgpResponsePacket> map;
 	private boolean terminated;
 
 	public DbgpResponcePacketWaiter() {
-		map = new HashMap();
+		map = new HashMap<>();
 		terminated = false;
 	}
 
@@ -36,7 +36,7 @@ public final class DbgpResponcePacketWaiter {
 		}
 
 		if (map.containsKey(key)) {
-			return (DbgpResponsePacket) map.remove(key);
+			return map.remove(key);
 		}
 
 		if (terminated) {

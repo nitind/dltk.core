@@ -7,8 +7,8 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.dltk.core.PriorityClassDLTKExtensionManager;
 import org.eclipse.dltk.debug.core.model.IScriptDebugTarget;
 
-public class DLTKDebugUILanguageManager extends
-		PriorityClassDLTKExtensionManager {
+public class DLTKDebugUILanguageManager
+		extends PriorityClassDLTKExtensionManager {
 
 	private static DLTKDebugUILanguageManager self;
 
@@ -37,13 +37,15 @@ public class DLTKDebugUILanguageManager extends
 		return getLanguageToolkit(natureId);
 	}
 
-	public static IDLTKDebugUILanguageToolkit getLanguageToolkit(String natureId) {
+	public static IDLTKDebugUILanguageToolkit getLanguageToolkit(
+			String natureId) {
 		return (IDLTKDebugUILanguageToolkit) getInstance().getObject(natureId);
 	}
 
 	public static IDLTKDebugUILanguageToolkit[] getLanguageToolkits() {
-		List toolkits = getInstance().getObjectList();
-		return (IDLTKDebugUILanguageToolkit[]) toolkits
+		List<IDLTKDebugUILanguageToolkit> toolkits = getInstance()
+				.getObjectList();
+		return toolkits
 				.toArray(new IDLTKDebugUILanguageToolkit[toolkits.size()]);
 	}
 }

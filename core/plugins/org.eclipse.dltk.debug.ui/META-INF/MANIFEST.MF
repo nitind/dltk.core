@@ -41,3 +41,4 @@ Export-Package: org.eclipse.dltk.debug.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: com.ibm.icu.text
+Automatic-Module-Name: org.eclipse.dltk.debug.ui

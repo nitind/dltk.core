@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -222,12 +222,14 @@ public abstract class InterpretersBlock
 	 * Creates this block's control in the given control.
 	 *
 	 * @param ancestor
-	 *            containing control
+	 *                            containing control
 	 * @param useManageButton
-	 *            whether to present a single 'manage...' button to the user
-	 *            that opens the installed InterpreterEnvironments pref page for
-	 *            InterpreterEnvironment management, or to provide 'add, remove,
-	 *            edit, and search' buttons.
+	 *                            whether to present a single 'manage...' button
+	 *                            to the user that opens the installed
+	 *                            InterpreterEnvironments pref page for
+	 *                            InterpreterEnvironment management, or to
+	 *                            provide 'add, remove, edit, and search'
+	 *                            buttons.
 	 */
 	public void createControl(Composite ancestor) {
 
@@ -512,13 +514,13 @@ public abstract class InterpretersBlock
 	}
 
 	protected void enableButtons() {
-		IStructuredSelection selection = (IStructuredSelection) fInterpreterList
-				.getSelection();
+		IStructuredSelection selection = fInterpreterList
+				.getStructuredSelection();
 		int selectionCount = selection.size();
 		fEditButton.setEnabled(selectionCount == 1);
 		fCopyButton.setEnabled(selectionCount > 0);
 		if (selectionCount > 0) {
-			Iterator iterator = selection.iterator();
+			Iterator<?> iterator = selection.iterator();
 			while (iterator.hasNext()) {
 				IInterpreterInstall install = (IInterpreterInstall) iterator
 						.next();
@@ -554,7 +556,7 @@ public abstract class InterpretersBlock
 	 * Sets the InterpreterEnvironments to be displayed in this block
 	 *
 	 * @param Interpreters
-	 *            InterpreterEnvironments to be displayed
+	 *                         InterpreterEnvironments to be displayed
 	 */
 	protected void setInterpreters(IInterpreterInstall[] Interpreters) {
 		fInterpreters.clear();
@@ -621,11 +623,11 @@ public abstract class InterpretersBlock
 	}
 
 	private void removeInterpreters() {
-		IStructuredSelection selection = (IStructuredSelection) fInterpreterList
-				.getSelection();
+		IStructuredSelection selection = fInterpreterList
+				.getStructuredSelection();
 		IInterpreterInstall[] Interpreters = new IInterpreterInstall[selection
 				.size()];
-		Iterator iter = selection.iterator();
+		Iterator<?> iter = selection.iterator();
 		int i = 0;
 		while (iter.hasNext()) {
 			Interpreters[i] = (IInterpreterInstall) iter.next();
@@ -769,7 +771,7 @@ public abstract class InterpretersBlock
 	 * Sets the checked InterpreterEnvironment, possible <code>null</code>
 	 *
 	 * @param interpreter
-	 *            InterpreterEnvironment or <code>null</code>
+	 *                        InterpreterEnvironment or <code>null</code>
 	 */
 	public void setCheckedInterpreter(IInterpreterInstall interpreter) {
 		if (interpreter == null) {
@@ -804,9 +806,9 @@ public abstract class InterpretersBlock
 	 * given key.
 	 *
 	 * @param settings
-	 *            dialog store
+	 *                      dialog store
 	 * @param qualifier
-	 *            key qualifier
+	 *                      key qualifier
 	 */
 	public void saveColumnSettings(IDialogSettings settings, String qualifier) {
 		int columnCount = fTable.getColumnCount();
@@ -821,9 +823,9 @@ public abstract class InterpretersBlock
 	 * Restore table settings from the given dialog store using the given key.
 	 *
 	 * @param settings
-	 *            dialog settings store
+	 *                      dialog settings store
 	 * @param qualifier
-	 *            key to restore settings from
+	 *                      key to restore settings from
 	 */
 	public void restoreColumnSettings(IDialogSettings settings,
 			String qualifier) {
@@ -937,7 +939,7 @@ public abstract class InterpretersBlock
 	 * numerical suffix to ensure that it is unique.
 	 *
 	 * @param name
-	 *            the name with which to ensure uniqueness
+	 *                 the name with which to ensure uniqueness
 	 * @return the unique version of the given name
 	 *
 	 */
@@ -994,9 +996,9 @@ public abstract class InterpretersBlock
 	}
 
 	protected void copyInterpreter() {
-		IStructuredSelection selection = (IStructuredSelection) fInterpreterList
-				.getSelection();
-		Iterator it = selection.iterator();
+		IStructuredSelection selection = fInterpreterList
+				.getStructuredSelection();
+		Iterator<?> it = selection.iterator();
 
 		ArrayList<InterpreterStandin> newEntries = new ArrayList<>();
 		while (it.hasNext()) {

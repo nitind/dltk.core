@@ -38,7 +38,7 @@ public class AddExceptionTypeDialogExtension extends TypeSelectionExtension {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param caught
 	 * @param uncaught
 	 */
@@ -93,7 +93,7 @@ public class AddExceptionTypeDialogExtension extends TypeSelectionExtension {
 				// else check that selected class was enherited from exception
 				// base class
 				try {
-					LinkedList queue = new LinkedList();
+					LinkedList<IType> queue = new LinkedList<>();
 					IType type = (IType) selection[0];
 					ITypeHierarchy hierarchy = type
 							.newSupertypeHierarchy(new NullProgressMonitor());
@@ -108,7 +108,7 @@ public class AddExceptionTypeDialogExtension extends TypeSelectionExtension {
 							queue.addAll(Arrays.asList(superclasses));
 
 						if (queue.size() > 0)
-							curr = (IType) queue.removeFirst();
+							curr = queue.removeFirst();
 						else
 							curr = null;
 					}
@@ -126,7 +126,7 @@ public class AddExceptionTypeDialogExtension extends TypeSelectionExtension {
 	/**
 	 * Returns if the breakpoint should be set to suspend when the associated
 	 * exception is thrown, but caught
-	 * 
+	 *
 	 * @return if the breakpoint should be set to suspend when the associated
 	 *         exception is thrown, but caught
 	 */
@@ -137,7 +137,7 @@ public class AddExceptionTypeDialogExtension extends TypeSelectionExtension {
 	/**
 	 * Returns if the breakpoint should be set to suspend when the associated
 	 * exception is thrown, but not caught
-	 * 
+	 *
 	 * @return if the breakpoint should be set to suspend when the associated
 	 *         exception is thrown, but not caught
 	 */

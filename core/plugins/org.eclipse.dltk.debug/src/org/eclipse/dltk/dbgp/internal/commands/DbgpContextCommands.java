@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,9 +40,9 @@ public class DbgpContextCommands extends DbgpBaseCommands
 		super(communicator);
 	}
 
-	protected Map parseContextNamesResponse(Element response)
+	protected Map<Integer, String> parseContextNamesResponse(Element response)
 			throws DbgpException {
-		Map map = new HashMap();
+		Map<Integer, String> map = new HashMap<>();
 
 		NodeList contexts = response.getElementsByTagName(TAG_CONTEXT);
 		for (int i = 0; i < contexts.getLength(); ++i) {
@@ -59,7 +59,7 @@ public class DbgpContextCommands extends DbgpBaseCommands
 			throws DbgpException {
 		NodeList properties = response.getChildNodes();
 
-		List list = new ArrayList();
+		List<IDbgpProperty> list = new ArrayList<>();
 		for (int i = 0; i < properties.getLength(); ++i) {
 
 			Node item = properties.item(i);
@@ -71,11 +71,12 @@ public class DbgpContextCommands extends DbgpBaseCommands
 			}
 		}
 
-		return (IDbgpProperty[]) list.toArray(new IDbgpProperty[list.size()]);
+		return list.toArray(new IDbgpProperty[list.size()]);
 	}
 
 	@Override
-	public Map getContextNames(int stackDepth) throws DbgpException {
+	public Map<Integer, String> getContextNames(int stackDepth)
+			throws DbgpException {
 		DbgpRequest request = createRequest(CONTEXT_NAMES_COMMAND);
 		request.addOption("-d", stackDepth); //$NON-NLS-1$
 		return parseContextNamesResponse(communicate(request));

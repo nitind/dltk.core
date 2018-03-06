@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -225,9 +225,6 @@ public class DbgpSession extends DbgpTermination
 		return this.communicator;
 	}
 
-	/*
-	 * @see org.eclipse.dltk.debug.core.IDebugConfigurable#getDebugOptions()
-	 */
 	@Override
 	public IDebugOptions getDebugOptions() {
 		return communicator.getDebugOptions();
@@ -239,13 +236,13 @@ public class DbgpSession extends DbgpTermination
 	}
 
 	@Override
-	public Object get(Class type) {
+	public <T> T get(Class<T> type) {
 		if (type == IDbgpSpawnpointCommands.class) {
-			return spawnpointCommands;
+			return type.cast(spawnpointCommands);
 		} else if (type == IDbgpCoreCommands.class) {
-			return coreCommands;
+			return type.cast(coreCommands);
 		} else if (type == IDbgpExtendedCommands.class) {
-			return extendedCommands;
+			return type.cast(extendedCommands);
 		}
 		return null;
 	}

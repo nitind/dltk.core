@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,12 +13,13 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.dltk.dbgp.internal.utils.Base64Helper;
 import org.eclipse.dltk.internal.debug.core.model.StrUtils;
 
 public class DbgpRequest implements IDbgpRawPacket {
-	private final Map options;
+	private final Map<String, Object> options;
 
 	private final String command;
 	private final boolean async;
@@ -32,7 +33,7 @@ public class DbgpRequest implements IDbgpRawPacket {
 	public DbgpRequest(String command, boolean async) {
 		this.command = command;
 		this.async = async;
-		this.options = new HashMap();
+		this.options = new HashMap<>();
 	}
 
 	public String getCommand() {
@@ -79,10 +80,10 @@ public class DbgpRequest implements IDbgpRawPacket {
 	public String toString() {
 		StringBuffer sb = new StringBuffer(command);
 
-		Iterator it = options.entrySet().iterator();
+		Iterator<Entry<String, Object>> it = options.entrySet().iterator();
 
 		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
+			Entry<String, Object> entry = it.next();
 
 			sb.append(' ');
 			sb.append(entry.getKey());

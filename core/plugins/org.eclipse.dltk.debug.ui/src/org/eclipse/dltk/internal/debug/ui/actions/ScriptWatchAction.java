@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,7 +45,7 @@ public class ScriptWatchAction extends ScriptEvaluationAction {
 
 		if (selectedObject instanceof IStructuredSelection) {
 			IStructuredSelection selection = (IStructuredSelection) selectedObject;
-			Iterator elements = selection.iterator();
+			Iterator<?> elements = selection.iterator();
 			while (elements.hasNext()) {
 				try {
 					createWatchExpression(

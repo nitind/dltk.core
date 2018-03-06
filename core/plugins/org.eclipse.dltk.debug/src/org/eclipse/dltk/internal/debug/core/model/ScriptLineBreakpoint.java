@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,8 +37,8 @@ public class ScriptLineBreakpoint extends AbstractScriptBreakpoint
 		return ScriptMarkerFactory.LINE_BREAKPOINT_MARKER_ID;
 	}
 
-	protected void addLineBreakpointAttributes(Map attributes, IPath path,
-			int lineNumber, int charStart, int charEnd) {
+	protected void addLineBreakpointAttributes(Map<String, Object> attributes,
+			IPath path, int lineNumber, int charStart, int charEnd) {
 		if (path != null) {
 			attributes.put(IMarker.LOCATION, path.toPortableString());
 		}
@@ -61,7 +61,7 @@ public class ScriptLineBreakpoint extends AbstractScriptBreakpoint
 			setMarker(resource.createMarker(getMarkerId()));
 
 			// add attributes
-			final Map attributes = new HashMap();
+			final Map<String, Object> attributes = new HashMap<>();
 			addScriptBreakpointAttributes(attributes, debugModelId, true);
 			addLineBreakpointAttributes(attributes, path, lineNumber, charStart,
 					charEnd);

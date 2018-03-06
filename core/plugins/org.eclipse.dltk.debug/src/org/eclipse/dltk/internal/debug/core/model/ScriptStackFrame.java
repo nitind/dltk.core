@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,7 +63,7 @@ public class ScriptStackFrame extends ScriptDebugElement
 			// Workaround for bug 215215
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=215215
 			// Remove this code when Tcl active state debugger fixed
-			Set duplicates = findDuplicateNames(properties);
+			Set<String> duplicates = findDuplicateNames(properties);
 
 			for (int i = 0; i < properties.length; ++i) {
 				IDbgpProperty property = properties[i];
@@ -83,9 +83,9 @@ public class ScriptStackFrame extends ScriptDebugElement
 		}
 	}
 
-	private static Set findDuplicateNames(IDbgpProperty[] properties) {
-		final Set duplicates = new HashSet();
-		final Set alreadyExsisting = new HashSet();
+	private static Set<String> findDuplicateNames(IDbgpProperty[] properties) {
+		final Set<String> duplicates = new HashSet<>();
+		final Set<String> alreadyExsisting = new HashSet<>();
 		for (int i = 0; i < properties.length; ++i) {
 			final IDbgpProperty property = properties[i];
 			final String name = property.getName();
@@ -461,7 +461,7 @@ public class ScriptStackFrame extends ScriptDebugElement
 	static IVariable[] refreshVariables(IVariable[] newVars,
 			IVariable[] oldVars) throws DebugException {
 		if (oldVars != null) {
-			final Map map = new HashMap();
+			final Map<String, IVariable> map = new HashMap<>();
 			for (int i = 0; i < oldVars.length; ++i) {
 				final IVariable variable = oldVars[i];
 				if (variable instanceof IRefreshableScriptVariable) {

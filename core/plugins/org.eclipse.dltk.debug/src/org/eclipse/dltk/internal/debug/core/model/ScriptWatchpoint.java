@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,7 +41,7 @@ public class ScriptWatchpoint extends ScriptLineBreakpoint
 			// create the marker
 			setMarker(resource.createMarker(getMarkerId()));
 
-			final Map attributes = new HashMap();
+			final Map<String, Object> attributes = new HashMap<>();
 			// add attributes
 			addScriptBreakpointAttributes(attributes, debugModelId, true);
 			addLineBreakpointAttributes(attributes, path, lineNumber, start,
@@ -112,9 +112,9 @@ public class ScriptWatchpoint extends ScriptLineBreakpoint
 
 	@Override
 	public String[] getUpdatableAttributes() {
-		List all = new ArrayList();
+		List<String> all = new ArrayList<>();
 		all.addAll(Arrays.asList(super.getUpdatableAttributes()));
 		all.addAll(Arrays.asList(UPDATABLE_ATTRS));
-		return (String[]) all.toArray(new String[all.size()]);
+		return all.toArray(new String[all.size()]);
 	}
 }

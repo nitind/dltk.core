@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2017 xored software, Inc. and others.
+ * Copyright (c) 2008, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -190,10 +190,6 @@ public class ScriptDisplayView extends PageBookView
 		if (fPinAction != null) {
 			fPinAction.update();
 		}
-		IPage page = getCurrentPage();
-		// if (page instanceof IOConsolePage) {
-		// ((IOConsolePage) page).setAutoScroll(!fScrollLock);
-		// }
 	}
 
 	/**
@@ -713,7 +709,7 @@ public class ScriptDisplayView extends PageBookView
 	 * Deactivates participants for the given console, if any.
 	 *
 	 * @param console
-	 *            console to deactivate
+	 *                    console to deactivate
 	 */
 	private void deactivateParticipants(IConsole console) {
 		// deactivate

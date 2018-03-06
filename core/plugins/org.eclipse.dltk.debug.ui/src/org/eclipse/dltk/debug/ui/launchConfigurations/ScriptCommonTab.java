@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -159,13 +159,6 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 */
 	private ModifyListener fBasicModifyListener = evt -> scheduleUpdateJob();
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#createControl(org.eclipse
-	 * .swt.widgets.Composite)
-	 */
 	@Override
 	public void createControl(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);
@@ -201,7 +194,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * Creates the favorites control
 	 *
 	 * @param parent
-	 *            the parent composite to add this one to
+	 *                   the parent composite to add this one to
 	 * @since 3.2
 	 */
 	private void createFavoritesComponent(Composite parent) {
@@ -224,7 +217,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * Creates the shared config component
 	 *
 	 * @param parent
-	 *            the parent composite to add this component to
+	 *                   the parent composite to add this component to
 	 * @since 3.2
 	 */
 	private void createSharedConfigComponent(Composite parent) {
@@ -272,7 +265,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * Creates the component set for the capture output composite
 	 *
 	 * @param parent
-	 *            the parent to add this component to
+	 *                   the parent to add this component to
 	 */
 	private void createOutputCaptureComponent(Composite parent) {
 		Group group = SWTFactory.createGroup(parent,
@@ -399,7 +392,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * enablement
 	 *
 	 * @param enable
-	 *            if the output capture widgets should be enabled or not
+	 *                   if the output capture widgets should be enabled or not
 	 * @since 3.2
 	 */
 	private void enableOuputCaptureWidgets(boolean enable) {
@@ -439,7 +432,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * Creates the encoding component
 	 *
 	 * @param parent
-	 *            the parent to add this composite to
+	 *                   the parent to add this composite to
 	 */
 	private void createEncodingComponent(Composite parent) {
 		Group group = SWTFactory.createGroup(parent,
@@ -460,8 +453,8 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 		fEncodingCombo = new Combo(group, SWT.NONE);
 		fEncodingCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		fEncodingCombo.setFont(parent.getFont());
-		List allEncodings = IDEEncoding.getIDEEncodings();
-		String[] encodingArray = (String[]) allEncodings.toArray(new String[0]);
+		List<String> allEncodings = IDEEncoding.getIDEEncodings();
+		String[] encodingArray = allEncodings.toArray(new String[0]);
 		fEncodingCombo.setItems(encodingArray);
 		if (encodingArray.length > 0) {
 			fEncodingCombo.select(0);
@@ -492,13 +485,6 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 		fDefaultEncodingButton.addSelectionListener(listener);
 		fEncodingCombo.addSelectionListener(listener);
 		fEncodingCombo.addKeyListener(new KeyAdapter() {
-			/*
-			 * (non-Javadoc)
-			 *
-			 * @see
-			 * org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt
-			 * .events.KeyEvent)
-			 */
 			@Override
 			public void keyReleased(KeyEvent e) {
 				scheduleUpdateJob();
@@ -510,7 +496,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * Returns whether or not the given encoding is valid.
 	 *
 	 * @param enc
-	 *            the encoding to validate
+	 *                the encoding to validate
 	 * @return <code>true</code> if the encoding is valid, <code>false</code>
 	 *         otherwise
 	 */
@@ -528,7 +514,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * an external tool
 	 *
 	 * @param parent
-	 *            the composite to create the controls in
+	 *                   the composite to create the controls in
 	 */
 	protected void createLaunchInBackgroundComponent(Composite parent) {
 		fLaunchInBackgroundButton = createCheckButton(parent,
@@ -558,7 +544,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * shared to the enable value
 	 *
 	 * @param enable
-	 *            the enabled value for
+	 *                   the enabled value for
 	 */
 	private void setSharedEnabled(boolean enable) {
 		fSharedLocationText.setEnabled(enable);
@@ -621,7 +607,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * gets the container form the specified path
 	 *
 	 * @param path
-	 *            the path to get the container from
+	 *                 the path to get the container from
 	 * @return the container for the specified path or null if one cannot be
 	 *         determined
 	 */
@@ -666,7 +652,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * Updates the console output form the local configuration
 	 *
 	 * @param configuration
-	 *            the local configuration
+	 *                          the local configuration
 	 */
 	protected void updateConsoleOutput(ILaunchConfiguration configuration) {
 		boolean outputToConsole = true;
@@ -707,7 +693,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * Updates the launch on background check button
 	 *
 	 * @param configuration
-	 *            the local launch configuration
+	 *                          the local launch configuration
 	 */
 	protected void updateLaunchInBackground(
 			ILaunchConfiguration configuration) {
@@ -719,7 +705,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * Updates the encoding
 	 *
 	 * @param configuration
-	 *            the local configuration
+	 *                          the local configuration
 	 */
 	private void updateEncoding(ILaunchConfiguration configuration) {
 		String encoding = null;
@@ -749,7 +735,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * background.
 	 *
 	 * @param configuration
-	 *            the configuration
+	 *                          the configuration
 	 * @return whether the configuration is configured to launch in the
 	 *         background
 	 */
@@ -769,14 +755,14 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * Updates the favorites selections from the local configuration
 	 *
 	 * @param config
-	 *            the local configuration
+	 *                   the local configuration
 	 */
 	private void updateFavoritesFromConfig(ILaunchConfiguration config) {
 		fFavoritesTable.setInput(config);
 		fFavoritesTable.setCheckedElements(new Object[] {});
 		try {
-			List groups = config.getAttribute(
-					IDebugUIConstants.ATTR_FAVORITE_GROUPS, new ArrayList());
+			List<String> groups = config.getAttribute(
+					IDebugUIConstants.ATTR_FAVORITE_GROUPS, new ArrayList<>());
 			if (groups.isEmpty()) {
 				// check old attributes for backwards compatible
 				if (config.getAttribute(IDebugUIConstants.ATTR_DEBUG_FAVORITE,
@@ -789,10 +775,10 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 				}
 			}
 			if (!groups.isEmpty()) {
-				List list = new ArrayList();
-				Iterator iterator = groups.iterator();
+				List<LaunchGroupExtension> list = new ArrayList<>();
+				Iterator<String> iterator = groups.iterator();
 				while (iterator.hasNext()) {
-					String id = (String) iterator.next();
+					String id = iterator.next();
 					LaunchGroupExtension extension = getLaunchConfigurationManager()
 							.getLaunchGroup(id);
 					if (extension != null) {
@@ -810,7 +796,7 @@ public class ScriptCommonTab extends AbstractLaunchConfigurationTab {
 	 * Updates the configuration form the local shared config working copy
 	 *
 	 * @param config
-	 *            the local shared config working copy
+	 *                   the local shared config working copy
 	 */
 	private void updateConfigFromLocalShared(
 			ILaunchConfigurationWorkingCopy config) {

@@ -54,7 +54,7 @@ public abstract class DebuggingEngineConfigOptionsBlock
 	 * </p>
 	 *
 	 * @param parent
-	 *            composite
+	 *                   composite
 	 */
 	protected abstract void createEngineBlock(Composite parent);
 
@@ -68,7 +68,7 @@ public abstract class DebuggingEngineConfigOptionsBlock
 	 * </p>
 	 *
 	 * @param parent
-	 *            composite
+	 *                   composite
 	 */
 	protected void createLoggingBlock(final Composite parent) {
 		final Group group = SWTFactory.createGroup(parent,
@@ -76,7 +76,7 @@ public abstract class DebuggingEngineConfigOptionsBlock
 				GridData.FILL_BOTH);
 		logFilePaths = new EnvironmentPathBlock();
 		logFilePaths.createControl(group, getRelevantEnvironments());
-		Map paths = EnvironmentPathUtils
+		Map<IEnvironment, String> paths = EnvironmentPathUtils
 				.decodePaths(getString(getLogFileNamePreferenceKey()));
 		logFilePaths.setPaths(paths);
 

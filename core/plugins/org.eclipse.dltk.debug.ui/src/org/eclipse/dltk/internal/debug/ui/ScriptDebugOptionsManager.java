@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -192,7 +192,7 @@ public class ScriptDebugOptionsManager
 
 	@Override
 	public void breakpointsAdded(IBreakpoint[] breakpoints) {
-		List list = new ArrayList();
+		List<IBreakpoint> list = new ArrayList<>();
 		for (int i = 0; i < breakpoints.length; i++) {
 			try {
 				IBreakpoint breakpoint = breakpoints[i];
@@ -208,7 +208,7 @@ public class ScriptDebugOptionsManager
 
 		if (!list.isEmpty()) {
 			updateBreakpointMessages(
-					(IBreakpoint[]) list.toArray(new IBreakpoint[list.size()]));
+					list.toArray(new IBreakpoint[list.size()]));
 		}
 	}
 
@@ -277,12 +277,12 @@ public class ScriptDebugOptionsManager
 	}
 
 	public static String[] parseList(String listString) {
-		List list = new ArrayList(10);
+		List<String> list = new ArrayList<>(10);
 		StringTokenizer tokenizer = new StringTokenizer(listString, ","); //$NON-NLS-1$
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
 			list.add(token);
 		}
-		return (String[]) list.toArray(new String[list.size()]);
+		return list.toArray(new String[list.size()]);
 	}
 }

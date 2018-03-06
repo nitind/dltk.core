@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.dbgp.commands;
 
@@ -25,5 +25,5 @@ public interface IDbgpDataTypeCommands {
 	final int OBJECT_TYPE = 8;
 	final int RESOURCE_TYPE = 9;
 
-	Map getTypeMap() throws DbgpException;
+	Map<String, Integer> getTypeMap() throws DbgpException;
 }

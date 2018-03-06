@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,7 +51,7 @@ public class DbgpBreakpointCommands extends DbgpBaseCommands
 	final String WATCH_BREAKPOINT = "watch"; //$NON-NLS-1$
 
 	protected IDbgpBreakpoint[] parseBreakpointsResponse(Element response) {
-		List list = new ArrayList();
+		List<IDbgpBreakpoint> list = new ArrayList<>();
 
 		NodeList breakpoints = response.getElementsByTagName(BREAKPOINT_TAG);
 		for (int i = 0; i < breakpoints.getLength(); ++i) {
@@ -59,8 +59,7 @@ public class DbgpBreakpointCommands extends DbgpBaseCommands
 					.parseBreakpoint((Element) breakpoints.item(i)));
 		}
 
-		return (IDbgpBreakpoint[]) list
-				.toArray(new IDbgpBreakpoint[list.size()]);
+		return list.toArray(new IDbgpBreakpoint[list.size()]);
 	}
 
 	protected String parseSetBreakpointResponse(Element response)

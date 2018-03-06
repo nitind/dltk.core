@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.  
+ * Copyright (c) 2008, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html  
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Andrei Sobolev)
@@ -66,7 +66,7 @@ public class EnvironmentVariablesFileUtils {
 
 	public static EnvironmentVariable[] load(String file) throws Exception {
 		LineNumberReader reader = null;
-		List results = new ArrayList();
+		List<EnvironmentVariable> results = new ArrayList<>();
 		try {
 			reader = new LineNumberReader(
 					new InputStreamReader(new BufferedInputStream(
@@ -81,22 +81,21 @@ public class EnvironmentVariablesFileUtils {
 					int pos = line.indexOf('=');
 					if (pos == -1) {
 						final String template = Messages.EnvironmentVariablesFileUtils_incorrectFormat;
-						throw new Exception(NLS.bind(template, Integer
-								.toString(reader.getLineNumber())));
+						throw new Exception(NLS.bind(template,
+								Integer.toString(reader.getLineNumber())));
 					}
 					String varName = line.substring(0, pos).trim();
 					if (varName.length() == 0) {
 						final String template = Messages.EnvironmentVariablesFileUtils_incorrectFormat;
-						throw new Exception(NLS.bind(template, Integer
-								.toString(reader.getLineNumber())));
+						throw new Exception(NLS.bind(template,
+								Integer.toString(reader.getLineNumber())));
 					}
 					String value = line.substring(pos + 1).trim();
 					results.add(new EnvironmentVariable(varName, value));
-				}// else skip line
+				} // else skip line
 			}
 			if (results.size() > 0) {
-				return (EnvironmentVariable[]) results
-						.toArray(new EnvironmentVariable[results.size()]);
+				return results.toArray(new EnvironmentVariable[results.size()]);
 			}
 		} catch (FileNotFoundException e) {
 			if (DLTKCore.DEBUG) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2017 IBM Corporation and others.
+ * Copyright (c) 2006, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,12 +68,13 @@ public class EnvironmentVariableContentProvider
 	 * Returns the list of libraries in the given selection. SubElements are
 	 * replaced by their parent libraries.
 	 */
-	private Set getSelectedLibraries(IStructuredSelection selection) {
-		Set libraries = new HashSet();
-		for (Iterator iter = selection.iterator(); iter.hasNext();) {
+	private Set<EnvironmentVariable> getSelectedLibraries(
+			IStructuredSelection selection) {
+		Set<EnvironmentVariable> libraries = new HashSet<>();
+		for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element instanceof EnvironmentVariable) {
-				libraries.add(element);
+				libraries.add((EnvironmentVariable) element);
 			}
 		}
 		return libraries;
@@ -83,7 +84,7 @@ public class EnvironmentVariableContentProvider
 	 * Move the libraries of the given selection up.
 	 */
 	public void up(IStructuredSelection selection) {
-		Set libraries = getSelectedLibraries(selection);
+		Set<EnvironmentVariable> libraries = getSelectedLibraries(selection);
 		for (int i = 0; i < fVariables.length - 1; i++) {
 			if (libraries.contains(fVariables[i + 1])) {
 				EnvironmentVariable temp = fVariables[i];
@@ -99,7 +100,7 @@ public class EnvironmentVariableContentProvider
 	 * Move the libraries of the given selection down.
 	 */
 	public void down(IStructuredSelection selection) {
-		Set libraries = getSelectedLibraries(selection);
+		Set<EnvironmentVariable> libraries = getSelectedLibraries(selection);
 		for (int i = fVariables.length - 1; i > 0; i--) {
 			if (libraries.contains(fVariables[i - 1])) {
 				EnvironmentVariable temp = fVariables[i];
@@ -143,8 +144,7 @@ public class EnvironmentVariableContentProvider
 		for (int i = 0; i < fVariables.length; i++) {
 			newLibraries.add(fVariables[i]);
 		}
-		List<EnvironmentVariable> toAdd = new ArrayList<>(
-				libs.length);
+		List<EnvironmentVariable> toAdd = new ArrayList<>(libs.length);
 		for (int i = 0; i < libs.length; i++) {
 			toAdd.add(new EnvironmentVariable(libs[i]));
 		}
@@ -168,7 +168,7 @@ public class EnvironmentVariableContentProvider
 	 * variable).
 	 *
 	 * @param variable
-	 *            the variable to add
+	 *                     the variable to add
 	 * @return whether the variable was added
 	 * @since 2.0
 	 */

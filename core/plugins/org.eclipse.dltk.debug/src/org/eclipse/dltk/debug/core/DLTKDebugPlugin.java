@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -179,12 +179,12 @@ public class DLTKDebugPlugin extends Plugin {
 	}
 
 	public static String[] getLocalAddresses() {
-		Set addresses = new HashSet();
+		Set<String> addresses = new HashSet<>();
 		try {
-			Enumeration netInterfaces = NetworkInterface.getNetworkInterfaces();
+			Enumeration<NetworkInterface> netInterfaces = NetworkInterface
+					.getNetworkInterfaces();
 			while (netInterfaces.hasMoreElements()) {
-				NetworkInterface ni = (NetworkInterface) netInterfaces
-						.nextElement();
+				NetworkInterface ni = netInterfaces.nextElement();
 				// ignore virtual interfaces for VMware, etc
 				if (ni.getName().startsWith("vmnet")) { //$NON-NLS-1$
 					continue;
@@ -193,9 +193,9 @@ public class DLTKDebugPlugin extends Plugin {
 						&& ni.getDisplayName().indexOf("VMware") != -1) { //$NON-NLS-1$
 					continue;
 				}
-				Enumeration inetAddresses = ni.getInetAddresses();
+				Enumeration<InetAddress> inetAddresses = ni.getInetAddresses();
 				while (inetAddresses.hasMoreElements()) {
-					InetAddress ip = (InetAddress) inetAddresses.nextElement();
+					InetAddress ip = inetAddresses.nextElement();
 					// ignore loopback address (127.0.0.1)
 					// use only IPv4 addresses (ignore IPv6)
 					if (!ip.isLoopbackAddress()
@@ -217,7 +217,7 @@ public class DLTKDebugPlugin extends Plugin {
 				e.printStackTrace();
 			}
 		}
-		return (String[]) addresses.toArray(new String[addresses.size()]);
+		return addresses.toArray(new String[addresses.size()]);
 	}
 
 	private static ISourceOffsetLookup sourceOffsetLookup = null;

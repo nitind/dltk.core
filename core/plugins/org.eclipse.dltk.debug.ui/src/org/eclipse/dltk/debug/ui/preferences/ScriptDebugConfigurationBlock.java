@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.dltk.ui.preferences.FieldValidators;
 import org.eclipse.dltk.ui.preferences.ImprovedAbstractConfigurationBlock;
 import org.eclipse.dltk.ui.preferences.NumberTransformer;
 import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore;
+import org.eclipse.dltk.ui.preferences.OverlayPreferenceStore.OverlayKey;
 import org.eclipse.dltk.ui.util.SWTFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
@@ -47,8 +48,8 @@ public class ScriptDebugConfigurationBlock
 	private Preferences fUIPreferences;
 
 	@Override
-	protected List createOverlayKeys() {
-		ArrayList overlayKeys = new ArrayList();
+	protected List<OverlayKey> createOverlayKeys() {
+		ArrayList<OverlayKey> overlayKeys = new ArrayList<>();
 
 		// Connection
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
