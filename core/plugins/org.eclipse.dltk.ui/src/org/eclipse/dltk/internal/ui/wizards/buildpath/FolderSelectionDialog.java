@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,19 +30,21 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.NewFolderDialog;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 
-public class FolderSelectionDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
+public class FolderSelectionDialog extends ElementTreeSelectionDialog
+		implements ISelectionChangedListener {
 
 	private Button fNewFolderButton;
 	private IContainer fSelectedContainer;
 
-	public FolderSelectionDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider) {
+	public FolderSelectionDialog(Shell parent, ILabelProvider labelProvider,
+			ITreeContentProvider contentProvider) {
 		super(parent, labelProvider, contentProvider);
 		setComparator(new ResourceComparator(ResourceComparator.NAME));
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite result= (Composite)super.createDialogArea(parent);
+		Composite result = (Composite) super.createDialogArea(parent);
 
 		getTreeViewer().addSelectionChangedListener(this);
 
@@ -55,7 +57,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 			}
 		});
 		button.setFont(parent.getFont());
-		fNewFolderButton= button;
+		fNewFolderButton = button;
 
 		applyDialogFont(result);
 		if (DLTKCore.DEBUG) {
@@ -67,32 +69,36 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 	}
 
 	private void updateNewFolderButtonState() {
-		IStructuredSelection selection= (IStructuredSelection) getTreeViewer().getSelection();
-		fSelectedContainer= null;
+		IStructuredSelection selection = getTreeViewer()
+				.getStructuredSelection();
+		fSelectedContainer = null;
 		if (selection.size() == 1) {
-			Object first= selection.getFirstElement();
+			Object first = selection.getFirstElement();
 			if (first instanceof IContainer) {
-				fSelectedContainer= (IContainer) first;
+				fSelectedContainer = (IContainer) first;
 			}
 		}
 		fNewFolderButton.setEnabled(fSelectedContainer != null);
 	}
 
 	protected void newFolderButtonPressed() {
-		NewFolderDialog dialog= new NewFolderDialog(getShell(), fSelectedContainer) {
+		NewFolderDialog dialog = new NewFolderDialog(getShell(),
+				fSelectedContainer) {
 			@Override
 			protected Control createContents(Composite parent) {
-				//PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IDLTKHelpContextIds.BP_CREATE_NEW_FOLDER);
+				// PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				// IDLTKHelpContextIds.BP_CREATE_NEW_FOLDER);
 				if (DLTKCore.DEBUG) {
-					System.err.println("FolderSelectionDialog: Add help support"); //$NON-NLS-1$
+					System.err
+							.println("FolderSelectionDialog: Add help support"); //$NON-NLS-1$
 				}
 				return super.createContents(parent);
 			}
 		};
 		if (dialog.open() == Window.OK) {
-			TreeViewer treeViewer= getTreeViewer();
+			TreeViewer treeViewer = getTreeViewer();
 			treeViewer.refresh(fSelectedContainer);
-			Object createdFolder= dialog.getResult()[0];
+			Object createdFolder = dialog.getResult()[0];
 			treeViewer.reveal(createdFolder);
 			treeViewer.setSelection(new StructuredSelection(createdFolder));
 		}

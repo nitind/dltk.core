@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,8 +30,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 
-public abstract class ScriptTemplatePreferencePage extends
-		TemplatePreferencePage implements IWorkbenchPreferencePage {
+public abstract class ScriptTemplatePreferencePage
+		extends TemplatePreferencePage implements IWorkbenchPreferencePage {
 	protected class ScriptEditTemplateDialog extends EditTemplateDialog {
 		public ScriptEditTemplateDialog(Shell parent, Template template,
 				boolean edit, boolean isNameModifiable,
@@ -48,7 +48,7 @@ public abstract class ScriptTemplatePreferencePage extends
 		 * override.
 		 *
 		 * @param parent
-		 *            the parent composite of the viewer
+		 *                   the parent composite of the viewer
 		 * @return a configured <code>SourceViewer</code>
 		 */
 		@Override
@@ -108,8 +108,8 @@ public abstract class ScriptTemplatePreferencePage extends
 		viewer.setDocument(document);
 
 		Control control = viewer.getControl();
-		control.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.FILL_VERTICAL));
+		control.setLayoutData(new GridData(
+				GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL));
 
 		// Font font = JFaceResources
 		// .getFont(TPreferenceConstants.EDITOR_TEXT_FONT);
@@ -122,12 +122,12 @@ public abstract class ScriptTemplatePreferencePage extends
 
 	@Override
 	protected void updateViewerInput() {
-		IStructuredSelection selection = (IStructuredSelection) getTableViewer()
-				.getSelection();
+		IStructuredSelection selection = getTableViewer()
+				.getStructuredSelection();
 		SourceViewer viewer = getViewer();
 
-		if (selection.size() == 1
-				&& selection.getFirstElement() instanceof TemplatePersistenceData) {
+		if (selection.size() == 1 && selection
+				.getFirstElement() instanceof TemplatePersistenceData) {
 			final TemplatePersistenceData data = (TemplatePersistenceData) selection
 					.getFirstElement();
 			final Template template = data.getTemplate();
@@ -167,8 +167,8 @@ public abstract class ScriptTemplatePreferencePage extends
 	 * so template content is colored like inside "javadoc", but prefix and
 	 * suffix strings are invisible.
 	 */
-	protected static class ViewerInputDecorations implements
-			IViewerInputUpdater {
+	protected static class ViewerInputDecorations
+			implements IViewerInputUpdater {
 		private final String prefix;
 		private final String suffix;
 
@@ -197,8 +197,8 @@ public abstract class ScriptTemplatePreferencePage extends
 			}
 			final IDocument doc = viewer.getDocument();
 			doc.set(sb.toString());
-			viewer.setDocument(doc, offset, doc.getLength() - offset
-					- endOffset);
+			viewer.setDocument(doc, offset,
+					doc.getLength() - offset - endOffset);
 		}
 
 	}

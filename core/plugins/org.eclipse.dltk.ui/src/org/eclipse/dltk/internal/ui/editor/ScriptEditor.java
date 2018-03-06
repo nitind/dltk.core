@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -301,7 +301,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		 * Creates a new updater for the given <code>category</code>.
 		 *
 		 * @param category
-		 *            the new category.
+		 *                     the new category.
 		 */
 		public ExclusivePositionUpdater(String category) {
 			fCategory = category;
@@ -611,7 +611,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		 * provider.
 		 *
 		 * @param selectionProvider
-		 *            the selection provider
+		 *                              the selection provider
 		 */
 		public void uninstall(ISelectionProvider selectionProvider) {
 			if (selectionProvider == null)
@@ -763,7 +763,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * input.
 	 *
 	 * @param input
-	 *            The editor input for which to create the preference store
+	 *                  The editor input for which to create the preference
+	 *                  store
 	 * @return the preference store for this editor
 	 */
 	private IPreferenceStore createCombinedPreferenceStore(IEditorInput input) {
@@ -1312,8 +1313,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 	protected void doSelectionChanged(SelectionChangedEvent event) {
 		ISourceReference reference = null;
-		ISelection selection = event.getSelection();
-		Iterator<?> iter = ((IStructuredSelection) selection).iterator();
+		IStructuredSelection selection = event.getStructuredSelection();
+		Iterator<?> iter = selection.iterator();
 		while (iter.hasNext()) {
 			Object o = iter.next();
 			if (o instanceof ISourceReference) {
@@ -1454,7 +1455,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * the editor.
 	 *
 	 * @param element
-	 *            thescriptelement to select
+	 *                    thescriptelement to select
 	 */
 	protected void synchronizeOutlinePage(ISourceReference element) {
 		synchronizeOutlinePage(element, true);
@@ -1465,10 +1466,10 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * the editor.
 	 *
 	 * @param element
-	 *            thescriptelement to select
+	 *                                     thescriptelement to select
 	 * @param checkIfOutlinePageActive
-	 *            <code>true</code> if check for active outline page needs to be
-	 *            done
+	 *                                     <code>true</code> if check for active
+	 *                                     outline page needs to be done
 	 * @since 2.0
 	 */
 	@Override
@@ -1503,14 +1504,14 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * </p>
 	 *
 	 * @param offset
-	 *            the region offset
+	 *                               the region offset
 	 * @param length
-	 *            the region length
+	 *                               the region length
 	 * @param forward
-	 *            <code>true</code> for forwards, <code>false</code> for
-	 *            backward
+	 *                               <code>true</code> for forwards,
+	 *                               <code>false</code> for backward
 	 * @param annotationPosition
-	 *            the position of the found annotation
+	 *                               the position of the found annotation
 	 * @return the found annotation
 	 */
 	@Override
@@ -1606,9 +1607,9 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * <code>null</code>.
 	 *
 	 * @param offset
-	 *            the region offset
+	 *                   the region offset
 	 * @param length
-	 *            the region length
+	 *                   the region length
 	 * @return the found annotation or <code>null</code>
 	 * @since 3.0
 	 */
@@ -1774,7 +1775,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * given IModelElement.
 	 *
 	 * @param element
-	 *            thescriptelement
+	 *                    thescriptelement
 	 * @return the corresponding model element
 	 */
 	protected IModelElement getCorrespondingElement(IModelElement element) {
@@ -1785,7 +1786,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * Returns the most narrow model element including the given offset.
 	 *
 	 * @param offset
-	 *            the offset inside of the requested element
+	 *                   the offset inside of the requested element
 	 * @return the most narrow model element
 	 */
 	@Override
@@ -1801,9 +1802,10 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * reconciled.
 	 *
 	 * @param offset
-	 *            the offset included by the retrieved element
+	 *                      the offset included by the retrieved element
 	 * @param reconcile
-	 *            <code>true</code> if working copy should be reconciled
+	 *                      <code>true</code> if working copy should be
+	 *                      reconciled
 	 * @return the most narrow element which includes the given offset
 	 */
 	public IModelElement getElementAt(int offset, boolean reconcile) {
@@ -2178,8 +2180,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		 * Creates a new next sub-word action.
 		 *
 		 * @param code
-		 *            Action code for the default operation. Must be an action
-		 *            code from
+		 *                 Action code for the default operation. Must be an
+		 *                 action code from
 		 * @see org.eclipse.swt.custom.ST.
 		 */
 		protected NextSubWordAction(int code) {
@@ -2219,7 +2221,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		 * Finds the next position after the given position.
 		 *
 		 * @param position
-		 *            the current position
+		 *                     the current position
 		 * @return the next position
 		 */
 		protected int findNextPosition(int position) {
@@ -2239,7 +2241,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		 * <code>position</code>.
 		 *
 		 * @param position
-		 *            Position where the action should move the caret
+		 *                     Position where the action should move the caret
 		 */
 		protected abstract void setCaretPosition(int position);
 	}
@@ -2352,8 +2354,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		 * Creates a new previous sub-word action.
 		 *
 		 * @param code
-		 *            Action code for the default operation. Must be an action
-		 *            code from
+		 *                 Action code for the default operation. Must be an
+		 *                 action code from
 		 * @see org.eclipse.swt.custom.ST.
 		 */
 		protected PreviousSubWordAction(final int code) {
@@ -2393,7 +2395,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		 * Finds the previous position before the given position.
 		 *
 		 * @param position
-		 *            the current position
+		 *                     the current position
 		 * @return the previous position
 		 */
 		protected int findPreviousPosition(int position) {
@@ -2413,7 +2415,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		 * <code>position</code>.
 		 *
 		 * @param position
-		 *            Position where the action should move the caret
+		 *                     Position where the action should move the caret
 		 */
 		protected abstract void setCaretPosition(int position);
 	}
@@ -2834,7 +2836,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * </p>
 	 *
 	 * @param sourceViewer
-	 *            the source viewer
+	 *                         the source viewer
 	 * @return a region denoting the current signed selection, for a resulting
 	 *         RtoL selections length is < 0
 	 */

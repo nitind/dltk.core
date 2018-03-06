@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,6 @@ import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlExtension;
 import org.eclipse.jface.text.IInformationControlExtension2;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -151,17 +150,17 @@ public abstract class AbstractInformationControl extends PopupDialog
 	 * given styles are applied to the shell and the tree widget.
 	 *
 	 * @param parent
-	 *            the parent shell
+	 *                              the parent shell
 	 * @param shellStyle
-	 *            the additional styles for the shell
+	 *                              the additional styles for the shell
 	 * @param treeStyle
-	 *            the additional styles for the tree widget
+	 *                              the additional styles for the tree widget
 	 * @param invokingCommandId
-	 *            the id of the command that invoked this control or
-	 *            <code>null</code>
+	 *                              the id of the command that invoked this
+	 *                              control or <code>null</code>
 	 * @param showStatusField
-	 *            <code>true</code> iff the control has a status field at the
-	 *            bottom
+	 *                              <code>true</code> iff the control has a
+	 *                              status field at the bottom
 	 */
 	public AbstractInformationControl(Shell parent, int shellStyle,
 			int treeStyle, String invokingCommandId, boolean showStatusField) {
@@ -207,7 +206,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 	 * Create the main content for this information control.
 	 *
 	 * @param parent
-	 *            The parent composite
+	 *                   The parent composite
 	 * @return The control representing the main content.
 	 *
 	 */
@@ -298,11 +297,11 @@ public abstract class AbstractInformationControl extends PopupDialog
 	 * given styles are applied to the shell and the tree widget.
 	 *
 	 * @param parent
-	 *            the parent shell
+	 *                       the parent shell
 	 * @param shellStyle
-	 *            the additional styles for the shell
+	 *                       the additional styles for the shell
 	 * @param treeStyle
-	 *            the additional styles for the tree widget
+	 *                       the additional styles for the tree widget
 	 */
 	public AbstractInformationControl(Shell parent, int shellStyle,
 			int treeStyle) {
@@ -428,9 +427,9 @@ public abstract class AbstractInformationControl extends PopupDialog
 	 * </p>
 	 *
 	 * @param pattern
-	 *            the pattern
+	 *                    the pattern
 	 * @param update
-	 *            <code>true</code> if the viewer should be updated
+	 *                    <code>true</code> if the viewer should be updated
 	 */
 	protected void setMatcherString(String pattern, boolean update) {
 		if (pattern.length() == 0) {
@@ -457,8 +456,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 		if (fTreeViewer == null)
 			return null;
 
-		return ((IStructuredSelection) fTreeViewer.getSelection())
-				.getFirstElement();
+		return fTreeViewer.getStructuredSelection().getFirstElement();
 	}
 
 	private void gotoSelectedElement() {
@@ -519,7 +517,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 	 * Fills the view menu. Clients can extend or override.
 	 *
 	 * @param viewMenu
-	 *            the menu manager that manages the menu
+	 *                     the menu manager that manages the menu
 	 *
 	 */
 	protected void fillViewMenu(IMenuManager viewMenu) {
@@ -567,10 +565,10 @@ public abstract class AbstractInformationControl extends PopupDialog
 	 * {@inheritDoc}
 	 *
 	 * @param event
-	 *            can be null
-	 *            <p>
-	 *            Subclasses may extend.
-	 *            </p>
+	 *                  can be null
+	 *                  <p>
+	 *                  Subclasses may extend.
+	 *                  </p>
 	 */
 	@Override
 	public void widgetDisposed(DisposeEvent event) {

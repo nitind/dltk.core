@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -116,17 +116,17 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 		 * Initialize the item with the given values.
 		 *
 		 * @param displayName
-		 *            the display name
+		 *                             the display name
 		 * @param colorKey
-		 *            the color preference key
+		 *                             the color preference key
 		 * @param boldKey
-		 *            the bold preference key
+		 *                             the bold preference key
 		 * @param italicKey
-		 *            the italic preference key
+		 *                             the italic preference key
 		 * @param strikethroughKey
-		 *            the strikethrough preference key
+		 *                             the strikethrough preference key
 		 * @param underlineKey
-		 *            the underline preference key
+		 *                             the underline preference key
 		 */
 		public HighlightingColorListItem(String displayName, String colorKey,
 				String boldKey, String italicKey, String strikethroughKey,
@@ -210,19 +210,19 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 		 * Initialize the item with the given values.
 		 *
 		 * @param displayName
-		 *            the display name
+		 *                             the display name
 		 * @param colorKey
-		 *            the color preference key
+		 *                             the color preference key
 		 * @param boldKey
-		 *            the bold preference key
+		 *                             the bold preference key
 		 * @param italicKey
-		 *            the italic preference key
+		 *                             the italic preference key
 		 * @param strikethroughKey
-		 *            the strikethroughKey preference key
+		 *                             the strikethroughKey preference key
 		 * @param underlineKey
-		 *            the underlineKey preference key
+		 *                             the underlineKey preference key
 		 * @param enableKey
-		 *            the enable preference key
+		 *                             the enable preference key
 		 */
 		public SemanticHighlightingColorListItem(String displayName,
 				String colorKey, String boldKey, String italicKey,
@@ -511,7 +511,7 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 	 * Creates page for hover preferences.
 	 *
 	 * @param parent
-	 *            the parent composite
+	 *                   the parent composite
 	 * @return the control for the preference page
 	 */
 	@Override
@@ -971,8 +971,7 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 	 *
 	 */
 	private HighlightingColorListItem getHighlightingColorListItem() {
-		IStructuredSelection selection = (IStructuredSelection) fListViewer
-				.getSelection();
+		IStructuredSelection selection = fListViewer.getStructuredSelection();
 		Object element = selection.getFirstElement();
 		if (element instanceof String)
 			return null;

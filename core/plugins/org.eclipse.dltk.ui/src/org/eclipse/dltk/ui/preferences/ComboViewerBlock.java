@@ -22,14 +22,15 @@ public abstract class ComboViewerBlock {
 			}
 		});
 
-		viewer.addSelectionChangedListener(event -> selectedObjectChanged(getSelectedObject()));
+		viewer.addSelectionChangedListener(
+				event -> selectedObjectChanged(getSelectedObject()));
 	}
 
 	/**
 	 * Initializes the ComboViewer
 	 *
 	 * @param elements
-	 *            viewer elements
+	 *                     viewer elements
 	 */
 	public void initialize(Object[] elements) {
 		viewer.add(elements);
@@ -65,7 +66,7 @@ public abstract class ComboViewerBlock {
 	 * </p>
 	 *
 	 * @param element
-	 *            newly selected element
+	 *                    newly selected element
 	 */
 	protected abstract void selectedObjectChanged(Object element);
 
@@ -91,8 +92,7 @@ public abstract class ComboViewerBlock {
 	protected abstract Object getObjectById(String id);
 
 	public Object getSelectedObject() {
-		IStructuredSelection selection = (IStructuredSelection) viewer
-				.getSelection();
+		IStructuredSelection selection = viewer.getStructuredSelection();
 		if (selection != null) {
 			return selection.getFirstElement();
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -333,7 +333,7 @@ public class TypeHierarchyViewPart extends ViewPart
 	 * list.
 	 *
 	 * @param entry
-	 *            The new entry
+	 *                  The new entry
 	 */
 	private void addHistoryEntry(IModelElement entry) {
 		if (fInputHistory.contains(entry)) {
@@ -358,7 +358,7 @@ public class TypeHierarchyViewPart extends ViewPart
 	 * entries.
 	 *
 	 * @param entry
-	 *            The entry to open
+	 *                  The entry to open
 	 */
 	public void gotoHistoryEntry(IModelElement entry) {
 		if (fInputHistory.contains(entry)) {
@@ -382,7 +382,7 @@ public class TypeHierarchyViewPart extends ViewPart
 	 * Sets the history entries
 	 *
 	 * @param elems
-	 *            The history elements to set
+	 *                  The history elements to set
 	 */
 	public void setHistoryEntries(IModelElement[] elems) {
 		fInputHistory.clear();
@@ -396,7 +396,7 @@ public class TypeHierarchyViewPart extends ViewPart
 	 * Selects an member in the methods list or in the current hierarchy.
 	 *
 	 * @param member
-	 *            The member to select
+	 *                   The member to select
 	 */
 	public void selectMember(IMember member) {
 		fSelectInEditor = false;
@@ -438,7 +438,7 @@ public class TypeHierarchyViewPart extends ViewPart
 	 * Sets the input to a new type
 	 *
 	 * @param type
-	 *            The new input type
+	 *                 The new input type
 	 * @deprecated
 	 */
 	@Override
@@ -462,7 +462,7 @@ public class TypeHierarchyViewPart extends ViewPart
 	 * Sets the input to a new element.
 	 *
 	 * @param element
-	 *            the input element
+	 *                    the input element
 	 */
 	@Override
 	public void setInputElement(IModelElement element) {
@@ -1003,8 +1003,9 @@ public class TypeHierarchyViewPart extends ViewPart
 	 * called from ToggleOrientationAction.
 	 *
 	 * @param orientation
-	 *            VIEW_ORIENTATION_SINGLE, VIEW_ORIENTATION_HORIZONTAL or
-	 *            VIEW_ORIENTATION_VERTICAL
+	 *                        VIEW_ORIENTATION_SINGLE,
+	 *                        VIEW_ORIENTATION_HORIZONTAL or
+	 *                        VIEW_ORIENTATION_VERTICAL
 	 */
 	public void setOrientation(int orientation) {
 		if (fCurrentOrientation != orientation) {
@@ -1408,7 +1409,7 @@ public class TypeHierarchyViewPart extends ViewPart
 	 * the view part.
 	 *
 	 * @param on
-	 *            <code>true</code> to turn the member filter on
+	 *               <code>true</code> to turn the member filter on
 	 */
 	public void enableMemberFilter(boolean on) {
 		if (on != fIsEnableMemberFilter) {
@@ -1441,7 +1442,7 @@ public class TypeHierarchyViewPart extends ViewPart
 	 * of the view part.
 	 *
 	 * @param on
-	 *            <code>true</code> to enable qualified type names
+	 *               <code>true</code> to enable qualified type names
 	 */
 	public void showQualifiedTypeNames(boolean on) {
 		if (fAllViewers == null) {
@@ -1461,10 +1462,11 @@ public class TypeHierarchyViewPart extends ViewPart
 	 * thread
 	 *
 	 * @param typeHierarchy
-	 *            Hierarchy that has changed
+	 *                          Hierarchy that has changed
 	 * @param changedTypes
-	 *            Types in the hierarchy that have change or <code>null</code>
-	 *            if the full hierarchy has changed
+	 *                          Types in the hierarchy that have change or
+	 *                          <code>null</code> if the full hierarchy has
+	 *                          changed
 	 */
 	protected void doTypeHierarchyChanged(
 			final TypeHierarchyLifeCycle typeHierarchy,
@@ -1573,8 +1575,7 @@ public class TypeHierarchyViewPart extends ViewPart
 		memento.putInteger(TAG_VERTICAL_SCROLL, position);
 
 		IModelElement selection = toModelElement(
-				((IStructuredSelection) getCurrentViewer().getSelection())
-						.getFirstElement());
+				getCurrentViewer().getStructuredSelection().getFirstElement());
 		if (selection != null) {
 			memento.putString(TAG_SELECTION, selection.getHandleIdentifier());
 		}
@@ -1725,7 +1726,7 @@ public class TypeHierarchyViewPart extends ViewPart
 	 * Link selection to active editor.
 	 *
 	 * @param editor
-	 *            The activated editor
+	 *                   The activated editor
 	 */
 	protected void editorActivated(IEditorPart editor) {
 		if (!isLinkingEnabled()) {

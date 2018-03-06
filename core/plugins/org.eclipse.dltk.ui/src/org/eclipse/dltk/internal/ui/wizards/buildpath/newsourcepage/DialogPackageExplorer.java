@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,8 +76,9 @@ public abstract class DialogPackageExplorer
 		 * Get the elements of the current project
 		 *
 		 * @param element
-		 *            the element to get the children from, will not be used,
-		 *            instead the project childrens are returned directly
+		 *                    the element to get the children from, will not be
+		 *                    used, instead the project childrens are returned
+		 *                    directly
 		 * @return returns the children of the project
 		 */
 		@Override
@@ -322,7 +323,7 @@ public abstract class DialogPackageExplorer
 	 * Should only be called once.
 	 *
 	 * @param actionGroup
-	 *            the action group to be used for the context menu.
+	 *                        the action group to be used for the context menu.
 	 */
 	public void setActionGroup(
 			final DialogPackageExplorerActionGroup actionGroup) {
@@ -368,7 +369,7 @@ public abstract class DialogPackageExplorer
 	 * Set the input for the package explorer.
 	 *
 	 * @param project
-	 *            the project to be displayed
+	 *                    the project to be displayed
 	 */
 	public void setInput(IScriptProject project) {
 		fCurrJProject = project;
@@ -388,7 +389,7 @@ public abstract class DialogPackageExplorer
 	 * Set the selection and focus to the list of elements
 	 *
 	 * @param elements
-	 *            the object to be selected and displayed
+	 *                     the object to be selected and displayed
 	 */
 	public void setSelection(final List<?> elements) {
 		if (elements == null || elements.size() == 0)
@@ -442,7 +443,7 @@ public abstract class DialogPackageExplorer
 	 */
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
-		fCurrentSelection = (IStructuredSelection) event.getSelection();
+		fCurrentSelection = event.getStructuredSelection();
 		try {
 			if (fActionGroup != null)
 				fActionGroup.setContext(new DialogExplorerActionContext(

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -220,19 +220,6 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			}
 		}
 	};
-
-	// private ITreeViewerListener fExpansionListener = new
-	// ITreeViewerListener() {
-	// public void treeCollapsed(TreeExpansionEvent event) {
-	// }
-	//
-	// public void treeExpanded(TreeExpansionEvent event) {
-	// Object element = event.getElement();
-	// if (element instanceof ISourceModule) {
-	// expandMainType(element);
-	// }
-	// }
-	// };
 
 	protected class PackageExplorerProblemTreeViewer extends ProblemTreeViewer {
 		// fix for 64372 Projects showing up in Package Explorer twice [package
@@ -794,15 +781,14 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 					return DLTKUIPlugin.getDefault().getPreferenceStore();
 				}
 			};
-		} else {
-			return new WorkingSetAwareContentProvider(showCUChildren,
-					fWorkingSetModel) {
-				@Override
-				protected IPreferenceStore getPreferenceStore() {
-					return DLTKUIPlugin.getDefault().getPreferenceStore();
-				}
-			};
 		}
+		return new WorkingSetAwareContentProvider(showCUChildren,
+				fWorkingSetModel) {
+			@Override
+			protected IPreferenceStore getPreferenceStore() {
+				return DLTKUIPlugin.getDefault().getPreferenceStore();
+			}
+		};
 	}
 
 	protected ScriptExplorerLabelProvider createLabelProvider() {
@@ -819,9 +805,8 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	private IElementComparer createElementComparer() {
 		if (getRootMode() == ScriptExplorerPart.PROJECTS_AS_ROOTS) {
 			return null;
-		} else {
-			return WorkingSetModel.COMPARER;
 		}
+		return WorkingSetModel.COMPARER;
 	}
 
 	private void fillActionBars() {
@@ -832,23 +817,22 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	private Object findInputElement() {
 		if (getRootMode() == ScriptExplorerPart.WORKING_SETS_AS_ROOTS) {
 			return fWorkingSetModel;
-		} else {
-			Object input = getSite().getPage().getInput();
-			if (input instanceof IWorkspace) {
-				return DLTKCore.create(((IWorkspace) input).getRoot());
-			} else if (input instanceof IContainer) {
-				IModelElement element = DLTKCore.create((IContainer) input);
-				if (element != null && element.exists()) {
-					return element;
-				}
-				return input;
-			}
-			// 1GERPRT: ITPJUI:ALL - Packages View is empty when shown in Type
-			// Hierarchy Perspective
-			// we can't handle the input
-			// fall back to show the workspace
-			return DLTKCore.create(DLTKUIPlugin.getWorkspace().getRoot());
 		}
+		Object input = getSite().getPage().getInput();
+		if (input instanceof IWorkspace) {
+			return DLTKCore.create(((IWorkspace) input).getRoot());
+		} else if (input instanceof IContainer) {
+			IModelElement element = DLTKCore.create((IContainer) input);
+			if (element != null && element.exists()) {
+				return element;
+			}
+			return input;
+		}
+		// 1GERPRT: ITPJUI:ALL - Packages View is empty when shown in Type
+		// Hierarchy Perspective
+		// we can't handle the input
+		// fall back to show the workspace
+		return DLTKCore.create(DLTKUIPlugin.getWorkspace().getRoot());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -912,36 +896,33 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			}
 			return Messages.format(ScriptMessages.PackageExplorer_toolTip2,
 					new String[] { result, fWorkingSetLabel });
-		} else { // Working set mode. During initialization element and
-			// action set can be null.
-			if (element != null && !(element instanceof IWorkingSet)
-					&& !(element instanceof WorkingSetModel)
-					&& fActionSet != null) {
-				FrameList frameList = fActionSet.getFrameList();
-				int index = frameList.getCurrentIndex();
-				IWorkingSet ws = null;
-				while (index >= 0) {
-					Frame frame = frameList.getFrame(index);
-					if (frame instanceof TreeFrame) {
-						Object input = ((TreeFrame) frame).getInput();
-						if (input instanceof IWorkingSet) {
-							ws = (IWorkingSet) input;
-							break;
-						}
-					}
-					index--;
-				}
-				if (ws != null) {
-					return Messages.format(
-							ScriptMessages.PackageExplorer_toolTip3,
-							new String[] { ws.getLabel(), result });
-				} else {
-					return result;
-				}
-			} else {
-				return result;
-			}
 		}
+		// Working set mode. During initialization element and
+		// action set can be null.
+		if (element != null && !(element instanceof IWorkingSet)
+				&& !(element instanceof WorkingSetModel)
+				&& fActionSet != null) {
+			FrameList frameList = fActionSet.getFrameList();
+			int index = frameList.getCurrentIndex();
+			IWorkingSet ws = null;
+			while (index >= 0) {
+				Frame frame = frameList.getFrame(index);
+				if (frame instanceof TreeFrame) {
+					Object input = ((TreeFrame) frame).getInput();
+					if (input instanceof IWorkingSet) {
+						ws = (IWorkingSet) input;
+						break;
+					}
+				}
+				index--;
+			}
+			if (ws != null) {
+				return Messages.format(ScriptMessages.PackageExplorer_toolTip3,
+						new String[] { ws.getLabel(), result });
+			}
+			return result;
+		}
+		return result;
 	}
 
 	@Override
@@ -1071,9 +1052,8 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		}
 		if (changed) {
 			return new StructuredSelection(elements);
-		} else {
-			return s;
 		}
+		return s;
 	}
 
 	private Object convertElement(Object original) {
@@ -1137,7 +1117,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	 * Links to editor (if option enabled)
 	 *
 	 * @param selection
-	 *            the selection
+	 *                      the selection
 	 */
 	private void linkToEditor(IStructuredSelection selection) {
 		// ignore selection changes if the package explorer is not the active
@@ -1244,7 +1224,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	 * to be the editor's input, if linking is enabled.
 	 *
 	 * @param editor
-	 *            the activated editor
+	 *                   the activated editor
 	 */
 	protected void editorActivated(IEditorPart editor) {
 		IEditorInput editorInput = editor.getEditorInput();
@@ -1288,8 +1268,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	}
 
 	protected boolean inputIsSelected(IEditorInput input) {
-		IStructuredSelection selection = (IStructuredSelection) fViewer
-				.getSelection();
+		IStructuredSelection selection = fViewer.getStructuredSelection();
 		if (selection.size() != 1) {
 			return false;
 		}
@@ -1711,7 +1690,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			}
 		}
 		IStructuredSelection selection = new StructuredSelection(
-				((IStructuredSelection) fViewer.getSelection()).toArray());
+				(fViewer.getStructuredSelection()).toArray());
 		Object input = fViewer.getInput();
 		boolean isRootInputChange = DLTKCore
 				.create(ResourcesPlugin.getWorkspace().getRoot()).equals(input)

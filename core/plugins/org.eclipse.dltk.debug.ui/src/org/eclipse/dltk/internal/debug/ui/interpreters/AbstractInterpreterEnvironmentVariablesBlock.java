@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -91,7 +91,7 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock
 	 * Creates and returns the source lookup control.
 	 *
 	 * @param parent
-	 *            the parent widget of this control
+	 *                   the parent widget of this control
 	 */
 	public Control createControl(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);
@@ -167,9 +167,9 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock
 	 * Creates and returns a button
 	 *
 	 * @param parent
-	 *            parent widget
+	 *                   parent widget
 	 * @param label
-	 *            label
+	 *                   label
 	 * @return Button
 	 */
 	protected Button createPushButton(Composite parent, String label) {
@@ -291,26 +291,27 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock
 		Object source = e.getSource();
 		/*
 		 * if (source == fUpButton) { fEnvironmentVariablesContentProvider
-		 * .up((IStructuredSelection) fLibraryViewer.getSelection()); } else if
-		 * (source == fDownButton) { fEnvironmentVariablesContentProvider
-		 * .down((IStructuredSelection) fLibraryViewer.getSelection()); } else
-		 */if (source == fRemoveButton) {
+		 * .up(fLibraryViewer.getStructuredSelection()); } else if (source ==
+		 * fDownButton) { fEnvironmentVariablesContentProvider
+		 * .down(fLibraryViewer.getStructuredSelection()); } else
+		 */
+		if (source == fRemoveButton) {
 			EnvironmentVariable[] old = this.fEnvironmentVariablesContentProvider
 					.getVariables();
-			fEnvironmentVariablesContentProvider.remove(
-					(IStructuredSelection) fVariablesViewer.getSelection());
+			fEnvironmentVariablesContentProvider
+					.remove(fVariablesViewer.getStructuredSelection());
 			fDialog.updateLibraries(
 					this.fEnvironmentVariablesContentProvider.getVariables(),
 					old);
 			fDialog.updateValidateInterpreterLocation();
 		} else if (source == fAddExistedButton) {
-			addExisted((IStructuredSelection) fVariablesViewer.getSelection());
+			addExisted(fVariablesViewer.getStructuredSelection());
 		} else if (source == fAddButton) {
 			handleAdd();
 		} else if (source == fEditButton) {
 			EnvironmentVariable[] old = this.fEnvironmentVariablesContentProvider
 					.getVariables();
-			if (edit((IStructuredSelection) fVariablesViewer.getSelection())) {
+			if (edit(fVariablesViewer.getStructuredSelection())) {
 				fDialog.updateLibraries(
 						this.fEnvironmentVariablesContentProvider
 								.getVariables(),
@@ -487,8 +488,8 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock
 	 * Refresh the enable/disable state for the buttons.
 	 */
 	private void updateButtons() {
-		IStructuredSelection selection = (IStructuredSelection) fVariablesViewer
-				.getSelection();
+		IStructuredSelection selection = fVariablesViewer
+				.getStructuredSelection();
 		fRemoveButton.setEnabled(!selection.isEmpty());
 		fEditButton.setEnabled(selection.size() == 1);
 		@SuppressWarnings("unused")
@@ -522,9 +523,9 @@ public abstract class AbstractInterpreterEnvironmentVariablesBlock
 	 * install and type.
 	 *
 	 * @param interpreter
-	 *            Interpreter or <code>null</code> if none
+	 *                        Interpreter or <code>null</code> if none
 	 * @param type
-	 *            type of Interpreter install
+	 *                        type of Interpreter install
 	 */
 	public void initializeFrom(IInterpreterInstall interpreter,
 			IInterpreterInstallType type) {

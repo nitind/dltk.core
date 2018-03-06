@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -172,7 +172,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	 * Sets the initial selection
 	 *
 	 * @param workingSets
-	 *            the initial selection
+	 *                        the initial selection
 	 */
 	public void setSelection(IWorkingSet[] workingSets) {
 		fResult = workingSets;
@@ -307,8 +307,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		fUpButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				moveUp(((IStructuredSelection) fTableViewer.getSelection())
-						.toList());
+				moveUp(fTableViewer.getStructuredSelection().toList());
 			}
 		});
 
@@ -320,8 +319,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		fDownButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				moveDown(((IStructuredSelection) fTableViewer.getSelection())
-						.toList());
+				moveDown(fTableViewer.getStructuredSelection().toList());
 			}
 		});
 
@@ -550,8 +548,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	 * Updates the modify buttons' enabled state based on the current seleciton.
 	 */
 	private void updateButtonAvailability() {
-		IStructuredSelection selection = (IStructuredSelection) fTableViewer
-				.getSelection();
+		IStructuredSelection selection = fTableViewer.getStructuredSelection();
 		boolean hasSelection = !selection.isEmpty();
 		boolean hasSingleSelection = selection.size() == 1;
 

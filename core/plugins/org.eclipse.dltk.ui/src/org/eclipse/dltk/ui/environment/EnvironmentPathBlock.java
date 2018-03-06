@@ -289,7 +289,7 @@ public class EnvironmentPathBlock {
 	}
 
 	public IStructuredSelection getSelection() {
-		return (IStructuredSelection) pathViewer.getSelection();
+		return pathViewer.getStructuredSelection();
 	}
 
 	public void setPaths(Map<IEnvironment, String> paths) {

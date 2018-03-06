@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,8 +19,6 @@ import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.actions.NewWizardMenu;
 
-
-
 /**
  * Action group that adds the 'new' menu to a context menu.
  * <p>
@@ -34,28 +32,29 @@ public class NewWizardsActionGroup extends ActionGroup {
 	private IWorkbenchSite fSite;
 
 	/**
-	 * Creates a new <code>NewWizardsActionGroup</code>. The group requires
-	 * that the selection provided by the part's selection provider is of type <code>
+	 * Creates a new <code>NewWizardsActionGroup</code>. The group requires that
+	 * the selection provided by the part's selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 *
-	 * @param site the view part that owns this action group
+	 * @param site
+	 *                 the view part that owns this action group
 	 */
 	public NewWizardsActionGroup(IWorkbenchSite site) {
-		fSite= site;
+		fSite = site;
 	}
-
 
 	@Override
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
 
-		ISelection selection= getContext().getSelection();
+		ISelection selection = getContext().getSelection();
 		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection sel= (IStructuredSelection) selection;
+			IStructuredSelection sel = (IStructuredSelection) selection;
 			if (sel.size() <= 1 && isNewTarget(sel.getFirstElement())) {
-		        MenuManager newMenu = new MenuManager(ActionMessages.NewWizardsActionGroup_new);
-		        menu.appendToGroup(IContextMenuConstants.GROUP_NEW, newMenu);
-		        newMenu.add(new NewWizardMenu(fSite.getWorkbenchWindow()));
+				MenuManager newMenu = new MenuManager(
+						ActionMessages.NewWizardsActionGroup_new);
+				menu.appendToGroup(IContextMenuConstants.GROUP_NEW, newMenu);
+				newMenu.add(new NewWizardMenu(fSite.getWorkbenchWindow()));
 			}
 		}
 
@@ -68,12 +67,12 @@ public class NewWizardsActionGroup extends ActionGroup {
 			return true;
 		}
 		if (element instanceof IModelElement) {
-			int type= ((IModelElement)element).getElementType();
-			return type == IModelElement.SCRIPT_PROJECT ||
-				type == IModelElement.PROJECT_FRAGMENT ||
-				type == IModelElement.SCRIPT_FOLDER ||
-				type == IModelElement.SOURCE_MODULE ||
-				type == IModelElement.TYPE;
+			int type = ((IModelElement) element).getElementType();
+			return type == IModelElement.SCRIPT_PROJECT
+					|| type == IModelElement.PROJECT_FRAGMENT
+					|| type == IModelElement.SCRIPT_FOLDER
+					|| type == IModelElement.SOURCE_MODULE
+					|| type == IModelElement.TYPE;
 		}
 		return false;
 	}

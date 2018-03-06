@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -236,8 +236,7 @@ public abstract class ScriptBrowsingPart extends ViewPart
 	}
 
 	private void saveSelectionState(IMemento memento) {
-		Object elements[] = ((IStructuredSelection) fViewer.getSelection())
-				.toArray();
+		Object elements[] = fViewer.getStructuredSelection().toArray();
 		if (elements.length > 0) {
 			IMemento selectionMem = memento.createChild(TAG_SELECTED_ELEMENTS);
 			for (int i = 0; i < elements.length; i++) {
@@ -566,19 +565,11 @@ public abstract class ScriptBrowsingPart extends ViewPart
 	protected void fillToolBar(IToolBarManager tbm) {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface
-	 * .action.IMenuManager)
-	 */
 	@Override
 	public void menuAboutToShow(IMenuManager menu) {
 		DLTKUIPlugin.createStandardGroups(menu);
 
-		IStructuredSelection selection = (IStructuredSelection) fViewer
-				.getSelection();
+		IStructuredSelection selection = fViewer.getStructuredSelection();
 		int size = selection.size();
 		Object element = selection.getFirstElement();
 
@@ -676,7 +667,7 @@ public abstract class ScriptBrowsingPart extends ViewPart
 	 * Answers if the given <code>element</code> is a valid input for this part.
 	 *
 	 * @param element
-	 *            the object to test
+	 *                    the object to test
 	 * @return <code>true</code> if the given element is a valid input
 	 */
 	abstract protected boolean isValidInput(Object element);
@@ -686,7 +677,7 @@ public abstract class ScriptBrowsingPart extends ViewPart
 	 * part.
 	 *
 	 * @param element
-	 *            the object to test
+	 *                    the object to test
 	 * @return <code>true</code> if the given element is a valid element
 	 */
 	protected boolean isValidElement(Object element) {
@@ -880,7 +871,7 @@ public abstract class ScriptBrowsingPart extends ViewPart
 	 * Returns the tool tip text for the given element.
 	 *
 	 * @param element
-	 *            the element
+	 *                    the element
 	 * @return the tooltip for the element
 	 */
 	String getToolTipText(Object element) {
@@ -957,7 +948,7 @@ public abstract class ScriptBrowsingPart extends ViewPart
 	 * Creates the viewer of this part.
 	 *
 	 * @param parent
-	 *            the parent for the viewer
+	 *                   the parent for the viewer
 	 * @return the created viewer
 	 */
 	protected StructuredViewer createViewer(Composite parent) {
@@ -1078,7 +1069,7 @@ public abstract class ScriptBrowsingPart extends ViewPart
 
 			if (page.equals(DLTKUIPlugin.getActivePage())
 					&& ScriptBrowsingPart.this.equals(page.getActivePart())) {
-				linkToEditor((IStructuredSelection) event.getSelection());
+				linkToEditor(event.getStructuredSelection());
 			}
 		});
 
@@ -1133,11 +1124,11 @@ public abstract class ScriptBrowsingPart extends ViewPart
 	 * Compute if a new input must be set.
 	 *
 	 * @param elementToSelect
-	 *            the element to select
+	 *                            the element to select
 	 * @param oldInput
-	 *            old input
+	 *                            old input
 	 * @param newInput
-	 *            new input
+	 *                            new input
 	 * @return <code>true</code> if the input has to be set
 	 * @since 3.0
 	 */
@@ -1157,7 +1148,7 @@ public abstract class ScriptBrowsingPart extends ViewPart
 	 * and has the given Java element as child
 	 *
 	 * @param je
-	 *            the Java element for which to search the closest input
+	 *               the Java element for which to search the closest input
 	 * @return the closest Java element used as input for this part
 	 */
 	protected IModelElement findInputForJavaElement(IModelElement je) {
@@ -1181,7 +1172,7 @@ public abstract class ScriptBrowsingPart extends ViewPart
 	 * Finds the element which has to be selected in this part.
 	 *
 	 * @param je
-	 *            the Java element which has the focus
+	 *               the Java element which has the focus
 	 * @return returns the element to select
 	 */
 	abstract protected IModelElement findElementToSelect(IModelElement je);
@@ -1246,7 +1237,7 @@ public abstract class ScriptBrowsingPart extends ViewPart
 	 * Links to editor (if option enabled)
 	 *
 	 * @param selection
-	 *            the selection
+	 *                      the selection
 	 */
 	private void linkToEditor(IStructuredSelection selection) {
 		Object obj = selection.getFirstElement();
@@ -1319,7 +1310,7 @@ public abstract class ScriptBrowsingPart extends ViewPart
 	 * Returns the element contained in the EditorInput
 	 *
 	 * @param input
-	 *            the editor input
+	 *                  the editor input
 	 * @return the input element
 	 */
 	Object getElementOfInput(IEditorInput input) {
@@ -1340,9 +1331,9 @@ public abstract class ScriptBrowsingPart extends ViewPart
 
 	/**
 	 * @param input
-	 *            the editor input
+	 *                   the editor input
 	 * @param offset
-	 *            the offset in the file
+	 *                   the offset in the file
 	 * @return the element at the given offset
 	 */
 	protected IModelElement getElementAt(IEditorInput input, int offset) {

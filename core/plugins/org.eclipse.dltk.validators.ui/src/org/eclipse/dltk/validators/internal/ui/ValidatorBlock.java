@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -157,12 +157,14 @@ public class ValidatorBlock implements IAddValidatorDialogRequestor {
 	 * Creates this block's control in the given control.
 	 *
 	 * @param ancestor
-	 *            containing control
+	 *                            containing control
 	 * @param useManageButton
-	 *            whether to present a single 'manage...' button to the user
-	 *            that opens the installed InterpreterEnvironments pref page for
-	 *            InterpreterEnvironment management, or to provide 'add, remove,
-	 *            edit, and search' buttons.
+	 *                            whether to present a single 'manage...' button
+	 *                            to the user that opens the installed
+	 *                            InterpreterEnvironments pref page for
+	 *                            InterpreterEnvironment management, or to
+	 *                            provide 'add, remove, edit, and search'
+	 *                            buttons.
 	 */
 	public void createControl(Composite ancestor) {
 
@@ -352,8 +354,8 @@ public class ValidatorBlock implements IAddValidatorDialogRequestor {
 	}
 
 	private void enableButtons() {
-		IStructuredSelection selection = (IStructuredSelection) fValidatorList
-				.getSelection();
+		IStructuredSelection selection = fValidatorList
+				.getStructuredSelection();
 		int selectionCount = selection.size();
 
 		boolean addEnabled = ValidatorRuntime
@@ -363,7 +365,7 @@ public class ValidatorBlock implements IAddValidatorDialogRequestor {
 		boolean copyEnabled = false && selectionCount > 0;// not implemented
 
 		if (selectionCount > 0) {
-			Iterator iterator = selection.iterator();
+			Iterator<?> iterator = selection.iterator();
 			while (iterator.hasNext()) {
 				IValidator install = (IValidator) iterator.next();
 				if (isContributed(install)) {
@@ -401,7 +403,7 @@ public class ValidatorBlock implements IAddValidatorDialogRequestor {
 	 * Sets the InterpreterEnvironments to be displayed in this block
 	 *
 	 * @param validators
-	 *            InterpreterEnvironments to be displayed
+	 *                       InterpreterEnvironments to be displayed
 	 */
 	protected void setValidators(IValidator[] validators) {
 		fValidators.clear();
@@ -446,11 +448,11 @@ public class ValidatorBlock implements IAddValidatorDialogRequestor {
 	}
 
 	private void removeValidator() {
-		IStructuredSelection selection = (IStructuredSelection) fValidatorList
-				.getSelection();
+		IStructuredSelection selection = fValidatorList
+				.getStructuredSelection();
 		IValidator[] validators = new IValidator[selection.size()];
 		int i = 0;
-		for (Iterator iter = selection.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 			validators[i++] = (IValidator) iter.next();
 		}
 		removeValidators(validators);
@@ -477,9 +479,9 @@ public class ValidatorBlock implements IAddValidatorDialogRequestor {
 	 * given key.
 	 *
 	 * @param settings
-	 *            dialog store
+	 *                      dialog store
 	 * @param qualifier
-	 *            key qualifier
+	 *                      key qualifier
 	 */
 	public void saveColumnSettings(IDialogSettings settings, String qualifier) {
 		int columnCount = fTable.getColumnCount();
@@ -494,9 +496,9 @@ public class ValidatorBlock implements IAddValidatorDialogRequestor {
 	 * Restore table settings from the given dialog store using the given key.
 	 *
 	 * @param settings
-	 *            dialog settings store
+	 *                      dialog settings store
 	 * @param qualifier
-	 *            key to restore settings from
+	 *                      key to restore settings from
 	 */
 	public void restoreColumnSettings(IDialogSettings settings,
 			String qualifier) {
@@ -592,7 +594,7 @@ public class ValidatorBlock implements IAddValidatorDialogRequestor {
 	 * numerical suffix to ensure that it is unique.
 	 *
 	 * @param name
-	 *            the name with which to ensure uniqueness
+	 *                 the name with which to ensure uniqueness
 	 * @return the unique version of the given name
 	 *
 	 */
@@ -658,8 +660,8 @@ public class ValidatorBlock implements IAddValidatorDialogRequestor {
 	}
 
 	protected void editValidator() {
-		IStructuredSelection selection = (IStructuredSelection) fValidatorList
-				.getSelection();
+		IStructuredSelection selection = fValidatorList
+				.getStructuredSelection();
 		IValidator validator = (IValidator) selection.getFirstElement();
 		if (validator == null) {
 			return;

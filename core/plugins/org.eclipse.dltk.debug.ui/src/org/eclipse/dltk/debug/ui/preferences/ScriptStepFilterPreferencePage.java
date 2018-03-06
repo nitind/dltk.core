@@ -43,7 +43,6 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -392,8 +391,7 @@ public class ScriptStepFilterPreferencePage extends PreferencePage
 	 * Removes the currently selected filters.
 	 */
 	protected void removeFilters() {
-		fTableViewer.remove(
-				((IStructuredSelection) fTableViewer.getSelection()).toArray());
+		fTableViewer.remove(fTableViewer.getStructuredSelection().toArray());
 	}
 
 	@Override

@@ -1042,8 +1042,8 @@ public abstract class InterpretersBlock
 	}
 
 	protected void editInterpreter() {
-		IStructuredSelection selection = (IStructuredSelection) fInterpreterList
-				.getSelection();
+		IStructuredSelection selection = fInterpreterList
+				.getStructuredSelection();
 		IInterpreterInstall install = (IInterpreterInstall) selection
 				.getFirstElement();
 

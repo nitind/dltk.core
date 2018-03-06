@@ -130,8 +130,8 @@ public abstract class AbstractInterpreterLibraryBlock
 					InterpretersMessages.AbstractInterpreterLibraryBlock_setPathVisibleToDltk);
 			fEnabledButton.addSelectionListener(this);
 			this.fLibraryViewer.addDoubleClickListener(event -> {
-				if (fLibraryContentProvider.canEnable(
-						(IStructuredSelection) fLibraryViewer.getSelection())) {
+				if (fLibraryContentProvider
+						.canEnable(fLibraryViewer.getStructuredSelection())) {
 					fLibraryContentProvider.changeEnabled();
 					updateButtons();
 				}
@@ -365,28 +365,20 @@ public abstract class AbstractInterpreterLibraryBlock
 		return fInterpreterInstallType;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt
-	 * .events.SelectionEvent)
-	 */
 	@Override
 	public void widgetSelected(SelectionEvent e) {
 		Object source = e.getSource();
 		if (source == fUpButton) {
-			fLibraryContentProvider
-					.up((IStructuredSelection) fLibraryViewer.getSelection());
+			fLibraryContentProvider.up(fLibraryViewer.getStructuredSelection());
 		} else if (source == fDownButton) {
 			fLibraryContentProvider
-					.down((IStructuredSelection) fLibraryViewer.getSelection());
+					.down(fLibraryViewer.getStructuredSelection());
 		} else if (source == fRemoveButton) {
-			fLibraryContentProvider.remove(
-					(IStructuredSelection) fLibraryViewer.getSelection());
+			fLibraryContentProvider
+					.remove(fLibraryViewer.getStructuredSelection());
 			this.fDialog.updateValidateInterpreterLocation();
 		} else if (source == fAddButton) {
-			add((IStructuredSelection) fLibraryViewer.getSelection());
+			add(fLibraryViewer.getStructuredSelection());
 		} else if (source == fDefaultButton) {
 			restoreDefaultLibraries();
 			this.fDialog.updateValidateInterpreterLocation();
@@ -398,12 +390,6 @@ public abstract class AbstractInterpreterLibraryBlock
 		update();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.
-	 * eclipse .swt.events.SelectionEvent)
-	 */
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
 	}
@@ -420,13 +406,6 @@ public abstract class AbstractInterpreterLibraryBlock
 		this.fDialog.updateValidateInterpreterLocation();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
-	 * org.eclipse.jface.viewers.SelectionChangedEvent)
-	 */
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		updateButtons();
@@ -436,8 +415,8 @@ public abstract class AbstractInterpreterLibraryBlock
 	 * Refresh the enable/disable state for the buttons.
 	 */
 	private void updateButtons() {
-		IStructuredSelection selection = (IStructuredSelection) fLibraryViewer
-				.getSelection();
+		IStructuredSelection selection = fLibraryViewer
+				.getStructuredSelection();
 		fRemoveButton.setEnabled(fLibraryContentProvider.canRemove(selection));
 		boolean enableUp = true, enableDown = true;
 		Object[] libraries = fLibraryContentProvider.getElements(null);

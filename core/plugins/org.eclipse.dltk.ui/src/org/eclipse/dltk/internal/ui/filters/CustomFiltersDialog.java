@@ -23,7 +23,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
@@ -62,15 +61,16 @@ public class CustomFiltersDialog extends SelectionDialog {
 	 * Creates a dialog to customize script element filters.
 	 *
 	 * @param shell
-	 *            the parent shell
+	 *                             the parent shell
 	 * @param viewId
-	 *            the id of the view
+	 *                             the id of the view
 	 * @param enablePatterns
-	 *            <code>true</code> if pattern filters are enabled
+	 *                             <code>true</code> if pattern filters are
+	 *                             enabled
 	 * @param patterns
-	 *            the filter patterns
+	 *                             the filter patterns
 	 * @param enabledFilterIds
-	 *            the Ids of the enabled filters
+	 *                             the Ids of the enabled filters
 	 */
 	public CustomFiltersDialog(Shell shell, String viewId,
 			boolean enablePatterns, String[] patterns,
@@ -198,14 +198,11 @@ public class CustomFiltersDialog extends SelectionDialog {
 		data.heightHint = convertHeightInCharsToPixels(3);
 		description.setLayoutData(data);
 		fCheckBoxList.addSelectionChangedListener(event -> {
-			ISelection selection = event.getSelection();
-			if (selection instanceof IStructuredSelection) {
-				Object selectedElement = ((IStructuredSelection) selection)
-						.getFirstElement();
-				if (selectedElement instanceof FilterDescriptor)
-					description.setText(((FilterDescriptor) selectedElement)
-							.getDescription());
-			}
+			IStructuredSelection selection = event.getStructuredSelection();
+			Object selectedElement = selection.getFirstElement();
+			if (selectedElement instanceof FilterDescriptor)
+				description.setText(
+						((FilterDescriptor) selectedElement).getDescription());
 		});
 		fCheckBoxList.addCheckStateListener(event -> {
 			Object element = event.getElement();

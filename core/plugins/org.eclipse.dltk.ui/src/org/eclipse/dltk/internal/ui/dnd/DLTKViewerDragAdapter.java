@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,14 +19,14 @@ public class DLTKViewerDragAdapter extends DelegatingDragAdapter {
 
 	public DLTKViewerDragAdapter(StructuredViewer viewer) {
 		super();
-		fViewer= viewer;
+		fViewer = viewer;
 	}
 
 	@Override
 	public void dragStart(DragSourceEvent event) {
-		IStructuredSelection selection= (IStructuredSelection)fViewer.getSelection();
+		IStructuredSelection selection = fViewer.getStructuredSelection();
 		if (selection.isEmpty()) {
-			event.doit= false;
+			event.doit = false;
 			return;
 		}
 		super.dragStart(event);

@@ -14,7 +14,6 @@ import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.dltk.ui.preferences.PreferencesMessages;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -44,7 +43,8 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
 
 	private ViewerFilter fFilter;
 
-	public ProjectSelectionDialog(Shell parentShell, Set projectsWithSpecifics) {
+	public ProjectSelectionDialog(Shell parentShell,
+			Set projectsWithSpecifics) {
 		this(parentShell, projectsWithSpecifics, null);
 	}
 
@@ -75,11 +75,10 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
 
 		createMessageArea(composite);
 
-		fTableViewer = new TableViewer(composite, SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.BORDER);
-		fTableViewer
-				.addSelectionChangedListener(event -> doSelectionChanged(((IStructuredSelection) event
-						.getSelection()).toArray()));
+		fTableViewer = new TableViewer(composite,
+				SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		fTableViewer.addSelectionChangedListener(event -> doSelectionChanged(
+				event.getStructuredSelection().toArray()));
 		fTableViewer.addDoubleClickListener(event -> okPressed());
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 		data.heightHint = SIZING_SELECTION_WIDGET_HEIGHT;
@@ -98,8 +97,8 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
 						Object element) {
 					if (element instanceof IScriptProject) {
 						IScriptProject project = (IScriptProject) element;
-						return natureId.equals(project.getLanguageToolkit()
-								.getNatureId());
+						return natureId.equals(
+								project.getLanguageToolkit().getNatureId());
 					}
 					return true;
 				}
@@ -108,8 +107,8 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
 
 		Button checkbox = new Button(composite, SWT.CHECK);
 		checkbox.setText(PreferencesMessages.ProjectSelectionDialog_filter);
-		checkbox.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true,
-				false));
+		checkbox.setLayoutData(
+				new GridData(SWT.BEGINNING, SWT.CENTER, true, false));
 		checkbox.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -128,8 +127,8 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
 		checkbox.setSelection(doFilter);
 		updateFilter(doFilter);
 
-		IScriptModel input = DLTKCore.create(ResourcesPlugin.getWorkspace()
-				.getRoot());
+		IScriptModel input = DLTKCore
+				.create(ResourcesPlugin.getWorkspace().getRoot());
 		fTableViewer.setInput(input);
 
 		doSelectionChanged(new Object[0]);
@@ -143,8 +142,8 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
 		} else {
 			fTableViewer.removeFilter(fFilter);
 		}
-		DLTKUIPlugin.getDefault().getDialogSettings().put(
-				DIALOG_SETTINGS_SHOW_ALL, !selected);
+		DLTKUIPlugin.getDefault().getDialogSettings()
+				.put(DIALOG_SETTINGS_SHOW_ALL, !selected);
 	}
 
 	private void doSelectionChanged(Object[] objects) {

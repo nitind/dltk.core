@@ -83,8 +83,8 @@ public class ScriptDebugLogView extends ViewPart {
 		});
 		viewer.addSelectionChangedListener(event -> {
 			if (event.getSelection() instanceof IStructuredSelection) {
-				final Object first = ((IStructuredSelection) event
-						.getSelection()).getFirstElement();
+				final Object first = event.getStructuredSelection()
+						.getFirstElement();
 				if (first instanceof ScriptDebugLogItem) {
 					textDocument.set(((ScriptDebugLogItem) first).getMessage());
 					return;

@@ -21,7 +21,6 @@ import org.eclipse.dltk.validators.ui.ValidatorConfigurationPage;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
@@ -98,8 +97,7 @@ public class ExternalCheckerConfigurationPage extends ValidatorConfigurationPage
 
 			if ("".equals(txtPath)) { //$NON-NLS-1$
 				/*
-				 * setMessage(env,
-				 * ValidatorMessages.ValidatorMessages_path_isempty,
+				 * setMessage(env, ValidatorMessages.ValidatorMessages_path_isempty,
 				 * IStatus.INFO);
 				 */
 				continue;
@@ -244,7 +242,7 @@ public class ExternalCheckerConfigurationPage extends ValidatorConfigurationPage
 		delRule.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent ev) {
-				Rule rule = (Rule) ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
+				Rule rule = (Rule) tableViewer.getStructuredSelection().getFirstElement();
 				if (rule != null)
 					rulesList.removeRule(rule);
 			}
