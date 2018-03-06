@@ -77,18 +77,17 @@ public class ReorgPolicyFactory {
 		// private
 	}
 
-	public static ICopyPolicy createCopyPolicy(IResource[] resources,
-			IModelElement[] modelElements) throws ModelException {
+	public static ICopyPolicy createCopyPolicy(IResource[] resources, IModelElement[] modelElements)
+			throws ModelException {
 		return (ICopyPolicy) createReorgPolicy(true, resources, modelElements);
 	}
 
-	public static IMovePolicy createMovePolicy(IResource[] resources,
-			IModelElement[] modelElements) throws ModelException {
+	public static IMovePolicy createMovePolicy(IResource[] resources, IModelElement[] modelElements)
+			throws ModelException {
 		return (IMovePolicy) createReorgPolicy(false, resources, modelElements);
 	}
 
-	private static IReorgPolicy createReorgPolicy(boolean copy,
-			IResource[] selectedResources,
+	private static IReorgPolicy createReorgPolicy(boolean copy, IResource[] selectedResources,
 			IModelElement[] selectedScriptElements) throws ModelException {
 		final IReorgPolicy NO;
 		if (copy)
@@ -96,11 +95,10 @@ public class ReorgPolicyFactory {
 		else
 			NO = new NoMovePolicy();
 
-		ActualSelectionComputer selectionComputer = new ActualSelectionComputer(
-				selectedScriptElements, selectedResources);
+		ActualSelectionComputer selectionComputer = new ActualSelectionComputer(selectedScriptElements,
+				selectedResources);
 		IResource[] resources = selectionComputer.getActualResourcesToReorg();
-		IModelElement[] modelElements = selectionComputer
-				.getActualScriptElementsToReorg();
+		IModelElement[] modelElements = selectionComputer.getActualScriptElementsToReorg();
 
 		if (false) {
 			System.out.println("createReorgPolicy():"); //$NON-NLS-1$
@@ -108,77 +106,55 @@ public class ReorgPolicyFactory {
 			System.out.println(" elements: " + Arrays.asList(modelElements)); //$NON-NLS-1$
 		}
 
-		if (isNothingToReorg(resources, modelElements)
-				|| containsNull(resources) || containsNull(modelElements)
-				|| ReorgUtils.hasElementsOfType(modelElements,
-						IModelElement.SCRIPT_PROJECT)
-				|| ReorgUtils.hasElementsOfType(modelElements,
-						IModelElement.SCRIPT_MODEL)
-				|| ReorgUtils.hasElementsOfType(resources,
-						IResource.PROJECT | IResource.ROOT)
+		if (isNothingToReorg(resources, modelElements) || containsNull(resources) || containsNull(modelElements)
+				|| ReorgUtils.hasElementsOfType(modelElements, IModelElement.SCRIPT_PROJECT)
+				|| ReorgUtils.hasElementsOfType(modelElements, IModelElement.SCRIPT_MODEL)
+				|| ReorgUtils.hasElementsOfType(resources, IResource.PROJECT | IResource.ROOT)
 				|| !haveCommonParent(resources, modelElements))
 			return NO;
 
-		if (ReorgUtils.hasElementsOfType(modelElements,
-				IModelElement.SCRIPT_FOLDER)) {
-			if (resources.length != 0 || ReorgUtils.hasElementsNotOfType(
-					modelElements, IModelElement.SCRIPT_FOLDER))
+		if (ReorgUtils.hasElementsOfType(modelElements, IModelElement.SCRIPT_FOLDER)) {
+			if (resources.length != 0 || ReorgUtils.hasElementsNotOfType(modelElements, IModelElement.SCRIPT_FOLDER))
 				return NO;
 			if (copy) {
-				return new CopyPackagesPolicy(
-						ArrayTypeConverter.toPackageArray(modelElements));
+				return new CopyPackagesPolicy(ArrayTypeConverter.toPackageArray(modelElements));
 			}
-			return new MovePackagesPolicy(
-					ArrayTypeConverter.toPackageArray(modelElements));
+			return new MovePackagesPolicy(ArrayTypeConverter.toPackageArray(modelElements));
 		}
 
-		if (ReorgUtils.hasElementsOfType(modelElements,
-				IModelElement.PROJECT_FRAGMENT)) {
-			if (resources.length != 0 || ReorgUtils.hasElementsNotOfType(
-					modelElements, IModelElement.PROJECT_FRAGMENT))
+		if (ReorgUtils.hasElementsOfType(modelElements, IModelElement.PROJECT_FRAGMENT)) {
+			if (resources.length != 0 || ReorgUtils.hasElementsNotOfType(modelElements, IModelElement.PROJECT_FRAGMENT))
 				return NO;
 			if (copy) {
-				return new CopyProjectFragmentsPolicy(ArrayTypeConverter
-						.toProjectFragmentArray(modelElements));
+				return new CopyProjectFragmentsPolicy(ArrayTypeConverter.toProjectFragmentArray(modelElements));
 			}
-			return new MoveProjectFragmentsPolicy(
-					ArrayTypeConverter.toProjectFragmentArray(modelElements));
+			return new MoveProjectFragmentsPolicy(ArrayTypeConverter.toProjectFragmentArray(modelElements));
 		}
 
-		if (ReorgUtils.hasElementsOfType(resources,
-				IResource.FILE | IResource.FOLDER)
-				|| ReorgUtils.hasElementsOfType(modelElements,
-						IModelElement.SOURCE_MODULE)) {
-			if (ReorgUtils.hasElementsNotOfType(modelElements,
-					IModelElement.SOURCE_MODULE))
+		if (ReorgUtils.hasElementsOfType(resources, IResource.FILE | IResource.FOLDER)
+				|| ReorgUtils.hasElementsOfType(modelElements, IModelElement.SOURCE_MODULE)) {
+			if (ReorgUtils.hasElementsNotOfType(modelElements, IModelElement.SOURCE_MODULE))
 				return NO;
-			if (ReorgUtils.hasElementsNotOfType(resources,
-					IResource.FILE | IResource.FOLDER))
+			if (ReorgUtils.hasElementsNotOfType(resources, IResource.FILE | IResource.FOLDER))
 				return NO;
 			if (copy) {
-				return new CopyFilesFoldersAndCusPolicy(
-						ReorgUtils.getFiles(resources),
-						ReorgUtils.getFolders(resources),
-						ArrayTypeConverter.toCuArray(modelElements));
+				return new CopyFilesFoldersAndCusPolicy(ReorgUtils.getFiles(resources),
+						ReorgUtils.getFolders(resources), ArrayTypeConverter.toCuArray(modelElements));
 			}
-			return new MoveFilesFoldersAndCusPolicy(
-					ReorgUtils.getFiles(resources),
-					ReorgUtils.getFolders(resources),
+			return new MoveFilesFoldersAndCusPolicy(ReorgUtils.getFiles(resources), ReorgUtils.getFolders(resources),
 					ArrayTypeConverter.toCuArray(modelElements));
 		}
 
 		if (hasElementsSmallerThanCuOrClassFile(modelElements)) {
 			// assertions guaranteed by common parent
 			Assert.isTrue(resources.length == 0);
-			Assert.isTrue(!ReorgUtils.hasElementsOfType(modelElements,
-					IModelElement.SOURCE_MODULE));
+			Assert.isTrue(!ReorgUtils.hasElementsOfType(modelElements, IModelElement.SOURCE_MODULE));
 			Assert.isTrue(!hasElementsLargerThanCuOrClassFile(modelElements));
 			if (copy) {
 				return new CopySubCuElementsPolicy(modelElements);
 			}
 			if (DLTKCore.DEBUG) {
-				System.err.println(
-						"TODO: ReorgPolicyFactory: Add MoveSubCuElementsPolicy support"); //$NON-NLS-1$
+				System.err.println("TODO: ReorgPolicyFactory: Add MoveSubCuElementsPolicy support"); //$NON-NLS-1$
 			}
 			// return new MoveSubCuElementsPolicy(modelElements);
 		}
@@ -193,8 +169,7 @@ public class ReorgPolicyFactory {
 		return false;
 	}
 
-	private static boolean hasElementsSmallerThanCuOrClassFile(
-			IModelElement[] modelElements) {
+	private static boolean hasElementsSmallerThanCuOrClassFile(IModelElement[] modelElements) {
 		for (int i = 0; i < modelElements.length; i++) {
 			if (ReorgUtils.isInsideSourceModule(modelElements[i]))
 				return true;
@@ -204,8 +179,7 @@ public class ReorgPolicyFactory {
 		return false;
 	}
 
-	private static boolean hasElementsLargerThanCuOrClassFile(
-			IModelElement[] modelElements) {
+	private static boolean hasElementsLargerThanCuOrClassFile(IModelElement[] modelElements) {
 		for (int i = 0; i < modelElements.length; i++) {
 			if (!ReorgUtils.isInsideSourceModule(modelElements[i])
 			// && ! ReorgUtils.isInsideClassFile(modelElements[i])
@@ -215,13 +189,11 @@ public class ReorgPolicyFactory {
 		return false;
 	}
 
-	private static boolean haveCommonParent(IResource[] resources,
-			IModelElement[] modelElements) {
+	private static boolean haveCommonParent(IResource[] resources, IModelElement[] modelElements) {
 		return new ParentChecker(resources, modelElements).haveCommonParent();
 	}
 
-	private static boolean isNothingToReorg(IResource[] resources,
-			IModelElement[] modelElements) {
+	private static boolean isNothingToReorg(IResource[] resources, IModelElement[] modelElements) {
 		return resources.length + modelElements.length == 0;
 	}
 
@@ -231,8 +203,7 @@ public class ReorgPolicyFactory {
 		private IModelElement fScriptElementDestination;
 
 		@Override
-		public final RefactoringStatus setDestination(IResource destination)
-				throws ModelException {
+		public final RefactoringStatus setDestination(IResource destination) throws ModelException {
 			Assert.isNotNull(destination);
 			resetDestinations();
 			fResourceDestination = destination;
@@ -240,19 +211,16 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public final RefactoringStatus setDestination(IModelElement destination)
-				throws ModelException {
+		public final RefactoringStatus setDestination(IModelElement destination) throws ModelException {
 			Assert.isNotNull(destination);
 			resetDestinations();
 			fScriptElementDestination = destination;
 			return verifyDestination(destination);
 		}
 
-		protected abstract RefactoringStatus verifyDestination(
-				IModelElement destination) throws ModelException;
+		protected abstract RefactoringStatus verifyDestination(IModelElement destination) throws ModelException;
 
-		protected abstract RefactoringStatus verifyDestination(
-				IResource destination) throws ModelException;
+		protected abstract RefactoringStatus verifyDestination(IResource destination) throws ModelException;
 
 		@Override
 		public boolean canChildrenBeDestinations(IModelElement modelElement) {
@@ -293,50 +261,41 @@ public class ReorgPolicyFactory {
 			return new IFile[0];
 		}
 
-		protected RefactoringModifications getModifications()
-				throws CoreException {
+		protected RefactoringModifications getModifications() throws CoreException {
 			return null;
 		}
 
 		@Override
-		public final RefactoringParticipant[] loadParticipants(
-				RefactoringStatus status, RefactoringProcessor processor,
-				String[] natures, SharableParticipants shared)
-				throws CoreException {
+		public final RefactoringParticipant[] loadParticipants(RefactoringStatus status, RefactoringProcessor processor,
+				String[] natures, SharableParticipants shared) throws CoreException {
 			RefactoringModifications modifications = getModifications();
 			if (modifications != null) {
-				return modifications.loadParticipants(status, processor,
-						natures, shared);
+				return modifications.loadParticipants(status, processor, natures, shared);
 			}
 			return new RefactoringParticipant[0];
 		}
 
 		@Override
-		public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-				CheckConditionsContext context, IReorgQueries reorgQueries)
-				throws CoreException {
+		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
+				IReorgQueries reorgQueries) throws CoreException {
 			Assert.isNotNull(reorgQueries);
-			ResourceChangeChecker checker = context
-					.getChecker(ResourceChangeChecker.class);
+			ResourceChangeChecker checker = context.getChecker(ResourceChangeChecker.class);
 			IFile[] allModifiedFiles = getAllModifiedFiles();
 			RefactoringModifications modifications = getModifications();
-			IResourceChangeDescriptionFactory deltaFactory = checker
-					.getDeltaFactory();
+			IResourceChangeDescriptionFactory deltaFactory = checker.getDeltaFactory();
 			for (int i = 0; i < allModifiedFiles.length; i++) {
 				deltaFactory.change(allModifiedFiles[i]);
 			}
 			if (modifications != null) {
 				modifications.buildDelta(deltaFactory);
-				modifications.buildValidateEdits(
-						context.getChecker(ValidateEditChecker.class));
+				modifications.buildValidateEdits(context.getChecker(ValidateEditChecker.class));
 			}
 			return new RefactoringStatus();
 		}
 
 		@Override
 		public boolean hasAllInputSet() {
-			return fScriptElementDestination != null
-					|| fResourceDestination != null;
+			return fScriptElementDestination != null || fResourceDestination != null;
 		}
 
 		@Override
@@ -407,8 +366,7 @@ public class ReorgPolicyFactory {
 			IResource[] resources = getResources();
 			for (int i = 0; i < resources.length; i++) {
 				IResource resource = resources[i];
-				if (!resource.exists() || resource.isPhantom()
-						|| !resource.isAccessible())
+				if (!resource.exists() || resource.isPhantom() || !resource.isAccessible())
 					return false;
 			}
 
@@ -422,94 +380,79 @@ public class ReorgPolicyFactory {
 		}
 	}
 
-	private static abstract class FilesFoldersAndCusReorgPolicy
-			extends ReorgPolicy {
+	private static abstract class FilesFoldersAndCusReorgPolicy extends ReorgPolicy {
 
 		private ISourceModule[] fCus;
 		private IFolder[] fFolders;
 		private IFile[] fFiles;
 
-		public FilesFoldersAndCusReorgPolicy(IFile[] files, IFolder[] folders,
-				ISourceModule[] cus) {
+		public FilesFoldersAndCusReorgPolicy(IFile[] files, IFolder[] folders, ISourceModule[] cus) {
 			fFiles = files;
 			fFolders = folders;
 			fCus = cus;
 		}
 
 		@Override
-		protected RefactoringStatus verifyDestination(
-				IModelElement modelElement) throws ModelException {
+		protected RefactoringStatus verifyDestination(IModelElement modelElement) throws ModelException {
 			Assert.isNotNull(modelElement);
 			if (!modelElement.exists())
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_doesnotexist0);
+				return RefactoringStatus
+						.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_doesnotexist0);
 			if (modelElement instanceof IScriptModel)
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_jmodel);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_jmodel);
 
 			if (modelElement.isReadOnly())
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_readonly);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_readonly);
 
 			if (!modelElement.isStructureKnown())
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_structure);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_structure);
 
 			if (modelElement instanceof IOpenable) {
 				IOpenable openable = (IOpenable) modelElement;
 				if (!openable.isConsistent())
-					return RefactoringStatus.createFatalErrorStatus(
-							RefactoringCoreMessages.ReorgPolicyFactory_inconsistent);
+					return RefactoringStatus
+							.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_inconsistent);
 			}
 
 			if (modelElement instanceof IProjectFragment) {
 				IProjectFragment root = (IProjectFragment) modelElement;
 				if (root.isArchive())
-					return RefactoringStatus.createFatalErrorStatus(
-							RefactoringCoreMessages.ReorgPolicyFactory_archive);
+					return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_archive);
 				if (root.isExternal())
-					return RefactoringStatus.createFatalErrorStatus(
-							RefactoringCoreMessages.ReorgPolicyFactory_external);
+					return RefactoringStatus
+							.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_external);
 			}
 
 			if (ReorgUtils.isInsideSourceModule(modelElement)) {
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_cannot);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_cannot);
 			}
 
 			IContainer destinationAsContainer = getDestinationAsContainer();
-			if (destinationAsContainer == null
-					|| isChildOfOrEqualToAnyFolder(destinationAsContainer))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_not_this_resource);
+			if (destinationAsContainer == null || isChildOfOrEqualToAnyFolder(destinationAsContainer))
+				return RefactoringStatus
+						.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_not_this_resource);
 
-			if (containsLinkedResources() && !ReorgUtils
-					.canBeDestinationForLinkedResources(modelElement))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_linked);
+			if (containsLinkedResources() && !ReorgUtils.canBeDestinationForLinkedResources(modelElement))
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_linked);
 			return new RefactoringStatus();
 		}
 
 		@Override
-		protected RefactoringStatus verifyDestination(IResource resource)
-				throws ModelException {
+		protected RefactoringStatus verifyDestination(IResource resource) throws ModelException {
 			Assert.isNotNull(resource);
 			if (!resource.exists() || resource.isPhantom())
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_phantom);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_phantom);
 			if (!resource.isAccessible())
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_inaccessible);
+				return RefactoringStatus
+						.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_inaccessible);
 			Assert.isTrue(resource.getType() != IResource.ROOT);
 
 			if (isChildOfOrEqualToAnyFolder(resource))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_not_this_resource);
+				return RefactoringStatus
+						.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_not_this_resource);
 
-			if (containsLinkedResources()
-					&& !ReorgUtils.canBeDestinationForLinkedResources(resource))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_linked);
+			if (containsLinkedResources() && !ReorgUtils.canBeDestinationForLinkedResources(resource))
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_linked);
 
 			return new RefactoringStatus();
 		}
@@ -517,8 +460,7 @@ public class ReorgPolicyFactory {
 		private boolean isChildOfOrEqualToAnyFolder(IResource resource) {
 			for (int i = 0; i < fFolders.length; i++) {
 				IFolder folder = fFolders[i];
-				if (folder.equals(resource)
-						|| ParentChecker.isDescendantOf(resource, folder))
+				if (folder.equals(resource) || ParentChecker.isDescendantOf(resource, folder))
 					return true;
 			}
 			return false;
@@ -586,16 +528,13 @@ public class ReorgPolicyFactory {
 		}
 
 		protected final IScriptFolder getDestinationAsScriptFolder() {
-			IScriptFolder javaAsPackage = getScriptDestinationAsScriptFolder(
-					getScriptElementDestination());
+			IScriptFolder javaAsPackage = getScriptDestinationAsScriptFolder(getScriptElementDestination());
 			if (javaAsPackage != null)
 				return javaAsPackage;
-			return getResourceDestinationAsScriptFolder(
-					getResourceDestination());
+			return getResourceDestinationAsScriptFolder(getResourceDestination());
 		}
 
-		private static IScriptFolder getScriptDestinationAsScriptFolder(
-				IModelElement scriptDest) {
+		private static IScriptFolder getScriptDestinationAsScriptFolder(IModelElement scriptDest) {
 			if (scriptDest == null || !scriptDest.exists())
 				return null;
 			if (scriptDest instanceof IScriptFolder)
@@ -604,24 +543,19 @@ public class ReorgPolicyFactory {
 				return ((IProjectFragment) scriptDest).getScriptFolder(""); //$NON-NLS-1$
 			if (scriptDest instanceof IScriptProject) {
 				try {
-					IProjectFragment root = ReorgUtils
-							.getCorrespondingProjectFragment(
-									(IScriptProject) scriptDest);
+					IProjectFragment root = ReorgUtils.getCorrespondingProjectFragment((IScriptProject) scriptDest);
 					if (root != null)
 						return root.getScriptFolder(""); //$NON-NLS-1$
 				} catch (ModelException e) {
 					// fall through
 				}
 			}
-			return (IScriptFolder) scriptDest
-					.getAncestor(IModelElement.SCRIPT_FOLDER);
+			return (IScriptFolder) scriptDest.getAncestor(IModelElement.SCRIPT_FOLDER);
 		}
 
-		private static IScriptFolder getResourceDestinationAsScriptFolder(
-				IResource resource) {
+		private static IScriptFolder getResourceDestinationAsScriptFolder(IResource resource) {
 			if (resource instanceof IFile)
-				return getScriptDestinationAsScriptFolder(
-						DLTKCore.create(resource.getParent()));
+				return getScriptDestinationAsScriptFolder(DLTKCore.create(resource.getParent()));
 			return null;
 		}
 
@@ -636,8 +570,7 @@ public class ReorgPolicyFactory {
 		}
 
 		protected boolean containsLinkedResources() {
-			return ReorgUtils.containsLinkedResources(fFiles)
-					|| ReorgUtils.containsLinkedResources(fFolders)
+			return ReorgUtils.containsLinkedResources(fFiles) || ReorgUtils.containsLinkedResources(fFolders)
 					|| ReorgUtils.containsLinkedResources(fCus);
 		}
 
@@ -654,11 +587,9 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-				CheckConditionsContext context, IReorgQueries reorgQueries)
-				throws CoreException {
-			RefactoringStatus status = super.checkFinalConditions(pm, context,
-					reorgQueries);
+		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
+				IReorgQueries reorgQueries) throws CoreException {
+			RefactoringStatus status = super.checkFinalConditions(pm, context, reorgQueries);
 			confirmOverwritting(reorgQueries);
 			return status;
 		}
@@ -674,8 +605,7 @@ public class ReorgPolicyFactory {
 			} else {
 				IContainer destinationAsContainer = getDestinationAsContainer();
 				if (destinationAsContainer != null)
-					oh.confirmOverwritting(reorgQueries,
-							destinationAsContainer);
+					oh.confirmOverwritting(reorgQueries, destinationAsContainer);
 			}
 			fFiles = oh.getFilesWithoutUnconfirmedOnes();
 			fFolders = oh.getFoldersWithoutUnconfirmedOnes();
@@ -692,17 +622,14 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		protected final RefactoringStatus verifyDestination(
-				IResource destination) throws ModelException {
-			return RefactoringStatus.createFatalErrorStatus(
-					RefactoringCoreMessages.ReorgPolicyFactory_no_resource);
+		protected final RefactoringStatus verifyDestination(IResource destination) throws ModelException {
+			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_no_resource);
 		}
 
 		protected final ISourceModule getSourceCu() {
 			// all have a common parent, so all must be in the same cu
 			// we checked before that the array in not null and not empty
-			return (ISourceModule) fScriptElements[0]
-					.getAncestor(IModelElement.SOURCE_MODULE);
+			return (ISourceModule) fScriptElements[0].getAncestor(IModelElement.SOURCE_MODULE);
 		}
 
 		@Override
@@ -719,12 +646,10 @@ public class ReorgPolicyFactory {
 			return getDestinationCu(getScriptElementDestination());
 		}
 
-		protected static final ISourceModule getDestinationCu(
-				IModelElement destination) {
+		protected static final ISourceModule getDestinationCu(IModelElement destination) {
 			if (destination instanceof ISourceModule)
 				return (ISourceModule) destination;
-			return (ISourceModule) destination
-					.getAncestor(IModelElement.SOURCE_MODULE);
+			return (ISourceModule) destination.getAncestor(IModelElement.SOURCE_MODULE);
 		}
 
 		// private static ISourceModule getEnclosingCu(IModelElement
@@ -757,39 +682,32 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		protected RefactoringStatus verifyDestination(IModelElement destination)
-				throws ModelException {
+		protected RefactoringStatus verifyDestination(IModelElement destination) throws ModelException {
 			return recursiveVerifyDestination(destination);
 		}
 
-		private RefactoringStatus recursiveVerifyDestination(
-				IModelElement destination) throws ModelException {
+		private RefactoringStatus recursiveVerifyDestination(IModelElement destination) throws ModelException {
 			Assert.isNotNull(destination);
 			if (!destination.exists())
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_doesnotexist1);
+				return RefactoringStatus
+						.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_doesnotexist1);
 			if (destination instanceof IScriptModel)
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_jmodel);
-			if (!(destination instanceof ISourceModule)
-					&& !ReorgUtils.isInsideSourceModule(destination))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_cannot);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_jmodel);
+			if (!(destination instanceof ISourceModule) && !ReorgUtils.isInsideSourceModule(destination))
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_cannot);
 
 			ISourceModule destinationCu = getDestinationCu(destination);
 			Assert.isNotNull(destinationCu);
 			if (destinationCu.isReadOnly())// the resource read-onliness is
 				// handled by validateEdit
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_cannot_modify);
+				return RefactoringStatus
+						.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_cannot_modify);
 
 			switch (destination.getElementType()) {
 			case IModelElement.SOURCE_MODULE:
-				int[] types0 = new int[] { IModelElement.FIELD,
-						IModelElement.METHOD };
+				int[] types0 = new int[] { IModelElement.FIELD, IModelElement.METHOD };
 				if (ReorgUtils.hasElementsOfType(getScriptElements(), types0))
-					return RefactoringStatus.createFatalErrorStatus(
-							RefactoringCoreMessages.ReorgPolicyFactory_cannot);
+					return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_cannot);
 				break;
 			// case IModelElement.PACKAGE_DECLARATION:
 			// return
@@ -843,8 +761,7 @@ public class ReorgPolicyFactory {
 		}
 	}
 
-	private static abstract class ProjectFragmentsReorgPolicy
-			extends ReorgPolicy {
+	private static abstract class ProjectFragmentsReorgPolicy extends ReorgPolicy {
 
 		private IProjectFragment[] fProjectFragments;
 
@@ -873,8 +790,7 @@ public class ReorgPolicyFactory {
 				return false;
 			for (int i = 0; i < fProjectFragments.length; i++) {
 				if (!(ReorgUtils.isSourceFolder(fProjectFragments[i])
-						|| (fProjectFragments[i].isArchive()
-								&& !fProjectFragments[i].isExternal())))
+						|| (fProjectFragments[i].isArchive() && !fProjectFragments[i].isExternal())))
 					return false;
 			}
 			if (ReorgUtils.containsLinkedResources(fProjectFragments))
@@ -900,8 +816,7 @@ public class ReorgPolicyFactory {
 
 		@Override
 		public boolean canElementBeDestination(IModelElement modelElement) {
-			return modelElement
-					.getElementType() == IModelElement.SCRIPT_PROJECT;
+			return modelElement.getElementType() == IModelElement.SCRIPT_PROJECT;
 		}
 
 		@Override
@@ -911,31 +826,24 @@ public class ReorgPolicyFactory {
 
 		@Override
 		protected RefactoringStatus verifyDestination(IResource resource) {
-			return RefactoringStatus.createFatalErrorStatus(
-					RefactoringCoreMessages.ReorgPolicyFactory_src2proj);
+			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_src2proj);
 		}
 
 		@Override
-		protected RefactoringStatus verifyDestination(
-				IModelElement modelElement) throws ModelException {
+		protected RefactoringStatus verifyDestination(IModelElement modelElement) throws ModelException {
 			Assert.isNotNull(modelElement);
 			if (!modelElement.exists())
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_cannot1);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_cannot1);
 			if (modelElement instanceof IScriptModel)
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_jmodel);
-			if (!(modelElement instanceof IScriptProject
-					|| modelElement instanceof IProjectFragment))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_src2proj);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_jmodel);
+			if (!(modelElement instanceof IScriptProject || modelElement instanceof IProjectFragment))
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_src2proj);
 			if (modelElement.isReadOnly())
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_src2writable);
+				return RefactoringStatus
+						.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_src2writable);
 			if (ReorgUtils.isProjectFragment(modelElement.getScriptProject()))
 				// TODO: adapt message to archives:
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_src2nosrc);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_src2nosrc);
 			return new RefactoringStatus();
 		}
 
@@ -943,8 +851,7 @@ public class ReorgPolicyFactory {
 			return getDestinationAsScriptProject(getScriptElementDestination());
 		}
 
-		private IScriptProject getDestinationAsScriptProject(
-				IModelElement modelElementDestination) {
+		private IScriptProject getDestinationAsScriptProject(IModelElement modelElementDestination) {
 			if (modelElementDestination == null) {
 				return null;
 			}
@@ -956,11 +863,9 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-				CheckConditionsContext context, IReorgQueries reorgQueries)
-				throws CoreException {
-			RefactoringStatus status = super.checkFinalConditions(pm, context,
-					reorgQueries);
+		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
+				IReorgQueries reorgQueries) throws CoreException {
+			RefactoringStatus status = super.checkFinalConditions(pm, context, reorgQueries);
 			confirmOverwritting(reorgQueries);
 			return status;
 		}
@@ -999,8 +904,7 @@ public class ReorgPolicyFactory {
 		@Override
 		public boolean canEnable() throws ModelException {
 			for (int i = 0; i < fScriptFolders.length; i++) {
-				if (ModelElementUtil.isDefaultPackage(fScriptFolders[i])
-						|| fScriptFolders[i].isReadOnly())
+				if (ModelElementUtil.isDefaultPackage(fScriptFolders[i]) || fScriptFolders[i].isReadOnly())
 					return false;
 			}
 			if (ReorgUtils.containsLinkedResources(fScriptFolders))
@@ -1010,14 +914,11 @@ public class ReorgPolicyFactory {
 
 		@Override
 		protected RefactoringStatus verifyDestination(IResource resource) {
-			return RefactoringStatus.createFatalErrorStatus(
-					RefactoringCoreMessages.ReorgPolicyFactory_packages);
+			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_packages);
 		}
 
-		protected IProjectFragment getDestinationAsProjectFragment()
-				throws ModelException {
-			return getDestinationAsProjectFragment(
-					getScriptElementDestination());
+		protected IProjectFragment getDestinationAsProjectFragment() throws ModelException {
+			return getDestinationAsProjectFragment(getScriptElementDestination());
 		}
 
 		@Override
@@ -1054,8 +955,7 @@ public class ReorgPolicyFactory {
 			return false;
 		}
 
-		private IProjectFragment getDestinationAsProjectFragment(
-				IModelElement modelElement) throws ModelException {
+		private IProjectFragment getDestinationAsProjectFragment(IModelElement modelElement) throws ModelException {
 			if (modelElement == null)
 				return null;
 
@@ -1069,41 +969,32 @@ public class ReorgPolicyFactory {
 			}
 
 			if (modelElement instanceof IScriptProject)
-				return ReorgUtils.getCorrespondingProjectFragment(
-						(IScriptProject) modelElement);
+				return ReorgUtils.getCorrespondingProjectFragment((IScriptProject) modelElement);
 			return null;
 		}
 
 		@Override
-		protected RefactoringStatus verifyDestination(
-				IModelElement modelElement) throws ModelException {
+		protected RefactoringStatus verifyDestination(IModelElement modelElement) throws ModelException {
 			Assert.isNotNull(modelElement);
 			if (!modelElement.exists())
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_cannot1);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_cannot1);
 			if (modelElement instanceof IScriptModel)
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_jmodel);
-			IProjectFragment destRoot = getDestinationAsProjectFragment(
-					modelElement);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_jmodel);
+			IProjectFragment destRoot = getDestinationAsProjectFragment(modelElement);
 			if (!ReorgUtils.isSourceFolder(destRoot))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_packages);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_packages);
 			return new RefactoringStatus();
 		}
 
 		@Override
-		public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-				CheckConditionsContext context, IReorgQueries reorgQueries)
-				throws CoreException {
-			RefactoringStatus refactoringStatus = super.checkFinalConditions(pm,
-					context, reorgQueries);
+		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
+				IReorgQueries reorgQueries) throws CoreException {
+			RefactoringStatus refactoringStatus = super.checkFinalConditions(pm, context, reorgQueries);
 			confirmOverwritting(reorgQueries);
 			return refactoringStatus;
 		}
 
-		private void confirmOverwritting(IReorgQueries reorgQueries)
-				throws ModelException {
+		private void confirmOverwritting(IReorgQueries reorgQueries) throws ModelException {
 			OverwriteHelper oh = new OverwriteHelper();
 			oh.setPackages(fScriptFolders);
 			IProjectFragment destRoot = getDestinationAsProjectFragment();
@@ -1112,8 +1003,7 @@ public class ReorgPolicyFactory {
 		}
 	}
 
-	private static class CopySubCuElementsPolicy extends SubCuElementReorgPolicy
-			implements ICopyPolicy {
+	private static class CopySubCuElementsPolicy extends SubCuElementReorgPolicy implements ICopyPolicy {
 		private CopyModifications fModifications;
 		private ReorgExecutionLog fReorgExecutionLog;
 
@@ -1127,15 +1017,13 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		protected RefactoringModifications getModifications()
-				throws CoreException {
+		protected RefactoringModifications getModifications() throws CoreException {
 			if (fModifications != null)
 				return fModifications;
 
 			fModifications = new CopyModifications();
 			fReorgExecutionLog = new ReorgExecutionLog();
-			CopyArguments args = new CopyArguments(
-					getScriptElementDestination(), fReorgExecutionLog);
+			CopyArguments args = new CopyArguments(getScriptElementDestination(), fReorgExecutionLog);
 			IModelElement[] modelElements = getScriptElements();
 			for (int i = 0; i < modelElements.length; i++) {
 				fModifications.copy(modelElements[i], args, null);
@@ -1144,11 +1032,9 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public Change createChange(IProgressMonitor pm,
-				INewNameQueries copyQueries) throws ModelException {
+		public Change createChange(IProgressMonitor pm, INewNameQueries copyQueries) throws ModelException {
 			if (DLTKCore.DEBUG) {
-				System.err.println(
-						"ReorgPolicyFactory:createChange return null."); //$NON-NLS-1$
+				System.err.println("ReorgPolicyFactory:createChange return null."); //$NON-NLS-1$
 			}
 			return null;
 			// try {
@@ -1187,18 +1073,15 @@ public class ReorgPolicyFactory {
 
 		@Override
 		public IFile[] getAllModifiedFiles() {
-			return ReorgUtils.getFiles(new IResource[] {
-					ReorgUtils.getResource(getDestinationCu()) });
+			return ReorgUtils.getFiles(new IResource[] { ReorgUtils.getResource(getDestinationCu()) });
 		}
 	}
 
-	private static class CopyFilesFoldersAndCusPolicy
-			extends FilesFoldersAndCusReorgPolicy implements ICopyPolicy {
+	private static class CopyFilesFoldersAndCusPolicy extends FilesFoldersAndCusReorgPolicy implements ICopyPolicy {
 		private CopyModifications fModifications;
 		private ReorgExecutionLog fReorgExecutionLog;
 
-		CopyFilesFoldersAndCusPolicy(IFile[] files, IFolder[] folders,
-				ISourceModule[] cus) {
+		CopyFilesFoldersAndCusPolicy(IFile[] files, IFolder[] folders, ISourceModule[] cus) {
 			super(files, folders, cus);
 		}
 
@@ -1208,16 +1091,13 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		protected RefactoringModifications getModifications()
-				throws CoreException {
+		protected RefactoringModifications getModifications() throws CoreException {
 			if (fModifications != null)
 				return fModifications;
 			fModifications = new CopyModifications();
 			fReorgExecutionLog = new ReorgExecutionLog();
-			CopyArguments jArgs = new CopyArguments(getDestination(),
-					fReorgExecutionLog);
-			CopyArguments rArgs = new CopyArguments(getDestinationAsContainer(),
-					fReorgExecutionLog);
+			CopyArguments jArgs = new CopyArguments(getDestination(), fReorgExecutionLog);
+			CopyArguments rArgs = new CopyArguments(getDestinationAsContainer(), fReorgExecutionLog);
 			ISourceModule[] cus = getCus();
 			for (int i = 0; i < cus.length; i++) {
 				fModifications.copy(cus[i], jArgs, rArgs);
@@ -1237,15 +1117,13 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public Change createChange(IProgressMonitor pm,
-				INewNameQueries copyQueries) {
+		public Change createChange(IProgressMonitor pm, INewNameQueries copyQueries) {
 			IFile[] file = getFiles();
 			IFolder[] folders = getFolders();
 			ISourceModule[] cus = getCus();
 			pm.beginTask("", cus.length + file.length + folders.length); //$NON-NLS-1$
 			NewNameProposer nameProposer = new NewNameProposer();
-			CompositeChange composite = new DynamicValidationStateChange(
-					RefactoringCoreMessages.ReorgPolicy_copy);
+			CompositeChange composite = new DynamicValidationStateChange(RefactoringCoreMessages.ReorgPolicy_copy);
 			composite.markAsSynthetic();
 			for (int i = 0; i < cus.length; i++) {
 				composite.add(createChange(cus[i], nameProposer, copyQueries));
@@ -1260,42 +1138,34 @@ public class ReorgPolicyFactory {
 			if (pm.isCanceled())
 				throw new OperationCanceledException();
 			for (int i = 0; i < folders.length; i++) {
-				composite.add(
-						createChange(folders[i], nameProposer, copyQueries));
+				composite.add(createChange(folders[i], nameProposer, copyQueries));
 				pm.worked(1);
 			}
 			pm.done();
 			return composite;
 		}
 
-		private Change createChange(ISourceModule unit,
-				NewNameProposer nameProposer, INewNameQueries copyQueries) {
+		private Change createChange(ISourceModule unit, NewNameProposer nameProposer, INewNameQueries copyQueries) {
 			IScriptFolder pack = getDestinationAsScriptFolder();
 			if (pack != null)
 				return copyCuToPackage(unit, pack, nameProposer, copyQueries);
 			IContainer container = getDestinationAsContainer();
-			return copyFileToContainer(unit, container, nameProposer,
-					copyQueries);
+			return copyFileToContainer(unit, container, nameProposer, copyQueries);
 		}
 
-		private static Change copyFileToContainer(ISourceModule cu,
-				IContainer dest, NewNameProposer nameProposer,
+		private static Change copyFileToContainer(ISourceModule cu, IContainer dest, NewNameProposer nameProposer,
 				INewNameQueries copyQueries) {
 			IResource resource = ReorgUtils.getResource(cu);
-			return createCopyResourceChange(resource, nameProposer, copyQueries,
-					dest);
+			return createCopyResourceChange(resource, nameProposer, copyQueries, dest);
 		}
 
-		private Change createChange(IResource resource,
-				NewNameProposer nameProposer, INewNameQueries copyQueries) {
+		private Change createChange(IResource resource, NewNameProposer nameProposer, INewNameQueries copyQueries) {
 			IContainer dest = getDestinationAsContainer();
-			return createCopyResourceChange(resource, nameProposer, copyQueries,
-					dest);
+			return createCopyResourceChange(resource, nameProposer, copyQueries, dest);
 		}
 
-		private static Change createCopyResourceChange(IResource resource,
-				NewNameProposer nameProposer, INewNameQueries copyQueries,
-				IContainer destination) {
+		private static Change createCopyResourceChange(IResource resource, NewNameProposer nameProposer,
+				INewNameQueries copyQueries, IContainer destination) {
 			if (resource == null || destination == null)
 				return new NullChange();
 			INewNameQuery nameQuery;
@@ -1303,45 +1173,37 @@ public class ReorgPolicyFactory {
 			if (name == null)
 				nameQuery = copyQueries.createNullQuery();
 			else
-				nameQuery = copyQueries.createNewResourceNameQuery(resource,
-						name);
+				nameQuery = copyQueries.createNewResourceNameQuery(resource, name);
 			return new CopyResourceChange(resource, destination, nameQuery);
 		}
 
-		private static Change copyCuToPackage(ISourceModule cu,
-				IScriptFolder dest, NewNameProposer nameProposer,
+		private static Change copyCuToPackage(ISourceModule cu, IScriptFolder dest, NewNameProposer nameProposer,
 				INewNameQueries copyQueries) {
 			// XXX workaround for bug 31998 we will have to disable renaming of
 			// linked packages (and cus)
 			IResource res = ReorgUtils.getResource(cu);
 			if (res != null && res.isLinked()) {
 				if (ResourceUtil.getResource(dest) instanceof IContainer)
-					return copyFileToContainer(cu,
-							(IContainer) ResourceUtil.getResource(dest),
-							nameProposer, copyQueries);
+					return copyFileToContainer(cu, (IContainer) ResourceUtil.getResource(dest), nameProposer,
+							copyQueries);
 			}
 
 			String newName = nameProposer.createNewName(cu, dest);
-			Change simpleCopy = new CopySourceModuleChange(cu, dest,
-					copyQueries.createStaticQuery(newName));
+			Change simpleCopy = new CopySourceModuleChange(cu, dest, copyQueries.createStaticQuery(newName));
 			if (newName == null || newName.equals(cu.getElementName()))
 				return simpleCopy;
 
 			try {
-				IPath newPath = ResourceUtil.getResource(cu).getParent()
-						.getFullPath().append(newName);
-				INewNameQuery nameQuery = copyQueries
-						.createNewSourceModuleNameQuery(cu, newName);
-				return new CreateCopyOfSourceModuleChange(newPath,
-						cu.getSource(), cu, nameQuery);
+				IPath newPath = ResourceUtil.getResource(cu).getParent().getFullPath().append(newName);
+				INewNameQuery nameQuery = copyQueries.createNewSourceModuleNameQuery(cu, newName);
+				return new CreateCopyOfSourceModuleChange(newPath, cu.getSource(), cu, nameQuery);
 			} catch (CoreException e) {
 				return simpleCopy; // fallback - no ui here
 			}
 		}
 	}
 
-	private static class CopyProjectFragmentsPolicy
-			extends ProjectFragmentsReorgPolicy implements ICopyPolicy {
+	private static class CopyProjectFragmentsPolicy extends ProjectFragmentsReorgPolicy implements ICopyPolicy {
 		private CopyModifications fModifications;
 		private ReorgExecutionLog fReorgExecutionLog;
 
@@ -1355,17 +1217,14 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		protected RefactoringModifications getModifications()
-				throws CoreException {
+		protected RefactoringModifications getModifications() throws CoreException {
 			if (fModifications != null)
 				return fModifications;
 
 			fModifications = new CopyModifications();
 			fReorgExecutionLog = new ReorgExecutionLog();
-			CopyArguments javaArgs = new CopyArguments(
-					getDestinationScriptProject(), fReorgExecutionLog);
-			CopyArguments resourceArgs = new CopyArguments(
-					getDestinationScriptProject().getProject(),
+			CopyArguments javaArgs = new CopyArguments(getDestinationScriptProject(), fReorgExecutionLog);
+			CopyArguments resourceArgs = new CopyArguments(getDestinationScriptProject().getProject(),
 					fReorgExecutionLog);
 			IProjectFragment[] roots = getRoots();
 			for (int i = 0; i < roots.length; i++) {
@@ -1375,8 +1234,7 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public Change createChange(IProgressMonitor pm,
-				INewNameQueries copyQueries) {
+		public Change createChange(IProgressMonitor pm, INewNameQueries copyQueries) {
 			NewNameProposer nameProposer = new NewNameProposer();
 			IProjectFragment[] roots = getProjectFragments();
 			pm.beginTask("", roots.length); //$NON-NLS-1$
@@ -1386,36 +1244,30 @@ public class ReorgPolicyFactory {
 			IScriptProject destination = getDestinationScriptProject();
 			Assert.isNotNull(destination);
 			for (int i = 0; i < roots.length; i++) {
-				composite.add(createChange(roots[i], destination, nameProposer,
-						copyQueries));
+				composite.add(createChange(roots[i], destination, nameProposer, copyQueries));
 				pm.worked(1);
 			}
 			pm.done();
 			return composite;
 		}
 
-		private Change createChange(IProjectFragment root,
-				IScriptProject destination, NewNameProposer nameProposer,
+		private Change createChange(IProjectFragment root, IScriptProject destination, NewNameProposer nameProposer,
 				INewNameQueries copyQueries) {
 			IResource res = root.getResource();
 			IProject destinationProject = destination.getProject();
-			String newName = nameProposer.createNewName(res,
-					destinationProject);
+			String newName = nameProposer.createNewName(res, destinationProject);
 			INewNameQuery nameQuery;
 			if (newName == null)
 				nameQuery = copyQueries.createNullQuery();
 			else
-				nameQuery = copyQueries.createNewProjectFragmentNameQuery(root,
-						newName);
+				nameQuery = copyQueries.createNewProjectFragmentNameQuery(root, newName);
 			// TODO sounds wrong that this change works on IProjects
 			// TODO fix the query problem
-			return new CopyProjectFragmentChange(root, destinationProject,
-					nameQuery, null);
+			return new CopyProjectFragmentChange(root, destinationProject, nameQuery, null);
 		}
 	}
 
-	private static class CopyPackagesPolicy extends PackagesReorgPolicy
-			implements ICopyPolicy {
+	private static class CopyPackagesPolicy extends PackagesReorgPolicy implements ICopyPolicy {
 		private CopyModifications fModifications;
 		private ReorgExecutionLog fReorgExecutionLog;
 
@@ -1429,18 +1281,15 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		protected RefactoringModifications getModifications()
-				throws CoreException {
+		protected RefactoringModifications getModifications() throws CoreException {
 			if (fModifications != null)
 				return fModifications;
 
 			fModifications = new CopyModifications();
 			fReorgExecutionLog = new ReorgExecutionLog();
 			IProjectFragment destination = getDestinationAsProjectFragment();
-			CopyArguments javaArgs = new CopyArguments(destination,
-					fReorgExecutionLog);
-			CopyArguments resourceArgs = new CopyArguments(
-					destination.getResource(), fReorgExecutionLog);
+			CopyArguments javaArgs = new CopyArguments(destination, fReorgExecutionLog);
+			CopyArguments resourceArgs = new CopyArguments(destination.getResource(), fReorgExecutionLog);
 			IScriptFolder[] packages = getPackages();
 			for (int i = 0; i < packages.length; i++) {
 				fModifications.copy(packages[i], javaArgs, resourceArgs);
@@ -1449,8 +1298,7 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public Change createChange(IProgressMonitor pm,
-				INewNameQueries newNameQueries) throws ModelException {
+		public Change createChange(IProgressMonitor pm, INewNameQueries newNameQueries) throws ModelException {
 			NewNameProposer nameProposer = new NewNameProposer();
 			IScriptFolder[] fragments = getPackages();
 			pm.beginTask("", fragments.length); //$NON-NLS-1$
@@ -1459,16 +1307,14 @@ public class ReorgPolicyFactory {
 			composite.markAsSynthetic();
 			IProjectFragment root = getDestinationAsProjectFragment();
 			for (int i = 0; i < fragments.length; i++) {
-				composite.add(createChange(fragments[i], root, nameProposer,
-						newNameQueries));
+				composite.add(createChange(fragments[i], root, nameProposer, newNameQueries));
 				pm.worked(1);
 			}
 			pm.done();
 			return composite;
 		}
 
-		private Change createChange(IScriptFolder pack,
-				IProjectFragment destination, NewNameProposer nameProposer,
+		private Change createChange(IScriptFolder pack, IProjectFragment destination, NewNameProposer nameProposer,
 				INewNameQueries copyQueries) {
 			String newName = nameProposer.createNewName(pack, destination);
 			IDLTKLanguageToolkit tk = null;
@@ -1477,31 +1323,27 @@ public class ReorgPolicyFactory {
 			if (newName != null) {
 				newPath = newPath.append(newName);
 			}
-			if (newName == null
-					|| (tk != null && tk.validateSourcePackage(newPath,
-							EnvironmentManager.getEnvironment(destination)))) {
+			if (newName == null || (tk != null
+					&& tk.validateSourcePackage(newPath, EnvironmentManager.getEnvironment(destination)))) {
 				INewNameQuery nameQuery;
 				if (newName == null) {
 					nameQuery = copyQueries.createNullQuery();
 				} else {
-					nameQuery = copyQueries.createNewPackageNameQuery(pack,
-							newName);
+					nameQuery = copyQueries.createNewPackageNameQuery(pack, newName);
 				}
 				return new CopyScriptFolderChange(pack, destination, nameQuery);
 			}
 			if (destination.getResource() instanceof IContainer) {
 				IContainer dest = (IContainer) destination.getResource();
 				IResource res = pack.getResource();
-				INewNameQuery nameQuery = copyQueries
-						.createNewResourceNameQuery(res, newName);
+				INewNameQuery nameQuery = copyQueries.createNewResourceNameQuery(res, newName);
 				return new CopyResourceChange(res, dest, nameQuery);
 			}
 			return new NullChange();
 		}
 	}
 
-	private static class NoCopyPolicy extends ReorgPolicy
-			implements ICopyPolicy {
+	private static class NoCopyPolicy extends ReorgPolicy implements ICopyPolicy {
 		@Override
 		public boolean canEnable() throws ModelException {
 			return false;
@@ -1513,22 +1355,17 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		protected RefactoringStatus verifyDestination(IResource resource)
-				throws ModelException {
-			return RefactoringStatus.createFatalErrorStatus(
-					RefactoringCoreMessages.ReorgPolicyFactory_noCopying);
+		protected RefactoringStatus verifyDestination(IResource resource) throws ModelException {
+			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_noCopying);
 		}
 
 		@Override
-		protected RefactoringStatus verifyDestination(
-				IModelElement modelElement) throws ModelException {
-			return RefactoringStatus.createFatalErrorStatus(
-					RefactoringCoreMessages.ReorgPolicyFactory_noCopying);
+		protected RefactoringStatus verifyDestination(IModelElement modelElement) throws ModelException {
+			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_noCopying);
 		}
 
 		@Override
-		public Change createChange(IProgressMonitor pm,
-				INewNameQueries copyQueries) {
+		public Change createChange(IProgressMonitor pm, INewNameQueries copyQueries) {
 			return new NullChange();
 		}
 
@@ -1546,8 +1383,7 @@ public class ReorgPolicyFactory {
 	private static class NewNameProposer {
 		private final Set fAutoGeneratedNewNames = new HashSet(2);
 
-		public String createNewName(ISourceModule cu,
-				IScriptFolder destination) {
+		public String createNewName(ISourceModule cu, IScriptFolder destination) {
 			if (isNewNameOk(destination, cu.getElementName()))
 				return null;
 			if (!ReorgUtils.isParentInWorkspaceOrOnDisk(cu, destination))
@@ -1556,16 +1392,11 @@ public class ReorgPolicyFactory {
 			while (true) {
 				String newName;
 				if (i == 1)
-					newName = Messages.format(
-							RefactoringCoreMessages.CopyRefactoring_cu_copyOf1,
-							cu.getElementName());
+					newName = Messages.format(RefactoringCoreMessages.CopyRefactoring_cu_copyOf1, cu.getElementName());
 				else
-					newName = Messages.format(
-							RefactoringCoreMessages.CopyRefactoring_cu_copyOfMore,
-							new String[] { String.valueOf(i),
-									cu.getElementName() });
-				if (isNewNameOk(destination, newName)
-						&& !fAutoGeneratedNewNames.contains(newName)) {
+					newName = Messages.format(RefactoringCoreMessages.CopyRefactoring_cu_copyOfMore, String.valueOf(i),
+							cu.getElementName());
+				if (isNewNameOk(destination, newName) && !fAutoGeneratedNewNames.contains(newName)) {
 					fAutoGeneratedNewNames.add(newName);
 					return removeTrailingScript(newName);
 				}
@@ -1576,8 +1407,7 @@ public class ReorgPolicyFactory {
 		private static String removeTrailingScript(String name) {
 			// return DLTKCore.removeScriptLikeExtension(name);
 			if (DLTKCore.DEBUG) {
-				System.err.println(
-						"TODO: ReorgPolicyFactory add removeScriptLikeExtension code..."); //$NON-NLS-1$
+				System.err.println("TODO: ReorgPolicyFactory add removeScriptLikeExtension code..."); //$NON-NLS-1$
 			}
 			return name;
 		}
@@ -1591,15 +1421,11 @@ public class ReorgPolicyFactory {
 			while (true) {
 				String newName;
 				if (i == 1)
-					newName = Messages.format(
-							RefactoringCoreMessages.CopyRefactoring_resource_copyOf1,
-							res.getName());
+					newName = Messages.format(RefactoringCoreMessages.CopyRefactoring_resource_copyOf1, res.getName());
 				else
-					newName = Messages.format(
-							RefactoringCoreMessages.CopyRefactoring_resource_copyOfMore,
-							new String[] { String.valueOf(i), res.getName() });
-				if (isNewNameOk(destination, newName)
-						&& !fAutoGeneratedNewNames.contains(newName)) {
+					newName = Messages.format(RefactoringCoreMessages.CopyRefactoring_resource_copyOfMore,
+							String.valueOf(i), res.getName());
+				if (isNewNameOk(destination, newName) && !fAutoGeneratedNewNames.contains(newName)) {
 					fAutoGeneratedNewNames.add(newName);
 					return newName;
 				}
@@ -1607,8 +1433,7 @@ public class ReorgPolicyFactory {
 			}
 		}
 
-		public String createNewName(IScriptFolder pack,
-				IProjectFragment destination) {
+		public String createNewName(IScriptFolder pack, IProjectFragment destination) {
 			if (isNewNameOk(destination, pack.getElementName()))
 				return null;
 			if (!ReorgUtils.isParentInWorkspaceOrOnDisk(pack, destination))
@@ -1617,16 +1442,12 @@ public class ReorgPolicyFactory {
 			while (true) {
 				String newName;
 				if (i == 1)
-					newName = Messages.format(
-							RefactoringCoreMessages.CopyRefactoring_package_copyOf1,
+					newName = Messages.format(RefactoringCoreMessages.CopyRefactoring_package_copyOf1,
 							pack.getElementName());
 				else
-					newName = Messages.format(
-							RefactoringCoreMessages.CopyRefactoring_package_copyOfMore,
-							new String[] { String.valueOf(i),
-									pack.getElementName() });
-				if (isNewNameOk(destination, newName)
-						&& !fAutoGeneratedNewNames.contains(newName)) {
+					newName = Messages.format(RefactoringCoreMessages.CopyRefactoring_package_copyOfMore,
+							String.valueOf(i), pack.getElementName());
+				if (isNewNameOk(destination, newName) && !fAutoGeneratedNewNames.contains(newName)) {
 					fAutoGeneratedNewNames.add(newName);
 					return newName;
 				}
@@ -1638,19 +1459,16 @@ public class ReorgPolicyFactory {
 			return !dest.getSourceModule(newName).exists();
 		}
 
-		private static boolean isNewNameOk(IContainer container,
-				String newName) {
+		private static boolean isNewNameOk(IContainer container, String newName) {
 			return container.findMember(newName) == null;
 		}
 
-		private static boolean isNewNameOk(IProjectFragment root,
-				String newName) {
+		private static boolean isNewNameOk(IProjectFragment root, String newName) {
 			return !root.getScriptFolder(newName).exists();
 		}
 	}
 
-	private static class MoveProjectFragmentsPolicy
-			extends ProjectFragmentsReorgPolicy implements IMovePolicy {
+	private static class MoveProjectFragmentsPolicy extends ProjectFragmentsReorgPolicy implements IMovePolicy {
 
 		private MoveModifications fModifications;
 
@@ -1659,20 +1477,17 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		protected RefactoringModifications getModifications()
-				throws CoreException {
+		protected RefactoringModifications getModifications() throws CoreException {
 			if (fModifications != null)
 				return fModifications;
 
 			fModifications = new MoveModifications();
 			IScriptProject destination = getDestinationScriptProject();
-			boolean updateReferences = canUpdateReferences()
-					&& getUpdateReferences();
+			boolean updateReferences = canUpdateReferences() && getUpdateReferences();
 			if (destination != null) {
 				IProjectFragment[] roots = getProjectFragments();
 				for (int i = 0; i < roots.length; i++) {
-					fModifications.move(roots[i],
-							new MoveArguments(destination, updateReferences));
+					fModifications.move(roots[i], new MoveArguments(destination, updateReferences));
 				}
 			}
 			return fModifications;
@@ -1696,37 +1511,30 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public Change postCreateChange(Change[] participantChanges,
-				IProgressMonitor pm) throws CoreException {
+		public Change postCreateChange(Change[] participantChanges, IProgressMonitor pm) throws CoreException {
 			return null;
 		}
 
-		private Change createChange(IProjectFragment root,
-				IScriptProject destination) {
+		private Change createChange(IProjectFragment root, IScriptProject destination) {
 			// /XXX fix the query
-			return new MoveProjectFragmentChange(root, destination.getProject(),
-					null);
+			return new MoveProjectFragmentChange(root, destination.getProject(), null);
 		}
 
 		@Override
-		protected RefactoringStatus verifyDestination(
-				IModelElement modelElement) throws ModelException {
-			RefactoringStatus superStatus = super.verifyDestination(
-					modelElement);
+		protected RefactoringStatus verifyDestination(IModelElement modelElement) throws ModelException {
+			RefactoringStatus superStatus = super.verifyDestination(modelElement);
 			if (superStatus.hasFatalError())
 				return superStatus;
 			IScriptProject scriptProject = getDestinationScriptProject();
 			if (isParentOfAny(scriptProject, getProjectFragments()))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_element2parent);
+				return RefactoringStatus
+						.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_element2parent);
 			return superStatus;
 		}
 
-		private static boolean isParentOfAny(IScriptProject scriptProject,
-				IProjectFragment[] roots) {
+		private static boolean isParentOfAny(IScriptProject scriptProject, IProjectFragment[] roots) {
 			for (int i = 0; i < roots.length; i++) {
-				if (ReorgUtils.isParentInWorkspaceOrOnDisk(roots[i],
-						scriptProject))
+				if (ReorgUtils.isParentInWorkspaceOrOnDisk(roots[i], scriptProject))
 					return true;
 			}
 			return false;
@@ -1741,14 +1549,12 @@ public class ReorgPolicyFactory {
 				if (roots[i].isReadOnly() && !(roots[i].isArchive())) {
 					IResource res = roots[i].getResource();
 					if (res != null) {
-						final ResourceAttributes attributes = roots[i]
-								.getResource().getResourceAttributes();
+						final ResourceAttributes attributes = roots[i].getResource().getResourceAttributes();
 						if (attributes == null || attributes.isReadOnly())
 							return false;
 					} else {
 						if (DLTKCore.DEBUG) {
-							System.err.println(
-									"TODO: Add correct code of copy external folders in..."); //$NON-NLS-1$
+							System.err.println("TODO: Add correct code of copy external folders in..."); //$NON-NLS-1$
 						}
 						return false;
 					}
@@ -1758,12 +1564,10 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-				CheckConditionsContext context, IReorgQueries reorgQueries)
-				throws CoreException {
+		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
+				IReorgQueries reorgQueries) throws CoreException {
 			try {
-				RefactoringStatus status = super.checkFinalConditions(pm,
-						context, reorgQueries);
+				RefactoringStatus status = super.checkFinalConditions(pm, context, reorgQueries);
 				confirmMovingReadOnly(reorgQueries);
 				return status;
 			} catch (ModelException e) {
@@ -1773,10 +1577,9 @@ public class ReorgPolicyFactory {
 			}
 		}
 
-		private void confirmMovingReadOnly(IReorgQueries reorgQueries)
-				throws CoreException {
-			if (!ReadOnlyResourceFinder.confirmMoveOfReadOnlyElements(
-					getScriptElements(), getResources(), reorgQueries))
+		private void confirmMovingReadOnly(IReorgQueries reorgQueries) throws CoreException {
+			if (!ReadOnlyResourceFinder.confirmMoveOfReadOnlyElements(getScriptElements(), getResources(),
+					reorgQueries))
 				throw new OperationCanceledException(); // saying' no' to this
 			// one is like
 			// cancelling the whole
@@ -1784,8 +1587,7 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public ICreateTargetQuery getCreateTargetQuery(
-				ICreateTargetQueries createQueries) {
+		public ICreateTargetQuery getCreateTargetQuery(ICreateTargetQueries createQueries) {
 			return null;
 		}
 
@@ -1795,8 +1597,7 @@ public class ReorgPolicyFactory {
 		}
 	}
 
-	private static class MovePackagesPolicy extends PackagesReorgPolicy
-			implements IMovePolicy {
+	private static class MovePackagesPolicy extends PackagesReorgPolicy implements IMovePolicy {
 		private MoveModifications fModifications;
 
 		MovePackagesPolicy(IScriptFolder[] ScriptFolders) {
@@ -1804,40 +1605,34 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		protected RefactoringModifications getModifications()
-				throws CoreException {
+		protected RefactoringModifications getModifications() throws CoreException {
 			if (fModifications != null)
 				return fModifications;
 
 			fModifications = new MoveModifications();
-			boolean updateReferences = canUpdateReferences()
-					&& getUpdateReferences();
+			boolean updateReferences = canUpdateReferences() && getUpdateReferences();
 			IScriptFolder[] packages = getPackages();
 			IProjectFragment scriptDestination = getDestinationAsProjectFragment();
 			for (int i = 0; i < packages.length; i++) {
-				fModifications.move(packages[i],
-						new MoveArguments(scriptDestination, updateReferences));
+				fModifications.move(packages[i], new MoveArguments(scriptDestination, updateReferences));
 			}
 			return fModifications;
 		}
 
 		@Override
-		protected RefactoringStatus verifyDestination(
-				IModelElement modelElement) throws ModelException {
-			RefactoringStatus superStatus = super.verifyDestination(
-					modelElement);
+		protected RefactoringStatus verifyDestination(IModelElement modelElement) throws ModelException {
+			RefactoringStatus superStatus = super.verifyDestination(modelElement);
 			if (superStatus.hasFatalError())
 				return superStatus;
 
 			IProjectFragment root = getDestinationAsProjectFragment();
 			if (isParentOfAny(root, getPackages()))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_package2parent);
+				return RefactoringStatus
+						.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_package2parent);
 			return superStatus;
 		}
 
-		private static boolean isParentOfAny(IProjectFragment root,
-				IScriptFolder[] fragments) {
+		private static boolean isParentOfAny(IProjectFragment root, IScriptFolder[] fragments) {
 			for (int i = 0; i < fragments.length; i++) {
 				IScriptFolder fragment = fragments[i];
 				if (ReorgUtils.isParentInWorkspaceOrOnDisk(fragment, root))
@@ -1850,8 +1645,7 @@ public class ReorgPolicyFactory {
 		public Change createChange(IProgressMonitor pm) throws ModelException {
 			IScriptFolder[] fragments = getPackages();
 			pm.beginTask("", fragments.length); //$NON-NLS-1$
-			CompositeChange result = new DynamicValidationStateChange(
-					RefactoringCoreMessages.ReorgPolicy_move_package);
+			CompositeChange result = new DynamicValidationStateChange(RefactoringCoreMessages.ReorgPolicy_move_package);
 			result.markAsSynthetic();
 			IProjectFragment root = getDestinationAsProjectFragment();
 			for (int i = 0; i < fragments.length; i++) {
@@ -1865,23 +1659,19 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public Change postCreateChange(Change[] participantChanges,
-				IProgressMonitor pm) throws CoreException {
+		public Change postCreateChange(Change[] participantChanges, IProgressMonitor pm) throws CoreException {
 			return null;
 		}
 
-		private Change createChange(IScriptFolder pack,
-				IProjectFragment destination) {
+		private Change createChange(IScriptFolder pack, IProjectFragment destination) {
 			return new MoveScriptFolderChange(pack, destination);
 		}
 
 		@Override
-		public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-				CheckConditionsContext context, IReorgQueries reorgQueries)
-				throws CoreException {
+		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
+				IReorgQueries reorgQueries) throws CoreException {
 			try {
-				RefactoringStatus status = super.checkFinalConditions(pm,
-						context, reorgQueries);
+				RefactoringStatus status = super.checkFinalConditions(pm, context, reorgQueries);
 				confirmMovingReadOnly(reorgQueries);
 				return status;
 			} catch (ModelException e) {
@@ -1891,10 +1681,9 @@ public class ReorgPolicyFactory {
 			}
 		}
 
-		private void confirmMovingReadOnly(IReorgQueries reorgQueries)
-				throws CoreException {
-			if (!ReadOnlyResourceFinder.confirmMoveOfReadOnlyElements(
-					getScriptElements(), getResources(), reorgQueries))
+		private void confirmMovingReadOnly(IReorgQueries reorgQueries) throws CoreException {
+			if (!ReadOnlyResourceFinder.confirmMoveOfReadOnlyElements(getScriptElements(), getResources(),
+					reorgQueries))
 				throw new OperationCanceledException(); // saying' no' to this
 			// one is like
 			// cancelling the whole
@@ -1902,8 +1691,7 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public ICreateTargetQuery getCreateTargetQuery(
-				ICreateTargetQueries createQueries) {
+		public ICreateTargetQuery getCreateTargetQuery(ICreateTargetQueries createQueries) {
 			return null;
 		}
 
@@ -1913,8 +1701,7 @@ public class ReorgPolicyFactory {
 		}
 	}
 
-	private static class MoveFilesFoldersAndCusPolicy
-			extends FilesFoldersAndCusReorgPolicy implements IMovePolicy {
+	private static class MoveFilesFoldersAndCusPolicy extends FilesFoldersAndCusReorgPolicy implements IMovePolicy {
 
 		private boolean fUpdateReferences;
 		private boolean fUpdateQualifiedNames;
@@ -1923,8 +1710,7 @@ public class ReorgPolicyFactory {
 		private TextChangeManager fChangeManager;
 		private MoveModifications fModifications;
 
-		MoveFilesFoldersAndCusPolicy(IFile[] files, IFolder[] folders,
-				ISourceModule[] cus) {
+		MoveFilesFoldersAndCusPolicy(IFile[] files, IFolder[] folders, ISourceModule[] cus) {
 			super(files, folders, cus);
 			fUpdateReferences = true;
 			fUpdateQualifiedNames = false;
@@ -1932,8 +1718,7 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		protected RefactoringModifications getModifications()
-				throws CoreException {
+		protected RefactoringModifications getModifications() throws CoreException {
 			if (fModifications != null)
 				return fModifications;
 
@@ -1948,86 +1733,66 @@ public class ReorgPolicyFactory {
 
 			// don't use fUpdateReferences directly since it is only valid if
 			// canUpdateReferences is true
-			boolean updateReferenes = canUpdateReferences()
-					&& getUpdateReferences();
+			boolean updateReferenes = canUpdateReferences() && getUpdateReferences();
 			if (unitDestination != null) {
 				ISourceModule[] units = getCus();
 				for (int i = 0; i < units.length; i++) {
-					fModifications.move(units[i], new MoveArguments(
-							unitDestination, updateReferenes));
+					fModifications.move(units[i], new MoveArguments(unitDestination, updateReferenes));
 				}
 			}
 			if (container != null) {
 				IFile[] files = getFiles();
 				for (int i = 0; i < files.length; i++) {
-					fModifications.move(files[i],
-							new MoveArguments(container, updateReferenes));
+					fModifications.move(files[i], new MoveArguments(container, updateReferenes));
 				}
 				IFolder[] folders = getFolders();
 				for (int i = 0; i < folders.length; i++) {
-					fModifications.move(folders[i],
-							new MoveArguments(container, updateReferenes));
+					fModifications.move(folders[i], new MoveArguments(container, updateReferenes));
 				}
 			}
 			return fModifications;
 		}
 
 		@Override
-		protected RefactoringStatus verifyDestination(IModelElement destination)
-				throws ModelException {
-			RefactoringStatus superStatus = super.verifyDestination(
-					destination);
+		protected RefactoringStatus verifyDestination(IModelElement destination) throws ModelException {
+			RefactoringStatus superStatus = super.verifyDestination(destination);
 			if (superStatus.hasFatalError())
 				return superStatus;
 
-			Object commonParent = new ParentChecker(getResources(),
-					getScriptElements()).getCommonParent();
+			Object commonParent = new ParentChecker(getResources(), getScriptElements()).getCommonParent();
 			if (destination.equals(commonParent))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_parent);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_parent);
 			IContainer destinationAsContainer = getDestinationAsContainer();
-			if (destinationAsContainer != null
-					&& destinationAsContainer.equals(commonParent))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_parent);
+			if (destinationAsContainer != null && destinationAsContainer.equals(commonParent))
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_parent);
 			IScriptFolder destinationAsPackage = getDestinationAsScriptFolder();
-			if (destinationAsPackage != null
-					&& destinationAsPackage.equals(commonParent))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_parent);
+			if (destinationAsPackage != null && destinationAsPackage.equals(commonParent))
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_parent);
 
 			return superStatus;
 		}
 
 		@Override
-		protected RefactoringStatus verifyDestination(IResource destination)
-				throws ModelException {
-			RefactoringStatus superStatus = super.verifyDestination(
-					destination);
+		protected RefactoringStatus verifyDestination(IResource destination) throws ModelException {
+			RefactoringStatus superStatus = super.verifyDestination(destination);
 			if (superStatus.hasFatalError())
 				return superStatus;
 
 			Object commonParent = getCommonParent();
 			if (destination.equals(commonParent))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_parent);
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_parent);
 			IContainer destinationAsContainer = getDestinationAsContainer();
-			if (destinationAsContainer != null
-					&& destinationAsContainer.equals(commonParent))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_parent);
+			if (destinationAsContainer != null && destinationAsContainer.equals(commonParent))
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_parent);
 			IModelElement destinationContainerAsPackage = getDestinationContainerAsScriptElement();
-			if (destinationContainerAsPackage != null
-					&& destinationContainerAsPackage.equals(commonParent))
-				return RefactoringStatus.createFatalErrorStatus(
-						RefactoringCoreMessages.ReorgPolicyFactory_parent);
+			if (destinationContainerAsPackage != null && destinationContainerAsPackage.equals(commonParent))
+				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_parent);
 
 			return superStatus;
 		}
 
 		private Object getCommonParent() {
-			return new ParentChecker(getResources(), getScriptElements())
-					.getCommonParent();
+			return new ParentChecker(getResources(), getScriptElements()).getCommonParent();
 		}
 
 		@Override
@@ -2039,11 +1804,9 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public Change postCreateChange(Change[] participantChanges,
-				IProgressMonitor pm) throws CoreException {
+		public Change postCreateChange(Change[] participantChanges, IProgressMonitor pm) throws CoreException {
 			if (DLTKCore.DEBUG) {
-				System.err.println(
-						"TODO: ReorgPolicyFactory Add QualifiedNameSearchResult "); //$NON-NLS-1$
+				System.err.println("TODO: ReorgPolicyFactory Add QualifiedNameSearchResult "); //$NON-NLS-1$
 			}
 			// if (fQualifiedNameSearchResult != null) {
 			// return
@@ -2054,33 +1817,28 @@ public class ReorgPolicyFactory {
 			// }
 		}
 
-		private Change createReferenceUpdatingMoveChange(IProgressMonitor pm)
-				throws ModelException {
+		private Change createReferenceUpdatingMoveChange(IProgressMonitor pm) throws ModelException {
 			pm.beginTask("", 2 + (fUpdateQualifiedNames ? 1 : 0)); //$NON-NLS-1$
 			try {
-				CompositeChange composite = new DynamicValidationStateChange(
-						RefactoringCoreMessages.ReorgPolicy_move);
+				CompositeChange composite = new DynamicValidationStateChange(RefactoringCoreMessages.ReorgPolicy_move);
 				composite.markAsSynthetic();
 				// XX workaround for bug 13558
 				// <workaround>
 				if (fChangeManager == null) {
-					fChangeManager = createChangeManager(
-							new SubProgressMonitor(pm, 1),
-							new RefactoringStatus()); // TODO: non-CU matches
+					fChangeManager = createChangeManager(new SubProgressMonitor(pm, 1), new RefactoringStatus()); // TODO:
+																													// non-CU
+																													// matches
 					// silently dropped
-					RefactoringStatus status = Checks
-							.validateModifiesFiles(getAllModifiedFiles(), null);
+					RefactoringStatus status = Checks.validateModifiesFiles(getAllModifiedFiles(), null);
 					if (status.hasFatalError())
 						fChangeManager = new TextChangeManager();
 				}
 				// </workaround>
 
-				composite.merge(new CompositeChange(
-						RefactoringCoreMessages.MoveRefactoring_reorganize_elements,
+				composite.merge(new CompositeChange(RefactoringCoreMessages.MoveRefactoring_reorganize_elements,
 						fChangeManager.getAllChanges()));
 
-				Change fileMove = createSimpleMoveChange(
-						new SubProgressMonitor(pm, 1));
+				Change fileMove = createSimpleMoveChange(new SubProgressMonitor(pm, 1));
 				if (fileMove instanceof CompositeChange) {
 					composite.merge(((CompositeChange) fileMove));
 				} else {
@@ -2092,8 +1850,8 @@ public class ReorgPolicyFactory {
 			}
 		}
 
-		private TextChangeManager createChangeManager(IProgressMonitor pm,
-				RefactoringStatus status) throws ModelException {
+		private TextChangeManager createChangeManager(IProgressMonitor pm, RefactoringStatus status)
+				throws ModelException {
 			pm.beginTask("", 1);//$NON-NLS-1$
 			try {
 				if (!fUpdateReferences)
@@ -2117,8 +1875,7 @@ public class ReorgPolicyFactory {
 		}
 
 		private Change createSimpleMoveChange(IProgressMonitor pm) {
-			CompositeChange result = new DynamicValidationStateChange(
-					RefactoringCoreMessages.ReorgPolicy_move);
+			CompositeChange result = new DynamicValidationStateChange(RefactoringCoreMessages.ReorgPolicy_move);
 			result.markAsSynthetic();
 			IFile[] files = getFiles();
 			IFolder[] folders = getFolders();
@@ -2154,21 +1911,18 @@ public class ReorgPolicyFactory {
 			return moveFileToContainer(cu, container);
 		}
 
-		private static Change moveCuToPackage(ISourceModule cu,
-				IScriptFolder dest) {
+		private static Change moveCuToPackage(ISourceModule cu, IScriptFolder dest) {
 			// XXX workaround for bug 31998 we will have to disable renaming of
 			// linked packages (and cus)
 			IResource resource = ResourceUtil.getResource(cu);
 			if (resource != null && resource.isLinked()) {
 				if (ResourceUtil.getResource(dest) instanceof IContainer)
-					return moveFileToContainer(cu,
-							(IContainer) ResourceUtil.getResource(dest));
+					return moveFileToContainer(cu, (IContainer) ResourceUtil.getResource(dest));
 			}
 			return new MoveSourceModuleChange(cu, dest);
 		}
 
-		private static Change moveFileToContainer(ISourceModule cu,
-				IContainer dest) {
+		private static Change moveFileToContainer(ISourceModule cu, IContainer dest) {
 			return new MoveResourceChange(ResourceUtil.getResource(cu), dest);
 		}
 
@@ -2179,25 +1933,21 @@ public class ReorgPolicyFactory {
 			return new MoveResourceChange(res, destinationAsContainer);
 		}
 
-		private void computeQualifiedNameMatches(IProgressMonitor pm)
-				throws ModelException {
+		private void computeQualifiedNameMatches(IProgressMonitor pm) throws ModelException {
 			if (!fUpdateQualifiedNames)
 				return;
 			IScriptFolder destination = getDestinationAsScriptFolder();
 			if (destination != null) {
 				ISourceModule[] cus = getCus();
 				pm.beginTask("", cus.length); //$NON-NLS-1$
-				pm.subTask(
-						RefactoringCoreMessages.MoveRefactoring_scanning_qualified_names);
+				pm.subTask(RefactoringCoreMessages.MoveRefactoring_scanning_qualified_names);
 				for (int i = 0; i < cus.length; i++) {
 					ISourceModule cu = cus[i];
 					IType[] types = cu.getTypes();
-					IProgressMonitor typesMonitor = new SubProgressMonitor(pm,
-							1);
+					IProgressMonitor typesMonitor = new SubProgressMonitor(pm, 1);
 					typesMonitor.beginTask("", types.length); //$NON-NLS-1$
 					for (int j = 0; j < types.length; j++) {
-						handleType(types[j], destination,
-								new SubProgressMonitor(typesMonitor, 1));
+						handleType(types[j], destination, new SubProgressMonitor(typesMonitor, 1));
 						if (typesMonitor.isCanceled())
 							throw new OperationCanceledException();
 					}
@@ -2207,8 +1957,7 @@ public class ReorgPolicyFactory {
 			pm.done();
 		}
 
-		private void handleType(IType type, IScriptFolder destination,
-				IProgressMonitor pm) {
+		private void handleType(IType type, IScriptFolder destination, IProgressMonitor pm) {
 			if (DLTKCore.DEBUG) {
 				System.err.println("TODO: Add QualifiedNameFinder support..."); //$NON-NLS-1$
 			}
@@ -2219,19 +1968,16 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-				CheckConditionsContext context, IReorgQueries reorgQueries)
-				throws CoreException {
+		public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context,
+				IReorgQueries reorgQueries) throws CoreException {
 			try {
 				pm.beginTask("", fUpdateQualifiedNames ? 7 : 3); //$NON-NLS-1$
 				RefactoringStatus result = new RefactoringStatus();
 				confirmMovingReadOnly(reorgQueries);
-				fChangeManager = createChangeManager(
-						new SubProgressMonitor(pm, 2), result);
+				fChangeManager = createChangeManager(new SubProgressMonitor(pm, 2), result);
 				if (fUpdateQualifiedNames)
 					computeQualifiedNameMatches(new SubProgressMonitor(pm, 4));
-				result.merge(super.checkFinalConditions(
-						new SubProgressMonitor(pm, 1), context, reorgQueries));
+				result.merge(super.checkFinalConditions(new SubProgressMonitor(pm, 1), context, reorgQueries));
 				return result;
 			} catch (ModelException e) {
 				throw e;
@@ -2242,10 +1988,9 @@ public class ReorgPolicyFactory {
 			}
 		}
 
-		private void confirmMovingReadOnly(IReorgQueries reorgQueries)
-				throws CoreException {
-			if (!ReadOnlyResourceFinder.confirmMoveOfReadOnlyElements(
-					getScriptElements(), getResources(), reorgQueries))
+		private void confirmMovingReadOnly(IReorgQueries reorgQueries) throws CoreException {
+			if (!ReadOnlyResourceFinder.confirmMoveOfReadOnlyElements(getScriptElements(), getResources(),
+					reorgQueries))
 				throw new OperationCanceledException(); // saying' no' to this
 			// one is like
 			// cancelling the whole
@@ -2255,8 +2000,7 @@ public class ReorgPolicyFactory {
 		@Override
 		public IFile[] getAllModifiedFiles() {
 			Set result = new HashSet();
-			result.addAll(Arrays.asList(ResourceUtil
-					.getFiles(fChangeManager.getAllSourceModules())));
+			result.addAll(Arrays.asList(ResourceUtil.getFiles(fChangeManager.getAllSourceModules())));
 			// result.addAll(Arrays.asList(fQualifiedNameSearchResult.
 			// getAllFiles()));
 			if (getDestinationAsScriptFolder() != null && getUpdateReferences())
@@ -2266,8 +2010,7 @@ public class ReorgPolicyFactory {
 
 		@Override
 		public boolean hasAllInputSet() {
-			return super.hasAllInputSet() && !canUpdateReferences()
-					&& !canUpdateQualifiedNames();
+			return super.hasAllInputSet() && !canUpdateReferences() && !canUpdateQualifiedNames();
 		}
 
 		@Override
@@ -2295,15 +2038,13 @@ public class ReorgPolicyFactory {
 
 		@Override
 		public boolean canEnableQualifiedNameUpdating() {
-			return getCus().length > 0
-					&& !ModelElementUtil.isDefaultPackage(getCommonParent());
+			return getCus().length > 0 && !ModelElementUtil.isDefaultPackage(getCommonParent());
 		}
 
 		@Override
 		public boolean canUpdateQualifiedNames() {
 			IScriptFolder pack = getDestinationAsScriptFolder();
-			return (canEnableQualifiedNameUpdating() && pack != null
-					&& !pack.isRootFolder());
+			return (canEnableQualifiedNameUpdating() && pack != null && !pack.isRootFolder());
 		}
 
 		@Override
@@ -2328,8 +2069,7 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public ICreateTargetQuery getCreateTargetQuery(
-				ICreateTargetQueries createQueries) {
+		public ICreateTargetQuery getCreateTargetQuery(ICreateTargetQueries createQueries) {
 			return createQueries.createNewPackageQuery();
 		}
 
@@ -2339,20 +2079,15 @@ public class ReorgPolicyFactory {
 		}
 	}
 
-	private static class NoMovePolicy extends ReorgPolicy
-			implements IMovePolicy {
+	private static class NoMovePolicy extends ReorgPolicy implements IMovePolicy {
 		@Override
-		protected RefactoringStatus verifyDestination(IResource resource)
-				throws ModelException {
-			return RefactoringStatus.createFatalErrorStatus(
-					RefactoringCoreMessages.ReorgPolicyFactory_noMoving);
+		protected RefactoringStatus verifyDestination(IResource resource) throws ModelException {
+			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_noMoving);
 		}
 
 		@Override
-		protected RefactoringStatus verifyDestination(
-				IModelElement modelElement) throws ModelException {
-			return RefactoringStatus.createFatalErrorStatus(
-					RefactoringCoreMessages.ReorgPolicyFactory_noMoving);
+		protected RefactoringStatus verifyDestination(IModelElement modelElement) throws ModelException {
+			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_noMoving);
 		}
 
 		@Override
@@ -2361,8 +2096,7 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public Change postCreateChange(Change[] participantChanges,
-				IProgressMonitor pm) throws CoreException {
+		public Change postCreateChange(Change[] participantChanges, IProgressMonitor pm) throws CoreException {
 			return null;
 		}
 
@@ -2382,8 +2116,7 @@ public class ReorgPolicyFactory {
 		}
 
 		@Override
-		public ICreateTargetQuery getCreateTargetQuery(
-				ICreateTargetQueries createQueries) {
+		public ICreateTargetQuery getCreateTargetQuery(ICreateTargetQueries createQueries) {
 			return null;
 		}
 
@@ -2397,14 +2130,12 @@ public class ReorgPolicyFactory {
 		private final IResource[] fResources;
 		private final IModelElement[] fScriptElements;
 
-		public ActualSelectionComputer(IModelElement[] modelElements,
-				IResource[] resources) {
+		public ActualSelectionComputer(IModelElement[] modelElements, IResource[] resources) {
 			fScriptElements = modelElements;
 			fResources = resources;
 		}
 
-		public IModelElement[] getActualScriptElementsToReorg()
-				throws ModelException {
+		public IModelElement[] getActualScriptElementsToReorg() throws ModelException {
 			List result = new ArrayList();
 			for (int i = 0; i < fScriptElements.length; i++) {
 				IModelElement element = fScriptElements[i];
@@ -2415,22 +2146,18 @@ public class ReorgPolicyFactory {
 				if (element instanceof IType) {
 					IType type = (IType) element;
 					ISourceModule cu = type.getSourceModule();
-					if (cu != null && type.getDeclaringType() == null
-							&& cu.exists() && cu.getTypes().length == 1
+					if (cu != null && type.getDeclaringType() == null && cu.exists() && cu.getTypes().length == 1
 							&& !result.contains(cu))
 						result.add(cu);
 					else if (!result.contains(type))
 						result.add(type);
-				} else if (element instanceof IScriptFolder
-						&& !element.isReadOnly()
-						&& element.getResource() != null) {
+				} else if (element instanceof IScriptFolder && !element.isReadOnly() && element.getResource() != null) {
 					// skip
 				} else if (!result.contains(element)) {
 					result.add(element);
 				}
 			}
-			return (IModelElement[]) result
-					.toArray(new IModelElement[result.size()]);
+			return (IModelElement[]) result.toArray(new IModelElement[result.size()]);
 		}
 
 		public IResource[] getActualResourcesToReorg() {
@@ -2440,8 +2167,7 @@ public class ReorgPolicyFactory {
 				if (fResources[i] == null)
 					continue;
 				IModelElement element = DLTKCore.create(fResources[i]);
-				if (element == null || !element.exists()
-						|| !modelElementSet.contains(element))
+				if (element == null || !element.exists() || !modelElementSet.contains(element))
 					if (!result.contains(fResources[i]))
 						result.add(fResources[i]);
 			}
@@ -2449,8 +2175,7 @@ public class ReorgPolicyFactory {
 				IModelElement element = fScriptElements[i];
 				if (element == null)
 					continue;
-				if (element.getElementType() == IModelElement.SCRIPT_FOLDER
-						&& !element.isReadOnly()) {
+				if (element.getElementType() == IModelElement.SCRIPT_FOLDER && !element.isReadOnly()) {
 					IResource resource = element.getResource();
 					if (resource != null) {
 						if (!result.contains(resource))

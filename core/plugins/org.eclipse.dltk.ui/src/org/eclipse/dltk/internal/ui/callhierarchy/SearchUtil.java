@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,8 +38,7 @@ public class SearchUtil {
 	/**
 	 * Updates the LRU list of working sets.
 	 *
-	 * @param workingSets
-	 *            the workings sets to be added to the LRU list
+	 * @param workingSets the workings sets to be added to the LRU list
 	 */
 	public static void updateLRUWorkingSets(IWorkingSet[] workingSets) {
 		if (workingSets == null || workingSets.length < 1)
@@ -58,8 +57,7 @@ public class SearchUtil {
 			String[] names = new String[workingSets.length];
 			for (int j = 0; j < workingSets.length; j++)
 				names[j] = workingSets[j].getName();
-			SearchUtil.fgSettingsStore
-					.put(SearchUtil.STORE_LRU_WORKING_SET_NAMES + i, names);
+			SearchUtil.fgSettingsStore.put(SearchUtil.STORE_LRU_WORKING_SET_NAMES + i, names);
 			i++;
 		}
 	}
@@ -72,13 +70,11 @@ public class SearchUtil {
 	}
 
 	static void restoreState() {
-		SearchUtil.fgLRUWorkingSets = new LRUWorkingSetsList(
-				SearchUtil.LRU_WORKINGSET_LIST_SIZE);
-		SearchUtil.fgSettingsStore = DLTKUIPlugin.getDefault()
-				.getDialogSettings().getSection(SearchUtil.DIALOG_SETTINGS_KEY);
+		SearchUtil.fgLRUWorkingSets = new LRUWorkingSetsList(SearchUtil.LRU_WORKINGSET_LIST_SIZE);
+		SearchUtil.fgSettingsStore = DLTKUIPlugin.getDefault().getDialogSettings()
+				.getSection(SearchUtil.DIALOG_SETTINGS_KEY);
 		if (SearchUtil.fgSettingsStore == null)
-			SearchUtil.fgSettingsStore = DLTKUIPlugin.getDefault()
-					.getDialogSettings()
+			SearchUtil.fgSettingsStore = DLTKUIPlugin.getDefault().getDialogSettings()
 					.addNewSection(SearchUtil.DIALOG_SETTINGS_KEY);
 
 		boolean foundLRU = false;
@@ -88,8 +84,7 @@ public class SearchUtil {
 			if (lruWorkingSetNames != null) {
 				Set<IWorkingSet> workingSets = new HashSet<>(2);
 				for (int j = 0; j < lruWorkingSetNames.length; j++) {
-					IWorkingSet workingSet = PlatformUI.getWorkbench()
-							.getWorkingSetManager()
+					IWorkingSet workingSet = PlatformUI.getWorkbench().getWorkingSetManager()
 							.getWorkingSet(lruWorkingSetNames[j]);
 					if (workingSet != null) {
 						workingSets.add(workingSet);
@@ -97,8 +92,7 @@ public class SearchUtil {
 				}
 				foundLRU = true;
 				if (!workingSets.isEmpty())
-					SearchUtil.fgLRUWorkingSets.add(workingSets
-							.toArray(new IWorkingSet[workingSets.size()]));
+					SearchUtil.fgLRUWorkingSets.add(workingSets.toArray(new IWorkingSet[workingSets.size()]));
 			}
 		}
 		if (!foundLRU)
@@ -107,27 +101,22 @@ public class SearchUtil {
 	}
 
 	private static void restoreFromOldFormat() {
-		SearchUtil.fgLRUWorkingSets = new LRUWorkingSetsList(
-				SearchUtil.LRU_WORKINGSET_LIST_SIZE);
-		SearchUtil.fgSettingsStore = DLTKUIPlugin.getDefault()
-				.getDialogSettings().getSection(SearchUtil.DIALOG_SETTINGS_KEY);
+		SearchUtil.fgLRUWorkingSets = new LRUWorkingSetsList(SearchUtil.LRU_WORKINGSET_LIST_SIZE);
+		SearchUtil.fgSettingsStore = DLTKUIPlugin.getDefault().getDialogSettings()
+				.getSection(SearchUtil.DIALOG_SETTINGS_KEY);
 		if (SearchUtil.fgSettingsStore == null)
-			SearchUtil.fgSettingsStore = DLTKUIPlugin.getDefault()
-					.getDialogSettings()
+			SearchUtil.fgSettingsStore = DLTKUIPlugin.getDefault().getDialogSettings()
 					.addNewSection(SearchUtil.DIALOG_SETTINGS_KEY);
 
 		boolean foundLRU = false;
-		String[] lruWorkingSetNames = SearchUtil.fgSettingsStore
-				.getArray(SearchUtil.STORE_LRU_WORKING_SET_NAMES);
+		String[] lruWorkingSetNames = SearchUtil.fgSettingsStore.getArray(SearchUtil.STORE_LRU_WORKING_SET_NAMES);
 		if (lruWorkingSetNames != null) {
 			for (int i = lruWorkingSetNames.length - 1; i >= 0; i--) {
-				IWorkingSet workingSet = PlatformUI.getWorkbench()
-						.getWorkingSetManager()
+				IWorkingSet workingSet = PlatformUI.getWorkbench().getWorkingSetManager()
 						.getWorkingSet(lruWorkingSetNames[i]);
 				if (workingSet != null) {
 					foundLRU = true;
-					SearchUtil.fgLRUWorkingSets
-							.add(new IWorkingSet[] { workingSet });
+					SearchUtil.fgLRUWorkingSets.add(new IWorkingSet[] { workingSet });
 				}
 			}
 		}
@@ -144,9 +133,8 @@ public class SearchUtil {
 			for (int i = 0; i < workingSets.length; i++) {
 				String workingSetName = workingSets[i].getLabel();
 				if (firstFound)
-					result = Messages.format(
-							CallHierarchyMessages.SearchUtil_workingSetConcatenation,
-							new String[] { result, workingSetName });
+					result = Messages.format(CallHierarchyMessages.SearchUtil_workingSetConcatenation, result,
+							workingSetName);
 				else {
 					result = workingSetName;
 					firstFound = true;
@@ -157,25 +145,24 @@ public class SearchUtil {
 	}
 
 	/**
-	 * This helper method with Object as parameter is needed to prevent the
-	 * loading of the Search plug-in: the Interpreter verifies the method call
-	 * and hence loads the types used in the method signature, eventually
-	 * triggering the loading of a plug-in (in this case ISearchQuery results in
-	 * Search plug-in being loaded).
+	 * This helper method with Object as parameter is needed to prevent the loading
+	 * of the Search plug-in: the Interpreter verifies the method call and hence
+	 * loads the types used in the method signature, eventually triggering the
+	 * loading of a plug-in (in this case ISearchQuery results in Search plug-in
+	 * being loaded).
 	 */
 	public static void runQueryInBackground(Object query) {
 		NewSearchUI.runQueryInBackground((ISearchQuery) query);
 	}
 
 	/**
-	 * This helper method with Object as parameter is needed to prevent the
-	 * loading of the Search plug-in: the Interpreter verifies the method call
-	 * and hence loads the types used in the method signature, eventually
-	 * triggering the loading of a plug-in (in this case ISearchQuery results in
-	 * Search plug-in being loaded).
+	 * This helper method with Object as parameter is needed to prevent the loading
+	 * of the Search plug-in: the Interpreter verifies the method call and hence
+	 * loads the types used in the method signature, eventually triggering the
+	 * loading of a plug-in (in this case ISearchQuery results in Search plug-in
+	 * being loaded).
 	 */
-	public static IStatus runQueryInForeground(IRunnableContext context,
-			Object query) {
+	public static IStatus runQueryInForeground(IRunnableContext context, Object query) {
 		return NewSearchUI.runQueryInForeground(context, (ISearchQuery) query);
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,22 +16,21 @@ import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 
-
 public class MoveScriptFolderChange extends ScriptFolderReorgChange {
 
-	public MoveScriptFolderChange(IScriptFolder pack, IProjectFragment dest){
+	public MoveScriptFolderChange(IScriptFolder pack, IProjectFragment dest) {
 		super(pack, dest, null);
 	}
 
 	@Override
-	protected Change doPerformReorg(IProgressMonitor pm) throws ModelException{
+	protected Change doPerformReorg(IProgressMonitor pm) throws ModelException {
 		getPackage().move(getDestination(), null, getNewName(), true, pm);
 		return null;
 	}
 
 	@Override
 	public String getName() {
-		return Messages.format(RefactoringCoreMessages.MovePackageChange_move,
-			new String[]{getPackage().getElementName(), getDestination().getElementName()});
+		return Messages.format(RefactoringCoreMessages.MovePackageChange_move, getPackage().getElementName(),
+				getDestination().getElementName());
 	}
 }

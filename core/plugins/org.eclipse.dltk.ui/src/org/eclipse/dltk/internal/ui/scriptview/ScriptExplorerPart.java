@@ -135,9 +135,8 @@ import org.eclipse.ui.views.framelist.TreeFrame;
  * view the corresponding editor is activated.
  */
 
-public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
-		IMenuListener, IShowInTarget, IScriptExplorerViewPart,
-		IPropertyChangeListener, IViewPartInputProvider {
+public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget, IMenuListener, IShowInTarget,
+		IScriptExplorerViewPart, IPropertyChangeListener, IViewPartInputProvider {
 
 	private static final String PERF_CREATE_PART_CONTROL = "org.eclipse.dltk.ui/perf/explorer/createPartControl"; //$NON-NLS-1$
 	private static final String PERF_MAKE_ACTIONS = "org.eclipse.dltk.ui/perf/explorer/makeActions"; //$NON-NLS-1$
@@ -251,21 +250,18 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 
 		@Override
 		protected boolean evaluateExpandableWithFilters(Object parent) {
-			if (parent instanceof IScriptProject
-					|| parent instanceof ISourceModule
+			if (parent instanceof IScriptProject || parent instanceof ISourceModule
 					|| parent instanceof BuildPathContainer) {
 				return false;
 			}
-			if (parent instanceof IProjectFragment
-					&& ((IProjectFragment) parent).isArchive()) {
+			if (parent instanceof IProjectFragment && ((IProjectFragment) parent).isArchive()) {
 				return false;
 			}
 			return true;
 		}
 
 		@Override
-		protected boolean isFiltered(Object object, Object parent,
-				ViewerFilter[] filters) {
+		protected boolean isFiltered(Object object, Object parent, ViewerFilter[] filters) {
 			// if (object instanceof PackageFragmentRootContainer) {
 			// return !hasFilteredChildren(object);
 			// }
@@ -278,8 +274,8 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		}
 
 		/*
-		 * Checks if a filtered object in essential (i.e. is a parent that
-		 * should not be removed).
+		 * Checks if a filtered object in essential (i.e. is a parent that should not be
+		 * removed).
 		 */
 		private boolean isEssential(Object object) {
 			try {
@@ -296,13 +292,11 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		}
 
 		@Override
-		protected void handleInvalidSelection(ISelection invalidSelection,
-				ISelection newSelection) {
+		protected void handleInvalidSelection(ISelection invalidSelection, ISelection newSelection) {
 			IStructuredSelection is = (IStructuredSelection) invalidSelection;
 			List ns = null;
 			if (newSelection instanceof IStructuredSelection) {
-				ns = new ArrayList(
-						((IStructuredSelection) newSelection).toList());
+				ns = new ArrayList(((IStructuredSelection) newSelection).toList());
 			} else {
 				ns = new ArrayList();
 			}
@@ -338,8 +332,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		 */
 		@Override
 		protected Object[] addAditionalProblemParents(Object[] elements) {
-			if (getRootMode() == ScriptExplorerPart.WORKING_SETS_AS_ROOTS
-					&& elements != null) {
+			if (getRootMode() == ScriptExplorerPart.WORKING_SETS_AS_ROOTS && elements != null) {
 				return fWorkingSetModel.addWorkingSets(elements);
 			}
 			return elements;
@@ -359,14 +352,12 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		}
 
 		@Override
-		protected void setSelectionToWidget(ISelection selection,
-				boolean reveal) {
+		protected void setSelectionToWidget(ISelection selection, boolean reveal) {
 			if (true) {
 				super.setSelectionToWidget(selection, reveal);
 				return;
 			}
-			if (!fInPreserveSelection
-					|| !(selection instanceof ITreeSelection)) {
+			if (!fInPreserveSelection || !(selection instanceof ITreeSelection)) {
 				super.setSelectionToWidget(selection, reveal);
 				return;
 			}
@@ -381,14 +372,11 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			for (Iterator iter = toRestore.iterator(); iter.hasNext();) {
 				Object element = iter.next();
 				TreePath[] pathsToRestore = toRestore.getPathsFor(element);
-				CustomHashtable currentParents = createRootAccessedMap(
-						contentProvider.getTreePaths(element));
+				CustomHashtable currentParents = createRootAccessedMap(contentProvider.getTreePaths(element));
 				for (int i = 0; i < pathsToRestore.length; i++) {
 					TreePath path = pathsToRestore[i];
 					Object root = path.getFirstSegment();
-					if (root != null
-							&& path.equals((TreePath) currentParents.get(root),
-									getComparer())) {
+					if (root != null && path.equals((TreePath) currentParents.get(root), getComparer())) {
 						pathsToSelect.add(path);
 					}
 				}
@@ -403,8 +391,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 				Widget current = getTree();
 				int last = size - 1;
 				Object segment;
-				for (int i = 0; i < size && current != null
-						&& (segment = path.getSegment(i)) != null; i++) {
+				for (int i = 0; i < size && current != null && (segment = path.getSegment(i)) != null; i++) {
 					internalExpandToLevel(current, 1);
 					current = internalFindChild(current, segment);
 					if (i == last && current != null) {
@@ -412,8 +399,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 					}
 				}
 			}
-			getTree().setSelection((TreeItem[]) toSelect
-					.toArray(new TreeItem[toSelect.size()]));
+			getTree().setSelection((TreeItem[]) toSelect.toArray(new TreeItem[toSelect.size()]));
 		}
 
 		private Widget internalFindChild(Widget parent, Object element) {
@@ -445,28 +431,23 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		fPostSelectionListener = event -> handlePostSelectionChanged(event);
 
 		// exception: initialize from preference
-		fDialogSettings = DLTKUIPlugin.getDefault()
-				.getDialogSettingsSection(getClass().getName());
+		fDialogSettings = DLTKUIPlugin.getDefault().getDialogSettingsSection(getClass().getName());
 
 		// on by default
-		fShowLibrariesNode = fDialogSettings
-				.get(ScriptExplorerPart.TAG_GROUP_LIBRARIES) == null
-				|| fDialogSettings
-						.getBoolean(ScriptExplorerPart.TAG_GROUP_LIBRARIES);
+		fShowLibrariesNode = fDialogSettings.get(ScriptExplorerPart.TAG_GROUP_LIBRARIES) == null
+				|| fDialogSettings.getBoolean(ScriptExplorerPart.TAG_GROUP_LIBRARIES);
 
-		fLinkingEnabled = fDialogSettings
-				.getBoolean(ScriptExplorerPart.TAG_LINK_EDITOR);
+		fLinkingEnabled = fDialogSettings.getBoolean(ScriptExplorerPart.TAG_LINK_EDITOR);
 
 		try {
-			fIsCurrentLayoutFlat = fDialogSettings.getInt(
-					ScriptExplorerPart.TAG_LAYOUT) == ScriptExplorerPart.FLAT_LAYOUT;
+			fIsCurrentLayoutFlat = fDialogSettings
+					.getInt(ScriptExplorerPart.TAG_LAYOUT) == ScriptExplorerPart.FLAT_LAYOUT;
 		} catch (NumberFormatException e) {
 			fIsCurrentLayoutFlat = getDefaultPackageLayout() == FLAT_LAYOUT;
 		}
 
 		try {
-			fRootMode = fDialogSettings
-					.getInt(ScriptExplorerPart.TAG_ROOT_MODE);
+			fRootMode = fDialogSettings.getInt(ScriptExplorerPart.TAG_ROOT_MODE);
 		} catch (NumberFormatException e) {
 			fRootMode = ScriptExplorerPart.PROJECTS_AS_ROOTS;
 		}
@@ -478,16 +459,13 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	}
 
 	@Override
-	public void init(IViewSite site, IMemento memento)
-			throws PartInitException {
+	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		if (memento == null) {
-			String persistedMemento = fDialogSettings
-					.get(ScriptExplorerPart.TAG_MEMENTO);
+			String persistedMemento = fDialogSettings.get(ScriptExplorerPart.TAG_MEMENTO);
 			if (persistedMemento != null) {
 				try {
-					memento = XMLMemento
-							.createReadRoot(new StringReader(persistedMemento));
+					memento = XMLMemento.createReadRoot(new StringReader(persistedMemento));
 				} catch (WorkbenchException e) {
 					// don't do anything. Simply don't restore the settings
 				}
@@ -506,8 +484,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 
 	private void restoreRootMode(IMemento memento) {
 		Integer value = memento.getInteger(ScriptExplorerPart.TAG_ROOT_MODE);
-		fRootMode = value == null ? ScriptExplorerPart.PROJECTS_AS_ROOTS
-				: value.intValue();
+		fRootMode = value == null ? ScriptExplorerPart.PROJECTS_AS_ROOTS : value.intValue();
 		if (fRootMode != ScriptExplorerPart.PROJECTS_AS_ROOTS
 				&& fRootMode != ScriptExplorerPart.WORKING_SETS_AS_ROOTS) {
 			fRootMode = ScriptExplorerPart.PROJECTS_AS_ROOTS;
@@ -517,20 +494,17 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	private void restoreLayoutState(IMemento memento) {
 		Integer layoutState = memento.getInteger(ScriptExplorerPart.TAG_LAYOUT);
 		if (layoutState != null) {
-			fIsCurrentLayoutFlat = layoutState
-					.intValue() == ScriptExplorerPart.FLAT_LAYOUT;
+			fIsCurrentLayoutFlat = layoutState.intValue() == ScriptExplorerPart.FLAT_LAYOUT;
 		}
 
 		// on by default
-		Integer groupLibraries = memento
-				.getInteger(ScriptExplorerPart.TAG_GROUP_LIBRARIES);
-		fShowLibrariesNode = groupLibraries == null
-				|| groupLibraries.intValue() != 0;
+		Integer groupLibraries = memento.getInteger(ScriptExplorerPart.TAG_GROUP_LIBRARIES);
+		fShowLibrariesNode = groupLibraries == null || groupLibraries.intValue() != 0;
 	}
 
 	/**
-	 * Returns the package explorer part of the active perspective. If there
-	 * isn't any package explorer part <code>null</code> is returned.
+	 * Returns the package explorer part of the active perspective. If there isn't
+	 * any package explorer part <code>null</code> is returned.
 	 */
 	public static ScriptExplorerPart getFromActivePerspective() {
 		IWorkbenchPage activePage = DLTKUIPlugin.getActivePage();
@@ -545,14 +519,13 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	}
 
 	/**
-	 * Makes the package explorer part visible in the active perspective. If
-	 * there isn't a package explorer part registered <code>null</code> is
-	 * returned. Otherwise the opened view part is returned.
+	 * Makes the package explorer part visible in the active perspective. If there
+	 * isn't a package explorer part registered <code>null</code> is returned.
+	 * Otherwise the opened view part is returned.
 	 */
 	public static ScriptExplorerPart openInActivePerspective() {
 		try {
-			return (ScriptExplorerPart) DLTKUIPlugin.getActivePage()
-					.showView(DLTKUIPlugin.ID_SCRIPT_EXPLORER);
+			return (ScriptExplorerPart) DLTKUIPlugin.getActivePage().showView(DLTKUIPlugin.ID_SCRIPT_EXPLORER);
 		} catch (PartInitException pe) {
 			return null;
 		}
@@ -561,8 +534,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	@Override
 	public void dispose() {
 		if (fContextActivation != null) {
-			IContextService ctxService = getSite()
-					.getService(IContextService.class);
+			IContextService ctxService = getSite().getService(IContextService.class);
 			if (ctxService != null) {
 				ctxService.deactivateContext(fContextActivation);
 			}
@@ -572,8 +544,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		StringWriter writer = new StringWriter();
 		try {
 			memento.save(writer);
-			fDialogSettings.put(ScriptExplorerPart.TAG_MEMENTO,
-					writer.getBuffer().toString());
+			fDialogSettings.put(ScriptExplorerPart.TAG_MEMENTO, writer.getBuffer().toString());
 		} catch (IOException e) {
 			// don't do anything. Simply don't store the settings
 		}
@@ -590,8 +561,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		// didn't
 		// register
 
-		DLTKUIPlugin.getDefault().getPreferenceStore()
-				.removePropertyChangeListener(this);
+		DLTKUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
 		// if (fViewer != null) {
 		// fViewer.removeTreeListener(fExpansionListener);
 		// }
@@ -600,8 +570,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			fActionSet.dispose();
 		}
 		if (fFilterUpdater != null) {
-			ResourcesPlugin.getWorkspace()
-					.removeResourceChangeListener(fFilterUpdater);
+			ResourcesPlugin.getWorkspace().removeResourceChangeListener(fFilterUpdater);
 		}
 		if (fWorkingSetModel != null) {
 			fWorkingSetModel.dispose();
@@ -618,8 +587,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	@Override
 	public void createPartControl(Composite parent) {
 
-		final PerformanceStats stats = PerformanceStats
-				.getStats(ScriptExplorerPart.PERF_CREATE_PART_CONTROL, this);
+		final PerformanceStats stats = PerformanceStats.getStats(ScriptExplorerPart.PERF_CREATE_PART_CONTROL, this);
 		stats.startRun();
 
 		fViewer = createViewer(parent);
@@ -629,8 +597,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 
 		setProviders();
 
-		DLTKUIPlugin.getDefault().getPreferenceStore()
-				.addPropertyChangeListener(this);
+		DLTKUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
@@ -655,16 +622,14 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 
 		fViewer.addPostSelectionChangedListener(fPostSelectionListener);
 
-		fViewer.addDoubleClickListener(
-				event -> fActionSet.handleDoubleClick(event));
+		fViewer.addDoubleClickListener(event -> fActionSet.handleDoubleClick(event));
 
 		fViewer.addOpenListener(event -> {
 			fActionSet.handleOpen(event);
 			fLastOpenSelection = event.getSelection();
 		});
 
-		IStatusLineManager slManager = getViewSite().getActionBars()
-				.getStatusLineManager();
+		IStatusLineManager slManager = getViewSite().getActionBars().getStatusLineManager();
 		fViewer.addSelectionChangedListener(new StatusBarUpdater(slManager));
 		// fViewer.addTreeListener(fExpansionListener);
 
@@ -675,19 +640,16 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		updateTitle();
 
 		fFilterUpdater = new FilterUpdater(fViewer);
-		ResourcesPlugin.getWorkspace()
-				.addResourceChangeListener(fFilterUpdater);
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(fFilterUpdater);
 
 		// Sync'ing the package explorer has to be done here. It can't be done
 		// when restoring the link state since the package explorers input isn't
 		// set yet.
 		setLinkingEnabled(isLinkingEnabled());
 
-		IContextService ctxService = getSite()
-				.getService(IContextService.class);
+		IContextService ctxService = getSite().getService(IContextService.class);
 		if (ctxService != null) {
-			fContextActivation = ctxService
-					.activateContext(DLTKUIPlugin.CONTEXT_VIEWS);
+			fContextActivation = ctxService.activateContext(DLTKUIPlugin.CONTEXT_VIEWS);
 		}
 		stats.endRun();
 	}
@@ -705,8 +667,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	 *
 	 */
 	protected ProblemTreeViewer createViewer(Composite composite) {
-		return new PackageExplorerProblemTreeViewer(composite,
-				SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		return new PackageExplorerProblemTreeViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 	}
 
 	/**
@@ -729,8 +690,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 
 		fLabelProvider = createLabelProvider();
 		fLabelProvider.setIsFlatLayout(fIsCurrentLayoutFlat);
-		fDecoratingLabelProvider = new StyledDecoratingModelLabelProvider(
-				fLabelProvider, false, fIsCurrentLayoutFlat);
+		fDecoratingLabelProvider = new StyledDecoratingModelLabelProvider(fLabelProvider, false, fIsCurrentLayoutFlat);
 		fViewer.setLabelProvider(fDecoratingLabelProvider);
 		// problem decoration provided by PackageLabelProvider
 	}
@@ -782,8 +742,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 				}
 			};
 		}
-		return new WorkingSetAwareContentProvider(showCUChildren,
-				fWorkingSetModel) {
+		return new WorkingSetAwareContentProvider(showCUChildren, fWorkingSetModel) {
 			@Override
 			protected IPreferenceStore getPreferenceStore() {
 				return DLTKUIPlugin.getDefault().getPreferenceStore();
@@ -793,8 +752,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 
 	protected ScriptExplorerLabelProvider createLabelProvider() {
 
-		final IPreferenceStore store = DLTKUIPlugin.getDefault()
-				.getPreferenceStore();
+		final IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
 		return new ScriptExplorerLabelProvider(fContentProvider, store);
 	}
 
@@ -845,8 +803,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			return (T) getShowInSource();
 		}
 		if (key == IShowInTargetList.class) {
-			return (T) (IShowInTargetList) () -> new String[] {
-					IPageLayout.ID_RES_NAV };
+			return (T) (IShowInTargetList) () -> new String[] { IPageLayout.ID_RES_NAV };
 		}
 		// if (key == IContextProvider.class) {
 		// return ScriptUIHelp.getHelpContextProvider(this,
@@ -891,16 +848,13 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 				return result;
 			}
 			if (result.length() == 0) {
-				return Messages.format(ScriptMessages.PackageExplorer_toolTip,
-						new String[] { fWorkingSetLabel });
+				return Messages.format(ScriptMessages.PackageExplorer_toolTip, fWorkingSetLabel);
 			}
-			return Messages.format(ScriptMessages.PackageExplorer_toolTip2,
-					new String[] { result, fWorkingSetLabel });
+			return Messages.format(ScriptMessages.PackageExplorer_toolTip2, result, fWorkingSetLabel);
 		}
 		// Working set mode. During initialization element and
 		// action set can be null.
-		if (element != null && !(element instanceof IWorkingSet)
-				&& !(element instanceof WorkingSetModel)
+		if (element != null && !(element instanceof IWorkingSet) && !(element instanceof WorkingSetModel)
 				&& fActionSet != null) {
 			FrameList frameList = fActionSet.getFrameList();
 			int index = frameList.getCurrentIndex();
@@ -917,8 +871,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 				index--;
 			}
 			if (ws != null) {
-				return Messages.format(ScriptMessages.PackageExplorer_toolTip3,
-						new String[] { ws.getLabel(), result });
+				return Messages.format(ScriptMessages.PackageExplorer_toolTip3, ws.getLabel(), result);
 			}
 			return result;
 		}
@@ -933,11 +886,6 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		return getToolTipText(fViewer.getInput());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-	 */
 	@Override
 	public void setFocus() {
 		fViewer.getTree().setFocus();
@@ -950,11 +898,6 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	// ---- Action handling
 	// ----------------------------------------------------------
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see IMenuListener#menuAboutToShow(IMenuManager)
-	 */
 	@Override
 	public void menuAboutToShow(IMenuManager menu) {
 		DLTKUIPlugin.createStandardGroups(menu);
@@ -966,14 +909,12 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 
 	private void makeActions() {
 
-		final PerformanceStats stats = PerformanceStats
-				.getStats(ScriptExplorerPart.PERF_MAKE_ACTIONS, this);
+		final PerformanceStats stats = PerformanceStats.getStats(ScriptExplorerPart.PERF_MAKE_ACTIONS, this);
 		stats.startRun();
 
 		fActionSet = getActionGroup();
 		if (fWorkingSetModel != null) {
-			fActionSet.getWorkingSetActionGroup()
-					.setWorkingSetModel(fWorkingSetModel);
+			fActionSet.getWorkingSetActionGroup().setWorkingSetModel(fWorkingSetModel);
 		}
 
 		stats.endRun();
@@ -1019,13 +960,6 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		fLastOpenSelection = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.ui.part.ISetSelectionTarget#selectReveal(org.eclipse.jface
-	 * .viewers.ISelection)
-	 */
 	@Override
 	public void selectReveal(final ISelection selection) {
 		Control ctrl = getTreeViewer().getControl();
@@ -1061,8 +995,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			if (original instanceof ISourceModule) {
 				ISourceModule cu = (ISourceModule) original;
 				IScriptProject javaProject = cu.getScriptProject();
-				if (javaProject != null && javaProject.exists()
-						&& !javaProject.isOnBuildpath(cu)) {
+				if (javaProject != null && javaProject.exists() && !javaProject.isOnBuildpath(cu)) {
 					// could be a working copy of a .java file that is not on
 					// classpath
 					IResource resource = cu.getResource();
@@ -1115,8 +1048,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	/**
 	 * Links to editor (if option enabled)
 	 *
-	 * @param selection
-	 *                      the selection
+	 * @param selection the selection
 	 */
 	private void linkToEditor(IStructuredSelection selection) {
 		// ignore selection changes if the package explorer is not the active
@@ -1165,25 +1097,21 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	}
 
 	private void saveLinkingEnabled(IMemento memento) {
-		memento.putInteger(ScriptExplorerPart.TAG_LINK_EDITOR,
-				fLinkingEnabled ? 1 : 0);
+		memento.putInteger(ScriptExplorerPart.TAG_LINK_EDITOR, fLinkingEnabled ? 1 : 0);
 	}
 
 	private void saveLayoutState(IMemento memento) {
 		if (memento != null) {
 			memento.putInteger(ScriptExplorerPart.TAG_LAYOUT, getLayoutAsInt());
-			memento.putInteger(ScriptExplorerPart.TAG_GROUP_LIBRARIES,
-					fShowLibrariesNode ? 1 : 0);
+			memento.putInteger(ScriptExplorerPart.TAG_GROUP_LIBRARIES, fShowLibrariesNode ? 1 : 0);
 		}
 	}
 
 	private void saveDialogSettings() {
-		fDialogSettings.put(ScriptExplorerPart.TAG_GROUP_LIBRARIES,
-				fShowLibrariesNode);
+		fDialogSettings.put(ScriptExplorerPart.TAG_GROUP_LIBRARIES, fShowLibrariesNode);
 		fDialogSettings.put(ScriptExplorerPart.TAG_LAYOUT, getLayoutAsInt());
 		fDialogSettings.put(ScriptExplorerPart.TAG_ROOT_MODE, fRootMode);
-		fDialogSettings.put(ScriptExplorerPart.TAG_LINK_EDITOR,
-				fLinkingEnabled);
+		fDialogSettings.put(ScriptExplorerPart.TAG_LINK_EDITOR, fLinkingEnabled);
 	}
 
 	private int getLayoutAsInt() {
@@ -1218,11 +1146,10 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	}
 
 	/**
-	 * An editor has been activated. Set the selection in this Packages Viewer
-	 * to be the editor's input, if linking is enabled.
+	 * An editor has been activated. Set the selection in this Packages Viewer to be
+	 * the editor's input, if linking is enabled.
 	 *
-	 * @param editor
-	 *                   the activated editor
+	 * @param editor the activated editor
 	 */
 	protected void editorActivated(IEditorPart editor) {
 		IEditorInput editorInput = editor.getEditorInput();
@@ -1271,8 +1198,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			return false;
 		}
 
-		IEditorInput selectionAsInput = EditorUtility
-				.getEditorInput(selection.getFirstElement());
+		IEditorInput selectionAsInput = EditorUtility.getEditorInput(selection.getFirstElement());
 		return input.equals(selectionAsInput);
 	}
 
@@ -1293,12 +1219,10 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 				fViewer.reveal(element);
 			} else {
 				try {
-					fViewer.removePostSelectionChangedListener(
-							fPostSelectionListener);
+					fViewer.removePostSelectionChangedListener(fPostSelectionListener);
 					fViewer.setSelection(newSelection, true);
 
-					while (element != null
-							&& fViewer.getSelection().isEmpty()) {
+					while (element != null && fViewer.getSelection().isEmpty()) {
 						// Try to select parent in case element is filtered
 						element = getParent(element);
 						if (element != null) {
@@ -1307,8 +1231,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 						}
 					}
 				} finally {
-					fViewer.addPostSelectionChangedListener(
-							fPostSelectionListener);
+					fViewer.addPostSelectionChangedListener(fPostSelectionListener);
 				}
 			}
 			return true;
@@ -1344,8 +1267,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		else if (input instanceof ExternalStorageEditorInput)
 			return ((ExternalStorageEditorInput) input).getStorage();
 		else if (input instanceof FileStoreEditorInput) {
-			ISourceModule module = DLTKUIPlugin
-					.resolveSourceModule((FileStoreEditorInput) input);
+			ISourceModule module = DLTKUIPlugin.resolveSourceModule((FileStoreEditorInput) input);
 			if (module != null) {
 				return module;
 			}
@@ -1379,8 +1301,8 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	}
 
 	/**
-	 * Updates the title text and title tool tip. Called whenever the input of
-	 * the viewer changes.
+	 * Updates the title text and title tool tip. Called whenever the input of the
+	 * viewer changes.
 	 */
 	void updateTitle() {
 		Object input = fViewer.getInput();
@@ -1388,8 +1310,8 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			setContentDescription(""); //$NON-NLS-1$
 			setTitleToolTip(""); //$NON-NLS-1$
 		} else {
-			String inputText = ScriptElementLabels.getDefault().getTextLabel(
-					input, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
+			String inputText = ScriptElementLabels.getDefault().getTextLabel(input,
+					AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
 			setContentDescription(inputText);
 			setTitleToolTip(getToolTipText(input));
 		}
@@ -1403,21 +1325,17 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 
 		boolean refreshViewer = false;
 
-		if (PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN
-				.equals(event.getProperty())) {
+		if (PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN.equals(event.getProperty())) {
 			fActionSet.updateActionBars(getViewSite().getActionBars());
 
-			boolean showCUChildren = DLTKUIPlugin.getDefault()
-					.getPreferenceStore().getBoolean(
-							PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN);
-			((StandardModelElementContentProvider) fViewer.getContentProvider())
-					.setProvideMembers(showCUChildren);
+			boolean showCUChildren = DLTKUIPlugin.getDefault().getPreferenceStore()
+					.getBoolean(PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN);
+			((StandardModelElementContentProvider) fViewer.getContentProvider()).setProvideMembers(showCUChildren);
 
 			refreshViewer = true;
 		}
 		if (DLTKCore.DEBUG) {
-			System.err.println(
-					"Add members order preference cach support here..."); //$NON-NLS-1$
+			System.err.println("Add members order preference cach support here..."); //$NON-NLS-1$
 		}
 		// } else if
 		// (MembersOrderPreferenceCache.isMemberOrderProperty(event.getProperty()
@@ -1447,8 +1365,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	public void collapseAll() {
 		try {
 			fViewer.getControl().setRedraw(false);
-			fViewer.collapseToLevel(getViewPartInput(),
-					AbstractTreeViewer.ALL_LEVELS);
+			fViewer.collapseToLevel(getViewPartInput(), AbstractTreeViewer.ALL_LEVELS);
 		} finally {
 			fViewer.getControl().setRedraw(true);
 		}
@@ -1484,8 +1401,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		Object input = context.getInput();
 		if (input instanceof IEditorInput) {
 			Object elementOfInput = getInputFromEditor((IEditorInput) input);
-			return elementOfInput != null
-					&& (tryToReveal(elementOfInput) == IStatus.OK);
+			return elementOfInput != null && (tryToReveal(elementOfInput) == IStatus.OK);
 		}
 
 		return false;
@@ -1495,8 +1411,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	 * Returns the <code>IShowInSource</code> for this view.
 	 */
 	protected IShowInSource getShowInSource() {
-		return () -> new ShowInContext(getTreeViewer().getInput(),
-				getTreeViewer().getSelection());
+		return () -> new ShowInContext(getTreeViewer().getInput(), getTreeViewer().getSelection());
 	}
 
 	@Override
@@ -1536,33 +1451,23 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			return IStatus.OK;
 		}
 
-		WorkingSetFilterActionGroup workingSetGroup = fActionSet
-				.getWorkingSetActionGroup().getFilterGroup();
+		WorkingSetFilterActionGroup workingSetGroup = fActionSet.getWorkingSetActionGroup().getFilterGroup();
 		if (workingSetGroup != null) {
 			IWorkingSet workingSet = workingSetGroup.getWorkingSet();
-			if (workingSetGroup.isFiltered(getVisibleParent(element),
-					element)) {
+			if (workingSetGroup.isFiltered(getVisibleParent(element), element)) {
 				String message;
 				if (element instanceof IModelElement) {
-					IDLTKUILanguageToolkit toolkit = DLTKUILanguageManager
-							.getLanguageToolkit((IModelElement) element);
-					ScriptElementLabels labels = toolkit
-							.getScriptElementLabels();
-					String elementLabel = labels.getElementLabel(
-							(IModelElement) element,
+					IDLTKUILanguageToolkit toolkit = DLTKUILanguageManager.getLanguageToolkit((IModelElement) element);
+					ScriptElementLabels labels = toolkit.getScriptElementLabels();
+					String elementLabel = labels.getElementLabel((IModelElement) element,
 							ScriptElementLabels.ALL_DEFAULT);
-					message = Messages.format(
-							ScriptMessages.PackageExplorer_notFound,
-							new String[] { elementLabel,
-									workingSet.getLabel() });
-				} else {
-					message = Messages.format(
-							ScriptMessages.PackageExplorer_notFound,
+					message = Messages.format(ScriptMessages.PackageExplorer_notFound, elementLabel,
 							workingSet.getLabel());
+				} else {
+					message = Messages.format(ScriptMessages.PackageExplorer_notFound, workingSet.getLabel());
 				}
 				if (MessageDialog.openQuestion(getSite().getShell(),
-						ScriptMessages.PackageExplorer_filteredDialog_title,
-						message)) {
+						ScriptMessages.PackageExplorer_filteredDialog_title, message)) {
 					workingSetGroup.setWorkingSet(null, true);
 					if (revealElementOrParent(element)) {
 						return IStatus.OK;
@@ -1573,29 +1478,21 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			}
 		}
 		// try to remove filters
-		CustomFiltersActionGroup filterGroup = fActionSet
-				.getCustomFilterActionGroup();
+		CustomFiltersActionGroup filterGroup = fActionSet.getCustomFilterActionGroup();
 		String[] currentFilters = filterGroup.internalGetEnabledFilterIds();
-		String[] newFilters = filterGroup.removeFiltersFor(
-				getVisibleParent(element), element,
+		String[] newFilters = filterGroup.removeFiltersFor(getVisibleParent(element), element,
 				getTreeViewer().getContentProvider());
 		if (currentFilters.length > newFilters.length) {
 			String message;
 			if (element instanceof IModelElement) {
-				IDLTKUILanguageToolkit toolkit = DLTKUILanguageManager
-						.getLanguageToolkit((IModelElement) element);
+				IDLTKUILanguageToolkit toolkit = DLTKUILanguageManager.getLanguageToolkit((IModelElement) element);
 				ScriptElementLabels labels = toolkit.getScriptElementLabels();
-				String elementLabel = labels.getElementLabel(
-						(IModelElement) element,
-						ScriptElementLabels.ALL_DEFAULT);
-				message = Messages.format(
-						ScriptMessages.PackageExplorer_removeFilters,
-						elementLabel);
+				String elementLabel = labels.getElementLabel((IModelElement) element, ScriptElementLabels.ALL_DEFAULT);
+				message = Messages.format(ScriptMessages.PackageExplorer_removeFilters, elementLabel);
 			} else {
 				message = ScriptMessages.PackageExplorer_removeFilters;
 			}
-			if (MessageDialog.openQuestion(getSite().getShell(),
-					ScriptMessages.PackageExplorer_filteredDialog_title,
+			if (MessageDialog.openQuestion(getSite().getShell(), ScriptMessages.PackageExplorer_filteredDialog_title,
 					message)) {
 				filterGroup.setFilters(newFilters);
 				if (revealElementOrParent(element)) {
@@ -1609,8 +1506,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		while (action.getFrameList().getCurrentIndex() > 0) {
 			// only try to go up if there is a parent frame
 			// fix for bug# 63769 Endless loop after Show in Package Explorer
-			if (action.getFrameList().getSource()
-					.getFrame(IFrameSource.PARENT_FRAME, 0) == null) {
+			if (action.getFrameList().getSource().getFrame(IFrameSource.PARENT_FRAME, 0) == null) {
 				break;
 			}
 			action.run();
@@ -1679,21 +1575,16 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		fRootMode = newMode;
 		saveDialogSettings();
 
-		if (getRootMode() == ScriptExplorerPart.WORKING_SETS_AS_ROOTS
-				&& fWorkingSetModel == null) {
+		if (getRootMode() == ScriptExplorerPart.WORKING_SETS_AS_ROOTS && fWorkingSetModel == null) {
 			createWorkingSetModel();
 			if (fActionSet != null) {
-				fActionSet.getWorkingSetActionGroup()
-						.setWorkingSetModel(fWorkingSetModel);
+				fActionSet.getWorkingSetActionGroup().setWorkingSetModel(fWorkingSetModel);
 			}
 		}
-		IStructuredSelection selection = new StructuredSelection(
-				(fViewer.getStructuredSelection()).toArray());
+		IStructuredSelection selection = new StructuredSelection((fViewer.getStructuredSelection()).toArray());
 		Object input = fViewer.getInput();
-		boolean isRootInputChange = DLTKCore
-				.create(ResourcesPlugin.getWorkspace().getRoot()).equals(input)
-				|| (fWorkingSetModel != null && fWorkingSetModel.equals(input))
-				|| input instanceof IWorkingSet;
+		boolean isRootInputChange = DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot()).equals(input)
+				|| (fWorkingSetModel != null && fWorkingSetModel.equals(input)) || input instanceof IWorkingSet;
 		try {
 			fViewer.getControl().setRedraw(false);
 			if (isRootInputChange) {
@@ -1709,8 +1600,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 		} finally {
 			fViewer.getControl().setRedraw(true);
 		}
-		if (isRootInputChange
-				&& getRootMode() == ScriptExplorerPart.WORKING_SETS_AS_ROOTS
+		if (isRootInputChange && getRootMode() == ScriptExplorerPart.WORKING_SETS_AS_ROOTS
 				&& fWorkingSetModel.needsConfiguration()) {
 			configWorkingSet();
 			fWorkingSetModel.configured();
@@ -1719,8 +1609,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	}
 
 	protected void configWorkingSet() {
-		ConfigureWorkingSetAction action = new ConfigureWorkingSetAction(
-				getSite());
+		ConfigureWorkingSetAction action = new ConfigureWorkingSetAction(getSite());
 		action.setWorkingSetModel(fWorkingSetModel);
 		action.run();
 	}
@@ -1752,8 +1641,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			return null;
 		}
 
-		return fActionSet.getWorkingSetActionGroup().getFilterGroup()
-				.getWorkingSet();
+		return fActionSet.getWorkingSetActionGroup().getFilterGroup().getWorkingSet();
 	}
 
 	public WorkingSetModel getWorkingSetModel() {

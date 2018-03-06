@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -79,12 +79,9 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 			if (text == null || text.length() == 0) {
 				getShell().setText(fTitle);
 			} else {
-				getShell()
-						.setText(
-								Messages
-										.format(
-												DLTKUIMessages.TypeSelectionDialog2_title_format,
-												new String[] { fTitle, text }));
+				getShell().setText(Messages.format(
+						DLTKUIMessages.TypeSelectionDialog2_title_format,
+						fTitle, text));
 			}
 		}
 	}
@@ -265,8 +262,7 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 							ScriptElementLabels.ROOT_QUALIFIED);
 					String message = Messages.format(
 							DLTKUIMessages.TypeSelectionDialog_dialogMessage,
-							new String[] { typeInfo.getFullyQualifiedName(),
-									containerName });
+							typeInfo.getFullyQualifiedName(), containerName);
 					MessageDialog.openError(getShell(), title, message);
 					history.remove(typeInfo);
 					setResult(null);
@@ -279,8 +275,8 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 		setResult(result);
 	}
 
-	private void ensureConsistency() throws InvocationTargetException,
-			InterruptedException {
+	private void ensureConsistency()
+			throws InvocationTargetException, InterruptedException {
 		// we only have to ensure history consistency here since the search
 		// engine
 		// takes care of working copies.
@@ -296,14 +292,14 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 				OpenMethodHistory history = OpenMethodHistory
 						.getInstance(fToolkit);
 				if (fgFirstTime || history.isEmpty()) {
-					monitor
-							.beginTask(
-									DLTKUIMessages.TypeSelectionDialog_progress_consistency,
-									100);
+					monitor.beginTask(
+							DLTKUIMessages.TypeSelectionDialog_progress_consistency,
+							100);
 					if (history.needConsistencyCheck()) {
-						refreshSearchIndices(new SubProgressMonitor(monitor, 90));
-						history.checkConsistency(new SubProgressMonitor(
-								monitor, 10));
+						refreshSearchIndices(
+								new SubProgressMonitor(monitor, 90));
+						history.checkConsistency(
+								new SubProgressMonitor(monitor, 10));
 					} else {
 						refreshSearchIndices(monitor);
 					}
@@ -324,16 +320,21 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 			private void refreshSearchIndices(IProgressMonitor monitor)
 					throws InvocationTargetException {
 				try {
-					new SearchEngine().searchAllTypeNames(
-							null,
-							0, // make sure we search a concrete name. This is
-							// faster according to Kent
+					new SearchEngine().searchAllTypeNames(null, 0, // make sure
+																	// we search
+																	// a
+																	// concrete
+																	// name.
+																	// This is
+																	// faster
+																	// according
+																	// to Kent
 							"_______________".toCharArray(), //$NON-NLS-1$
 							SearchPattern.R_EXACT_MATCH
 									| SearchPattern.R_CASE_SENSITIVE,
-							IDLTKSearchConstants.FIELD, SearchEngine
-									.createWorkspaceScope(fToolkit
-											.getCoreToolkit()),
+							IDLTKSearchConstants.FIELD,
+							SearchEngine.createWorkspaceScope(
+									fToolkit.getCoreToolkit()),
 							new NopTypeNameRequestor(),
 							IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
 							monitor);

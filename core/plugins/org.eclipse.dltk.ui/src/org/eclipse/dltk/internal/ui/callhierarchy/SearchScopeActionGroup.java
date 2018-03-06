@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,8 +52,7 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 	private SearchScopeWorkspaceAction fSearchScopeWorkspaceAction;
 	private SelectWorkingSetAction fSelectWorkingSetAction;
 
-	public SearchScopeActionGroup(CallHierarchyViewPart view,
-			IDialogSettings dialogSettings) {
+	public SearchScopeActionGroup(CallHierarchyViewPart view, IDialogSettings dialogSettings) {
 		this.fView = view;
 		this.fDialogSettings = dialogSettings;
 		createActions();
@@ -81,8 +80,7 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 	protected void setActiveWorkingSets(IWorkingSet[] sets) {
 		if (sets != null) {
 			fSelectedWorkingSetNames = getWorkingSetNames(sets);
-			fSelectedAction = new SearchScopeWorkingSetAction(this, sets,
-					getScopeDescription(sets));
+			fSelectedAction = new SearchScopeWorkingSetAction(this, sets, getScopeDescription(sets));
 		} else {
 			fSelectedWorkingSetNames = null;
 			fSelectedAction = null;
@@ -111,8 +109,7 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 		}
 		Set<IWorkingSet> workingSets = new HashSet<>(2);
 		for (int j = 0; j < workingSetNames.length; j++) {
-			IWorkingSet workingSet = getWorkingSetManager()
-					.getWorkingSet(workingSetNames[j]);
+			IWorkingSet workingSet = getWorkingSetManager().getWorkingSet(workingSetNames[j]);
 			if (workingSet != null) {
 				workingSets.add(workingSet);
 			}
@@ -124,19 +121,15 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 	/**
 	 * Sets the new search scope type.
 	 *
-	 * @param newSelection
-	 *            New action which should be the checked one
-	 * @param ignoreUnchecked
-	 *            Ignores actions which are unchecked (necessary since both the
-	 *            old and the new action fires).
+	 * @param newSelection    New action which should be the checked one
+	 * @param ignoreUnchecked Ignores actions which are unchecked (necessary since
+	 *                        both the old and the new action fires).
 	 */
-	protected void setSelected(SearchScopeAction newSelection,
-			boolean ignoreUnchecked) {
+	protected void setSelected(SearchScopeAction newSelection, boolean ignoreUnchecked) {
 		if (!ignoreUnchecked || newSelection.isChecked()) {
 			if (newSelection instanceof SearchScopeWorkingSetAction) {
 				fSelectedWorkingSetNames = getWorkingSetNames(
-						((SearchScopeWorkingSetAction) newSelection)
-								.getWorkingSets());
+						((SearchScopeWorkingSetAction) newSelection).getWorkingSets());
 			} else {
 				fSelectedWorkingSetNames = null;
 			}
@@ -148,8 +141,7 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 			}
 
 			fDialogSettings.put(DIALOGSTORE_SCOPE_TYPE, getSearchScopeType());
-			fDialogSettings.put(DIALOGSTORE_SELECTED_WORKING_SET,
-					fSelectedWorkingSetNames);
+			fDialogSettings.put(DIALOGSTORE_SELECTED_WORKING_SET, fSelectedWorkingSetNames);
 		}
 	}
 
@@ -158,8 +150,7 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 	}
 
 	protected IWorkingSetManager getWorkingSetManager() {
-		IWorkingSetManager workingSetManager = PlatformUI.getWorkbench()
-				.getWorkingSetManager();
+		IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
 
 		return workingSetManager;
 	}
@@ -182,8 +173,7 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 	public void fillContextMenu(IMenuManager menu) {
 		menu.add(new Separator(IContextMenuConstants.GROUP_SEARCH));
 
-		MenuManager javaSearchMM = new MenuManager(
-				CallHierarchyMessages.SearchScopeActionGroup_searchScope,
+		MenuManager javaSearchMM = new MenuManager(CallHierarchyMessages.SearchScopeActionGroup_searchScope,
 				IContextMenuConstants.GROUP_SEARCH);
 		javaSearchMM.setRemoveAllWhenShown(true);
 
@@ -194,8 +184,7 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 	}
 
 	private Action[] getActions() {
-		List<Action> actions = new ArrayList<>(
-				SearchUtil.LRU_WORKINGSET_LIST_SIZE + 4);
+		List<Action> actions = new ArrayList<>(SearchUtil.LRU_WORKINGSET_LIST_SIZE + 4);
 		addAction(actions, fSearchScopeWorkspaceAction);
 		addAction(actions, fSearchScopeProjectAction);
 		addAction(actions, fSearchScopeHierarchyAction);
@@ -205,8 +194,8 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 		while (iter.hasNext()) {
 			IWorkingSet[] workingSets = (IWorkingSet[]) iter.next();
 			String description = SearchUtil.toString(workingSets);
-			SearchScopeWorkingSetAction workingSetAction = new SearchScopeWorkingSetAction(
-					this, workingSets, description);
+			SearchScopeWorkingSetAction workingSetAction = new SearchScopeWorkingSetAction(this, workingSets,
+					description);
 
 			if (isSelectedWorkingSet(workingSets)) {
 				workingSetAction.setChecked(true);
@@ -268,18 +257,15 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 		} catch (NumberFormatException e) {
 			searchScopeType = SEARCH_SCOPE_TYPE_WORKSPACE;
 		}
-		String[] workingSetNames = fDialogSettings
-				.getArray(DIALOGSTORE_SELECTED_WORKING_SET);
-		setSelected(getSearchScopeAction(searchScopeType, workingSetNames),
-				false);
+		String[] workingSetNames = fDialogSettings.getArray(DIALOGSTORE_SELECTED_WORKING_SET);
+		setSelected(getSearchScopeAction(searchScopeType, workingSetNames), false);
 	}
 
 	public void saveState(IMemento memento) {
 		int type = getSearchScopeType();
 		memento.putInteger(TAG_SEARCH_SCOPE_TYPE, type);
 		if (type == SEARCH_SCOPE_TYPE_WORKING_SET) {
-			memento.putInteger(TAG_WORKING_SET_COUNT,
-					fSelectedWorkingSetNames.length);
+			memento.putInteger(TAG_WORKING_SET_COUNT, fSelectedWorkingSetNames.length);
 			for (int i = 0; i < fSelectedWorkingSetNames.length; i++) {
 				String workingSetName = fSelectedWorkingSetNames[i];
 				memento.putString(TAG_SELECTED_WORKING_SET + i, workingSetName);
@@ -292,24 +278,19 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 		Integer scopeType = memento.getInteger(TAG_SEARCH_SCOPE_TYPE);
 		if (scopeType != null) {
 			if (scopeType.intValue() == SEARCH_SCOPE_TYPE_WORKING_SET) {
-				Integer workingSetCount = memento
-						.getInteger(TAG_WORKING_SET_COUNT);
+				Integer workingSetCount = memento.getInteger(TAG_WORKING_SET_COUNT);
 				if (workingSetCount != null) {
 					workingSetNames = new String[workingSetCount.intValue()];
 					for (int i = 0; i < workingSetCount.intValue(); i++) {
-						workingSetNames[i] = memento
-								.getString(TAG_SELECTED_WORKING_SET + i);
+						workingSetNames[i] = memento.getString(TAG_SELECTED_WORKING_SET + i);
 					}
 				}
 			}
-			setSelected(
-					getSearchScopeAction(scopeType.intValue(), workingSetNames),
-					false);
+			setSelected(getSearchScopeAction(scopeType.intValue(), workingSetNames), false);
 		}
 	}
 
-	private SearchScopeAction getSearchScopeAction(int searchScopeType,
-			String[] workingSetNames) {
+	private SearchScopeAction getSearchScopeAction(int searchScopeType, String[] workingSetNames) {
 		switch (searchScopeType) {
 		case SEARCH_SCOPE_TYPE_WORKSPACE:
 			return fSearchScopeWorkspaceAction;
@@ -320,8 +301,7 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 		case SEARCH_SCOPE_TYPE_WORKING_SET:
 			IWorkingSet[] workingSets = getWorkingSets(workingSetNames);
 			if (workingSets != null && workingSets.length > 0) {
-				return new SearchScopeWorkingSetAction(this, workingSets,
-						getScopeDescription(workingSets));
+				return new SearchScopeWorkingSetAction(this, workingSets, getScopeDescription(workingSets));
 			}
 			return null;
 		}
@@ -336,8 +316,7 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 	}
 
 	private String getScopeDescription(IWorkingSet[] workingSets) {
-		return Messages.format(CallHierarchyMessages.WorkingSetScope,
-				new String[] { SearchUtil.toString(workingSets) });
+		return Messages.format(CallHierarchyMessages.WorkingSetScope, SearchUtil.toString(workingSets));
 	}
 
 	/**
@@ -349,8 +328,7 @@ public abstract class SearchScopeActionGroup extends ActionGroup {
 	 *         currently selected working sets
 	 */
 	private boolean isSelectedWorkingSet(IWorkingSet[] workingSets) {
-		if (fSelectedWorkingSetNames != null
-				&& fSelectedWorkingSetNames.length == workingSets.length) {
+		if (fSelectedWorkingSetNames != null && fSelectedWorkingSetNames.length == workingSets.length) {
 			Set<String> workingSetNames = new HashSet<>(workingSets.length);
 			for (int i = 0; i < workingSets.length; i++) {
 				workingSetNames.add(workingSets[i].getName());

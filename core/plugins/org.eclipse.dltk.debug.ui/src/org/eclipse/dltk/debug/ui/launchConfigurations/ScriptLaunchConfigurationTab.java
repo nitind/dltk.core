@@ -104,7 +104,7 @@ public abstract class ScriptLaunchConfigurationTab
 	 * Creates the widgets for specifying a main type.
 	 *
 	 * @param parent
-	 *            the parent composite
+	 *                   the parent composite
 	 */
 	protected void createDebugOptionsGroup(Composite parent) {
 		if (ILaunchManager.DEBUG_MODE.equals(fMode)) {
@@ -226,11 +226,11 @@ public abstract class ScriptLaunchConfigurationTab
 	 * <code>null</code> if none.
 	 *
 	 * @param config
-	 *            working copy
+	 *                   working copy
 	 * @throws CoreException
 	 * @returns resource or <code>null</code>
 	 * @throws CoreException
-	 *             if an exception occurs mapping resource
+	 *                           if an exception occurs mapping resource
 	 */
 	protected IResource getResource(ILaunchConfiguration config)
 			throws CoreException {
@@ -317,7 +317,7 @@ public abstract class ScriptLaunchConfigurationTab
 	 * </p>
 	 *
 	 * @param composite
-	 *            control composite
+	 *                      control composite
 	 *
 	 * @see #createControl(Composite)
 	 */
@@ -327,7 +327,7 @@ public abstract class ScriptLaunchConfigurationTab
 	 * Performs the sub-class specific configuration tab initialization.
 	 *
 	 * @param config
-	 *            launch configuration
+	 *                   launch configuration
 	 *
 	 * @see #initializeFrom(ILaunchConfiguration)
 	 */
@@ -342,7 +342,7 @@ public abstract class ScriptLaunchConfigurationTab
 	 * Validate the specified toolkit is valid for the launch configuration
 	 *
 	 * @param toolkit
-	 *            language toolkit
+	 *                    language toolkit
 	 *
 	 * @return <code>true</code> if the toolkit is valid for the launch
 	 *         configuration, <code>false</code> otherwise
@@ -365,7 +365,7 @@ public abstract class ScriptLaunchConfigurationTab
 	 * </p>
 	 *
 	 * @param group
-	 *            group composite
+	 *                  group composite
 	 */
 	private void addBreakOnFirstLineButton(Composite group) {
 		breakOnFirstLine = createCheckButton(group,
@@ -383,7 +383,7 @@ public abstract class ScriptLaunchConfigurationTab
 	 * </p>
 	 *
 	 * @param group
-	 *            group composite
+	 *                  group composite
 	 */
 	private void addDbgpLoggingButton(Composite group) {
 		enableLogging = createCheckButton(group,
@@ -463,7 +463,7 @@ public abstract class ScriptLaunchConfigurationTab
 	 * </p>
 	 *
 	 * @param parent
-	 *            the parent composite
+	 *                   the parent composite
 	 */
 	protected void createProjectEditor(Composite parent) {
 		final Composite editParent;
@@ -631,10 +631,10 @@ public abstract class ScriptLaunchConfigurationTab
 		if (!validateProject(project)) {
 			String msg = Messages.format(
 					DLTKLaunchConfigurationsMessages.mainTab_errorDlg_notALangProject,
-					new String[] { getLanguageName() });
+					getLanguageName());
 			String reason = Messages.format(
 					DLTKLaunchConfigurationsMessages.mainTab_errorDlg_reasonNotALangProject,
-					new String[] { getLanguageName() });
+					getLanguageName());
 			ErrorDialog.openError(getShell(),
 					DLTKLaunchConfigurationsMessages.mainTab_errorDlg_invalidProject,
 					msg, DLTKUIStatus.createError(IStatus.ERROR, reason, null));
@@ -649,7 +649,7 @@ public abstract class ScriptLaunchConfigurationTab
 	 * Sets the name of the project associated with the launch configuration
 	 *
 	 * @param name
-	 *            project name
+	 *                 project name
 	 */
 	protected final void setProjectName(String name) {
 		setProjectName(name, new PreferencesLookupDelegate(
@@ -672,7 +672,7 @@ public abstract class ScriptLaunchConfigurationTab
 	 * updates the project text field form the configuration
 	 *
 	 * @param config
-	 *            the configuration we are editing
+	 *                   the configuration we are editing
 	 */
 	protected void updateProjectFromConfig(ILaunchConfiguration config) {
 		String projectName = LaunchConfigurationUtils.getProjectName(config);

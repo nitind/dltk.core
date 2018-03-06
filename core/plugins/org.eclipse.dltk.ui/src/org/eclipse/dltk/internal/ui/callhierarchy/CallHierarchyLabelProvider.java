@@ -25,18 +25,14 @@ class CallHierarchyLabelProvider extends AppearanceAwareLabelProvider {
 //
 //    private static final long TEXTFLAGS= DEFAULT_TEXTFLAGS | FULLY_QUALIFIED | ScriptElementLabels.P_POST_QUALIFIED | ScriptElementLabels.P_COMPRESSED;// | ScriptElementLabels.M_FULLY_QUALIFIED | ScriptElementLabels.PREPEND_ROOT_PATH;
 //    private static final int IMAGEFLAGS= DEFAULT_IMAGEFLAGS | ScriptElementImageProvider.SMALL_ICONS;
-	private static final long TEXTFLAGS = DEFAULT_TEXTFLAGS
-			| ScriptElementLabels.ALL_POST_QUALIFIED
-			| ScriptElementLabels.P_COMPRESSED | ScriptElementLabels.APPEND_FILE
-			| ScriptElementLabels.APPEND_ROOT_PATH;
-	private static final int IMAGEFLAGS = DEFAULT_IMAGEFLAGS
-			| ScriptElementImageProvider.SMALL_ICONS;
+	private static final long TEXTFLAGS = DEFAULT_TEXTFLAGS | ScriptElementLabels.ALL_POST_QUALIFIED
+			| ScriptElementLabels.P_COMPRESSED | ScriptElementLabels.APPEND_FILE | ScriptElementLabels.APPEND_ROOT_PATH;
+	private static final int IMAGEFLAGS = DEFAULT_IMAGEFLAGS | ScriptElementImageProvider.SMALL_ICONS;
 
 	private ILabelDecorator fDecorator;
 
 	CallHierarchyLabelProvider() {
-		super(TEXTFLAGS, IMAGEFLAGS,
-				DLTKUIPlugin.getDefault().getPreferenceStore());
+		super(TEXTFLAGS, IMAGEFLAGS, DLTKUIPlugin.getDefault().getPreferenceStore());
 		fDecorator = new CallHierarchyLabelDecorator();
 	}
 
@@ -47,9 +43,7 @@ class CallHierarchyLabelProvider extends AppearanceAwareLabelProvider {
 			MethodWrapper methodWrapper = (MethodWrapper) element;
 
 			if (methodWrapper.getMember() != null) {
-				result = fDecorator.decorateImage(
-						super.getImage(methodWrapper.getMember()),
-						methodWrapper);
+				result = fDecorator.decorateImage(super.getImage(methodWrapper.getMember()), methodWrapper);
 			}
 		} else if (isPendingUpdate(element)) {
 			return null;
@@ -85,14 +79,11 @@ class CallHierarchyLabelProvider extends AppearanceAwareLabelProvider {
 	private String getElementLabel(MethodWrapper methodWrapper) {
 		String label = super.getText(methodWrapper.getMember());
 
-		Collection callLocations = methodWrapper.getMethodCall()
-				.getCallLocations();
+		Collection callLocations = methodWrapper.getMethodCall().getCallLocations();
 
 		if ((callLocations != null) && (callLocations.size() > 1)) {
-			return Messages.format(
-					CallHierarchyMessages.CallHierarchyLabelProvider_matches,
-					new String[] { label,
-							String.valueOf(callLocations.size()) });
+			return Messages.format(CallHierarchyMessages.CallHierarchyLabelProvider_matches, label,
+					String.valueOf(callLocations.size()));
 		}
 
 		return label;

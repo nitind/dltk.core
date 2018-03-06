@@ -53,13 +53,11 @@ public class ReorgUtils {
 	}
 
 	public static boolean isProject(Object element) {
-		return (element instanceof IScriptProject)
-				|| (element instanceof IProject);
+		return (element instanceof IScriptProject) || (element instanceof IProject);
 	}
 
 	public static boolean isInsideSourceModule(IModelElement element) {
-		return !(element instanceof ISourceModule)
-				&& hasAncestorOfType(element, IModelElement.SOURCE_MODULE);
+		return !(element instanceof ISourceModule) && hasAncestorOfType(element, IModelElement.SOURCE_MODULE);
 	}
 
 	public static boolean hasAncestorOfType(IModelElement element, int type) {
@@ -69,8 +67,7 @@ public class ReorgUtils {
 	public static ISourceModule getSourceModule(IModelElement modelElement) {
 		if (modelElement instanceof ISourceModule)
 			return (ISourceModule) modelElement;
-		return (ISourceModule) modelElement
-				.getAncestor(IModelElement.SOURCE_MODULE);
+		return (ISourceModule) modelElement.getAncestor(IModelElement.SOURCE_MODULE);
 	}
 
 	public static boolean isDeletedFromEditor(IModelElement elem) {
@@ -94,13 +91,13 @@ public class ReorgUtils {
 
 	public static String getName(IModelElement element) throws ModelException {
 		String pattern = createNamePattern(element);
-		String[] args = createNameArguments(element);
+		Object[] args = createNameArguments(element);
 		return Messages.format(pattern, args);
 	}
 
 	public static String getName(IResource resource) {
 		String pattern = createNamePattern(resource);
-		String[] args = createNameArguments(resource);
+		Object[] args = createNameArguments(resource);
 		return Messages.format(pattern, args);
 	}
 
@@ -122,8 +119,7 @@ public class ReorgUtils {
 		}
 	}
 
-	private static String createNamePattern(IModelElement element)
-			throws ModelException {
+	private static String createNamePattern(IModelElement element) throws ModelException {
 		switch (element.getElementType()) {
 		case IModelElement.SOURCE_MODULE:
 			if (element instanceof ExternalSourceModule) {
@@ -165,13 +161,11 @@ public class ReorgUtils {
 		}
 	}
 
-	private static String[] createNameArguments(IModelElement element)
-			throws ModelException {
+	private static String[] createNameArguments(IModelElement element) throws ModelException {
 		switch (element.getElementType()) {
 		case IModelElement.SOURCE_MODULE:
 			if (element instanceof ExternalSourceModule) {
-				return new String[] { ((ExternalSourceModule) element)
-						.getFullPath().toString() };
+				return new String[] { ((ExternalSourceModule) element).getFullPath().toString() };
 			}
 			return new String[] { element.getElementName() };
 		case IModelElement.FIELD:
@@ -203,11 +197,9 @@ public class ReorgUtils {
 		}
 	}
 
-	public static boolean isSourceFolder(IModelElement modelElement)
-			throws ModelException {
+	public static boolean isSourceFolder(IModelElement modelElement) throws ModelException {
 		return (modelElement instanceof IProjectFragment)
-				&& ((IProjectFragment) modelElement)
-						.getKind() == IProjectFragment.K_SOURCE;
+				&& ((IProjectFragment) modelElement).getKind() == IProjectFragment.K_SOURCE;
 	}
 
 	public static IResource[] getResources(List elements) {
@@ -242,8 +234,7 @@ public class ReorgUtils {
 		Collection<IResource> result = new ArrayList<>(resources.length);
 		for (int i = 0; i < resources.length; i++) {
 			IResource resource = resources[i];
-			if (resource != null && !result.contains(resource)
-					&& !resource.isLinked())
+			if (resource != null && !result.contains(resource) && !resource.isLinked())
 				result.add(resource);
 		}
 		return result.toArray(new IResource[result.size()]);
@@ -273,8 +264,7 @@ public class ReorgUtils {
 		return result;
 	}
 
-	public static List getElementsOfType(IModelElement[] modelElements,
-			int type) {
+	public static List getElementsOfType(IModelElement[] modelElements, int type) {
 		List result = new ArrayList(modelElements.length);
 		for (int i = 0; i < modelElements.length; i++) {
 			if (isOfType(modelElements[i], type))
@@ -295,17 +285,14 @@ public class ReorgUtils {
 		return (flags & flag) != 0;
 	}
 
-	public static IModelElement[] setMinus(IModelElement[] setToRemoveFrom,
-			IModelElement[] elementsToRemove) {
-		Set<IModelElement> setMinus = new HashSet<>(
-				setToRemoveFrom.length - setToRemoveFrom.length);
+	public static IModelElement[] setMinus(IModelElement[] setToRemoveFrom, IModelElement[] elementsToRemove) {
+		Set<IModelElement> setMinus = new HashSet<>(setToRemoveFrom.length - setToRemoveFrom.length);
 		setMinus.addAll(Arrays.asList(setToRemoveFrom));
 		setMinus.removeAll(Arrays.asList(elementsToRemove));
 		return setMinus.toArray(new IModelElement[setMinus.size()]);
 	}
 
-	public static IModelElement[] union(IModelElement[] set1,
-			IModelElement[] set2) {
+	public static IModelElement[] union(IModelElement[] set1, IModelElement[] set2) {
 		List<IModelElement> union = new ArrayList<>(set1.length + set2.length);// use
 																				// lists
 																				// to
@@ -336,10 +323,8 @@ public class ReorgUtils {
 		}
 	}
 
-	public static IResource[] setMinus(IResource[] setToRemoveFrom,
-			IResource[] elementsToRemove) {
-		Set<IResource> setMinus = new HashSet<>(
-				setToRemoveFrom.length - setToRemoveFrom.length);
+	public static IResource[] setMinus(IResource[] setToRemoveFrom, IResource[] elementsToRemove) {
+		Set<IResource> setMinus = new HashSet<>(setToRemoveFrom.length - setToRemoveFrom.length);
 		setMinus.addAll(Arrays.asList(setToRemoveFrom));
 		setMinus.removeAll(Arrays.asList(elementsToRemove));
 		return setMinus.toArray(new IResource[setMinus.size()]);
@@ -355,8 +340,7 @@ public class ReorgUtils {
 		return resources.toArray(new IModelElement[resources.size()]);
 	}
 
-	public static ISourceModule[] getSourceModules(
-			IModelElement[] modelElements) {
+	public static ISourceModule[] getSourceModules(IModelElement[] modelElements) {
 		ISourceModule[] result = new ISourceModule[modelElements.length];
 		for (int i = 0; i < modelElements.length; i++) {
 			result[i] = getSourceModule(modelElements[i]);
@@ -375,8 +359,8 @@ public class ReorgUtils {
 		return result.toArray(new IWorkingSet[result.size()]);
 	}
 
-	public static void splitIntoModelElementsAndResources(Object[] elements,
-			List modelElementResult, List resourceResult) {
+	public static void splitIntoModelElementsAndResources(Object[] elements, List modelElementResult,
+			List resourceResult) {
 		for (int i = 0; i < elements.length; i++) {
 			Object element = elements[i];
 			if (element instanceof IModelElement) {
@@ -392,8 +376,7 @@ public class ReorgUtils {
 		}
 	}
 
-	public static boolean containsElementOrParent(Set elements,
-			IModelElement element) {
+	public static boolean containsElementOrParent(Set elements, IModelElement element) {
 		if (elements.contains(element))
 			return true;
 		IModelElement parent = element.getParent();
@@ -405,8 +388,7 @@ public class ReorgUtils {
 		return false;
 	}
 
-	public static boolean containsElementOrParent(Set elements,
-			IResource element) {
+	public static boolean containsElementOrParent(Set elements, IResource element) {
 		if (elements.contains(element))
 			return true;
 		IResource parent = element.getParent();
@@ -422,8 +404,7 @@ public class ReorgUtils {
 		return false;
 	}
 
-	public static boolean hasElementsNotOfType(IResource[] resources,
-			int typeMask) {
+	public static boolean hasElementsNotOfType(IResource[] resources, int typeMask) {
 		for (int i = 0; i < resources.length; i++) {
 			IResource resource = resources[i];
 			if (resource != null && !isOfType(resource, typeMask))
@@ -432,8 +413,7 @@ public class ReorgUtils {
 		return false;
 	}
 
-	public static boolean hasElementsNotOfType(IModelElement[] modelElements,
-			int type) {
+	public static boolean hasElementsNotOfType(IModelElement[] modelElements, int type) {
 		for (int i = 0; i < modelElements.length; i++) {
 			IModelElement element = modelElements[i];
 			if (element != null && !isOfType(element, type))
@@ -442,40 +422,34 @@ public class ReorgUtils {
 		return false;
 	}
 
-	public static boolean canBeDestinationForLinkedResources(
-			IResource resource) {
+	public static boolean canBeDestinationForLinkedResources(IResource resource) {
 		return resource.isAccessible() && resource instanceof IProject;
 	}
 
-	public static boolean canBeDestinationForLinkedResources(
-			IModelElement modelElement) {
+	public static boolean canBeDestinationForLinkedResources(IModelElement modelElement) {
 		if (modelElement instanceof IProjectFragment) {
-			return isProjectFragmentCorrespondingToProject(
-					(IProjectFragment) modelElement);
+			return isProjectFragmentCorrespondingToProject((IProjectFragment) modelElement);
 		} else if (modelElement instanceof IScriptProject) {
 			return true;// XXX ???
 		} else
 			return false;
 	}
 
-	private static boolean isProjectFragmentCorrespondingToProject(
-			IProjectFragment root) {
+	private static boolean isProjectFragmentCorrespondingToProject(IProjectFragment root) {
 		return root.getResource() instanceof IProject;
 	}
 
 	public static boolean isArchiveOrExterrnalMember(IModelElement[] elements) {
 		for (int i = 0; i < elements.length; i++) {
 			IModelElement element = elements[i];
-			IProjectFragment root = (IProjectFragment) element
-					.getAncestor(IModelElement.PROJECT_FRAGMENT);
+			IProjectFragment root = (IProjectFragment) element.getAncestor(IModelElement.PROJECT_FRAGMENT);
 			if (root != null && (root.isArchive() || root.isExternal()))
 				return true;
 		}
 		return false;
 	}
 
-	public static boolean hasElementsOfType(IModelElement[] modelElements,
-			int type) {
+	public static boolean hasElementsOfType(IModelElement[] modelElements, int type) {
 		for (int i = 0; i < modelElements.length; i++) {
 			IModelElement element = modelElements[i];
 			if (element != null && isOfType(element, type))
@@ -484,8 +458,7 @@ public class ReorgUtils {
 		return false;
 	}
 
-	public static boolean hasElementsOfType(IModelElement[] modelElements,
-			int[] types) {
+	public static boolean hasElementsOfType(IModelElement[] modelElements, int[] types) {
 		for (int i = 0; i < types.length; i++) {
 			if (hasElementsOfType(modelElements, types[i]))
 				return true;
@@ -493,8 +466,7 @@ public class ReorgUtils {
 		return false;
 	}
 
-	public static boolean hasElementsOfType(IResource[] resources,
-			int typeMask) {
+	public static boolean hasElementsOfType(IResource[] resources, int typeMask) {
 		for (int i = 0; i < resources.length; i++) {
 			IResource resource = resources[i];
 			if (resource != null && isOfType(resource, typeMask))
@@ -522,8 +494,7 @@ public class ReorgUtils {
 		return (IFolder[]) result.toArray(new IFolder[result.size()]);
 	}
 
-	public static IProjectFragment getCorrespondingProjectFragment(
-			IScriptProject p) throws ModelException {
+	public static IProjectFragment getCorrespondingProjectFragment(IScriptProject p) throws ModelException {
 		IProjectFragment[] roots = p.getProjectFragments();
 		for (int i = 0; i < roots.length; i++) {
 			if (isProjectFragmentCorrespondingToProject(roots[i]))
@@ -540,8 +511,7 @@ public class ReorgUtils {
 		return false;
 	}
 
-	public static boolean containsLinkedResources(
-			IModelElement[] modelElements) {
+	public static boolean containsLinkedResources(IModelElement[] modelElements) {
 		for (int i = 0; i < modelElements.length; i++) {
 			IResource res = getResource(modelElements[i]);
 			if (res != null && res.isLinked())
@@ -550,13 +520,11 @@ public class ReorgUtils {
 		return false;
 	}
 
-	public static boolean isProjectFragment(IScriptProject scriptProject)
-			throws ModelException {
+	public static boolean isProjectFragment(IScriptProject scriptProject) throws ModelException {
 		return getCorrespondingProjectFragment(scriptProject) != null;
 	}
 
-	public static boolean areEqualInWorkspaceOrOnDisk(IResource r1,
-			IResource r2) {
+	public static boolean areEqualInWorkspaceOrOnDisk(IResource r1, IResource r2) {
 		if (r1 == null || r2 == null)
 			return false;
 		if (r1.equals(r2))
@@ -568,8 +536,7 @@ public class ReorgUtils {
 		return r1Location.equals(r2Location);
 	}
 
-	public static boolean isParentInWorkspaceOrOnDisk(IScriptFolder pack,
-			IProjectFragment root) {
+	public static boolean isParentInWorkspaceOrOnDisk(IScriptFolder pack, IProjectFragment root) {
 		if (pack == null)
 			return false;
 		IModelElement packParent = pack.getParent();
@@ -579,12 +546,10 @@ public class ReorgUtils {
 			return true;
 		IResource packageResource = ResourceUtil.getResource(pack);
 		IResource packageRootResource = ResourceUtil.getResource(root);
-		return isParentInWorkspaceOrOnDisk(packageResource,
-				packageRootResource);
+		return isParentInWorkspaceOrOnDisk(packageResource, packageRootResource);
 	}
 
-	public static boolean isParentInWorkspaceOrOnDisk(IProjectFragment root,
-			IScriptProject scriptProject) {
+	public static boolean isParentInWorkspaceOrOnDisk(IProjectFragment root, IScriptProject scriptProject) {
 		if (root == null)
 			return false;
 		IModelElement rootParent = root.getParent();
@@ -594,12 +559,10 @@ public class ReorgUtils {
 			return true;
 		IResource packageResource = ResourceUtil.getResource(root);
 		IResource packageRootResource = ResourceUtil.getResource(scriptProject);
-		return isParentInWorkspaceOrOnDisk(packageResource,
-				packageRootResource);
+		return isParentInWorkspaceOrOnDisk(packageResource, packageRootResource);
 	}
 
-	public static boolean isParentInWorkspaceOrOnDisk(ISourceModule cu,
-			IScriptFolder dest) {
+	public static boolean isParentInWorkspaceOrOnDisk(ISourceModule cu, IScriptFolder dest) {
 		if (cu == null)
 			return false;
 		IModelElement cuParent = cu.getParent();
@@ -612,8 +575,7 @@ public class ReorgUtils {
 		return isParentInWorkspaceOrOnDisk(cuResource, packageResource);
 	}
 
-	public static boolean isParentInWorkspaceOrOnDisk(IResource res,
-			IResource maybeParent) {
+	public static boolean isParentInWorkspaceOrOnDisk(IResource res, IResource maybeParent) {
 		if (res == null)
 			return false;
 		return areEqualInWorkspaceOrOnDisk(res.getParent(), maybeParent);

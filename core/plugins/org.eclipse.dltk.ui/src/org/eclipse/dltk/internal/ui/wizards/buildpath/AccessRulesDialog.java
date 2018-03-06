@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,10 +46,9 @@ import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-
 public class AccessRulesDialog extends StatusDialog {
 
-	public static final int SWITCH_PAGE= 10;
+	public static final int SWITCH_PAGE = 10;
 
 	private final ListDialogField fAccessRulesList;
 	private final SelectionButtonDialogField fCombineRulesCheckbox;
@@ -58,48 +57,43 @@ public class AccessRulesDialog extends StatusDialog {
 	private final IScriptProject fProject;
 	private final boolean fParentCanSwitchPage;
 
-	private static final int IDX_ADD= 0;
-	private static final int IDX_EDIT= 1;
-	private static final int IDX_UP= 3;
-	private static final int IDX_DOWN= 4;
-	private static final int IDX_REMOVE= 6;
+	private static final int IDX_ADD = 0;
+	private static final int IDX_EDIT = 1;
+	private static final int IDX_UP = 3;
+	private static final int IDX_DOWN = 4;
+	private static final int IDX_REMOVE = 6;
 
-
-	public AccessRulesDialog(Shell parent, BPListElement entryToEdit, IScriptProject project, boolean parentCanSwitchPage) {
+	public AccessRulesDialog(Shell parent, BPListElement entryToEdit, IScriptProject project,
+			boolean parentCanSwitchPage) {
 		super(parent);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 
-		fCurrElement= entryToEdit;
-		fProject= project; // can be null
+		fCurrElement = entryToEdit;
+		fProject = project; // can be null
 
 		setTitle(NewWizardMessages.AccessRulesDialog_title);
 
-		fAccessRulesList= createListContents(entryToEdit);
+		fAccessRulesList = createListContents(entryToEdit);
 
-		fCombineRulesCheckbox= new SelectionButtonDialogField(SWT.CHECK);
+		fCombineRulesCheckbox = new SelectionButtonDialogField(SWT.CHECK);
 		fCombineRulesCheckbox.setLabelText(NewWizardMessages.AccessRulesDialog_combine_label);
-		fCombineRulesCheckbox.setSelection(Boolean.TRUE.equals(entryToEdit.getAttribute(BPListElement.COMBINE_ACCESSRULES)));
+		fCombineRulesCheckbox
+				.setSelection(Boolean.TRUE.equals(entryToEdit.getAttribute(BPListElement.COMBINE_ACCESSRULES)));
 
-		fParentCanSwitchPage= parentCanSwitchPage;
+		fParentCanSwitchPage = parentCanSwitchPage;
 	}
 
-
 	private ListDialogField createListContents(BPListElement entryToEdit) {
-		String label= NewWizardMessages.AccessRulesDialog_rules_label;
-		String[] buttonLabels= new String[] {
-				NewWizardMessages.AccessRulesDialog_rules_add,
-				NewWizardMessages.AccessRulesDialog_rules_edit,
-				null,
-				NewWizardMessages.AccessRulesDialog_rules_up,
-				NewWizardMessages.AccessRulesDialog_rules_down,
-				null,
-				NewWizardMessages.AccessRulesDialog_rules_remove
-		};
+		String label = NewWizardMessages.AccessRulesDialog_rules_label;
+		String[] buttonLabels = new String[] { NewWizardMessages.AccessRulesDialog_rules_add,
+				NewWizardMessages.AccessRulesDialog_rules_edit, null, NewWizardMessages.AccessRulesDialog_rules_up,
+				NewWizardMessages.AccessRulesDialog_rules_down, null,
+				NewWizardMessages.AccessRulesDialog_rules_remove };
 
-		TypeRestrictionAdapter adapter= new TypeRestrictionAdapter();
-		AccessRulesLabelProvider labelProvider= new AccessRulesLabelProvider();
+		TypeRestrictionAdapter adapter = new TypeRestrictionAdapter();
+		AccessRulesLabelProvider labelProvider = new AccessRulesLabelProvider();
 
-		ListDialogField patternList= new ListDialogField(adapter, buttonLabels, labelProvider);
+		ListDialogField patternList = new ListDialogField(adapter, buttonLabels, labelProvider);
 		patternList.setDialogFieldListener(adapter);
 
 		patternList.setLabelText(label);
@@ -108,9 +102,9 @@ public class AccessRulesDialog extends StatusDialog {
 		patternList.setDownButtonIndex(IDX_DOWN);
 		patternList.enableButton(IDX_EDIT, false);
 
-		IAccessRule[] rules= (IAccessRule[]) entryToEdit.getAttribute(BPListElement.ACCESSRULES);
-		ArrayList elements= new ArrayList(rules.length);
-		for (int i= 0; i < rules.length; i++) {
+		IAccessRule[] rules = (IAccessRule[]) entryToEdit.getAttribute(BPListElement.ACCESSRULES);
+		ArrayList elements = new ArrayList(rules.length);
+		for (int i = 0; i < rules.length; i++) {
 			elements.add(rules[i]);
 		}
 		patternList.setElements(elements);
@@ -118,77 +112,74 @@ public class AccessRulesDialog extends StatusDialog {
 		return patternList;
 	}
 
-
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite composite= (Composite) super.createDialogArea(parent);
+		Composite composite = (Composite) super.createDialogArea(parent);
 
-		int maxLabelSize= 0;
-		GC gc= new GC(composite);
+		int maxLabelSize = 0;
+		GC gc = new GC(composite);
 		try {
-			maxLabelSize= gc.textExtent(AccessRulesLabelProvider.getResolutionLabel(IAccessRule.K_ACCESSIBLE)).x;
-			int len2= gc.textExtent(AccessRulesLabelProvider.getResolutionLabel(IAccessRule.K_DISCOURAGED)).x;
+			maxLabelSize = gc.textExtent(AccessRulesLabelProvider.getResolutionLabel(IAccessRule.K_ACCESSIBLE)).x;
+			int len2 = gc.textExtent(AccessRulesLabelProvider.getResolutionLabel(IAccessRule.K_DISCOURAGED)).x;
 			if (len2 > maxLabelSize) {
-				maxLabelSize= len2;
+				maxLabelSize = len2;
 			}
-			int len3= gc.textExtent(AccessRulesLabelProvider.getResolutionLabel(IAccessRule.K_NON_ACCESSIBLE)).x;
+			int len3 = gc.textExtent(AccessRulesLabelProvider.getResolutionLabel(IAccessRule.K_NON_ACCESSIBLE)).x;
 			if (len3 > maxLabelSize) {
-				maxLabelSize= len3;
+				maxLabelSize = len3;
 			}
 		} finally {
 			gc.dispose();
 		}
 
-		ColumnLayoutData[] columnDta= new ColumnLayoutData[] {
-				new ColumnPixelData(maxLabelSize + 40),
-				new ColumnWeightData(1),
-		};
+		ColumnLayoutData[] columnDta = new ColumnLayoutData[] { new ColumnPixelData(maxLabelSize + 40),
+				new ColumnWeightData(1), };
 		fAccessRulesList.setTableColumns(new ListDialogField.ColumnsDescription(columnDta, null, false));
 
-
-		Composite inner= new Composite(composite, SWT.NONE);
+		Composite inner = new Composite(composite, SWT.NONE);
 		inner.setFont(composite.getFont());
 
-		GridLayout layout= new GridLayout();
-		layout.marginHeight= 0;
-		layout.marginWidth= 0;
-		layout.numColumns= 2;
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.numColumns = 2;
 		inner.setLayout(layout);
 		inner.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		Label description= new Label(inner, SWT.WRAP);
+		Label description = new Label(inner, SWT.WRAP);
 
 		description.setText(getDescriptionString());
 
-		GridData data= new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
-		data.widthHint= convertWidthInCharsToPixels(70);
+		GridData data = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+		data.widthHint = convertWidthInCharsToPixels(70);
 		description.setLayoutData(data);
 
 		fAccessRulesList.doFillIntoGrid(inner, 3);
 
 		LayoutUtil.setHorizontalSpan(fAccessRulesList.getLabelControl(null), 2);
 
-		data= (GridData) fAccessRulesList.getListControl(null).getLayoutData();
-		data.grabExcessHorizontalSpace= true;
-		data.heightHint= SWT.DEFAULT;
+		data = (GridData) fAccessRulesList.getListControl(null).getLayoutData();
+		data.grabExcessHorizontalSpace = true;
+		data.heightHint = SWT.DEFAULT;
 
 		if (fCurrElement.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
 			fCombineRulesCheckbox.doFillIntoGrid(inner, 2);
 		}
 
 		if (fProject != null) {
-			String forbiddenSeverity=  fProject.getOption(DLTKCore.COMPILER_PB_FORBIDDEN_REFERENCE, true);
-			String discouragedSeverity= fProject.getOption(DLTKCore.COMPILER_PB_DISCOURAGED_REFERENCE, true);
-			String[] args= { getLocalizedString(discouragedSeverity), getLocalizedString(forbiddenSeverity) };
+			String forbiddenSeverity = fProject.getOption(DLTKCore.COMPILER_PB_FORBIDDEN_REFERENCE, true);
+			String discouragedSeverity = fProject.getOption(DLTKCore.COMPILER_PB_DISCOURAGED_REFERENCE, true);
+			Object[] args = { getLocalizedString(discouragedSeverity), getLocalizedString(forbiddenSeverity) };
 
-			FormToolkit toolkit= new FormToolkit(parent.getDisplay());
+			FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 			toolkit.setBackground(null);
 			try {
 				FormText text = toolkit.createFormText(composite, true);
 				text.setFont(inner.getFont());
 				if (fParentCanSwitchPage) {
 					// with link
-					text.setText(Messages.format(NewWizardMessages.AccessRulesDialog_severity_info_with_link, args), true, false);
+					text.setText(Messages.format(NewWizardMessages.AccessRulesDialog_severity_info_with_link, args),
+							true, false);
 					text.addHyperlinkListener(new HyperlinkAdapter() {
 						@Override
 						public void linkActivated(HyperlinkEvent e) {
@@ -197,10 +188,11 @@ public class AccessRulesDialog extends StatusDialog {
 					});
 				} else {
 					// no link
-					text.setText(Messages.format(NewWizardMessages.AccessRulesDialog_severity_info_no_link, args), true, false);
+					text.setText(Messages.format(NewWizardMessages.AccessRulesDialog_severity_info_no_link, args), true,
+							false);
 				}
-				data= new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
-				data.widthHint= convertWidthInCharsToPixels(70);
+				data = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+				data.widthHint = convertWidthInCharsToPixels(70);
 				text.setLayoutData(data);
 			} catch (IllegalArgumentException e) {
 				DLTKUIPlugin.log(e); // invalid string
@@ -213,8 +205,10 @@ public class AccessRulesDialog extends StatusDialog {
 	}
 
 	final void doErrorWarningLinkPressed() {
-		if (fParentCanSwitchPage && MessageDialog.openQuestion(getShell(), NewWizardMessages.AccessRulesDialog_switch_dialog_title, NewWizardMessages.AccessRulesDialog_switch_dialog_message)) {
-	        setReturnCode(SWITCH_PAGE);
+		if (fParentCanSwitchPage
+				&& MessageDialog.openQuestion(getShell(), NewWizardMessages.AccessRulesDialog_switch_dialog_title,
+						NewWizardMessages.AccessRulesDialog_switch_dialog_message)) {
+			setReturnCode(SWITCH_PAGE);
 			close();
 		}
 	}
@@ -231,28 +225,28 @@ public class AccessRulesDialog extends StatusDialog {
 
 	private String getDescriptionString() {
 		String desc;
-		String name= fCurrElement.getPath().lastSegment();
-		if( name.startsWith(IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
+		String name = fCurrElement.getPath().lastSegment();
+		if (name.startsWith(IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
 			name = ScriptElementLabels.BUILTINS_FRAGMENT;
 		}
 		switch (fCurrElement.getEntryKind()) {
-			case IBuildpathEntry.BPE_CONTAINER:
-				try {
-					name= ScriptElementLabels.getDefault().getContainerEntryLabel(fCurrElement.getPath(), fCurrElement.getScriptProject());
-				} catch (ModelException e) {
-				}
-				desc= NewWizardMessages.AccessRulesDialog_container_description;
-				break;
-			case IBuildpathEntry.BPE_PROJECT:
-				desc=  NewWizardMessages.AccessRulesDialog_project_description;
-				break;
-			default:
-				desc=  NewWizardMessages.AccessRulesDialog_description;
+		case IBuildpathEntry.BPE_CONTAINER:
+			try {
+				name = ScriptElementLabels.getDefault().getContainerEntryLabel(fCurrElement.getPath(),
+						fCurrElement.getScriptProject());
+			} catch (ModelException e) {
+			}
+			desc = NewWizardMessages.AccessRulesDialog_container_description;
+			break;
+		case IBuildpathEntry.BPE_PROJECT:
+			desc = NewWizardMessages.AccessRulesDialog_project_description;
+			break;
+		default:
+			desc = NewWizardMessages.AccessRulesDialog_description;
 		}
 
 		return Messages.format(desc, name);
 	}
-
 
 	protected void doCustomButtonPressed(ListDialogField field, int index) {
 		if (index == IDX_ADD) {
@@ -267,7 +261,7 @@ public class AccessRulesDialog extends StatusDialog {
 	}
 
 	protected void doSelectionChanged(ListDialogField field) {
-		List selected= field.getSelectedElements();
+		List selected = field.getSelectedElements();
 		field.enableButton(IDX_EDIT, canEdit(selected));
 	}
 
@@ -277,25 +271,23 @@ public class AccessRulesDialog extends StatusDialog {
 
 	private void editEntry(ListDialogField field) {
 
-		List selElements= field.getSelectedElements();
+		List selElements = field.getSelectedElements();
 		if (selElements.size() != 1) {
 			return;
 		}
-		IAccessRule rule= (IAccessRule) selElements.get(0);
-		AccessRuleEntryDialog dialog= new AccessRuleEntryDialog(getShell(), rule, fCurrElement);
+		IAccessRule rule = (IAccessRule) selElements.get(0);
+		AccessRuleEntryDialog dialog = new AccessRuleEntryDialog(getShell(), rule, fCurrElement);
 		if (dialog.open() == Window.OK) {
 			field.replaceElement(rule, dialog.getRule());
 		}
 	}
 
 	private void addEntry(ListDialogField field) {
-		AccessRuleEntryDialog dialog= new AccessRuleEntryDialog(getShell(), null, fCurrElement);
+		AccessRuleEntryDialog dialog = new AccessRuleEntryDialog(getShell(), null, fCurrElement);
 		if (dialog.open() == Window.OK) {
 			field.addElement(dialog.getRule());
 		}
 	}
-
-
 
 	// -------- TypeRestrictionAdapter --------
 
@@ -329,7 +321,7 @@ public class AccessRulesDialog extends StatusDialog {
 	}
 
 	public IAccessRule[] getAccessRules() {
-		List elements= fAccessRulesList.getElements();
+		List elements = fAccessRulesList.getElements();
 		return (IAccessRule[]) elements.toArray(new IAccessRule[elements.size()]);
 	}
 
@@ -340,20 +332,23 @@ public class AccessRulesDialog extends StatusDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		if(DLTKCore.DEBUG) {
+		if (DLTKCore.DEBUG) {
 			System.err.println("TODO: AccessRulesDialog add help context"); //$NON-NLS-1$
 		}
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IDLTKHelpContextIds.ACCESS_RULES_DIALOG);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell,
+		// IDLTKHelpContextIds.ACCESS_RULES_DIALOG);
 	}
 
-
 	public void performPageSwitch(IWorkbenchPreferenceContainer pageContainer) {
-		//HashMap data= new HashMap();
-		if(DLTKCore.DEBUG) {
+		// HashMap data= new HashMap();
+		if (DLTKCore.DEBUG) {
 			System.err.println("TODO:AccessRulesDialog:"); //$NON-NLS-1$
 		}
-		//data.put(ProblemSeveritiesPreferencePage.DATA_SELECT_OPTION_KEY, DLTKCore.COMPILER_PB_FORBIDDEN_REFERENCE);
-		//data.put(ProblemSeveritiesPreferencePage.DATA_SELECT_OPTION_QUALIFIER, DLTKCore.PLUGIN_ID);
-		//pageContainer.openPage(ProblemSeveritiesPreferencePage.PROP_ID, data);
+		// data.put(ProblemSeveritiesPreferencePage.DATA_SELECT_OPTION_KEY,
+		// DLTKCore.COMPILER_PB_FORBIDDEN_REFERENCE);
+		// data.put(ProblemSeveritiesPreferencePage.DATA_SELECT_OPTION_QUALIFIER,
+		// DLTKCore.PLUGIN_ID);
+		// pageContainer.openPage(ProblemSeveritiesPreferencePage.PROP_ID,
+		// data);
 	}
 }

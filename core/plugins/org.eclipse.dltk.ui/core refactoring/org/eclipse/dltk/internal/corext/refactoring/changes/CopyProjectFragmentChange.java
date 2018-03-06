@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,10 +19,10 @@ import org.eclipse.dltk.internal.corext.refactoring.reorg.IProjectFragmentManipu
 import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 
-
 public class CopyProjectFragmentChange extends ProjectFragmentReorgChange {
 
-	public CopyProjectFragmentChange(IProjectFragment root, IProject destination, INewNameQuery newNameQuery, IProjectFragmentManipulationQuery updateClasspathQuery) {
+	public CopyProjectFragmentChange(IProjectFragment root, IProject destination, INewNameQuery newNameQuery,
+			IProjectFragmentManipulationQuery updateClasspathQuery) {
 		super(root, destination, newNameQuery, updateClasspathQuery);
 	}
 
@@ -34,7 +34,7 @@ public class CopyProjectFragmentChange extends ProjectFragmentReorgChange {
 
 	@Override
 	public String getName() {
-		String[] keys= {getRoot().getElementName(), getDestinationProject().getName()};
-		return Messages.format(RefactoringCoreMessages.CopyProjectFragmentChange_copy, keys);
+		return Messages.format(RefactoringCoreMessages.CopyProjectFragmentChange_copy, getRoot().getElementName(),
+				getDestinationProject().getName());
 	}
 }

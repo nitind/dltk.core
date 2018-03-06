@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,25 +21,20 @@ import org.eclipse.ltk.core.refactoring.Change;
 
 public class CopyPackageFragmentRootChange extends ProjectFragmentReorgChange {
 
-	public CopyPackageFragmentRootChange(IProjectFragment root,
-			IProject destination, INewNameQuery newNameQuery,
+	public CopyPackageFragmentRootChange(IProjectFragment root, IProject destination, INewNameQuery newNameQuery,
 			IProjectFragmentManipulationQuery updateBuildpathQuery) {
 		super(root, destination, newNameQuery, updateBuildpathQuery);
 	}
 
 	@Override
-	protected Change doPerformReorg(IPath destinationPath, IProgressMonitor pm)
-			throws ModelException {
-		getRoot().copy(destinationPath, getResourceUpdateFlags(),
-				getUpdateModelFlags(true), null, pm);
+	protected Change doPerformReorg(IPath destinationPath, IProgressMonitor pm) throws ModelException {
+		getRoot().copy(destinationPath, getResourceUpdateFlags(), getUpdateModelFlags(true), null, pm);
 		return null;
 	}
 
 	@Override
 	public String getName() {
-		String[] keys = { getRoot().getElementName(),
-				getDestinationProject().getName() };
-		return Messages.format(RefactoringCoreMessages.CopyPackageChange_copy,
-				keys);
+		return Messages.format(RefactoringCoreMessages.CopyPackageChange_copy, getRoot().getElementName(),
+				getDestinationProject().getName());
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,40 +33,41 @@ import org.eclipse.ltk.core.refactoring.NullChange;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
-
 public class RenameScriptFolderChange extends AbstractModelElementRenameChange {
 
 	private Map fSourceModuleStamps;
 	private final boolean fRenameSubpackages;
 
-	public RenameScriptFolderChange(RefactoringDescriptor descriptor, IScriptFolder pack, String newName, String comment, boolean renameSubpackages) {
-		this(descriptor, pack.getPath(), pack.getElementName(), newName, comment, IResource.NULL_STAMP, null, renameSubpackages);
+	public RenameScriptFolderChange(RefactoringDescriptor descriptor, IScriptFolder pack, String newName,
+			String comment, boolean renameSubpackages) {
+		this(descriptor, pack.getPath(), pack.getElementName(), newName, comment, IResource.NULL_STAMP, null,
+				renameSubpackages);
 		Assert.isTrue(!pack.isReadOnly(), "package must not be read only"); //$NON-NLS-1$
 	}
 
-	private RenameScriptFolderChange(RefactoringDescriptor descriptor, IPath resourcePath, String oldName, String newName, String comment, long stampToRestore,
-		Map compilationUnitStamps, boolean renameSubpackages) {
+	private RenameScriptFolderChange(RefactoringDescriptor descriptor, IPath resourcePath, String oldName,
+			String newName, String comment, long stampToRestore, Map compilationUnitStamps, boolean renameSubpackages) {
 		super(descriptor, resourcePath, oldName, newName, comment, stampToRestore);
-		fSourceModuleStamps= compilationUnitStamps;
-		fRenameSubpackages= renameSubpackages;
+		fSourceModuleStamps = compilationUnitStamps;
+		fRenameSubpackages = renameSubpackages;
 	}
-	
+
 	@Override
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException {
-		RefactoringStatus result= new RefactoringStatus();
-		IModelElement element= (IModelElement)getModifiedElement();
-		// don't check for read-only since we don't go through 
+		RefactoringStatus result = new RefactoringStatus();
+		IModelElement element = (IModelElement) getModifiedElement();
+		// don't check for read-only since we don't go through
 		// validate edit.
 		result.merge(isValid(DIRTY));
 		if (result.hasFatalError())
 			return result;
 		if (element != null && element.exists() && element instanceof IScriptFolder) {
-			IScriptFolder pack= (IScriptFolder)element;
+			IScriptFolder pack = (IScriptFolder) element;
 			if (fRenameSubpackages) {
-				IScriptFolder[] allPackages= ModelElementUtil.getPackageAndSubpackages(pack);
+				IScriptFolder[] allPackages = ModelElementUtil.getPackageAndSubpackages(pack);
 				pm.beginTask("", allPackages.length); //$NON-NLS-1$
-				for (int i= 0; i < allPackages.length; i++) {
-					// don't check for read-only since we don't go through 
+				for (int i = 0; i < allPackages.length; i++) {
+					// don't check for read-only since we don't go through
 					// validate edit.
 					checkIfModifiable(result, allPackages[i], DIRTY);
 					if (result.hasFatalError())
@@ -82,11 +83,11 @@ public class RenameScriptFolderChange extends AbstractModelElementRenameChange {
 	}
 
 	private void isValid(RefactoringStatus result, IScriptFolder pack, IProgressMonitor pm) throws ModelException {
-		ISourceModule[] units= pack.getSourceModules();
+		ISourceModule[] units = pack.getSourceModules();
 		pm.beginTask("", units.length); //$NON-NLS-1$
-		for (int i= 0; i < units.length; i++) {
-			pm.subTask(Messages.format(
-				RefactoringCoreMessages.RenamePackageChange_checking_change, pack.getElementName())); 
+		for (int i = 0; i < units.length; i++) {
+			pm.subTask(Messages.format(RefactoringCoreMessages.RenamePackageChange_checking_change,
+					pack.getElementName()));
 			checkIfModifiable(result, units[i], READ_ONLY | DIRTY);
 			pm.worked(1);
 		}
@@ -95,9 +96,9 @@ public class RenameScriptFolderChange extends AbstractModelElementRenameChange {
 
 	@Override
 	protected IPath createNewPath() {
-		IScriptFolder oldPackage= getPackage();
-		IPath oldPackageName= createPath(oldPackage.getElementName());
-		IPath newPackageName= createPath(getNewName());
+		IScriptFolder oldPackage = getPackage();
+		IPath oldPackageName = createPath(oldPackage.getElementName());
+		IPath newPackageName = createPath(getNewName());
 		return getResourcePath().removeLastSegments(oldPackageName.segmentCount()).append(newPackageName);
 	}
 
@@ -106,47 +107,48 @@ public class RenameScriptFolderChange extends AbstractModelElementRenameChange {
 	}
 
 	protected IPath createNewPath(IScriptFolder oldPackage) {
-		IPath oldPackagePath= createPath(oldPackage.getElementName());
-		IPath newPackagePath= createPath(getNewName(oldPackage));
+		IPath oldPackagePath = createPath(oldPackage.getElementName());
+		IPath newPackagePath = createPath(getNewName(oldPackage));
 		return oldPackage.getPath().removeLastSegments(oldPackagePath.segmentCount()).append(newPackagePath);
 	}
-	
+
 	private String getNewName(IScriptFolder subpackage) {
 		return getNewName() + subpackage.getElementName().substring(getOldName().length());
 	}
 
 	@Override
 	public String getName() {
-		String msg= fRenameSubpackages
-				? RefactoringCoreMessages.RenamePackageChange_name_with_subpackages
+		String msg = fRenameSubpackages ? RefactoringCoreMessages.RenamePackageChange_name_with_subpackages
 				: RefactoringCoreMessages.RenamePackageChange_name;
-		return Messages.format(msg, new String[]{getOldName(), getNewName()});
+		return Messages.format(msg, getOldName(), getNewName());
 	}
 
 	@Override
 	protected Change createUndoChange(long stampToRestore) throws CoreException {
-		IScriptFolder pack= getPackage();
+		IScriptFolder pack = getPackage();
 		if (pack == null)
 			return new NullChange();
-		Map stamps= new HashMap();
-		if (! fRenameSubpackages) {
+		Map stamps = new HashMap();
+		if (!fRenameSubpackages) {
 			addStamps(stamps, pack.getSourceModules());
 		} else {
-			IScriptFolder[] allPackages= ModelElementUtil.getPackageAndSubpackages(pack);
-			for (int i= 0; i < allPackages.length; i++) {
-				IScriptFolder currentPackage= allPackages[i];
+			IScriptFolder[] allPackages = ModelElementUtil.getPackageAndSubpackages(pack);
+			for (int i = 0; i < allPackages.length; i++) {
+				IScriptFolder currentPackage = allPackages[i];
 				addStamps(stamps, currentPackage.getSourceModules());
 			}
 		}
-		return new RenameScriptFolderChange(null, createNewPath(), getNewName(), getOldName(), getComment(), stampToRestore, stamps, fRenameSubpackages);
-			// Note: This reverse change only works if the renamePackage change did not merge the source package into an existing target.
+		return new RenameScriptFolderChange(null, createNewPath(), getNewName(), getOldName(), getComment(),
+				stampToRestore, stamps, fRenameSubpackages);
+		// Note: This reverse change only works if the renamePackage change did
+		// not merge the source package into an existing target.
 	}
 
 	private void addStamps(Map stamps, ISourceModule[] units) {
-		for (int i= 0; i < units.length; i++) {
-			IResource resource= units[i].getResource();
-			long stamp= IResource.NULL_STAMP;
-			if (resource != null && (stamp= resource.getModificationStamp()) != IResource.NULL_STAMP) {
+		for (int i = 0; i < units.length; i++) {
+			IResource resource = units[i].getResource();
+			long stamp = IResource.NULL_STAMP;
+			if (resource != null && (stamp = resource.getModificationStamp()) != IResource.NULL_STAMP) {
 				stamps.put(resource, Long.valueOf(stamp));
 			}
 		}
@@ -154,20 +156,21 @@ public class RenameScriptFolderChange extends AbstractModelElementRenameChange {
 
 	@Override
 	protected void doRename(IProgressMonitor pm) throws CoreException {
-		IScriptFolder pack= getPackage();
+		IScriptFolder pack = getPackage();
 		if (pack == null)
 			return;
-		
-		if (! fRenameSubpackages) {
+
+		if (!fRenameSubpackages) {
 			renamePackage(pack, pm, createNewPath(), getNewName());
 		} else {
-			IScriptFolder[] allPackages= ModelElementUtil.getPackageAndSubpackages(pack);
-			
+			IScriptFolder[] allPackages = ModelElementUtil.getPackageAndSubpackages(pack);
+
 			pm.beginTask("", allPackages.length); //$NON-NLS-1$
 			try {
-				for (int i= 0; i < allPackages.length; i++) {
-					IScriptFolder currentPackage= allPackages[i];
-					renamePackage(currentPackage, new SubProgressMonitor(pm, 1), createNewPath(currentPackage), getNewName(currentPackage));
+				for (int i = 0; i < allPackages.length; i++) {
+					IScriptFolder currentPackage = allPackages[i];
+					renamePackage(currentPackage, new SubProgressMonitor(pm, 1), createNewPath(currentPackage),
+							getNewName(currentPackage));
 				}
 			} finally {
 				pm.done();
@@ -175,17 +178,18 @@ public class RenameScriptFolderChange extends AbstractModelElementRenameChange {
 		}
 	}
 
-	private void renamePackage(IScriptFolder pack, IProgressMonitor pm, IPath newPath, String newName) throws ModelException, CoreException {
+	private void renamePackage(IScriptFolder pack, IProgressMonitor pm, IPath newPath, String newName)
+			throws ModelException, CoreException {
 		pack.rename(newName, false, pm);
 		if (fSourceModuleStamps != null) {
-			IScriptFolder newPack= (IScriptFolder)DLTKCore.create(
-				ResourcesPlugin.getWorkspace().getRoot().getFolder(newPath));
+			IScriptFolder newPack = (IScriptFolder) DLTKCore
+					.create(ResourcesPlugin.getWorkspace().getRoot().getFolder(newPath));
 			if (newPack.exists()) {
-				ISourceModule[] units= newPack.getSourceModules();
-				for (int i= 0; i < units.length; i++) {
-					IResource resource= units[i].getResource();
+				ISourceModule[] units = newPack.getSourceModules();
+				for (int i = 0; i < units.length; i++) {
+					IResource resource = units[i].getResource();
 					if (resource != null) {
-						Long stamp= (Long)fSourceModuleStamps.get(resource);
+						Long stamp = (Long) fSourceModuleStamps.get(resource);
 						if (stamp != null) {
 							resource.revertModificationStamp(stamp.longValue());
 						}
@@ -196,6 +200,6 @@ public class RenameScriptFolderChange extends AbstractModelElementRenameChange {
 	}
 
 	private IScriptFolder getPackage() {
-		return (IScriptFolder)getModifiedElement();
+		return (IScriptFolder) getModifiedElement();
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,8 +58,7 @@ import org.eclipse.swt.widgets.Text;
 /**
  * Configures DLTK Editor hover preferences.
  */
-public class ScriptEditorHoverConfigurationBlock
-		implements IPreferenceConfigurationBlock {
+public class ScriptEditorHoverConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	private static final String DELIMITER = PreferencesMessages.DLTKEditorHoverConfigurationBlock_delimiter;
 
@@ -80,8 +79,7 @@ public class ScriptEditorHoverConfigurationBlock
 		}
 	}
 
-	private class ScriptEditorTextHoverDescriptorLabelProvider
-			implements ITableLabelProvider {
+	private class ScriptEditorTextHoverDescriptorLabelProvider implements ITableLabelProvider {
 
 		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
@@ -95,8 +93,7 @@ public class ScriptEditorHoverConfigurationBlock
 				return ((EditorTextHoverDescriptor) element).getLabel();
 
 			case MODIFIER_PROP:
-				TableItem item = (TableItem) fHoverTableViewer
-						.testFindItem(element);
+				TableItem item = (TableItem) fHoverTableViewer.testFindItem(element);
 				int index = fHoverTable.indexOf(item);
 				return fHoverConfigs[index].fModifierString;
 
@@ -125,12 +122,10 @@ public class ScriptEditorHoverConfigurationBlock
 		}
 	}
 
-	private class ScriptEditorTextHoverDescriptorContentProvider
-			implements IStructuredContentProvider {
+	private class ScriptEditorTextHoverDescriptorContentProvider implements IStructuredContentProvider {
 
 		@Override
-		public void inputChanged(Viewer viewer, Object oldInput,
-				Object newInput) {
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			// Do nothing since the viewer listens to resource deltas
 		}
 
@@ -163,20 +158,17 @@ public class ScriptEditorHoverConfigurationBlock
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fStore.setValue((String) fCheckBoxes.get(button),
-					button.getSelection());
+			fStore.setValue((String) fCheckBoxes.get(button), button.getSelection());
 		}
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fStore.setValue((String) fCheckBoxes.get(button),
-					button.getSelection());
+			fStore.setValue((String) fCheckBoxes.get(button), button.getSelection());
 		}
 	};
 
-	public ScriptEditorHoverConfigurationBlock(
-			PreferencePage mainPreferencePage, OverlayPreferenceStore store,
+	public ScriptEditorHoverConfigurationBlock(PreferencePage mainPreferencePage, OverlayPreferenceStore store,
 			String nature) {
 		Assert.isNotNull(mainPreferencePage);
 		Assert.isNotNull(store);
@@ -194,15 +186,12 @@ public class ScriptEditorHoverConfigurationBlock
 		// OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
 		// PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER));
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS));
 
-		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys
-				.size()];
+		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);
 		return keys;
 	}
@@ -210,8 +199,7 @@ public class ScriptEditorHoverConfigurationBlock
 	/**
 	 * Creates page for hover preferences.
 	 *
-	 * @param parent
-	 *            the parent composite
+	 * @param parent the parent composite
 	 * @return the control for the preference page
 	 */
 	@Override
@@ -223,36 +211,32 @@ public class ScriptEditorHoverConfigurationBlock
 		hoverComposite.setLayout(layout);
 
 		String rollOverLabel = PreferencesMessages.DLTKEditorHoverConfigurationBlock_annotationRollover;
-		addCheckBox(hoverComposite, rollOverLabel,
-				PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER, 0);
+		addCheckBox(hoverComposite, rollOverLabel, PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER, 0);
 
 		GridData gd;
 
 		addFiller(hoverComposite);
 
 		Label label = new Label(hoverComposite, SWT.NONE);
-		label.setText(
-				PreferencesMessages.DLTKEditorHoverConfigurationBlock_hoverPreferences);
+		label.setText(PreferencesMessages.DLTKEditorHoverConfigurationBlock_hoverPreferences);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalAlignment = GridData.BEGINNING;
 		gd.horizontalSpan = 2;
 		label.setLayoutData(gd);
 
-		TableLayoutComposite layouter = new TableLayoutComposite(hoverComposite,
-				SWT.NONE);
+		TableLayoutComposite layouter = new TableLayoutComposite(hoverComposite, SWT.NONE);
 		addColumnLayoutData(layouter);
 
 		// Hover table
-		fHoverTable = new Table(layouter, SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION | SWT.CHECK);
+		fHoverTable = new Table(layouter,
+				SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION | SWT.CHECK);
 		fHoverTable.setHeaderVisible(true);
 		fHoverTable.setLinesVisible(true);
 
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.heightHint = SWTUtil.getTableHeightHint(fHoverTable, 10);
 		gd.horizontalSpan = 2;
-		gd.widthHint = new PixelConverter(parent)
-				.convertWidthInCharsToPixels(30);
+		gd.widthHint = new PixelConverter(parent).convertWidthInCharsToPixels(30);
 		layouter.setLayoutData(gd);
 
 		fHoverTable.addSelectionListener(new SelectionListener() {
@@ -270,49 +254,41 @@ public class ScriptEditorHoverConfigurationBlock
 		fHoverTable.setLayout(tableLayout);
 
 		fNameColumn = new TableColumn(fHoverTable, SWT.NONE);
-		fNameColumn.setText(
-				PreferencesMessages.DLTKEditorHoverConfigurationBlock_nameColumnTitle);
+		fNameColumn.setText(PreferencesMessages.DLTKEditorHoverConfigurationBlock_nameColumnTitle);
 		fNameColumn.setResizable(true);
 
 		fModifierColumn = new TableColumn(fHoverTable, SWT.NONE);
-		fModifierColumn.setText(
-				PreferencesMessages.DLTKEditorHoverConfigurationBlock_modifierColumnTitle);
+		fModifierColumn.setText(PreferencesMessages.DLTKEditorHoverConfigurationBlock_modifierColumnTitle);
 		fModifierColumn.setResizable(true);
 
 		fHoverTableViewer = new CheckboxTableViewer(fHoverTable);
 		fHoverTableViewer.setUseHashlookup(true);
-		fHoverTableViewer.setContentProvider(
-				new ScriptEditorTextHoverDescriptorContentProvider());
-		fHoverTableViewer.setLabelProvider(
-				new ScriptEditorTextHoverDescriptorLabelProvider());
+		fHoverTableViewer.setContentProvider(new ScriptEditorTextHoverDescriptorContentProvider());
+		fHoverTableViewer.setLabelProvider(new ScriptEditorTextHoverDescriptorLabelProvider());
 
-		((CheckboxTableViewer) fHoverTableViewer)
-				.addCheckStateListener(event -> {
-					String id = ((EditorTextHoverDescriptor) event.getElement())
-							.getId();
-					if (id == null)
-						return;
-					EditorTextHoverDescriptor[] descriptors = getContributedHovers();
-					HoverConfig hoverConfig = null;
-					int i = 0, length = fHoverConfigs.length;
-					while (i < length) {
-						if (id.equals(descriptors[i].getId())) {
-							hoverConfig = fHoverConfigs[i];
-							hoverConfig.fIsEnabled = event.getChecked();
-							fModifierEditor.setEnabled(event.getChecked());
-							fHoverTableViewer.setSelection(
-									new StructuredSelection(descriptors[i]));
-						}
-						i++;
-					}
-					handleHoverListSelection();
-					updateStatus(hoverConfig);
-				});
+		((CheckboxTableViewer) fHoverTableViewer).addCheckStateListener(event -> {
+			String id = ((EditorTextHoverDescriptor) event.getElement()).getId();
+			if (id == null)
+				return;
+			EditorTextHoverDescriptor[] descriptors = getContributedHovers();
+			HoverConfig hoverConfig = null;
+			int i = 0, length = fHoverConfigs.length;
+			while (i < length) {
+				if (id.equals(descriptors[i].getId())) {
+					hoverConfig = fHoverConfigs[i];
+					hoverConfig.fIsEnabled = event.getChecked();
+					fModifierEditor.setEnabled(event.getChecked());
+					fHoverTableViewer.setSelection(new StructuredSelection(descriptors[i]));
+				}
+				i++;
+			}
+			handleHoverListSelection();
+			updateStatus(hoverConfig);
+		});
 
 		// Text field for modifier string
 		label = new Label(hoverComposite, SWT.LEFT);
-		label.setText(
-				PreferencesMessages.DLTKEditorHoverConfigurationBlock_keyModifier);
+		label.setText(PreferencesMessages.DLTKEditorHoverConfigurationBlock_keyModifier);
 		fModifierEditor = new Text(hoverComposite, SWT.BORDER);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		fModifierEditor.setLayoutData(gd);
@@ -322,14 +298,12 @@ public class ScriptEditorHoverConfigurationBlock
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				isModifierCandidate = e.keyCode > 0 && e.character == 0
-						&& e.stateMask == 0;
+				isModifierCandidate = e.keyCode > 0 && e.character == 0 && e.stateMask == 0;
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if (isModifierCandidate && e.stateMask > 0
-						&& e.stateMask == e.stateMask && e.character == 0) {
+				if (isModifierCandidate && e.stateMask > 0 && e.stateMask == e.stateMask && e.character == 0) {
 					// && e.time - time < 1000)
 					String text = fModifierEditor.getText();
 					Point selection = fModifierEditor.getSelection();
@@ -337,34 +311,29 @@ public class ScriptEditorHoverConfigurationBlock
 					while (i > -1 && Character.isWhitespace(text.charAt(i))) {
 						i--;
 					}
-					boolean needsPrefixDelimiter = i > -1 && !String
-							.valueOf(text.charAt(i)).equals(DELIMITER);
+					boolean needsPrefixDelimiter = i > -1 && !String.valueOf(text.charAt(i)).equals(DELIMITER);
 
 					i = selection.y;
-					while (i < text.length()
-							&& Character.isWhitespace(text.charAt(i))) {
+					while (i < text.length() && Character.isWhitespace(text.charAt(i))) {
 						i++;
 					}
-					boolean needsPostfixDelimiter = i < text.length() && !String
-							.valueOf(text.charAt(i)).equals(DELIMITER);
+					boolean needsPostfixDelimiter = i < text.length()
+							&& !String.valueOf(text.charAt(i)).equals(DELIMITER);
 
 					String insertString;
 
 					if (needsPrefixDelimiter && needsPostfixDelimiter)
 						insertString = Messages.format(
 								PreferencesMessages.DLTKEditorHoverConfigurationBlock_insertDelimiterAndModifierAndDelimiter,
-								new String[] { Action
-										.findModifierString(e.stateMask) });
+								Action.findModifierString(e.stateMask));
 					else if (needsPrefixDelimiter)
 						insertString = Messages.format(
 								PreferencesMessages.DLTKEditorHoverConfigurationBlock_insertDelimiterAndModifier,
-								new String[] { Action
-										.findModifierString(e.stateMask) });
+								Action.findModifierString(e.stateMask));
 					else if (needsPostfixDelimiter)
 						insertString = Messages.format(
 								PreferencesMessages.DLTKEditorHoverConfigurationBlock_insertModifierAndDelimiter,
-								new String[] { Action
-										.findModifierString(e.stateMask) });
+								Action.findModifierString(e.stateMask));
 					else
 						insertString = Action.findModifierString(e.stateMask);
 
@@ -378,13 +347,11 @@ public class ScriptEditorHoverConfigurationBlock
 
 		// Description
 		Label descriptionLabel = new Label(hoverComposite, SWT.LEFT);
-		descriptionLabel.setText(
-				PreferencesMessages.DLTKEditorHoverConfigurationBlock_description);
+		descriptionLabel.setText(PreferencesMessages.DLTKEditorHoverConfigurationBlock_description);
 		gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		gd.horizontalSpan = 2;
 		descriptionLabel.setLayoutData(gd);
-		fDescription = new Text(hoverComposite,
-				SWT.LEFT | SWT.WRAP | SWT.MULTI | SWT.READ_ONLY | SWT.BORDER);
+		fDescription = new Text(hoverComposite, SWT.LEFT | SWT.WRAP | SWT.MULTI | SWT.READ_ONLY | SWT.BORDER);
 		gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
 		fDescription.setLayoutData(gd);
@@ -401,8 +368,7 @@ public class ScriptEditorHoverConfigurationBlock
 	}
 
 	private EditorTextHoverDescriptor[] getContributedHovers() {
-		return DLTKUIPlugin.getDefault().getEditorTextHoverDescriptors(fStore,
-				fNature);
+		return DLTKUIPlugin.getDefault().getEditorTextHoverDescriptors(fStore, fNature);
 	}
 
 	@Override
@@ -410,9 +376,8 @@ public class ScriptEditorHoverConfigurationBlock
 		EditorTextHoverDescriptor[] hoverDescs = getContributedHovers();
 		fHoverConfigs = new HoverConfig[hoverDescs.length];
 		for (int i = 0; i < hoverDescs.length; i++)
-			fHoverConfigs[i] = new HoverConfig(
-					hoverDescs[i].getModifierString(),
-					hoverDescs[i].getStateMask(), hoverDescs[i].isEnabled());
+			fHoverConfigs[i] = new HoverConfig(hoverDescs[i].getModifierString(), hoverDescs[i].getStateMask(),
+					hoverDescs[i].isEnabled());
 
 		fHoverTableViewer.setInput(hoverDescs);
 
@@ -454,10 +419,8 @@ public class ScriptEditorHoverConfigurationBlock
 			maskBuf.append(fHoverConfigs[i].fStateMask);
 			maskBuf.append(EditorTextHoverDescriptor.VALUE_SEPARATOR);
 		}
-		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS,
-				buf.toString());
-		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS,
-				maskBuf.toString());
+		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS, buf.toString());
+		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS, maskBuf.toString());
 
 		DLTKUIPlugin.getDefault().resetEditorTextHoverDescriptors(fNature);
 	}
@@ -471,11 +434,9 @@ public class ScriptEditorHoverConfigurationBlock
 
 	private void restoreFromPreferences() {
 
-		String compiledTextHoverModifiers = fStore
-				.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS);
+		String compiledTextHoverModifiers = fStore.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS);
 
-		StringTokenizer tokenizer = new StringTokenizer(
-				compiledTextHoverModifiers,
+		StringTokenizer tokenizer = new StringTokenizer(compiledTextHoverModifiers,
 				EditorTextHoverDescriptor.VALUE_SEPARATOR);
 		HashMap idToModifier = new HashMap(tokenizer.countTokens() / 2);
 
@@ -485,12 +446,10 @@ public class ScriptEditorHoverConfigurationBlock
 				idToModifier.put(id, tokenizer.nextToken());
 		}
 
-		String compiledTextHoverModifierMasks = DLTKUIPlugin.getDefault()
-				.getPreferenceStore().getString(
-						PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
+		String compiledTextHoverModifierMasks = DLTKUIPlugin.getDefault().getPreferenceStore()
+				.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
 
-		tokenizer = new StringTokenizer(compiledTextHoverModifierMasks,
-				EditorTextHoverDescriptor.VALUE_SEPARATOR);
+		tokenizer = new StringTokenizer(compiledTextHoverModifierMasks, EditorTextHoverDescriptor.VALUE_SEPARATOR);
 		HashMap idToModifierMask = new HashMap(tokenizer.countTokens() / 2);
 
 		while (tokenizer.hasMoreTokens()) {
@@ -500,14 +459,12 @@ public class ScriptEditorHoverConfigurationBlock
 		}
 
 		for (int i = 0; i < fHoverConfigs.length; i++) {
-			String modifierString = (String) idToModifier
-					.get(getContributedHovers()[i].getId());
+			String modifierString = (String) idToModifier.get(getContributedHovers()[i].getId());
 			boolean enabled = true;
 			if (modifierString == null)
 				modifierString = EditorTextHoverDescriptor.DISABLED_TAG;
 
-			if (modifierString
-					.startsWith(EditorTextHoverDescriptor.DISABLED_TAG)) {
+			if (modifierString.startsWith(EditorTextHoverDescriptor.DISABLED_TAG)) {
 				enabled = false;
 				modifierString = modifierString.substring(1);
 			}
@@ -517,14 +474,12 @@ public class ScriptEditorHoverConfigurationBlock
 
 			fHoverConfigs[i].fModifierString = modifierString;
 			fHoverConfigs[i].fIsEnabled = enabled;
-			fHoverConfigs[i].fStateMask = EditorTextHoverDescriptor
-					.computeStateMask(modifierString);
+			fHoverConfigs[i].fStateMask = EditorTextHoverDescriptor.computeStateMask(modifierString);
 
 			if (fHoverConfigs[i].fStateMask == -1) {
 				try {
 					fHoverConfigs[i].fStateMask = Integer
-							.parseInt((String) idToModifierMask
-									.get(getContributedHovers()[i].getId()));
+							.parseInt((String) idToModifierMask.get(getContributedHovers()[i].getId()));
 				} catch (NumberFormatException ex) {
 					fHoverConfigs[i].fStateMask = -1;
 				}
@@ -539,8 +494,7 @@ public class ScriptEditorHoverConfigurationBlock
 
 		String modifiers = fModifierEditor.getText();
 		fHoverConfigs[i].fModifierString = modifiers;
-		fHoverConfigs[i].fStateMask = EditorTextHoverDescriptor
-				.computeStateMask(modifiers);
+		fHoverConfigs[i].fStateMask = EditorTextHoverDescriptor.computeStateMask(modifiers);
 
 		// update table
 		fHoverTableViewer.refresh(getContributedHovers()[i]);
@@ -573,11 +527,10 @@ public class ScriptEditorHoverConfigurationBlock
 	}
 
 	private void updateStatus(HoverConfig hoverConfig) {
-		if (hoverConfig != null && hoverConfig.fIsEnabled
-				&& hoverConfig.fStateMask == -1)
-			fStatus = new StatusInfo(IStatus.ERROR, Messages.format(
-					PreferencesMessages.DLTKEditorHoverConfigurationBlock_modifierIsNotValid,
-					hoverConfig.fModifierString));
+		if (hoverConfig != null && hoverConfig.fIsEnabled && hoverConfig.fStateMask == -1)
+			fStatus = new StatusInfo(IStatus.ERROR,
+					Messages.format(PreferencesMessages.DLTKEditorHoverConfigurationBlock_modifierIsNotValid,
+							hoverConfig.fModifierString));
 		else
 			fStatus = new StatusInfo();
 
@@ -586,18 +539,16 @@ public class ScriptEditorHoverConfigurationBlock
 		while (fStatus.isOK() && i < fHoverConfigs.length) {
 			if (fHoverConfigs[i].fIsEnabled) {
 				String label = getContributedHovers()[i].getLabel();
-				Integer stateMask = Integer
-						.valueOf(fHoverConfigs[i].fStateMask);
+				Integer stateMask = Integer.valueOf(fHoverConfigs[i].fStateMask);
 				if (fHoverConfigs[i].fStateMask == -1)
-					fStatus = new StatusInfo(IStatus.ERROR, Messages.format(
-							PreferencesMessages.DLTKEditorHoverConfigurationBlock_modifierIsNotValidForHover,
-							new String[] { fHoverConfigs[i].fModifierString,
-									label }));
+					fStatus = new StatusInfo(IStatus.ERROR,
+							Messages.format(
+									PreferencesMessages.DLTKEditorHoverConfigurationBlock_modifierIsNotValidForHover,
+									fHoverConfigs[i].fModifierString, label));
 				else if (stateMasks.containsKey(stateMask))
-					fStatus = new StatusInfo(IStatus.ERROR, Messages.format(
-							PreferencesMessages.DLTKEditorHoverConfigurationBlock_duplicateModifier,
-							new String[] { label,
-									(String) stateMasks.get(stateMask) }));
+					fStatus = new StatusInfo(IStatus.ERROR,
+							Messages.format(PreferencesMessages.DLTKEditorHoverConfigurationBlock_duplicateModifier,
+									label, stateMasks.get(stateMask)));
 				else
 					stateMasks.put(stateMask, label);
 			}
@@ -608,8 +559,7 @@ public class ScriptEditorHoverConfigurationBlock
 		StatusUtil.applyToStatusLine(fMainPreferencePage, fStatus);
 	}
 
-	private Button addCheckBox(Composite parent, String label, String key,
-			int indentation) {
+	private Button addCheckBox(Composite parent, String label, String key, int indentation) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(label);
 

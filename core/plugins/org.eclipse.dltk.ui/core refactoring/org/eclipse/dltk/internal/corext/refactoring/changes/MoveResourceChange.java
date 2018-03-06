@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,10 +18,9 @@ import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
-
 public class MoveResourceChange extends ResourceReorgChange {
 
-	public MoveResourceChange(IResource res, IContainer dest){
+	public MoveResourceChange(IResource res, IContainer dest) {
 		super(res, dest, null);
 	}
 
@@ -36,15 +35,14 @@ public class MoveResourceChange extends ResourceReorgChange {
 	}
 
 	@Override
-	protected Change doPerformReorg(IPath path, IProgressMonitor pm) throws CoreException{
+	protected Change doPerformReorg(IPath path, IProgressMonitor pm) throws CoreException {
 		getResource().move(path, getReorgFlags(), pm);
 		return null;
 	}
 
 	@Override
 	public String getName() {
-		return Messages.format(RefactoringCoreMessages.MoveResourceChange_move,
-			new String[]{getResource().getFullPath().toString(), getDestination().getName()});
+		return Messages.format(RefactoringCoreMessages.MoveResourceChange_move, getResource().getFullPath().toString(),
+				getDestination().getName());
 	}
 }
-

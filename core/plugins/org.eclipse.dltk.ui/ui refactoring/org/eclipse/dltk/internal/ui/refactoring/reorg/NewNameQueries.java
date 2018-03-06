@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,26 +38,25 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-
 public class NewNameQueries implements INewNameQueries {
 
-	private static final String INVALID_NAME_NO_MESSAGE= "";//$NON-NLS-1$
+	private static final String INVALID_NAME_NO_MESSAGE = "";//$NON-NLS-1$
 	private final Wizard fWizard;
 	private final Shell fShell;
 
 	public NewNameQueries() {
-		fShell= null;
-		fWizard= null;
+		fShell = null;
+		fWizard = null;
 	}
 
 	public NewNameQueries(Wizard wizard) {
-		fWizard= wizard;
-		fShell= null;
+		fWizard = wizard;
+		fShell = null;
 	}
 
 	public NewNameQueries(Shell shell) {
 		fShell = shell;
-		fWizard= null;
+		fWizard = null;
 	}
 
 	private Shell getShell() {
@@ -75,56 +74,47 @@ public class NewNameQueries implements INewNameQueries {
 		if (DLTKCore.DEBUG) {
 			System.err.println("TODO:add removeScriptLikeExtensions code here..."); //$NON-NLS-1$
 		}
-		String[] keys= {/*DLTKCore.removeScriptLikeExtension(*/cu.getElementName()/*)*/};
-		String message= Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, keys);
+		String message = Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, cu.getElementName());
 		return createStaticQuery(createSourceModuleNameValidator(cu), message, initialSuggestedName, getShell());
 	}
 
-
 	@Override
 	public INewNameQuery createNewResourceNameQuery(IResource res, String initialSuggestedName) {
-		String[] keys= {res.getName()};
-		String message= Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, keys);
+		String message = Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, res.getName());
 		return createStaticQuery(createResourceNameValidator(res), message, initialSuggestedName, getShell());
 	}
 
-
 	@Override
 	public INewNameQuery createNewPackageNameQuery(IScriptFolder pack, String initialSuggestedName) {
-		String[] keys= {pack.getElementName()};
-		String message= Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, keys);
+		String message = Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, pack.getElementName());
 		return createStaticQuery(createPackageNameValidator(pack), message, initialSuggestedName, getShell());
 	}
 
 	@Override
 	public INewNameQuery createNewProjectFragmentNameQuery(IProjectFragment root, String initialSuggestedName) {
-		String[] keys= {root.getElementName()};
-		String message= Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, keys);
+		String message = Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, root.getElementName());
 		return createStaticQuery(createProjectFragmentNameValidator(root), message, initialSuggestedName, getShell());
 	}
 
-
 	@Override
-	public INewNameQuery createNullQuery(){
+	public INewNameQuery createNullQuery() {
 		return createStaticQuery(null);
 	}
 
-
 	@Override
-	public INewNameQuery createStaticQuery(final String newName){
+	public INewNameQuery createStaticQuery(final String newName) {
 		return () -> newName;
 	}
 
-	private static INewNameQuery createStaticQuery(final IInputValidator validator, final String message, final String initial, final Shell shell){
+	private static INewNameQuery createStaticQuery(final IInputValidator validator, final String message,
+			final String initial, final Shell shell) {
 		return () -> {
-			InputDialog dialog = new InputDialog(shell,
-					ReorgMessages.ReorgQueries_nameConflictMessage, message,
+			InputDialog dialog = new InputDialog(shell, ReorgMessages.ReorgQueries_nameConflictMessage, message,
 					initial, validator) {
 				/*
 				 * (non-Javadoc)
 				 *
-				 * @see
-				 * org.eclipse.jface.dialogs.InputDialog#createDialogArea(org.
+				 * @see org.eclipse.jface.dialogs.InputDialog#createDialogArea(org.
 				 * eclipse.swt.widgets.Composite)
 				 */
 				@Override
@@ -140,7 +130,7 @@ public class NewNameQueries implements INewNameQueries {
 		};
 	}
 
-	private static IInputValidator createResourceNameValidator(final IResource res){
+	private static IInputValidator createResourceNameValidator(final IResource res) {
 		IInputValidator validator = newText -> {
 			if (newText == null || "".equals(newText) //$NON-NLS-1$
 					|| res.getParent() == null)
@@ -149,8 +139,7 @@ public class NewNameQueries implements INewNameQueries {
 				return ReorgMessages.ReorgQueries_resourceWithThisNameAlreadyExists;
 			if (!res.getParent().getFullPath().isValidSegment(newText))
 				return ReorgMessages.ReorgQueries_invalidNameMessage;
-			IStatus status = res.getParent().getWorkspace()
-					.validateName(newText, res.getType());
+			IStatus status = res.getParent().getWorkspace().validateName(newText, res.getType());
 			if (status.getSeverity() == IStatus.ERROR)
 				return status.getMessage();
 
@@ -169,11 +158,10 @@ public class NewNameQueries implements INewNameQueries {
 			String newCuName = ScriptModelUtil.getRenamedCUName(cu, newText);
 			IDLTKLanguageToolkit toolkit = null;
 			toolkit = DLTKLanguageManager.getLanguageToolkit(cu);
-			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID,
-					0, ReorgMessages.NewNameQueries_mustBeAScriptProject, null);
+			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, 0,
+					ReorgMessages.NewNameQueries_mustBeAScriptProject, null);
 			if (toolkit != null) {
-				if (DLTKContentTypeManager
-						.isValidFileNameForContentType(toolkit, newCuName)) {
+				if (DLTKContentTypeManager.isValidFileNameForContentType(toolkit, newCuName)) {
 					status = IModelStatus.VERIFIED_OK;
 				} else {
 					status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID,
@@ -185,8 +173,7 @@ public class NewNameQueries implements INewNameQueries {
 			RefactoringStatus refStatus;
 			refStatus = Checks.checkSourceModuleNewName(cu, newText);
 			if (refStatus.hasFatalError())
-				return refStatus
-						.getMessageMatchingSeverity(RefactoringStatus.FATAL);
+				return refStatus.getMessageMatchingSeverity(RefactoringStatus.FATAL);
 
 			if (cu.getElementName().equalsIgnoreCase(newCuName))
 				return ReorgMessages.ReorgQueries_resourceExistsWithDifferentCaseMassage;
@@ -196,10 +183,10 @@ public class NewNameQueries implements INewNameQueries {
 		return validator;
 	}
 
-
 	private static IInputValidator createProjectFragmentNameValidator(final IProjectFragment root) {
 		return new IInputValidator() {
-			IInputValidator resourceNameValidator= createResourceNameValidator(root.getResource());
+			IInputValidator resourceNameValidator = createResourceNameValidator(root.getResource());
+
 			@Override
 			public String isValid(String newText) {
 				return resourceNameValidator.isValid(newText);
@@ -219,8 +206,7 @@ public class NewNameQueries implements INewNameQueries {
 //				try {
 			if (parent instanceof IProjectFragment) {
 				if (DLTKCore.DEBUG) {
-					System.err.println(
-							"TODO:NewNamequeries add isPackageNameOkInRoot check..."); //$NON-NLS-1$
+					System.err.println("TODO:NewNamequeries add isPackageNameOkInRoot check..."); //$NON-NLS-1$
 				}
 //						if (! RenamePackageProcessor.isPackageNameOkInRoot(newText, (IProjectFragment)parent))
 //							return ReorgMessages.ReorgQueries_packagewithThatNameexistsMassage;
