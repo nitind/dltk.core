@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -176,13 +176,13 @@ public class RenamingNameSuggestor {
 
 		initializePrefixesAndSuffixes(project);
 
-		if (isStatic)
+		if (isStatic) {
 			return suggestNewVariableName(fStaticFieldPrefixes,
 					fStaticFieldSuffixes, oldFieldName, oldTypeName,
 					newTypeName);
-		else
-			return suggestNewVariableName(fFieldPrefixes, fFieldSuffixes,
-					oldFieldName, oldTypeName, newTypeName);
+		}
+		return suggestNewVariableName(fFieldPrefixes, fFieldSuffixes,
+				oldFieldName, oldTypeName, newTypeName);
 	}
 
 	public String suggestNewLocalName(IScriptProject project,
@@ -191,12 +191,12 @@ public class RenamingNameSuggestor {
 
 		initializePrefixesAndSuffixes(project);
 
-		if (isArgument)
+		if (isArgument) {
 			return suggestNewVariableName(fArgumentPrefixes, fArgumentSuffixes,
 					oldLocalName, oldTypeName, newTypeName);
-		else
-			return suggestNewVariableName(fLocalPrefixes, fLocalSuffixes,
-					oldLocalName, oldTypeName, newTypeName);
+		}
+		return suggestNewVariableName(fLocalPrefixes, fLocalSuffixes,
+				oldLocalName, oldTypeName, newTypeName);
 	}
 
 	public String suggestNewMethodName(String oldMethodName, String oldTypeName,
@@ -443,10 +443,10 @@ public class RenamingNameSuggestor {
 		}
 
 		String varName = concat(suffixesVar);
-		if (varName.equals(strippedVariableName))
+		if (varName.equals(strippedVariableName)) {
 			return null; // no "silly suggestions"
-		else
-			return varName;
+		}
+		return varName;
 	}
 
 	// ---------------- Helper methods
@@ -519,25 +519,25 @@ public class RenamingNameSuggestor {
 	}
 
 	private String getLowerCased(String name) {
-		if (name.length() > 1)
+		if (name.length() > 1) {
 			return Character.toLowerCase(name.charAt(0)) + name.substring(1);
-		else
-			return name.toLowerCase();
+		}
+		return name.toLowerCase();
 	}
 
 	private String getUpperCased(String name) {
-		if (name.length() > 1)
+		if (name.length() > 1) {
 			return Character.toUpperCase(name.charAt(0)) + name.substring(1);
-		else
-			return name.toLowerCase();
+		}
+		return name.toLowerCase();
 	}
 
 	private String getFirstUpperRestLowerCased(String name) {
-		if (name.length() > 1)
+		if (name.length() > 1) {
 			return Character.toUpperCase(name.charAt(0))
 					+ name.substring(1).toLowerCase();
-		else
-			return name.toLowerCase();
+		}
+		return name.toLowerCase();
 	}
 
 	private boolean isInterfaceName(String typeName) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2017 IBM Corporation and others.
+ * Copyright (c) 2006, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,7 +70,8 @@ public final class SaveParticipantRegistry
 	 * the given context.
 	 *
 	 * @param context
-	 *            the context from which to retrieve the settings from, not null
+	 *                    the context from which to retrieve the settings from,
+	 *                    not null
 	 * @return the current enabled post save listeners according to the
 	 *         preferences
 	 */
@@ -92,9 +93,8 @@ public final class SaveParticipantRegistry
 		}
 		if (result == null) {
 			return EMPTY_ARRAY;
-		} else {
-			return result.toArray(new IPostSaveListener[result.size()]);
 		}
+		return result.toArray(new IPostSaveListener[result.size()]);
 	}
 
 	@Override
@@ -107,10 +107,10 @@ public final class SaveParticipantRegistry
 	 * about the changed region in this save cycle.
 	 *
 	 * @param unit
-	 *            the unit which is about to be saved
+	 *                 the unit which is about to be saved
 	 * @return true if the change regions need do be determined
 	 * @throws CoreException
-	 *             if something went wrong
+	 *                           if something went wrong
 	 */
 	public static boolean isChangedRegionsRequired(final ISourceModule unit,
 			IPostSaveListener[] listeners) throws CoreException {

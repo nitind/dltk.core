@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 xored software, Inc. and others.
+ * Copyright (c) 2009, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -147,9 +147,8 @@ public class EnvironmentContainer {
 		final IEnvironment environment = environments.get(environmentId);
 		if (environment != null) {
 			return environment.getName();
-		} else {
-			return "(" + environmentId + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
+		return "(" + environmentId + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

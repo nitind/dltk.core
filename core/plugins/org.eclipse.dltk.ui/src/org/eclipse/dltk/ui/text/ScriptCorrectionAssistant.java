@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,7 +51,7 @@ public class ScriptCorrectionAssistant extends QuickAssistAssistant {
 	 * Constructor for JavaCorrectionAssistant.
 	 *
 	 * @param editor
-	 *            the editor
+	 *                   the editor
 	 */
 	public ScriptCorrectionAssistant(ITextEditor editor, IPreferenceStore store,
 			IColorManager manager) {
@@ -210,19 +210,18 @@ public class ScriptCorrectionAssistant extends QuickAssistAssistant {
 				}
 			}
 			return bestOffset;
-		} else {
-			while (iter.hasNext()) {
-				Annotation annot = iter.next();
-				if (ScriptAnnotationUtils.isQuickFixableType(annot)) {
-					Position pos = model.getPosition(annot);
-					if (pos != null && isInside(invocationLocation, pos.offset,
-							pos.offset + pos.length)) {
-						resultingAnnotations.add(annot);
-					}
+		}
+		while (iter.hasNext()) {
+			Annotation annot = iter.next();
+			if (ScriptAnnotationUtils.isQuickFixableType(annot)) {
+				Position pos = model.getPosition(annot);
+				if (pos != null && isInside(invocationLocation, pos.offset,
+						pos.offset + pos.length)) {
+					resultingAnnotations.add(annot);
 				}
 			}
-			return invocationLocation;
 		}
+		return invocationLocation;
 	}
 
 	private static void ensureUpdatedAnnotations(ITextEditor editor) {
@@ -269,11 +268,11 @@ public class ScriptCorrectionAssistant extends QuickAssistAssistant {
 	 * </p>
 	 *
 	 * @param newOffset
-	 *            the offset to llok at
+	 *                               the offset to llok at
 	 * @param invocationLocation
-	 *            the invocation location
+	 *                               the invocation location
 	 * @param bestOffset
-	 *            the current best offset
+	 *                               the current best offset
 	 * @return -1 is returned if the given offset is not closer or the new best
 	 *         offset
 	 */

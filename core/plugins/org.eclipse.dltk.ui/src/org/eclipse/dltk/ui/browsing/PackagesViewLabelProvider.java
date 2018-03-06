@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,15 +38,16 @@ class PackagesViewLabelProvider extends AppearanceAwareLabelProvider {
 	private TreeHierarchyLayoutProblemsDecorator fDecorator;
 
 	PackagesViewLabelProvider(int state) {
-		this(state, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
-				| ScriptElementLabels.P_COMPRESSED,
+		this(state,
+				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
+						| ScriptElementLabels.P_COMPRESSED,
 				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS
 						| ScriptElementImageProvider.SMALL_ICONS);
 	}
 
 	PackagesViewLabelProvider(int state, long textFlags, int imageFlags) {
-		super(textFlags, imageFlags, DLTKUIPlugin.getDefault()
-				.getPreferenceStore());
+		super(textFlags, imageFlags,
+				DLTKUIPlugin.getDefault().getPreferenceStore());
 
 		Assert.isTrue(isValidState(state));
 		fViewState = state;
@@ -111,10 +112,10 @@ class PackagesViewLabelProvider extends AppearanceAwareLabelProvider {
 	}
 
 	private String getText(IScriptFolder fragment) {
-		if (isFlatView())
+		if (isFlatView()) {
 			return getFlatText(fragment);
-		else
-			return getHierarchicalText(fragment);
+		}
+		return getHierarchicalText(fragment);
 	}
 
 	private String getText(LogicalPackage logicalPackage) {
@@ -135,10 +136,10 @@ class PackagesViewLabelProvider extends AppearanceAwareLabelProvider {
 			return super.getText(fragment);
 		}
 		IResource res = fragment.getResource();
-		if (res != null && !(res.getType() == IResource.FILE))
+		if (res != null && !(res.getType() == IResource.FILE)) {
 			return decorateText(res.getName(), fragment);
-		else
-			return decorateText(calculateName(fragment), fragment);
+		}
+		return decorateText(calculateName(fragment), fragment);
 	}
 
 	private String calculateName(IScriptFolder fragment) {

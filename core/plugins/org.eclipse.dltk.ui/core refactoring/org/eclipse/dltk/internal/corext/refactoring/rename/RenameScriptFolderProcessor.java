@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,10 +89,10 @@ public class RenameScriptFolderProcessor extends ScriptRenameProcessor
 
 	/**
 	 * Creates a new rename package processor.
-	 * 
+	 *
 	 * @param fragment
-	 *            the package fragment, or <code>null</code> if invoked by
-	 *            scripting
+	 *                     the package fragment, or <code>null</code> if invoked
+	 *                     by scripting
 	 */
 	public RenameScriptFolderProcessor(IScriptFolder fragment) {
 		fPackage = fragment;
@@ -380,11 +380,11 @@ public class RenameScriptFolderProcessor extends ScriptRenameProcessor
 
 	private RefactoringStatus checkPackageInCurrentRoot(String newName)
 			throws CoreException {
-		if (isPackageNameOkInRoot(newName, getProjectFragment()))
+		if (isPackageNameOkInRoot(newName, getProjectFragment())) {
 			return null;
-		else
-			return RefactoringStatus.createFatalErrorStatus(
-					RefactoringCoreMessages.RenamePackageRefactoring_package_exists);
+		}
+		return RefactoringStatus.createFatalErrorStatus(
+				RefactoringCoreMessages.RenamePackageRefactoring_package_exists);
 	}
 
 	private IProjectFragment getProjectFragment() {
@@ -452,7 +452,7 @@ public class RenameScriptFolderProcessor extends ScriptRenameProcessor
 		for (int i = 0; i < types.length; i++) {
 			String name = types[i].getElementName();
 			if (topLevelTypeNames.contains(name)) {
-				String[] keys = { packageName, name };
+				Object[] keys = { packageName, name };
 				String msg = Messages.format(
 						RefactoringCoreMessages.RenamePackageRefactoring_contains_type,
 						keys);
@@ -699,11 +699,11 @@ public class RenameScriptFolderProcessor extends ScriptRenameProcessor
 				final IModelElement element = ScriptRefactoringDescriptor
 						.handleToElement(extended.getProject(), handle, false);
 				if (element == null || !element.exists() || element
-						.getElementType() != IModelElement.SCRIPT_FOLDER)
+						.getElementType() != IModelElement.SCRIPT_FOLDER) {
 					return ScriptableRefactoring.createInputFatalStatus(element,
 							getRefactoring().getName(), ID_RENAME_PACKAGE);
-				else
-					fPackage = (IScriptFolder) element;
+				}
+				fPackage = (IScriptFolder) element;
 			} else
 				return RefactoringStatus.createFatalErrorStatus(Messages.format(
 						RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,

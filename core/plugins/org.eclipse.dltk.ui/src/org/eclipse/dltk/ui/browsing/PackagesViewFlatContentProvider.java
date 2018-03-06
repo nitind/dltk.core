@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,11 +39,6 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider
 		super(viewer);
 	}
 
-	/*
-	 * @see
-	 * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
-	 * Object)
-	 */
 	public Object[] getChildren(Object parentElement) {
 
 		if (parentElement instanceof IModelElement) {
@@ -61,8 +56,8 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider
 						fMapToLogicalPackage.clear();
 						fMapToPackageFragments.clear();
 						return combineSamePackagesIntoLogialPackages(children);
-					} else
-						return children;
+					}
+					return children;
 
 				case IModelElement.PROJECT_FRAGMENT:
 					fMapToLogicalPackage.clear();
@@ -177,10 +172,10 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider
 	// PackageFragmentRoot)
 	private Object findElementToRefresh(IScriptFolder fragment) {
 		if (fViewer.testFindItem(fragment) == null) {
-			if (fInputIsProject)
+			if (fInputIsProject) {
 				return fragment.getScriptProject();
-			else
-				return fragment.getParent();
+			}
+			return fragment.getParent();
 		}
 		return fragment;
 	}
@@ -257,10 +252,9 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider
 				postAdd(fragment);
 			}
 			return;
-		} else {
-			fMapToPackageFragments.remove(key);
-			postRemove(frag);
 		}
+		fMapToPackageFragments.remove(key);
+		postRemove(frag);
 	}
 
 	private void postRefresh(final Object element) {

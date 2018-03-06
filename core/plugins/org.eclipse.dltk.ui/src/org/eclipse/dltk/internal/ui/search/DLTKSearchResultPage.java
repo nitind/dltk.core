@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -487,15 +487,12 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage
 				&& input.getActiveMatchFilters().length > 0) {
 			if (isQueryRunning()) {
 				String message = SearchMessages.DLTKSearchResultPage_filtered_message;
-				return Messages.format(message, new Object[] { label });
+				return Messages.format(message, label);
 
-			} else {
-				int filteredOut = input.getMatchCount()
-						- getFilteredMatchCount();
-				String message = SearchMessages.DLTKSearchResultPage_filteredWithCount_message;
-				return Messages.format(message,
-						new Object[] { label, String.valueOf(filteredOut) });
 			}
+			int filteredOut = input.getMatchCount() - getFilteredMatchCount();
+			String message = SearchMessages.DLTKSearchResultPage_filteredWithCount_message;
+			return Messages.format(message, label, String.valueOf(filteredOut));
 		}
 		return label;
 	}
@@ -506,9 +503,8 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage
 			ITreeContentProvider tp = (ITreeContentProvider) viewer
 					.getContentProvider();
 			return getMatchCount(tp, getRootElements((TreeViewer) getViewer()));
-		} else {
-			return getMatchCount((TableViewer) viewer);
 		}
+		return getMatchCount((TableViewer) viewer);
 	}
 
 	private Object[] getRootElements(TreeViewer viewer) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -83,9 +83,9 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 		 * used.
 		 *
 		 * @param selection
-		 *            the current selection
+		 *                      the current selection
 		 * @param jProject
-		 *            the element's script project
+		 *                      the element's script project
 		 */
 		public DialogExplorerActionContext(ISelection selection,
 				IScriptProject jProject) {
@@ -106,9 +106,9 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 		 * used.
 		 *
 		 * @param selectedElements
-		 *            a list of currently selected elements
+		 *                             a list of currently selected elements
 		 * @param jProject
-		 *            the element's script project
+		 *                             the element's script project
 		 */
 		public DialogExplorerActionContext(List selectedElements,
 				IScriptProject jProject) {
@@ -178,11 +178,12 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * actions.
 	 *
 	 * @param provider
-	 *            a information provider to pass necessary information to the
-	 *            operations
+	 *                     a information provider to pass necessary information
+	 *                     to the operations
 	 * @param listener
-	 *            a listener for the changes on Buildpath entries, that is the
-	 *            listener will be notified whenever a Buildpath entry changed.
+	 *                     a listener for the changes on Buildpath entries, that
+	 *                     is the listener will be notified whenever a Buildpath
+	 *                     entry changed.
 	 * @see IBuildpathModifierListener
 	 */
 	public DialogPackageExplorerActionGroup(
@@ -274,8 +275,8 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * Get an action of the specified type
 	 *
 	 * @param type
-	 *            the type of the desired action, must be a constante of
-	 *            <code>IBuildpathInformationProvider</code>
+	 *                 the type of the desired action, must be a constante of
+	 *                 <code>IBuildpathInformationProvider</code>
 	 * @return the requested action
 	 *
 	 * @see IBuildpathInformationProvider
@@ -309,7 +310,7 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * Create a toolbar manager for a given <code>ViewerPane</code>
 	 *
 	 * @param pane
-	 *            the pane to create the <code>
+	 *                 the pane to create the <code>
 	 * ToolBarManager</code> for.
 	 * @return the created <code>ToolBarManager</code>
 	 */
@@ -328,7 +329,7 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * Create a toolbar manager for a given <code>ViewerPane</code>
 	 *
 	 * @param pane
-	 *            the pane to create the help toolbar for
+	 *                 the pane to create the help toolbar for
 	 * @return the created <code>ToolBarManager</code>
 	 */
 	public ToolBarManager createLeftToolBar(ViewerPane pane) {
@@ -397,7 +398,7 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * can be called.
 	 *
 	 * @param context
-	 *            the action context
+	 *                    the action context
 	 *
 	 * @see IPackageExplorerActionListener
 	 * @see PackageExplorerActionEvent
@@ -406,7 +407,8 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * @see #refresh(DialogExplorerActionContext)
 	 *
 	 * @throws ModelException
-	 *             if there is a failure while computing the available actions.
+	 *                            if there is a failure while computing the
+	 *                            available actions.
 	 */
 	public void setContext(DialogExplorerActionContext context)
 			throws ModelException {
@@ -455,11 +457,11 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * Internal method to set the context of the action group.
 	 *
 	 * @param selectedElements
-	 *            a list of selected elements, can be empty
+	 *                             a list of selected elements, can be empty
 	 * @param project
-	 *            the script project
+	 *                             the script project
 	 * @param type
-	 *            the type of the selected element(s)
+	 *                             the type of the selected element(s)
 	 * @throws ModelException
 	 */
 	private void internalSetContext(List selectedElements,
@@ -490,9 +492,9 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * therefore provides more information.
 	 *
 	 * @param elements
-	 *            a list of elements to be compared to each other
+	 *                     a list of elements to be compared to each other
 	 * @param project
-	 *            the script project
+	 *                     the script project
 	 * @return <code>true</code> if all elements are of the same type,
 	 *         <code>false</code> otherwise.
 	 * @throws ModelException
@@ -516,11 +518,11 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * Inform all listeners about new actions.
 	 *
 	 * @param descriptions
-	 *            an array of descriptions for each actions, where the
-	 *            description at position 'i' belongs to the action at position
-	 *            'i'
+	 *                         an array of descriptions for each actions, where
+	 *                         the description at position 'i' belongs to the
+	 *                         action at position 'i'
 	 * @param actions
-	 *            an array of available actions
+	 *                         an array of available actions
 	 */
 	private void informListeners(String[] descriptions,
 			BuildpathModifierAction[] actions) {
@@ -575,7 +577,7 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * to set the content of the hint text group properly.
 	 *
 	 * @param obj
-	 *            the object to get the type from
+	 *                the object to get the type from
 	 * @return the type of the current selection or UNDEFINED if no appropriate
 	 *         type could be found. Possible types are:<br>
 	 *         PackageExplorerActionGroup.FOLDER<br>
@@ -648,7 +650,7 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * Get the type of the folder
 	 *
 	 * @param folder
-	 *            folder to get the type from
+	 *                   folder to get the type from
 	 * @return the type code for the folder. Possible types are:<br>
 	 *         PackageExplorerActionGroup.FOLDER<br>
 	 *         PackageExplorerActionGroup.EXCLUDED_FOLDER;<br>
@@ -674,7 +676,7 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * Get the type of the file
 	 *
 	 * @param file
-	 *            file to get the type from
+	 *                 file to get the type from
 	 * @return the type code for the file. Possible types are:<br>
 	 *         PackageExplorerActionGroup.EXCLUDED_FILE<br>
 	 *         PackageExplorerActionGroup.FILE
@@ -717,9 +719,9 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * that can be applied on this elements
 	 *
 	 * @param selectedElements
-	 *            the list of elements to get the actions for
+	 *                             the list of elements to get the actions for
 	 * @param project
-	 *            the script project
+	 *                             the script project
 	 * @return a list of <code>BuildpathModifierAction</code>s
 	 * @throws ModelException
 	 */
@@ -757,12 +759,12 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * Changes the enabled state of an action if necessary.
 	 *
 	 * @param action
-	 *            the action to change it's state for
+	 *                             the action to change it's state for
 	 * @param selectedElements
-	 *            a list of selected elements
+	 *                             a list of selected elements
 	 * @param types
-	 *            an array of types corresponding to the types of the selected
-	 *            elements
+	 *                             an array of types corresponding to the types
+	 *                             of the selected elements
 	 * @return <code>true</code> if the action is valid (= enabled),
 	 *         <code>false</code> otherwise
 	 * @throws ModelException
@@ -773,18 +775,17 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 			if (!action.isEnabled())
 				action.setEnabled(true);
 			return true;
-		} else {
-			if (action.isEnabled())
-				action.setEnabled(false);
-			return false;
 		}
+		if (action.isEnabled())
+			action.setEnabled(false);
+		return false;
 	}
 
 	/**
 	 * Fill the context menu with the available actions
 	 *
 	 * @param menu
-	 *            the menu to be filled up with actions
+	 *                 the menu to be filled up with actions
 	 */
 	@Override
 	public void fillContextMenu(IMenuManager menu) {
@@ -809,7 +810,7 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * Add listeners for the <code>PackageExplorerActionEvent</code>.
 	 *
 	 * @param listener
-	 *            the listener to be added
+	 *                     the listener to be added
 	 *
 	 * @see PackageExplorerActionEvent
 	 * @see IPackageExplorerActionListener
@@ -822,7 +823,7 @@ public class DialogPackageExplorerActionGroup extends CompositeActionGroup {
 	 * Remove the listener from the list of registered listeners.
 	 *
 	 * @param listener
-	 *            the listener to be removed
+	 *                     the listener to be removed
 	 */
 	public void removeListener(IPackageExplorerActionListener listener) {
 		fListeners.remove(listener);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,14 +16,15 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.ui.search.DLTKSearchScopeFactory;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 
-
 class SearchScopeHierarchyAction extends SearchScopeAction {
 	private final SearchScopeActionGroup fGroup;
 
 	public SearchScopeHierarchyAction(SearchScopeActionGroup group) {
-		super(group, CallHierarchyMessages.SearchScopeActionGroup_hierarchy_text);
+		super(group,
+				CallHierarchyMessages.SearchScopeActionGroup_hierarchy_text);
 		this.fGroup = group;
-		setToolTipText(CallHierarchyMessages.SearchScopeActionGroup_hierarchy_tooltip);
+		setToolTipText(
+				CallHierarchyMessages.SearchScopeActionGroup_hierarchy_tooltip);
 //		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IJavaHelpContextIds.CALL_HIERARCHY_SEARCH_SCOPE_ACTION);
 		if (DLTKCore.DEBUG) {
 			System.err.println("Add help support here..."); //$NON-NLS-1$
@@ -37,10 +38,10 @@ class SearchScopeHierarchyAction extends SearchScopeAction {
 			IMethod method = this.fGroup.getView().getMethod();
 
 			if (method != null) {
-				return SearchEngine.createHierarchyScope(method.getDeclaringType());
-			} else {
-				return null;
+				return SearchEngine
+						.createHierarchyScope(method.getDeclaringType());
 			}
+			return null;
 		} catch (ModelException e) {
 			DLTKUIPlugin.log(e);
 		}
@@ -53,11 +54,11 @@ class SearchScopeHierarchyAction extends SearchScopeAction {
 		return SearchScopeActionGroup.SEARCH_SCOPE_TYPE_HIERARCHY;
 	}
 
-
 	@Override
 	public String getFullDescription() {
 		IMethod method = this.fGroup.getView().getMethod();
-		return DLTKSearchScopeFactory.getInstance().getHierarchyScopeDescription(method.getDeclaringType());
+		return DLTKSearchScopeFactory.getInstance()
+				.getHierarchyScopeDescription(method.getDeclaringType());
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,8 +29,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
-public class ScriptInformationProvider implements IInformationProvider,
-		IInformationProviderExtension2 {
+public class ScriptInformationProvider
+		implements IInformationProvider, IInformationProviderExtension2 {
 
 	class EditorWatcher implements IPartListener {
 
@@ -137,12 +137,12 @@ public class ScriptInformationProvider implements IInformationProvider,
 				@Override
 				public IInformationControl doCreateInformationControl(
 						Shell parent) {
-					if (BrowserInformationControl.isAvailable(parent))
+					if (BrowserInformationControl.isAvailable(parent)) {
 						return new BrowserInformationControl(parent,
 								JFaceResources.DIALOG_FONT, true);
-					else
-						return new DefaultInformationControl(parent,
-								new HTMLTextPresenter(false));
+					}
+					return new DefaultInformationControl(parent,
+							new HTMLTextPresenter(false));
 				}
 			};
 		}

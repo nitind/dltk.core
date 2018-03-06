@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -127,46 +127,42 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter
 				return DND.DROP_MOVE;
 			}
 			return DND.DROP_NONE;
-		} else {
-			if (isOthersWorkingSet(fWorkingSet) && operation == DND.DROP_COPY)
-				return DND.DROP_NONE;
+		}
+		if (isOthersWorkingSet(fWorkingSet) && operation == DND.DROP_COPY)
+			return DND.DROP_NONE;
 
-			List realScriptElements = new ArrayList();
-			List realResource = new ArrayList();
-			ReorgUtils.splitIntoModelElementsAndResources(fElementsToAdds,
-					realScriptElements, realResource);
-			if (fElementsToAdds.length != realScriptElements.size()
-					+ realResource.size())
+		List realScriptElements = new ArrayList();
+		List realResource = new ArrayList();
+		ReorgUtils.splitIntoModelElementsAndResources(fElementsToAdds,
+				realScriptElements, realResource);
+		if (fElementsToAdds.length != realScriptElements.size()
+				+ realResource.size())
+			return DND.DROP_NONE;
+		for (Iterator iter = realScriptElements.iterator(); iter.hasNext();) {
+			IModelElement element = (IModelElement) iter.next();
+			if (ReorgUtils.containsElementOrParent(fCurrentElements, element))
 				return DND.DROP_NONE;
-			for (Iterator iter = realScriptElements.iterator(); iter
-					.hasNext();) {
-				IModelElement element = (IModelElement) iter.next();
-				if (ReorgUtils.containsElementOrParent(fCurrentElements,
-						element))
-					return DND.DROP_NONE;
-			}
-			for (Iterator iter = realResource.iterator(); iter.hasNext();) {
-				IResource element = (IResource) iter.next();
-				if (ReorgUtils.containsElementOrParent(fCurrentElements,
-						element))
-					return DND.DROP_NONE;
-			}
-			if (!(fSelection instanceof ITreeSelection)) {
+		}
+		for (Iterator iter = realResource.iterator(); iter.hasNext();) {
+			IResource element = (IResource) iter.next();
+			if (ReorgUtils.containsElementOrParent(fCurrentElements, element))
+				return DND.DROP_NONE;
+		}
+		if (!(fSelection instanceof ITreeSelection)) {
+			return DND.DROP_COPY;
+		}
+		ITreeSelection treeSelection = (ITreeSelection) fSelection;
+		TreePath[] paths = treeSelection.getPaths();
+		for (int i = 0; i < paths.length; i++) {
+			TreePath path = paths[i];
+			if (path.getSegmentCount() != 2)
 				return DND.DROP_COPY;
-			}
-			ITreeSelection treeSelection = (ITreeSelection) fSelection;
-			TreePath[] paths = treeSelection.getPaths();
-			for (int i = 0; i < paths.length; i++) {
-				TreePath path = paths[i];
-				if (path.getSegmentCount() != 2)
-					return DND.DROP_COPY;
-				if (!(path.getSegment(0) instanceof IWorkingSet))
-					return DND.DROP_COPY;
-				if (paths.length == 1) {
-					IWorkingSet ws = (IWorkingSet) path.getSegment(0);
-					if (WorkingSetIDs.OTHERS.equals(ws.getId()))
-						return DND.DROP_MOVE;
-				}
+			if (!(path.getSegment(0) instanceof IWorkingSet))
+				return DND.DROP_COPY;
+			if (paths.length == 1) {
+				IWorkingSet ws = (IWorkingSet) path.getSegment(0);
+				if (WorkingSetIDs.OTHERS.equals(ws.getId()))
+					return DND.DROP_MOVE;
 			}
 		}
 		if (operation == DND.DROP_DEFAULT)
@@ -302,9 +298,6 @@ public class WorkingSetDropAdapter extends DLTKViewerDropAdapter
 		fLocation = location;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected int getCurrentLocation() {
 		if (fLocation == -1)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,11 +62,10 @@ public class OpenTypeHistory extends History implements IShutdownListener {
 			IDLTKUILanguageToolkit toolkit) {
 		if (sToolkitHistory.containsKey(toolkit)) {
 			return sToolkitHistory.get(toolkit);
-		} else {
-			OpenTypeHistory his = new OpenTypeHistory(toolkit);
-			sToolkitHistory.put(toolkit, his);
-			return his;
 		}
+		OpenTypeHistory his = new OpenTypeHistory(toolkit);
+		sToolkitHistory.put(toolkit, his);
+		return his;
 	}
 
 	private class TypeHistoryDeltaListener implements IElementChangedListener {
@@ -81,7 +80,7 @@ public class OpenTypeHistory extends History implements IShutdownListener {
 		 * Computes whether the history needs a consistency check or not.
 		 *
 		 * @param delta
-		 *            the Java element delta
+		 *                  the Java element delta
 		 *
 		 * @return <code>true</code> if consistency must be checked
 		 *         <code>false</code> otherwise.

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -91,8 +91,8 @@ public class DLTKSearchEditorOpener {
 
 	private ReusedEditorWatcher fReusedEditorWatcher;
 
-	public IEditorPart openElement(Object element) throws PartInitException,
-			ModelException {
+	public IEditorPart openElement(Object element)
+			throws PartInitException, ModelException {
 		IWorkbenchPage wbPage = DLTKUIPlugin.getActivePage();
 		final IEditorPart editor;
 		if (NewSearchUI.reuseEditor())
@@ -104,8 +104,8 @@ public class DLTKSearchEditorOpener {
 		return editor;
 	}
 
-	public IEditorPart openMatch(Match match) throws PartInitException,
-			ModelException {
+	public IEditorPart openMatch(Match match)
+			throws PartInitException, ModelException {
 		Object element = getElementToOpen(match);
 		return openElement(element);
 	}
@@ -131,7 +131,8 @@ public class DLTKSearchEditorOpener {
 			} else if (module instanceof SourceModule) {
 				String editorID = getEditorID(module);
 				IFile file = getFile(element);
-				return showInEditor(wbPage, new FileEditorInput(file), editorID);
+				return showInEditor(wbPage, new FileEditorInput(file),
+						editorID);
 			}
 		}
 
@@ -159,12 +160,12 @@ public class DLTKSearchEditorOpener {
 
 	private String getEditorID(IFile file) throws PartInitException {
 		IEditorDescriptor desc = null;
-		if (desc == null)
+		if (desc == null) {
 			return DLTKUIPlugin.getDefault().getWorkbench().getEditorRegistry()
 					.findEditor(IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID)
 					.getId();
-		else
-			return desc.getId();
+		}
+		return desc.getId();
 	}
 
 	private String getEditorID(IModelElement module) throws PartInitException {
@@ -182,9 +183,8 @@ public class DLTKSearchEditorOpener {
 			return DLTKUIPlugin.getDefault().getWorkbench().getEditorRegistry()
 					.findEditor(IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID)
 					.getId();
-		} else {
-			return desc.getId();
 		}
+		return desc.getId();
 	}
 
 	private boolean isPinned(IEditorPart editor) {
@@ -238,8 +238,8 @@ public class DLTKSearchEditorOpener {
 					else
 						setReusedEditor(null);
 				} catch (PartInitException ex) {
-					MessageDialog.openError(DLTKUIPlugin
-							.getActiveWorkbenchShell(),
+					MessageDialog.openError(
+							DLTKUIPlugin.getActiveWorkbenchShell(),
 							SearchMessages.Search_Error_openEditor_title,
 							SearchMessages.Search_Error_openEditor_message);
 					return null;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -215,8 +215,8 @@ public abstract class BracketInserter
 	 * @param offset
 	 * @param partitioning
 	 * @param contentTypes
-	 *            acceptable content types, if empty only
-	 *            IDocument.DEFAULT_CONTENT_TYPE is checked.
+	 *                         acceptable content types, if empty only
+	 *                         IDocument.DEFAULT_CONTENT_TYPE is checked.
 	 * @return
 	 * @throws BadLocationException
 	 * @since 2.0
@@ -232,8 +232,7 @@ public abstract class BracketInserter
 					return true;
 			}
 			return false;
-		} else {
-			return IDocument.DEFAULT_CONTENT_TYPE.equals(partition.getType());
 		}
+		return IDocument.DEFAULT_CONTENT_TYPE.equals(partition.getType());
 	}
 }

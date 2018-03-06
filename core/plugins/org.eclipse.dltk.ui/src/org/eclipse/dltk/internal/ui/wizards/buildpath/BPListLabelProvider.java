@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,8 +49,8 @@ public class BPListLabelProvider extends LabelProvider {
 
 		IWorkbench workbench = DLTKUIPlugin.getDefault().getWorkbench();
 
-		fProjectImage = workbench.getSharedImages().getImageDescriptor(
-				IDE.SharedImages.IMG_OBJ_PROJECT);
+		fProjectImage = workbench.getSharedImages()
+				.getImageDescriptor(IDE.SharedImages.IMG_OBJ_PROJECT);
 	}
 
 	@Override
@@ -62,23 +62,19 @@ public class BPListLabelProvider extends LabelProvider {
 			BPListElementAttribute attribute = (BPListElementAttribute) element;
 			String text = getCPListElementAttributeText(attribute);
 			if (attribute.isInNonModifiableContainer()) {
-				return Messages
-						.format(
-								NewWizardMessages.CPListLabelProvider_non_modifiable_attribute,
-								text);
+				return Messages.format(
+						NewWizardMessages.CPListLabelProvider_non_modifiable_attribute,
+						text);
 			}
 			return text;
 		} else if (element instanceof BPUserLibraryElement) {
 			return getCPUserLibraryText((BPUserLibraryElement) element);
 		} else if (element instanceof IAccessRule) {
 			IAccessRule rule = (IAccessRule) element;
-			return Messages
-					.format(
-							NewWizardMessages.CPListLabelProvider_access_rules_label,
-							new String[] {
-									AccessRulesLabelProvider
-											.getResolutionLabel(rule.getKind()),
-									rule.getPattern().toString() });
+			return Messages.format(
+					NewWizardMessages.CPListLabelProvider_access_rules_label,
+					AccessRulesLabelProvider.getResolutionLabel(rule.getKind()),
+					rule.getPattern().toString());
 		}
 		return super.getText(element);
 	}
@@ -107,8 +103,8 @@ public class BPListLabelProvider extends LabelProvider {
 					String pattern = patterns[i].toString();
 					if (pattern.length() > 0) {
 						if (patternsCount > 0) {
-							buf
-									.append(NewWizardMessages.CPListLabelProvider_exclusion_filter_separator);
+							buf.append(
+									NewWizardMessages.CPListLabelProvider_exclusion_filter_separator);
 						}
 						buf.append(pattern);
 						patternsCount++;
@@ -122,10 +118,9 @@ public class BPListLabelProvider extends LabelProvider {
 			} else {
 				arg = notAvailable;
 			}
-			return Messages
-					.format(
-							NewWizardMessages.CPListLabelProvider_exclusion_filter_label,
-							new String[] { arg });
+			return Messages.format(
+					NewWizardMessages.CPListLabelProvider_exclusion_filter_label,
+					arg);
 		} else if (key.equals(BPListElement.INCLUSION)) {
 			String arg = null;
 			IPath[] patterns = (IPath[]) attrib.getValue();
@@ -136,8 +131,8 @@ public class BPListLabelProvider extends LabelProvider {
 					String pattern = patterns[i].toString();
 					if (pattern.length() > 0) {
 						if (patternsCount > 0) {
-							buf
-									.append(NewWizardMessages.CPListLabelProvider_inclusion_filter_separator);
+							buf.append(
+									NewWizardMessages.CPListLabelProvider_inclusion_filter_separator);
 						}
 						buf.append(pattern);
 						patternsCount++;
@@ -151,51 +146,42 @@ public class BPListLabelProvider extends LabelProvider {
 			} else {
 				arg = NewWizardMessages.CPListLabelProvider_all;
 			}
-			return Messages
-					.format(
-							NewWizardMessages.CPListLabelProvider_inclusion_filter_label,
-							new String[] { arg });
+			return Messages.format(
+					NewWizardMessages.CPListLabelProvider_inclusion_filter_label,
+					arg);
 		} else if (key.equals(BPListElement.ACCESSRULES)) {
 			IAccessRule[] rules = (IAccessRule[]) attrib.getValue();
 			int nRules = rules != null ? rules.length : 0;
 
 			int parentKind = attrib.getParent().getEntryKind();
 			if (parentKind == IBuildpathEntry.BPE_PROJECT) {
-				Boolean combined = (Boolean) attrib.getParent().getAttribute(
-						BPListElement.COMBINE_ACCESSRULES);
+				Boolean combined = (Boolean) attrib.getParent()
+						.getAttribute(BPListElement.COMBINE_ACCESSRULES);
 				if (nRules > 0) {
 					if (combined.booleanValue()) {
-						return Messages
-								.format(
-										NewWizardMessages.CPListLabelProvider_project_access_rules_combined,
-										String.valueOf(nRules));
-					} else {
-						return Messages
-								.format(
-										NewWizardMessages.CPListLabelProvider_project_access_rules_not_combined,
-										String.valueOf(nRules));
+						return Messages.format(
+								NewWizardMessages.CPListLabelProvider_project_access_rules_combined,
+								String.valueOf(nRules));
 					}
-				} else {
-					return NewWizardMessages.CPListLabelProvider_project_access_rules_no_rules;
+					return Messages.format(
+							NewWizardMessages.CPListLabelProvider_project_access_rules_not_combined,
+							String.valueOf(nRules));
 				}
+				return NewWizardMessages.CPListLabelProvider_project_access_rules_no_rules;
 			} else if (parentKind == IBuildpathEntry.BPE_CONTAINER) {
 				if (nRules > 0) {
-					return Messages
-							.format(
-									NewWizardMessages.CPListLabelProvider_container_access_rules,
-									String.valueOf(nRules));
-				} else {
-					return NewWizardMessages.CPListLabelProvider_container_no_access_rules;
+					return Messages.format(
+							NewWizardMessages.CPListLabelProvider_container_access_rules,
+							String.valueOf(nRules));
 				}
+				return NewWizardMessages.CPListLabelProvider_container_no_access_rules;
 			} else {
 				if (nRules > 0) {
-					return Messages
-							.format(
-									NewWizardMessages.CPListLabelProvider_access_rules_enabled,
-									String.valueOf(nRules));
-				} else {
-					return NewWizardMessages.CPListLabelProvider_access_rules_disabled;
+					return Messages.format(
+							NewWizardMessages.CPListLabelProvider_access_rules_enabled,
+							String.valueOf(nRules));
 				}
+				return NewWizardMessages.CPListLabelProvider_access_rules_disabled;
 			}
 		}
 		if (DLTKCore.DEBUG) {
@@ -217,8 +203,8 @@ public class BPListLabelProvider extends LabelProvider {
 	public String getCPListElementText(BPListElement cpentry) {
 
 		IPath path = cpentry.getPath();
-		if (path.toString().startsWith(
-				IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
+		if (path.toString()
+				.startsWith(IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
 			return ScriptElementLabels.BUILTINS_FRAGMENT;
 		}
 		if (EnvironmentPathUtils.isFull(path)) {
@@ -228,8 +214,8 @@ public class BPListLabelProvider extends LabelProvider {
 		case IBuildpathEntry.BPE_LIBRARY: {
 			IResource resource = cpentry.getResource();
 			if (resource instanceof IContainer) {
-				StringBuffer buf = new StringBuffer(path.makeRelative()
-						.toString());
+				StringBuffer buf = new StringBuffer(
+						path.makeRelative().toString());
 				IPath linkTarget = cpentry.getLinkTarget();
 				if (linkTarget != null) {
 					buf.append(ScriptElementLabels.CONCAT_STRING);
@@ -252,9 +238,8 @@ public class BPListLabelProvider extends LabelProvider {
 			// should not get here
 			if (!cpentry.isExternalFolder()) {
 				return path.makeRelative().toString();
-			} else {
-				return path.toString();
 			}
+			return path.toString();
 		}
 		case IBuildpathEntry.BPE_PROJECT:
 			return path.lastSegment();
@@ -270,10 +255,9 @@ public class BPListLabelProvider extends LabelProvider {
 				if (initializer != null) {
 					String description = initializer.getDescription(path,
 							cpentry.getScriptProject());
-					return Messages
-							.format(
-									NewWizardMessages.CPListLabelProvider_unbound_library,
-									description);
+					return Messages.format(
+							NewWizardMessages.CPListLabelProvider_unbound_library,
+							description);
 				}
 			} catch (ModelException e) {
 
@@ -314,11 +298,9 @@ public class BPListLabelProvider extends LabelProvider {
 					: appendedPath.makeRelative().toString();
 			return Messages.format(
 					NewWizardMessages.CPListLabelProvider_twopart,
-					new String[] { path.lastSegment(), appended });
-		} else {
-			return isExternal ? path.toOSString() : path.makeRelative()
-					.toString();
+					path.lastSegment(), appended);
 		}
+		return isExternal ? path.toOSString() : path.makeRelative().toString();
 	}
 
 	protected ImageDescriptor getCPListElementBaseImage(BPListElement cpentry) {
@@ -327,10 +309,9 @@ public class BPListLabelProvider extends LabelProvider {
 		case IBuildpathEntry.BPE_SOURCE:
 			if (cpentry.getPath().segmentCount() == 1) {
 				return fProjectImage;
-			} else {
-				return DLTKPluginImages
-						.getDescriptor(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT);
 			}
+			return DLTKPluginImages
+					.getDescriptor(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT);
 		case IBuildpathEntry.BPE_LIBRARY:
 			return DLTKPluginImages
 					.getDescriptor(DLTKPluginImages.IMG_OBJS_EXTZIP_WSRC);
@@ -349,7 +330,8 @@ public class BPListLabelProvider extends LabelProvider {
 
 		if (element instanceof BPListElement) {
 			BPListElement cpentry = (BPListElement) element;
-			ImageDescriptor imageDescriptor = getCPListElementBaseImage(cpentry);
+			ImageDescriptor imageDescriptor = getCPListElementBaseImage(
+					cpentry);
 			if (imageDescriptor != null) {
 				if (cpentry.isMissing()) {
 					imageDescriptor = new ScriptElementImageDescriptor(
@@ -362,11 +344,11 @@ public class BPListLabelProvider extends LabelProvider {
 		} else if (element instanceof BPListElementAttribute) {
 			String key = ((BPListElementAttribute) element).getKey();
 			if (key.equals(BPListElement.EXCLUSION)) {
-				return fRegistry
-						.get(DLTKPluginImages.DESC_OBJS_EXCLUSION_FILTER_ATTRIB);
+				return fRegistry.get(
+						DLTKPluginImages.DESC_OBJS_EXCLUSION_FILTER_ATTRIB);
 			} else if (key.equals(BPListElement.INCLUSION)) {
-				return fRegistry
-						.get(DLTKPluginImages.DESC_OBJS_INCLUSION_FILTER_ATTRIB);
+				return fRegistry.get(
+						DLTKPluginImages.DESC_OBJS_INCLUSION_FILTER_ATTRIB);
 			} else if (key.equals(BPListElement.ACCESSRULES)) {
 				return fRegistry
 						.get(DLTKPluginImages.DESC_OBJS_ACCESSRULES_ATTRIB);

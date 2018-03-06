@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -116,7 +116,7 @@ public class ModelElementUtil {
 
 	/**
 	 * @param pack
-	 *            a package fragment
+	 *                 a package fragment
 	 * @return an array containing the given package and all subpackages
 	 * @throws ModelException
 	 */
@@ -142,7 +142,7 @@ public class ModelElementUtil {
 
 	/**
 	 * @param pack
-	 *            the package fragment; may not be null
+	 *                 the package fragment; may not be null
 	 * @return the parent package fragment, or null if the given package
 	 *         fragment is the default package or a top level package
 	 */
@@ -155,10 +155,10 @@ public class ModelElementUtil {
 		final IProjectFragment root = (IProjectFragment) pack.getParent();
 		final String newPackageName = pack.getElementName().substring(0, index);
 		final IScriptFolder parent = root.getScriptFolder(newPackageName);
-		if (parent.exists())
+		if (parent.exists()) {
 			return parent;
-		else
-			return null;
+		}
+		return null;
 	}
 
 	public static IMember[] sortByOffset(IMember[] members) {

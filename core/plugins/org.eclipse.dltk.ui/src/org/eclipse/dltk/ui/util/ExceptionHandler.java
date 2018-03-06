@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ui.util;
 
@@ -50,13 +49,13 @@ public class ExceptionHandler {
 	/**
 	 * Handles the given <code>CoreException</code>. The workbench shell is used
 	 * as a parent for the dialog window.
-	 * 
+	 *
 	 * @param e
-	 *            the <code>CoreException</code> to be handled
+	 *                    the <code>CoreException</code> to be handled
 	 * @param title
-	 *            the dialog window's window title
+	 *                    the dialog window's window title
 	 * @param message
-	 *            message to be displayed by the dialog window
+	 *                    message to be displayed by the dialog window
 	 */
 	public static void handle(CoreException e, String title, String message) {
 		handle(e, DLTKUIPlugin.getActiveWorkbenchShell(), title, message);
@@ -64,15 +63,15 @@ public class ExceptionHandler {
 
 	/**
 	 * Handles the given <code>CoreException</code>.
-	 * 
+	 *
 	 * @param e
-	 *            the <code>CoreException</code> to be handled
+	 *                    the <code>CoreException</code> to be handled
 	 * @param parent
-	 *            the dialog window's parent shell
+	 *                    the dialog window's parent shell
 	 * @param title
-	 *            the dialog window's window title
+	 *                    the dialog window's window title
 	 * @param message
-	 *            message to be displayed by the dialog window
+	 *                    message to be displayed by the dialog window
 	 */
 	public static void handle(CoreException e, Shell parent, String title,
 			String message) {
@@ -82,13 +81,14 @@ public class ExceptionHandler {
 	/**
 	 * Handles the given <code>InvocationTargetException</code>. The workbench
 	 * shell is used as a parent for the dialog window.
-	 * 
+	 *
 	 * @param e
-	 *            the <code>InvocationTargetException</code> to be handled
+	 *                    the <code>InvocationTargetException</code> to be
+	 *                    handled
 	 * @param title
-	 *            the dialog window's window title
+	 *                    the dialog window's window title
 	 * @param message
-	 *            message to be displayed by the dialog window
+	 *                    message to be displayed by the dialog window
 	 */
 	public static void handle(InvocationTargetException e, String title,
 			String message) {
@@ -97,15 +97,16 @@ public class ExceptionHandler {
 
 	/**
 	 * Handles the given <code>InvocationTargetException</code>.
-	 * 
+	 *
 	 * @param e
-	 *            the <code>InvocationTargetException</code> to be handled
+	 *                    the <code>InvocationTargetException</code> to be
+	 *                    handled
 	 * @param parent
-	 *            the dialog window's parent shell
+	 *                    the dialog window's parent shell
 	 * @param title
-	 *            the dialog window's window title
+	 *                    the dialog window's window title
 	 * @param message
-	 *            message to be displayed by the dialog window
+	 *                    message to be displayed by the dialog window
 	 */
 	public static void handle(InvocationTargetException e, Shell parent,
 			String title, String message) {
@@ -147,16 +148,15 @@ public class ExceptionHandler {
 			final IStatus[] children = status.getChildren();
 			for (int i = 0; i < children.length; ++i) {
 				final IStatus child = children[i];
-				if (!(ResourcesPlugin.PI_RESOURCES.equals(status.getPlugin()) && child
-						.getCode() == IResourceStatus.INVALID_RESOURCE_NAME)) {
+				if (!(ResourcesPlugin.PI_RESOURCES.equals(status.getPlugin())
+						&& child.getCode() == IResourceStatus.INVALID_RESOURCE_NAME)) {
 					return false;
 				}
 			}
 			return true;
-		} else {
-			if (status.getCode() == IResourceStatus.INVALID_RESOURCE_NAME) {
-				return true;
-			}
+		}
+		if (status.getCode() == IResourceStatus.INVALID_RESOURCE_NAME) {
+			return true;
 		}
 		return false;
 	}

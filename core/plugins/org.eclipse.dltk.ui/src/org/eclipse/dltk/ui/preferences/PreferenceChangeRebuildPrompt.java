@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 xored software, Inc. and others.
+ * Copyright (c) 2009, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -16,8 +16,8 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Default implementation of the {@link IPreferenceChangeRebuildPrompt}
  */
-public class PreferenceChangeRebuildPrompt implements
-		IPreferenceChangeRebuildPrompt {
+public class PreferenceChangeRebuildPrompt
+		implements IPreferenceChangeRebuildPrompt {
 
 	private String title;
 	private String message;
@@ -69,9 +69,8 @@ public class PreferenceChangeRebuildPrompt implements
 	public String getMessage() {
 		if (messageTemplate == null || messageTemplate.length() == 0) {
 			return message;
-		} else {
-			return NLS.bind(messageTemplate, message);
 		}
+		return NLS.bind(messageTemplate, message);
 	}
 
 	@Override

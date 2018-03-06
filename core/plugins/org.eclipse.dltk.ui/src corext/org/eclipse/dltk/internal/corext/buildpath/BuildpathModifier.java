@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -75,7 +75,7 @@ public class BuildpathModifier {
 		 * <code>IBuildpathEntry</code>, but <code>BPListElement</code>
 		 *
 		 * @param newEntries
-		 *            list of <code>BPListElement</code>
+		 *                       list of <code>BPListElement</code>
 		 */
 		public void buildpathEntryChanged(List newEntries);
 	}
@@ -94,11 +94,11 @@ public class BuildpathModifier {
 	 * Create a linked source folder.
 	 *
 	 * @param query
-	 *            a query to create a linked source folder
+	 *                    a query to create a linked source folder
 	 * @param project
-	 *            the script project
+	 *                    the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                    progress monitor, can be <code>null</code>
 	 * @return a list containing a <code>IProjectFragment</code> representing
 	 *         the linked source folder
 	 * @throws CoreException
@@ -128,15 +128,15 @@ public class BuildpathModifier {
 	 * <code>FolderCreationQuery.getCreatedFolder()</code>.
 	 *
 	 * @param folderQuery
-	 *            query to create the new folder
+	 *                        query to create the new folder
 	 * @param outputQuery
-	 *            query to get information about whether the project should be
-	 *            removed as source folder and update build folder to
-	 *            <code>outputLocation</code>
+	 *                        query to get information about whether the project
+	 *                        should be removed as source folder and update
+	 *                        build folder to <code>outputLocation</code>
 	 * @param project
-	 *            the script project
+	 *                        the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                        progress monitor, can be <code>null</code>
 	 * @return a list containing the created object (either of type
 	 *         <code>IResource</code> of <code>IModelElement</code>, or an empty
 	 *         list if no folder was created (e.g. the operation was cancelled).
@@ -158,12 +158,11 @@ public class BuildpathModifier {
 					if (root.size() == 0)
 						folder.delete(false, null);
 					return root;
-				} else {
-					List entries = getExistingEntries(project);
-					exclude(folder.getFullPath(), entries, new ArrayList(),
-							project, monitor);
-					updateBuildpath(entries, project, null);
 				}
+				List entries = getExistingEntries(project);
+				exclude(folder.getFullPath(), entries, new ArrayList(), project,
+						monitor);
+				updateBuildpath(entries, project, null);
 				return folderList;
 			}
 		}
@@ -174,17 +173,17 @@ public class BuildpathModifier {
 	 * Add a list of elements to the build path.
 	 *
 	 * @param elements
-	 *            a list of elements to be added to the build path. An element
-	 *            must either be of type <code>IFolder</code>,
-	 *            <code>IModelElement</code> or <code>IFile</code> (only allowed
-	 *            if the file is a .zip file!).
+	 *                     a list of elements to be added to the build path. An
+	 *                     element must either be of type <code>IFolder</code>,
+	 *                     <code>IModelElement</code> or <code>IFile</code>
+	 *                     (only allowed if the file is a .zip file!).
 	 * @param project
-	 *            the script project
+	 *                     the script project
 	 * @param query
-	 *            for information about whether the project should be removed as
-	 *            source folder and update build folder
+	 *                     for information about whether the project should be
+	 *                     removed as source folder and update build folder
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                     progress monitor, can be <code>null</code>
 	 * @return returns a list of elements of type <code>IProjectFragment</code>
 	 *         or <code>IScriptProject</code> that have been added to the build
 	 *         path or an empty list if the operation was aborted
@@ -252,12 +251,11 @@ public class BuildpathModifier {
 				}
 
 				return result;
-			} else {
-				StatusInfo rootStatus = new StatusInfo();
-				rootStatus.setError(
-						NewWizardMessages.BuildpathModifier_Error_NoNatures);
-				throw new CoreException(rootStatus);
 			}
+			StatusInfo rootStatus = new StatusInfo();
+			rootStatus.setError(
+					NewWizardMessages.BuildpathModifier_Error_NoNatures);
+			throw new CoreException(rootStatus);
 		} finally {
 			monitor.done();
 		}
@@ -268,12 +266,12 @@ public class BuildpathModifier {
 	 * query to find out which entries need to be added.
 	 *
 	 * @param query
-	 *            the query to get the information which entries need to be
-	 *            added
+	 *                    the query to get the information which entries need to
+	 *                    be added
 	 * @param project
-	 *            the script project
+	 *                    the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                    progress monitor, can be <code>null</code>
 	 * @return a list of <code>IProjectFragment</code>s representing the added
 	 *         archives or an empty list if no element was added.
 	 * @throws CoreException
@@ -330,12 +328,12 @@ public class BuildpathModifier {
 	 * which entries need to be added.
 	 *
 	 * @param query
-	 *            the query to get the information which entries need to be
-	 *            added
+	 *                    the query to get the information which entries need to
+	 *                    be added
 	 * @param project
-	 *            the script project
+	 *                    the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                    progress monitor, can be <code>null</code>
 	 * @return a list of <code>BuildpathContainer</code>s representing the added
 	 *         archives or an empty list if no element was added.
 	 * @throws CoreException
@@ -426,16 +424,18 @@ public class BuildpathModifier {
 	 * Remove a list of elements to the build path.
 	 *
 	 * @param query
-	 *            query to remove unused linked folders from the project
+	 *                     query to remove unused linked folders from the
+	 *                     project
 	 * @param elements
-	 *            a list of elements to be removed from the build path. An
-	 *            element must either be of type <code>IScriptProject</code>,
-	 *            <code>IProjectFragment</code> or
-	 *            <code>BuildPathContainer</code>
+	 *                     a list of elements to be removed from the build path.
+	 *                     An element must either be of type
+	 *                     <code>IScriptProject</code>,
+	 *                     <code>IProjectFragment</code> or
+	 *                     <code>BuildPathContainer</code>
 	 * @param project
-	 *            the script project
+	 *                     the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                     progress monitor, can be <code>null</code>
 	 * @return returns a list of elements of type <code>IFile</code> (in case of
 	 *         removed archives) or <code>IFolder</code> that have been removed
 	 *         from the build path
@@ -538,12 +538,13 @@ public class BuildpathModifier {
 	 * parent fragment is allowed.
 	 *
 	 * @param elements
-	 *            a list of elements to be included. The elements must be either
-	 *            of type <code>IResource</code> or <code>IModelElement</code>.
+	 *                     a list of elements to be included. The elements must
+	 *                     be either of type <code>IResource</code> or
+	 *                     <code>IModelElement</code>.
 	 * @param project
-	 *            the script project
+	 *                     the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                     progress monitor, can be <code>null</code>
 	 * @return a list of <code>IModelElement</code>s corresponding to the
 	 *         included ones.
 	 * @throws ModelException
@@ -599,11 +600,11 @@ public class BuildpathModifier {
 	 * parent fragment is allowed.
 	 *
 	 * @param scriptElements
-	 *            list of script elements to be excluded
+	 *                           list of script elements to be excluded
 	 * @param project
-	 *            the script project
+	 *                           the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                           progress monitor, can be <code>null</code>
 	 * @return list of objects representing the excluded elements
 	 * @throws ModelException
 	 */
@@ -649,11 +650,12 @@ public class BuildpathModifier {
 	 * parent fragment is allowed.
 	 *
 	 * @param scriptElements
-	 *            a list of <code>IModelElements</code> to be unincluded
+	 *                           a list of <code>IModelElements</code> to be
+	 *                           unincluded
 	 * @param project
-	 *            the script project
+	 *                           the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                           progress monitor, can be <code>null</code>
 	 * @return a list of elements representing unexcluded elements
 	 * @throws ModelException
 	 *
@@ -699,11 +701,11 @@ public class BuildpathModifier {
 	 * parent fragment is allowed.
 	 *
 	 * @param elements
-	 *            list of <code>IResource</code>s to be unexcluded
+	 *                     list of <code>IResource</code>s to be unexcluded
 	 * @param project
-	 *            the script project
+	 *                     the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                     progress monitor, can be <code>null</code>
 	 * @return an object representing the unexcluded element
 	 * @throws ModelException
 	 *
@@ -745,13 +747,13 @@ public class BuildpathModifier {
 	 * passed <code>IInclusionExclusionQuery</code>.
 	 *
 	 * @param element
-	 *            the script element to edit the filters on. Must be either of
-	 *            type <code>IScriptProject</code> or
-	 *            <code>IProjectFragment</code>.
+	 *                    the script element to edit the filters on. Must be
+	 *                    either of type <code>IScriptProject</code> or
+	 *                    <code>IProjectFragment</code>.
 	 * @param project
-	 *            the script project
+	 *                    the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                    progress monitor, can be <code>null</code>
 	 * @return returns the edited script element or <code>null</code> if the
 	 *         operation was cancelled
 	 * @throws ModelException
@@ -800,9 +802,9 @@ public class BuildpathModifier {
 	 * given attribute is reset to the default output location.</li>
 	 *
 	 * @param project
-	 *            the script project
+	 *                    the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                    progress monitor, can be <code>null</code>
 	 * @return a list of elements representing the elements on which 'reset' was
 	 *         called. They can either be of type <code>BPListElement</code>,
 	 *         <code>IScriptProject</code> or <code>IProjectFragment</code>
@@ -852,7 +854,7 @@ public class BuildpathModifier {
 	 * a list of <code>BPListElement</code>s.
 	 *
 	 * @param project
-	 *            the script project to get it's build path entries from
+	 *                    the script project to get it's build path entries from
 	 * @return a list of <code>BPListElement</code>s corresponding to the build
 	 *         path entries of the project
 	 * @throws ModelException
@@ -875,10 +877,10 @@ public class BuildpathModifier {
 	 * <code>BPListElement</code> and returned.
 	 *
 	 * @param elements
-	 *            a list of <code>BPListElements</code>
+	 *                     a list of <code>BPListElements</code>
 	 * @param root
-	 *            the root to find the <code>BuildpathEntry</code> for
-	 *            represented by a <code>BPListElement</code>
+	 *                     the root to find the <code>BuildpathEntry</code> for
+	 *                     represented by a <code>BPListElement</code>
 	 * @return the <code>BPListElement</code> found in the list (matching by
 	 *         using the path) or the roots own <code>IBuildpathEntry</code>
 	 *         converted to a <code>BPListElement</code>.
@@ -905,7 +907,7 @@ public class BuildpathModifier {
 	 * no fragment root could be created.
 	 *
 	 * @param resource
-	 *            the resource to be converted
+	 *                     the resource to be converted
 	 * @return the <code>resource<code> as
 	 * <code>IScriptFolder</code>,or <code>null</code> if failed to convert
 	 */
@@ -921,11 +923,11 @@ public class BuildpathModifier {
 	 * with the resource's parent.
 	 *
 	 * @param resource
-	 *            the resource to get the fragment root from
+	 *                     the resource to get the fragment root from
 	 * @param project
-	 *            the script project
+	 *                     the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                     progress monitor, can be <code>null</code>
 	 * @return resolved fragment root
 	 * @throws ModelException
 	 */
@@ -963,9 +965,9 @@ public class BuildpathModifier {
 	 * build path entries on the project
 	 *
 	 * @param path
-	 *            the path to find a build path entry for
+	 *                    the path to find a build path entry for
 	 * @param project
-	 *            the script project
+	 *                    the script project
 	 * @return the <code>IBuildpathEntry</code> corresponding to the
 	 *         <code>path</code> or <code>null</code> if there is no such entry
 	 * @throws ModelException
@@ -987,7 +989,7 @@ public class BuildpathModifier {
 	 * folder or not
 	 *
 	 * @param attrib
-	 *            the attribute to be checked
+	 *                   the attribute to be checked
 	 * @return <code>true</code> if is the default output folder,
 	 *         <code>false</code> otherwise.
 	 */
@@ -1001,11 +1003,11 @@ public class BuildpathModifier {
 	 * inclusion filter of it's parent source folder.
 	 *
 	 * @param selection
-	 *            the current script element
+	 *                      the current script element
 	 * @param project
-	 *            the script project
+	 *                      the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                      progress monitor, can be <code>null</code>
 	 * @return <code>true</code> if the current selection is included,
 	 *         <code>false</code> otherwise.
 	 * @throws ModelException
@@ -1038,9 +1040,9 @@ public class BuildpathModifier {
 	 * Find out whether the <code>IResource</code> excluded or not.
 	 *
 	 * @param resource
-	 *            the resource to be checked
+	 *                     the resource to be checked
 	 * @param project
-	 *            the script project
+	 *                     the script project
 	 * @return <code>true</code> if the resource is excluded, <code>
 	 * false</code> otherwise
 	 * @throws ModelException
@@ -1061,9 +1063,10 @@ public class BuildpathModifier {
 	 * Find out whether one of the <code>IResource</code>'s parents is excluded.
 	 *
 	 * @param resource
-	 *            check the resources parents whether they are excluded or not
+	 *                     check the resources parents whether they are excluded
+	 *                     or not
 	 * @param project
-	 *            the script project
+	 *                     the script project
 	 * @return <code>true</code> if there is an excluded parent,
 	 *         <code>false</code> otherwise
 	 * @throws ModelException
@@ -1126,7 +1129,7 @@ public class BuildpathModifier {
 	 * Check whether the <code>IScriptProject</code> is a source folder
 	 *
 	 * @param project
-	 *            the project to test
+	 *                    the project to test
 	 * @return <code>true</code> if <code>project</code> is a source folder
 	 *         <code>false</code> otherwise.
 	 */
@@ -1141,7 +1144,7 @@ public class BuildpathModifier {
 	 * default fragment.
 	 *
 	 * @param fragment
-	 *            the package fragment to be checked
+	 *                     the package fragment to be checked
 	 * @return <code>true</code> if is the default package fragment,
 	 *         <code>false</code> otherwise.
 	 */
@@ -1184,7 +1187,7 @@ public class BuildpathModifier {
 	 * both set (that means they are not empty).
 	 *
 	 * @param root
-	 *            the fragment root to be inspected
+	 *                 the fragment root to be inspected
 	 * @return <code>true</code> inclusion or exclusion filter set,
 	 *         <code>false</code> otherwise.
 	 */
@@ -1206,11 +1209,11 @@ public class BuildpathModifier {
 	 * Add a resource to the build path.
 	 *
 	 * @param resource
-	 *            the resource to be added to the build path
+	 *                     the resource to be added to the build path
 	 * @param project
-	 *            the script project
+	 *                     the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                     progress monitor, can be <code>null</code>
 	 * @return returns the new element of type <code>IProjectFragment</code>
 	 *         that has been added to the build path
 	 * @throws CoreException
@@ -1241,9 +1244,9 @@ public class BuildpathModifier {
 	 * Check whether the provided file is an archive (.zip).
 	 *
 	 * @param file
-	 *            the file to be checked
+	 *                    the file to be checked
 	 * @param project
-	 *            the script project
+	 *                    the script project
 	 * @return <code>true</code> if the file is an archive, <code>false</code>
 	 *         otherwise
 	 * @throws ModelException
@@ -1262,11 +1265,11 @@ public class BuildpathModifier {
 	 * Add a script element to the build path.
 	 *
 	 * @param scriptElement
-	 *            element to be added to the build path
+	 *                          element to be added to the build path
 	 * @param project
-	 *            the script project
+	 *                          the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                          progress monitor, can be <code>null</code>
 	 * @return returns the new element of type <code>IProjectFragment</code>
 	 *         that has been added to the build path
 	 * @throws CoreException
@@ -1295,12 +1298,13 @@ public class BuildpathModifier {
 	 * Remove the script project from the build path
 	 *
 	 * @param project
-	 *            the project to be removed
+	 *                            the project to be removed
 	 * @param existingEntries
-	 *            a list of existing <code>BPListElement</code>. This list will
-	 *            be traversed and the entry for the project will be removed.
+	 *                            a list of existing <code>BPListElement</code>.
+	 *                            This list will be traversed and the entry for
+	 *                            the project will be removed.
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                            progress monitor, can be <code>null</code>
 	 * @return returns the script project
 	 * @throws CoreException
 	 */
@@ -1318,16 +1322,17 @@ public class BuildpathModifier {
 	 * Remove a given <code>IProjectFragment</code> from the build path.
 	 *
 	 * @param root
-	 *            the <code>IProjectFragment</code> to be removed from the build
-	 *            path
+	 *                            the <code>IProjectFragment</code> to be
+	 *                            removed from the build path
 	 * @param existingEntries
-	 *            a list of <code>BPListElements</code> representing the build
-	 *            path entries of the project. The entry for the root will be
-	 *            looked up and removed from the list.
+	 *                            a list of <code>BPListElements</code>
+	 *                            representing the build path entries of the
+	 *                            project. The entry for the root will be looked
+	 *                            up and removed from the list.
 	 * @param project
-	 *            the script project
+	 *                            the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                            progress monitor, can be <code>null</code>
 	 * @return returns the <code>IResource</code> that has been removed from the
 	 *         build path; is of type <code>IFile</code> if the root was an
 	 *         archive, otherwise <code>IFolder</code> or <code>null<code> for
@@ -1358,12 +1363,13 @@ public class BuildpathModifier {
 	 * <code>existingEntries</code>
 	 *
 	 * @param path
-	 *            the path to remove
+	 *                            the path to remove
 	 * @param project
-	 *            the script project
+	 *                            the script project
 	 * @param existingEntries
-	 *            a list of <code>BPListElement</code> representing the build
-	 *            path entries of the project.
+	 *                            a list of <code>BPListElement</code>
+	 *                            representing the build path entries of the
+	 *                            project.
 	 * @return returns a <code>List</code> of <code>BPListElement</code> of
 	 *         modified elements, not null.
 	 */
@@ -1428,14 +1434,14 @@ public class BuildpathModifier {
 	 * parent fragment is allowed.
 	 *
 	 * @param resource
-	 *            the element to be included
+	 *                     the element to be included
 	 * @param entry
-	 *            the <code>BPListElement</code> representing the
-	 *            <code>IBuildpathEntry</code> of the resource's root
+	 *                     the <code>BPListElement</code> representing the
+	 *                     <code>IBuildpathEntry</code> of the resource's root
 	 * @param project
-	 *            the script project
+	 *                     the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                     progress monitor, can be <code>null</code>
 	 *
 	 * @throws ModelException
 	 *
@@ -1477,15 +1483,15 @@ public class BuildpathModifier {
 	 * path.
 	 *
 	 * @param name
-	 *            the name of the element to be excluded
+	 *                     the name of the element to be excluded
 	 * @param fullPath
-	 *            the absolute path of the element
+	 *                     the absolute path of the element
 	 * @param entry
-	 *            the build path entry to be modified
+	 *                     the build path entry to be modified
 	 * @param project
-	 *            the script project
+	 *                     the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                     progress monitor, can be <code>null</code>
 	 * @return a <code>IResource</code> corresponding to the excluded element
 	 * @throws ModelException
 	 */
@@ -1533,15 +1539,15 @@ public class BuildpathModifier {
 	 * parent fragment is allowed.
 	 *
 	 * @param path
-	 *            absolute path of an object to be excluded
+	 *                            absolute path of an object to be excluded
 	 * @param existingEntries
-	 *            a list of existing build path entries
+	 *                            a list of existing build path entries
 	 * @param newEntries
-	 *            a list of new build path entries
+	 *                            a list of new build path entries
 	 * @param project
-	 *            the script project
+	 *                            the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                            progress monitor, can be <code>null</code>
 	 */
 	public static void exclude(IPath path, List existingEntries,
 			List newEntries, IScriptProject project, IProgressMonitor monitor)
@@ -1585,14 +1591,15 @@ public class BuildpathModifier {
 	 * parent fragment is allowed.
 	 *
 	 * @param scriptElement
-	 *            the script element to be excluded
+	 *                          the script element to be excluded
 	 * @param entry
-	 *            the <code>BPListElement</code> representing the
-	 *            <code>IBuildpathEntry</code> of the script element's root.
+	 *                          the <code>BPListElement</code> representing the
+	 *                          <code>IBuildpathEntry</code> of the script
+	 *                          element's root.
 	 * @param project
-	 *            the script project
+	 *                          the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                          progress monitor, can be <code>null</code>
 	 *
 	 * @return the resulting <code>IResource<code>
 	 * @throws ModelException
@@ -1621,14 +1628,14 @@ public class BuildpathModifier {
 	 * parent fragment is allowed.
 	 *
 	 * @param scriptElement
-	 *            the script element to be unincluded
+	 *                          the script element to be unincluded
 	 * @param entry
-	 *            the <code>BPListElement</code> representing the
-	 *            <code>IBuildpathEntry</code> of the root.
+	 *                          the <code>BPListElement</code> representing the
+	 *                          <code>IBuildpathEntry</code> of the root.
 	 * @param project
-	 *            the script project
+	 *                          the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                          progress monitor, can be <code>null</code>
 	 * @throws ModelException
 	 *
 	 * @see #include(List, IScriptProject, IProgressMonitor)
@@ -1664,14 +1671,14 @@ public class BuildpathModifier {
 	 * parent fragment is allowed.
 	 *
 	 * @param resource
-	 *            the resource to be unexcluded
+	 *                     the resource to be unexcluded
 	 * @param entry
-	 *            the <code>BPListElement</code> representing the
-	 *            <code>IBuildpathEntry</code> of the resource's root.
+	 *                     the <code>BPListElement</code> representing the
+	 *                     <code>IBuildpathEntry</code> of the resource's root.
 	 * @param project
-	 *            the script project
+	 *                     the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                     progress monitor, can be <code>null</code>
 	 * @throws ModelException
 	 *
 	 * @see #exclude(List, IScriptProject, IProgressMonitor)
@@ -1702,13 +1709,14 @@ public class BuildpathModifier {
 	 * <code>IModelElement</code>
 	 *
 	 * @param element
-	 *            element to reset it's filters
+	 *                    element to reset it's filters
 	 * @param entry
-	 *            the <code>BPListElement</code> to reset its filters for
+	 *                    the <code>BPListElement</code> to reset its filters
+	 *                    for
 	 * @param project
-	 *            the script project
+	 *                    the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                    progress monitor, can be <code>null</code>
 	 * @throws ModelException
 	 */
 	private void resetFilters(IModelElement element, BPListElement entry,
@@ -1740,10 +1748,10 @@ public class BuildpathModifier {
 	 * <code>BPListElement</code> is returned.
 	 *
 	 * @param elements
-	 *            a list of <code>BPListElements</code>
+	 *                      a list of <code>BPListElements</code>
 	 * @param cpElement
-	 *            the <code>BPListElement</code> to find the corresponding entry
-	 *            in the list
+	 *                      the <code>BPListElement</code> to find the
+	 *                      corresponding entry in the list
 	 * @return the <code>BPListElement</code> found in the list (matching by
 	 *         using the path) or the second <code>BPListElement</code>
 	 *         parameter itself if there is no match.
@@ -1764,9 +1772,9 @@ public class BuildpathModifier {
 	 * For a given path, find the corresponding element in the list.
 	 *
 	 * @param path
-	 *            the path to found an entry for
+	 *                     the path to found an entry for
 	 * @param elements
-	 *            a list of <code>BPListElement</code>s
+	 *                     a list of <code>BPListElement</code>s
 	 * @return the mathed <code>BPListElement</code> or <code>null</code> if no
 	 *         match could be found
 	 */
@@ -1788,14 +1796,15 @@ public class BuildpathModifier {
 	 * excluding an object.
 	 *
 	 * @param newEntries
-	 *            a list of <code>BPListElements</code> that should be used as
-	 *            build path entries for the project.
+	 *                       a list of <code>BPListElements</code> that should
+	 *                       be used as build path entries for the project.
 	 * @param project
-	 *            the script project
+	 *                       the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                       progress monitor, can be <code>null</code>
 	 * @throws ModelException
-	 *             in case that validation for the new entries fails
+	 *                            in case that validation for the new entries
+	 *                            fails
 	 */
 	private void updateBuildpath(List newEntries, IScriptProject project,
 			IProgressMonitor monitor) throws ModelException {
@@ -1841,12 +1850,13 @@ public class BuildpathModifier {
 	 * in the project and return a list with corresponding elements.
 	 *
 	 * @param entries
-	 *            a list of entries to find an appropriate representation for.
-	 *            The list can contain elements of two types:
-	 *            <li><code>IResource</code></li>
-	 *            <li><code>IModelElement</code></li>
+	 *                    a list of entries to find an appropriate
+	 *                    representation for. The list can contain elements of
+	 *                    two types:
+	 *                    <li><code>IResource</code></li>
+	 *                    <li><code>IModelElement</code></li>
 	 * @param project
-	 *            the script project
+	 *                    the script project
 	 * @return a list of elements corresponding to the passed entries.
 	 */
 	public static List getCorrespondingElements(List entries,
@@ -1877,9 +1887,9 @@ public class BuildpathModifier {
 	 * either element of type <code>IFile</code> or <code>IFolder</code>.
 	 *
 	 * @param path
-	 *            an absolute path to a resource
+	 *                    an absolute path to a resource
 	 * @param project
-	 *            the script project
+	 *                    the script project
 	 * @return the resource matching to the path. Can be either an
 	 *         <code>IFile</code> or an <code>IFolder</code>.
 	 */
@@ -1891,11 +1901,11 @@ public class BuildpathModifier {
 	 * Find out whether the provided path equals to one in the array.
 	 *
 	 * @param path
-	 *            path to find an equivalent for
+	 *                    path to find an equivalent for
 	 * @param paths
-	 *            set of paths to compare with
+	 *                    set of paths to compare with
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                    progress monitor, can be <code>null</code>
 	 * @return <code>true</code> if there is an occurrence, <code>
 	 * false</code> otherwise
 	 */
@@ -1928,7 +1938,7 @@ public class BuildpathModifier {
 	 * XXX this method does nothing, use {@link #completeName(IPath, String)}
 	 *
 	 * @param name
-	 *            append '/' at the end if necessary
+	 *                 append '/' at the end if necessary
 	 * @return modified string
 	 */
 	@Deprecated
@@ -1951,9 +1961,10 @@ public class BuildpathModifier {
 	 * {@link #completeName(IPath, String)}
 	 *
 	 * @param project
-	 *            - the project containing the resource
+	 *                    - the project containing the resource
 	 * @param name
-	 *            - name of the resource append '/' at the end if necessary
+	 *                    - name of the resource append '/' at the end if
+	 *                    necessary
 	 * @return modified string
 	 */
 	@Deprecated
@@ -1973,9 +1984,10 @@ public class BuildpathModifier {
 	 * Add a '/' at the end of the name if it maps to a folder.
 	 *
 	 * @param fullPath
-	 *            - the project containing the resource
+	 *                     - the project containing the resource
 	 * @param name
-	 *            - name of the resource append '/' at the end if necessary
+	 *                     - name of the resource append '/' at the end if
+	 *                     necessary
 	 * @return modified string
 	 */
 	private static String completeName(IPath fullPath, String name) {
@@ -1998,11 +2010,11 @@ public class BuildpathModifier {
 	 * Only the first occurrence will be removed.
 	 *
 	 * @param path
-	 *            path to be removed
+	 *                    path to be removed
 	 * @param paths
-	 *            array of path to apply the removal on
+	 *                    array of path to apply the removal on
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                    progress monitor, can be <code>null</code>
 	 * @return array which does not contain <code>path</code>
 	 */
 	private static IPath[] remove(IPath path, IPath[] paths,
@@ -2040,11 +2052,11 @@ public class BuildpathModifier {
 	 * returned if they are also on the project's build path.
 	 *
 	 * @param path
-	 *            absolute path
+	 *                    absolute path
 	 * @param project
-	 *            the script project
+	 *                    the script project
 	 * @param monitor
-	 *            progress monitor, can be <code>null</code>
+	 *                    progress monitor, can be <code>null</code>
 	 * @return an array of paths which belong to subfolders of <code>path</code>
 	 *         and which are on the build path
 	 * @throws ModelException
@@ -2069,9 +2081,9 @@ public class BuildpathModifier {
 	 * <code>rootPath<code>'s number of segments removed
 	 *
 	 * @param path
-	 *            path to remove segments
+	 *                     path to remove segments
 	 * @param rootPath
-	 *            provides the number of segments to be removed
+	 *                     provides the number of segments to be removed
 	 * @return a string corresponding to the mentioned action
 	 */
 	private static String getName(IPath path, IPath rootPath) {
@@ -2084,15 +2096,17 @@ public class BuildpathModifier {
 	 * (therefore, there is no return list for this method).
 	 *
 	 * @param existingEntries
-	 *            a list of existing buildpath entries
+	 *                            a list of existing buildpath entries
 	 * @param newEntries
-	 *            a list of entries to be added to the existing ones
+	 *                            a list of entries to be added to the existing
+	 *                            ones
 	 * @param project
-	 *            the script project
+	 *                            the script project
 	 * @param monitor
-	 *            a progress monitor, can be <code>null</code>
+	 *                            a progress monitor, can be <code>null</code>
 	 * @throws CoreException
-	 *             in case that validation on one of the new entries fails
+	 *                           in case that validation on one of the new
+	 *                           entries fails
 	 */
 	public static void setNewEntry(List existingEntries, List newEntries,
 			IScriptProject project, IProgressMonitor monitor)
@@ -2116,7 +2130,7 @@ public class BuildpathModifier {
 	 * <code>IBuildpathEntry</code>.
 	 *
 	 * @param list
-	 *            the list to be converted
+	 *                 the list to be converted
 	 * @return an array containing build path entries corresponding to the list
 	 */
 	private static IBuildpathEntry[] convert(List list) {
@@ -2137,14 +2151,15 @@ public class BuildpathModifier {
 	 * entries.
 	 *
 	 * @param entry
-	 *            the entry to be validated and added to the list of existing
-	 *            entries.
+	 *                            the entry to be validated and added to the
+	 *                            list of existing entries.
 	 * @param existingEntries
-	 *            a list of existing entries representing the build path
+	 *                            a list of existing entries representing the
+	 *                            build path
 	 * @param project
-	 *            the script project
+	 *                            the script project
 	 * @throws CoreException
-	 *             in case that validation fails
+	 *                           in case that validation fails
 	 */
 	private static void validateAndAddEntry(BPListElement entry,
 			List existingEntries, IScriptProject project) throws CoreException {
@@ -2275,9 +2290,10 @@ public class BuildpathModifier {
 	 * <code>IBuildpathEntry.BPE_SOURCE</code>
 	 *
 	 * @param entry
-	 *            the buildpath entry to be compared with the provided type
+	 *                  the buildpath entry to be compared with the provided
+	 *                  type
 	 * @param kind
-	 *            the kind to be checked
+	 *                  the kind to be checked
 	 * @return <code>true</code> if kind equals
 	 *         <code>IBuildpathEntry.BPE_SOURCE</code>, <code>false</code>
 	 *         otherwise

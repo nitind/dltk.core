@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2016 xored software, Inc.  
+ * Copyright (c) 2010, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html  
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
@@ -52,7 +52,7 @@ import org.eclipse.ui.texteditor.TextEditorAction;
 /**
  * Indents a line or range of lines in a script document to its correct
  * position.
- * 
+ *
  * @since 2.0
  */
 public class IndentAction extends TextEditorAction {
@@ -65,15 +65,16 @@ public class IndentAction extends TextEditorAction {
 
 	/**
 	 * Creates a new instance.
-	 * 
+	 *
 	 * @param bundle
-	 *            the resource bundle
+	 *                        the resource bundle
 	 * @param prefix
-	 *            the prefix to use for keys in <code>bundle</code>
+	 *                        the prefix to use for keys in <code>bundle</code>
 	 * @param editor
-	 *            the text editor
+	 *                        the text editor
 	 * @param isTabAction
-	 *            whether the action should insert tabs if over the indentation
+	 *                        whether the action should insert tabs if over the
+	 *                        indentation
 	 */
 	public IndentAction(ResourceBundle bundle, String prefix,
 			ITextEditor editor, boolean isTabAction) {
@@ -149,13 +150,13 @@ public class IndentAction extends TextEditorAction {
 								project);
 				if (factory != null) {
 					Map<String, String> preferences = factory
-							.retrievePreferences(new PreferencesLookupDelegate(
-									project));
+							.retrievePreferences(
+									new PreferencesLookupDelegate(project));
 					preferences = factory.changeToIndentingOnly(preferences);
 					final String lineDelimiter = TextUtilities
 							.getDefaultLineDelimiter(document);
-					final IScriptFormatter formatter = factory.createFormatter(
-							lineDelimiter, preferences);
+					final IScriptFormatter formatter = factory
+							.createFormatter(lineDelimiter, preferences);
 					if (project != null
 							&& formatter instanceof IScriptFormatterExtension) {
 						((IScriptFormatterExtension) formatter)
@@ -200,8 +201,8 @@ public class IndentAction extends TextEditorAction {
 				+ lastLineRegion.getLength();
 		int level = formatter.detectIndentationLevel(document, startOffset);
 		final String source = document.get();
-		final TextEdit edit = formatter.format(source, startOffset, lastOffset
-				- startOffset, level);
+		final TextEdit edit = formatter.format(source, startOffset,
+				lastOffset - startOffset, level);
 		if (edit == null) {
 			return false;
 		}
@@ -249,7 +250,7 @@ public class IndentAction extends TextEditorAction {
 
 	/**
 	 * Returns the editor's selection provider.
-	 * 
+	 *
 	 * @return the editor's selection provider or <code>null</code>
 	 */
 	private ISelectionProvider getSelectionProvider() {
@@ -278,7 +279,7 @@ public class IndentAction extends TextEditorAction {
 	 * Returns if the current selection is valid, i.e. whether it is empty and
 	 * the caret in the whitespace at the start of a line, or covers multiple
 	 * lines.
-	 * 
+	 *
 	 * @return <code>true</code> if the selection is valid for an indent
 	 *         operation
 	 */
@@ -297,12 +298,12 @@ public class IndentAction extends TextEditorAction {
 			// either the selection has to be empty and the caret in the WS at
 			// the line start
 			// or the selection has to extend over multiple lines
-			if (length == 0)
+			if (length == 0) {
 				return document.get(lineOffset, offset - lineOffset).trim()
 						.length() == 0;
-			else
-				// return lineOffset + firstLine.getLength() < offset + length;
-				return false; // only enable for empty selections for now
+			}
+			// return lineOffset + firstLine.getLength() < offset + length;
+			return false; // only enable for empty selections for now
 		} catch (BadLocationException e) {
 		}
 		return false;
@@ -310,24 +311,25 @@ public class IndentAction extends TextEditorAction {
 
 	/**
 	 * Returns the smart preference state.
-	 * 
+	 *
 	 * @return <code>true</code> if smart mode is on, <code>false</code>
 	 *         otherwise
 	 */
 	private boolean isSmartMode() {
 		ITextEditor editor = getTextEditor();
 		if (editor instanceof ITextEditorExtension3)
-			return ((ITextEditorExtension3) editor).getInsertMode() == ITextEditorExtension3.SMART_INSERT;
+			return ((ITextEditorExtension3) editor)
+					.getInsertMode() == ITextEditorExtension3.SMART_INSERT;
 		return false;
 	}
 
 	/**
 	 * Selects the given range on the editor.
-	 * 
+	 *
 	 * @param newOffset
-	 *            the selection offset
+	 *                      the selection offset
 	 * @param newLength
-	 *            the selection range
+	 *                      the selection range
 	 */
 	private void selectAndReveal(int newOffset, int newLength) {
 		Assert.isTrue(newOffset >= 0);
@@ -345,7 +347,7 @@ public class IndentAction extends TextEditorAction {
 	/**
 	 * Returns a tab equivalent, either as a tab character or as spaces,
 	 * depending on the editor and formatter preferences.
-	 * 
+	 *
 	 * @return a string representing one tab in the editor, never
 	 *         <code>null</code>
 	 */
@@ -357,8 +359,8 @@ public class IndentAction extends TextEditorAction {
 		final IPreferenceStore prefs = ((ScriptEditor) editor)
 				.getScriptPreferenceStore();
 		String tab;
-		if (CodeFormatterConstants.SPACE.equals(prefs
-				.getString(CodeFormatterConstants.FORMATTER_TAB_CHAR))) {
+		if (CodeFormatterConstants.SPACE.equals(
+				prefs.getString(CodeFormatterConstants.FORMATTER_TAB_CHAR))) {
 			final int tabSize = prefs
 					.getInt(CodeFormatterConstants.FORMATTER_TAB_SIZE);
 			int wsLen = whiteSpaceLength(indent, tabSize);
@@ -371,24 +373,23 @@ public class IndentAction extends TextEditorAction {
 	/**
 	 * Returns the size in characters of a string. All characters count one,
 	 * tabs count the editor's preference for the tab display
-	 * 
+	 *
 	 * @param indent
-	 *            the string to be measured.
+	 *                    the string to be measured.
 	 * @param project
-	 *            the project to retrieve the indentation settings from,
-	 *            <b>null</b> for workspace settings
+	 *                    the project to retrieve the indentation settings from,
+	 *                    <b>null</b> for workspace settings
 	 * @return the size in characters of a string
 	 */
 	private static int whiteSpaceLength(String indent, int tabSize) {
-		if (indent == null)
+		if (indent == null) {
 			return 0;
-		else {
-			int size = 0;
-			int l = indent.length();
-			for (int i = 0; i < l; i++)
-				size += indent.charAt(i) == '\t' ? tabSize : 1;
-			return size;
 		}
+		int size = 0;
+		int l = indent.length();
+		for (int i = 0; i < l; i++)
+			size += indent.charAt(i) == '\t' ? tabSize : 1;
+		return size;
 	}
 
 	private String getPrevIndent(IDocument document, int n)
@@ -406,7 +407,7 @@ public class IndentAction extends TextEditorAction {
 	/**
 	 * Returns the document currently displayed in the editor, or
 	 * <code>null</code> if none can be obtained.
-	 * 
+	 *
 	 * @return the current document or <code>null</code>
 	 */
 	private IDocument getDocument() {
@@ -423,7 +424,7 @@ public class IndentAction extends TextEditorAction {
 	/**
 	 * Returns the selection on the editor or an invalid selection if none can
 	 * be obtained. Returns never <code>null</code>.
-	 * 
+	 *
 	 * @return the current selection, never <code>null</code>
 	 */
 	private ITextSelection getSelection() {

@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
-
  *******************************************************************************/
 package org.eclipse.dltk.ui.templates;
 
@@ -159,7 +158,7 @@ public abstract class ScriptTemplateCompletionProcessor
 	 * characters except the new line characters are selected.
 	 *
 	 * @param viewer
-	 *            the text viewer
+	 *                   the text viewer
 	 * @return <code>true</code> if one or multiple lines are selected
 	 * @since 2.1
 	 */
@@ -296,9 +295,8 @@ public abstract class ScriptTemplateCompletionProcessor
 		final int spaceIndex = s.lastIndexOf(' ');
 		if (spaceIndex != -1) {
 			return s.substring(spaceIndex);
-		} else {
-			return s;
 		}
+		return s;
 	}
 
 	/**
@@ -306,7 +304,7 @@ public abstract class ScriptTemplateCompletionProcessor
 	 * zero.
 	 *
 	 * @param template
-	 *            the template to compute the relevance for
+	 *                     the template to compute the relevance for
 	 * @return the relevance of <code>template</code>
 	 */
 	protected int getRelevance(Template template) {

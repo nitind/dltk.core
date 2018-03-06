@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,38 +12,40 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ModelException;
 
-
 /**
- * This class locates different resources
- * which are related to an object
+ * This class locates different resources which are related to an object
  */
 public class ResourceLocator implements IResourceLocator {
 
 	@Override
-	public IResource getUnderlyingResource(Object element) throws ModelException {
-		if (element instanceof IModelElement)
-			return ((IModelElement) element).getUnderlyingResource();
-		else
-			return null;
-	}
-
-	@Override
-	public IResource getCorrespondingResource(Object element) throws ModelException {
-		if (element instanceof IModelElement)
-			return ((IModelElement) element).getCorrespondingResource();
-		else
-			return null;
-	}
-
-	@Override
-	public IResource getContainingResource(Object element) throws ModelException {
-		IResource resource= null;
-		if (element instanceof IResource)
-			resource= (IResource) element;
+	public IResource getUnderlyingResource(Object element)
+			throws ModelException {
 		if (element instanceof IModelElement) {
-			resource= ((IModelElement) element).getResource();
+			return ((IModelElement) element).getUnderlyingResource();
+		}
+		return null;
+	}
+
+	@Override
+	public IResource getCorrespondingResource(Object element)
+			throws ModelException {
+		if (element instanceof IModelElement) {
+			return ((IModelElement) element).getCorrespondingResource();
+		}
+		return null;
+	}
+
+	@Override
+	public IResource getContainingResource(Object element)
+			throws ModelException {
+		IResource resource = null;
+		if (element instanceof IResource)
+			resource = (IResource) element;
+		if (element instanceof IModelElement) {
+			resource = ((IModelElement) element).getResource();
 			if (resource == null)
-				resource= ((IModelElement) element).getScriptProject().getProject();
+				resource = ((IModelElement) element).getScriptProject()
+						.getProject();
 		}
 		return resource;
 	}

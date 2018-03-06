@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 xored software, Inc. and others.
+ * Copyright (c) 2009, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -43,14 +43,15 @@ public class FloatNumberRule implements IRule {
 	/**
 	 * @param token
 	 * @param digitSeparators
-	 *            additional digits separator, e.g. "_" for java7 or
-	 *            <code>null</code> if not applicable
+	 *                            additional digits separator, e.g. "_" for
+	 *                            java7 or <code>null</code> if not applicable
 	 * @param integerSuffixes
-	 *            integer number suffixes, e.g. "Ll" for java or
-	 *            <code>null</code> if not applicable
+	 *                            integer number suffixes, e.g. "Ll" for java or
+	 *                            <code>null</code> if not applicable
 	 * @param floatSuffixes
-	 *            floating point number suffixes, e.g. "DdFf" for java or
-	 *            <code>null</code> if not applicable
+	 *                            floating point number suffixes, e.g. "DdFf"
+	 *                            for java or <code>null</code> if not
+	 *                            applicable
 	 */
 	public FloatNumberRule(IToken token, String digitSeparators,
 			String integerSuffixes, String floatSuffixes) {
@@ -92,10 +93,9 @@ public class FloatNumberRule implements IRule {
 						unread(scanner, readCount);
 						return Token.UNDEFINED; // not "0x" prefix
 					}
-				} else if (Character.isDigit((char) c)
-						|| isSeparator(c)
-						|| (mode == Mode.HEX && (c >= 'A' && c <= 'F' || c >= 'a'
-								&& c <= 'f'))) {
+				} else if (Character.isDigit((char) c) || isSeparator(c)
+						|| (mode == Mode.HEX && (c >= 'A' && c <= 'F'
+								|| c >= 'a' && c <= 'f'))) {
 					digitCount++;
 				} else if (c == '.' && mode == Mode.DECIMAL) {
 					mode = Mode.FLOAT;
@@ -126,14 +126,15 @@ public class FloatNumberRule implements IRule {
 					return Token.UNDEFINED;
 				}
 			}
-			if (!(((mode == Mode.DECIMAL || mode == Mode.FLOAT) && isFloatSuffix(c)) || (mode == Mode.DECIMAL && isDecimalSuffix(c)))) {
+			if (!(((mode == Mode.DECIMAL || mode == Mode.FLOAT)
+					&& isFloatSuffix(c))
+					|| (mode == Mode.DECIMAL && isDecimalSuffix(c)))) {
 				scanner.unread();
 			}
 			return fToken;
-		} else {
-			scanner.unread();
-			return Token.UNDEFINED;
 		}
+		scanner.unread();
+		return Token.UNDEFINED;
 	}
 
 	private final void unread(ICharacterScanner scanner, int count) {

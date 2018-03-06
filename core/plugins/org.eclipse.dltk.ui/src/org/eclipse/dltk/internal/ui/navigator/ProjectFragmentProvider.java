@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -252,21 +252,18 @@ public class ProjectFragmentProvider implements IPropertyChangeListener {
 					IProjectFragment root = (IProjectFragment) parent;
 					if (root.isArchive()) {
 						return findNextLevelParentByElementName(fragment);
-					} else {
+					}
 
-						IResource resource = fragment.getUnderlyingResource();
-						if ((resource != null)
-								&& (resource instanceof IFolder)) {
-							IFolder folder = (IFolder) resource;
-							IResource res = folder.getParent();
+					IResource resource = fragment.getUnderlyingResource();
+					if ((resource != null) && (resource instanceof IFolder)) {
+						IFolder folder = (IFolder) resource;
+						IResource res = folder.getParent();
 
-							IModelElement el = DLTKCore.create(res);
-							if (el != null) {
-								return el;
-							} else {
-								return res;
-							}
+						IModelElement el = DLTKCore.create(res);
+						if (el != null) {
+							return el;
 						}
+						return res;
 					}
 					return parent;
 				}
@@ -415,10 +412,10 @@ public class ProjectFragmentProvider implements IPropertyChangeListener {
 		Object parent = findNextLevelParentByElementName(element);
 		if (parent instanceof IProjectFragment) {
 			IProjectFragment root = (IProjectFragment) parent;
-			if (isRootProject(root))
+			if (isRootProject(root)) {
 				return root.getScriptProject();
-			else
-				return root;
+			}
+			return root;
 		}
 
 		Object grandParent = getParent(parent);

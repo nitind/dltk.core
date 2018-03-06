@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,16 +68,15 @@ public class TodoTaskConfigurationBlock extends AbstractConfigurationBlock {
 			final TodoTask task = (TodoTask) element;
 			if (columnIndex == 0) {
 				return task.name;
-			} else {
-				if (TodoTask.PRIORITY_HIGH.equals(task.priority)) {
-					return PreferencesMessages.TodoTaskConfigurationBlock_markers_tasks_high_priority;
-				} else if (TodoTask.PRIORITY_NORMAL.equals(task.priority)) {
-					return PreferencesMessages.TodoTaskConfigurationBlock_markers_tasks_normal_priority;
-				} else if (TodoTask.PRIORITY_LOW.equals(task.priority)) {
-					return PreferencesMessages.TodoTaskConfigurationBlock_markers_tasks_low_priority;
-				}
-				return ""; //$NON-NLS-1$
 			}
+			if (TodoTask.PRIORITY_HIGH.equals(task.priority)) {
+				return PreferencesMessages.TodoTaskConfigurationBlock_markers_tasks_high_priority;
+			} else if (TodoTask.PRIORITY_NORMAL.equals(task.priority)) {
+				return PreferencesMessages.TodoTaskConfigurationBlock_markers_tasks_normal_priority;
+			} else if (TodoTask.PRIORITY_LOW.equals(task.priority)) {
+				return PreferencesMessages.TodoTaskConfigurationBlock_markers_tasks_low_priority;
+			}
+			return ""; //$NON-NLS-1$
 		}
 
 	}

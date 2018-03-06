@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ui.infoviews;
 
@@ -22,8 +21,8 @@ import org.eclipse.ui.IEditorPart;
 
 /**
  * Helper class to convert text selections to Script elements.
- * 
- * 
+ *
+ *
  */
 class TextSelectionConverter {
 
@@ -33,11 +32,11 @@ class TextSelectionConverter {
 
 	/**
 	 * Finds and returns the Script elements for the given editor selection.
-	 * 
+	 *
 	 * @param editor
-	 *            the Script editor
+	 *                      the Script editor
 	 * @param selection
-	 *            the text selection
+	 *                      the text selection
 	 * @return the Script elements for the given editor selection
 	 * @throws ModelException
 	 */
@@ -49,11 +48,11 @@ class TextSelectionConverter {
 	/**
 	 * Finds and returns the Script element that contains the text selection in
 	 * the given editor.
-	 * 
+	 *
 	 * @param editor
-	 *            the Script editor
+	 *                      the Script editor
 	 * @param selection
-	 *            the text selection
+	 *                      the text selection
 	 * @return the Script elements for the given editor selection
 	 * @throws ModelException
 	 */
@@ -81,8 +80,8 @@ class TextSelectionConverter {
 				if (cunit.isWorkingCopy())
 					ScriptModelUtil.reconcile(cunit);
 			}
-			IModelElement[] elements = ((ICodeAssist) input).codeSelect(
-					selection.getOffset(), selection.getLength());
+			IModelElement[] elements = ((ICodeAssist) input)
+					.codeSelect(selection.getOffset(), selection.getLength());
 			if (elements != null && elements.length > 0)
 				return elements;
 		}
@@ -96,10 +95,10 @@ class TextSelectionConverter {
 			if (cunit.isWorkingCopy())
 				ScriptModelUtil.reconcile(cunit);
 			IModelElement ref = cunit.getElementAt(selection.getOffset());
-			if (ref == null)
+			if (ref == null) {
 				return input;
-			else
-				return ref;
+			}
+			return ref;
 		}
 		return null;
 	}

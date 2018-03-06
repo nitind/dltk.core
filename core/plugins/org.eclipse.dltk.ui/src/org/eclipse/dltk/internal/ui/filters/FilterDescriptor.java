@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -148,12 +148,12 @@ public class FilterDescriptor implements Comparable, IPluginContribution {
 	public String getId() {
 		if (isPatternFilter()) {
 			String targetId = getTargetId();
-			if (targetId == null)
+			if (targetId == null) {
 				return PATTERN_FILTER_ID_PREFIX + getPattern();
-			else
-				return targetId + PATTERN_FILTER_ID_PREFIX + getPattern();
-		} else
-			return fElement.getAttribute(ID_ATTRIBUTE);
+			}
+			return targetId + PATTERN_FILTER_ID_PREFIX + getPattern();
+		}
+		return fElement.getAttribute(ID_ATTRIBUTE);
 	}
 
 	/**
@@ -242,11 +242,11 @@ public class FilterDescriptor implements Comparable, IPluginContribution {
 	 */
 	@Override
 	public int compareTo(Object o) {
-		if (o instanceof FilterDescriptor)
+		if (o instanceof FilterDescriptor) {
 			return Collator.getInstance().compare(getName(),
 					((FilterDescriptor) o).getName());
-		else
-			return Integer.MIN_VALUE;
+		}
+		return Integer.MIN_VALUE;
 	}
 
 	// ---- initialization ---------------------------------------------------

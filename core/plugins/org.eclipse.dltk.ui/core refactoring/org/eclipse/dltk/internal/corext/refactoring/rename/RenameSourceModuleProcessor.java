@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,11 +69,12 @@ public class RenameSourceModuleProcessor extends ScriptRenameProcessor
 	 * Creates a new rename compilation unit processor.
 	 *
 	 * @param unit
-	 *            the compilation unit, or <code>null</code> if invoked by
-	 *            scripting
+	 *                 the compilation unit, or <code>null</code> if invoked by
+	 *                 scripting
 	 * @throws CoreException
 	 */
-	public RenameSourceModuleProcessor(ISourceModule unit) throws CoreException {
+	public RenameSourceModuleProcessor(ISourceModule unit)
+			throws CoreException {
 		fCu = unit;
 		if (fCu != null) {
 			computeRenameTypeRefactoring();
@@ -133,10 +134,9 @@ public class RenameSourceModuleProcessor extends ScriptRenameProcessor
 		if (isFileExtensionRequired()) {
 			// return initial name without extension
 			return getSimpleCUName();
-		} else {
-			// return initial name with extension
-			return fCu.getElementName();
 		}
+		// return initial name with extension
+		return fCu.getElementName();
 	}
 
 	/**
@@ -166,8 +166,8 @@ public class RenameSourceModuleProcessor extends ScriptRenameProcessor
 		}
 		RefactoringStatus result = new RefactoringStatus();// Checks.checkSourceModuleName(newName);
 		if (Checks.isAlreadyNamed(fCu, newName))
-			result
-					.addFatalError(RefactoringCoreMessages.RenameSourceModuleRefactoring_same_name);
+			result.addFatalError(
+					RefactoringCoreMessages.RenameSourceModuleRefactoring_same_name);
 		return result;
 	}
 
@@ -184,9 +184,8 @@ public class RenameSourceModuleProcessor extends ScriptRenameProcessor
 		IScriptFolder pack = (IScriptFolder) parent;
 		IDLTKLanguageToolkit tk = null;
 		tk = DLTKLanguageManager.getLanguageToolkit(pack);
-		if (tk != null
-				&& !DLTKContentTypeManager.isValidFileNameForContentType(tk,
-						getNewElementName())) {
+		if (tk != null && !DLTKContentTypeManager
+				.isValidFileNameForContentType(tk, getNewElementName())) {
 			return fCu; // ??
 		}
 		return pack.getSourceModule(getNewElementName());
@@ -341,28 +340,23 @@ public class RenameSourceModuleProcessor extends ScriptRenameProcessor
 			final Map arguments = new HashMap();
 			final IProject project = resource.getProject();
 			final String name = project.getName();
-			final String description = Messages
-					.format(
-							RefactoringCoreMessages.RenameSourceModuleChange_descriptor_description_short,
-							resource.getName());
-			final String header = Messages
-					.format(
-							RefactoringCoreMessages.RenameSourceModuleChange_descriptor_description,
-							new String[] { resource.getFullPath().toString(),
-									newName });
+			final String description = Messages.format(
+					RefactoringCoreMessages.RenameSourceModuleChange_descriptor_description_short,
+					resource.getName());
+			final String header = Messages.format(
+					RefactoringCoreMessages.RenameSourceModuleChange_descriptor_description,
+					resource.getFullPath().toString(), newName);
 			final String comment = new ScriptRefactoringDescriptorComment(this,
 					header).asString();
 			final ScriptRefactoringDescriptor descriptor = new ScriptRefactoringDescriptor(
-					RenameResourceProcessor.ID_RENAME_RESOURCE,
-					name,
-					description,
-					comment,
-					arguments,
+					RenameResourceProcessor.ID_RENAME_RESOURCE, name,
+					description, comment, arguments,
 					(RefactoringDescriptor.STRUCTURAL_CHANGE
-							| RefactoringDescriptor.MULTI_CHANGE | RefactoringDescriptor.BREAKING_CHANGE));
+							| RefactoringDescriptor.MULTI_CHANGE
+							| RefactoringDescriptor.BREAKING_CHANGE));
 			arguments.put(ScriptRefactoringDescriptor.ATTRIBUTE_INPUT,
-					ScriptRefactoringDescriptor
-							.resourceToHandle(name, resource));
+					ScriptRefactoringDescriptor.resourceToHandle(name,
+							resource));
 			arguments.put(ScriptRefactoringDescriptor.ATTRIBUTE_NAME, newName);
 			return new DynamicValidationStateChange(new RenameResourceChange(
 					descriptor, resource, newName, comment));
@@ -378,14 +372,12 @@ public class RenameSourceModuleProcessor extends ScriptRenameProcessor
 			label = fCu.getElementName();
 		final Map arguments = new HashMap();
 		final String name = fCu.getScriptProject().getElementName();
-		final String description = Messages
-				.format(
-						RefactoringCoreMessages.RenameSourceModuleChange_descriptor_description_short,
-						fCu.getElementName());
-		final String header = Messages
-				.format(
-						RefactoringCoreMessages.RenameSourceModuleChange_descriptor_description,
-						new String[] { label, newName });
+		final String description = Messages.format(
+				RefactoringCoreMessages.RenameSourceModuleChange_descriptor_description_short,
+				fCu.getElementName());
+		final String header = Messages.format(
+				RefactoringCoreMessages.RenameSourceModuleChange_descriptor_description,
+				label, newName);
 		final String comment = new ScriptRefactoringDescriptorComment(this,
 				header).asString();
 		final ScriptRefactoringDescriptor descriptor = new ScriptRefactoringDescriptor(
@@ -395,8 +387,8 @@ public class RenameSourceModuleProcessor extends ScriptRenameProcessor
 						| ScriptRefactoringDescriptor.ARCHIVE_REFACTORABLE
 						| RefactoringDescriptor.STRUCTURAL_CHANGE
 						| RefactoringDescriptor.MULTI_CHANGE);
-		arguments.put(ScriptRefactoringDescriptor.ATTRIBUTE_INPUT, descriptor
-				.elementToHandle(fCu));
+		arguments.put(ScriptRefactoringDescriptor.ATTRIBUTE_INPUT,
+				descriptor.elementToHandle(fCu));
 		arguments.put(ScriptRefactoringDescriptor.ATTRIBUTE_NAME, newName);
 		return new DynamicValidationStateChange(new RenameSourceModuleChange(
 				descriptor, fCu, newName, comment));
@@ -419,36 +411,31 @@ public class RenameSourceModuleProcessor extends ScriptRenameProcessor
 			if (path != null) {
 				final IResource resource = ResourcesPlugin.getWorkspace()
 						.getRoot().findMember(new Path(path));
-				if (resource == null || !resource.exists())
+				if (resource == null || !resource.exists()) {
 					return ScriptableRefactoring.createInputFatalStatus(
 							resource, getRefactoring().getName(),
 							ID_RENAME_COMPILATION_UNIT);
-				else {
-					fCu = (ISourceModule) DLTKCore.create(resource);
-					try {
-						computeRenameTypeRefactoring();
-					} catch (CoreException exception) {
-						DLTKUIPlugin.log(exception);
-					}
+				}
+				fCu = (ISourceModule) DLTKCore.create(resource);
+				try {
+					computeRenameTypeRefactoring();
+				} catch (CoreException exception) {
+					DLTKUIPlugin.log(exception);
 				}
 			} else
-				return RefactoringStatus
-						.createFatalErrorStatus(Messages
-								.format(
-										RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
-										ATTRIBUTE_PATH));
+				return RefactoringStatus.createFatalErrorStatus(Messages.format(
+						RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+						ATTRIBUTE_PATH));
 			final String name = generic.getAttribute(ATTRIBUTE_NAME);
 			if (name != null && !"".equals(name)) //$NON-NLS-1$
 				setNewElementName(name);
 			else
-				return RefactoringStatus
-						.createFatalErrorStatus(Messages
-								.format(
-										RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
-										ATTRIBUTE_NAME));
+				return RefactoringStatus.createFatalErrorStatus(Messages.format(
+						RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+						ATTRIBUTE_NAME));
 		} else
-			return RefactoringStatus
-					.createFatalErrorStatus(RefactoringCoreMessages.InitializableRefactoring_inacceptable_arguments);
+			return RefactoringStatus.createFatalErrorStatus(
+					RefactoringCoreMessages.InitializableRefactoring_inacceptable_arguments);
 		return new RefactoringStatus();
 	}
 }

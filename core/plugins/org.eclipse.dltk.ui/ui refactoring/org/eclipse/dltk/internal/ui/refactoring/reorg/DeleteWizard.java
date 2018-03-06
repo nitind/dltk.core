@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,13 +36,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-
 public class DeleteWizard extends RefactoringWizard {
 
 	public DeleteWizard(Refactoring refactoring) {
-		super(refactoring, DIALOG_BASED_USER_INTERFACE | YES_NO_BUTTON_STYLE | NO_PREVIEW_PAGE | NO_BACK_BUTTON_ON_STATUS_DIALOG);
+		super(refactoring, DIALOG_BASED_USER_INTERFACE | YES_NO_BUTTON_STYLE
+				| NO_PREVIEW_PAGE | NO_BACK_BUTTON_ON_STATUS_DIALOG);
 		setDefaultPageTitle(RefactoringMessages.DeleteWizard_1);
-		((ScriptDeleteProcessor)((DeleteRefactoring)getRefactoring()).getProcessor()).setQueries(new ReorgQueries(this));
+		((ScriptDeleteProcessor) ((DeleteRefactoring) getRefactoring())
+				.getProcessor()).setQueries(new ReorgQueries(this));
 	}
 
 	@Override
@@ -57,17 +58,17 @@ public class DeleteWizard extends RefactoringWizard {
 
 	@Override
 	public boolean needsProgressMonitor() {
-		DeleteRefactoring refactoring= (DeleteRefactoring)getRefactoring();
-		RefactoringProcessor processor= refactoring.getProcessor();
+		DeleteRefactoring refactoring = (DeleteRefactoring) getRefactoring();
+		RefactoringProcessor processor = refactoring.getProcessor();
 		if (processor instanceof ScriptDeleteProcessor) {
-			return ((ScriptDeleteProcessor)processor).needsProgressMonitor();
+			return ((ScriptDeleteProcessor) processor).needsProgressMonitor();
 		}
 		return super.needsProgressMonitor();
 	}
 
 	private static class DeleteInputPage extends MessageWizardPage {
-		private static final String PAGE_NAME= "DeleteInputPage"; //$NON-NLS-1$
-		private static final String DIALOG_SETTINGS_DELETE_SUB_PACKAGES= "deleteSubPackages"; //$NON-NLS-1$
+		private static final String PAGE_NAME = "DeleteInputPage"; //$NON-NLS-1$
+		private static final String DIALOG_SETTINGS_DELETE_SUB_PACKAGES = "deleteSubPackages"; //$NON-NLS-1$
 		private Button fDeleteSubPackagesCheckBox;
 
 		public DeleteInputPage() {
@@ -78,13 +79,13 @@ public class DeleteWizard extends RefactoringWizard {
 		protected String getMessageString() {
 			try {
 				if (1 == numberOfSelectedElements()) {
-					String pattern= createConfirmationStringForOneElement();
-					String name= getNameOfSingleSelectedElement();
-					return Messages.format(pattern, new String[] { name });
-				} else {
-					String pattern= createConfirmationStringForManyElements();
-					return Messages.format(pattern, new String[] { String.valueOf(numberOfSelectedElements())});
+					String pattern = createConfirmationStringForOneElement();
+					String name = getNameOfSingleSelectedElement();
+					return Messages.format(pattern, name);
 				}
+				String pattern = createConfirmationStringForManyElements();
+				return Messages.format(pattern,
+						String.valueOf(numberOfSelectedElements()));
 			} catch (ModelException e) {
 				// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 				if (ScriptModelUtil.isExceptionToBeLogged(e))
@@ -113,75 +114,89 @@ public class DeleteWizard extends RefactoringWizard {
 		 */
 		private void addDeleteSubPackagesCheckBox() {
 
-			Composite c= new Composite((Composite) getControl(), SWT.NONE);
-			GridLayout gd= new GridLayout();
-			gd.horizontalSpacing= 10;
+			Composite c = new Composite((Composite) getControl(), SWT.NONE);
+			GridLayout gd = new GridLayout();
+			gd.horizontalSpacing = 10;
 			c.setLayout(gd);
 
-			GridData data= new GridData(GridData.FILL_HORIZONTAL);
-			data.horizontalSpan= 2;
+			GridData data = new GridData(GridData.FILL_HORIZONTAL);
+			data.horizontalSpan = 2;
 			c.setLayoutData(data);
 
-			final boolean selection= getRefactoringSettings().getBoolean(DIALOG_SETTINGS_DELETE_SUB_PACKAGES);
+			final boolean selection = getRefactoringSettings()
+					.getBoolean(DIALOG_SETTINGS_DELETE_SUB_PACKAGES);
 
-			fDeleteSubPackagesCheckBox= new Button(c, SWT.CHECK);
-			fDeleteSubPackagesCheckBox.setText(RefactoringMessages.DeleteWizard_also_delete_sub_packages);
+			fDeleteSubPackagesCheckBox = new Button(c, SWT.CHECK);
+			fDeleteSubPackagesCheckBox.setText(
+					RefactoringMessages.DeleteWizard_also_delete_sub_packages);
 			fDeleteSubPackagesCheckBox.setSelection(selection);
 
-			fDeleteSubPackagesCheckBox.addSelectionListener(new SelectionAdapter() {
+			fDeleteSubPackagesCheckBox
+					.addSelectionListener(new SelectionAdapter() {
 
-				@Override
-				public void widgetSelected(SelectionEvent event) {
-					getDeleteProcessor().setDeleteSubPackages(fDeleteSubPackagesCheckBox.getSelection());
-				}
-			});
+						@Override
+						public void widgetSelected(SelectionEvent event) {
+							getDeleteProcessor().setDeleteSubPackages(
+									fDeleteSubPackagesCheckBox.getSelection());
+						}
+					});
 
-			getDeleteProcessor().setDeleteSubPackages(fDeleteSubPackagesCheckBox.getSelection());
+			getDeleteProcessor().setDeleteSubPackages(
+					fDeleteSubPackagesCheckBox.getSelection());
 		}
 
 		private String getNameOfSingleSelectedElement() throws ModelException {
-			if (getSingleSelectedResource() != null)
+			if (getSingleSelectedResource() != null) {
 				return ReorgUtils.getName(getSingleSelectedResource());
-			else
-				return ReorgUtils.getName(getSingleSelectedScriptElement());
+			}
+			return ReorgUtils.getName(getSingleSelectedScriptElement());
 		}
 
 		private IModelElement getSingleSelectedScriptElement() {
-			IModelElement[] elements= getSelectedScriptElements();
+			IModelElement[] elements = getSelectedScriptElements();
 			return elements.length == 1 ? elements[0] : null;
 		}
 
 		private IResource getSingleSelectedResource() {
-			IResource[] resources= getSelectedResources();
+			IResource[] resources = getSelectedResources();
 			return resources.length == 1 ? resources[0] : null;
 		}
 
 		private int numberOfSelectedElements() {
-			return getSelectedScriptElements().length + getSelectedResources().length;
+			return getSelectedScriptElements().length
+					+ getSelectedResources().length;
 		}
 
 		@Override
 		protected boolean performFinish() {
-			return super.performFinish() || getDeleteProcessor().wasCanceled(); //close the dialog if canceled
+			return super.performFinish() || getDeleteProcessor().wasCanceled(); // close
+																				// the
+																				// dialog
+																				// if
+																				// canceled
 		}
 
 		protected boolean saveSettings() {
 			if (getContainer() instanceof Dialog)
-				return ((Dialog) getContainer()).getReturnCode() == IDialogConstants.OK_ID;
+				return ((Dialog) getContainer())
+						.getReturnCode() == IDialogConstants.OK_ID;
 			return true;
 		}
 
 		@Override
 		public void dispose() {
 			if (fDeleteSubPackagesCheckBox != null && saveSettings())
-				getRefactoringSettings().put(DIALOG_SETTINGS_DELETE_SUB_PACKAGES, fDeleteSubPackagesCheckBox.getSelection());
+				getRefactoringSettings().put(
+						DIALOG_SETTINGS_DELETE_SUB_PACKAGES,
+						fDeleteSubPackagesCheckBox.getSelection());
 			super.dispose();
 		}
 
-		private String createConfirmationStringForOneElement() throws ModelException {
-			IModelElement[] elements= getSelectedScriptElements();
+		private String createConfirmationStringForOneElement()
+				throws ModelException {
+			IModelElement[] elements = getSelectedScriptElements();
 			if (elements.length == 1) {
-				IModelElement element= elements[0];
+				IModelElement element = elements[0];
 				if (isDefaultPackageWithLinkedFiles(element))
 					return RefactoringMessages.DeleteWizard_3;
 
@@ -189,69 +204,77 @@ public class DeleteWizard extends RefactoringWizard {
 					return RefactoringMessages.DeleteWizard_4;
 
 				if (isLinkedPackageOrProjectFragment(element))
-					//XXX workaround for jcore bugs 31998 and 31456 - linked packages or source folders cannot be deleted properly
+					// XXX workaround for jcore bugs 31998 and 31456 - linked
+					// packages or source folders cannot be deleted properly
 					return RefactoringMessages.DeleteWizard_6;
 
 				return RefactoringMessages.DeleteWizard_5;
-			} else {
-				if (isLinked(getSelectedResources()[0])) //checked before that this will work
-					return RefactoringMessages.DeleteWizard_7;
-				else
-					return RefactoringMessages.DeleteWizard_8;
 			}
+			if (isLinked(getSelectedResources()[0])) {// checked before that
+														// this will work
+				return RefactoringMessages.DeleteWizard_7;
+			}
+			return RefactoringMessages.DeleteWizard_8;
 		}
 
-		private String createConfirmationStringForManyElements() throws ModelException {
-			IResource[] resources= getSelectedResources();
-			IModelElement[] modelElements= getSelectedScriptElements();
+		private String createConfirmationStringForManyElements()
+				throws ModelException {
+			IResource[] resources = getSelectedResources();
+			IModelElement[] modelElements = getSelectedScriptElements();
 			if (!containsLinkedResources(resources, modelElements))
 				return RefactoringMessages.DeleteWizard_9;
 
 			if (!containsLinkedPackagesOrProjectFragments(modelElements))
 				return RefactoringMessages.DeleteWizard_10;
 
-			//XXX workaround for jcore bugs - linked packages or source folders cannot be deleted properly
+			// XXX workaround for jcore bugs - linked packages or source folders
+			// cannot be deleted properly
 			return RefactoringMessages.DeleteWizard_11;
 		}
 
-		private static boolean isLinkedPackageOrProjectFragment(IModelElement element) {
-			if ((element instanceof IScriptFolder) || (element instanceof IProjectFragment))
+		private static boolean isLinkedPackageOrProjectFragment(
+				IModelElement element) {
+			if ((element instanceof IScriptFolder)
+					|| (element instanceof IProjectFragment)) {
 				return isLinkedResource(element);
-			else
-				return false;
+			}
+			return false;
 		}
 
-		private static boolean containsLinkedPackagesOrProjectFragments(IModelElement[] modelElements) {
-			for (int i= 0; i < modelElements.length; i++) {
-				IModelElement element= modelElements[i];
+		private static boolean containsLinkedPackagesOrProjectFragments(
+				IModelElement[] modelElements) {
+			for (int i = 0; i < modelElements.length; i++) {
+				IModelElement element = modelElements[i];
 				if (isLinkedPackageOrProjectFragment(element))
 					return true;
 			}
 			return false;
 		}
 
-		private static boolean containsLinkedResources(IResource[] resources, IModelElement[] modelElements) throws ModelException {
-			for (int i= 0; i < modelElements.length; i++) {
-				IModelElement element= modelElements[i];
+		private static boolean containsLinkedResources(IResource[] resources,
+				IModelElement[] modelElements) throws ModelException {
+			for (int i = 0; i < modelElements.length; i++) {
+				IModelElement element = modelElements[i];
 				if (isLinkedResource(element))
 					return true;
 				if (isDefaultPackageWithLinkedFiles(element))
 					return true;
 			}
-			for (int i= 0; i < resources.length; i++) {
-				IResource resource= resources[i];
+			for (int i = 0; i < resources.length; i++) {
+				IResource resource = resources[i];
 				if (isLinked(resource))
 					return true;
 			}
 			return false;
 		}
 
-		private static boolean isDefaultPackageWithLinkedFiles(Object firstElement) throws ModelException {
+		private static boolean isDefaultPackageWithLinkedFiles(
+				Object firstElement) throws ModelException {
 			if (!ModelElementUtil.isDefaultPackage(firstElement))
 				return false;
-			IScriptFolder defaultPackage= (IScriptFolder)firstElement;
-			ISourceModule[] cus= defaultPackage.getSourceModules();
-			for (int i= 0; i < cus.length; i++) {
+			IScriptFolder defaultPackage = (IScriptFolder) firstElement;
+			ISourceModule[] cus = defaultPackage.getSourceModules();
+			for (int i = 0; i < cus.length; i++) {
 				if (isLinkedResource(cus[i]))
 					return true;
 			}
@@ -275,7 +298,8 @@ public class DeleteWizard extends RefactoringWizard {
 		}
 
 		private ScriptDeleteProcessor getDeleteProcessor() {
-			return (ScriptDeleteProcessor) ((DeleteRefactoring) getRefactoring()).getProcessor();
+			return (ScriptDeleteProcessor) ((DeleteRefactoring) getRefactoring())
+					.getProcessor();
 		}
 
 	}

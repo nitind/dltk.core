@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.actions;
 
@@ -116,18 +115,15 @@ public class ActionUtil {
 		return false;
 	}
 
-	public static boolean areProcessable(Shell shell, IModelElement[] elements) {
+	public static boolean areProcessable(Shell shell,
+			IModelElement[] elements) {
 		for (int i = 0; i < elements.length; i++) {
 			if (!isOnBuildPath(elements[i])) {
-				MessageDialog
-						.openInformation(
-								shell,
-								ActionMessages.ActionUtil_notOnBuildPath_title,
-								Messages
-										.format(
-												ActionMessages.ActionUtil_notOnBuildPath_resource_message,
-												new Object[] { elements[i]
-														.getPath() }));
+				MessageDialog.openInformation(shell,
+						ActionMessages.ActionUtil_notOnBuildPath_title,
+						Messages.format(
+								ActionMessages.ActionUtil_notOnBuildPath_resource_message,
+								new Object[] { elements[i].getPath() }));
 				return false;
 			}
 		}
@@ -139,14 +135,14 @@ public class ActionUtil {
 	 * processable and editable. If the editor edits the element, the validation
 	 * is only performed once. If necessary, ask the user whether the file(s)
 	 * should be edited.
-	 * 
+	 *
 	 * @param editor
-	 *            an editor, or <code>null</code> iff the action was not
-	 *            executed from an editor
+	 *                    an editor, or <code>null</code> iff the action was not
+	 *                    executed from an editor
 	 * @param shell
-	 *            a shell to serve as parent for a dialog
+	 *                    a shell to serve as parent for a dialog
 	 * @param element
-	 *            the element to check, cannot be <code>null</code>
+	 *                    the element to check, cannot be <code>null</code>
 	 * @return <code>true</code> if the element can be edited,
 	 *         <code>false</code> otherwise
 	 */
@@ -154,12 +150,11 @@ public class ActionUtil {
 			IModelElement element) {
 		if (editor != null) {
 			IModelElement input = SelectionConverter.getInput(editor);
-			if (input != null
-					&& input.equals(element
-							.getAncestor(IModelElement.SOURCE_MODULE)))
+			if (input != null && input
+					.equals(element.getAncestor(IModelElement.SOURCE_MODULE))) {
 				return isEditable(editor);
-			else
-				return isEditable(editor) && isEditable(shell, element);
+			}
+			return isEditable(editor) && isEditable(shell, element);
 		}
 		return isEditable(shell, element);
 	}
@@ -191,16 +186,12 @@ public class ActionUtil {
 					return true;
 
 				MessageDialogWithToggle toggleDialog = MessageDialogWithToggle
-						.openYesNoQuestion(
-								shell,
+						.openYesNoQuestion(shell,
 								ActionMessages.ActionUtil_warning_derived_title,
-								Messages
-										.format(
-												ActionMessages.ActionUtil_warning_derived_message,
-												BasicElementLabels
-														.getPathLabel(resource
-																.getFullPath(),
-																false)),
+								Messages.format(
+										ActionMessages.ActionUtil_warning_derived_message,
+										BasicElementLabels.getPathLabel(
+												resource.getFullPath(), false)),
 								ActionMessages.ActionUtil_warning_derived_dontShowAgain,
 								false, null, null);
 

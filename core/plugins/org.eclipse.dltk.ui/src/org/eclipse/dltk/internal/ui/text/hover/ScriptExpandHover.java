@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -186,10 +186,10 @@ public class ScriptExpandHover extends AnnotationExpandHover {
 
 	@Override
 	protected int getOrder(Annotation annotation) {
-		if (isBreakpointAnnotation(annotation))
+		if (isBreakpointAnnotation(annotation)) {
 			return 1000;
-		else
-			return super.getOrder(annotation);
+		}
+		return super.getOrder(annotation);
 	}
 
 	private boolean isBreakpointAnnotation(Annotation a) {

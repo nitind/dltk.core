@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -203,10 +203,9 @@ public abstract class HierarchyInformationControl
 		if (filterOverrides) {
 			return fMethodOverrideTester
 					.findOverriddenMethodInType(typeToFindIn, filterMethod);
-		} else {
-			return fMethodOverrideTester
-					.findOverridingMethodInType(typeToFindIn, filterMethod);
 		}
+		return fMethodOverrideTester.findOverridingMethodInType(typeToFindIn,
+				filterMethod);
 	}
 
 	@Override
@@ -356,11 +355,10 @@ public abstract class HierarchyInformationControl
 			return Messages.format(
 					TypeHierarchyMessages.HierarchyInformationControl_toggle_traditionalhierarchy_label,
 					keyName);
-		} else {
-			return Messages.format(
-					TypeHierarchyMessages.HierarchyInformationControl_toggle_superhierarchy_label,
-					keyName);
 		}
+		return Messages.format(
+				TypeHierarchyMessages.HierarchyInformationControl_toggle_superhierarchy_label,
+				keyName);
 	}
 
 	@Override

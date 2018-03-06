@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,9 +36,8 @@ public class TraditionalHierarchyViewer extends TypeHierarchyViewer {
 	public String getTitle() {
 		if (isMethodFiltering()) {
 			return TypeHierarchyMessages.TraditionalHierarchyViewer_filtered_title;
-		} else {
-			return TypeHierarchyMessages.TraditionalHierarchyViewer_title;
 		}
+		return TypeHierarchyMessages.TraditionalHierarchyViewer_title;
 	}
 
 	@Override
@@ -60,8 +59,8 @@ public class TraditionalHierarchyViewer extends TypeHierarchyViewer {
 	/**
 	 * Content provider for the 'traditional' type hierarchy.
 	 */
-	public static class TraditionalHierarchyContentProvider extends
-			TypeHierarchyContentProvider {
+	public static class TraditionalHierarchyContentProvider
+			extends TypeHierarchyContentProvider {
 
 		public TraditionalHierarchyContentProvider(
 				TypeHierarchyLifeCycle provider) {
@@ -74,9 +73,8 @@ public class TraditionalHierarchyViewer extends TypeHierarchyViewer {
 				IType input = hierarchy.getType();
 				if (input != null) {
 					return getDepth(hierarchy, input) + 2;
-				} else {
-					return 5;
 				}
+				return 5;
 			}
 			return 2;
 		}
@@ -84,7 +82,7 @@ public class TraditionalHierarchyViewer extends TypeHierarchyViewer {
 		private int getDepth(ITypeHierarchy hierarchy, IType input) {
 			int max = 0;
 			IType[] superType = hierarchy.getSuperclass(input);
-			if( superType == null ) {
+			if (superType == null) {
 				return 0;
 			}
 			for (int q = 0; q < superType.length; ++q) {
@@ -127,10 +125,10 @@ public class TraditionalHierarchyViewer extends TypeHierarchyViewer {
 				IType[] types = hierarchy.getSubtypes(type);
 				/*
 				 * if (isObject(type)) { for (int i= 0; i < types.length; i++) {
-				 * IType curr= types[i]; if (!isAnonymousFromInterface(curr)) { //
-				 * no anonymous classes on 'Object' -> will be children of
+				 * IType curr= types[i]; if (!isAnonymousFromInterface(curr)) {
+				 * // no anonymous classes on 'Object' -> will be children of
 				 * interface res.add(curr); } } } else
-				 */{
+				 */ {
 					boolean isHierarchyOnType = (hierarchy.getType() != null);
 					boolean isClass = true;// !Flags.isInterface(hierarchy.getCachedFlags(type));
 					if (isClass || isHierarchyOnType) {

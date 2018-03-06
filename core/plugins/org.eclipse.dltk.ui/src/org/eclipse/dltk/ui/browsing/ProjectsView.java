@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -119,7 +119,7 @@ public class ProjectsView extends ScriptBrowsingPart {
 	 * Answers if the given <code>element</code> is a valid input for this part.
 	 *
 	 * @param element
-	 *            the object to test
+	 *                    the object to test
 	 * @return <true> if the given element is a valid input
 	 */
 	@Override
@@ -132,7 +132,7 @@ public class ProjectsView extends ScriptBrowsingPart {
 	 * part.
 	 *
 	 * @param element
-	 *            the object to test
+	 *                    the object to test
 	 * @return <true> if the given element is a valid element
 	 */
 	@Override
@@ -155,7 +155,7 @@ public class ProjectsView extends ScriptBrowsingPart {
 	 * Finds the element which has to be selected in this part.
 	 *
 	 * @param je
-	 *            the Java element which has the focus
+	 *               the Java element which has the focus
 	 * @return the element to select
 	 */
 	@Override
@@ -170,10 +170,10 @@ public class ProjectsView extends ScriptBrowsingPart {
 			return je;
 		case IModelElement.PROJECT_FRAGMENT:
 			if (je.getElementName()
-					.equals(IProjectFragment.DEFAULT_PACKAGE_ROOT))
+					.equals(IProjectFragment.DEFAULT_PACKAGE_ROOT)) {
 				return je.getParent();
-			else
-				return je;
+			}
+			return je;
 		default:
 			return findElementToSelect(je.getParent());
 		}

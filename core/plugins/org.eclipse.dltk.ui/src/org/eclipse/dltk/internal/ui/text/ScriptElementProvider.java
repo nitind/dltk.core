@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,30 +24,32 @@ import org.eclipse.ui.IEditorPart;
 /**
  * Provides a Script element to be displayed in by an information presenter.
  */
-public class ScriptElementProvider implements IInformationProvider, IInformationProviderExtension {
+public class ScriptElementProvider
+		implements IInformationProvider, IInformationProviderExtension {
 
 	private ScriptEditor fEditor;
 	private boolean fUseCodeResolve;
 
 	public ScriptElementProvider(IEditorPart editor) {
-		fUseCodeResolve= false;
+		fUseCodeResolve = false;
 		if (editor instanceof ScriptEditor)
-			fEditor= (ScriptEditor)editor;
+			fEditor = (ScriptEditor) editor;
 	}
 
 	public ScriptElementProvider(IEditorPart editor, boolean useCodeResolve) {
 		this(editor);
-		fUseCodeResolve= useCodeResolve;
+		fUseCodeResolve = useCodeResolve;
 	}
 
 	@Override
 	public IRegion getSubject(ITextViewer textViewer, int offset) {
 		if (textViewer != null && fEditor != null) {
-			IRegion region= ScriptWordFinder.findWord(textViewer.getDocument(), offset);
-			if (region != null)
+			IRegion region = ScriptWordFinder.findWord(textViewer.getDocument(),
+					offset);
+			if (region != null) {
 				return region;
-			else
-				return new Region(offset, 0);
+			}
+			return new Region(offset, 0);
 		}
 		return null;
 	}
@@ -64,11 +66,13 @@ public class ScriptElementProvider implements IInformationProvider, IInformation
 
 		try {
 			if (fUseCodeResolve) {
-				IStructuredSelection sel= SelectionConverter.getStructuredSelection(fEditor);
+				IStructuredSelection sel = SelectionConverter
+						.getStructuredSelection(fEditor);
 				if (!sel.isEmpty())
 					return sel.getFirstElement();
 			}
-			IModelElement element= SelectionConverter.getElementAtOffset(fEditor);
+			IModelElement element = SelectionConverter
+					.getElementAtOffset(fEditor);
 			if (element != null)
 				return element;
 

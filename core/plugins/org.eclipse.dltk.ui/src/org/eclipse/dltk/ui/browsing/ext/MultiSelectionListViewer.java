@@ -108,9 +108,8 @@ public class MultiSelectionListViewer extends ScrolledComposite {
 		public Object[] getElements(Object inputElement) {
 			if (controlIndex == 0) {
 				return contentProvider.getElements(input);
-			} else {
-				return getElementsFrom(this.controlIndex - 1);
 			}
+			return getElementsFrom(this.controlIndex - 1);
 		}
 
 		@Override

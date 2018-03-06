@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,8 +44,8 @@ import com.ibm.icu.text.Collator;
  * name. Package fragment roots are sorted as ordered on the buildpath.
  *
  */
-public class ModelElementSorter extends ViewerSorter implements
-		IModelCompareCategories {
+public class ModelElementSorter extends ViewerSorter
+		implements IModelCompareCategories {
 
 	private MembersOrderPreferenceCache fMemberOrderCache;
 	private Collator fNewCollator; // collator from ICU
@@ -90,25 +90,29 @@ public class ModelElementSorter extends ViewerSorter implements
 				case IModelElement.METHOD: {
 					IMethod method = (IMethod) je;
 					if (method.isConstructor()) {
-						return getMemberCategory(MembersOrderPreferenceCache.CONSTRUCTORS_INDEX);
+						return getMemberCategory(
+								MembersOrderPreferenceCache.CONSTRUCTORS_INDEX);
 					}
-					return getMemberCategory(MembersOrderPreferenceCache.METHOD_INDEX);
+					return getMemberCategory(
+							MembersOrderPreferenceCache.METHOD_INDEX);
 				}
 				case IModelElement.FIELD: {
-					return getMemberCategory(MembersOrderPreferenceCache.FIELDS_INDEX);
+					return getMemberCategory(
+							MembersOrderPreferenceCache.FIELDS_INDEX);
 				}
-					// case IModelElement.INITIALIZER :
-					// {
-					// int flags= ((IInitializer) je).getFlags();
-					// if (Flags.isStatic(flags))
-					// return
-					// getMemberCategory(MembersOrderPreferenceCache.STATIC_INIT_INDEX);
-					// else
-					// return
-					// getMemberCategory(MembersOrderPreferenceCache.INIT_INDEX);
-					// }
+				// case IModelElement.INITIALIZER :
+				// {
+				// int flags= ((IInitializer) je).getFlags();
+				// if (Flags.isStatic(flags))
+				// return
+				// getMemberCategory(MembersOrderPreferenceCache.STATIC_INIT_INDEX);
+				// else
+				// return
+				// getMemberCategory(MembersOrderPreferenceCache.INIT_INDEX);
+				// }
 				case IModelElement.TYPE:
-					return getMemberCategory(MembersOrderPreferenceCache.TYPE_INDEX);
+					return getMemberCategory(
+							MembersOrderPreferenceCache.TYPE_INDEX);
 				case IModelElement.PACKAGE_DECLARATION:
 					return PACKAGE_DECL;
 				case IModelElement.IMPORT_CONTAINER:
@@ -182,9 +186,8 @@ public class ModelElementSorter extends ViewerSorter implements
 			if (root1 == null) {
 				if (root2 == null) {
 					return 0;
-				} else {
-					return 1;
 				}
+				return 1;
 			} else if (root2 == null) {
 				return -1;
 			}
@@ -237,9 +240,8 @@ public class ModelElementSorter extends ViewerSorter implements
 					} catch (ModelException e) {
 						return 0;
 					}
-				} else {
-					return 1;
 				}
+				return 1;
 			} else if (name2.length() == 0) {
 				return -1;
 			}
@@ -342,9 +344,12 @@ public class ModelElementSorter extends ViewerSorter implements
 		if ((cat1 == PROJECTFRAGMENT && cat2 == PROJECTFRAGMENT)
 				|| (cat1 == CONTAINER && cat2 == CONTAINER)
 				|| (cat1 == SCRIPTFOLDER
-						&& ((IScriptFolder) e1).getParent().getResource() instanceof IProject && cat2 == PROJECTFRAGMENT)
-				|| (cat1 == PROJECTFRAGMENT && cat2 == SCRIPTFOLDER && ((IScriptFolder) e2)
-						.getParent().getResource() instanceof IProject)) {
+						&& ((IScriptFolder) e1).getParent()
+								.getResource() instanceof IProject
+						&& cat2 == PROJECTFRAGMENT)
+				|| (cat1 == PROJECTFRAGMENT && cat2 == SCRIPTFOLDER
+						&& ((IScriptFolder) e2).getParent()
+								.getResource() instanceof IProject)) {
 			IScriptProject p1 = getScriptProject(e1);
 			return p1 != null && p1.equals(getScriptProject(e2));
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 xored software, Inc. and others.
+ * Copyright (c) 2009, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -111,9 +111,8 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 				ICodeTemplateCategory category = (ICodeTemplateCategory) element;
 				if (category.isGroup()) {
 					return getTemplateContextTypes(category);
-				} else {
-					return getTemplatesOfCategory(category);
 				}
+				return getTemplatesOfCategory(category);
 			} else if (element instanceof TemplateContextType) {
 				return getTemplatesOfContextType(
 						((TemplateContextType) element).getId());
@@ -135,9 +134,8 @@ public class CodeTemplateBlock extends OptionsConfigurationBlock {
 				if (category.isGroup()) {
 					return codeTemplateAccess.getContextTypeRegistry()
 							.getContextType(contextTypeId);
-				} else {
-					return category;
 				}
+				return category;
 			} else if (element instanceof TemplateContextType) {
 				return codeTemplateAccess.getCategoryOfContextType(
 						((TemplateContextType) element).getId());

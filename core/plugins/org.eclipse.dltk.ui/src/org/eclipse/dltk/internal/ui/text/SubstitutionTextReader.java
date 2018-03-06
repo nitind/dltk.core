@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,13 +14,14 @@ import java.io.Reader;
 import org.eclipse.dltk.corext.documentation.SingleCharReader;
 
 /**
- * Reads the text contents from a reader and computes for each character
- * a potential substitution. The substitution may eat more characters than
- * only the one passed into the computation routine.
+ * Reads the text contents from a reader and computes for each character a
+ * potential substitution. The substitution may eat more characters than only
+ * the one passed into the computation routine.
  */
 public abstract class SubstitutionTextReader extends SingleCharReader {
 
-	protected static final String LINE_DELIM= System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+	protected static final String LINE_DELIM = System
+			.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private Reader fReader;
 	protected boolean fWasWhiteSpace;
@@ -29,26 +30,25 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 	/**
 	 * Tells whether white space characters are skipped.
 	 */
-	private boolean fSkipWhiteSpace= true;
+	private boolean fSkipWhiteSpace = true;
 
 	private boolean fReadFromBuffer;
 	private StringBuffer fBuffer;
 	private int fIndex;
 
-
 	protected SubstitutionTextReader(Reader reader) {
-		fReader= reader;
-		fBuffer= new StringBuffer();
-		fIndex= 0;
-		fReadFromBuffer= false;
-		fCharAfterWhiteSpace= -1;
-		fWasWhiteSpace= true;
+		fReader = reader;
+		fBuffer = new StringBuffer();
+		fIndex = 0;
+		fReadFromBuffer = false;
+		fCharAfterWhiteSpace = -1;
+		fWasWhiteSpace = true;
 	}
 
 	/**
-	 * Implement to compute the substitution for the given character and
-	 * if necessary subsequent characters. Use <code>nextChar</code>
-	 * to read subsequent characters.
+	 * Implement to compute the substitution for the given character and if
+	 * necessary subsequent characters. Use <code>nextChar</code> to read
+	 * subsequent characters.
 	 */
 	protected abstract String computeSubstitution(int c) throws IOException;
 
@@ -63,32 +63,31 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 	 * Returns the next character.
 	 */
 	protected int nextChar() throws IOException {
-		fReadFromBuffer= (fBuffer.length() > 0);
+		fReadFromBuffer = (fBuffer.length() > 0);
 		if (fReadFromBuffer) {
-			char ch= fBuffer.charAt(fIndex++);
+			char ch = fBuffer.charAt(fIndex++);
 			if (fIndex >= fBuffer.length()) {
 				fBuffer.setLength(0);
-				fIndex= 0;
-			}
-			return ch;
-		} else {
-			int ch= fCharAfterWhiteSpace;
-			if (ch == -1) {
-				ch= fReader.read();
-			}
-			if (fSkipWhiteSpace && Character.isWhitespace((char)ch)) {
-				do {
-					ch= fReader.read();
-				} while (Character.isWhitespace((char)ch));
-				if (ch != -1) {
-					fCharAfterWhiteSpace= ch;
-					return ' ';
-				}
-			} else {
-				fCharAfterWhiteSpace= -1;
+				fIndex = 0;
 			}
 			return ch;
 		}
+		int ch = fCharAfterWhiteSpace;
+		if (ch == -1) {
+			ch = fReader.read();
+		}
+		if (fSkipWhiteSpace && Character.isWhitespace((char) ch)) {
+			do {
+				ch = fReader.read();
+			} while (Character.isWhitespace((char) ch));
+			if (ch != -1) {
+				fCharAfterWhiteSpace = ch;
+				return ' ';
+			}
+		} else {
+			fCharAfterWhiteSpace = -1;
+		}
+		return ch;
 	}
 
 	@Override
@@ -96,22 +95,22 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 		int c;
 		do {
 
-			c= nextChar();
+			c = nextChar();
 			while (!fReadFromBuffer && c != -1) {
-				String s= computeSubstitution(c);
+				String s = computeSubstitution(c);
 				if (s == null)
 					break;
 				if (s.length() > 0)
 					fBuffer.insert(0, s);
-				c= nextChar();
+				c = nextChar();
 			}
 
 		} while (fSkipWhiteSpace && fWasWhiteSpace && (c == ' '));
-		fWasWhiteSpace= (c == ' ' || c == '\r' || c == '\n');
+		fWasWhiteSpace = (c == ' ' || c == '\r' || c == '\n');
 		return c;
 	}
 
-    @Override
+	@Override
 	public boolean ready() throws IOException {
 		return fReader.ready();
 	}
@@ -124,14 +123,14 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 	@Override
 	public void reset() throws IOException {
 		fReader.reset();
-		fWasWhiteSpace= true;
-		fCharAfterWhiteSpace= -1;
+		fWasWhiteSpace = true;
+		fCharAfterWhiteSpace = -1;
 		fBuffer.setLength(0);
-		fIndex= 0;
+		fIndex = 0;
 	}
 
 	protected final void setSkipWhitespace(boolean state) {
-		fSkipWhiteSpace= state;
+		fSkipWhiteSpace = state;
 	}
 
 	protected final boolean isSkippingWhitespace() {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IWorkbenchSite;
 
-
 /**
  * Renames a Script element or workbench resource.
  * <p>
@@ -33,7 +32,7 @@ import org.eclipse.ui.IWorkbenchSite;
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
  *
-	 *
+ *
  */
 public class RenameAction extends SelectionDispatchAction {
 
@@ -43,34 +42,39 @@ public class RenameAction extends SelectionDispatchAction {
 	private ScriptEditor fEditor;
 
 	/**
-	 * Creates a new <code>RenameAction</code>. The action requires
-	 * that the selection provided by the site's selection provider is of type <code>
+	 * Creates a new <code>RenameAction</code>. The action requires that the
+	 * selection provided by the site's selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 *
-	 * @param site the site providing context information for this action
+	 * @param site
+	 *                 the site providing context information for this action
 	 */
 	public RenameAction(IWorkbenchSite site) {
 		super(site);
 		setText(RefactoringMessages.RenameAction_text);
-		fRenameScriptElement= new RenameModelElementAction(site);
+		fRenameScriptElement = new RenameModelElementAction(site);
 		fRenameScriptElement.setText(getText());
-		fRenameResource= new RenameResourceAction(site);
+		fRenameResource = new RenameResourceAction(site);
 		fRenameResource.setText(getText());
 		if (DLTKCore.DEBUG) {
 			System.err.println("Add help support here..."); //$NON-NLS-1$
 		}
 
-	//	PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IScriptHelpContextIds.RENAME_ACTION);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+		// IScriptHelpContextIds.RENAME_ACTION);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call this constructor.
-	 * @param editor the compilation unit editor
+	 * Note: This constructor is for internal use only. Clients should not call
+	 * this constructor.
+	 *
+	 * @param editor
+	 *                   the compilation unit editor
 	 */
 	public RenameAction(ScriptEditor editor) {
 		this(editor.getEditorSite());
-		fEditor= editor;
-		fRenameScriptElement= new RenameModelElementAction(editor);
+		fEditor = editor;
+		fRenameScriptElement = new RenameModelElementAction(editor);
 	}
 
 	@Override
@@ -91,12 +95,12 @@ public class RenameAction extends SelectionDispatchAction {
 		setEnabled(computeEnabledState());
 	}
 
-	private boolean computeEnabledState(){
+	private boolean computeEnabledState() {
 		if (fRenameResource != null) {
-			return fRenameScriptElement.isEnabled() || fRenameResource.isEnabled();
-		} else {
-			return fRenameScriptElement.isEnabled();
+			return fRenameScriptElement.isEnabled()
+					|| fRenameResource.isEnabled();
 		}
+		return fRenameScriptElement.isEnabled();
 	}
 
 	@Override
@@ -114,6 +118,8 @@ public class RenameAction extends SelectionDispatchAction {
 		if (fRenameScriptElement.canRun())
 			fRenameScriptElement.run(selection);
 		else
-			MessageDialog.openInformation(getShell(), RefactoringMessages.RenameAction_rename, RefactoringMessages.RenameAction_unavailable);
+			MessageDialog.openInformation(getShell(),
+					RefactoringMessages.RenameAction_rename,
+					RefactoringMessages.RenameAction_unavailable);
 	}
 }

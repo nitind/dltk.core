@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,7 +43,8 @@ public abstract class QuickMenuAction extends Action {
 	 * Creates a new quick menu action with the given command id.
 	 *
 	 * @param commandId
-	 *            the command id of the short cut used to open the sub menu
+	 *                      the command id of the short cut used to open the sub
+	 *                      menu
 	 */
 	public QuickMenuAction(String commandId) {
 		setActionDefinitionId(commandId);
@@ -79,7 +80,7 @@ public abstract class QuickMenuAction extends Action {
 	 * Hook to fill a menu manager with the items of the sub menu.
 	 *
 	 * @param menu
-	 *            the sub menu to fill
+	 *                 the sub menu to fill
 	 */
 	protected abstract void fillMenu(IMenuManager menu);
 
@@ -87,7 +88,7 @@ public abstract class QuickMenuAction extends Action {
 	 * Adds the shortcut to the given menu text and returns it.
 	 *
 	 * @param menuText
-	 *            the menu text
+	 *                     the menu text
 	 * @return the menu text with the shortcut
 	 * @since 3.1
 	 */
@@ -152,7 +153,7 @@ public abstract class QuickMenuAction extends Action {
 	 * widget.
 	 *
 	 * @param text
-	 *            the styled text widget that has the focus
+	 *                 the styled text widget that has the focus
 	 *
 	 * @return a widget relative position of the menu to pop up or
 	 *         <code>null</code> if now position inside the widget can be
@@ -171,7 +172,7 @@ public abstract class QuickMenuAction extends Action {
 	 * Hook to compute the menu location if the focus widget is a tree widget.
 	 *
 	 * @param tree
-	 *            the tree widget that has the focus
+	 *                 the tree widget that has the focus
 	 *
 	 * @return a widget relative position of the menu to pop up or
 	 *         <code>null</code> if now position inside the widget can be
@@ -192,9 +193,8 @@ public abstract class QuickMenuAction extends Action {
 								bounds.x + getAvarageCharWith(tree)
 										* CHAR_INDENT),
 						bounds.y + bounds.height);
-			} else {
-				return null;
 			}
+			return null;
 		default:
 			Rectangle[] rectangles = new Rectangle[items.length];
 			for (int i = 0; i < rectangles.length; i++) {
@@ -214,7 +214,7 @@ public abstract class QuickMenuAction extends Action {
 	 * Hook to compute the menu location if the focus widget is a table widget.
 	 *
 	 * @param table
-	 *            the table widget that has the focus
+	 *                  the table widget that has the focus
 	 *
 	 * @return a widget relative position of the menu to pop up or
 	 *         <code>null</code> if now position inside the widget can be
@@ -238,9 +238,8 @@ public abstract class QuickMenuAction extends Action {
 										+ getAvarageCharWith(table)
 												* CHAR_INDENT),
 						bounds.y + bounds.height);
-			} else {
-				return null;
 			}
+			return null;
 		}
 		default: {
 			Rectangle[] rectangles = new Rectangle[items.length];

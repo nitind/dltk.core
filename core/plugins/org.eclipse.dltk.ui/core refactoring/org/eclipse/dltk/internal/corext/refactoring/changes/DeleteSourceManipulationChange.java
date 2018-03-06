@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,12 +55,10 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 				// don't check anything in this case. We have a warning dialog
 				// already presented to the user that the file is dirty.
 				return super.isValid(pm, NONE);
-			} else {
-				return super.isValid(pm, DIRTY);
 			}
-		} else {
-			return super.isValid(pm, READ_ONLY | DIRTY);
+			return super.isValid(pm, DIRTY);
 		}
+		return super.isValid(pm, READ_ONLY | DIRTY);
 	}
 
 	private String getElementName() {
@@ -100,9 +98,8 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 				resourceDescription.recordStateFromHistory(resource,
 						new SubProgressMonitor(pm, 1));
 				return new UndoDeleteResourceChange(resourceDescription);
-			} else {
-				element.delete(false, pm);
 			}
+			element.delete(false, pm);
 			return null;
 
 			// begin fix https://bugs.eclipse.org/bugs/show_bug.cgi?id=66835

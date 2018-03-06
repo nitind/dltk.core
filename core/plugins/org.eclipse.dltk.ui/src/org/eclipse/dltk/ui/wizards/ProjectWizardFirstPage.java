@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -405,9 +405,8 @@ public abstract class ProjectWizardFirstPage extends WizardPage
 					.get(DIALOGSTORE_LAST_EXTERNAL_ENVIRONMENT);
 			if (savedEnvId == null || savedEnvId.equals(environment.getId())) {
 				return ds.get(DIALOGSTORE_LAST_EXTERNAL_LOC);
-			} else {
-				return null;
 			}
+			return null;
 		}
 
 		/**
@@ -665,10 +664,10 @@ public abstract class ProjectWizardFirstPage extends WizardPage
 			IInterpreterInstall inst = ScriptRuntime
 					.getDefaultInterpreterInstall(getCurrentLanguageNature(),
 							getEnvironment());
-			if (inst != null)
+			if (inst != null) {
 				return inst.getName();
-			else
-				return "undefined"; //$NON-NLS-1$
+			}
+			return "undefined"; //$NON-NLS-1$
 		}
 
 		private String getDefaultInterpreterLabel() {
@@ -786,9 +785,8 @@ public abstract class ProjectWizardFirstPage extends WizardPage
 		public Control getDecorationTarget() {
 			if (fUseDefaultInterpreter.isSelected()) {
 				return fUseDefaultInterpreter.getSelectionButton();
-			} else {
-				return fUseProjectInterpreter.getSelectionButton();
 			}
+			return fUseProjectInterpreter.getSelectionButton();
 		}
 	}
 
@@ -926,22 +924,19 @@ public abstract class ProjectWizardFirstPage extends WizardPage
 			if (fLocationGroup.isInWorkspace()) {
 				if (!isValidProjectName(getProjectName())) {
 					return false;
-				} else {
-					final IEnvironment environment = EnvironmentManager
-							.getLocalEnvironment();
-					final IFileHandle directory = environment
-							.getFile(location.append(getProjectName()));
-					return directory.isDirectory();
 				}
-			} else {
-				IEnvironment environment = fLocationGroup.getEnvironment();
-				if (!location.isEmpty()) {
-					final IFileHandle directory = environment.getFile(location);
-					return directory.isDirectory();
-				} else {
-					return false;
-				}
+				final IEnvironment environment = EnvironmentManager
+						.getLocalEnvironment();
+				final IFileHandle directory = environment
+						.getFile(location.append(getProjectName()));
+				return directory.isDirectory();
 			}
+			IEnvironment environment = fLocationGroup.getEnvironment();
+			if (!location.isEmpty()) {
+				final IFileHandle directory = environment.getFile(location);
+				return directory.isDirectory();
+			}
+			return false;
 		}
 
 		@Override
@@ -1191,9 +1186,8 @@ public abstract class ProjectWizardFirstPage extends WizardPage
 	protected Observable getInterpreterGroupObservable() {
 		if (fInterpreterGroup instanceof Observable) {
 			return (Observable) fInterpreterGroup;
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	/**
@@ -1417,7 +1411,7 @@ public abstract class ProjectWizardFirstPage extends WizardPage
 	 * Sets the working sets to which the new project should be added.
 	 *
 	 * @param workingSets
-	 *            the initial selected working sets
+	 *                        the initial selected working sets
 	 * @since 2.0
 	 */
 	public void setWorkingSets(IWorkingSet[] workingSets) {

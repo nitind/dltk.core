@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,23 +60,21 @@ public class StatusBarUpdater implements ISelectionChangedListener {
 				return Messages.format(
 						DLTKUIMessages.StatusBarUpdater_num_elements_selected,
 						String.valueOf(nElements));
-			} else {
-				Object elem = selection.getFirstElement();
-				if (elem instanceof IModelElement) {
-					return formatModelElementMessage((IModelElement) elem);
-				} else if (elem instanceof IResource) {
-					return formatResourceMessage((IResource) elem);
-				} else if (elem instanceof BuildPathContainer) {
-					BuildPathContainer container = (BuildPathContainer) elem;
-					return container.getLabel()
-							+ ScriptElementLabels.CONCAT_STRING
-							+ container.getScriptProject().getElementName();
-				} else if (elem instanceof IAdaptable) {
-					IWorkbenchAdapter wbadapter = ((IAdaptable) elem)
-							.getAdapter(IWorkbenchAdapter.class);
-					if (wbadapter != null) {
-						return wbadapter.getLabel(elem);
-					}
+			}
+			Object elem = selection.getFirstElement();
+			if (elem instanceof IModelElement) {
+				return formatModelElementMessage((IModelElement) elem);
+			} else if (elem instanceof IResource) {
+				return formatResourceMessage((IResource) elem);
+			} else if (elem instanceof BuildPathContainer) {
+				BuildPathContainer container = (BuildPathContainer) elem;
+				return container.getLabel() + ScriptElementLabels.CONCAT_STRING
+						+ container.getScriptProject().getElementName();
+			} else if (elem instanceof IAdaptable) {
+				IWorkbenchAdapter wbadapter = ((IAdaptable) elem)
+						.getAdapter(IWorkbenchAdapter.class);
+				if (wbadapter != null) {
+					return wbadapter.getLabel(elem);
 				}
 			}
 		}
@@ -90,11 +88,11 @@ public class StatusBarUpdater implements ISelectionChangedListener {
 
 	private String formatResourceMessage(IResource element) {
 		IContainer parent = element.getParent();
-		if (parent != null && parent.getType() != IResource.ROOT)
+		if (parent != null && parent.getType() != IResource.ROOT) {
 			return element.getName() + ScriptElementLabels.CONCAT_STRING
 					+ parent.getFullPath().makeRelative().toString();
-		else
-			return element.getName();
+		}
+		return element.getName();
 	}
 
 }

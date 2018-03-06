@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -142,28 +142,26 @@ public abstract class SearchLabelProvider extends AppearanceAwareLabelProvider {
 			return Messages.format(
 					SearchMessages.SearchLabelProvider_exact_noCount,
 					elementName);
-		} else {
-			int exactCount = matchCount - potentialCount;
+		}
+		int exactCount = matchCount - potentialCount;
 
-			if (potentialCount > 0 && exactCount > 0) {
-				String[] args = new String[] { elementName,
-						String.valueOf(matchCount), String.valueOf(exactCount),
-						String.valueOf(potentialCount) };
-				return Messages.format(
-						SearchMessages.SearchLabelProvider_exact_and_potential_plural,
-						args);
-			} else if (exactCount == 0) {
-				String[] args = new String[] { elementName,
-						String.valueOf(matchCount) };
-				return Messages.format(
-						SearchMessages.SearchLabelProvider_potential_plural,
-						args);
-			}
-			String[] args = new String[] { elementName,
+		if (potentialCount > 0 && exactCount > 0) {
+			Object[] args = new String[] { elementName,
+					String.valueOf(matchCount), String.valueOf(exactCount),
+					String.valueOf(potentialCount) };
+			return Messages.format(
+					SearchMessages.SearchLabelProvider_exact_and_potential_plural,
+					args);
+		} else if (exactCount == 0) {
+			Object[] args = new String[] { elementName,
 					String.valueOf(matchCount) };
 			return Messages.format(
-					SearchMessages.SearchLabelProvider_exact_plural, args);
+					SearchMessages.SearchLabelProvider_potential_plural, args);
 		}
+		Object[] args = new String[] { elementName,
+				String.valueOf(matchCount) };
+		return Messages.format(SearchMessages.SearchLabelProvider_exact_plural,
+				args);
 	}
 
 	protected boolean hasChildren(Object elem) {

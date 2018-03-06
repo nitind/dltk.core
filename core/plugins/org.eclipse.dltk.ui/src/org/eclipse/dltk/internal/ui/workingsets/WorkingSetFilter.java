@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,8 +27,8 @@ import org.eclipse.ui.IWorkingSet;
  */
 public class WorkingSetFilter extends ViewerFilter {
 
-	private IWorkingSet fWorkingSet= null;
-	private IAdaptable[] fCachedWorkingSet= null;
+	private IWorkingSet fWorkingSet = null;
+	private IAdaptable[] fCachedWorkingSet = null;
 
 	/**
 	 * Returns the working set which is used by this filter.
@@ -42,29 +42,31 @@ public class WorkingSetFilter extends ViewerFilter {
 	/**
 	 * Sets this filter's working set.
 	 *
-	 * @param workingSet the working set
+	 * @param workingSet
+	 *                       the working set
 	 */
 	public void setWorkingSet(IWorkingSet workingSet) {
-		fWorkingSet= workingSet;
+		fWorkingSet = workingSet;
 	}
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (fWorkingSet == null || (fWorkingSet.isAggregateWorkingSet() && fWorkingSet.getElements().length == 0))
+		if (fWorkingSet == null || (fWorkingSet.isAggregateWorkingSet()
+				&& fWorkingSet.getElements().length == 0))
 			return true;
 
 		if (element instanceof IModelElement)
-			return isEnclosing((IModelElement)element);
+			return isEnclosing((IModelElement) element);
 
 		if (element instanceof IResource)
-			return isEnclosing(((IResource)element).getFullPath());
+			return isEnclosing(((IResource) element).getFullPath());
 
 		if (element instanceof BuildPathContainer) {
-			return isEnclosing((BuildPathContainer)element);
+			return isEnclosing((BuildPathContainer) element);
 		}
 
 		if (element instanceof IAdaptable) {
-			IAdaptable adaptable= (IAdaptable)element;
+			IAdaptable adaptable = (IAdaptable) element;
 			IModelElement je = adaptable.getAdapter(IModelElement.class);
 			if (je != null)
 				return isEnclosing(je);
@@ -79,21 +81,21 @@ public class WorkingSetFilter extends ViewerFilter {
 
 	private boolean isEnclosing(BuildPathContainer container) {
 		// check whether the containing ScriptFolder root is enclosed
-		Object[] roots= container.getProjectFragments();
+		Object[] roots = container.getProjectFragments();
 		if (roots.length > 0)
-			return isEnclosing((IProjectFragment)roots[0]);
+			return isEnclosing((IProjectFragment) roots[0]);
 		return false;
 	}
 
 	@Override
 	public Object[] filter(Viewer viewer, Object parent, Object[] elements) {
-		Object[] result= null;
+		Object[] result = null;
 		if (fWorkingSet != null)
-			fCachedWorkingSet= fWorkingSet.getElements();
+			fCachedWorkingSet = fWorkingSet.getElements();
 		try {
-			result= super.filter(viewer, parent, elements);
+			result = super.filter(viewer, parent, elements);
 		} finally {
-			fCachedWorkingSet= null;
+			fCachedWorkingSet = null;
 		}
 		return result;
 	}
@@ -102,12 +104,12 @@ public class WorkingSetFilter extends ViewerFilter {
 		if (elementPath == null)
 			return false;
 
-		IAdaptable[] cachedWorkingSet= fCachedWorkingSet;
+		IAdaptable[] cachedWorkingSet = fCachedWorkingSet;
 		if (cachedWorkingSet == null)
-			cachedWorkingSet= fWorkingSet.getElements();
+			cachedWorkingSet = fWorkingSet.getElements();
 
-		int length= cachedWorkingSet.length;
-		for (int i= 0; i < length; i++) {
+		int length = cachedWorkingSet.length;
+		for (int i = 0; i < length; i++) {
 			if (isEnclosing(cachedWorkingSet[i], elementPath))
 				return true;
 		}
@@ -117,43 +119,47 @@ public class WorkingSetFilter extends ViewerFilter {
 	public boolean isEnclosing(IModelElement element) {
 		Assert.isNotNull(element);
 
-		IAdaptable[] cachedWorkingSet= fCachedWorkingSet;
+		IAdaptable[] cachedWorkingSet = fCachedWorkingSet;
 		if (cachedWorkingSet == null)
-			cachedWorkingSet= fWorkingSet.getElements();
+			cachedWorkingSet = fWorkingSet.getElements();
 
-		boolean isElementPathComputed= false;
-		IPath elementPath= null; // will be lazy computed if needed
+		boolean isElementPathComputed = false;
+		IPath elementPath = null; // will be lazy computed if needed
 
-		int length= cachedWorkingSet.length;
-		for (int i= 0; i < length; i++) {
+		int length = cachedWorkingSet.length;
+		for (int i = 0; i < length; i++) {
 			IModelElement scopeElement = cachedWorkingSet[i]
 					.getAdapter(IModelElement.class);
 			if (scopeElement != null) {
 				// compare Script elements
-				IModelElement searchedElement= element;
+				IModelElement searchedElement = element;
 				while (searchedElement != null) {
-					if (searchedElement.equals(scopeElement))
+					if (searchedElement.equals(scopeElement)) {
 						return true;
-					else {
-						if (scopeElement.getElementType() == IModelElement.SCRIPT_PROJECT && searchedElement.getElementType() == IModelElement.PROJECT_FRAGMENT) {
-							IProjectFragment pkgRoot= (IProjectFragment)searchedElement;
-							if (pkgRoot.isExternal() && pkgRoot.isArchive()) {
-								if (((IScriptProject)scopeElement).isOnBuildpath(searchedElement))
-									return true;
+					}
+					if (scopeElement
+							.getElementType() == IModelElement.SCRIPT_PROJECT
+							&& searchedElement
+									.getElementType() == IModelElement.PROJECT_FRAGMENT) {
+						IProjectFragment pkgRoot = (IProjectFragment) searchedElement;
+						if (pkgRoot.isExternal() && pkgRoot.isArchive()) {
+							if (((IScriptProject) scopeElement)
+									.isOnBuildpath(searchedElement))
+								return true;
 						}
-						}
-						searchedElement= searchedElement.getParent();
-						if (searchedElement != null && searchedElement.getElementType() == IModelElement.SOURCE_MODULE) {
-							ISourceModule unit= (ISourceModule)searchedElement;
-							unit= unit.getPrimary();
-						}
+					}
+					searchedElement = searchedElement.getParent();
+					if (searchedElement != null && searchedElement
+							.getElementType() == IModelElement.SOURCE_MODULE) {
+						ISourceModule unit = (ISourceModule) searchedElement;
+						unit = unit.getPrimary();
 					}
 				}
 				while (scopeElement != null) {
-					if (element.equals(scopeElement))
+					if (element.equals(scopeElement)) {
 						return true;
-					else
-						scopeElement= scopeElement.getParent();
+					}
+					scopeElement = scopeElement.getParent();
 				}
 			} else {
 				// compare resource paths
@@ -161,7 +167,7 @@ public class WorkingSetFilter extends ViewerFilter {
 					IResource elementResource = element
 							.getAdapter(IResource.class);
 					if (elementResource != null)
-						elementPath= elementResource.getFullPath();
+						elementPath = elementResource.getFullPath();
 				}
 				if (isEnclosing(cachedWorkingSet[i], elementPath))
 					return true;
@@ -174,21 +180,21 @@ public class WorkingSetFilter extends ViewerFilter {
 		if (path == null)
 			return false;
 
-		IPath elementPath= null;
+		IPath elementPath = null;
 
 		IResource elementResource = element.getAdapter(IResource.class);
 		if (elementResource != null)
-			elementPath= elementResource.getFullPath();
+			elementPath = elementResource.getFullPath();
 
 		if (elementPath == null) {
 			IModelElement ScriptElement = element
 					.getAdapter(IModelElement.class);
 			if (ScriptElement != null)
-				elementPath= ScriptElement.getPath();
+				elementPath = ScriptElement.getPath();
 		}
 
 		if (elementPath == null && element instanceof IStorage)
-			elementPath= ((IStorage)element).getFullPath();
+			elementPath = ((IStorage) element).getFullPath();
 
 		if (elementPath == null)
 			return false;

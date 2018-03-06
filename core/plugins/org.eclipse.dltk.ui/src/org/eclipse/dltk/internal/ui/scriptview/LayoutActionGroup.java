@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,13 +21,12 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 
 /**
  * Adds view menus to switch between flat and hierarchical layout.
- *
- *
  */
 public class LayoutActionGroup extends MultiActionGroup {
 
 	LayoutActionGroup(ScriptExplorerPart packageExplorer) {
-		super(createActions(packageExplorer), getSelectedState(packageExplorer));
+		super(createActions(packageExplorer),
+				getSelectedState(packageExplorer));
 	}
 
 	@Override
@@ -49,27 +48,27 @@ public class LayoutActionGroup extends MultiActionGroup {
 		viewMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		viewMenu.add(marker);
 		viewMenu.appendToGroup(layoutGroupName, layoutSubMenu);
-		viewMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS
-				+ "-end"));//$NON-NLS-1$
+		viewMenu.add(
+				new Separator(IWorkbenchActionConstants.MB_ADDITIONS + "-end"));//$NON-NLS-1$
 		addActions(layoutSubMenu);
 	}
 
 	static int getSelectedState(ScriptExplorerPart packageExplorer) {
-		if (packageExplorer.isFlatLayout())
+		if (packageExplorer.isFlatLayout()) {
 			return 0;
-		else
-			return 1;
+		}
+		return 1;
 	}
 
 	static IAction[] createActions(ScriptExplorerPart packageExplorer) {
 		IAction flatLayoutAction = new LayoutAction(packageExplorer, true);
-		flatLayoutAction
-				.setText(ScriptMessages.LayoutActionGroup_flatLayoutAction_label);
+		flatLayoutAction.setText(
+				ScriptMessages.LayoutActionGroup_flatLayoutAction_label);
 		DLTKPluginImages.setLocalImageDescriptors(flatLayoutAction,
 				"flatLayout.png"); //$NON-NLS-1$
 		IAction hierarchicalLayout = new LayoutAction(packageExplorer, false);
-		hierarchicalLayout
-				.setText(ScriptMessages.LayoutActionGroup_hierarchicalLayoutAction_label);
+		hierarchicalLayout.setText(
+				ScriptMessages.LayoutActionGroup_hierarchicalLayoutAction_label);
 		DLTKPluginImages.setLocalImageDescriptors(hierarchicalLayout,
 				"hierarchicalLayout.png"); //$NON-NLS-1$
 

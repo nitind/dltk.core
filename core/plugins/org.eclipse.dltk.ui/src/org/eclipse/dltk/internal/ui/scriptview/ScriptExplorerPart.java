@@ -1095,9 +1095,8 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 				je2 = DLTKCore.create(r);
 				if (je2 != null && je2.exists()) {
 					return je2;
-				} else {
-					return r;
 				}
+				return r;
 			}
 		}
 		return original;
@@ -1190,9 +1189,8 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 	private int getLayoutAsInt() {
 		if (fIsCurrentLayoutFlat) {
 			return ScriptExplorerPart.FLAT_LAYOUT;
-		} else {
-			return ScriptExplorerPart.HIERARCHICAL_LAYOUT;
 		}
+		return ScriptExplorerPart.HIERARCHICAL_LAYOUT;
 	}
 
 	private void restoreFilterAndSorter() {

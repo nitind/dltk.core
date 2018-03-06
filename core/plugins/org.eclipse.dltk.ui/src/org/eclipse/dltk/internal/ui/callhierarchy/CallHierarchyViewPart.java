@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -242,16 +242,16 @@ public class CallHierarchyViewPart extends ViewPart
 	public MethodWrapper getCurrentMethodWrapper() {
 		if (fCurrentCallMode == CallHierarchyViewPart.CALL_MODE_CALLERS) {
 			return fCallerRoot;
-		} else {
-			return fCalleeRoot;
 		}
+		return fCalleeRoot;
 	}
 
 	/**
 	 * called from ToggleOrientationAction.
 	 *
 	 * @param orientation
-	 *            VIEW_ORIENTATION_HORIZONTAL or VIEW_ORIENTATION_VERTICAL
+	 *                        VIEW_ORIENTATION_HORIZONTAL or
+	 *                        VIEW_ORIENTATION_VERTICAL
 	 */
 	void setOrientation(int orientation) {
 		if (fCurrentOrientation != orientation) {
@@ -294,7 +294,7 @@ public class CallHierarchyViewPart extends ViewPart
 	 * called from ToggleCallModeAction.
 	 *
 	 * @param mode
-	 *            CALL_MODE_CALLERS or CALL_MODE_CALLEES
+	 *                 CALL_MODE_CALLERS or CALL_MODE_CALLEES
 	 */
 	void setCallMode(int mode) {
 		if (fCurrentCallMode != mode) {

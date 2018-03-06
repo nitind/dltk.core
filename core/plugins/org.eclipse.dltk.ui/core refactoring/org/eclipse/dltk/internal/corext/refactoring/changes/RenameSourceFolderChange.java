@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,22 +22,27 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
+public final class RenameSourceFolderChange
+		extends AbstractModelElementRenameChange {
 
-public final class RenameSourceFolderChange extends AbstractModelElementRenameChange {
-
-	private static RefactoringStatus checkIfModifiable(IProjectFragment root, IProgressMonitor pm) throws CoreException {
-		RefactoringStatus result= new RefactoringStatus();
+	private static RefactoringStatus checkIfModifiable(IProjectFragment root,
+			IProgressMonitor pm) throws CoreException {
+		RefactoringStatus result = new RefactoringStatus();
 		checkExistence(result, root);
 		if (result.hasFatalError())
 			return result;
 
 		if (root.isArchive()) {
-			result.addFatalError(Messages.format(RefactoringCoreMessages.RenameSourceFolderChange_rename_archive, root.getElementName()));
+			result.addFatalError(Messages.format(
+					RefactoringCoreMessages.RenameSourceFolderChange_rename_archive,
+					root.getElementName()));
 			return result;
 		}
 
 		if (root.isExternal()) {
-			result.addFatalError(Messages.format(RefactoringCoreMessages.RenameSourceFolderChange_rename_external, root.getElementName()));
+			result.addFatalError(Messages.format(
+					RefactoringCoreMessages.RenameSourceFolderChange_rename_external,
+					root.getElementName()));
 			return result;
 		}
 
@@ -46,20 +51,26 @@ public final class RenameSourceFolderChange extends AbstractModelElementRenameCh
 			return result;
 
 		if (root.getCorrespondingResource().isLinked()) {
-			result.addFatalError(Messages.format(RefactoringCoreMessages.RenameSourceFolderChange_rename_linked, root.getElementName()));
+			result.addFatalError(Messages.format(
+					RefactoringCoreMessages.RenameSourceFolderChange_rename_linked,
+					root.getElementName()));
 			return result;
 		}
 
 		return result;
 	}
 
-	public RenameSourceFolderChange(RefactoringDescriptor descriptor, IProjectFragment sourceFolder, String newName, String comment) {
-		this(descriptor, sourceFolder.getPath(), sourceFolder.getElementName(), newName, comment, IResource.NULL_STAMP);
+	public RenameSourceFolderChange(RefactoringDescriptor descriptor,
+			IProjectFragment sourceFolder, String newName, String comment) {
+		this(descriptor, sourceFolder.getPath(), sourceFolder.getElementName(),
+				newName, comment, IResource.NULL_STAMP);
 		Assert.isTrue(!sourceFolder.isReadOnly(), "should not be read only"); //$NON-NLS-1$
 		Assert.isTrue(!sourceFolder.isArchive(), "should not be an archive"); //$NON-NLS-1$
 	}
 
-	private RenameSourceFolderChange(RefactoringDescriptor descriptor, IPath resourcePath, String oldName, String newName, String comment, long stampToRestore) {
+	private RenameSourceFolderChange(RefactoringDescriptor descriptor,
+			IPath resourcePath, String oldName, String newName, String comment,
+			long stampToRestore) {
 		super(descriptor, resourcePath, oldName, newName, comment);
 	}
 
@@ -70,34 +81,42 @@ public final class RenameSourceFolderChange extends AbstractModelElementRenameCh
 
 	@Override
 	protected Change createUndoChange(long stampToRestore) {
-		return new RenameSourceFolderChange(null, createNewPath(), getNewName(), getOldName(), getComment(), stampToRestore);
+		return new RenameSourceFolderChange(null, createNewPath(), getNewName(),
+				getOldName(), getComment(), stampToRestore);
 	}
 
 	@Override
 	protected void doRename(IProgressMonitor pm) throws CoreException {
-		IProjectFragment sourceFolder= getSourceFolder();
+		IProjectFragment sourceFolder = getSourceFolder();
 		if (sourceFolder != null)
-			sourceFolder.move(getNewPath(), getCoreMoveFlags(), getScriptModelUpdateFlags(), null, pm);
+			sourceFolder.move(getNewPath(), getCoreMoveFlags(),
+					getScriptModelUpdateFlags(), null, pm);
 	}
 
 	private int getCoreMoveFlags() {
-		if (getResource().isLinked())
+		if (getResource().isLinked()) {
 			return IResource.SHALLOW;
-		else
-			return IResource.NONE;
+		}
+		return IResource.NONE;
 	}
 
 	private int getScriptModelUpdateFlags() {
-		return IProjectFragment.DESTINATION_PROJECT_BUILDPATH | IProjectFragment.ORIGINATING_PROJECT_BUILDPATH | IProjectFragment.OTHER_REFERRING_PROJECTS_BUILDPATH | IProjectFragment.REPLACE;
+		return IProjectFragment.DESTINATION_PROJECT_BUILDPATH
+				| IProjectFragment.ORIGINATING_PROJECT_BUILDPATH
+				| IProjectFragment.OTHER_REFERRING_PROJECTS_BUILDPATH
+				| IProjectFragment.REPLACE;
 	}
 
 	@Override
 	public String getName() {
-		return Messages.format(RefactoringCoreMessages.RenameSourceFolderChange_rename, new String[] { getOldName(), getNewName()});
+		return Messages.format(
+				RefactoringCoreMessages.RenameSourceFolderChange_rename,
+				getOldName(), getNewName());
 	}
 
 	private IPath getNewPath() {
-		return getResource().getFullPath().removeLastSegments(1).append(getNewName());
+		return getResource().getFullPath().removeLastSegments(1)
+				.append(getNewName());
 	}
 
 	private IProjectFragment getSourceFolder() {
@@ -106,13 +125,14 @@ public final class RenameSourceFolderChange extends AbstractModelElementRenameCh
 
 	@Override
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException {
-		RefactoringStatus result= new RefactoringStatus();
+		RefactoringStatus result = new RefactoringStatus();
 		pm.beginTask("", 2); //$NON-NLS-1$
 		result.merge(isValid(new SubProgressMonitor(pm, 1), DIRTY));
 		if (result.hasFatalError())
 			return result;
-		IProjectFragment sourceFolder= getSourceFolder();
-		result.merge(checkIfModifiable(sourceFolder, new SubProgressMonitor(pm, 1)));
+		IProjectFragment sourceFolder = getSourceFolder();
+		result.merge(
+				checkIfModifiable(sourceFolder, new SubProgressMonitor(pm, 1)));
 
 		return result;
 	}

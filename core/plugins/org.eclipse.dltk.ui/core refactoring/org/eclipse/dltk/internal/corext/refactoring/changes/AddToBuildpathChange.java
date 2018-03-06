@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,7 +51,7 @@ public class AddToBuildpathChange extends DLTKChange {
 	 *
 	 * @param project
 	 * @param newProjectEntry
-	 *            (must be absolute <code>IPath</code>)
+	 *                            (must be absolute <code>IPath</code>)
 	 */
 	public AddToBuildpathChange(IScriptProject project, IPath newProjectEntry) {
 		this(project, DLTKCore.newProjectEntry(newProjectEntry));
@@ -77,9 +77,8 @@ public class AddToBuildpathChange extends DLTKChange {
 				IPath buildpathEntryPath = fEntryToAdd.getPath();
 				return new DeleteFromBuildpathChange(buildpathEntryPath,
 						getScriptProject());
-			} else {
-				return new NullChange();
 			}
+			return new NullChange();
 		} finally {
 			pm.done();
 		}

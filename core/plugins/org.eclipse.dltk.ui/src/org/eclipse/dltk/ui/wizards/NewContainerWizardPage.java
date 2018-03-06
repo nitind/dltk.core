@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -109,8 +109,8 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 		}
 	}
 
-	private class ContainerFieldAdapter implements IStringButtonAdapter,
-			IDialogFieldListener {
+	private class ContainerFieldAdapter
+			implements IStringButtonAdapter, IDialogFieldListener {
 		@Override
 		public void changeControlPressed(DialogField field) {
 			containerChangeControlPressed(field);
@@ -126,7 +126,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	 * Create a new <code>NewContainerWizardPage</code>
 	 *
 	 * @param name
-	 *            the wizard page's name
+	 *                 the wizard page's name
 	 */
 	public NewContainerWizardPage(String name) {
 		super(name);
@@ -135,8 +135,8 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 		containerDialogField = new StringButtonDialogField(adapter);
 		containerDialogField.setDialogFieldListener(adapter);
 		containerDialogField.setLabelText(getContainerLabel());
-		containerDialogField
-				.setButtonLabel(NewWizardMessages.NewContainerWizardPage_container_button);
+		containerDialogField.setButtonLabel(
+				NewWizardMessages.NewContainerWizardPage_container_button);
 		containerStatus = new StatusInfo();
 		currRoot = null;
 	}
@@ -156,8 +156,8 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	 * The package fragment root is computed from the given Script element.
 	 *
 	 * @param elem
-	 *            the Script element used to compute the initial package
-	 *            fragment root used as the source folder
+	 *                 the Script element used to compute the initial package
+	 *                 fragment root used as the source folder
 	 */
 	protected void initContainerPage(IModelElement elem) {
 		IScriptFolder initRoot = null;
@@ -184,16 +184,18 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 								IProjectFragment[] roots = project
 										.getProjectFragments();
 								for (int i = 0; i < roots.length; i++) {
-									if (roots[i].getKind() == IProjectFragment.K_SOURCE) {
+									if (roots[i]
+											.getKind() == IProjectFragment.K_SOURCE) {
 										initRoot = roots[i].getScriptFolder(""); //$NON-NLS-1$
 										break;
 									}
 								}
 							}
 							if (initRoot == null) {
-								initRoot = project.getProjectFragment(
-										project.getResource()).getScriptFolder(
-										""); //$NON-NLS-1$
+								initRoot = project
+										.getProjectFragment(
+												project.getResource())
+										.getScriptFolder(""); //$NON-NLS-1$
 							}
 						}
 					}
@@ -210,7 +212,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	 * Utility method to inspect a selection to find a Script element.
 	 *
 	 * @param selection
-	 *            the selection to be inspected
+	 *                      the selection to be inspected
 	 * @return a Script element to be used as the initial selection, or
 	 *         <code>null</code>, if no Script element exists in the given
 	 *         selection
@@ -225,14 +227,12 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 			// Check for adapters
 			if (selectedElement instanceof IAdaptable) {
 				IAdaptable adaptable = (IAdaptable) selectedElement;
-				scriptElement = adaptable
-						.getAdapter(IModelElement.class);
+				scriptElement = adaptable.getAdapter(IModelElement.class);
 				if (scriptElement != null && scriptElement.isReadOnly()) {
 					scriptElement = scriptElement.getScriptProject();
 				}
 				if (scriptElement == null) {
-					IResource resource = adaptable
-							.getAdapter(IResource.class);
+					IResource resource = adaptable.getAdapter(IResource.class);
 					if (resource != null
 							&& resource.getType() != IResource.ROOT) {
 						while (scriptElement == null
@@ -266,8 +266,8 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 			}
 		}
 
-		if (scriptElement == null
-				|| scriptElement.getElementType() == IModelElement.SCRIPT_MODEL) {
+		if (scriptElement == null || scriptElement
+				.getElementType() == IModelElement.SCRIPT_MODEL) {
 			try {
 				IScriptProject[] projects = DLTKCore.create(getWorkspaceRoot())
 						.getScriptProjects();
@@ -301,10 +301,10 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	 * the grid layout has at least 3 columns.
 	 *
 	 * @param parent
-	 *            the parent composite
+	 *                     the parent composite
 	 * @param nColumns
-	 *            the number of columns to span. This number must be greater or
-	 *            equal three
+	 *                     the number of columns to span. This number must be
+	 *                     greater or equal three
 	 */
 	protected void createContainerControls(Composite parent, int nColumns) {
 		containerDialogField.doFillIntoGrid(parent, nColumns);
@@ -353,8 +353,8 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 		currRoot = null;
 		String str = getScriptFolderText();
 		if (str.length() == 0) {
-			status
-					.setError(NewWizardMessages.NewContainerWizardPage_error_EnterContainerName);
+			status.setError(
+					NewWizardMessages.NewContainerWizardPage_error_EnterContainerName);
 			return status;
 		}
 		IPath path = new Path(str);
@@ -364,11 +364,9 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 			if (resType == IResource.PROJECT || resType == IResource.FOLDER) {
 				IProject proj = res.getProject();
 				if (!proj.isOpen()) {
-					status
-							.setError(Messages
-									.format(
-											NewWizardMessages.NewContainerWizardPage_error_ProjectClosed,
-											proj.getFullPath().toString()));
+					status.setError(Messages.format(
+							NewWizardMessages.NewContainerWizardPage_error_ProjectClosed,
+							proj.getFullPath().toString()));
 					return status;
 				}
 
@@ -395,9 +393,9 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 						}
 						if (projectFragment != null) {
 							IPath fragmentPath = projectFragment.getPath();
-							currRoot = projectFragment.getScriptFolder(path
-									.removeFirstSegments(fragmentPath
-											.segmentCount()));
+							currRoot = projectFragment
+									.getScriptFolder(path.removeFirstSegments(
+											fragmentPath.segmentCount()));
 						}
 					}
 				}
@@ -410,38 +408,32 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 						String nature = getRequiredNature();
 						if (nature != null && !proj.hasNature(nature)) {
 							if (resType == IResource.PROJECT) {
-								status
-										.setError(NewWizardMessages.NewContainerWizardPage_warning_NotAScriptProject);
+								status.setError(
+										NewWizardMessages.NewContainerWizardPage_warning_NotAScriptProject);
 							} else {
-								status
-										.setWarning(NewWizardMessages.NewContainerWizardPage_warning_NotInAScriptProject);
+								status.setWarning(
+										NewWizardMessages.NewContainerWizardPage_warning_NotInAScriptProject);
 							}
 							return status;
 						}
 						// }
 
 					} catch (CoreException e) {
-						status
-								.setWarning(NewWizardMessages.NewContainerWizardPage_warning_NotAScriptProject);
+						status.setWarning(
+								NewWizardMessages.NewContainerWizardPage_warning_NotAScriptProject);
 					}
 				}
 				return status;
-			} else {
-				status
-						.setError(Messages
-								.format(
-										NewWizardMessages.NewContainerWizardPage_error_NotAFolder,
-										str));
-				return status;
 			}
-		} else {
-			status
-					.setError(Messages
-							.format(
-									NewWizardMessages.NewContainerWizardPage_error_ContainerDoesNotExist,
-									str));
+			status.setError(Messages.format(
+					NewWizardMessages.NewContainerWizardPage_error_NotAFolder,
+					str));
 			return status;
 		}
+		status.setError(Messages.format(
+				NewWizardMessages.NewContainerWizardPage_error_ContainerDoesNotExist,
+				str));
+		return status;
 	}
 
 	// -------- update message ----------------
@@ -456,8 +448,9 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	 * field changes (check for duplicated class names).
 	 *
 	 * @param fieldName
-	 *            The name of the field that has changed (field id). For the
-	 *            source folder the field id is <code>CONTAINER</code>
+	 *                      The name of the field that has changed (field id).
+	 *                      For the source folder the field id is
+	 *                      <code>CONTAINER</code>
 	 */
 	protected void handleFieldChanged(String fieldName) {
 	}
@@ -520,15 +513,16 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	 * package fragment root.
 	 *
 	 * @param root
-	 *            The new root.
+	 *                          The new root.
 	 * @param canBeModified
-	 *            if <code>false</code> the source folder field can not be
-	 *            changed by the user. If <code>true</code> the field is
-	 *            editable
+	 *                          if <code>false</code> the source folder field
+	 *                          can not be changed by the user. If
+	 *                          <code>true</code> the field is editable
 	 */
 	public void setScriptFolder(IScriptFolder root, boolean canBeModified) {
 		currRoot = root;
-		String str = (root == null) ? "" : root.getPath().makeRelative().toString(); //$NON-NLS-1$
+		String str = (root == null) ? "" //$NON-NLS-1$
+				: root.getPath().makeRelative().toString();
 		containerDialogField.setText(str);
 		containerDialogField.setEnabled(canBeModified);
 	}
@@ -560,11 +554,11 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	 * filter.
 	 *
 	 * @param initElement
-	 *            initially selected element
+	 *                        initially selected element
 	 * @param filter
-	 *            viewer filter
+	 *                        viewer filter
 	 * @param validator
-	 *            selection validator, may be null
+	 *                        selection validator, may be null
 	 */
 	protected IScriptFolder doChooseContainer(IModelElement initElement,
 			ViewerFilter filter, ISelectionStatusValidator validator) {
@@ -575,8 +569,10 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 				getShell(), labelProvider, provider);
 
 		dialog.setComparator(new ModelElementSorter());
-		dialog.setTitle(NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_title);
-		dialog.setMessage(NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_description);
+		dialog.setTitle(
+				NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_title);
+		dialog.setMessage(
+				NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_description);
 		dialog.addFilter(filter);
 		if (validator != null) {
 			dialog.setValidator(validator);

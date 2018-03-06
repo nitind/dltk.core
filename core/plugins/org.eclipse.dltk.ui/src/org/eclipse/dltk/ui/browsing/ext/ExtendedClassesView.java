@@ -91,10 +91,9 @@ public class ExtendedClassesView extends ViewPart
 				if (affectedChildren[i].getElement()
 						.getElementType() == IModelElement.TYPE) {
 					return true;
-				} else {
-					if (typesChanged(affectedChildren[i])) {
-						return true;
-					}
+				}
+				if (typesChanged(affectedChildren[i])) {
+					return true;
 				}
 			}
 			return false;
@@ -323,25 +322,26 @@ public class ExtendedClassesView extends ViewPart
 						.getAdapter(IModelElement.class);
 				if (je == null && firstElement instanceof IFile) {
 					IContainer parent = ((IFile) firstElement).getParent();
-					if (parent != null)
+					if (parent != null) {
 						return parent.getAdapter(IModelElement.class);
-					else
-						return null;
-				} else
-					return je;
+					}
+					return null;
+				}
+				return je;
 
-			} else
-				return firstElement;
+			}
+			return firstElement;
 		}
 		Object currentInput = browsingPane.getInput();
 		List elements = new ArrayList();
-		if (currentInput == null || !currentInput.equals(firstElement))
+		if (currentInput == null || !currentInput.equals(firstElement)) {
 			if (iter.hasNext() && selection instanceof StructuredSelection) {
 				// multi-selection and view is empty
 				return ((StructuredSelection) selection).toList();
-			} else
-				// OK: single selection and view is empty
-				return firstElement;
+			}
+			// OK: single selection and view is empty
+			return firstElement;
+		}
 
 		// be nice to multi-selection
 		while (iter.hasNext()) {

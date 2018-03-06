@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -107,8 +107,8 @@ public class StandardModelElementContentProvider
 	 * Creates a new <code>StandardJavaElementContentProvider</code>.
 	 *
 	 * @param provideMembers
-	 *            if <code>true</code> members below compilation units and class
-	 *            files are provided.
+	 *                           if <code>true</code> members below compilation
+	 *                           units and class files are provided.
 	 */
 	public StandardModelElementContentProvider(boolean provideMembers) {
 		fProvideMembers = provideMembers;
@@ -131,9 +131,9 @@ public class StandardModelElementContentProvider
 	 * asking a compilation unit or class file for its children.
 	 *
 	 * @param b
-	 *            if <code>true</code> then members are provided. If
-	 *            <code>false</code> compilation units and class files are the
-	 *            leaves provided by this content provider.
+	 *              if <code>true</code> then members are provided. If
+	 *              <code>false</code> compilation units and class files are the
+	 *              leaves provided by this content provider.
 	 */
 	public void setProvideMembers(boolean b) {
 		fProvideMembers = b;
@@ -167,9 +167,8 @@ public class StandardModelElementContentProvider
 				providers[i].provideModelChanges(element, elements, this);
 			}
 			return elements.toArray();
-		} else {
-			return children;
 		}
+		return children;
 	}
 
 	private String getToolkitID(Object element) {
@@ -302,12 +301,12 @@ public class StandardModelElementContentProvider
 	 * can override this method.
 	 *
 	 * @param root
-	 *            The root to evaluate the children for.
+	 *                 The root to evaluate the children for.
 	 * @return The children of the root
 	 * @exception JavaModelException
-	 *                if the package fragment root does not exist or if an
-	 *                exception occurs while accessing its corresponding
-	 *                resource
+	 *                                   if the package fragment root does not
+	 *                                   exist or if an exception occurs while
+	 *                                   accessing its corresponding resource
 	 *
 	 */
 	protected Object[] getProjectFragmentContent(IProjectFragment root)
@@ -345,12 +344,13 @@ public class StandardModelElementContentProvider
 	 * override this method.
 	 *
 	 * @param project
-	 *            The Java project to evaluate the children for.
+	 *                    The Java project to evaluate the children for.
 	 * @return The children of the project. Typically these are package fragment
 	 *         roots but can also be other elements.
 	 * @exception JavaModelException
-	 *                if the Java project does not exist or if an exception
-	 *                occurs while accessing its corresponding resource
+	 *                                   if the Java project does not exist or
+	 *                                   if an exception occurs while accessing
+	 *                                   its corresponding resource
 	 */
 	protected Object[] getProjectFragments(IScriptProject project)
 			throws ModelException {
@@ -393,11 +393,12 @@ public class StandardModelElementContentProvider
 	 * override this method.
 	 *
 	 * @param fragment
-	 *            The fragment to evaluate the children for.
+	 *                     The fragment to evaluate the children for.
 	 * @return The children of the given package fragment.
 	 * @exception JavaModelException
-	 *                if the package fragment does not exist or if an exception
-	 *                occurs while accessing its corresponding resource
+	 *                                   if the package fragment does not exist
+	 *                                   or if an exception occurs while
+	 *                                   accessing its corresponding resource
 	 *
 	 * @since 3.3
 	 */
@@ -416,10 +417,10 @@ public class StandardModelElementContentProvider
 	 * this method.
 	 *
 	 * @param folder
-	 *            The folder to evaluate the children for.
+	 *                   The folder to evaluate the children for.
 	 * @return The children of the given package fragment.
 	 * @exception CoreException
-	 *                if the folder does not exist.
+	 *                              if the folder does not exist.
 	 *
 	 */
 	protected Object[] getFolderContent(IFolder folder) throws CoreException {

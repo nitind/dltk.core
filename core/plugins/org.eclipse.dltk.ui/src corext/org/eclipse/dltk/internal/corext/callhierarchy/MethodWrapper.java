@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2016 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- *          (report 36180: Callers/Callees view)
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.callhierarchy;
 
@@ -21,300 +20,307 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.internal.ui.callhierarchy.MethodWrapperWorkbenchAdapter;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
-
 /**
  * This class represents the general parts of a method call (either to or from a
  * method).
  *
  */
 public abstract class MethodWrapper extends PlatformObject {
-    private Map fElements = null;
+	private Map fElements = null;
 
-    /*
-     * A cache of previously found methods. This cache should be searched
-     * before adding a "new" method object reference to the list of elements.
-     * This way previously found methods won't be searched again.
-     */
-    private Map fMethodCache;
-    private MethodCall fMethodCall;
-    private MethodWrapper fParent;
-    private int fLevel;
+	/*
+	 * A cache of previously found methods. This cache should be searched before
+	 * adding a "new" method object reference to the list of elements. This way
+	 * previously found methods won't be searched again.
+	 */
+	private Map fMethodCache;
+	private MethodCall fMethodCall;
+	private MethodWrapper fParent;
+	private int fLevel;
 
-    /**
-     * Constructor CallerElement.
-     */
-    public MethodWrapper(MethodWrapper parent, MethodCall methodCall) {
-        Assert.isNotNull(methodCall);
+	/**
+	 * Constructor CallerElement.
+	 */
+	public MethodWrapper(MethodWrapper parent, MethodCall methodCall) {
+		Assert.isNotNull(methodCall);
 
-        if (parent == null) {
-            setMethodCache(new HashMap());
-            fLevel = 1;
-        } else {
-            setMethodCache(parent.getMethodCache());
-            fLevel = parent.getLevel() + 1;
-        }
+		if (parent == null) {
+			setMethodCache(new HashMap());
+			fLevel = 1;
+		} else {
+			setMethodCache(parent.getMethodCache());
+			fLevel = parent.getLevel() + 1;
+		}
 
-        this.fMethodCall = methodCall;
-        this.fParent = parent;
-    }
+		this.fMethodCall = methodCall;
+		this.fParent = parent;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getAdapter(Class<T> adapter) {
 		if (adapter == IModelElement.class) {
 			return (T) getMember();
-	    } else if (adapter == IWorkbenchAdapter.class){
+		} else if (adapter == IWorkbenchAdapter.class) {
 			return (T) new MethodWrapperWorkbenchAdapter(this);
-	    } else {
-	    	return null;
-	    }
+		} else {
+			return null;
+		}
 	}
 
-    /**
-     * @return the child caller elements of this element
-     */
-    public MethodWrapper[] getCalls(IProgressMonitor progressMonitor) {
-        if (fElements == null) {
-            doFindChildren(progressMonitor);
-        }
+	/**
+	 * @return the child caller elements of this element
+	 */
+	public MethodWrapper[] getCalls(IProgressMonitor progressMonitor) {
+		if (fElements == null) {
+			doFindChildren(progressMonitor);
+		}
 
-        MethodWrapper[] result = new MethodWrapper[fElements.size()];
-        int i = 0;
+		MethodWrapper[] result = new MethodWrapper[fElements.size()];
+		int i = 0;
 
-        for (Iterator iter = fElements.keySet().iterator(); iter.hasNext();) {
-            MethodCall methodCall = getMethodCallFromMap(fElements, iter.next());
-            result[i++] = createMethodWrapper(methodCall);
-        }
+		for (Iterator iter = fElements.keySet().iterator(); iter.hasNext();) {
+			MethodCall methodCall = getMethodCallFromMap(fElements,
+					iter.next());
+			result[i++] = createMethodWrapper(methodCall);
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    public int getLevel() {
-        return fLevel;
-    }
+	public int getLevel() {
+		return fLevel;
+	}
 
-    public IModelElement getMember() {
-        return getMethodCall().getMember();
-    }
+	public IModelElement getMember() {
+		return getMethodCall().getMember();
+	}
 
-    public MethodCall getMethodCall() {
-        return fMethodCall;
-    }
+	public MethodCall getMethodCall() {
+		return fMethodCall;
+	}
 
-    public String getName() {
-        if (getMethodCall() != null) {
-            return getMethodCall().getMember().getElementName();
-        } else {
-            return ""; //$NON-NLS-1$
-        }
-    }
+	public String getName() {
+		if (getMethodCall() != null) {
+			return getMethodCall().getMember().getElementName();
+		}
+		return ""; //$NON-NLS-1$
+	}
 
-    public MethodWrapper getParent() {
-        return fParent;
-    }
+	public MethodWrapper getParent() {
+		return fParent;
+	}
 
 	@Override
 	public boolean equals(Object oth) {
-        if (this == oth) {
-            return true;
-        }
+		if (this == oth) {
+			return true;
+		}
 
-        if (oth == null) {
-            return false;
-        }
-        
-        if (oth instanceof MethodWrapperWorkbenchAdapter) {
-            //Note: A MethodWrapper is equal to a referring MethodWrapperWorkbenchAdapter and vice versa (bug 101677).
-        	oth= ((MethodWrapperWorkbenchAdapter) oth).getMethodWrapper();
-        }
-        
-        if (oth.getClass() != getClass()) {
-            return false;
-        }
+		if (oth == null) {
+			return false;
+		}
 
-        MethodWrapper other = (MethodWrapper) oth;
+		if (oth instanceof MethodWrapperWorkbenchAdapter) {
+			// Note: A MethodWrapper is equal to a referring
+			// MethodWrapperWorkbenchAdapter and vice versa (bug 101677).
+			oth = ((MethodWrapperWorkbenchAdapter) oth).getMethodWrapper();
+		}
 
-        if (this.fParent == null) {
-            if (other.fParent != null) {
-                return false;
-            }
-        } else {
-            if (!this.fParent.equals(other.fParent)) {
-                return false;
-            }
-        }
+		if (oth.getClass() != getClass()) {
+			return false;
+		}
 
-        if (this.getMethodCall() == null) {
-            if (other.getMethodCall() != null) {
-                return false;
-            }
-        } else {
-            if (!this.getMethodCall().equals(other.getMethodCall())) {
-                return false;
-            }
-        }
+		MethodWrapper other = (MethodWrapper) oth;
 
-        return true;
-    }
+		if (this.fParent == null) {
+			if (other.fParent != null) {
+				return false;
+			}
+		} else {
+			if (!this.fParent.equals(other.fParent)) {
+				return false;
+			}
+		}
+
+		if (this.getMethodCall() == null) {
+			if (other.getMethodCall() != null) {
+				return false;
+			}
+		} else {
+			if (!this.getMethodCall().equals(other.getMethodCall())) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 
 	@Override
 	public int hashCode() {
-        final int PRIME = 1000003;
-        int result = 0;
+		final int PRIME = 1000003;
+		int result = 0;
 
-        if (fParent != null) {
-            result = (PRIME * result) + fParent.hashCode();
-        }
+		if (fParent != null) {
+			result = (PRIME * result) + fParent.hashCode();
+		}
 
-        if (getMethodCall() != null) {
-            result = (PRIME * result) + getMethodCall().getMember().hashCode();
-        }
+		if (getMethodCall() != null) {
+			result = (PRIME * result) + getMethodCall().getMember().hashCode();
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    private void setMethodCache(Map methodCache) {
-        fMethodCache = methodCache;
-    }
+	private void setMethodCache(Map methodCache) {
+		fMethodCache = methodCache;
+	}
 
-    protected abstract String getTaskName();
+	protected abstract String getTaskName();
 
-    private void addCallToCache(MethodCall methodCall) {
-        Map cachedCalls = lookupMethod(this.getMethodCall());
-        cachedCalls.put(methodCall.getKey(), methodCall);
-    }
+	private void addCallToCache(MethodCall methodCall) {
+		Map cachedCalls = lookupMethod(this.getMethodCall());
+		cachedCalls.put(methodCall.getKey(), methodCall);
+	}
 
-    protected abstract MethodWrapper createMethodWrapper(MethodCall methodCall);
+	protected abstract MethodWrapper createMethodWrapper(MethodCall methodCall);
 
-    private void doFindChildren(IProgressMonitor progressMonitor) {
-        Map existingResults = lookupMethod(getMethodCall());
+	private void doFindChildren(IProgressMonitor progressMonitor) {
+		Map existingResults = lookupMethod(getMethodCall());
 
-        if (existingResults != null) {
-            fElements = new HashMap();
-            fElements.putAll(existingResults);
-        } else {
-            initCalls();
+		if (existingResults != null) {
+			fElements = new HashMap();
+			fElements.putAll(existingResults);
+		} else {
+			initCalls();
 
-            if (progressMonitor != null) {
-                progressMonitor.beginTask(getTaskName(), 100);
-            }
+			if (progressMonitor != null) {
+				progressMonitor.beginTask(getTaskName(), 100);
+			}
 
-            try {
-                performSearch(progressMonitor);
-            } finally {
-                if (progressMonitor != null) {
-                    progressMonitor.done();
-                }
-            }
+			try {
+				performSearch(progressMonitor);
+			} finally {
+				if (progressMonitor != null) {
+					progressMonitor.done();
+				}
+			}
 
-            //                ModalContext.run(getRunnableWithProgress(), true, getProgressMonitor(),
-            //                    Display.getCurrent());
-        }
-    }
+			// ModalContext.run(getRunnableWithProgress(), true,
+			// getProgressMonitor(),
+			// Display.getCurrent());
+		}
+	}
 
-    /**
-     * Determines if the method represents a recursion call (i.e. whether the
-     * method call is already in the cache.)
-     *
-     * @return True if the call is part of a recursion
-     */
-    public boolean isRecursive() {
-        MethodWrapper current = getParent();
+	/**
+	 * Determines if the method represents a recursion call (i.e. whether the
+	 * method call is already in the cache.)
+	 *
+	 * @return True if the call is part of a recursion
+	 */
+	public boolean isRecursive() {
+		MethodWrapper current = getParent();
 
-        while (current != null) {
-            if (getMember().getHandleIdentifier().equals(current.getMember()
-                                                                        .getHandleIdentifier())) {
-                return true;
-            }
+		while (current != null) {
+			if (getMember().getHandleIdentifier()
+					.equals(current.getMember().getHandleIdentifier())) {
+				return true;
+			}
 
-            current = current.getParent();
-        }
+			current = current.getParent();
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    /**
-     * This method finds the children of the current IMethod (either callers or
-     * callees, depending on the concrete subclass.
-     * @return The result of the search for children
-     */
-    protected abstract Map findChildren(IProgressMonitor progressMonitor);
+	/**
+	 * This method finds the children of the current IMethod (either callers or
+	 * callees, depending on the concrete subclass.
+	 *
+	 * @return The result of the search for children
+	 */
+	protected abstract Map findChildren(IProgressMonitor progressMonitor);
 
-    private Map getMethodCache() {
-        return fMethodCache;
-    }
+	private Map getMethodCache() {
+		return fMethodCache;
+	}
 
-    private void initCalls() {
-        this.fElements = new HashMap();
+	private void initCalls() {
+		this.fElements = new HashMap();
 
-        initCacheForMethod();
-    }
+		initCacheForMethod();
+	}
 
-    /**
-     * Looks up a previously created search result in the "global" cache.
-     * @return the List of previously found search results
-     */
-    private Map lookupMethod(MethodCall methodCall) {
-        return (Map) getMethodCache().get(methodCall.getKey());
-    }
+	/**
+	 * Looks up a previously created search result in the "global" cache.
+	 *
+	 * @return the List of previously found search results
+	 */
+	private Map lookupMethod(MethodCall methodCall) {
+		return (Map) getMethodCache().get(methodCall.getKey());
+	}
 
-    private void performSearch(IProgressMonitor progressMonitor) {
-        fElements = findChildren(progressMonitor);
+	private void performSearch(IProgressMonitor progressMonitor) {
+		fElements = findChildren(progressMonitor);
 
-        for (Iterator iter = fElements.keySet().iterator(); iter.hasNext();) {
-            checkCanceled(progressMonitor);
+		for (Iterator iter = fElements.keySet().iterator(); iter.hasNext();) {
+			checkCanceled(progressMonitor);
 
-            MethodCall methodCall = getMethodCallFromMap(fElements, iter.next());
-            addCallToCache(methodCall);
-        }
-    }
+			MethodCall methodCall = getMethodCallFromMap(fElements,
+					iter.next());
+			addCallToCache(methodCall);
+		}
+	}
 
-    private MethodCall getMethodCallFromMap(Map elements, Object key) {
-        return (MethodCall) elements.get(key);
-    }
+	private MethodCall getMethodCallFromMap(Map elements, Object key) {
+		return (MethodCall) elements.get(key);
+	}
 
-    private void initCacheForMethod() {
-        Map cachedCalls = new HashMap();
-        getMethodCache().put(this.getMethodCall().getKey(), cachedCalls);
-    }
+	private void initCacheForMethod() {
+		Map cachedCalls = new HashMap();
+		getMethodCache().put(this.getMethodCall().getKey(), cachedCalls);
+	}
 
-    /**
-     * Checks with the progress monitor to see whether the creation of the type hierarchy
-     * should be canceled. Should be regularly called
-     * so that the user can cancel.
-     *
-     * @exception OperationCanceledException if cancelling the operation has been requested
-     * @see IProgressMonitor#isCanceled
-     */
-    protected void checkCanceled(IProgressMonitor progressMonitor) {
-        if (progressMonitor != null && progressMonitor.isCanceled()) {
-            throw new OperationCanceledException();
-        }
-    }
-    
-    /**
-     * Allows a visitor to traverse the call hierarchy. The visiting is stopped when
-     * a recursive node is reached.
-     *  
-     * @param visitor
-     */
-    public void accept(CallHierarchyVisitor visitor, IProgressMonitor progressMonitor) {
-        if (getParent() != null && getParent().isRecursive()) {
-            return;
-        }
-        checkCanceled(progressMonitor);
-        
-        visitor.preVisit(this);
-        if (visitor.visit(this)) {
-            MethodWrapper[] methodWrappers= getCalls(progressMonitor);
-            for (int i= 0; i < methodWrappers.length; i++) {
-                methodWrappers[i].accept(visitor, progressMonitor);
-            }
-        }
-        visitor.postVisit(this);
+	/**
+	 * Checks with the progress monitor to see whether the creation of the type
+	 * hierarchy should be canceled. Should be regularly called so that the user
+	 * can cancel.
+	 *
+	 * @exception OperationCanceledException
+	 *                                           if cancelling the operation has
+	 *                                           been requested
+	 * @see IProgressMonitor#isCanceled
+	 */
+	protected void checkCanceled(IProgressMonitor progressMonitor) {
+		if (progressMonitor != null && progressMonitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
+	}
 
-        if (progressMonitor != null) {        
-            progressMonitor.worked(1);
-        }
-    }
+	/**
+	 * Allows a visitor to traverse the call hierarchy. The visiting is stopped
+	 * when a recursive node is reached.
+	 *
+	 * @param visitor
+	 */
+	public void accept(CallHierarchyVisitor visitor,
+			IProgressMonitor progressMonitor) {
+		if (getParent() != null && getParent().isRecursive()) {
+			return;
+		}
+		checkCanceled(progressMonitor);
+
+		visitor.preVisit(this);
+		if (visitor.visit(this)) {
+			MethodWrapper[] methodWrappers = getCalls(progressMonitor);
+			for (int i = 0; i < methodWrappers.length; i++) {
+				methodWrappers[i].accept(visitor, progressMonitor);
+			}
+		}
+		visitor.postVisit(this);
+
+		if (progressMonitor != null) {
+			progressMonitor.worked(1);
+		}
+	}
 }

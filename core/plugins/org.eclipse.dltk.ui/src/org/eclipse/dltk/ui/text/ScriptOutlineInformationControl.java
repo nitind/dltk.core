@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -235,7 +235,8 @@ public class ScriptOutlineInformationControl
 		 * Creates a new Outline content provider.
 		 *
 		 * @param showInheritedMembers
-		 *            <code>true</code> iff inherited members are shown
+		 *                                 <code>true</code> iff inherited
+		 *                                 members are shown
 		 */
 		private OutlineContentProvider(boolean showInheritedMembers) {
 			super(true);
@@ -370,7 +371,7 @@ public class ScriptOutlineInformationControl
 		 * Creates the action.
 		 *
 		 * @param outlineViewer
-		 *            the outline viewer
+		 *                          the outline viewer
 		 */
 		private SortByDefiningTypeAction(TreeViewer outlineViewer) {
 			super(TextMessages.ScriptOutlineInformationControl_SortByDefiningTypeAction_label);
@@ -540,14 +541,14 @@ public class ScriptOutlineInformationControl
 
 		String keySequence = sequences[0].format();
 
-		if (fOutlineContentProvider.isShowingInheritedMembers())
+		if (fOutlineContentProvider.isShowingInheritedMembers()) {
 			return Messages.format(
 					TextMessages.ScriptOutlineInformationControl_pressToHideInheritedMembers,
 					keySequence);
-		else
-			return Messages.format(
-					TextMessages.ScriptOutlineInformationControl_pressToShowInheritedMembers,
-					keySequence);
+		}
+		return Messages.format(
+				TextMessages.ScriptOutlineInformationControl_pressToShowInheritedMembers,
+				keySequence);
 	}
 
 	@Override

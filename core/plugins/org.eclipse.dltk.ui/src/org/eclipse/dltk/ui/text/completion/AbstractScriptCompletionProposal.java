@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -83,8 +83,8 @@ import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 import org.osgi.framework.Bundle;
 
 @SuppressWarnings("restriction")
-public abstract class AbstractScriptCompletionProposal implements
-		IScriptCompletionProposal, ICompletionProposalExtension,
+public abstract class AbstractScriptCompletionProposal
+		implements IScriptCompletionProposal, ICompletionProposalExtension,
 		ICompletionProposalExtension2, ICompletionProposalExtension3,
 		ICompletionProposalExtension5, ICompletionProposalExtension6,
 		ICompletionProposalExtension7 {
@@ -107,7 +107,8 @@ public abstract class AbstractScriptCompletionProposal implements
 		 * to postReplace().
 		 *
 		 * @param document
-		 *            the document on which to track the reference position.
+		 *                     the document on which to track the reference
+		 *                     position.
 		 *
 		 */
 		public void preReplace(IDocument document, int offset)
@@ -129,7 +130,8 @@ public abstract class AbstractScriptCompletionProposal implements
 		 * call to preReplace().
 		 *
 		 * @param document
-		 *            the document on which to track the reference position.
+		 *                     the document on which to track the reference
+		 *                     position.
 		 */
 		public int postReplace(IDocument document) {
 			try {
@@ -160,11 +162,11 @@ public abstract class AbstractScriptCompletionProposal implements
 				int offset, int length) {
 
 			if (event.character == fExitCharacter) {
-				if (environment.anyPositionContains(offset))
+				if (environment.anyPositionContains(offset)) {
 					return new ExitFlags(ILinkedModeListener.UPDATE_CARET,
 							false);
-				else
-					return new ExitFlags(ILinkedModeListener.UPDATE_CARET, true);
+				}
+				return new ExitFlags(ILinkedModeListener.UPDATE_CARET, true);
 			}
 
 			switch (event.character) {
@@ -230,8 +232,8 @@ public abstract class AbstractScriptCompletionProposal implements
 	 * Sets the trigger characters.
 	 *
 	 * @param triggerCharacters
-	 *            The set of characters which can trigger the application of
-	 *            this completion proposal
+	 *                              The set of characters which can trigger the
+	 *                              application of this completion proposal
 	 */
 	public void setTriggerCharacters(char[] triggerCharacters) {
 		fTriggerCharacters = triggerCharacters;
@@ -241,8 +243,8 @@ public abstract class AbstractScriptCompletionProposal implements
 	 * Sets the proposal info.
 	 *
 	 * @param proposalInfo
-	 *            The additional information associated with this proposal or
-	 *            <code>null</code>
+	 *                         The additional information associated with this
+	 *                         proposal or <code>null</code>
 	 */
 	public void setProposalInfo(ICompletionProposalInfo proposalInfo) {
 		fProposalInfo = proposalInfo;
@@ -264,7 +266,7 @@ public abstract class AbstractScriptCompletionProposal implements
 	 * completion)
 	 *
 	 * @param cursorPosition
-	 *            The cursorPosition to set
+	 *                           The cursorPosition to set
 	 */
 	public void setCursorPosition(int cursorPosition) {
 		Assert.isTrue(cursorPosition >= 0);
@@ -278,8 +280,8 @@ public abstract class AbstractScriptCompletionProposal implements
 	@Override
 	public final void apply(IDocument document) {
 		// not used any longer
-		apply(document, (char) 0, getReplacementOffset()
-				+ getReplacementLength());
+		apply(document, (char) 0,
+				getReplacementOffset() + getReplacementLength());
 	}
 
 	@Override
@@ -434,7 +436,7 @@ public abstract class AbstractScriptCompletionProposal implements
 	 * Sets the javadoc attribute.
 	 *
 	 * @param isInDoc
-	 *            <code>true</code> if the proposal is within javadoc
+	 *                    <code>true</code> if the proposal is within javadoc
 	 */
 	protected void setInDoc(boolean isInDoc) {
 		fIsInDoc = isInDoc;
@@ -454,7 +456,8 @@ public abstract class AbstractScriptCompletionProposal implements
 	 * Sets the context information.
 	 *
 	 * @param contextInformation
-	 *            The context information associated with this proposal
+	 *                               The context information associated with
+	 *                               this proposal
 	 */
 	public void setContextInformation(IContextInformation contextInformation) {
 		fContextInformation = contextInformation;
@@ -562,7 +565,8 @@ public abstract class AbstractScriptCompletionProposal implements
 
 	@Override
 	public String getAdditionalProposalInfo() {
-		final Object info = getAdditionalProposalInfo(new NullProgressMonitor());
+		final Object info = getAdditionalProposalInfo(
+				new NullProgressMonitor());
 		return info != null ? info.toString() : null;
 	}
 
@@ -638,7 +642,7 @@ public abstract class AbstractScriptCompletionProposal implements
 	 * Sets the replacement offset.
 	 *
 	 * @param replacementOffset
-	 *            The replacement offset to set
+	 *                              The replacement offset to set
 	 */
 	public void setReplacementOffset(int replacementOffset) {
 		Assert.isTrue(replacementOffset >= 0);
@@ -646,7 +650,8 @@ public abstract class AbstractScriptCompletionProposal implements
 	}
 
 	@Override
-	public int getPrefixCompletionStart(IDocument document, int completionOffset) {
+	public int getPrefixCompletionStart(IDocument document,
+			int completionOffset) {
 		return getReplacementOffset();
 	}
 
@@ -663,7 +668,7 @@ public abstract class AbstractScriptCompletionProposal implements
 	 * Sets the replacement length.
 	 *
 	 * @param replacementLength
-	 *            The replacementLength to set
+	 *                              The replacementLength to set
 	 */
 	public void setReplacementLength(int replacementLength) {
 		Assert.isTrue(replacementLength >= 0);
@@ -683,7 +688,7 @@ public abstract class AbstractScriptCompletionProposal implements
 	 * Sets the replacement string.
 	 *
 	 * @param replacementString
-	 *            The replacement string to set
+	 *                              The replacement string to set
 	 */
 	public void setReplacementString(String replacementString) {
 		Assert.isNotNull(replacementString);
@@ -709,7 +714,7 @@ public abstract class AbstractScriptCompletionProposal implements
 	 * Sets the image.
 	 *
 	 * @param image
-	 *            The image to set
+	 *                  The image to set
 	 */
 	public void setImage(Image image) {
 		fImage = image;
@@ -721,7 +726,8 @@ public abstract class AbstractScriptCompletionProposal implements
 	}
 
 	@Override
-	public boolean validate(IDocument document, int offset, DocumentEvent event) {
+	public boolean validate(IDocument document, int offset,
+			DocumentEvent event) {
 
 		if (offset < getReplacementOffset())
 			return false;
@@ -753,7 +759,7 @@ public abstract class AbstractScriptCompletionProposal implements
 	 * </p>
 	 *
 	 * @param prefix
-	 *            the current prefix in the document
+	 *                   the current prefix in the document
 	 * @return <code>true</code> if <code>prefix</code> is a valid prefix of
 	 *         this proposal
 	 */
@@ -782,7 +788,7 @@ public abstract class AbstractScriptCompletionProposal implements
 	 * Sets the proposal's relevance.
 	 *
 	 * @param relevance
-	 *            The relevance to set
+	 *                      The relevance to set
 	 */
 	public void setRelevance(int relevance) {
 		fRelevance = relevance;
@@ -829,14 +835,15 @@ public abstract class AbstractScriptCompletionProposal implements
 	 * <ul>
 	 * <li>getCamelCompound("NuPo", "NullPointerException") ->
 	 * "NuPointerException"</li>
-	 * <li>getCamelCompound("NuPoE", "NullPointerException") -> "NuPoException"</li>
+	 * <li>getCamelCompound("NuPoE", "NullPointerException") ->
+	 * "NuPoException"</li>
 	 * <li>getCamelCompound("hasCod", "hashCode") -> "hasCode"</li>
 	 * </ul>
 	 *
 	 * @param prefix
-	 *            the prefix to match against
+	 *                   the prefix to match against
 	 * @param string
-	 *            the string to match
+	 *                   the string to match
 	 * @return a compound of prefix and any postfix taken from
 	 *         <code>string</code>
 	 *
@@ -876,8 +883,8 @@ public abstract class AbstractScriptCompletionProposal implements
 	}
 
 	protected boolean insertCompletion() {
-		return getPreferenceStore().getBoolean(
-				PreferenceConstants.CODEASSIST_INSERT_COMPLETION);
+		return getPreferenceStore()
+				.getBoolean(PreferenceConstants.CODEASSIST_INSERT_COMPLETION);
 	}
 
 	protected Color getForegroundColor(StyledText text) {
@@ -914,9 +921,8 @@ public abstract class AbstractScriptCompletionProposal implements
 				if (viewer instanceof ITextViewerExtension5) {
 
 					ITextViewerExtension5 extension = (ITextViewerExtension5) viewer;
-					IRegion modelRange = extension
-							.widgetRange2ModelRange(new Region(
-									fRememberedStyleRange.start,
+					IRegion modelRange = extension.widgetRange2ModelRange(
+							new Region(fRememberedStyleRange.start,
 									fRememberedStyleRange.length));
 					if (modelRange != null)
 						viewer2.invalidateTextPresentation(
@@ -1046,9 +1052,9 @@ public abstract class AbstractScriptCompletionProposal implements
 	 * typed and an exit position at <code>getCursorPosition() + 1</code>.
 	 *
 	 * @param document
-	 *            the document
+	 *                             the document
 	 * @param closingCharacter
-	 *            the exit character
+	 *                             the exit character
 	 */
 	protected void setUpLinkedMode(IDocument document, char closingCharacter) {
 		if (getTextViewer() != null && autocloseBrackets()) {
@@ -1063,7 +1069,8 @@ public abstract class AbstractScriptCompletionProposal implements
 				model.addGroup(group);
 				model.forceInstall();
 
-				LinkedModeUI ui = new EditorLinkedModeUI(model, getTextViewer());
+				LinkedModeUI ui = new EditorLinkedModeUI(model,
+						getTextViewer());
 				ui.setSimpleMode(true);
 				ui.setExitPolicy(new ExitPolicy(closingCharacter, document));
 				ui.setExitPosition(getTextViewer(), exit, 0, Integer.MAX_VALUE);
@@ -1076,8 +1083,8 @@ public abstract class AbstractScriptCompletionProposal implements
 	}
 
 	protected boolean autocloseBrackets() {
-		return getPreferenceStore().getBoolean(
-				PreferenceConstants.EDITOR_CLOSE_BRACKETS);
+		return getPreferenceStore()
+				.getBoolean(PreferenceConstants.EDITOR_CLOSE_BRACKETS);
 	}
 
 	protected void setDisplayString(String string) {

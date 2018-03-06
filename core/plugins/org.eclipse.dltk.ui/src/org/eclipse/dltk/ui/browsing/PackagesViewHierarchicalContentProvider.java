@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -95,9 +95,8 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 						if (logicalPackages.length > 0)
 							folders.addAll(Arrays.asList(logicalPackages));
 						return folders.toArray();
-					} else {
-						return logicalPackages;
 					}
+					return logicalPackages;
 				}
 
 				case IModelElement.PROJECT_FRAGMENT: {
@@ -301,15 +300,14 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 				if (parent instanceof IScriptFolder) {
 					IScriptFolder pkgFragment = (IScriptFolder) parent;
 					LogicalPackage logicalPkg = findLogicalPackage(pkgFragment);
-					if (logicalPkg != null)
+					if (logicalPkg != null) {
 						return logicalPkg;
-					else {
-						LogicalPackage lp = createLogicalPackage(pkgFragment);
-						if (lp == null)
-							return pkgFragment;
-						else
-							return lp;
 					}
+					LogicalPackage lp = createLogicalPackage(pkgFragment);
+					if (lp == null) {
+						return pkgFragment;
+					}
+					return lp;
 				}
 				return parent;
 
@@ -321,17 +319,16 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 				if (parent instanceof IScriptFolder) {
 					IScriptFolder pkgFragment = (IScriptFolder) parent;
 					LogicalPackage logicalPkg = findLogicalPackage(pkgFragment);
-					if (logicalPkg != null)
+					if (logicalPkg != null) {
 						return logicalPkg;
-					else {
-						LogicalPackage lp = createLogicalPackage(pkgFragment);
-						if (lp == null)
-							return pkgFragment;
-						else
-							return lp;
 					}
-				} else
-					return fragment.getScriptProject();
+					LogicalPackage lp = createLogicalPackage(pkgFragment);
+					if (lp == null) {
+						return pkgFragment;
+					}
+					return lp;
+				}
+				return fragment.getScriptProject();
 			} else if (element instanceof IFolder) {
 				IFolder folder = (IFolder) element;
 				IResource res = folder.getParent();
@@ -339,9 +336,8 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 				IModelElement el = DLTKCore.create(res);
 				if (el != null) {
 					return el;
-				} else {
-					return res;
 				}
+				return res;
 			}
 
 		} catch (Exception e) {
@@ -400,19 +396,17 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider
 			IProjectFragment root = (IProjectFragment) parent;
 			if (root.isArchive() || !fragment.exists()) {
 				return findNextLevelParentByElementName(fragment);
-			} else {
-				IResource resource = fragment.getUnderlyingResource();
-				if ((resource != null) && (resource instanceof IFolder)) {
-					IFolder folder = (IFolder) resource;
-					IResource res = folder.getParent();
+			}
+			IResource resource = fragment.getUnderlyingResource();
+			if ((resource != null) && (resource instanceof IFolder)) {
+				IFolder folder = (IFolder) resource;
+				IResource res = folder.getParent();
 
-					IModelElement el = DLTKCore.create(res);
-					if (el != null) {
-						return el;
-					} else {
-						return res;
-					}
+				IModelElement el = DLTKCore.create(res);
+				if (el != null) {
+					return el;
 				}
+				return res;
 			}
 		}
 		return parent;

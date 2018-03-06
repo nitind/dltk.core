@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,8 +77,8 @@ public class EditorTextHoverDescriptor {
 	 * Computes the state mask for the given modifier string.
 	 *
 	 * @param modifiers
-	 *            the string with the modifiers, separated by '+', '-', ';', ','
-	 *            or '.'
+	 *                      the string with the modifiers, separated by '+',
+	 *                      '-', ';', ',' or '.'
 	 * @return the state mask or -1 if the input is invalid
 	 */
 	public static int computeStateMask(String modifiers) {
@@ -154,10 +154,10 @@ public class EditorTextHoverDescriptor {
 		// Return simple class name
 		label = getHoverClassName();
 		int lastDot = label.lastIndexOf('.');
-		if (lastDot >= 0 && lastDot < label.length() - 1)
+		if (lastDot >= 0 && lastDot < label.length() - 1) {
 			return label.substring(lastDot + 1);
-		else
-			return label;
+		}
+		return label;
 	}
 
 	/**

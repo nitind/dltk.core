@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -17,7 +17,8 @@ import org.eclipse.dltk.utils.NatureExtensionManager;
 
 public class FoldingProviderManager {
 
-	public static IFoldingStructureProvider getStructureProvider(String natureId) {
+	public static IFoldingStructureProvider getStructureProvider(
+			String natureId) {
 		final NatureExtensionManager structureProviders = new NatureExtensionManager(
 				FOLDING_EXT_POINT, IFoldingStructureProvider.class) {
 			@Override
@@ -28,9 +29,8 @@ public class FoldingProviderManager {
 		final Object[] instances = structureProviders.getInstances(natureId);
 		if (instances != null && instances.length != 0) {
 			return (IFoldingStructureProvider) instances[0];
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	public static IFoldingBlockProvider[] getBlockProviders(String natureId) {

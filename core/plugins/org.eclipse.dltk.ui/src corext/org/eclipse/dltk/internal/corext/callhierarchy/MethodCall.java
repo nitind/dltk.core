@@ -1,12 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
- *          (report 36180: Callers/Callees view)
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.callhierarchy;
 
@@ -16,59 +14,57 @@ import java.util.List;
 
 import org.eclipse.dltk.core.IModelElement;
 
-
 public class MethodCall {
-    private IModelElement fMember;
-    private List fCallLocations;
+	private IModelElement fMember;
+	private List fCallLocations;
 
-    /**
-     * @param enclosingElement
-     */
-    public MethodCall(IModelElement enclosingElement) {
-        this.fMember = enclosingElement;
-    }
+	/**
+	 * @param enclosingElement
+	 */
+	public MethodCall(IModelElement enclosingElement) {
+		this.fMember = enclosingElement;
+	}
 
-    /**
-     *
-     */
-    public Collection getCallLocations() {
-        return fCallLocations;
-    }
+	/**
+	 *
+	 */
+	public Collection getCallLocations() {
+		return fCallLocations;
+	}
 
-    public CallLocation getFirstCallLocation() {
-        if ((fCallLocations != null) && !fCallLocations.isEmpty()) {
-            return (CallLocation) fCallLocations.get(0);
-        } else {
-            return null;
-        }
-    }
+	public CallLocation getFirstCallLocation() {
+		if ((fCallLocations != null) && !fCallLocations.isEmpty()) {
+			return (CallLocation) fCallLocations.get(0);
+		}
+		return null;
+	}
 
-    public boolean hasCallLocations() {
-        return fCallLocations != null && fCallLocations.size() > 0;
-    }
-    
-    /**
-     * @return Object
-     */
-    public Object getKey() {
-        return getMember().getHandleIdentifier();
-    }
+	public boolean hasCallLocations() {
+		return fCallLocations != null && fCallLocations.size() > 0;
+	}
 
-    /**
-     *
-     */
-    public IModelElement getMember() {
-        return fMember;
-    }
+	/**
+	 * @return Object
+	 */
+	public Object getKey() {
+		return getMember().getHandleIdentifier();
+	}
 
-    /**
-     * @param location
-     */
-    public void addCallLocation(CallLocation location) {
-        if (fCallLocations == null) {
-            fCallLocations = new ArrayList();
-        }
+	/**
+	 *
+	 */
+	public IModelElement getMember() {
+		return fMember;
+	}
 
-        fCallLocations.add(location);
-    }
+	/**
+	 * @param location
+	 */
+	public void addCallLocation(CallLocation location) {
+		if (fCallLocations == null) {
+			fCallLocations = new ArrayList();
+		}
+
+		fCallLocations.add(location);
+	}
 }

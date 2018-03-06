@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2017 xored software, Inc. and others.
+ * Copyright (c) 2008, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -51,9 +51,8 @@ public class ModelElementArray {
 		if (obj instanceof ModelElementArray) {
 			final ModelElementArray other = (ModelElementArray) obj;
 			return Arrays.equals(elements, other.elements);
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
@@ -163,10 +162,10 @@ public class ModelElementArray {
 	 * </p>
 	 *
 	 * @param collection
-	 *            the <code>Collection</code> of values to join together, may be
-	 *            null
+	 *                       the <code>Collection</code> of values to join
+	 *                       together, may be null
 	 * @param separator
-	 *            the separator character to use, null treated as ""
+	 *                       the separator character to use, null treated as ""
 	 * @return the joined String, <code>null</code> if null collection input
 	 */
 	private static String join(Collection<?> collection, String separator) {

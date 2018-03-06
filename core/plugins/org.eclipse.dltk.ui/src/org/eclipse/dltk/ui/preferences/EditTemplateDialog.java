@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 xored software, Inc.
+ * Copyright (c) 2009, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -100,9 +100,9 @@ public class EditTemplateDialog extends StatusDialog {
 		 * Creates a new action.
 		 *
 		 * @param viewer
-		 *            the viewer
+		 *                          the viewer
 		 * @param operationCode
-		 *            the opcode
+		 *                          the opcode
 		 */
 		public TextViewerAction(ITextViewer viewer, int operationCode) {
 			fOperationCode = operationCode;
@@ -170,17 +170,20 @@ public class EditTemplateDialog extends StatusDialog {
 	 * Creates a new dialog.
 	 *
 	 * @param parent
-	 *            the shell parent of the dialog
+	 *                                    the shell parent of the dialog
 	 * @param template
-	 *            the template to edit
+	 *                                    the template to edit
 	 * @param edit
-	 *            whether this is a new template or an existing being edited
+	 *                                    whether this is a new template or an
+	 *                                    existing being edited
 	 * @param isNameModifiable
-	 *            whether the name of the template may be modified
+	 *                                    whether the name of the template may
+	 *                                    be modified
 	 * @param isContextTypeModifiable
-	 *            whether the context type of the template may be modified
+	 *                                    whether the context type of the
+	 *                                    template may be modified
 	 * @param registry
-	 *            the context type registry to use
+	 *                                    the context type registry to use
 	 */
 	public EditTemplateDialog(IDLTKUILanguageToolkit toolkit, Shell parent,
 			Template template, boolean edit, boolean isNameModifiable,
@@ -473,10 +476,10 @@ public class EditTemplateDialog extends StatusDialog {
 	private String getPrefix() {
 		String id = getContextId();
 		int idx = getIndex(id);
-		if (idx != -1)
+		if (idx != -1) {
 			return fContextTypes[idx][2];
-		else
-			return ""; //$NON-NLS-1$
+		}
+		return ""; //$NON-NLS-1$
 	}
 
 	private void initializeActions() {
@@ -640,7 +643,7 @@ public class EditTemplateDialog extends StatusDialog {
 	 * Checks whether the given string is a valid template name.
 	 *
 	 * @param name
-	 *            the string to test
+	 *                 the string to test
 	 * @return <code>true</code> if the name is valid
 	 * @since 3.3.1
 	 */

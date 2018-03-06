@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 20018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 
 package org.eclipse.dltk.ui.text.completion;
@@ -15,25 +14,25 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
-public class ScriptCompletionProposal extends
-		AbstractScriptCompletionProposal {
+public class ScriptCompletionProposal extends AbstractScriptCompletionProposal {
 
 	/**
 	 * Creates a new completion proposal. All fields are initialized based on
 	 * the provided information.
-	 * 
+	 *
 	 * @param replacementString
-	 *            the actual string to be inserted into the document
+	 *                              the actual string to be inserted into the
+	 *                              document
 	 * @param replacementOffset
-	 *            the offset of the text to be replaced
+	 *                              the offset of the text to be replaced
 	 * @param replacementLength
-	 *            the length of the text to be replaced
+	 *                              the length of the text to be replaced
 	 * @param image
-	 *            the image to display for this proposal
+	 *                              the image to display for this proposal
 	 * @param displayString
-	 *            the string to be displayed for the proposal If set to
-	 *            <code>null</code>, the replacement string will be taken as
-	 *            display string.
+	 *                              the string to be displayed for the proposal
+	 *                              If set to <code>null</code>, the replacement
+	 *                              string will be taken as display string.
 	 */
 	public ScriptCompletionProposal(String replacementString,
 			int replacementOffset, int replacementLength, Image image,
@@ -45,24 +44,25 @@ public class ScriptCompletionProposal extends
 	/**
 	 * Creates a new completion proposal. All fields are initialized based on
 	 * the provided information.
-	 * 
+	 *
 	 * @param replacementString
-	 *            the actual string to be inserted into the document
+	 *                              the actual string to be inserted into the
+	 *                              document
 	 * @param replacementOffset
-	 *            the offset of the text to be replaced
+	 *                              the offset of the text to be replaced
 	 * @param replacementLength
-	 *            the length of the text to be replaced
+	 *                              the length of the text to be replaced
 	 * @param image
-	 *            the image to display for this proposal
+	 *                              the image to display for this proposal
 	 * @param displayString
-	 *            the string to be displayed for the proposal If set to
-	 *            <code>null</code>, the replacement string will be taken as
-	 *            display string.
+	 *                              the string to be displayed for the proposal
+	 *                              If set to <code>null</code>, the replacement
+	 *                              string will be taken as display string.
 	 * @param relevance
-	 *            the relevance
+	 *                              the relevance
 	 * @param indoc
-	 *            <code>true</code> for a javadoc proposal
-	 * 
+	 *                              <code>true</code> for a javadoc proposal
+	 *
 	 */
 	public ScriptCompletionProposal(String replacementString,
 			int replacementOffset, int replacementLength, Image image,
@@ -74,25 +74,27 @@ public class ScriptCompletionProposal extends
 	/**
 	 * Creates a new completion proposal. All fields are initialized based on
 	 * the provided information.
-	 * 
+	 *
 	 * @param replacementString
-	 *            the actual string to be inserted into the document
+	 *                              the actual string to be inserted into the
+	 *                              document
 	 * @param replacementOffset
-	 *            the offset of the text to be replaced
+	 *                              the offset of the text to be replaced
 	 * @param replacementLength
-	 *            the length of the text to be replaced
+	 *                              the length of the text to be replaced
 	 * @param image
-	 *            the image to display for this proposal
+	 *                              the image to display for this proposal
 	 * @param displayString
-	 *            the StyledString to be displayed for the proposal If set to
-	 *            <code>null</code>, the replacement string will be taken as
-	 *            display string.
+	 *                              the StyledString to be displayed for the
+	 *                              proposal If set to <code>null</code>, the
+	 *                              replacement string will be taken as display
+	 *                              string.
 	 * @param relevance
-	 *            the relevance
+	 *                              the relevance
 	 * @param indoc
-	 *            <code>true</code> for a javadoc proposal
+	 *                              <code>true</code> for a javadoc proposal
 	 * @since 5.2
-	 * 
+	 *
 	 */
 	public ScriptCompletionProposal(String replacementString,
 			int replacementOffset, int replacementLength, Image image,
@@ -105,14 +107,14 @@ public class ScriptCompletionProposal extends
 		setReplacementOffset(replacementOffset);
 		setReplacementLength(replacementLength);
 		setImage(image);
-		setStyledDisplayString(displayString == null ? new StyledString(
-				replacementString)
-				: displayString);
+		setStyledDisplayString(
+				displayString == null ? new StyledString(replacementString)
+						: displayString);
 		setRelevance(relevance);
 		setCursorPosition(replacementString.length());
 		setInDoc(indoc);
-		setSortString(displayString == null ? replacementString : displayString
-				.toString());
+		setSortString(displayString == null ? replacementString
+				: displayString.toString());
 	}
 
 	@Override
@@ -137,10 +139,10 @@ public class ScriptCompletionProposal extends
 			int completionOffset) {
 		String string = getReplacementString();
 		int pos = string.indexOf('(');
-		if (pos > 0)
+		if (pos > 0) {
 			return string.subSequence(0, pos);
-		else
-			return string;
+		}
+		return string;
 	}
 
 }

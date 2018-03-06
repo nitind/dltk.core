@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,41 +23,52 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
+public final class RenameSourceModuleChange
+		extends AbstractModelElementRenameChange {
 
-public final class RenameSourceModuleChange extends AbstractModelElementRenameChange {
-
-	public RenameSourceModuleChange(RefactoringDescriptor descriptor, ISourceModule unit, String newName, String comment) {
-		this(descriptor, ResourceUtil.getResource(unit).getFullPath(), unit.getElementName(), newName, comment, IResource.NULL_STAMP);
-		Assert.isTrue(!unit.isReadOnly(), "compilation unit must not be read-only"); //$NON-NLS-1$
+	public RenameSourceModuleChange(RefactoringDescriptor descriptor,
+			ISourceModule unit, String newName, String comment) {
+		this(descriptor, ResourceUtil.getResource(unit).getFullPath(),
+				unit.getElementName(), newName, comment, IResource.NULL_STAMP);
+		Assert.isTrue(!unit.isReadOnly(),
+				"compilation unit must not be read-only"); //$NON-NLS-1$
 	}
 
-	private RenameSourceModuleChange(RefactoringDescriptor descriptor, IPath resourcePath, String oldName, String newName, String comment, long stampToRestore) {
-		super(descriptor, resourcePath, oldName, newName, comment, stampToRestore);
+	private RenameSourceModuleChange(RefactoringDescriptor descriptor,
+			IPath resourcePath, String oldName, String newName, String comment,
+			long stampToRestore) {
+		super(descriptor, resourcePath, oldName, newName, comment,
+				stampToRestore);
 	}
 
 	@Override
 	protected IPath createNewPath() {
-		if (getResourcePath().getFileExtension() != null)
-			return getResourcePath().removeFileExtension().removeLastSegments(1).append(getNewName());
-		else
-			return getResourcePath().removeLastSegments(1).append(getNewName());
+		if (getResourcePath().getFileExtension() != null) {
+			return getResourcePath().removeFileExtension().removeLastSegments(1)
+					.append(getNewName());
+		}
+		return getResourcePath().removeLastSegments(1).append(getNewName());
 	}
 
 	@Override
-	protected Change createUndoChange(long stampToRestore) throws ModelException {
-		return new RenameSourceModuleChange(null, createNewPath(), getNewName(), getOldName(), getComment(), stampToRestore);
+	protected Change createUndoChange(long stampToRestore)
+			throws ModelException {
+		return new RenameSourceModuleChange(null, createNewPath(), getNewName(),
+				getOldName(), getComment(), stampToRestore);
 	}
 
 	@Override
 	protected void doRename(IProgressMonitor pm) throws CoreException {
-		ISourceModule cu= (ISourceModule) getModifiedElement();
+		ISourceModule cu = (ISourceModule) getModifiedElement();
 		if (cu != null)
 			cu.rename(getNewName(), false, pm);
 	}
 
 	@Override
 	public String getName() {
-		return Messages.format(RefactoringCoreMessages.RenameSourceModuleChange_name, new String[] { getOldName(), getNewName()});
+		return Messages.format(
+				RefactoringCoreMessages.RenameSourceModuleChange_name,
+				getOldName(), getNewName());
 	}
 
 	@Override

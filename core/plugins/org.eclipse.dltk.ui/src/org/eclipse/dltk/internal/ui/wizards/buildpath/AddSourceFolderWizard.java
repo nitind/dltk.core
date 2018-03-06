@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,52 +25,60 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 	private final boolean fCanCommitConflict;
 	private final IContainer fParent;
 
-	public AddSourceFolderWizard(BPListElement[] existingEntries, BPListElement newEntry,
-			boolean linkedMode, boolean canCommitConflict,
-			boolean allowConflict, boolean allowRemoveProjectFolder, boolean allowAddExclusionPatterns) {
-		this(existingEntries, newEntry, linkedMode, canCommitConflict, allowConflict, allowRemoveProjectFolder, allowAddExclusionPatterns, newEntry.getScriptProject().getProject());
+	public AddSourceFolderWizard(BPListElement[] existingEntries,
+			BPListElement newEntry, boolean linkedMode,
+			boolean canCommitConflict, boolean allowConflict,
+			boolean allowRemoveProjectFolder,
+			boolean allowAddExclusionPatterns) {
+		this(existingEntries, newEntry, linkedMode, canCommitConflict,
+				allowConflict, allowRemoveProjectFolder,
+				allowAddExclusionPatterns,
+				newEntry.getScriptProject().getProject());
 	}
 
-	public AddSourceFolderWizard(BPListElement[] existingEntries, BPListElement newEntry,
-			boolean linkedMode, boolean canCommitConflict,
-			boolean allowConflict, boolean allowRemoveProjectFolder, boolean allowAddExclusionPatterns, IContainer parent) {
-		super(existingEntries, newEntry, getTitel(newEntry, linkedMode), DLTKPluginImages.DESC_WIZBAN_NEWSRCFOLDR);
-		fLinkedMode= linkedMode;
-		fCanCommitConflict= canCommitConflict;
-		fAllowConflict= allowConflict;
-		fAllowRemoveProjectFolder= allowRemoveProjectFolder;
-		fAllowAddExclusionPatterns= allowAddExclusionPatterns;
-		fParent= parent;
+	public AddSourceFolderWizard(BPListElement[] existingEntries,
+			BPListElement newEntry, boolean linkedMode,
+			boolean canCommitConflict, boolean allowConflict,
+			boolean allowRemoveProjectFolder, boolean allowAddExclusionPatterns,
+			IContainer parent) {
+		super(existingEntries, newEntry, getTitel(newEntry, linkedMode),
+				DLTKPluginImages.DESC_WIZBAN_NEWSRCFOLDR);
+		fLinkedMode = linkedMode;
+		fCanCommitConflict = canCommitConflict;
+		fAllowConflict = allowConflict;
+		fAllowRemoveProjectFolder = allowRemoveProjectFolder;
+		fAllowAddExclusionPatterns = allowAddExclusionPatterns;
+		fParent = parent;
 	}
 
 	private static String getTitel(BPListElement newEntry, boolean linkedMode) {
 		if (newEntry.getPath() == null) {
 			if (linkedMode) {
 				return NewWizardMessages.NewSourceFolderCreationWizard_link_title;
-			} else {
-				return NewWizardMessages.NewSourceFolderCreationWizard_title;
 			}
-		} else {
-			return NewWizardMessages.NewSourceFolderCreationWizard_edit_title;
+			return NewWizardMessages.NewSourceFolderCreationWizard_title;
 		}
+		return NewWizardMessages.NewSourceFolderCreationWizard_edit_title;
 	}
 
 	@Override
 	public void addPages() {
 		super.addPages();
 
-		fAddFolderPage= new AddSourceFolderWizardPage(getEntryToEdit(), getExistingEntries(),
-				fLinkedMode, fCanCommitConflict,
-				fAllowConflict, fAllowRemoveProjectFolder, fAllowAddExclusionPatterns, fParent);
+		fAddFolderPage = new AddSourceFolderWizardPage(getEntryToEdit(),
+				getExistingEntries(), fLinkedMode, fCanCommitConflict,
+				fAllowConflict, fAllowRemoveProjectFolder,
+				fAllowAddExclusionPatterns, fParent);
 		addPage(fAddFolderPage);
 
-		fFilterPage= new SetFilterWizardPage(getEntryToEdit(), getExistingEntries());
+		fFilterPage = new SetFilterWizardPage(getEntryToEdit(),
+				getExistingEntries());
 		addPage(fFilterPage);
 	}
 
 	@Override
 	public List getInsertedElements() {
-		List result= super.getInsertedElements();
+		List result = super.getInsertedElements();
 		if (getEntryToEdit().getOrginalPath() == null)
 			result.add(getEntryToEdit());
 
@@ -89,10 +97,12 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 
 	@Override
 	public boolean performFinish() {
-		getEntryToEdit().setAttribute(BPListElement.INCLUSION, fFilterPage.getInclusionPattern());
-		getEntryToEdit().setAttribute(BPListElement.EXCLUSION, fFilterPage.getExclusionPattern());
+		getEntryToEdit().setAttribute(BPListElement.INCLUSION,
+				fFilterPage.getInclusionPattern());
+		getEntryToEdit().setAttribute(BPListElement.EXCLUSION,
+				fFilterPage.getExclusionPattern());
 
-		boolean res= super.performFinish();
+		boolean res = super.performFinish();
 		if (res) {
 			selectAndReveal(fAddFolderPage.getCorrespondingResource());
 		}

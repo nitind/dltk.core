@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,8 +22,8 @@ import org.eclipse.jface.text.templates.TemplateProposal;
  * </p>
  *
  */
-public final class CompletionProposalComparator implements
-		Comparator<ICompletionProposal> {
+public final class CompletionProposalComparator
+		implements Comparator<ICompletionProposal> {
 
 	private boolean fOrderAlphabetically;
 
@@ -39,8 +39,8 @@ public final class CompletionProposalComparator implements
 	 * relevance.
 	 *
 	 * @param orderAlphabetically
-	 *            <code>true</code> to order alphabetically, <code>false</code>
-	 *            to order by relevance
+	 *                                <code>true</code> to order alphabetically,
+	 *                                <code>false</code> to order by relevance
 	 */
 	public void setOrderAlphabetically(boolean orderAlphabetically) {
 		fOrderAlphabetically = orderAlphabetically;
@@ -109,9 +109,8 @@ public final class CompletionProposalComparator implements
 	private String getSubSortKey(ICompletionProposal obj) {
 		if (obj instanceof TemplateProposal) {
 			return ((TemplateProposal) obj).getDisplayString();
-		} else {
-			return "";
 		}
+		return "";
 	}
 
 }

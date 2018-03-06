@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -120,8 +120,8 @@ public class SelectionConverter {
 
 	/**
 	 * @param primaryOnly
-	 *            if <code>true</code> only primary working copies will be
-	 *            returned
+	 *                        if <code>true</code> only primary working copies
+	 *                        will be returned
 	 *
 	 */
 	public static IModelElement[] codeResolve(IEditorPart editor,
@@ -134,8 +134,8 @@ public class SelectionConverter {
 	 * Perform a code resolve in a separate thread.
 	 *
 	 * @param primaryOnly
-	 *            if <code>true</code> only primary working copies will be
-	 *            returned
+	 *                        if <code>true</code> only primary working copies
+	 *                        will be returned
 	 * @throws InterruptedException
 	 * @throws InvocationTargetException
 	 *
@@ -161,8 +161,8 @@ public class SelectionConverter {
 
 	/**
 	 * @param primaryOnly
-	 *            if <code>true</code> only primary working copies will be
-	 *            returned
+	 *                        if <code>true</code> only primary working copies
+	 *                        will be returned
 	 *
 	 */
 	private static IModelElement getElementAtOffset(IEditorPart editor,
@@ -188,9 +188,8 @@ public class SelectionConverter {
 		if (editor instanceof ITextEditor) {
 			return (ITextSelection) ((ITextEditor) editor)
 					.getSelectionProvider().getSelection();
-		} else {
-			return TextSelection.emptySelection();
 		}
+		return TextSelection.emptySelection();
 	}
 
 	public static IModelElement getInput(IEditorPart editor) {
@@ -199,8 +198,8 @@ public class SelectionConverter {
 
 	/**
 	 * @param primaryOnly
-	 *            if <code>true</code> only primary working copies will be
-	 *            returned
+	 *                        if <code>true</code> only primary working copies
+	 *                        will be returned
 	 *
 	 */
 	private static IModelElement getInput(IEditorPart editor,
@@ -329,10 +328,10 @@ public class SelectionConverter {
 			ISourceModule cunit = (ISourceModule) input;
 			ScriptModelUtil.reconcile(cunit);
 			IModelElement ref = cunit.getElementAt(selection.getOffset());
-			if (ref == null)
+			if (ref == null) {
 				return input;
-			else
-				return ref;
+			}
+			return ref;
 		}
 		return null;
 	}
@@ -367,23 +366,21 @@ public class SelectionConverter {
 		}
 		if (atOffset == null) {
 			return input;
-		} else {
-			int selectionEnd = selection.getOffset() + selection.getLength();
-			IModelElement result = atOffset;
-			if (atOffset instanceof ISourceReference) {
-				ISourceRange range = ((ISourceReference) atOffset)
-						.getSourceRange();
-				while (range.getOffset() + range.getLength() < selectionEnd) {
-					result = result.getParent();
-					if (!(result instanceof ISourceReference)) {
-						result = input;
-						break;
-					}
-					range = ((ISourceReference) result).getSourceRange();
-				}
-			}
-			return result;
 		}
+		int selectionEnd = selection.getOffset() + selection.getLength();
+		IModelElement result = atOffset;
+		if (atOffset instanceof ISourceReference) {
+			ISourceRange range = ((ISourceReference) atOffset).getSourceRange();
+			while (range.getOffset() + range.getLength() < selectionEnd) {
+				result = result.getParent();
+				if (!(result instanceof ISourceReference)) {
+					result = input;
+					break;
+				}
+				range = ((ISourceReference) result).getSourceRange();
+			}
+		}
+		return result;
 	}
 
 	/**

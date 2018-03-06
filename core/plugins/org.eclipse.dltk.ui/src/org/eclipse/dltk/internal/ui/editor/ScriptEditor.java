@@ -1694,12 +1694,12 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			// int style = cutDown ? SWT.NONE : (SWT.V_SCROLL | SWT.H_SCROLL);
 			// return new DefaultInformationControl(shell, SWT.RESIZE
 			// | SWT.TOOL, style, new HTMLTextPresenter(cutDown));
-			if (BrowserInformationControl.isAvailable(shell))
+			if (BrowserInformationControl.isAvailable(shell)) {
 				return new BrowserInformationControl(shell,
 						JFaceResources.DIALOG_FONT, true);
-			else
-				return new DefaultInformationControl(shell,
-						new HTMLTextPresenter(cutDown));
+			}
+			return new DefaultInformationControl(shell,
+					new HTMLTextPresenter(cutDown));
 		};
 
 		fInformationPresenter = new InformationPresenter(

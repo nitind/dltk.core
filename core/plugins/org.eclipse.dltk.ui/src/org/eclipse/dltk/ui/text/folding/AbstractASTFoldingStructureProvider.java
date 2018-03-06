@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2017 IBM Corporation and others.
+ * Copyright (c) 2006, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -137,9 +137,9 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		 * the editor.
 		 *
 		 * @param annotation
-		 *            the annotation to add
+		 *                       the annotation to add
 		 * @param position
-		 *            the corresponding position
+		 *                       the corresponding position
 		 */
 		public void addProjectionRange(ScriptProjectionAnnotation annotation,
 				Position position) {
@@ -164,7 +164,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 
 		/**
 		 * @param hash
-		 *            the hash to set
+		 *                 the hash to set
 		 */
 		public void setHash(int hash) {
 			this.hash = hash;
@@ -179,7 +179,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 
 		/**
 		 * @param length
-		 *            the length to set
+		 *                   the length to set
 		 */
 		public void setLength(int length) {
 			this.length = length;
@@ -223,13 +223,15 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		 * Creates a new projection annotation.
 		 *
 		 * @param isCollapsed
-		 *            <code>true</code> to set the initial state to collapsed,
-		 *            <code>false</code> to set it to expanded
+		 *                        <code>true</code> to set the initial state to
+		 *                        collapsed, <code>false</code> to set it to
+		 *                        expanded
 		 * @param codeStamp
-		 *            the stamp of source code this annotation refers to
+		 *                        the stamp of source code this annotation
+		 *                        refers to
 		 * @param isComment
-		 *            <code>true</code> for a foldable comment,
-		 *            <code>false</code> for a foldable code element
+		 *                        <code>true</code> for a foldable comment,
+		 *                        <code>false</code> for a foldable code element
 		 */
 		public ScriptProjectionAnnotation(boolean isCollapsed,
 				boolean isComment, SourceRangeStamp codeStamp,
@@ -257,7 +259,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 
 		/**
 		 * @param stamp
-		 *            the stamp to set
+		 *                  the stamp to set
 		 */
 		void setStamp(SourceRangeStamp stamp) {
 			this.stamp = stamp;
@@ -377,7 +379,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		 * <code>content</code>. Returns 0 if none is found.
 		 *
 		 * @param content
-		 *            the content to search
+		 *                    the content to search
 		 * @return the first index of a unicode identifier part, or zero if none
 		 *         can be found
 		 */
@@ -477,7 +479,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		 * Registers the listener with the viewer.
 		 *
 		 * @param viewer
-		 *            the viewer to register a listener with
+		 *                   the viewer to register a listener with
 		 */
 		public ProjectionListener(ProjectionViewer viewer) {
 			fViewer = viewer;
@@ -593,9 +595,9 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	 * </p>
 	 *
 	 * @param editor
-	 *            {@inheritDoc}
+	 *                   {@inheritDoc}
 	 * @param viewer
-	 *            {@inheritDoc}
+	 *                   {@inheritDoc}
 	 */
 	@Override
 	public void install(ITextEditor editor, ProjectionViewer viewer,
@@ -948,9 +950,9 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		 * Represents foldable statement.
 		 *
 		 * @param s
-		 *            AST statement
+		 *              AST statement
 		 * @param r
-		 *            <b>Absolute</b> statement position in source file
+		 *              <b>Absolute</b> statement position in source file
 		 */
 		public CodeBlock(ASTNode s, IRegion r) {
 			this.statement = s;
@@ -1052,9 +1054,8 @@ public abstract class AbstractASTFoldingStructureProvider implements
 		final int foldMinLines = getMinimalFoldableLinesCount();
 		if (foldMinLines > 0) {
 			return line2 - line1 + 1 >= foldMinLines;
-		} else {
-			return line1 != line2;
 		}
+		return line1 != line2;
 	}
 
 	/**
@@ -1063,7 +1064,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	 * aligned} region.
 	 *
 	 * @param aligned
-	 *            an aligned region
+	 *                    an aligned region
 	 * @return a folding position corresponding to <code>aligned</code>
 	 */
 	protected final Position createCommentPosition(IRegion aligned) {
@@ -1076,7 +1077,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	 * aligned} region.
 	 *
 	 * @param aligned
-	 *            an aligned region
+	 *                    an aligned region
 	 *
 	 * @return a folding position corresponding to <code>aligned</code>
 	 */
@@ -1094,9 +1095,9 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	 * cannot be folded.
 	 *
 	 * @param region
-	 *            the region to align, may be <code>null</code>
+	 *                   the region to align, may be <code>null</code>
 	 * @param ctx
-	 *            the folding context
+	 *                   the folding context
 	 * @return a region equal or greater than <code>region</code> that is
 	 *         aligned with line offsets, <code>null</code> if the region is too
 	 *         small to be foldable (e.g. covers only one line)
@@ -1178,10 +1179,11 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	 * Collapses or expands all annotations matched by the passed filter.
 	 *
 	 * @param filter
-	 *            the filter to use to select which annotations to collapse
+	 *                   the filter to use to select which annotations to
+	 *                   collapse
 	 * @param expand
-	 *            <code>true</code> to expand the matched annotations,
-	 *            <code>false</code> to collapse them
+	 *                   <code>true</code> to expand the matched annotations,
+	 *                   <code>false</code> to collapse them
 	 */
 	private void modifyFiltered(Filter filter, boolean expand) {
 		if (!isInstalled())
@@ -1412,7 +1414,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	 * Installs a partitioner with <code>document</code>.
 	 *
 	 * @param document
-	 *            the document
+	 *                     the document
 	 */
 	private void installDocumentStuff(Document document) {
 		IDocumentPartitioner partitioner = getDocumentPartitioner();
@@ -1428,7 +1430,7 @@ public abstract class AbstractASTFoldingStructureProvider implements
 	 * Removes partitioner with <code>document</code>.
 	 *
 	 * @param document
-	 *            the document
+	 *                     the document
 	 */
 	private void removeDocumentStuff(Document document) {
 		document.setDocumentPartitioner(getPartition(), null);

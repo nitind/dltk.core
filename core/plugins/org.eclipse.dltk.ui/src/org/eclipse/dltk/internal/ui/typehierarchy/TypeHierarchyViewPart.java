@@ -1138,9 +1138,8 @@ public class TypeHierarchyViewPart extends ViewPart
 	private IType getSelectableType(IModelElement elem) {
 		if (elem.getElementType() != IModelElement.TYPE) {
 			return getCurrentViewer().getTreeRootType();
-		} else {
-			return (IType) elem;
 		}
+		return (IType) elem;
 	}
 
 	private void internalSelectType(IMember elem, boolean reveal) {
@@ -1317,7 +1316,7 @@ public class TypeHierarchyViewPart extends ViewPart
 		if (fInputElement != null) {
 			IWorkingSet workingSet = fWorkingSetActionGroup.getWorkingSet();
 			if (workingSet == null) {
-				String[] args = new String[] { viewerTitle,
+				Object[] args = new String[] { viewerTitle,
 						ScriptElementLabels.getDefault().getElementLabel(
 								fInputElement,
 								ScriptElementLabels.ALL_DEFAULT) };
@@ -1328,7 +1327,7 @@ public class TypeHierarchyViewPart extends ViewPart
 						TypeHierarchyMessages.TypeHierarchyViewPart_tooltip,
 						args);
 			} else {
-				String[] args = new String[] { viewerTitle,
+				Object[] args = new String[] { viewerTitle,
 						ScriptElementLabels.getDefault().getElementLabel(
 								fInputElement, ScriptElementLabels.ALL_DEFAULT),
 						workingSet.getLabel() };

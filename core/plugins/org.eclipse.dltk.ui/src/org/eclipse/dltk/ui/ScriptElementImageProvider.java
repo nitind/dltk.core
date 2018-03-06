@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -88,7 +88,7 @@ public class ScriptElementImageProvider {
 	 * for <code>ISourceReference</code>s.
 	 *
 	 * @param flags
-	 *            Flags as defined by the ScriptImageLabelProvider
+	 *                  Flags as defined by the ScriptImageLabelProvider
 	 */
 	public Image getImageLabel(Object element, int flags) {
 		return getImageLabel(computeDescriptor(element, flags));
@@ -197,9 +197,8 @@ public class ScriptElementImageProvider {
 		if (descr != null) {
 			return new ScriptElementImageDescriptor(descr, adornmentFlags,
 					size);
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	/**
@@ -255,12 +254,10 @@ public class ScriptElementImageProvider {
 				if (root.isExternal()) {
 					if (root.isArchive()) {
 						return DLTKPluginImages.DESC_OBJS_JAR_WSRC;
-					} else {
-						return DLTKPluginImages.DESC_OBJS_PACKFRAG_ROOT;
 					}
-				} else {
 					return DLTKPluginImages.DESC_OBJS_PACKFRAG_ROOT;
 				}
+				return DLTKPluginImages.DESC_OBJS_PACKFRAG_ROOT;
 			}
 
 			case IModelElement.SCRIPT_FOLDER:

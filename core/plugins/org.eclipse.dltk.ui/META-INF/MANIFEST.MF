@@ -108,3 +108,4 @@ Export-Package: org.eclipse.dltk.corext,
  org.eclipse.dltk.ui.wizards
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: org.eclipse.dltk.ui

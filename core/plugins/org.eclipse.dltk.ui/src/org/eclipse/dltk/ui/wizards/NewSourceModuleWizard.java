@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -201,9 +201,8 @@ public abstract class NewSourceModuleWizard extends NewElementWizard
 	public String getMode() {
 		if (!created) {
 			return mode;
-		} else {
-			return page.getMode();
 		}
+		return page.getMode();
 	}
 
 	/**
@@ -289,7 +288,7 @@ public abstract class NewSourceModuleWizard extends NewElementWizard
 					.get(field);
 			if (list != null) {
 				for (IFieldChangeListener listener : list) {
-					if (listener instanceof IFieldChangeListener) {
+					if (listener != null) {
 						listener.fieldChanged();
 					}
 				}

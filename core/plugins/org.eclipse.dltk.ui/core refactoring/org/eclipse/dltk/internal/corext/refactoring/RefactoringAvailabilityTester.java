@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -82,10 +82,10 @@ public final class RefactoringAvailabilityTester {
 			return isRenameAvailable((IType) element);
 		case IModelElement.METHOD:
 			final IMethod method = (IMethod) element;
-			if (method.isConstructor())
+			if (method.isConstructor()) {
 				return isRenameAvailable(method.getDeclaringType());
-			else
-				return isRenameAvailable(method);
+			}
+			return isRenameAvailable(method);
 		case IModelElement.FIELD:
 			final IField field = (IField) element;
 			return isRenameFieldAvailable(field);

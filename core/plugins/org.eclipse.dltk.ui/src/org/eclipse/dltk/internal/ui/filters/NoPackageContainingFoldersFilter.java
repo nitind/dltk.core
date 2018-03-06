@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,10 +23,10 @@ public class NoPackageContainingFoldersFilter extends ViewerFilter {
 	public boolean select(Viewer viewer, Object parent, Object element) {
 		if (element instanceof IFolder) {
 			try {
-				if (containsPackage((IFolder)element))
+				if (containsPackage((IFolder) element)) {
 					return true;
-				else
-					return false;
+				}
+				return false;
 			} catch (CoreException e) {
 				return true;
 			}
@@ -36,12 +36,13 @@ public class NoPackageContainingFoldersFilter extends ViewerFilter {
 	}
 
 	private boolean containsPackage(IFolder folder) throws CoreException {
-		IModelElement element= DLTKCore.create(folder);
+		IModelElement element = DLTKCore.create(folder);
 		if (element instanceof IScriptFolder)
 			return true;
-		IResource[] resources= folder.members();
-		for (int i= 0; i < resources.length; i++) {
-			if (resources[i] instanceof IFolder && containsPackage((IFolder)resources[i]))
+		IResource[] resources = folder.members();
+		for (int i = 0; i < resources.length; i++) {
+			if (resources[i] instanceof IFolder
+					&& containsPackage((IFolder) resources[i]))
 				return true;
 		}
 		return false;

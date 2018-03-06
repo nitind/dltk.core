@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -138,24 +138,26 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 	 * Creates new FilteredTypesSelectionDialog instance
 	 *
 	 * @param parent
-	 *            shell to parent the dialog on
+	 *                         shell to parent the dialog on
 	 * @param multi
-	 *            <code>true</code> if multiple selection is allowed
+	 *                         <code>true</code> if multiple selection is
+	 *                         allowed
 	 * @param context
-	 *            context used to execute long-running operations associated
-	 *            with this dialog
+	 *                         context used to execute long-running operations
+	 *                         associated with this dialog
 	 * @param scope
-	 *            scope used when searching for types
+	 *                         scope used when searching for types
 	 * @param elementKinds
-	 *            flags defining nature of searched elements; the only valid
-	 *            values are: <code>IJavaSearchConstants.TYPE</code>
-	 *            <code>IJavaSearchConstants.ANNOTATION_TYPE</code>
-	 *            <code>IJavaSearchConstants.INTERFACE</code>
-	 *            <code>IJavaSearchConstants.ENUM</code>
-	 *            <code>IJavaSearchConstants.CLASS_AND_INTERFACE</code>
-	 *            <code>IJavaSearchConstants.CLASS_AND_ENUM</code>. Please note
-	 *            that the bitwise OR combination of the elementary constants is
-	 *            not supported.
+	 *                         flags defining nature of searched elements; the
+	 *                         only valid values are:
+	 *                         <code>IJavaSearchConstants.TYPE</code>
+	 *                         <code>IJavaSearchConstants.ANNOTATION_TYPE</code>
+	 *                         <code>IJavaSearchConstants.INTERFACE</code>
+	 *                         <code>IJavaSearchConstants.ENUM</code>
+	 *                         <code>IJavaSearchConstants.CLASS_AND_INTERFACE</code>
+	 *                         <code>IJavaSearchConstants.CLASS_AND_ENUM</code>.
+	 *                         Please note that the bitwise OR combination of
+	 *                         the elementary constants is not supported.
 	 */
 	public FilteredTypesSelectionDialog(Shell parent, boolean multi,
 			IRunnableContext context, IDLTKSearchScope scope, int elementKinds,
@@ -167,29 +169,32 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 	 * Creates new FilteredTypesSelectionDialog instance.
 	 *
 	 * @param shell
-	 *            shell to parent the dialog on
+	 *                         shell to parent the dialog on
 	 * @param multi
-	 *            <code>true</code> if multiple selection is allowed
+	 *                         <code>true</code> if multiple selection is
+	 *                         allowed
 	 * @param context
-	 *            context used to execute long-running operations associated
-	 *            with this dialog
+	 *                         context used to execute long-running operations
+	 *                         associated with this dialog
 	 * @param scope
-	 *            scope used when searching for types. If the scope is
-	 *            <code>null</code>, then workspace is scope is used as default,
-	 *            and the user can choose a working set as scope.
+	 *                         scope used when searching for types. If the scope
+	 *                         is <code>null</code>, then workspace is scope is
+	 *                         used as default, and the user can choose a
+	 *                         working set as scope.
 	 * @param elementKinds
-	 *            flags defining nature of searched elements; the only valid
-	 *            values are: <code>IJavaSearchConstants.TYPE</code>
-	 *            <code>IJavaSearchConstants.ANNOTATION_TYPE</code>
-	 *            <code>IJavaSearchConstants.INTERFACE</code>
-	 *            <code>IJavaSearchConstants.ENUM</code>
-	 *            <code>IJavaSearchConstants.CLASS_AND_INTERFACE</code>
-	 *            <code>IJavaSearchConstants.CLASS_AND_ENUM</code>. Please note
-	 *            that the bitwise OR combination of the elementary constants is
-	 *            not supported.
+	 *                         flags defining nature of searched elements; the
+	 *                         only valid values are:
+	 *                         <code>IJavaSearchConstants.TYPE</code>
+	 *                         <code>IJavaSearchConstants.ANNOTATION_TYPE</code>
+	 *                         <code>IJavaSearchConstants.INTERFACE</code>
+	 *                         <code>IJavaSearchConstants.ENUM</code>
+	 *                         <code>IJavaSearchConstants.CLASS_AND_INTERFACE</code>
+	 *                         <code>IJavaSearchConstants.CLASS_AND_ENUM</code>.
+	 *                         Please note that the bitwise OR combination of
+	 *                         the elementary constants is not supported.
 	 * @param extension
-	 *            an extension of the standard type selection dialog; See
-	 *            {@link TypeSelectionExtension}
+	 *                         an extension of the standard type selection
+	 *                         dialog; See {@link TypeSelectionExtension}
 	 */
 	public FilteredTypesSelectionDialog(Shell shell, boolean multi,
 			IRunnableContext context, IDLTKSearchScope scope, int elementKinds,
@@ -240,7 +245,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 	 * Adds or replaces subtitle of the dialog
 	 *
 	 * @param text
-	 *            the new subtitle for this dialog
+	 *                 the new subtitle for this dialog
 	 */
 	private void setSubtitle(String text) {
 		if (text == null || text.length() == 0) {
@@ -248,7 +253,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 		} else {
 			getShell().setText(Messages.format(
 					DLTKUIMessages.FilteredTypeSelectionDialog_titleFormat,
-					new String[] { fTitle, text }));
+					fTitle, text));
 		}
 	}
 
@@ -394,8 +399,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 							ScriptElementLabels.ALL_FULLY_QUALIFIED);
 					String message = Messages.format(
 							DLTKUIMessages.FilteredTypesSelectionDialog_dialogMessage,
-							new String[] { typeInfo.getFullyQualifiedName(),
-									containerName });
+							typeInfo.getFullyQualifiedName(), containerName);
 					MessageDialog.openError(getShell(), fTitle, message);
 					getSelectionHistory().remove(typeInfo);
 				}
@@ -439,7 +443,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 	 * Sets a new validator.
 	 *
 	 * @param validator
-	 *            the new validator
+	 *                      the new validator
 	 */
 	public void setValidator(ISelectionStatusValidator validator) {
 		fValidator = validator;
@@ -600,16 +604,16 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 						null);
 			Object[] elements = { type };
 			return fValidator.validate(elements);
-		} else
-			return new Status(IStatus.OK, DLTKUIPlugin.getPluginId(),
-					IStatus.OK, "", null); //$NON-NLS-1$
+		}
+		return new Status(IStatus.OK, DLTKUIPlugin.getPluginId(), IStatus.OK,
+				"", null); //$NON-NLS-1$
 	}
 
 	/**
 	 * Sets search scope used when searching for types.
 	 *
 	 * @param scope
-	 *            the new scope
+	 *                  the new scope
 	 */
 	private void setSearchScope(IDLTKSearchScope scope) {
 		fSearchScope = scope;
@@ -1124,9 +1128,10 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog
 		 * Set filter to "match everything" mode.
 		 *
 		 * @param matchEverything
-		 *            if <code>true</code>, {@link #matchItem(Object)} always
-		 *            returns true. If <code>false</code>, the filter is
-		 *            enabled.
+		 *                            if <code>true</code>,
+		 *                            {@link #matchItem(Object)} always returns
+		 *                            true. If <code>false</code>, the filter is
+		 *                            enabled.
 		 */
 		public void setMatchEverythingMode(boolean matchEverything) {
 			this.fMatchEverything = matchEverything;

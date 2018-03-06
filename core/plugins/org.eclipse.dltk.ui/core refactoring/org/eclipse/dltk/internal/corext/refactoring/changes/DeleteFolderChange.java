@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,34 +25,35 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ui.ide.undo.ResourceDescription;
 
-
 public class DeleteFolderChange extends AbstractDeleteChange {
-	
+
 	private final IPath fPath;
 	private final boolean fIsExecuteChange;
-	
+
 	public DeleteFolderChange(IFolder folder, boolean isExecuteChange) {
 		this(getFolderPath(folder), isExecuteChange);
 	}
-	
+
 	public DeleteFolderChange(IPath path, boolean isExecuteChange) {
-		fPath= path;
-		fIsExecuteChange= isExecuteChange;
+		fPath = path;
+		fIsExecuteChange = isExecuteChange;
 	}
-	
-	public static IPath getFolderPath(IFolder folder){
-		return folder.getFullPath().removeFirstSegments(ResourcesPlugin.getWorkspace().getRoot().getFullPath().segmentCount());
+
+	public static IPath getFolderPath(IFolder folder) {
+		return folder.getFullPath().removeFirstSegments(ResourcesPlugin
+				.getWorkspace().getRoot().getFullPath().segmentCount());
 	}
-	
-	public static IFolder getFolder(IPath path){
+
+	public static IFolder getFolder(IPath path) {
 		return ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
 	}
 
 	@Override
 	public String getName() {
-		return Messages.format(RefactoringCoreMessages.DeleteFolderChange_0, fPath.lastSegment()); 
+		return Messages.format(RefactoringCoreMessages.DeleteFolderChange_0,
+				fPath.lastSegment());
 	}
-	
+
 	@Override
 	public Object getModifiedElement() {
 		return getFolder(fPath);
@@ -66,14 +67,13 @@ public class DeleteFolderChange extends AbstractDeleteChange {
 			// or read only files in the folder. The change is
 			// currently not used as a undo/redo change
 			return super.isValid(pm, NONE);
-		} else {
-			return super.isValid(pm, READ_ONLY | DIRTY);
 		}
+		return super.isValid(pm, READ_ONLY | DIRTY);
 	}
 
 	@Override
 	protected Change doDelete(IProgressMonitor pm) throws CoreException {
-		IFolder folder= getFolder(fPath);
+		IFolder folder = getFolder(fPath);
 		Assert.isTrue(folder.exists());
 		pm.beginTask("", 2); //$NON-NLS-1$
 		folder.accept((IResourceVisitor) resource -> {
@@ -95,4 +95,3 @@ public class DeleteFolderChange extends AbstractDeleteChange {
 		return new UndoDeleteResourceChange(resourceDescription);
 	}
 }
-

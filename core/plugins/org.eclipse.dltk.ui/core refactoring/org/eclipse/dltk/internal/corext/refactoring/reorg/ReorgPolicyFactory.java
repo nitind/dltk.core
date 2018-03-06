@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -124,12 +124,12 @@ public class ReorgPolicyFactory {
 			if (resources.length != 0 || ReorgUtils.hasElementsNotOfType(
 					modelElements, IModelElement.SCRIPT_FOLDER))
 				return NO;
-			if (copy)
+			if (copy) {
 				return new CopyPackagesPolicy(
 						ArrayTypeConverter.toPackageArray(modelElements));
-			else
-				return new MovePackagesPolicy(
-						ArrayTypeConverter.toPackageArray(modelElements));
+			}
+			return new MovePackagesPolicy(
+					ArrayTypeConverter.toPackageArray(modelElements));
 		}
 
 		if (ReorgUtils.hasElementsOfType(modelElements,
@@ -137,12 +137,12 @@ public class ReorgPolicyFactory {
 			if (resources.length != 0 || ReorgUtils.hasElementsNotOfType(
 					modelElements, IModelElement.PROJECT_FRAGMENT))
 				return NO;
-			if (copy)
+			if (copy) {
 				return new CopyProjectFragmentsPolicy(ArrayTypeConverter
 						.toProjectFragmentArray(modelElements));
-			else
-				return new MoveProjectFragmentsPolicy(ArrayTypeConverter
-						.toProjectFragmentArray(modelElements));
+			}
+			return new MoveProjectFragmentsPolicy(
+					ArrayTypeConverter.toProjectFragmentArray(modelElements));
 		}
 
 		if (ReorgUtils.hasElementsOfType(resources,
@@ -155,16 +155,16 @@ public class ReorgPolicyFactory {
 			if (ReorgUtils.hasElementsNotOfType(resources,
 					IResource.FILE | IResource.FOLDER))
 				return NO;
-			if (copy)
+			if (copy) {
 				return new CopyFilesFoldersAndCusPolicy(
 						ReorgUtils.getFiles(resources),
 						ReorgUtils.getFolders(resources),
 						ArrayTypeConverter.toCuArray(modelElements));
-			else
-				return new MoveFilesFoldersAndCusPolicy(
-						ReorgUtils.getFiles(resources),
-						ReorgUtils.getFolders(resources),
-						ArrayTypeConverter.toCuArray(modelElements));
+			}
+			return new MoveFilesFoldersAndCusPolicy(
+					ReorgUtils.getFiles(resources),
+					ReorgUtils.getFolders(resources),
+					ArrayTypeConverter.toCuArray(modelElements));
 		}
 
 		if (hasElementsSmallerThanCuOrClassFile(modelElements)) {
@@ -173,15 +173,14 @@ public class ReorgPolicyFactory {
 			Assert.isTrue(!ReorgUtils.hasElementsOfType(modelElements,
 					IModelElement.SOURCE_MODULE));
 			Assert.isTrue(!hasElementsLargerThanCuOrClassFile(modelElements));
-			if (copy)
+			if (copy) {
 				return new CopySubCuElementsPolicy(modelElements);
-			else {
-				if (DLTKCore.DEBUG) {
-					System.err.println(
-							"TODO: ReorgPolicyFactory: Add MoveSubCuElementsPolicy support"); //$NON-NLS-1$
-				}
-				// return new MoveSubCuElementsPolicy(modelElements);
 			}
+			if (DLTKCore.DEBUG) {
+				System.err.println(
+						"TODO: ReorgPolicyFactory: Add MoveSubCuElementsPolicy support"); //$NON-NLS-1$
+			}
+			// return new MoveSubCuElementsPolicy(modelElements);
 		}
 		return NO;
 	}
@@ -308,9 +307,8 @@ public class ReorgPolicyFactory {
 			if (modifications != null) {
 				return modifications.loadParticipants(status, processor,
 						natures, shared);
-			} else {
-				return new RefactoringParticipant[0];
 			}
+			return new RefactoringParticipant[0];
 		}
 
 		@Override
@@ -947,10 +945,10 @@ public class ReorgPolicyFactory {
 
 		private IScriptProject getDestinationAsScriptProject(
 				IModelElement modelElementDestination) {
-			if (modelElementDestination == null)
+			if (modelElementDestination == null) {
 				return null;
-			else
-				return modelElementDestination.getScriptProject();
+			}
+			return modelElementDestination.getScriptProject();
 		}
 
 		protected IProjectFragment[] getProjectFragments() {
@@ -1490,17 +1488,15 @@ public class ReorgPolicyFactory {
 							newName);
 				}
 				return new CopyScriptFolderChange(pack, destination, nameQuery);
-			} else {
-				if (destination.getResource() instanceof IContainer) {
-					IContainer dest = (IContainer) destination.getResource();
-					IResource res = pack.getResource();
-					INewNameQuery nameQuery = copyQueries
-							.createNewResourceNameQuery(res, newName);
-					return new CopyResourceChange(res, dest, nameQuery);
-				} else {
-					return new NullChange();
-				}
 			}
+			if (destination.getResource() instanceof IContainer) {
+				IContainer dest = (IContainer) destination.getResource();
+				IResource res = pack.getResource();
+				INewNameQuery nameQuery = copyQueries
+						.createNewResourceNameQuery(res, newName);
+				return new CopyResourceChange(res, dest, nameQuery);
+			}
+			return new NullChange();
 		}
 	}
 
@@ -2038,9 +2034,8 @@ public class ReorgPolicyFactory {
 		public Change createChange(IProgressMonitor pm) throws ModelException {
 			if (!fUpdateReferences) {
 				return createSimpleMoveChange(pm);
-			} else {
-				return createReferenceUpdatingMoveChange(pm);
 			}
+			return createReferenceUpdatingMoveChange(pm);
 		}
 
 		@Override

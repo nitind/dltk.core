@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,10 +47,10 @@ public class MethodNameMatchLabelProvider extends LabelProvider {
 	}
 
 	private String getPackageName(String packName) {
-		if (packName.length() == 0)
+		if (packName.length() == 0) {
 			return DLTKUIMessages.TypeInfoLabelProvider_default_package;
-		else
-			return packName;
+		}
+		return packName;
 	}
 
 	@Override
@@ -105,8 +105,8 @@ public class MethodNameMatchLabelProvider extends LabelProvider {
 
 		if (isSet(SHOW_TYPE_CONTAINER_ONLY)) {
 			MethodNameMatch methodRef = (MethodNameMatch) element;
-			if (methodRef.getPackageName().equals(
-					methodRef.getMethodContainerName()))
+			if (methodRef.getPackageName()
+					.equals(methodRef.getMethodContainerName()))
 				return PKG_ICON;
 
 			return METHOD_ICON;

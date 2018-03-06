@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2017 NumberFour AG and others.
+ * Copyright (c) 2012, 2018 NumberFour AG and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -190,9 +190,8 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 		if (src != null) {
 			if (currentPackagePath == null) {
 				return src.getScriptFolder("");
-			} else {
-				return src.getScriptFolder(currentPackagePath);
 			}
+			return src.getScriptFolder(currentPackagePath);
 		}
 		return null;
 	}
@@ -214,10 +213,10 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 	 * Sets the content of the package input field to the given value.
 	 *
 	 * @param str
-	 *            the new package input field text
+	 *                          the new package input field text
 	 * @param canBeModified
-	 *            if <code>true</code> the package input field can be modified;
-	 *            otherwise it is read-only.
+	 *                          if <code>true</code> the package input field can
+	 *                          be modified; otherwise it is read-only.
 	 */
 	public void setPackageText(String str, boolean canBeModified) {
 		fPackageDialogField.setText(str);
@@ -439,11 +438,11 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 	 * field changes (check for duplicated class names).
 	 *
 	 * @param fieldName
-	 *            The name of the field that has changed (field id). For the
-	 *            source folder the field id is
-	 *            {@link NewContainerWizardPage#CONTAINER} , for the package
-	 *            it's {@link #PACKAGE}, and for the file name
-	 *            {@link NewSourceModulePage#FILE}
+	 *                      The name of the field that has changed (field id).
+	 *                      For the source folder the field id is
+	 *                      {@link NewContainerWizardPage#CONTAINER} , for the
+	 *                      package it's {@link #PACKAGE}, and for the file name
+	 *                      {@link NewSourceModulePage#FILE}
 	 */
 	@Override
 	protected void handleFieldChanged(String fieldName) {
@@ -484,10 +483,10 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 	 * layout manager and that the grid layout has at least 3 columns.
 	 *
 	 * @param parent
-	 *            the parent composite
+	 *                     the parent composite
 	 * @param nColumns
-	 *            the number of columns to span. This number must be greater or
-	 *            equal three
+	 *                     the number of columns to span. This number must be
+	 *                     greater or equal three
 	 */
 	@Override
 	protected void createContainerControls(Composite parent, int nColumns) {
@@ -501,9 +500,9 @@ public abstract class NewSourceModuleInPackagePage extends NewSourceModulePage {
 	 * called if packages are supported.
 	 *
 	 * @param composite
-	 *            the parent composite
+	 *                      the parent composite
 	 * @param nColumns
-	 *            number of columns to span
+	 *                      number of columns to span
 	 */
 	protected void createPackageControls(Composite composite, int nColumns) {
 		fPackageDialogField.doFillIntoGrid(composite, nColumns);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -20,8 +20,8 @@ import org.eclipse.dltk.core.SourceParserUtil;
 /**
  * Abstract base class for the semantic highlighters operating on the AST tree.
  */
-public abstract class ASTSemanticHighlighter extends
-		AbstractSemanticHighlighter {
+public abstract class ASTSemanticHighlighter
+		extends AbstractSemanticHighlighter {
 
 	/**
 	 * @param code
@@ -32,9 +32,8 @@ public abstract class ASTSemanticHighlighter extends
 			throws ModelException {
 		if (code instanceof ISourceModule) {
 			return parseSourceModule((ISourceModule) code);
-		} else {
-			return parseSourceCode(code);
 		}
+		return parseSourceCode(code);
 	}
 
 	private IModuleDeclaration parseSourceCode(IModuleSource code) {

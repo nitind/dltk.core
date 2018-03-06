@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 xored software Inc. and others.
+ * Copyright (c) 2009, 2018 xored software Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -310,8 +310,8 @@ public class ProjectCreator {
 	 *
 	 * @param kind
 	 * @param priority
-	 *            the priority of the specified step. steps with greater
-	 *            priority are executed later
+	 *                     the priority of the specified step. steps with
+	 *                     greater priority are executed later
 	 * @param step
 	 * @param mode
 	 */
@@ -600,15 +600,16 @@ public class ProjectCreator {
 	 * configured. No natures are added.
 	 *
 	 * @param project
-	 *            The handle of the project to create.
+	 *                        The handle of the project to create.
 	 * @param locationURI
-	 *            The location of the project or <code>null</code> to create the
-	 *            project in the workspace
+	 *                        The location of the project or <code>null</code>
+	 *                        to create the project in the workspace
 	 * @param monitor
-	 *            a progress monitor to report progress or <code>null</code> if
-	 *            progress reporting is not desired
+	 *                        a progress monitor to report progress or
+	 *                        <code>null</code> if progress reporting is not
+	 *                        desired
 	 * @throws CoreException
-	 *             if the project couldn't be created
+	 *                           if the project couldn't be created
 	 * @see org.eclipse.core.resources.IProjectDescription#setLocationURI(java.net.URI)
 	 */
 	protected void createProject(IProject project, URI locationURI,
@@ -636,10 +637,9 @@ public class ProjectCreator {
 				detector.detectBuildpath(
 						new SubProgressMonitor(monitor, WORK_INIT_BP));
 				return detector.getBuildpath();
-			} else {
-				monitor.worked(WORK_INIT_BP);
-				return null;
 			}
+			monitor.worked(WORK_INIT_BP);
+			return null;
 		} else if (fLocation.isSrc()) {
 			final IDLTKUILanguageToolkit toolkit = getUILanguageToolkit();
 			final IPath srcPath = toolkit != null

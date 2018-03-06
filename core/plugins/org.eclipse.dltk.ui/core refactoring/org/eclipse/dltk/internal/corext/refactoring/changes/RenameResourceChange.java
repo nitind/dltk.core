@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,6 @@ import org.eclipse.ltk.core.refactoring.RefactoringChangeDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
-
 public final class RenameResourceChange extends DLTKChange {
 
 	public static IPath renamedResourcePath(IPath path, String newName) {
@@ -39,16 +38,20 @@ public final class RenameResourceChange extends DLTKChange {
 
 	private final long fStampToRestore;
 
-	private RenameResourceChange(RefactoringDescriptor descriptor, IPath resourcePath, String newName, String comment, long stampToRestore) {
-		fDescriptor= descriptor;
-		fResourcePath= resourcePath;
-		fNewName= newName;
-		fComment= comment;
-		fStampToRestore= stampToRestore;
+	private RenameResourceChange(RefactoringDescriptor descriptor,
+			IPath resourcePath, String newName, String comment,
+			long stampToRestore) {
+		fDescriptor = descriptor;
+		fResourcePath = resourcePath;
+		fNewName = newName;
+		fComment = comment;
+		fStampToRestore = stampToRestore;
 	}
 
-	public RenameResourceChange(RefactoringDescriptor descriptor, IResource resource, String newName, String comment) {
-		this(descriptor, resource.getFullPath(), newName, comment, IResource.NULL_STAMP);
+	public RenameResourceChange(RefactoringDescriptor descriptor,
+			IResource resource, String newName, String comment) {
+		this(descriptor, resource.getFullPath(), newName, comment,
+				IResource.NULL_STAMP);
 	}
 
 	@Override
@@ -65,7 +68,9 @@ public final class RenameResourceChange extends DLTKChange {
 
 	@Override
 	public String getName() {
-		return Messages.format(RefactoringCoreMessages.RenameResourceChange_name, new String[] { fResourcePath.toString(), fNewName});
+		return Messages.format(
+				RefactoringCoreMessages.RenameResourceChange_name,
+				fResourcePath.toString(), fNewName);
 	}
 
 	public String getNewName() {
@@ -73,34 +78,40 @@ public final class RenameResourceChange extends DLTKChange {
 	}
 
 	private IResource getResource() {
-		return ResourcesPlugin.getWorkspace().getRoot().findMember(fResourcePath);
+		return ResourcesPlugin.getWorkspace().getRoot()
+				.findMember(fResourcePath);
 	}
 
 	@Override
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException {
-		IResource resource= getResource();
+		IResource resource = getResource();
 		if (resource == null || !resource.exists()) {
-			return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.RenameResourceChange_does_not_exist, fResourcePath.toString()));
-		} else {
-			return super.isValid(pm, DIRTY);
+			return RefactoringStatus.createFatalErrorStatus(Messages.format(
+					RefactoringCoreMessages.RenameResourceChange_does_not_exist,
+					fResourcePath.toString()));
 		}
+		return super.isValid(pm, DIRTY);
 	}
 
 	@Override
 	public Change perform(IProgressMonitor pm) throws CoreException {
 		try {
-			pm.beginTask(RefactoringCoreMessages.RenameResourceChange_rename_resource, 1);
+			pm.beginTask(
+					RefactoringCoreMessages.RenameResourceChange_rename_resource,
+					1);
 
-			IResource resource= getResource();
-			long currentStamp= resource.getModificationStamp();
-			IPath newPath= renamedResourcePath(fResourcePath, fNewName);
+			IResource resource = getResource();
+			long currentStamp = resource.getModificationStamp();
+			IPath newPath = renamedResourcePath(fResourcePath, fNewName);
 			resource.move(newPath, IResource.SHALLOW, pm);
 			if (fStampToRestore != IResource.NULL_STAMP) {
-				IResource newResource= ResourcesPlugin.getWorkspace().getRoot().findMember(newPath);
+				IResource newResource = ResourcesPlugin.getWorkspace().getRoot()
+						.findMember(newPath);
 				newResource.revertModificationStamp(fStampToRestore);
 			}
-			String oldName= fResourcePath.lastSegment();
-			return new RenameResourceChange(null, newPath, oldName, fComment, currentStamp);
+			String oldName = fResourcePath.lastSegment();
+			return new RenameResourceChange(null, newPath, oldName, fComment,
+					currentStamp);
 		} finally {
 			pm.done();
 		}

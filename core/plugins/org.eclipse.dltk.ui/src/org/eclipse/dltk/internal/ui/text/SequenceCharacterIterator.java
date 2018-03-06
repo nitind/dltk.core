@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,12 +15,10 @@ import org.eclipse.core.runtime.Assert;
 /**
  * A <code>CharSequence</code> based implementation of
  * <code>CharacterIterator</code>.
- *
- *
  */
 public class SequenceCharacterIterator implements CharacterIterator {
 
-	private int fIndex= -1;
+	private int fIndex = -1;
 	private final CharSequence fSequence;
 	private final int fFirst;
 	private final int fLast;
@@ -33,7 +31,8 @@ public class SequenceCharacterIterator implements CharacterIterator {
 	/**
 	 * Creates an iterator for the entire sequence.
 	 *
-	 * @param sequence the sequence backing this iterator
+	 * @param sequence
+	 *                     the sequence backing this iterator
 	 */
 	public SequenceCharacterIterator(CharSequence sequence) {
 		this(sequence, 0);
@@ -42,33 +41,42 @@ public class SequenceCharacterIterator implements CharacterIterator {
 	/**
 	 * Creates an iterator.
 	 *
-	 * @param sequence the sequence backing this iterator
-	 * @param first the first character to consider
-	 * @throws IllegalArgumentException if the indices are out of bounds
+	 * @param sequence
+	 *                     the sequence backing this iterator
+	 * @param first
+	 *                     the first character to consider
+	 * @throws IllegalArgumentException
+	 *                                      if the indices are out of bounds
 	 */
-	public SequenceCharacterIterator(CharSequence sequence, int first) throws IllegalArgumentException {
+	public SequenceCharacterIterator(CharSequence sequence, int first)
+			throws IllegalArgumentException {
 		this(sequence, first, sequence.length());
 	}
 
 	/**
 	 * Creates an iterator.
 	 *
-	 * @param sequence the sequence backing this iterator
-	 * @param first the first character to consider
-	 * @param last the last character index to consider
-	 * @throws IllegalArgumentException if the indices are out of bounds
+	 * @param sequence
+	 *                     the sequence backing this iterator
+	 * @param first
+	 *                     the first character to consider
+	 * @param last
+	 *                     the last character index to consider
+	 * @throws IllegalArgumentException
+	 *                                      if the indices are out of bounds
 	 */
-	public SequenceCharacterIterator(CharSequence sequence, int first, int last) throws IllegalArgumentException {
+	public SequenceCharacterIterator(CharSequence sequence, int first, int last)
+			throws IllegalArgumentException {
 		if (sequence == null)
 			throw new NullPointerException();
 		if (first < 0 || first > last)
 			throw new IllegalArgumentException();
 		if (last > sequence.length())
 			throw new IllegalArgumentException();
-		fSequence= sequence;
-		fFirst= first;
-		fLast= last;
-		fIndex= first;
+		fSequence = sequence;
+		fFirst = first;
+		fLast = last;
+		fIndex = first;
 		invariant();
 	}
 
@@ -79,18 +87,18 @@ public class SequenceCharacterIterator implements CharacterIterator {
 
 	@Override
 	public char last() {
-		if (fFirst == fLast)
+		if (fFirst == fLast) {
 			return setIndex(getEndIndex());
-		else
-			return setIndex(getEndIndex() - 1);
+		}
+		return setIndex(getEndIndex() - 1);
 	}
 
 	@Override
 	public char current() {
-		if (fIndex >= fFirst && fIndex < fLast)
+		if (fIndex >= fFirst && fIndex < fLast) {
 			return fSequence.charAt(fIndex);
-		else
-			return DONE;
+		}
+		return DONE;
 	}
 
 	@Override
@@ -102,15 +110,14 @@ public class SequenceCharacterIterator implements CharacterIterator {
 	public char previous() {
 		if (fIndex > getBeginIndex()) {
 			return setIndex(fIndex - 1);
-		} else {
-			return DONE;
 		}
+		return DONE;
 	}
 
 	@Override
 	public char setIndex(int position) {
 		if (position >= getBeginIndex() && position <= getEndIndex())
-			fIndex= position;
+			fIndex = position;
 		else
 			throw new IllegalArgumentException();
 

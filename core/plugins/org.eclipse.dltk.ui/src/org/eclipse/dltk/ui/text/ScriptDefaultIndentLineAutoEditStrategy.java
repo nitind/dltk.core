@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 xored software, Inc.
+ * Copyright (c) 2010, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -19,30 +19,37 @@ import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextUtilities;
 
-public class ScriptDefaultIndentLineAutoEditStrategy extends DefaultIndentLineAutoEditStrategy {
-    protected final IPreferenceStore fPreferenceStore;
+public class ScriptDefaultIndentLineAutoEditStrategy
+		extends DefaultIndentLineAutoEditStrategy {
+	protected final IPreferenceStore fPreferenceStore;
 
-    public ScriptDefaultIndentLineAutoEditStrategy(IPreferenceStore fPreferenceStore) {
-        this.fPreferenceStore = fPreferenceStore;
-    }
+	public ScriptDefaultIndentLineAutoEditStrategy(
+			IPreferenceStore fPreferenceStore) {
+		this.fPreferenceStore = fPreferenceStore;
+	}
 
-    protected int getIndentSize() {
-        return fPreferenceStore.getInt(CodeFormatterConstants.FORMATTER_INDENTATION_SIZE);
-    }
+	protected int getIndentSize() {
+		return fPreferenceStore
+				.getInt(CodeFormatterConstants.FORMATTER_INDENTATION_SIZE);
+	}
 
-    protected TabStyle getTabStyle() {
-        return TabStyle.forName(fPreferenceStore.getString(CodeFormatterConstants.FORMATTER_TAB_CHAR), TabStyle.TAB);
-    }
+	protected TabStyle getTabStyle() {
+		return TabStyle.forName(
+				fPreferenceStore
+						.getString(CodeFormatterConstants.FORMATTER_TAB_CHAR),
+				TabStyle.TAB);
+	}
 
-    protected String getIndent() {
-        if (getTabStyle() == TabStyle.SPACES) {
-            return AutoEditUtils.getNSpaces(getIndentSize());
-        } else
-            return "\t"; //$NON-NLS-1$
-    }
+	protected String getIndent() {
+		if (getTabStyle() == TabStyle.SPACES) {
+			return AutoEditUtils.getNSpaces(getIndentSize());
+		}
+		return "\t"; //$NON-NLS-1$
+	}
 
-    protected boolean isLineDelimiter(IDocument document, String text) {
-        String[] delimiters = document.getLegalLineDelimiters();
-        return delimiters != null && TextUtilities.equals(delimiters, text) > -1;
-    }
+	protected boolean isLineDelimiter(IDocument document, String text) {
+		String[] delimiters = document.getLegalLineDelimiters();
+		return delimiters != null
+				&& TextUtilities.equals(delimiters, text) > -1;
+	}
 }

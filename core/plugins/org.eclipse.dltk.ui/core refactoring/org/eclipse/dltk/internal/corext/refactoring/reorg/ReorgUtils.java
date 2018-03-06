@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -128,9 +128,8 @@ public class ReorgUtils {
 		case IModelElement.SOURCE_MODULE:
 			if (element instanceof ExternalSourceModule) {
 				return RefactoringCoreMessages.ReorgUtils_21;
-			} else {
-				return RefactoringCoreMessages.ReorgUtils_4;
 			}
+			return RefactoringCoreMessages.ReorgUtils_4;
 		case IModelElement.FIELD:
 			return RefactoringCoreMessages.ReorgUtils_5;
 		// case IModelElement.IMPORT_CONTAINER:
@@ -140,17 +139,17 @@ public class ReorgUtils {
 		case IModelElement.SCRIPT_PROJECT:
 			return RefactoringCoreMessages.ReorgUtils_9;
 		case IModelElement.METHOD:
-			if (((IMethod) element).isConstructor())
+			if (((IMethod) element).isConstructor()) {
 				return RefactoringCoreMessages.ReorgUtils_10;
-			else
-				return RefactoringCoreMessages.ReorgUtils_11;
-			// case IModelElement.PACKAGE_DECLARATION:
-			// return RefactoringCoreMessages.ReorgUtils_12;
+			}
+			return RefactoringCoreMessages.ReorgUtils_11;
+		// case IModelElement.PACKAGE_DECLARATION:
+		// return RefactoringCoreMessages.ReorgUtils_12;
 		case IModelElement.SCRIPT_FOLDER:
-			if (ModelElementUtil.isDefaultPackage(element))
+			if (ModelElementUtil.isDefaultPackage(element)) {
 				return RefactoringCoreMessages.ReorgUtils_13;
-			else
-				return RefactoringCoreMessages.ReorgUtils_14;
+			}
+			return RefactoringCoreMessages.ReorgUtils_14;
 		case IModelElement.PROJECT_FRAGMENT:
 			if (isSourceFolder(element))
 				return RefactoringCoreMessages.ReorgUtils_15;
@@ -173,9 +172,8 @@ public class ReorgUtils {
 			if (element instanceof ExternalSourceModule) {
 				return new String[] { ((ExternalSourceModule) element)
 						.getFullPath().toString() };
-			} else {
-				return new String[] { element.getElementName() };
 			}
+			return new String[] { element.getElementName() };
 		case IModelElement.FIELD:
 			return new String[] { element.getElementName() };
 		// case IModelElement.IMPORT_CONTAINER:
@@ -223,10 +221,10 @@ public class ReorgUtils {
 	}
 
 	public static IResource getResource(IModelElement element) {
-		if (element instanceof ISourceModule)
+		if (element instanceof ISourceModule) {
 			return ((ISourceModule) element).getPrimary().getResource();
-		else
-			return element.getResource();
+		}
+		return element.getResource();
 	}
 
 	public static IResource[] getResources(IModelElement[] elements) {

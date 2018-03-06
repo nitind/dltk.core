@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
-
 class CallHierarchyLabelProvider extends AppearanceAwareLabelProvider {
 //	private final static long FULLY_QUALIFIED = Long.valueOf(ScriptElementLabels.F_FULLY_QUALIFIED | ScriptElementLabels.M_FULLY_QUALIFIED | ScriptElementLabels.I_FULLY_QUALIFIED | ScriptElementLabels.T_FULLY_QUALIFIED ).longValue();
 //
@@ -28,66 +27,74 @@ class CallHierarchyLabelProvider extends AppearanceAwareLabelProvider {
 //    private static final int IMAGEFLAGS= DEFAULT_IMAGEFLAGS | ScriptElementImageProvider.SMALL_ICONS;
 	private static final long TEXTFLAGS = DEFAULT_TEXTFLAGS
 			| ScriptElementLabels.ALL_POST_QUALIFIED
-			| ScriptElementLabels.P_COMPRESSED
-			| ScriptElementLabels.APPEND_FILE
+			| ScriptElementLabels.P_COMPRESSED | ScriptElementLabels.APPEND_FILE
 			| ScriptElementLabels.APPEND_ROOT_PATH;
-    private static final int IMAGEFLAGS= DEFAULT_IMAGEFLAGS | ScriptElementImageProvider.SMALL_ICONS;
+	private static final int IMAGEFLAGS = DEFAULT_IMAGEFLAGS
+			| ScriptElementImageProvider.SMALL_ICONS;
 
-    private ILabelDecorator fDecorator;
+	private ILabelDecorator fDecorator;
 
-    CallHierarchyLabelProvider() {
-        super(TEXTFLAGS, IMAGEFLAGS, DLTKUIPlugin.getDefault().getPreferenceStore());
-        fDecorator= new CallHierarchyLabelDecorator();
-    }
-    @Override
+	CallHierarchyLabelProvider() {
+		super(TEXTFLAGS, IMAGEFLAGS,
+				DLTKUIPlugin.getDefault().getPreferenceStore());
+		fDecorator = new CallHierarchyLabelDecorator();
+	}
+
+	@Override
 	public Image getImage(Object element) {
-        Image result= null;
-        if (element instanceof MethodWrapper) {
-            MethodWrapper methodWrapper = (MethodWrapper) element;
+		Image result = null;
+		if (element instanceof MethodWrapper) {
+			MethodWrapper methodWrapper = (MethodWrapper) element;
 
-            if (methodWrapper.getMember() != null) {
-                result= fDecorator.decorateImage(super.getImage(methodWrapper.getMember()), methodWrapper);
-            }
-        } else if (isPendingUpdate(element)) {
-            return null;
-        } else {
-            result= super.getImage(element);
-        }
+			if (methodWrapper.getMember() != null) {
+				result = fDecorator.decorateImage(
+						super.getImage(methodWrapper.getMember()),
+						methodWrapper);
+			}
+		} else if (isPendingUpdate(element)) {
+			return null;
+		} else {
+			result = super.getImage(element);
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    @Override
+	@Override
 	public String getText(Object element) {
-        if (element instanceof MethodWrapper) {
-            MethodWrapper methodWrapper = (MethodWrapper) element;
+		if (element instanceof MethodWrapper) {
+			MethodWrapper methodWrapper = (MethodWrapper) element;
 
-            if (methodWrapper.getMember() != null) {
-                return getElementLabel(methodWrapper);
-            } else {
-                return CallHierarchyMessages.CallHierarchyLabelProvider_root;
-            }
-        } else if (element == TreeTermination.SEARCH_CANCELED) {
-            return CallHierarchyMessages.CallHierarchyLabelProvider_searchCanceled;
-        } else if (isPendingUpdate(element)) {
-            return CallHierarchyMessages.CallHierarchyLabelProvider_updatePending;
-        }
+			if (methodWrapper.getMember() != null) {
+				return getElementLabel(methodWrapper);
+			}
+			return CallHierarchyMessages.CallHierarchyLabelProvider_root;
+		} else if (element == TreeTermination.SEARCH_CANCELED) {
+			return CallHierarchyMessages.CallHierarchyLabelProvider_searchCanceled;
+		} else if (isPendingUpdate(element)) {
+			return CallHierarchyMessages.CallHierarchyLabelProvider_updatePending;
+		}
 
-        return CallHierarchyMessages.CallHierarchyLabelProvider_noMethodSelected;
-    }
+		return CallHierarchyMessages.CallHierarchyLabelProvider_noMethodSelected;
+	}
 
-    private boolean isPendingUpdate(Object element) {
-        return element instanceof IWorkbenchAdapter;
-    }
-    private String getElementLabel(MethodWrapper methodWrapper) {
-        String label = super.getText(methodWrapper.getMember());
+	private boolean isPendingUpdate(Object element) {
+		return element instanceof IWorkbenchAdapter;
+	}
 
-        Collection callLocations = methodWrapper.getMethodCall().getCallLocations();
+	private String getElementLabel(MethodWrapper methodWrapper) {
+		String label = super.getText(methodWrapper.getMember());
 
-        if ((callLocations != null) && (callLocations.size() > 1)) {
-            return Messages.format(CallHierarchyMessages.CallHierarchyLabelProvider_matches, new String[]{label, String.valueOf(callLocations.size())});
-        }
+		Collection callLocations = methodWrapper.getMethodCall()
+				.getCallLocations();
 
-        return label;
-    }
+		if ((callLocations != null) && (callLocations.size() > 1)) {
+			return Messages.format(
+					CallHierarchyMessages.CallHierarchyLabelProvider_matches,
+					new String[] { label,
+							String.valueOf(callLocations.size()) });
+		}
+
+		return label;
+	}
 }

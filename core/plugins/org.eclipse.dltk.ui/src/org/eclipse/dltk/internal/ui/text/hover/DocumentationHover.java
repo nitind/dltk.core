@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -221,7 +221,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 		 * Creates a new PresenterControlCreator.
 		 *
 		 * @param site
-		 *            the site or <code>null</code> if none
+		 *                 the site or <code>null</code> if none
 		 */
 		public PresenterControlCreator(IWorkbenchSite site) {
 		}
@@ -292,9 +292,8 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 				// TODO (alex) addLinkListener(iControl);
 				return iControl;
 
-			} else {
-				return new DefaultInformationControl(parent, true);
 			}
+			return new DefaultInformationControl(parent, true);
 		}
 	}
 
@@ -339,7 +338,8 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 
 		/**
 		 * @param informationPresenterControlCreator
-		 *            control creator for enriched hover
+		 *                                               control creator for
+		 *                                               enriched hover
 		 */
 		public HoverControlCreator(
 				IInformationControlCreator informationPresenterControlCreator) {
@@ -348,10 +348,15 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 
 		/**
 		 * @param informationPresenterControlCreator
-		 *            control creator for enriched hover
+		 *                                               control creator for
+		 *                                               enriched hover
 		 * @param additionalInfoAffordance
-		 *            <code>true</code> to use the additional info affordance,
-		 *            <code>false</code> to use the hover affordance
+		 *                                               <code>true</code> to
+		 *                                               use the additional info
+		 *                                               affordance,
+		 *                                               <code>false</code> to
+		 *                                               use the hover
+		 *                                               affordance
 		 */
 		public HoverControlCreator(
 				IInformationControlCreator informationPresenterControlCreator,
@@ -382,10 +387,9 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 				};
 				// TODO (alex) addLinkListener(iControl);
 				return iControl;
-			} else {
-				return new DefaultInformationControl(parent,
-						tooltipAffordanceString);
 			}
+			return new DefaultInformationControl(parent,
+					tooltipAffordanceString);
 		}
 
 		/**
@@ -595,9 +599,8 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 				String label = ScriptElementLabels.getDefault()
 						.getElementLabel(member, flags);
 				return label;
-			} else {
-				return null;
 			}
+			return null;
 		}
 
 		@Override

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,12 +47,13 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 
 	/**
 	 * Creates a new text input page.
-	 * 
+	 *
 	 * @param isLastUserPage
-	 *            <code>true</code> if this page is the wizard's last user input
-	 *            page. Otherwise <code>false</code>.
+	 *                           <code>true</code> if this page is the wizard's
+	 *                           last user input page. Otherwise
+	 *                           <code>false</code>.
 	 * @param initialValue
-	 *            the initial value
+	 *                           the initial value
 	 */
 	public RenameInputWizardPage(String description, String contextHelpId,
 			boolean isLastUserPage, String initialValue) {
@@ -113,9 +114,9 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 	 * does nothing
 	 *
 	 * @param composite
-	 *            the parent composite
+	 *                      the parent composite
 	 * @param layouter
-	 *            the row layouter to use
+	 *                      the row layouter to use
 	 */
 	protected void addAdditionalOptions(Composite composite,
 			RowLayouter layouter) {
@@ -333,10 +334,10 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 
 	protected boolean getBooleanSetting(String key, boolean defaultValue) {
 		String update = getRefactoringSettings().get(key);
-		if (update != null)
+		if (update != null) {
 			return Boolean.valueOf(update).booleanValue();
-		else
-			return defaultValue;
+		}
+		return defaultValue;
 	}
 
 	protected void saveBooleanSetting(String key, Button checkBox) {

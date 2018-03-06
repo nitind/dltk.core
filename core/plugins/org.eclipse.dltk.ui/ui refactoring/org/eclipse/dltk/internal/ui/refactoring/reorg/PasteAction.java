@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -387,12 +387,12 @@ public class PasteAction extends SelectionDispatchAction {
 		private Object getTarget(IModelElement[] modelElements,
 				IResource[] resources) {
 			if (modelElements.length + resources.length == 1) {
-				if (modelElements.length == 1)
+				if (modelElements.length == 1) {
 					return modelElements[0];
-				else
-					return resources[0];
-			} else
-				return getCommonParent(modelElements, resources);
+				}
+				return resources[0];
+			}
+			return getCommonParent(modelElements, resources);
 		}
 
 		@Override
@@ -428,10 +428,9 @@ public class PasteAction extends SelectionDispatchAction {
 
 			if (isContainer) {
 				return true;
-			} else {
-				IModelElement element = (IModelElement) target;
-				return !element.isReadOnly();
 			}
+			IModelElement element = (IModelElement) target;
+			return !element.isReadOnly();
 		}
 
 		private IContainer getAsContainer(Object target) throws ModelException {
@@ -499,12 +498,12 @@ public class PasteAction extends SelectionDispatchAction {
 		private Object getTarget(IModelElement[] modelElements,
 				IResource[] resources) {
 			if (modelElements.length + resources.length == 1) {
-				if (modelElements.length == 1)
+				if (modelElements.length == 1) {
 					return modelElements[0];
-				else
-					return resources[0];
-			} else
-				return getCommonParent(modelElements, resources);
+				}
+				return resources[0];
+			}
+			return getCommonParent(modelElements, resources);
 		}
 
 		private Object getCommonParent(IModelElement[] modelElements,

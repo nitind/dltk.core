@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2017 xored software, Inc. and others.
+ * Copyright (c) 2008, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -61,9 +61,8 @@ public class ScriptCorrectionContext implements IScriptCorrectionContext {
 	public ICompletionProposal[] getProposals() {
 		if (proposals != null) {
 			return proposals.toArray(new ICompletionProposal[proposals.size()]);
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	private final IQuickAssistInvocationContext invocationContext;
@@ -108,9 +107,8 @@ public class ScriptCorrectionContext implements IScriptCorrectionContext {
 	public Object getAttribute(String attributeName) {
 		if (attributes == null) {
 			return null;
-		} else {
-			return attributes.get(attributeName);
 		}
+		return attributes.get(attributeName);
 	}
 
 	@Override

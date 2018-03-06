@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,8 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.IWorkingSetPage;
 
-public abstract class AbstractWorkingSetWizardPage extends WizardPage implements IWorkingSetPage {
+public abstract class AbstractWorkingSetWizardPage extends WizardPage
+		implements IWorkingSetPage {
 
 	private boolean fIsFirstValidation;
 	private Text fWorkingSetName;
@@ -31,7 +32,8 @@ public abstract class AbstractWorkingSetWizardPage extends WizardPage implements
 	/**
 	 * Default constructor.
 	 */
-	public AbstractWorkingSetWizardPage(String pageid, String title, ImageDescriptor image) {
+	public AbstractWorkingSetWizardPage(String pageid, String title,
+			ImageDescriptor image) {
 		super(pageid, title, image);
 	}
 
@@ -39,21 +41,23 @@ public abstract class AbstractWorkingSetWizardPage extends WizardPage implements
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 
-		Composite composite= new Composite(parent, SWT.NONE);
+		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
 		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		setControl(composite);
 
-		Label label= new Label(composite, SWT.WRAP);
-		label.setText(WorkingSetMessages.AbstractWorkingSetPage_workingSet_name);
-		GridData gd= new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
+		Label label = new Label(composite, SWT.WRAP);
+		label.setText(
+				WorkingSetMessages.AbstractWorkingSetPage_workingSet_name);
+		GridData gd = new GridData(
+				GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL
+						| GridData.VERTICAL_ALIGN_CENTER);
 		label.setLayoutData(gd);
 
-		fWorkingSetName= new Text(composite, SWT.SINGLE | SWT.BORDER);
-		fWorkingSetName.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
-		fWorkingSetName.addModifyListener(
-			e -> validateInput()
-		);
+		fWorkingSetName = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		fWorkingSetName.setLayoutData(new GridData(
+				GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
+		fWorkingSetName.addModifyListener(e -> validateInput());
 		fWorkingSetName.setFocus();
 
 		Dialog.applyDialogFont(composite);
@@ -67,8 +71,9 @@ public abstract class AbstractWorkingSetWizardPage extends WizardPage implements
 	@Override
 	public void setSelection(IWorkingSet workingSet) {
 		Assert.isNotNull(workingSet, "Working set must not be null"); //$NON-NLS-1$
-		fWorkingSet= workingSet;
-		if (getContainer() != null && getShell() != null && fWorkingSetName != null) {
+		fWorkingSet = workingSet;
+		if (getContainer() != null && getShell() != null
+				&& fWorkingSetName != null) {
 			fWorkingSetName.setText(fWorkingSet.getName());
 			validateInput();
 		}
@@ -76,9 +81,9 @@ public abstract class AbstractWorkingSetWizardPage extends WizardPage implements
 
 	@Override
 	public void finish() {
-		String workingSetName= fWorkingSetName.getText();
+		String workingSetName = fWorkingSetName.getText();
 		if (fWorkingSet == null) {
-			fWorkingSet= createWorkingSet(workingSetName);
+			fWorkingSet = createWorkingSet(workingSetName);
 		}
 		fWorkingSet.setName(workingSetName);
 	}
@@ -86,28 +91,29 @@ public abstract class AbstractWorkingSetWizardPage extends WizardPage implements
 	protected abstract IWorkingSet createWorkingSet(String workingSetName);
 
 	private void validateInput() {
-		String errorMessage= null;
-		String newText= fWorkingSetName.getText();
+		String errorMessage = null;
+		String newText = fWorkingSetName.getText();
 
 		if (newText.equals(newText.trim()) == false)
 			errorMessage = WorkingSetMessages.AbstractWorkingSetPage_warning_nameWhitespace;
 		if (newText.equals("")) { //$NON-NLS-1$
 			if (fIsFirstValidation) {
 				setPageComplete(false);
-				fIsFirstValidation= false;
+				fIsFirstValidation = false;
 				return;
-			} else {
-				errorMessage= WorkingSetMessages.AbstractWorkingSetPage_warning_nameMustNotBeEmpty;
 			}
+			errorMessage = WorkingSetMessages.AbstractWorkingSetPage_warning_nameMustNotBeEmpty;
 		}
 
-		fIsFirstValidation= false;
+		fIsFirstValidation = false;
 
-		if (errorMessage == null && (fWorkingSet == null || newText.equals(fWorkingSet.getName()) == false)) {
-			IWorkingSet[] workingSets= PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets();
-			for (int i= 0; i < workingSets.length; i++) {
+		if (errorMessage == null && (fWorkingSet == null
+				|| newText.equals(fWorkingSet.getName()) == false)) {
+			IWorkingSet[] workingSets = PlatformUI.getWorkbench()
+					.getWorkingSetManager().getWorkingSets();
+			for (int i = 0; i < workingSets.length; i++) {
 				if (newText.equals(workingSets[i].getName())) {
-					errorMessage= WorkingSetMessages.AbstractWorkingSetPage_warning_workingSetExists;
+					errorMessage = WorkingSetMessages.AbstractWorkingSetPage_warning_workingSetExists;
 				}
 			}
 		}

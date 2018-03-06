@@ -687,11 +687,10 @@ public abstract class ScriptBrowsingPart extends ViewPart
 		Object input = getViewer().getInput();
 		if (input == null)
 			return false;
-		if (input instanceof Collection)
+		if (input instanceof Collection) {
 			return ((Collection) input).contains(element);
-		else
-			return input.equals(element);
-
+		}
+		return input.equals(element);
 	}
 
 	private boolean isInputResetBy(Object newInput, Object input,
@@ -702,11 +701,10 @@ public abstract class ScriptBrowsingPart extends ViewPart
 		if (input instanceof IModelElement && newInput instanceof IModelElement)
 			return getTypeComparator().compare(newInput, input) > 0;
 
-		if ((newInput instanceof List) && (part instanceof PackagesView))
+		if ((newInput instanceof List) && (part instanceof PackagesView)) {
 			return true;
-
-		else
-			return false;
+		}
+		return false;
 	}
 
 	private boolean isInputResetBy(IWorkbenchPart part) {
@@ -722,10 +720,10 @@ public abstract class ScriptBrowsingPart extends ViewPart
 			partInput = ((Collection) partInput).iterator().next();
 
 		if (thisInput instanceof IModelElement
-				&& partInput instanceof IModelElement)
+				&& partInput instanceof IModelElement) {
 			return getTypeComparator().compare(partInput, thisInput) > 0;
-		else
-			return true;
+		}
+		return true;
 	}
 
 	protected boolean isAncestorOf(Object ancestor, Object element) {
@@ -748,11 +746,11 @@ public abstract class ScriptBrowsingPart extends ViewPart
 
 	private boolean internalIsAncestorOf(IModelElement ancestor,
 			IModelElement element) {
-		if (element != null)
+		if (element != null) {
 			return element.equals(ancestor)
 					|| internalIsAncestorOf(ancestor, element.getParent());
-		else
-			return false;
+		}
+		return false;
 	}
 
 	private boolean isSearchResultView(IWorkbenchPart part) {
@@ -1191,26 +1189,26 @@ public abstract class ScriptBrowsingPart extends ViewPart
 						.getAdapter(IModelElement.class);
 				if (je == null && firstElement instanceof IFile) {
 					IContainer parent = ((IFile) firstElement).getParent();
-					if (parent != null)
+					if (parent != null) {
 						return parent.getAdapter(IModelElement.class);
-					else
-						return null;
-				} else
-					return je;
-
-			} else
-				return firstElement;
+					}
+					return null;
+				}
+				return je;
+			}
+			return firstElement;
 		}
 		Object currentInput = getViewer().getInput();
 		List elements = new ArrayList();
-		if (currentInput == null || !currentInput
-				.equals(findInputForJavaElement((IModelElement) firstElement)))
+		if (currentInput == null || !currentInput.equals(
+				findInputForJavaElement((IModelElement) firstElement))) {
 			if (iter.hasNext() && selection instanceof StructuredSelection) {
 				// multi-selection and view is empty
 				return ((StructuredSelection) selection).toList();
-			} else
-				// OK: single selection and view is empty
-				return firstElement;
+			}
+			// OK: single selection and view is empty
+			return firstElement;
+		}
 
 		// be nice to multi-selection
 		while (iter.hasNext()) {
@@ -1343,15 +1341,14 @@ public abstract class ScriptBrowsingPart extends ViewPart
 		ISourceModule unit = manager.getWorkingCopy(input);
 		if (unit != null)
 			try {
-				if (unit.isConsistent())
+				if (unit.isConsistent()) {
 					return unit.getElementAt(offset);
-				else {
-					/*
-					 * XXX: We should set the selection later when the CU is
-					 * reconciled. see
-					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=51290
-					 */
 				}
+				/*
+				 * XXX: We should set the selection later when the CU is
+				 * reconciled. see
+				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=51290
+				 */
 			} catch (ModelException ex) {
 				// fall through
 			}

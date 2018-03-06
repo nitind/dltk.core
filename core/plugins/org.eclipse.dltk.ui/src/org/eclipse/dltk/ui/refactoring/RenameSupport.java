@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,17 +53,18 @@ public class RenameSupport {
 	 * Creates a new rename support for the given {@link IScriptProject}.
 	 *
 	 * @param project
-	 *            the {@link IScriptProject} to be renamed.
+	 *                    the {@link IScriptProject} to be renamed.
 	 * @param newName
-	 *            the project's new name. <code>null</code> is a valid value
-	 *            indicating that no new name is provided.
+	 *                    the project's new name. <code>null</code> is a valid
+	 *                    value indicating that no new name is provided.
 	 * @param flags
-	 *            flags controlling additional parameters. Valid flags are
-	 *            <code>UPDATE_REFERENCES</code> or <code>NONE</code>.
+	 *                    flags controlling additional parameters. Valid flags
+	 *                    are <code>UPDATE_REFERENCES</code> or
+	 *                    <code>NONE</code>.
 	 * @return the {@link RenameSupport}.
 	 * @throws CoreException
-	 *             if an unexpected error occurred while creating the
-	 *             {@link RenameSupport}.
+	 *                           if an unexpected error occurred while creating
+	 *                           the {@link RenameSupport}.
 	 */
 	public static RenameSupport create(IScriptProject project, String newName,
 			int flags) throws CoreException {
@@ -82,14 +83,15 @@ public class RenameSupport {
 	 * Creates a new rename support for the given {@link IProjectFragment}.
 	 *
 	 * @param root
-	 *            the {@link IProjectFragment} to be renamed.
+	 *                    the {@link IProjectFragment} to be renamed.
 	 * @param newName
-	 *            the package fragment root's new name. <code>null</code> is a
-	 *            valid value indicating that no new name is provided.
+	 *                    the package fragment root's new name.
+	 *                    <code>null</code> is a valid value indicating that no
+	 *                    new name is provided.
 	 * @return the {@link RenameSupport}.
 	 * @throws CoreException
-	 *             if an unexpected error occurred while creating the
-	 *             {@link RenameSupport}.
+	 *                           if an unexpected error occurred while creating
+	 *                           the {@link RenameSupport}.
 	 */
 	public static RenameSupport create(IProjectFragment root, String newName)
 			throws CoreException {
@@ -101,19 +103,20 @@ public class RenameSupport {
 	 * Creates a new rename support for the given {@link IScriptFolder}.
 	 *
 	 * @param fragment
-	 *            the {@link IScriptFolder} to be renamed.
+	 *                     the {@link IScriptFolder} to be renamed.
 	 * @param newName
-	 *            the package fragment's new name. <code>null</code> is a valid
-	 *            value indicating that no new name is provided.
+	 *                     the package fragment's new name. <code>null</code> is
+	 *                     a valid value indicating that no new name is
+	 *                     provided.
 	 * @param flags
-	 *            flags controlling additional parameters. Valid flags are
-	 *            <code>UPDATE_REFERENCES</code>, and
-	 *            <code>UPDATE_TEXTUAL_MATCHES</code>, or their bitwise OR, or
-	 *            <code>NONE</code>.
+	 *                     flags controlling additional parameters. Valid flags
+	 *                     are <code>UPDATE_REFERENCES</code>, and
+	 *                     <code>UPDATE_TEXTUAL_MATCHES</code>, or their bitwise
+	 *                     OR, or <code>NONE</code>.
 	 * @return the {@link RenameSupport}.
 	 * @throws CoreException
-	 *             if an unexpected error occurred while creating the
-	 *             {@link RenameSupport}.
+	 *                           if an unexpected error occurred while creating
+	 *                           the {@link RenameSupport}.
 	 */
 	public static RenameSupport create(IScriptFolder fragment, String newName,
 			int flags) throws CoreException {
@@ -126,19 +129,19 @@ public class RenameSupport {
 	 * Creates a new rename support for the given {@link ISourceModule}.
 	 *
 	 * @param unit
-	 *            the {@link ISourceModule} to be renamed.
+	 *                    the {@link ISourceModule} to be renamed.
 	 * @param newName
-	 *            the compilation unit's new name. <code>null</code> is a valid
-	 *            value indicating that no new name is provided.
+	 *                    the compilation unit's new name. <code>null</code> is
+	 *                    a valid value indicating that no new name is provided.
 	 * @param flags
-	 *            flags controlling additional parameters. Valid flags are
-	 *            <code>UPDATE_REFERENCES</code>, and
-	 *            <code>UPDATE_TEXTUAL_MATCHES</code>, or their bitwise OR, or
-	 *            <code>NONE</code>.
+	 *                    flags controlling additional parameters. Valid flags
+	 *                    are <code>UPDATE_REFERENCES</code>, and
+	 *                    <code>UPDATE_TEXTUAL_MATCHES</code>, or their bitwise
+	 *                    OR, or <code>NONE</code>.
 	 * @return the {@link RenameSupport}.
 	 * @throws CoreException
-	 *             if an unexpected error occurred while creating the
-	 *             {@link RenameSupport}.
+	 *                           if an unexpected error occurred while creating
+	 *                           the {@link RenameSupport}.
 	 */
 	public static RenameSupport create(ISourceModule unit, String newName,
 			int flags) throws CoreException {
@@ -166,20 +169,20 @@ public class RenameSupport {
 	 * @return the result of the light weight precondition checking.
 	 *
 	 * @throws CoreException
-	 *             if an unexpected exception occurs while performing the
-	 *             checking.
+	 *                           if an unexpected exception occurs while
+	 *                           performing the checking.
 	 *
 	 * @see #openDialog(Shell)
 	 * @see #perform(Shell, IRunnableContext)
 	 */
 	public IStatus preCheck() throws CoreException {
 		ensureChecked();
-		if (fPreCheckStatus.hasFatalError())
+		if (fPreCheckStatus.hasFatalError()) {
 			return fPreCheckStatus
 					.getEntryMatchingSeverity(RefactoringStatus.FATAL)
 					.toStatus();
-		else
-			return new Status(IStatus.OK, DLTKUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
+		}
+		return new Status(IStatus.OK, DLTKUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
 	}
 
 	private void ensureChecked() throws CoreException {

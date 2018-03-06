@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,83 +14,84 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+class LocationLabelProvider extends LabelProvider
+		implements ITableLabelProvider {
+	private static final int COLUMN_ICON = 0;
+	private static final int COLUMN_LINE = 1;
+	private static final int COLUMN_INFO = 2;
 
-class LocationLabelProvider extends LabelProvider implements ITableLabelProvider {
-    private static final int COLUMN_ICON= 0;
-    private static final int COLUMN_LINE= 1;
-    private static final int COLUMN_INFO= 2;
+	LocationLabelProvider() {
+		// Do nothing
+	}
 
-    LocationLabelProvider() {
-        // Do nothing
-    }
-
-    @Override
+	@Override
 	public String getText(Object element) {
-        return getColumnText(element, COLUMN_INFO);
-    }
+		return getColumnText(element, COLUMN_INFO);
+	}
 
-    @Override
+	@Override
 	public Image getImage(Object element) {
-        return getColumnImage(element, COLUMN_ICON);
-    }
+		return getColumnImage(element, COLUMN_ICON);
+	}
 
-    private String removeWhitespaceOutsideStringLiterals(CallLocation callLocation) {
-        StringBuffer buf = new StringBuffer();
-        boolean withinString = false;
+	private String removeWhitespaceOutsideStringLiterals(
+			CallLocation callLocation) {
+		StringBuffer buf = new StringBuffer();
+		boolean withinString = false;
 
-        String s= callLocation.getCallText();
-        for (int i = 0; i < s.length(); i++) {
-            char ch = s.charAt(i);
+		String s = callLocation.getCallText();
+		for (int i = 0; i < s.length(); i++) {
+			char ch = s.charAt(i);
 
-            if (ch == '"') {
-                withinString = !withinString;
-            }
+			if (ch == '"') {
+				withinString = !withinString;
+			}
 
-            if (withinString) {
-                buf.append(ch);
-            } else if (Character.isWhitespace(ch)) {
-                if ((buf.length() == 0) ||
-                            !Character.isWhitespace(buf.charAt(buf.length() - 1))) {
-                    if (ch != ' ') {
-                        ch = ' ';
-                    }
+			if (withinString) {
+				buf.append(ch);
+			} else if (Character.isWhitespace(ch)) {
+				if ((buf.length() == 0) || !Character
+						.isWhitespace(buf.charAt(buf.length() - 1))) {
+					if (ch != ' ') {
+						ch = ' ';
+					}
 
-                    buf.append(ch);
-                }
-            } else {
-                buf.append(ch);
-            }
-        }
+					buf.append(ch);
+				}
+			} else {
+				buf.append(ch);
+			}
+		}
 
-        return buf.toString();
-    }
+		return buf.toString();
+	}
 
-    @Override
+	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
-        if (columnIndex == COLUMN_ICON) {
-            return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_SEARCH_OCCURRENCE);
-        }
-        return null;
-    }
+		if (columnIndex == COLUMN_ICON) {
+			return DLTKPluginImages
+					.get(DLTKPluginImages.IMG_OBJS_SEARCH_OCCURRENCE);
+		}
+		return null;
+	}
 
-    @Override
+	@Override
 	public String getColumnText(Object element, int columnIndex) {
-        if (element instanceof CallLocation) {
-            CallLocation callLocation= (CallLocation) element;
+		if (element instanceof CallLocation) {
+			CallLocation callLocation = (CallLocation) element;
 
-            switch (columnIndex) {
-                case COLUMN_LINE:
-                    int lineNumber= callLocation.getLineNumber();
-                    if (lineNumber == CallLocation.UNKNOWN_LINE_NUMBER) {
-						return CallHierarchyMessages.LocationLabelProvider_unknown;
-                    } else {
-                    	return String.valueOf(lineNumber);
-                    }
-                case COLUMN_INFO:
-                    return removeWhitespaceOutsideStringLiterals(callLocation);
-            }
-        }
+			switch (columnIndex) {
+			case COLUMN_LINE:
+				int lineNumber = callLocation.getLineNumber();
+				if (lineNumber == CallLocation.UNKNOWN_LINE_NUMBER) {
+					return CallHierarchyMessages.LocationLabelProvider_unknown;
+				}
+				return String.valueOf(lineNumber);
+			case COLUMN_INFO:
+				return removeWhitespaceOutsideStringLiterals(callLocation);
+			}
+		}
 
-        return ""; //$NON-NLS-1$
-    }
+		return ""; //$NON-NLS-1$
+	}
 }

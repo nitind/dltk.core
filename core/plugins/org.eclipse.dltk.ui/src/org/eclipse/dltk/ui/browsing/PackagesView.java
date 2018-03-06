@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -66,8 +66,8 @@ public class PackagesView extends ScriptBrowsingPart {
 	private static final int LIST_VIEW_STATE = 0;
 	private static final int TREE_VIEW_STATE = 1;
 
-	private static class StatusBarUpdater4LogicalPackage extends
-			StatusBarUpdater {
+	private static class StatusBarUpdater4LogicalPackage
+			extends StatusBarUpdater {
 
 		private StatusBarUpdater4LogicalPackage(
 				IStatusLineManager statusLineManager) {
@@ -86,9 +86,11 @@ public class PackagesView extends ScriptBrowsingPart {
 			return super.formatMessage(sel);
 		}
 
-		private String formatLogicalPackageMessage(LogicalPackage logicalPackage) {
+		private String formatLogicalPackageMessage(
+				LogicalPackage logicalPackage) {
 			IScriptFolder[] fragments = logicalPackage.getScriptFolders();
-			StringBuffer buf = new StringBuffer(logicalPackage.getElementName());
+			StringBuffer buf = new StringBuffer(
+					logicalPackage.getElementName());
 			buf.append(ScriptElementLabels.CONCAT_STRING);
 			String message = ""; //$NON-NLS-1$
 			boolean firstTime = true;
@@ -97,10 +99,8 @@ public class PackagesView extends ScriptBrowsingPart {
 				IModelElement element = fragment.getParent();
 				if (element instanceof IProjectFragment) {
 					IProjectFragment root = (IProjectFragment) element;
-					String label = ScriptElementLabels
-							.getDefault()
-							.getElementLabel(
-									root,
+					String label = ScriptElementLabels.getDefault()
+							.getElementLabel(root,
 									ScriptElementLabels.DEFAULT_QUALIFIED
 											| ScriptElementLabels.ROOT_QUALIFIED);
 					if (firstTime) {
@@ -109,7 +109,7 @@ public class PackagesView extends ScriptBrowsingPart {
 					} else
 						message = Messages.format(
 								ScriptBrowsingMessages.StatusBar_concat,
-								new String[] { message, label });
+								message, label);
 				}
 			}
 			buf.append(message);
@@ -145,15 +145,18 @@ public class PackagesView extends ScriptBrowsingPart {
 	protected NonScriptElementFilter createNonJavaElementFilter() {
 		return new NonScriptElementFilter() {
 			@Override
-			public boolean select(Viewer viewer, Object parent, Object element) {
+			public boolean select(Viewer viewer, Object parent,
+					Object element) {
 				return ((element instanceof IModelElement)
-						|| (element instanceof LogicalPackage) || (element instanceof IFolder));
+						|| (element instanceof LogicalPackage)
+						|| (element instanceof IFolder));
 			}
 		};
 	}
 
 	@Override
-	public void init(IViewSite site, IMemento memento) throws PartInitException {
+	public void init(IViewSite site, IMemento memento)
+			throws PartInitException {
 		super.init(site, memento);
 		// this must be created before all actions and filters
 		fWrappedViewer = new PackageViewerWrapper();
@@ -165,12 +168,12 @@ public class PackagesView extends ScriptBrowsingPart {
 			// read state from the preference store
 			IPreferenceStore store = DLTKUIPlugin.getDefault()
 					.getPreferenceStore();
-			fCurrViewState = store.getInt(this.getViewSite().getId()
-					+ TAG_VIEW_STATE);
+			fCurrViewState = store
+					.getInt(this.getViewSite().getId() + TAG_VIEW_STATE);
 		} else {
 			// restore from memento
-			Integer integer = memento.getInteger(this.getViewSite().getId()
-					+ TAG_VIEW_STATE);
+			Integer integer = memento
+					.getInteger(this.getViewSite().getId() + TAG_VIEW_STATE);
 			if ((integer == null) || !isValidState(integer.intValue())) {
 				fCurrViewState = LIST_VIEW_STATE;
 			} else
@@ -195,7 +198,9 @@ public class PackagesView extends ScriptBrowsingPart {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#createViewer(org.eclipse.swt.widgets.Composite)
+	 * @see
+	 * org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#createViewer(org.
+	 * eclipse.swt.widgets.Composite)
 	 */
 	@Override
 	protected StructuredViewer createViewer(Composite parent) {
@@ -241,20 +246,20 @@ public class PackagesView extends ScriptBrowsingPart {
 	 */
 	@Override
 	protected IContentProvider createContentProvider() {
-		if (isInListState())
-			return new PackagesViewFlatContentProvider(fWrappedViewer
-					.getViewer());
-		else
-			return new PackagesViewHierarchicalContentProvider(fWrappedViewer
-					.getViewer());
+		if (isInListState()) {
+			return new PackagesViewFlatContentProvider(
+					fWrappedViewer.getViewer());
+		}
+		return new PackagesViewHierarchicalContentProvider(
+				fWrappedViewer.getViewer());
 	}
 
 	@Override
 	protected ScriptUILabelProvider createLabelProvider() {
-		if (isInListState())
+		if (isInListState()) {
 			return createListLabelProvider();
-		else
-			return createTreeLabelProvider();
+		}
+		return createTreeLabelProvider();
 	}
 
 	private ScriptUILabelProvider createTreeLabelProvider() {
@@ -284,23 +289,23 @@ public class PackagesView extends ScriptBrowsingPart {
 	}
 
 	/**
-	 * Answers if the given <code>element</code> is a valid input for this
-	 * part.
+	 * Answers if the given <code>element</code> is a valid input for this part.
 	 *
 	 * @param element
-	 *            the object to test
+	 *                    the object to test
 	 * @return <true> if the given element is a valid input
 	 */
 	@Override
 	protected boolean isValidInput(Object element) {
 		if (element instanceof IScriptProject
-				|| (element instanceof IProjectFragment && ((IModelElement) element)
-						.getElementName() != IProjectFragment.DEFAULT_PACKAGE_ROOT)) {
+				|| (element instanceof IProjectFragment
+						&& ((IModelElement) element)
+								.getElementName() != IProjectFragment.DEFAULT_PACKAGE_ROOT)) {
 			IScriptProject jProject = ((IModelElement) element)
 					.getScriptProject();
 			if (jProject != null)
-				return DLTKLanguageManager.hasScriptNature(jProject
-						.getProject());
+				return DLTKLanguageManager
+						.hasScriptNature(jProject.getProject());
 		}
 		return false;
 	}
@@ -310,7 +315,7 @@ public class PackagesView extends ScriptBrowsingPart {
 	 * part.
 	 *
 	 * @param element
-	 *            the object to test
+	 *                    the object to test
 	 * @return <true> if the given element is a valid element
 	 */
 	@Override
@@ -327,7 +332,9 @@ public class PackagesView extends ScriptBrowsingPart {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#findElementToSelect(org.eclipse.jdt.core.IJavaElement)
+	 * @see
+	 * org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#findElementToSelect
+	 * (org.eclipse.jdt.core.IJavaElement)
 	 */
 	@Override
 	protected IModelElement findElementToSelect(IModelElement je) {
@@ -346,9 +353,6 @@ public class PackagesView extends ScriptBrowsingPart {
 		}
 	}
 
-	/*
-	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#setInput(java.lang.Object)
-	 */
 	@Override
 	protected void setInput(Object input) {
 		setViewerWrapperInput(input);
@@ -402,8 +406,8 @@ public class PackagesView extends ScriptBrowsingPart {
 				if (element instanceof LogicalPackage) {
 					LogicalPackage cp = (LogicalPackage) element;
 					return super.category(cp.getScriptFolders()[0]);
-				} else
-					return super.category(element);
+				}
+				return super.category(element);
 			}
 
 			@Override
@@ -518,14 +522,12 @@ public class PackagesView extends ScriptBrowsingPart {
 
 	private void switchViewer(int state) {
 		// Indicate which viewer is to be used
-		if (fCurrViewState == state)
+		if (fCurrViewState == state) {
 			return;
-		else {
-			fCurrViewState = state;
-			IPreferenceStore store = DLTKUIPlugin.getDefault()
-					.getPreferenceStore();
-			store.setValue(getViewSite().getId() + TAG_VIEW_STATE, state);
 		}
+		fCurrViewState = state;
+		IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
+		store.setValue(getViewSite().getId() + TAG_VIEW_STATE, state);
 
 		// get the information from the existing viewer
 		StructuredViewer viewer = fWrappedViewer.getViewer();
@@ -559,8 +561,8 @@ public class PackagesView extends ScriptBrowsingPart {
 	private void createSelectAllAction() {
 		IActionBars actionBars = getViewSite().getActionBars();
 		if (isInListState()) {
-			fSelectAllAction = new SelectAllAction((TableViewer) fWrappedViewer
-					.getViewer());
+			fSelectAllAction = new SelectAllAction(
+					(TableViewer) fWrappedViewer.getViewer());
 			actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(),
 					fSelectAllAction);
 		} else {
@@ -579,10 +581,10 @@ public class PackagesView extends ScriptBrowsingPart {
 		if (je == null)
 			return null;
 		if (je.getElementType() == IModelElement.PROJECT_FRAGMENT
-				|| je.getElementType() == IModelElement.SCRIPT_PROJECT)
+				|| je.getElementType() == IModelElement.SCRIPT_PROJECT) {
 			return findInputForJavaElement(je, true);
-		else
-			return findInputForJavaElement(je, false);
+		}
+		return findInputForJavaElement(je, false);
 
 	}
 
@@ -596,7 +598,8 @@ public class PackagesView extends ScriptBrowsingPart {
 			// don't update if input must be project (i.e. project is used as
 			// source folder)
 			if (canChangeInputType)
-				fLastInputWasProject = je.getElementType() == IModelElement.SCRIPT_PROJECT;
+				fLastInputWasProject = je
+						.getElementType() == IModelElement.SCRIPT_PROJECT;
 			return je;
 		} else if (fLastInputWasProject) {
 			IProjectFragment packageFragmentRoot = (IProjectFragment) je
@@ -617,15 +620,16 @@ public class PackagesView extends ScriptBrowsingPart {
 	@Override
 	protected DecoratingModelLabelProvider createDecoratingLabelProvider(
 			ScriptUILabelProvider provider) {
-		return new DecoratingModelLabelProvider(provider, false, isInListState()) {
+		return new DecoratingModelLabelProvider(provider, false,
+				isInListState()) {
 
 			@Override
 			public String getText(Object element) {
 				if (element instanceof LogicalPackage) {
 					LogicalPackage el = (LogicalPackage) element;
 					return super.getText(el.getScriptFolders()[0]);
-				} else
-					return super.getText(element);
+				}
+				return super.getText(element);
 			}
 
 			@Override
@@ -644,8 +648,8 @@ public class PackagesView extends ScriptBrowsingPart {
 							image = decoratedImage;
 					}
 					return image;
-				} else
-					return super.getImage(element);
+				}
+				return super.getImage(element);
 			}
 
 		};
@@ -655,7 +659,8 @@ public class PackagesView extends ScriptBrowsingPart {
 	 * Overridden from JavaBrowsingPart to handel LogicalPackages and tree
 	 * structure.
 	 *
-	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#adjustInputAndSetSelection(org.eclipse.jdt.core.IJavaElement)
+	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#
+	 * adjustInputAndSetSelection(org.eclipse.jdt.core.IJavaElement)
 	 */
 	void adjustInputAndSetSelection(IModelElement je) {
 
@@ -664,8 +669,8 @@ public class PackagesView extends ScriptBrowsingPart {
 				.getContentProvider();
 
 		Object elementToSelect = jElementToSelect;
-		if (jElementToSelect != null
-				&& jElementToSelect.getElementType() == IModelElement.SCRIPT_FOLDER) {
+		if (jElementToSelect != null && jElementToSelect
+				.getElementType() == IModelElement.SCRIPT_FOLDER) {
 			IScriptFolder pkgFragment = (IScriptFolder) jElementToSelect;
 			elementToSelect = p.findLogicalPackage(pkgFragment);
 			if (elementToSelect == null)

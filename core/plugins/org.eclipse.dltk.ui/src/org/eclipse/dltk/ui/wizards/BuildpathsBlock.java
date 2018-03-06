@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -103,7 +103,7 @@ public class BuildpathsBlock {
 		 * removed from the old output location.
 		 *
 		 * @param oldOutputLocation
-		 *            The old output location
+		 *                              The old output location
 		 * @return Returns true if .class files should be removed.
 		 * @throws OperationCanceledException
 		 */
@@ -277,17 +277,20 @@ public class BuildpathsBlock {
 	 * given or default paths.
 	 *
 	 * @param jproject
-	 *            The java project to configure. Does not have to exist.
+	 *                             The java project to configure. Does not have
+	 *                             to exist.
 	 * @param outputLocation
-	 *            The output location to be set in the page. If
-	 *            <code>null</code> is passed, jdt default settings are used, or
-	 *            - if the project is an existing script project- the output
-	 *            location of the existing project
+	 *                             The output location to be set in the page. If
+	 *                             <code>null</code> is passed, jdt default
+	 *                             settings are used, or - if the project is an
+	 *                             existing script project- the output location
+	 *                             of the existing project
 	 * @param buildpathEntries
-	 *            The buildpath entries to be set in the page. If
-	 *            <code>null</code> is passed, jdt default settings are used, or
-	 *            - if the project is an existing script project - the buildpath
-	 *            entries of the existing project
+	 *                             The buildpath entries to be set in the page.
+	 *                             If <code>null</code> is passed, jdt default
+	 *                             settings are used, or - if the project is an
+	 *                             existing script project - the buildpath
+	 *                             entries of the existing project
 	 */
 	public void init(IScriptProject jproject,
 			IBuildpathEntry[] buildpathEntries) {
@@ -428,9 +431,8 @@ public class BuildpathsBlock {
 	protected IDLTKLanguageToolkit getLanguageToolkit() {
 		if (fContext instanceof IScriptLanguageProvider) {
 			return ((IScriptLanguageProvider) fContext).getLanguageToolkit();
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	/**

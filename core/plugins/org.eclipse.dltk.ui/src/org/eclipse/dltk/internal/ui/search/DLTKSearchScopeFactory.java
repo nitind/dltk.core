@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -169,13 +169,13 @@ public class DLTKSearchScopeFactory {
 			String label = includeInterp
 					? SearchMessages.EnclosingProjectsScope2
 					: SearchMessages.EnclosingProjectsScope2NoInterpreterEnvironment;
-			scopeDescription = Messages.format(label,
-					new String[] { projectNames[0], projectNames[1] });
+			scopeDescription = Messages.format(label, projectNames[0],
+					projectNames[1]);
 		} else {
 			String label = includeInterp ? SearchMessages.EnclosingProjectsScope
 					: SearchMessages.EnclosingProjectsScopeNoInterpreterEnvironment;
-			scopeDescription = Messages.format(label,
-					new String[] { projectNames[0], projectNames[1] });
+			scopeDescription = Messages.format(label, projectNames[0],
+					projectNames[1]);
 		}
 		return scopeDescription;
 	}
@@ -185,11 +185,10 @@ public class DLTKSearchScopeFactory {
 		if (includeInterp) {
 			return Messages.format(SearchMessages.ProjectScope,
 					project.getElementName());
-		} else {
-			return Messages.format(
-					SearchMessages.ProjectScopeNoInterpreterEnvironment,
-					project.getElementName());
 		}
+		return Messages.format(
+				SearchMessages.ProjectScopeNoInterpreterEnvironment,
+				project.getElementName());
 	}
 
 	public String getProjectScopeDescription(IEditorInput editorInput,
@@ -207,7 +206,7 @@ public class DLTKSearchScopeFactory {
 
 	public String getHierarchyScopeDescription(IType type) {
 		return Messages.format(SearchMessages.HierarchyScope,
-				new String[] { type.getElementName() });
+				type.getElementName());
 	}
 
 	public String getSelectionScopeDescription(IModelElement[] modelElements,
@@ -225,14 +224,14 @@ public class DLTKSearchScopeFactory {
 			String label = includeInterp ? SearchMessages.DoubleSelectionScope
 					: SearchMessages.DoubleSelectionScopeNoInterpreterEnvironment;
 			scopeDescription = Messages.format(label,
-					new String[] { modelElements[0].getElementName(),
-							modelElements[1].getElementName() });
+					modelElements[0].getElementName(),
+					modelElements[1].getElementName());
 		} else {
 			String label = includeInterp ? SearchMessages.SelectionScope
 					: SearchMessages.SelectionScopeNoInterpreterEnvironment;
 			scopeDescription = Messages.format(label,
-					new String[] { modelElements[0].getElementName(),
-							modelElements[1].getElementName() });
+					modelElements[0].getElementName(),
+					modelElements[1].getElementName());
 		}
 		return scopeDescription;
 	}
@@ -251,13 +250,13 @@ public class DLTKSearchScopeFactory {
 		if (workingSets.length == 2) {
 			String label = includeInterp ? SearchMessages.DoubleWorkingSetScope
 					: SearchMessages.DoubleWorkingSetScopeNoInterpreterEnvironment;
-			return Messages.format(label, new String[] {
-					workingSets[0].getLabel(), workingSets[1].getLabel() });
+			return Messages.format(label, workingSets[0].getLabel(),
+					workingSets[1].getLabel());
 		}
 		String label = includeInterp ? SearchMessages.WorkingSetsScope
 				: SearchMessages.WorkingSetsScopeNoInterpreterEnvironment;
-		return Messages.format(label, new String[] { workingSets[0].getLabel(),
-				workingSets[1].getLabel() });
+		return Messages.format(label, workingSets[0].getLabel(),
+				workingSets[1].getLabel());
 	}
 
 	public IProject[] getProjects(IDLTKSearchScope scope) {
@@ -276,9 +275,8 @@ public class DLTKSearchScopeFactory {
 		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
 			return getModelElements(
 					((IStructuredSelection) selection).toArray());
-		} else {
-			return new IModelElement[0];
 		}
+		return new IModelElement[0];
 	}
 
 	private IModelElement[] getModelElements(Object[] elements) {

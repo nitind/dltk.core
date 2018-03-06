@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2017 xored software, Inc. and others.
+ * Copyright (c) 2008, 2018 xored software, Inc. and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -131,7 +131,8 @@ public class ScriptCommentScanner extends AbstractScriptScanner {
 		 * Enables/disables the case-sensitivity of the task tag detection.
 		 *
 		 * @param caseSensitive
-		 *            <code>true</code> iff case-sensitivity should be enabled
+		 *                          <code>true</code> iff case-sensitivity
+		 *                          should be enabled
 		 * @since 3.0
 		 */
 		public void setCaseSensitive(boolean caseSensitive) {
@@ -311,10 +312,9 @@ public class ScriptCommentScanner extends AbstractScriptScanner {
 	protected int skipCommentChars() {
 		if (read() == getCommentChar()) {
 			return 1;
-		} else {
-			unread();
-			return 0;
 		}
+		unread();
+		return 0;
 	}
 
 	/*

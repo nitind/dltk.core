@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -108,10 +108,10 @@ public class SemanticHighlightingReconciler
 			return;
 		// ensure at most one thread can be reconciling at any time
 		synchronized (fReconcileLock) {
-			if (fIsReconciling)
+			if (fIsReconciling) {
 				return;
-			else
-				fIsReconciling = true;
+			}
+			fIsReconciling = true;
 		}
 		fJobPresenter = fPresenter;
 		fJobSemanticHighlightings = fSemanticHighlightings;
@@ -165,11 +165,11 @@ public class SemanticHighlightingReconciler
 	 * Update the presentation.
 	 *
 	 * @param textPresentation
-	 *            the text presentation
+	 *                             the text presentation
 	 * @param addedPositions
-	 *            the added positions
+	 *                             the added positions
 	 * @param removedPositions
-	 *            the removed positions
+	 *                             the removed positions
 	 */
 	private void updatePresentation(TextPresentation textPresentation,
 			HighlightedPosition[] addedPositions,

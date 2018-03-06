@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -187,7 +187,7 @@ public abstract class AbstractConfigurationBlock
 		 * </p>
 		 *
 		 * @param parent
-		 *            the parent composite
+		 *                   the parent composite
 		 * @return the newly created composite
 		 */
 		public Composite createSectionComposite(Composite parent) {
@@ -213,7 +213,7 @@ public abstract class AbstractConfigurationBlock
 		 * directly to the returned composite, which has no layout initially.
 		 *
 		 * @param label
-		 *            the display name of the section
+		 *                  the display name of the section
 		 * @return a composite within the expandable section
 		 */
 		public Composite createSection(String label) {
@@ -478,17 +478,18 @@ public abstract class AbstractConfigurationBlock
 	 * controls.
 	 *
 	 * @param composite
-	 *            the parent composite
+	 *                        the parent composite
 	 * @param label
-	 *            the text field's label
+	 *                        the text field's label
 	 * @param key
-	 *            the preference key
+	 *                        the preference key
 	 * @param textLimit
-	 *            the text limit
+	 *                        the text limit
 	 * @param indentation
-	 *            the field's indentation
+	 *                        the field's indentation
 	 * @param isNumber
-	 *            <code>true</code> iff this text field is used to edit a number
+	 *                        <code>true</code> iff this text field is used to
+	 *                        edit a number
 	 * @return the controls added
 	 */
 	protected Control[] addLabelledTextField(Composite composite, String label,
@@ -685,13 +686,12 @@ public abstract class AbstractConfigurationBlock
 			SectionManager manager, String label) {
 		if (manager != null) {
 			return manager.createSection(label);
-		} else {
-			Group group = new Group(parent, SWT.SHADOW_NONE);
-			group.setText(label);
-			GridData data = new GridData(SWT.FILL, SWT.CENTER, true, false);
-			group.setLayoutData(data);
-			return group;
 		}
+		Group group = new Group(parent, SWT.SHADOW_NONE);
+		group.setText(label);
+		GridData data = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		group.setLayoutData(data);
+		return group;
 	}
 
 	private FontMetrics fFontMetrics;
@@ -705,7 +705,7 @@ public abstract class AbstractConfigurationBlock
 	 * </p>
 	 *
 	 * @param testControl
-	 *            a control from which to obtain the current font
+	 *                        a control from which to obtain the current font
 	 */
 	protected void initializeDialogUnits(Control testControl) {
 		// Compute and store a font metric
@@ -727,7 +727,7 @@ public abstract class AbstractConfigurationBlock
 	 * </p>
 	 *
 	 * @param chars
-	 *            the number of characters
+	 *                  the number of characters
 	 * @return the number of pixels
 	 */
 	protected int convertWidthInCharsToPixels(int chars) {
@@ -749,7 +749,7 @@ public abstract class AbstractConfigurationBlock
 	 * </p>
 	 *
 	 * @param chars
-	 *            the number of characters
+	 *                  the number of characters
 	 * @return the number of pixels
 	 */
 	protected int convertHeightInCharsToPixels(int chars) {

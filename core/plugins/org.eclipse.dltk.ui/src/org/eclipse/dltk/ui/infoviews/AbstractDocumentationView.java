@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -124,9 +124,9 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 		 * Creates the action.
 		 *
 		 * @param control
-		 *            the widget
+		 *                              the widget
 		 * @param selectionProvider
-		 *            the selection provider
+		 *                              the selection provider
 		 */
 		public SelectAllAction(Control control,
 				SelectionProvider selectionProvider) {
@@ -173,7 +173,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 		 * Creates a new selection provider.
 		 *
 		 * @param control
-		 *            the widget
+		 *                    the widget
 		 */
 		public SelectionProvider(Control control) {
 			fControl = control;
@@ -220,11 +220,10 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 				IDocument document = new Document(
 						((StyledText) fControl).getSelectionText());
 				return new TextSelection(document, 0, document.getLength());
-			} else {
-				// FIXME: see
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=63022
-				return StructuredSelection.EMPTY;
 			}
+			// FIXME: see
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=63022
+			return StructuredSelection.EMPTY;
 		}
 
 		@Override
@@ -432,7 +431,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 	 * Returns the doc in HTML format.
 	 *
 	 * @param result
-	 *            the Script elements for which to get the Javadoc
+	 *                   the Script elements for which to get the Javadoc
 	 * @return a string with the Javadoc in HTML format.
 	 */
 	private String getScriptdocHtml(KeywordInput keyword) {
@@ -459,7 +458,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 	 * Returns the Javadoc in HTML format.
 	 *
 	 * @param result
-	 *            the Script elements for which to get the Javadoc
+	 *                   the Script elements for which to get the Javadoc
 	 * @return a string with the Javadoc in HTML format.
 	 */
 	private String getScriptdocHtmlDetailed(Object[] result) {
@@ -501,7 +500,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 	 * Returns the Javadoc in HTML format.
 	 *
 	 * @param result
-	 *            the Script elements for which to get the Javadoc
+	 *                   the Script elements for which to get the Javadoc
 	 * @return a string with the Javadoc in HTML format.
 	 */
 	private String getScriptdocHtmlList(IModelElement[] result) {
@@ -522,7 +521,7 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 	 * Returns the Javadoc in HTML format.
 	 *
 	 * @param result
-	 *            the Script elements for which to get the Javadoc
+	 *                   the Script elements for which to get the Javadoc
 	 * @return a string with the Javadoc in HTML format.
 	 */
 	private String getScriptdocHtml(IModelElement curr) {
@@ -583,25 +582,24 @@ public abstract class AbstractDocumentationView extends AbstractInfoView {
 	 * Gets the label for the given member.
 	 *
 	 * @param member
-	 *            the Script member
+	 *                   the Script member
 	 * @return a string containing the member's label
 	 */
 	private String getInfoText(Object member) {
 		if (member instanceof IModelElement) {
 			return ScriptElementLabels.getDefault()
 					.getElementLabel((IModelElement) member, LABEL_FLAGS);
-		} else {
-			// TODO
-			return null;
 		}
+		// TODO
+		return null;
 	}
 
 	@Override
 	protected Control getControl() {
-		if (fIsUsingBrowserWidget)
+		if (fIsUsingBrowserWidget) {
 			return fBrowser;
-		else
-			return fText;
+		}
+		return fText;
 	}
 
 	@Override

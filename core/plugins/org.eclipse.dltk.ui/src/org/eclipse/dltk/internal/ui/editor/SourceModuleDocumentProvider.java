@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2017 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -198,10 +198,10 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 			Annotation annotation = new Annotation(annotationType, false, null);
 			AnnotationPreference preference = lookup
 					.getAnnotationPreference(annotation);
-			if (preference != null)
+			if (preference != null) {
 				return preference.getPresentationLayer() + 1;
-			else
-				return IAnnotationAccessExtension.DEFAULT_LAYER + 1;
+			}
+			return IAnnotationAccessExtension.DEFAULT_LAYER + 1;
 		}
 
 		private static Image fgQuickFixImage;
@@ -578,12 +578,11 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 		private boolean isScriptMarker(IMarker marker) {
 			if (problemFactory != null) {
 				return problemFactory.isValidMarker(marker);
-			} else {
-				return MarkerUtilities.isMarkerType(marker,
-						DefaultProblem.MARKER_TYPE_PROBLEM)
-						|| MarkerUtilities.isMarkerType(marker,
-								DefaultProblem.MARKER_TYPE_TASK);
 			}
+			return MarkerUtilities.isMarkerType(marker,
+					DefaultProblem.MARKER_TYPE_PROBLEM)
+					|| MarkerUtilities.isMarkerType(marker,
+							DefaultProblem.MARKER_TYPE_TASK);
 		}
 
 		@Override
@@ -632,8 +631,9 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 		 * Sets up the infrastructure necessary for problem reporting.
 		 *
 		 * @param insideReportingSequence
-		 *            <code>true</code> if this method call is issued from
-		 *            inside a reporting sequence
+		 *                                    <code>true</code> if this method
+		 *                                    call is issued from inside a
+		 *                                    reporting sequence
 		 */
 		private void internalBeginReporting(boolean insideReportingSequence) {
 
@@ -950,7 +950,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 		 * Updates this model to the given marker deltas.
 		 *
 		 * @param markerDeltas
-		 *            the array of marker deltas
+		 *                         the array of marker deltas
 		 */
 		@Override
 		protected void update(IMarkerDelta[] markerDeltas) {
@@ -1150,7 +1150,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 	 * Creates a source module from the given file.
 	 *
 	 * @param file
-	 *            the file from which to create the source module
+	 *                 the file from which to create the source module
 	 */
 	protected ISourceModule createSourceModule(IFile file) {
 
@@ -1306,9 +1306,10 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 	 * monitor.
 	 *
 	 * @param monitor
-	 *            the parent progress monitor
+	 *                    the parent progress monitor
 	 * @param ticks
-	 *            the number of work ticks allocated from the parent monitor
+	 *                    the number of work ticks allocated from the parent
+	 *                    monitor
 	 * @return the new sub-progress monitor
 	 */
 	private IProgressMonitor getSubProgressMonitor(IProgressMonitor monitor,
@@ -1358,10 +1359,6 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 							overwrite);
 				}
 
-				/*
-				 * @see org.eclipse.ui.editors.text.TextFileDocumentProvider.
-				 * DocumentProviderOperation#getSchedulingRule()
-				 */
 				@Override
 				public ISchedulingRule getSchedulingRule() {
 
@@ -1369,8 +1366,8 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 						IFile file = ((IFileEditorInput) info.fElement)
 								.getFile();
 						return computeSchedulingRule(file);
-					} else
-						return null;
+					}
+					return null;
 				}
 			};
 		}
@@ -1396,8 +1393,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 
 				Assert.isTrue(resource instanceof IFile);
 
-				isSynchronized = resource
-						.isSynchronized(IResource.DEPTH_ZERO);
+				isSynchronized = resource.isSynchronized(IResource.DEPTH_ZERO);
 				/*
 				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=98327 Make sure
 				 * file gets save in commit() if the underlying file has been
@@ -1410,8 +1406,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 					// underlying resource has been deleted, just recreate
 					// file,
 					// ignore the rest
-					createFileFromDocument(monitor, (IFile) resource,
-							document);
+					createFileFromDocument(monitor, (IFile) resource, document);
 					return;
 				}
 
@@ -1604,9 +1599,10 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 	 * Creates a fake compilation unit.
 	 *
 	 * @param element
-	 *            the element
+	 *                        the element
 	 * @param setContents
-	 *            tells whether to read and set the contents to the new CU
+	 *                        tells whether to read and set the contents to the
+	 *                        new CU
 	 *
 	 */
 	private ISourceModule createFakeSourceModule(Object element,
@@ -1780,7 +1776,7 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 	 * path.
 	 *
 	 * @param path
-	 *            the path to match
+	 *                 the path to match
 	 * @return the matching script project or <code>null</code>
 	 *
 	 */
@@ -1831,15 +1827,15 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider
 	 * </p>
 	 *
 	 * @param info
-	 *            compilation unit info
+	 *                           compilation unit info
 	 * @param changedRegions
-	 *            the array with the changed regions
+	 *                           the array with the changed regions
 	 * @param listeners
-	 *            the listeners to notify
+	 *                           the listeners to notify
 	 * @param monitor
-	 *            the progress monitor
+	 *                           the progress monitor
 	 * @throws CoreException
-	 *             if something goes wrong
+	 *                           if something goes wrong
 	 * @see IPostSaveListener
 	 * @since 3.0
 	 */

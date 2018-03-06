@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -124,9 +124,8 @@ public abstract class TypeHierarchyContentProvider
 			boolean filterOverrides) throws ModelException {
 		if (filterOverrides) {
 			return fMethodOverrideTester.isSubsignature(filterMethod, method);
-		} else {
-			return fMethodOverrideTester.isSubsignature(method, filterMethod);
 		}
+		return fMethodOverrideTester.isSubsignature(method, filterMethod);
 	}
 
 	/**
@@ -352,9 +351,8 @@ public abstract class TypeHierarchyContentProvider
 		if (isInScope(type)) {
 			if (fMemberFilter != null) {
 				return hasMemberFilterChildren(type) || hasTypeChildren(type);
-			} else {
-				return true;
 			}
+			return true;
 		}
 		return hasTypeChildren(type);
 	}
@@ -409,9 +407,8 @@ public abstract class TypeHierarchyContentProvider
 				final IType[] parents = getParentType((IType) member);
 				if (parents != null && parents.length == 1) {
 					return parents[0];
-				} else {
-					return null;
 				}
+				return null;
 			}
 			return member.getDeclaringType();
 		} else if (element instanceof CumulativeType.Part) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,7 +89,8 @@ public class ScriptExplorerContentProvider
 	 * Creates a new content provider for Java elements.
 	 *
 	 * @param provideMembers
-	 *            if set, members of compilation units and class files are shown
+	 *                           if set, members of compilation units and class
+	 *                           files are shown
 	 */
 	public ScriptExplorerContentProvider(final boolean provideMembers) {
 		super(provideMembers);
@@ -472,12 +473,12 @@ public class ScriptExplorerContentProvider
 	 * Returns the hierarchical packages inside a given fragment or root.
 	 *
 	 * @param parent
-	 *            The parent package fragment root
+	 *                     The parent package fragment root
 	 * @param fragment
-	 *            The package to get the children for or 'null' to get the
-	 *            children of the root.
+	 *                     The package to get the children for or 'null' to get
+	 *                     the children of the root.
 	 * @param result
-	 *            Collection where the resulting elements are added
+	 *                     Collection where the resulting elements are added
 	 * @throws JavaModelException
 	 */
 	private void getHierarchicalPackageChildren(final IProjectFragment parent,
@@ -535,11 +536,11 @@ public class ScriptExplorerContentProvider
 	 * Returns the hierarchical packages inside a given folder.
 	 *
 	 * @param folder
-	 *            The parent folder
+	 *                   The parent folder
 	 * @param result
-	 *            Collection where the resulting elements are added
+	 *                   Collection where the resulting elements are added
 	 * @throws CoreException
-	 *             thrown when elements could not be accessed
+	 *                           thrown when elements could not be accessed
 	 */
 	private void getHierarchicalPackagesInFolder(final IFolder folder,
 			final Collection<Object> result) throws CoreException {
@@ -644,14 +645,15 @@ public class ScriptExplorerContentProvider
 	 * the tree is fully refreshed starting at this node.
 	 *
 	 * @param delta
-	 *            the delta to process
+	 *                      the delta to process
 	 * @param runnables
-	 *            the resulting view changes as runnables (type {@link Runnable}
-	 *            )
+	 *                      the resulting view changes as runnables (type
+	 *                      {@link Runnable} )
 	 * @return true is returned if the conclusion is to refresh a parent of an
 	 *         element. In that case no siblings need to be processed
 	 * @throws JavaModelException
-	 *             thrown when the access to an element failed
+	 *                                thrown when the access to an element
+	 *                                failed
 	 */
 	private boolean processDelta(final IModelElementDelta delta,
 			final Collection<Runnable> runnables) throws ModelException {
@@ -696,11 +698,10 @@ public class ScriptExplorerContentProvider
 					if (parent instanceof IProjectFragment) {
 						postRemove(element, runnables);
 						return false;
-					} else {
-						postRefresh(internalGetParent(parent), GRANT_PARENT,
-								element, runnables);
-						return true;
 					}
+					postRefresh(internalGetParent(parent), GRANT_PARENT,
+							element, runnables);
+					return true;
 				} else if (kind == IModelElementDelta.ADDED) {
 					final Object parent = getHierarchicalPackageParent(
 							(IScriptFolder) element);
@@ -708,15 +709,13 @@ public class ScriptExplorerContentProvider
 						if (fFoldPackages) {
 							postRefresh(parent, PARENT, element, runnables);
 							return true;
-						} else {
-							postAdd(parent, element, runnables);
-							return false;
 						}
-					} else {
-						postRefresh(internalGetParent(parent), GRANT_PARENT,
-								element, runnables);
-						return true;
+						postAdd(parent, element, runnables);
+						return false;
 					}
+					postRefresh(internalGetParent(parent), GRANT_PARENT,
+							element, runnables);
+					return true;
 				}
 				handleAffectedChildren(delta, element, runnables);
 				return false;
@@ -824,9 +823,8 @@ public class ScriptExplorerContentProvider
 					}
 				}
 				return true;
-			} else {
-				postAdd(parent, element, runnables);
 			}
+			postAdd(parent, element, runnables);
 		}
 
 		if (elementType == IModelElement.SOURCE_MODULE
@@ -962,10 +960,10 @@ public class ScriptExplorerContentProvider
 	 * Updates the package icon
 	 *
 	 * @param element
-	 *            the element to update
+	 *                      the element to update
 	 * @param runnables
-	 *            the resulting view changes as runnables (type {@link Runnable}
-	 *            )
+	 *                      the resulting view changes as runnables (type
+	 *                      {@link Runnable} )
 	 */
 	private void postUpdateIcon(final IModelElement element,
 			final Collection<Runnable> runnables) {
@@ -977,12 +975,12 @@ public class ScriptExplorerContentProvider
 	 * Process a resource delta.
 	 *
 	 * @param delta
-	 *            the delta to process
+	 *                      the delta to process
 	 * @param parent
-	 *            the parent
+	 *                      the parent
 	 * @param runnables
-	 *            the resulting view changes as runnables (type {@link Runnable}
-	 *            )
+	 *                      the resulting view changes as runnables (type
+	 *                      {@link Runnable} )
 	 * @return true if the parent got refreshed
 	 */
 	private boolean processResourceDelta(final IResourceDelta delta,
@@ -1006,10 +1004,9 @@ public class ScriptExplorerContentProvider
 						ScriptExplorerContentProvider.PARENT, parent,
 						runnables);
 				return true;
-			} else {
-				postRemove(resource, runnables);
-				return false;
 			}
+			postRemove(resource, runnables);
+			return false;
 		}
 		if ((status & IResourceDelta.ADDED) != 0) {
 			if (parent instanceof IScriptFolder) {
@@ -1019,10 +1016,9 @@ public class ScriptExplorerContentProvider
 						ScriptExplorerContentProvider.PARENT, parent,
 						runnables);
 				return true;
-			} else {
-				postAdd(parent, resource, runnables);
-				return false;
 			}
+			postAdd(parent, resource, runnables);
+			return false;
 		}
 		if ((status & IResourceDelta.CHANGED) != 0) {
 			if ((flags & IResourceDelta.TYPE) != 0) {
@@ -1085,12 +1081,13 @@ public class ScriptExplorerContentProvider
 	 * Can be implemented by subclasses to add additional elements to refresh
 	 *
 	 * @param toRefresh
-	 *            the elements to refresh
+	 *                            the elements to refresh
 	 * @param relation
-	 *            the relation to the affected element ({@link #GRANT_PARENT},
-	 *            {@link #PARENT}, {@link #ORIGINAL}, {@link #PROJECT})
+	 *                            the relation to the affected element
+	 *                            ({@link #GRANT_PARENT}, {@link #PARENT},
+	 *                            {@link #ORIGINAL}, {@link #PROJECT})
 	 * @param affectedElement
-	 *            the affected element
+	 *                            the affected element
 	 */
 	protected void augmentElementToRefresh(final List<Object> toRefresh,
 			final int relation, final Object affectedElement) {

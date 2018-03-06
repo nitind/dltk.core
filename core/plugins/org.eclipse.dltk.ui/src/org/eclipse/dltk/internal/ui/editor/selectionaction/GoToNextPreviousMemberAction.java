@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -105,12 +105,12 @@ public class GoToNextPreviousMemberAction extends Action implements IUpdate {
 			Integer oldOffset = Integer.valueOf(oldSourceRange.getOffset());
 			int index = Arrays.binarySearch(offsetArray, oldOffset);
 
-			if (fIsGotoNext)
+			if (fIsGotoNext) {
 				return createNewSourceRange(
 						getNextOffset(index, offsetArray, oldOffset));
-			else
-				return createNewSourceRange(
-						getPreviousOffset(index, offsetArray, oldOffset));
+			}
+			return createNewSourceRange(
+					getPreviousOffset(index, offsetArray, oldOffset));
 
 		} catch (ModelException e) {
 			DLTKUIPlugin.log(e); // dialog would be too heavy here
@@ -137,10 +137,10 @@ public class GoToNextPreviousMemberAction extends Action implements IUpdate {
 			return offsetArray[0];
 
 		if (index == 0) {
-			if (offsetArray.length != 1)
+			if (offsetArray.length != 1) {
 				return offsetArray[1];
-			else
-				return offsetArray[0];
+			}
+			return offsetArray[0];
 		}
 		if (index > 0) {
 			if (index == offsetArray.length - 1)
@@ -149,10 +149,10 @@ public class GoToNextPreviousMemberAction extends Action implements IUpdate {
 		}
 		Assert.isTrue(index < -1);
 		int absIndex = Math.abs(index);
-		if (absIndex > offsetArray.length)
+		if (absIndex > offsetArray.length) {
 			return oldOffset;
-		else
-			return offsetArray[absIndex - 1];
+		}
+		return offsetArray[absIndex - 1];
 	}
 
 	private static ISourceRange createNewSourceRange(Integer offset) {
@@ -199,7 +199,8 @@ public class GoToNextPreviousMemberAction extends Action implements IUpdate {
 	}
 
 	private static void addOffset(List result, int offset) {
-		if (offset >= 0)
+		if (offset >= 0) {
 			result.add(Integer.valueOf(offset));
+		}
 	}
 }

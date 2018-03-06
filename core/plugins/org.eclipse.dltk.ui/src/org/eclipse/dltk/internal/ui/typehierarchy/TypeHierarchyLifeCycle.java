@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -125,37 +125,34 @@ public class TypeHierarchyLifeCycle
 			IType type = (IType) element;
 			if (fIsSuperTypesOnly) {
 				return type.newSupertypeHierarchy(pm);
-			} else {
-				return type.newTypeHierarchy(pm);
+			}
+			return type.newTypeHierarchy(pm);
+		}
+		IRegion region = DLTKCore.newRegion();
+		if (element.getElementType() == IModelElement.SCRIPT_PROJECT) {
+			// for projects only add the contained source folders
+			IProjectFragment[] roots = ((IScriptProject) element)
+					.getProjectFragments();
+			for (int i = 0; i < roots.length; i++) {
+				if (!roots[i].isExternal()) {
+					region.add(roots[i]);
+				}
+			}
+		} else if (element.getElementType() == IModelElement.PROJECT_FRAGMENT) {
+			IProjectFragment[] roots = element.getScriptProject()
+					.getProjectFragments();
+			String name = element.getElementName();
+			for (int i = 0; i < roots.length; i++) {
+				IScriptFolder pack = roots[i].getScriptFolder(name);
+				if (pack.exists()) {
+					region.add(pack);
+				}
 			}
 		} else {
-			IRegion region = DLTKCore.newRegion();
-			if (element.getElementType() == IModelElement.SCRIPT_PROJECT) {
-				// for projects only add the contained source folders
-				IProjectFragment[] roots = ((IScriptProject) element)
-						.getProjectFragments();
-				for (int i = 0; i < roots.length; i++) {
-					if (!roots[i].isExternal()) {
-						region.add(roots[i]);
-					}
-				}
-			} else if (element
-					.getElementType() == IModelElement.PROJECT_FRAGMENT) {
-				IProjectFragment[] roots = element.getScriptProject()
-						.getProjectFragments();
-				String name = element.getElementName();
-				for (int i = 0; i < roots.length; i++) {
-					IScriptFolder pack = roots[i].getScriptFolder(name);
-					if (pack.exists()) {
-						region.add(pack);
-					}
-				}
-			} else {
-				region.add(element);
-			}
-			IScriptProject jproject = element.getScriptProject();
-			return jproject.newTypeHierarchy(region, pm);
+			region.add(element);
 		}
+		IScriptProject jproject = element.getScriptProject();
+		return jproject.newTypeHierarchy(region, pm);
 	}
 
 	public synchronized void doHierarchyRefresh(IModelElement element,
@@ -197,13 +194,11 @@ public class TypeHierarchyLifeCycle
 
 		if (fHierarchyRefreshNeeded) {
 			return;
-		} else {
-			ArrayList<IType> changedTypes = new ArrayList<>();
-			processDelta(event.getDelta(), changedTypes);
-			if (changedTypes.size() > 0) {
-				fireChange(
-						changedTypes.toArray(new IType[changedTypes.size()]));
-			}
+		}
+		ArrayList<IType> changedTypes = new ArrayList<>();
+		processDelta(event.getDelta(), changedTypes);
+		if (changedTypes.size() > 0) {
+			fireChange(changedTypes.toArray(new IType[changedTypes.size()]));
 		}
 	}
 

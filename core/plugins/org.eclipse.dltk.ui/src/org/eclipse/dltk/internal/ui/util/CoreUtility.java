@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,9 +52,9 @@ public class CoreUtility {
 	 * cursor will be activated during the duration of the load.
 	 *
 	 * @param element
-	 *            the config element defining the extension
+	 *                           the config element defining the extension
 	 * @param classAttribute
-	 *            the name of the attribute carrying the class
+	 *                           the name of the attribute carrying the class
 	 * @return the extension object
 	 */
 	public static Object createExtension(final IConfigurationElement element,
@@ -65,29 +65,27 @@ public class CoreUtility {
 		Bundle bundle = Platform.getBundle(pluginId);
 		if (bundle != null && bundle.getState() == Bundle.ACTIVE) {
 			return element.createExecutableExtension(classAttribute);
-		} else {
-			final Object[] ret = new Object[1];
-			final CoreException[] exc = new CoreException[1];
-			BusyIndicator.showWhile(null, () -> {
-				try {
-					ret[0] = element
-							.createExecutableExtension(classAttribute);
-				} catch (CoreException e) {
-					exc[0] = e;
-				}
-			});
-			if (exc[0] != null)
-				throw exc[0];
-			else
-				return ret[0];
 		}
+		final Object[] ret = new Object[1];
+		final CoreException[] exc = new CoreException[1];
+		BusyIndicator.showWhile(null, () -> {
+			try {
+				ret[0] = element.createExecutableExtension(classAttribute);
+			} catch (CoreException e) {
+				exc[0] = e;
+			}
+		});
+		if (exc[0] != null) {
+			throw exc[0];
+		}
+		return ret[0];
 	}
 
 	/**
 	 * Set the autobuild to the value of the parameter and return the old one.
 	 *
 	 * @param state
-	 *            the value to be set for autobuilding.
+	 *                  the value to be set for autobuilding.
 	 * @return the old value of the autobuild state
 	 */
 	public static boolean enableAutoBuild(boolean state) throws CoreException {
@@ -122,8 +120,8 @@ public class CoreUtility {
 				if (monitor.isCanceled()) {
 					return Status.CANCEL_STATUS;
 				}
-				Job[] buildJobs = Job.getJobManager().find(
-						ResourcesPlugin.FAMILY_MANUAL_BUILD);
+				Job[] buildJobs = Job.getJobManager()
+						.find(ResourcesPlugin.FAMILY_MANUAL_BUILD);
 				for (int i = 0; i < buildJobs.length; i++) {
 					Job curr = buildJobs[i];
 					if (curr != this && curr instanceof BuildJob) {
@@ -172,14 +170,14 @@ public class CoreUtility {
 	 * Returns a build job
 	 *
 	 * @param project
-	 *            The project to build or <code>null</code> to build the
-	 *            workspace.
+	 *                    The project to build or <code>null</code> to build the
+	 *                    workspace.
 	 */
 	public static Job getBuildJob(final IProject project) {
 		Job buildJob = new BuildJob(DLTKUIMessages.CoreUtility_job_title,
 				project);
-		buildJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory()
-				.buildRule());
+		buildJob.setRule(
+				ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
 		buildJob.setUser(true);
 		return buildJob;
 	}

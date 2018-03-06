@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,8 +40,8 @@ public class LevelTreeContentProvider extends DLTKSearchContentProvider
 	private static final int MAX_LEVEL = SCRIPT_ELEMENT_TYPES.length - 1;
 	private int fCurrentLevel;
 
-	static class FastModelElementProvider extends
-			StandardModelElementContentProvider {
+	static class FastModelElementProvider
+			extends StandardModelElementContentProvider {
 		@Override
 		public Object getParent(Object element) {
 			Object parent = getExtendedParent(element);
@@ -65,7 +65,8 @@ public class LevelTreeContentProvider extends DLTKSearchContentProvider
 			IModelElement modelElement = (IModelElement) possibleParent;
 			for (int j = fCurrentLevel; j < MAX_LEVEL + 1; j++) {
 				for (int i = 0; i < SCRIPT_ELEMENT_TYPES[j].length; i++) {
-					if (modelElement.getElementType() == SCRIPT_ELEMENT_TYPES[j][i]) {
+					if (modelElement
+							.getElementType() == SCRIPT_ELEMENT_TYPES[j][i]) {
 						return null;
 					}
 				}
@@ -183,9 +184,8 @@ public class LevelTreeContentProvider extends DLTKSearchContentProvider
 		Set siblings = (Set) fChildrenMap.get(parent);
 		if (siblings != null) {
 			return siblings.remove(element);
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	@Override

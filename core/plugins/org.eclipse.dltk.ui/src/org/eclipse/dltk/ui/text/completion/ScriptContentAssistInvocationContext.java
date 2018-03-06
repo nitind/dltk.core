@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
 package org.eclipse.dltk.ui.text.completion;
 
@@ -25,8 +24,8 @@ import org.eclipse.ui.IEditorPart;
 /**
  * Describes the context of a content assist invocation in a Script editor.
  */
-public class ScriptContentAssistInvocationContext extends
-		ContentAssistInvocationContext {
+public class ScriptContentAssistInvocationContext
+		extends ContentAssistInvocationContext {
 	private final IEditorPart fEditor;
 
 	private ISourceModule fSourceModule = null;
@@ -42,13 +41,13 @@ public class ScriptContentAssistInvocationContext extends
 
 	/**
 	 * Creates a new context.
-	 * 
+	 *
 	 * @param viewer
-	 *            the viewer used by the editor
+	 *                   the viewer used by the editor
 	 * @param offset
-	 *            the invocation offset
+	 *                   the invocation offset
 	 * @param editor
-	 *            the editor that content assist is invoked in
+	 *                   the editor that content assist is invoked in
 	 */
 	public ScriptContentAssistInvocationContext(ITextViewer viewer, int offset,
 			IEditorPart editor, String natureId) {
@@ -60,9 +59,9 @@ public class ScriptContentAssistInvocationContext extends
 
 	/**
 	 * Creates a new context.
-	 * 
+	 *
 	 * @param unit
-	 *            the compilation unit in <code>document</code>
+	 *                 the compilation unit in <code>document</code>
 	 */
 	public ScriptContentAssistInvocationContext(ISourceModule unit,
 			String natureId) {
@@ -84,7 +83,7 @@ public class ScriptContentAssistInvocationContext extends
 	/**
 	 * Returns the compilation unit that content assist is invoked in,
 	 * <code>null</code> if there is none.
-	 * 
+	 *
 	 * @return the compilation unit that content assist is invoked in, possibly
 	 *         <code>null</code>
 	 */
@@ -94,8 +93,8 @@ public class ScriptContentAssistInvocationContext extends
 			if (fCollector != null)
 				fSourceModule = fCollector.getSourceModule();
 			else {
-				IModelElement je = EditorUtility.getEditorInputModelElement(
-						fEditor, false);
+				IModelElement je = EditorUtility
+						.getEditorInputModelElement(fEditor, false);
 				if (je instanceof ISourceModule)
 					fSourceModule = (ISourceModule) je;
 			}
@@ -106,7 +105,7 @@ public class ScriptContentAssistInvocationContext extends
 	/**
 	 * Returns the project of the compilation unit that content assist is
 	 * invoked in, <code>null</code> if none.
-	 * 
+	 *
 	 * @return the currentscriptproject, possibly <code>null</code>
 	 */
 	public IScriptProject getProject() {
@@ -117,7 +116,7 @@ public class ScriptContentAssistInvocationContext extends
 	/**
 	 * Returns the keyword proposals that are available in this context,
 	 * possibly none.
-	 * 
+	 *
 	 * @return the available keyword proposals.
 	 */
 	public IScriptCompletionProposal[] getKeywordProposals() {
@@ -129,9 +128,9 @@ public class ScriptContentAssistInvocationContext extends
 	/**
 	 * Sets the collector, which is used to access the compilation unit, the
 	 * core context and the label provider.
-	 * 
+	 *
 	 * @param collector
-	 *            the collector
+	 *                      the collector
 	 */
 	public void setCollector(ScriptCompletionProposalCollector collector) {
 		fCollector = collector;
@@ -140,7 +139,7 @@ public class ScriptContentAssistInvocationContext extends
 	/**
 	 * Returns the {@link CompletionContext core completion context} if
 	 * available, <code>null</code> otherwise.
-	 * 
+	 *
 	 * @return the core completion context if available, <code>null</code>
 	 *         otherwise
 	 */
@@ -156,9 +155,9 @@ public class ScriptContentAssistInvocationContext extends
 	 * context. 0 signals that the <code>qualifiedTypeName</code> does not match
 	 * the expected type, while 1.0 signals that <code>qualifiedTypeName</code>
 	 * has most recently been used in a similar context.
-	 * 
+	 *
 	 * @param qualifiedTypeName
-	 *            the type name of the type of interest
+	 *                              the type name of the type of interest
 	 * @return a relevance in [0.0,&nbsp;1.0] based on previous content assist
 	 *         invocations
 	 */
@@ -168,7 +167,7 @@ public class ScriptContentAssistInvocationContext extends
 
 	/**
 	 * Returns the content assist type history for the expected type.
-	 * 
+	 *
 	 * @return the content assist type history for the expected type
 	 */
 	private RHSHistory getRHSHistory() {
@@ -193,7 +192,7 @@ public class ScriptContentAssistInvocationContext extends
 
 	/**
 	 * Returns the expected type if any, <code>null</code> otherwise.
-	 * 
+	 *
 	 * @return the expected type if any, <code>null</code> otherwise
 	 */
 	public IType getExpectedType() {
@@ -220,7 +219,7 @@ public class ScriptContentAssistInvocationContext extends
 
 	/**
 	 * Returns a label provider that can be used to compute proposal labels.
-	 * 
+	 *
 	 * @return a label provider that can be used to compute proposal labels
 	 */
 	public CompletionProposalLabelProvider getLabelProvider() {
@@ -240,9 +239,8 @@ public class ScriptContentAssistInvocationContext extends
 	public Image getImage(ImageDescriptor descriptor) {
 		if (fCollector != null) {
 			return fCollector.getImage(descriptor);
-		} else {
-			return DLTKUIPlugin.getImageDescriptorRegistry().get(descriptor);
 		}
+		return DLTKUIPlugin.getImageDescriptorRegistry().get(descriptor);
 	}
 
 	protected final CompletionProposalLabelProvider createLabelProvider() {

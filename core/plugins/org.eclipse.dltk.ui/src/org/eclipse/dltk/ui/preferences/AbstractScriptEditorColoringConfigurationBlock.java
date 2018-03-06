@@ -257,10 +257,10 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 	private class ColorListLabelProvider extends LabelProvider {
 		@Override
 		public String getText(Object element) {
-			if (element instanceof String)
+			if (element instanceof String) {
 				return (String) element;
-			else
-				return ((HighlightingColorListItem) element).getDisplayName();
+			}
+			return ((HighlightingColorListItem) element).getDisplayName();
 		}
 	}
 
@@ -312,9 +312,8 @@ public abstract class AbstractScriptEditorColoringConfigurationBlock extends
 		public Object getParent(Object element) {
 			if (element instanceof HighlightingColorListItem) {
 				return ((HighlightingColorListItem) element).getCategory();
-			} else {
-				return null;
 			}
+			return null;
 		}
 
 		@Override

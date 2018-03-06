@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -133,16 +133,18 @@ public class ScriptDocumentationAccess {
 	 * <code>true</code>)
 	 *
 	 * @param member
-	 *            The member to get documentation for.
+	 *                           The member to get documentation for.
 	 * @param allowInherited
-	 *            For procedures and methods: if member doesn't have it's own
-	 *            documentation, look into parent types methods.
+	 *                           For procedures and methods: if member doesn't
+	 *                           have it's own documentation, look into parent
+	 *                           types methods.
 	 * @param allowExternal
-	 *            Allows external documentation like man-pages.
+	 *                           Allows external documentation like man-pages.
 	 * @return Reader for a content, or <code>null</code> if no documentation is
 	 *         found.
 	 * @throws ModelException
-	 *             is thrown when the elements documentation can not be accessed
+	 *                            is thrown when the elements documentation can
+	 *                            not be accessed
 	 * @since 3.0
 	 */
 	public static Reader getHTMLContentReader(String nature,
@@ -223,11 +225,12 @@ public class ScriptDocumentationAccess {
 	 * The content does contain HTML code describing member.
 	 *
 	 * @param content
-	 *            The keyword to find.
+	 *                    The keyword to find.
 	 * @return Reader for a content, or <code>null</code> if no documentation is
 	 *         found.
 	 * @throws ModelException
-	 *             is thrown when the elements documentation can not be accessed
+	 *                            is thrown when the elements documentation can
+	 *                            not be accessed
 	 */
 	@Deprecated
 	public static Reader getHTMLContentReader(String nature,
@@ -252,9 +255,8 @@ public class ScriptDocumentationAccess {
 				final IDocumentationResponse response = ext
 						.describeKeyword(keyword, context);
 				return DocumentationUtils.getReader(response);
-			} else {
-				return provider.getInfo(keyword);
 			}
+			return provider.getInfo(keyword);
 		});
 	}
 }

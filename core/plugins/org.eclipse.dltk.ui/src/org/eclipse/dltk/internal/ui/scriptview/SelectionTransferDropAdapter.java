@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -211,11 +211,9 @@ public class SelectionTransferDropAdapter extends DLTKViewerDropAdapter
 					ScriptMessages.SelectionTransferDropAdapter_error_title,
 					ScriptMessages.SelectionTransferDropAdapter_error_message);
 		} catch (InvocationTargetException e) {
-			ExceptionHandler
-					.handle(
-							e,
-							RefactoringMessages.OpenRefactoringWizardAction_refactoring,
-							RefactoringMessages.OpenRefactoringWizardAction_exception);
+			ExceptionHandler.handle(e,
+					RefactoringMessages.OpenRefactoringWizardAction_refactoring,
+					RefactoringMessages.OpenRefactoringWizardAction_exception);
 		} catch (InterruptedException e) {
 			// ok
 		}
@@ -239,9 +237,9 @@ public class SelectionTransferDropAdapter extends DLTKViewerDropAdapter
 
 	private int handleValidateMove(Object target) throws ModelException {
 		if (fMoveProcessor == null) {
-			IMovePolicy policy = ReorgPolicyFactory.createMovePolicy(ReorgUtils
-					.getResources(fElements), ReorgUtils
-					.getModelElements(fElements));
+			IMovePolicy policy = ReorgPolicyFactory.createMovePolicy(
+					ReorgUtils.getResources(fElements),
+					ReorgUtils.getModelElements(fElements));
 			if (policy.canEnable())
 				fMoveProcessor = new ScriptMoveProcessor(policy);
 		}
@@ -298,10 +296,11 @@ public class SelectionTransferDropAdapter extends DLTKViewerDropAdapter
 
 		if (fCopyProcessor == null) {
 			final ICopyPolicy policy = ReorgPolicyFactory.createCopyPolicy(
-					ReorgUtils.getResources(fElements), ReorgUtils
-							.getModelElements(fElements));
-			fCopyProcessor = policy.canEnable() ? new ScriptCopyProcessor(
-					policy) : null;
+					ReorgUtils.getResources(fElements),
+					ReorgUtils.getModelElements(fElements));
+			fCopyProcessor = policy.canEnable()
+					? new ScriptCopyProcessor(policy)
+					: null;
 		}
 
 		if (!canCopyElements())
@@ -357,15 +356,11 @@ public class SelectionTransferDropAdapter extends DLTKViewerDropAdapter
 		return getViewer().getControl().getShell();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected int getCurrentLocation() {
 		if (getFeedbackEnabled()) {
 			return super.getCurrentLocation();
-		} else {
-			return LOCATION_ON;
 		}
+		return LOCATION_ON;
 	}
 }

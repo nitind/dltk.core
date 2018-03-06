@@ -1,13 +1,11 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- 
  *******************************************************************************/
-
 package org.eclipse.dltk.ui.text.completion;
 
 import org.eclipse.core.runtime.Assert;
@@ -20,8 +18,8 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
-public abstract class LazyScriptCompletionProposal extends
-		AbstractScriptCompletionProposal {
+public abstract class LazyScriptCompletionProposal
+		extends AbstractScriptCompletionProposal {
 
 	protected static final String LPAREN = "("; //$NON-NLS-1$
 	protected static final String RPAREN = ")"; //$NON-NLS-1$
@@ -77,10 +75,10 @@ public abstract class LazyScriptCompletionProposal extends
 
 	/**
 	 * Sets the trigger characters.
-	 * 
+	 *
 	 * @param triggerCharacters
-	 *            The set of characters which can trigger the application of
-	 *            this completion proposal
+	 *                              The set of characters which can trigger the
+	 *                              application of this completion proposal
 	 */
 	@Override
 	public final void setTriggerCharacters(char[] triggerCharacters) {
@@ -90,10 +88,10 @@ public abstract class LazyScriptCompletionProposal extends
 
 	/**
 	 * Sets the proposal info.
-	 * 
+	 *
 	 * @param proposalInfo
-	 *            The additional information associated with this proposal or
-	 *            <code>null</code>
+	 *                         The additional information associated with this
+	 *                         proposal or <code>null</code>
 	 */
 	@Override
 	public final void setProposalInfo(ICompletionProposalInfo proposalInfo) {
@@ -104,7 +102,7 @@ public abstract class LazyScriptCompletionProposal extends
 	/**
 	 * Returns the additional proposal info, or <code>null</code> if none
 	 * exists.
-	 * 
+	 *
 	 * @return the additional proposal info, or <code>null</code> if none exists
 	 */
 	@Override
@@ -124,9 +122,9 @@ public abstract class LazyScriptCompletionProposal extends
 	 * Sets the cursor position relative to the insertion offset. By default
 	 * this is the length of the completion string (Cursor positioned after the
 	 * completion)
-	 * 
+	 *
 	 * @param cursorPosition
-	 *            The cursorPosition to set
+	 *                           The cursorPosition to set
 	 */
 	@Override
 	public final void setCursorPosition(int cursorPosition) {
@@ -168,9 +166,10 @@ public abstract class LazyScriptCompletionProposal extends
 
 	/**
 	 * Sets the context information.
-	 * 
+	 *
 	 * @param contextInformation
-	 *            The context information associated with this proposal
+	 *                               The context information associated with
+	 *                               this proposal
 	 */
 	@Override
 	public final void setContextInformation(
@@ -220,11 +219,11 @@ public abstract class LazyScriptCompletionProposal extends
 	protected StyledString computeStyledDisplayString() {
 		CompletionProposalLabelProvider labelProvider = fInvocationContext
 				.getLabelProvider();
-		if (labelProvider instanceof ICompletionProposalLabelProviderExtension)
+		if (labelProvider instanceof ICompletionProposalLabelProviderExtension) {
 			return ((ICompletionProposalLabelProviderExtension) labelProvider)
 					.createStyledLabel(fProposal);
-		else
-			return new StyledString(labelProvider.createLabel(fProposal));
+		}
+		return new StyledString(labelProvider.createLabel(fProposal));
 	}
 
 	@Override
@@ -242,7 +241,7 @@ public abstract class LazyScriptCompletionProposal extends
 
 	/**
 	 * Gets the replacement offset.
-	 * 
+	 *
 	 * @return Returns a int
 	 */
 	@Override
@@ -255,9 +254,9 @@ public abstract class LazyScriptCompletionProposal extends
 
 	/**
 	 * Sets the replacement offset.
-	 * 
+	 *
 	 * @param replacementOffset
-	 *            The replacement offset to set
+	 *                              The replacement offset to set
 	 */
 	@Override
 	public final void setReplacementOffset(int replacementOffset) {
@@ -273,22 +272,22 @@ public abstract class LazyScriptCompletionProposal extends
 
 	/**
 	 * Gets the replacement length.
-	 * 
+	 *
 	 * @return Returns a int
 	 */
 	@Override
 	public final int getReplacementLength() {
 		if (!fReplacementLengthComputed)
-			setReplacementLength(fProposal.getReplaceEnd()
-					- fProposal.getReplaceStart());
+			setReplacementLength(
+					fProposal.getReplaceEnd() - fProposal.getReplaceStart());
 		return super.getReplacementLength();
 	}
 
 	/**
 	 * Sets the replacement length.
-	 * 
+	 *
 	 * @param replacementLength
-	 *            The replacementLength to set
+	 *                              The replacementLength to set
 	 */
 	@Override
 	public final void setReplacementLength(int replacementLength) {
@@ -298,7 +297,7 @@ public abstract class LazyScriptCompletionProposal extends
 
 	/**
 	 * Gets the replacement string.
-	 * 
+	 *
 	 * @return Returns a String
 	 */
 	@Override
@@ -314,9 +313,9 @@ public abstract class LazyScriptCompletionProposal extends
 
 	/**
 	 * Sets the replacement string.
-	 * 
+	 *
 	 * @param replacementString
-	 *            The replacement string to set
+	 *                              The replacement string to set
 	 */
 	@Override
 	public final void setReplacementString(String replacementString) {
@@ -332,16 +331,15 @@ public abstract class LazyScriptCompletionProposal extends
 	}
 
 	protected Image computeImage() {
-		return DLTKUIPlugin.getImageDescriptorRegistry().get(
-				fInvocationContext.getLabelProvider().createImageDescriptor(
-						fProposal));
+		return DLTKUIPlugin.getImageDescriptorRegistry().get(fInvocationContext
+				.getLabelProvider().createImageDescriptor(fProposal));
 	}
 
 	/**
 	 * Sets the image.
-	 * 
+	 *
 	 * @param image
-	 *            The image to set
+	 *                  The image to set
 	 */
 	@Override
 	public final void setImage(Image image) {
@@ -367,7 +365,7 @@ public abstract class LazyScriptCompletionProposal extends
 
 	/**
 	 * Gets the proposal's relevance.
-	 * 
+	 *
 	 * @return Returns a int
 	 */
 	@Override
@@ -379,9 +377,9 @@ public abstract class LazyScriptCompletionProposal extends
 
 	/**
 	 * Sets the proposal's relevance.
-	 * 
+	 *
 	 * @param relevance
-	 *            The relevance to set
+	 *                      The relevance to set
 	 */
 	@Override
 	public final void setRelevance(int relevance) {
@@ -391,7 +389,7 @@ public abstract class LazyScriptCompletionProposal extends
 
 	/**
 	 * TODO (alex) avoid duplicated code.
-	 * 
+	 *
 	 * @see ScriptCompletionProposalCollector#computeRelevance(CompletionProposal)
 	 */
 	protected int computeRelevance() {

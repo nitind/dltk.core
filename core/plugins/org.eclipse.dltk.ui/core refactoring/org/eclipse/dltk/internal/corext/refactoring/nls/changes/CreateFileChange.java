@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,11 +73,11 @@ public class CreateFileChange extends DLTKChange {
 
 	@Override
 	public String getName() {
-		if (fChangeName == null)
+		if (fChangeName == null) {
 			return Messages.format(NLSChangesMessages.createFile_Create_file,
 					fPath.toOSString());
-		else
-			return fChangeName;
+		}
+		return fChangeName;
 	}
 
 	public void setName(String name) {

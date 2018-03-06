@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,124 +22,129 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.progress.DeferredTreeContentManager;
 
-
 public class CallHierarchyContentProvider implements ITreeContentProvider {
-    private final static Object[] EMPTY_ARRAY = new Object[0];
+	private final static Object[] EMPTY_ARRAY = new Object[0];
 
-    private DeferredTreeContentManager fManager;
-    private CallHierarchyViewPart fPart;
+	private DeferredTreeContentManager fManager;
+	private CallHierarchyViewPart fPart;
 
-    private class MethodWrapperRunnable implements IRunnableWithProgress {
-        private MethodWrapper fMethodWrapper;
-        private MethodWrapper[] fCalls= null;
+	private class MethodWrapperRunnable implements IRunnableWithProgress {
+		private MethodWrapper fMethodWrapper;
+		private MethodWrapper[] fCalls = null;
 
-        MethodWrapperRunnable(MethodWrapper methodWrapper) {
-            fMethodWrapper= methodWrapper;
-        }
+		MethodWrapperRunnable(MethodWrapper methodWrapper) {
+			fMethodWrapper = methodWrapper;
+		}
 
-        @Override
+		@Override
 		public void run(IProgressMonitor pm) {
-        	fCalls= fMethodWrapper.getCalls(pm);
-        }
+			fCalls = fMethodWrapper.getCalls(pm);
+		}
 
-        MethodWrapper[] getCalls() {
-            if (fCalls != null) {
-                return fCalls;
-            }
-            return new MethodWrapper[0];
-        }
-    }
+		MethodWrapper[] getCalls() {
+			if (fCalls != null) {
+				return fCalls;
+			}
+			return new MethodWrapper[0];
+		}
+	}
 
-    public CallHierarchyContentProvider(CallHierarchyViewPart part) {
-        super();
-        fPart= part;
-    }
+	public CallHierarchyContentProvider(CallHierarchyViewPart part) {
+		super();
+		fPart = part;
+	}
 
-    @Override
+	@Override
 	public Object[] getChildren(Object parentElement) {
-        if (parentElement instanceof TreeRoot) {
-            TreeRoot dummyRoot = (TreeRoot) parentElement;
+		if (parentElement instanceof TreeRoot) {
+			TreeRoot dummyRoot = (TreeRoot) parentElement;
 
-            return new Object[] { dummyRoot.getRoot() };
-        } else if (parentElement instanceof MethodWrapper) {
-            MethodWrapper methodWrapper = ((MethodWrapper) parentElement);
+			return new Object[] { dummyRoot.getRoot() };
+		} else if (parentElement instanceof MethodWrapper) {
+			MethodWrapper methodWrapper = ((MethodWrapper) parentElement);
 
-            if (shouldStopTraversion(methodWrapper)) {
-                return EMPTY_ARRAY;
-            } else {
-                if (fManager != null) {
-                    Object[] children = fManager.getChildren(new DeferredMethodWrapper(this, methodWrapper));
-                    if (children != null)
-                        return children;
-                }
-                return fetchChildren(methodWrapper);
-            }
-        }
+			if (shouldStopTraversion(methodWrapper)) {
+				return EMPTY_ARRAY;
+			}
+			if (fManager != null) {
+				Object[] children = fManager.getChildren(
+						new DeferredMethodWrapper(this, methodWrapper));
+				if (children != null)
+					return children;
+			}
+			return fetchChildren(methodWrapper);
+		}
 
-        return EMPTY_ARRAY;
-    }
+		return EMPTY_ARRAY;
+	}
 
-    protected Object[] fetchChildren(MethodWrapper methodWrapper) {
-        IRunnableContext context= DLTKUIPlugin.getActiveWorkbenchWindow();
-        MethodWrapperRunnable runnable= new MethodWrapperRunnable(methodWrapper);
-        try {
-            context.run(true, true, runnable);
-        } catch (InvocationTargetException e) {
-            ExceptionHandler.handle(e, CallHierarchyMessages.CallHierarchyContentProvider_searchError_title, CallHierarchyMessages.CallHierarchyContentProvider_searchError_message);
-            return EMPTY_ARRAY;
-        } catch (InterruptedException e) {
-            return new Object[] { TreeTermination.SEARCH_CANCELED };
-        }
+	protected Object[] fetchChildren(MethodWrapper methodWrapper) {
+		IRunnableContext context = DLTKUIPlugin.getActiveWorkbenchWindow();
+		MethodWrapperRunnable runnable = new MethodWrapperRunnable(
+				methodWrapper);
+		try {
+			context.run(true, true, runnable);
+		} catch (InvocationTargetException e) {
+			ExceptionHandler.handle(e,
+					CallHierarchyMessages.CallHierarchyContentProvider_searchError_title,
+					CallHierarchyMessages.CallHierarchyContentProvider_searchError_message);
+			return EMPTY_ARRAY;
+		} catch (InterruptedException e) {
+			return new Object[] { TreeTermination.SEARCH_CANCELED };
+		}
 
-        return runnable.getCalls();
-    }
+		return runnable.getCalls();
+	}
 
-    private boolean shouldStopTraversion(MethodWrapper methodWrapper) {
-        return (methodWrapper.getLevel() > CallHierarchyUI.getDefault().getMaxCallDepth()) || methodWrapper.isRecursive();
-    }
+	private boolean shouldStopTraversion(MethodWrapper methodWrapper) {
+		return (methodWrapper.getLevel() > CallHierarchyUI.getDefault()
+				.getMaxCallDepth()) || methodWrapper.isRecursive();
+	}
 
-    /**
-     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-     */
-    @Override
+	/**
+	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+	 */
+	@Override
 	public Object[] getElements(Object inputElement) {
-        return getChildren(inputElement);
-    }
+		return getChildren(inputElement);
+	}
 
-    /**
-     * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
-     */
-    @Override
+	/**
+	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
+	 */
+	@Override
 	public Object getParent(Object element) {
-        if (element instanceof MethodWrapper) {
-            return ((MethodWrapper) element).getParent();
-        }
+		if (element instanceof MethodWrapper) {
+			return ((MethodWrapper) element).getParent();
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-     */
-    @Override
+	/**
+	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+	 */
+	@Override
 	public void dispose() {
-        // Nothing to dispose
-    }
+		// Nothing to dispose
+	}
 
-    /**
+	/**
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
 	 */
 	@Override
 	public boolean hasChildren(Object element) {
-		if (element == TreeRoot.EMPTY_ROOT || element == TreeTermination.SEARCH_CANCELED) {
+		if (element == TreeRoot.EMPTY_ROOT
+				|| element == TreeTermination.SEARCH_CANCELED) {
 			return false;
 		}
 
 		// Only methods can have subelements, so there's no need to fool the
 		// user into believing that there is more
 		if (element instanceof MethodWrapper) {
-			MethodWrapper methodWrapper= (MethodWrapper) element;
-			if (methodWrapper.getMember().getElementType() != IModelElement.METHOD) {
+			MethodWrapper methodWrapper = (MethodWrapper) element;
+			if (methodWrapper.getMember()
+					.getElementType() != IModelElement.METHOD) {
 				return false;
 			}
 			if (shouldStopTraversion(methodWrapper)) {
@@ -159,45 +164,45 @@ public class CallHierarchyContentProvider implements ITreeContentProvider {
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-    	if (oldInput instanceof TreeRoot) {
-    		Object root = ((TreeRoot) oldInput).getRoot();
-    		if (root instanceof MethodWrapper) {
-    			cancelJobs((MethodWrapper) root);
-    		}
-    	}
-        if (viewer instanceof AbstractTreeViewer) {
+		if (oldInput instanceof TreeRoot) {
+			Object root = ((TreeRoot) oldInput).getRoot();
+			if (root instanceof MethodWrapper) {
+				cancelJobs((MethodWrapper) root);
+			}
+		}
+		if (viewer instanceof AbstractTreeViewer) {
 			fManager = new DeferredTreeContentManager(
 					(AbstractTreeViewer) viewer, fPart.getSite());
-        }
-    }
+		}
+	}
 
-    /**
-     * Cancel all current jobs.
-     */
-    void cancelJobs(MethodWrapper wrapper) {
-        if (fManager != null && wrapper != null) {
+	/**
+	 * Cancel all current jobs.
+	 */
+	void cancelJobs(MethodWrapper wrapper) {
+		if (fManager != null && wrapper != null) {
 			fManager.cancel(wrapper);
-            if (fPart != null) {
-                fPart.setCancelEnabled(false);
-            }
-        }
-    }
+			if (fPart != null) {
+				fPart.setCancelEnabled(false);
+			}
+		}
+	}
 
-    /**
-     *
-     */
-    public void doneFetching() {
-        if (fPart != null) {
-            fPart.setCancelEnabled(false);
-        }
-    }
+	/**
+	 *
+	 */
+	public void doneFetching() {
+		if (fPart != null) {
+			fPart.setCancelEnabled(false);
+		}
+	}
 
-    /**
-     *
-     */
-    public void startFetching() {
-        if (fPart != null) {
-            fPart.setCancelEnabled(true);
-        }
-    }
+	/**
+	 *
+	 */
+	public void startFetching() {
+		if (fPart != null) {
+			fPart.setCancelEnabled(true);
+		}
+	}
 }
