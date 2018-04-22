@@ -1,6 +1,7 @@
 package org.eclipse.dltk.core.tests.launching;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -304,6 +305,50 @@ public abstract class ScriptLaunchingTests extends AbstractModelTests {
 			public boolean hasAttribute(String attributeName)
 					throws CoreException {
 				return false;
+			}
+
+			@Override
+			public void delete(int flag) throws CoreException {
+
+			}
+
+			@Override
+			public ILaunchConfiguration getPrototype() throws CoreException {
+				return null;
+			}
+
+			@Override
+			public boolean isAttributeModified(String attribute)
+					throws CoreException {
+				return false;
+			}
+
+			@Override
+			public boolean isPrototype() {
+				return false;
+			}
+
+			@Override
+			public Collection<ILaunchConfiguration> getPrototypeChildren()
+					throws CoreException {
+				return null;
+			}
+
+			@Override
+			public int getKind() throws CoreException {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+			@Override
+			public Set<String> getPrototypeVisibleAttributes()
+					throws CoreException {
+				return null;
+			}
+
+			@Override
+			public void setPrototypeAttributeVisibility(String attribute,
+					boolean visible) throws CoreException {
 			}
 		};
 	}

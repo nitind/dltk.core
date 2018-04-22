@@ -11,39 +11,5 @@
 	</parent>
 
 	<artifactId>org.eclipse.dltk.core.targetplatform</artifactId>
-	<packaging>pom</packaging>
-	<build>
-      <plugins>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.0.0</version>
-          <executions>
-            <execution>
-              <id>attach-artifacts</id>
-              <phase>package</phase>
-              <goals>
-                <goal>attach-artifact</goal>
-              </goals>
-              <configuration>
-                <artifacts>
-                  <artifact>
-                    <file>DLTK-Neon-4.6.target</file>
-                    <type>target</type>
-                    <classifier>DLTK-Neon-4.6</classifier>
-                  </artifact>
-                  <artifact>
-                    <file>DLTK-Oxygen-4.7.target</file>
-                    <type>target</type>
-                    <classifier>DLTK-Oxygen-4.7</classifier>
-                  </artifact>
-                </artifacts>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-      </plugins>
-    </build>
-
-
+	<packaging>eclipse-target-definition</packaging>
 </project>
