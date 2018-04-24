@@ -74,3 +74,4 @@ Export-Package: org.eclipse.dltk.annotations,
  org.eclipse.dltk.utils
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.eclipse.dltk.core

@@ -15,3 +15,4 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dltk.core.index.lucene
+Automatic-Module-Name: org.eclipse.dltk.core.index.lucene

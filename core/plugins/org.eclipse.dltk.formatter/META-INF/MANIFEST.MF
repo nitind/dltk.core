@@ -15,3 +15,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.dltk.ui;bundle-version="0.0.0"
 Bundle-Activator: org.eclipse.dltk.formatter.DLTKFormatterPlugin
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: org.eclipse.dltk.formatter

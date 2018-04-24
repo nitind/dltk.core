@@ -21,3 +21,4 @@ Export-Package: org.eclipse.dltk.console.ui,
  org.eclipse.dltk.console.ui.internal
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: org.eclipse.dltk.console.ui

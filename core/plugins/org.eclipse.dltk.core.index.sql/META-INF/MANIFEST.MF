@@ -13,3 +13,4 @@ Bundle-ActivationPolicy: lazy
 Export-Package: 
  org.eclipse.dltk.core.index.sql,
  org.eclipse.dltk.internal.core.index.sql
+Automatic-Module-Name: org.eclipse.dltk.core.index.sql
