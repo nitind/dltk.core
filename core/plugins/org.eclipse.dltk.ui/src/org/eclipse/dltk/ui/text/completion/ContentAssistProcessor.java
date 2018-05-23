@@ -419,7 +419,7 @@ public abstract class ContentAssistProcessor implements IContentAssistProcessor 
 			fAssistant.setStatusMessage(message);
 			fAssistant.setEmptyMessage(emptyMessage);
 		} else {
-			Display.getDefault().syncExec(() -> {
+			Display.getDefault().asyncExec(() -> {
 				fAssistant.setStatusMessage(message);
 				fAssistant.setEmptyMessage(emptyMessage);
 			});
@@ -428,7 +428,9 @@ public abstract class ContentAssistProcessor implements IContentAssistProcessor 
 		fRepetition++;
 
 		// fAssistant.setShowMessage(fRepetition % 2 != 0);
-
+		if (fCategoryIteration == null) {
+			return fCategories;
+		}
 		return fCategoryIteration.get(iteration);
 	}
 
