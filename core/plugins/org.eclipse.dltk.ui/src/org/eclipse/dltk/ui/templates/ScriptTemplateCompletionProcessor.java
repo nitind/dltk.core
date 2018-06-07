@@ -166,7 +166,16 @@ public abstract class ScriptTemplateCompletionProcessor extends TemplateCompleti
 	private boolean areMultipleLinesSelected(ITextViewer viewer) {
 		if (viewer == null)
 			return false;
-		Point s = viewer.getSelectedRange();
+		final Point[] range = new Point[1];
+		Runnable getRange = () -> {
+			range[0] = viewer.getSelectedRange();
+		};
+		if (Display.getCurrent() != null) {
+			getRange.run();
+		} else {
+			Display.getDefault().syncExec(getRange);
+		}
+		Point s = range[0];
 		if (s.y == 0)
 			return false;
 		try {
