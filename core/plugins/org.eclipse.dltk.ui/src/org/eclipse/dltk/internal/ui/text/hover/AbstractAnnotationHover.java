@@ -20,12 +20,15 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.text.completion.HTMLPrinter;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.editors.text.EditorsUI;
@@ -37,8 +40,7 @@ import org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess;
  * Abstract super class for annotation hovers.
  *
  */
-public abstract class AbstractAnnotationHover
-		extends AbstractScriptEditorTextHover {
+public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHover {
 
 	protected DefaultMarkerAnnotationAccess fAnnotationAccess = new DefaultMarkerAnnotationAccess();
 	protected boolean fAllAnnotations;
@@ -56,7 +58,10 @@ public abstract class AbstractAnnotationHover
 	 */
 	protected String formatMessage(String message) {
 		StringBuffer buffer = new StringBuffer();
-		HTMLPrinter.insertPageProlog(buffer, 0, getStyleSheet());
+		ColorRegistry registry = JFaceResources.getColorRegistry();
+		RGB fgRGB = registry.getRGB("org.eclipse.dltk.ui.documentation.foregroundColor"); //$NON-NLS-1$
+		RGB bgRGB = registry.getRGB("org.eclipse.dltk.ui.documentation.backgroundColor"); //$NON-NLS-1$
+		HTMLPrinter.insertPageProlog(buffer, 0, bgRGB, fgRGB, getStyleSheet());
 		buffer.append(postUpdateMessage(TextUtils.escapeHTML(message)));
 		HTMLPrinter.addPageEpilog(buffer);
 		return buffer.toString();
@@ -82,8 +87,7 @@ public abstract class AbstractAnnotationHover
 
 		try {
 			final IPreferenceStore store = getCombinedPreferenceStore();
-			Iterator<Annotation> e = new ScriptAnnotationIterator(model,
-					fAllAnnotations);
+			Iterator<Annotation> e = new ScriptAnnotationIterator(model, fAllAnnotations);
 			int layer = -1;
 			String message = null;
 			boolean multi = false;
@@ -95,8 +99,7 @@ public abstract class AbstractAnnotationHover
 					continue;
 				}
 				if (!isActive(store, preference.getTextPreferenceKey())
-						&& !isActive(store,
-								preference.getHighlightPreferenceKey())) {
+						&& !isActive(store, preference.getHighlightPreferenceKey())) {
 					continue;
 				}
 
@@ -104,8 +107,7 @@ public abstract class AbstractAnnotationHover
 
 				int l = fAnnotationAccess.getLayer(a);
 
-				if (l >= layer && p != null && p.overlapsWith(
-						hoverRegion.getOffset(), hoverRegion.getLength())) {
+				if (l >= layer && p != null && p.overlapsWith(hoverRegion.getOffset(), hoverRegion.getLength())) {
 					String msg = getMessageFromAnnotation(a);
 					if (msg != null && msg.trim().length() > 0) {
 						if (message != null) {
@@ -128,8 +130,7 @@ public abstract class AbstractAnnotationHover
 		} finally {
 			try {
 				if (path != null) {
-					ITextFileBufferManager manager = FileBuffers
-							.getTextFileBufferManager();
+					ITextFileBufferManager manager = FileBuffers.getTextFileBufferManager();
 					manager.disconnect(path, LocationKind.NORMALIZE, null);
 				}
 			} catch (CoreException ex) {
@@ -144,8 +145,7 @@ public abstract class AbstractAnnotationHover
 		return a.getText();
 	}
 
-	protected static boolean isActive(IPreferenceStore store,
-			String preference) {
+	protected static boolean isActive(IPreferenceStore store, String preference) {
 		return preference != null && store.getBoolean(preference);
 	}
 
@@ -153,8 +153,8 @@ public abstract class AbstractAnnotationHover
 
 	protected synchronized IPreferenceStore getCombinedPreferenceStore() {
 		if (combinedStore == null) {
-			combinedStore = new ChainedPreferenceStore(new IPreferenceStore[] {
-					getPreferenceStore(), EditorsUI.getPreferenceStore() });
+			combinedStore = new ChainedPreferenceStore(
+					new IPreferenceStore[] { getPreferenceStore(), EditorsUI.getPreferenceStore() });
 		}
 		return combinedStore;
 	}
@@ -188,8 +188,7 @@ public abstract class AbstractAnnotationHover
 
 		IAnnotationModel model = null;
 		try {
-			model = manager.getTextFileBuffer(path, LocationKind.NORMALIZE)
-					.getAnnotationModel();
+			model = manager.getTextFileBuffer(path, LocationKind.NORMALIZE).getAnnotationModel();
 			return model;
 		} finally {
 			if (model == null) {
@@ -205,17 +204,14 @@ public abstract class AbstractAnnotationHover
 	/**
 	 * Returns the annotation preference for the given annotation.
 	 *
-	 * @param annotation
-	 *            the annotation
+	 * @param annotation the annotation
 	 * @return the annotation preference or <code>null</code> if none
 	 */
-	protected AnnotationPreference getAnnotationPreference(
-			Annotation annotation) {
+	protected AnnotationPreference getAnnotationPreference(Annotation annotation) {
 		if (annotation.isMarkedDeleted()) {
 			return null;
 		}
 
-		return EditorsUI.getAnnotationPreferenceLookup()
-				.getAnnotationPreference(annotation);
+		return EditorsUI.getAnnotationPreferenceLookup().getAnnotationPreference(annotation);
 	}
 }

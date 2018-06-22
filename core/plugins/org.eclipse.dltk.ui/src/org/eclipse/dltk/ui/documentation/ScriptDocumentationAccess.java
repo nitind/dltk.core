@@ -36,15 +36,13 @@ public class ScriptDocumentationAccess {
 	private static final String DOCUMENTATION_PROVIDERS_EXTENSION_POINT = "org.eclipse.dltk.ui.scriptDocumentationProviders"; //$NON-NLS-1$
 
 	private static final NatureExtensionManager<IScriptDocumentationProvider> providers = new NatureExtensionManager<IScriptDocumentationProvider>(
-			DOCUMENTATION_PROVIDERS_EXTENSION_POINT,
-			IScriptDocumentationProvider.class) {
+			DOCUMENTATION_PROVIDERS_EXTENSION_POINT, IScriptDocumentationProvider.class) {
 		@Override
 		protected void initializeDescriptors(List<Object> descriptors) {
 			Collections.sort(descriptors, new Comparator<Object>() {
 				int priority(IConfigurationElement element) {
 					try {
-						return Integer
-								.parseInt(element.getAttribute("priority"));
+						return Integer.parseInt(element.getAttribute("priority"));
 					} catch (NumberFormatException e) {
 						return 0;
 					}
@@ -52,8 +50,7 @@ public class ScriptDocumentationAccess {
 
 				@Override
 				public int compare(Object o1, Object o2) {
-					return priority((IConfigurationElement) o2)
-							- priority((IConfigurationElement) o1);
+					return priority((IConfigurationElement) o2) - priority((IConfigurationElement) o1);
 				}
 			});
 		}
@@ -114,8 +111,7 @@ public class ScriptDocumentationAccess {
 		return null;
 	}
 
-	private static IDocumentationResponse merge(String nature,
-			Operation2 operation) {
+	private static IDocumentationResponse merge(String nature, Operation2 operation) {
 		for (IScriptDocumentationProvider p : getProviders(nature)) {
 			final IDocumentationResponse response = operation.getInfo(p);
 			if (response != null) {
@@ -127,38 +123,29 @@ public class ScriptDocumentationAccess {
 
 	/**
 	 * Gets a reader for an IMember documentation. Content are found using
-	 * documentation documentationProviders, contributed via extension point.
-	 * The content does contain HTML code describing member. It may be for ex.
-	 * header comment or a man page. (if <code>allowExternal</code> is
-	 * <code>true</code>)
+	 * documentation documentationProviders, contributed via extension point. The
+	 * content does contain HTML code describing member. It may be for ex. header
+	 * comment or a man page. (if <code>allowExternal</code> is <code>true</code>)
 	 *
-	 * @param member
-	 *                           The member to get documentation for.
-	 * @param allowInherited
-	 *                           For procedures and methods: if member doesn't
-	 *                           have it's own documentation, look into parent
-	 *                           types methods.
-	 * @param allowExternal
-	 *                           Allows external documentation like man-pages.
+	 * @param member         The member to get documentation for.
+	 * @param allowInherited For procedures and methods: if member doesn't have it's
+	 *                       own documentation, look into parent types methods.
+	 * @param allowExternal  Allows external documentation like man-pages.
 	 * @return Reader for a content, or <code>null</code> if no documentation is
 	 *         found.
-	 * @throws ModelException
-	 *                            is thrown when the elements documentation can
-	 *                            not be accessed
+	 * @throws ModelException is thrown when the elements documentation can not be
+	 *                        accessed
 	 * @since 3.0
 	 */
-	public static Reader getHTMLContentReader(String nature,
-			final Object member, final boolean allowInherited,
+	public static Reader getHTMLContentReader(String nature, final Object member, final boolean allowInherited,
 			final boolean allowExternal) {
 		return merge(nature, (Operation) provider -> {
 			if (provider instanceof IScriptDocumentationProviderExtension2) {
 				final IScriptDocumentationProviderExtension2 ext = (IScriptDocumentationProviderExtension2) provider;
-				final IDocumentationResponse response = ext
-						.getDocumentationFor(member);
+				final IDocumentationResponse response = ext.getDocumentationFor(member);
 				return DocumentationUtils.getReader(response);
 			} else if (member instanceof IMember) {
-				return provider.getInfo((IMember) member, allowInherited,
-						allowExternal);
+				return provider.getInfo((IMember) member, allowInherited, allowExternal);
 			} else {
 				return null;
 			}
@@ -168,17 +155,15 @@ public class ScriptDocumentationAccess {
 	/**
 	 * @since 3.0
 	 */
-	public static IDocumentationResponse getDocumentation(String nature,
-			final Object member, final IAdaptable context) {
+	public static IDocumentationResponse getDocumentation(String nature, final Object member,
+			final IAdaptable context) {
 		return merge(nature, (Operation2) provider -> {
 			if (provider instanceof IScriptDocumentationProviderExtension2) {
 				final IScriptDocumentationProviderExtension2 ext = (IScriptDocumentationProviderExtension2) provider;
-				final IDocumentationResponse response = ext
-						.getDocumentationFor(member);
+				final IDocumentationResponse response = ext.getDocumentationFor(member);
 				if (response != null && response.getTitle() == null) {
-					final IScriptDocumentationTitleAdapter titleAdapter = AdaptUtils
-							.getAdapter(context,
-									IScriptDocumentationTitleAdapter.class);
+					final IScriptDocumentationTitleAdapter titleAdapter = AdaptUtils.getAdapter(context,
+							IScriptDocumentationTitleAdapter.class);
 					if (titleAdapter != null) {
 						final String title = titleAdapter.getTitle(member);
 						// TODO (alex) image
@@ -211,8 +196,7 @@ public class ScriptDocumentationAccess {
 				return response;
 			} else if (member instanceof IMember) {
 				final IMember m = (IMember) member;
-				return DocumentationUtils.wrap(member, context,
-						provider.getInfo(m, true, true));
+				return DocumentationUtils.wrap(member, context, provider.getInfo(m, true, true));
 			} else {
 				return null;
 			}
@@ -221,20 +205,17 @@ public class ScriptDocumentationAccess {
 
 	/**
 	 * Gets a reader for an keyword documentation. Content are found using ALL
-	 * documentation documentationProviders, contributed via extension point.
-	 * The content does contain HTML code describing member.
+	 * documentation documentationProviders, contributed via extension point. The
+	 * content does contain HTML code describing member.
 	 *
-	 * @param content
-	 *                    The keyword to find.
+	 * @param content The keyword to find.
 	 * @return Reader for a content, or <code>null</code> if no documentation is
 	 *         found.
-	 * @throws ModelException
-	 *                            is thrown when the elements documentation can
-	 *                            not be accessed
+	 * @throws ModelException is thrown when the elements documentation can not be
+	 *                        accessed
 	 */
 	@Deprecated
-	public static Reader getHTMLContentReader(String nature,
-			final String content) throws ModelException {
+	public static Reader getHTMLContentReader(String nature, final String content) throws ModelException {
 		return merge(nature, (Operation) provider -> provider.getInfo(content));
 	}
 
@@ -246,14 +227,12 @@ public class ScriptDocumentationAccess {
 	 * @param keyword
 	 * @since 2.0
 	 */
-	public static Reader getKeywordDocumentation(String nature,
-			final IModelElement context, final String keyword)
+	public static Reader getKeywordDocumentation(String nature, final IModelElement context, final String keyword)
 			throws ModelException {
 		return merge(nature, (Operation) provider -> {
 			if (provider instanceof IScriptDocumentationProviderExtension) {
 				final IScriptDocumentationProviderExtension ext = (IScriptDocumentationProviderExtension) provider;
-				final IDocumentationResponse response = ext
-						.describeKeyword(keyword, context);
+				final IDocumentationResponse response = ext.describeKeyword(keyword, context);
 				return DocumentationUtils.getReader(response);
 			}
 			return provider.getInfo(keyword);

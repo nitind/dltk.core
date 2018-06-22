@@ -30,7 +30,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.internal.text.html.BrowserInformationControl;
 import org.eclipse.jface.internal.text.html.BrowserInformationControlInput;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.AbstractReusableInformationControlCreator;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IInformationControl;
@@ -41,6 +43,7 @@ import org.eclipse.jface.text.IInputChangedListener;
 import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISharedImages;
@@ -58,17 +61,12 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 		implements IInformationProviderExtension2, ITextHoverExtension {
 
 	private static final long LABEL_FLAGS = ScriptElementLabels.ALL_FULLY_QUALIFIED
-			| ScriptElementLabels.M_APP_RETURNTYPE
-			| ScriptElementLabels.F_APP_TYPE_SIGNATURE
-			| ScriptElementLabels.M_PARAMETER_TYPES
-			| ScriptElementLabels.M_PARAMETER_NAMES
-			| ScriptElementLabels.M_EXCEPTIONS
-			| ScriptElementLabels.F_PRE_TYPE_SIGNATURE
-			| ScriptElementLabels.M_PRE_TYPE_PARAMETERS
-			| ScriptElementLabels.T_TYPE_PARAMETERS
+			| ScriptElementLabels.M_APP_RETURNTYPE | ScriptElementLabels.F_APP_TYPE_SIGNATURE
+			| ScriptElementLabels.M_PARAMETER_TYPES | ScriptElementLabels.M_PARAMETER_NAMES
+			| ScriptElementLabels.M_EXCEPTIONS | ScriptElementLabels.F_PRE_TYPE_SIGNATURE
+			| ScriptElementLabels.M_PRE_TYPE_PARAMETERS | ScriptElementLabels.T_TYPE_PARAMETERS
 			| ScriptElementLabels.USE_RESOLVED;
-	private static final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS
-			& ~ScriptElementLabels.F_FULLY_QUALIFIED
+	private static final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS & ~ScriptElementLabels.F_FULLY_QUALIFIED
 			| ScriptElementLabels.F_POST_QUALIFIED;
 
 	/**
@@ -93,18 +91,16 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 			fInfoControl = infoControl;
 			setText(ScriptHoverMessages.ScriptdocHover_back);
 			ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
-			setImageDescriptor(
-					images.getImageDescriptor(ISharedImages.IMG_TOOL_BACK));
-			setDisabledImageDescriptor(images
-					.getImageDescriptor(ISharedImages.IMG_TOOL_BACK_DISABLED));
+			setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_BACK));
+			setDisabledImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_BACK_DISABLED));
 
 			update();
 		}
 
 		@Override
 		public void run() {
-			BrowserInformationControlInput previous = (BrowserInformationControlInput) fInfoControl
-					.getInput().getPrevious();
+			BrowserInformationControlInput previous = (BrowserInformationControlInput) fInfoControl.getInput()
+					.getPrevious();
 			if (previous != null) {
 				fInfoControl.setInput(previous);
 			}
@@ -139,18 +135,15 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 			fInfoControl = infoControl;
 			setText(ScriptHoverMessages.ScriptdocHover_forward);
 			ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
-			setImageDescriptor(
-					images.getImageDescriptor(ISharedImages.IMG_TOOL_FORWARD));
-			setDisabledImageDescriptor(images.getImageDescriptor(
-					ISharedImages.IMG_TOOL_FORWARD_DISABLED));
+			setImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_FORWARD));
+			setDisabledImageDescriptor(images.getImageDescriptor(ISharedImages.IMG_TOOL_FORWARD_DISABLED));
 
 			update();
 		}
 
 		@Override
 		public void run() {
-			BrowserInformationControlInput next = (BrowserInformationControlInput) fInfoControl
-					.getInput().getNext();
+			BrowserInformationControlInput next = (BrowserInformationControlInput) fInfoControl.getInput().getNext();
 			if (next != null) {
 				fInfoControl.setInput(next);
 			}
@@ -199,8 +192,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 			try {
 				if (infoInput.getElement() instanceof IModelElement) {
 					// FIXME: add hover location to editor navigation history?
-					DLTKUIPlugin.openInEditor(
-							(IModelElement) infoInput.getElement());
+					DLTKUIPlugin.openInEditor((IModelElement) infoInput.getElement());
 				}
 				// TODO (alex) try via IOpenDelegate
 			} catch (PartInitException | ModelException e) {
@@ -214,14 +206,12 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 	 *
 	 * @since 4.0
 	 */
-	public static final class PresenterControlCreator
-			extends AbstractReusableInformationControlCreator {
+	public static final class PresenterControlCreator extends AbstractReusableInformationControlCreator {
 
 		/**
 		 * Creates a new PresenterControlCreator.
 		 *
-		 * @param site
-		 *                 the site or <code>null</code> if none
+		 * @param site the site or <code>null</code> if none
 		 */
 		public PresenterControlCreator(IWorkbenchSite site) {
 		}
@@ -231,8 +221,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 			if (BrowserInformationControl.isAvailable(parent)) {
 				ToolBarManager tbm = new ToolBarManager(SWT.FLAT);
 				String font = PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT;
-				BrowserInformationControl iControl = new BrowserInformationControl(
-						parent, font, tbm);
+				BrowserInformationControl iControl = new BrowserInformationControl(parent, font, tbm);
 
 				final BackAction backAction = new BackAction(iControl);
 				backAction.setEnabled(false);
@@ -245,8 +234,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 				// ShowInJavadocViewAction(
 				// iControl);
 				// tbm.add(showInJavadocViewAction);
-				final OpenDeclarationAction openDeclarationAction = new OpenDeclarationAction(
-						iControl);
+				final OpenDeclarationAction openDeclarationAction = new OpenDeclarationAction(iControl);
 				tbm.add(openDeclarationAction);
 
 				// final SimpleSelectionProvider selectionProvider = new
@@ -323,43 +311,33 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 	 *
 	 * @since 4.0
 	 */
-	public static final class HoverControlCreator
-			extends AbstractReusableInformationControlCreator {
+	public static final class HoverControlCreator extends AbstractReusableInformationControlCreator {
 		/**
 		 * The information presenter control creator.
 		 */
 		private final IInformationControlCreator fInformationPresenterControlCreator;
 
 		/**
-		 * <code>true</code> to use the additional info affordance,
-		 * <code>false</code> to use the hover affordance.
+		 * <code>true</code> to use the additional info affordance, <code>false</code>
+		 * to use the hover affordance.
 		 */
 		private final boolean fAdditionalInfoAffordance;
 
 		/**
-		 * @param informationPresenterControlCreator
-		 *                                               control creator for
-		 *                                               enriched hover
+		 * @param informationPresenterControlCreator control creator for enriched hover
 		 */
-		public HoverControlCreator(
-				IInformationControlCreator informationPresenterControlCreator) {
+		public HoverControlCreator(IInformationControlCreator informationPresenterControlCreator) {
 			this(informationPresenterControlCreator, false);
 		}
 
 		/**
-		 * @param informationPresenterControlCreator
-		 *                                               control creator for
-		 *                                               enriched hover
-		 * @param additionalInfoAffordance
-		 *                                               <code>true</code> to
-		 *                                               use the additional info
-		 *                                               affordance,
-		 *                                               <code>false</code> to
-		 *                                               use the hover
-		 *                                               affordance
+		 * @param informationPresenterControlCreator control creator for enriched hover
+		 * @param additionalInfoAffordance           <code>true</code> to use the
+		 *                                           additional info affordance,
+		 *                                           <code>false</code> to use the hover
+		 *                                           affordance
 		 */
-		public HoverControlCreator(
-				IInformationControlCreator informationPresenterControlCreator,
+		public HoverControlCreator(IInformationControlCreator informationPresenterControlCreator,
 				boolean additionalInfoAffordance) {
 			fInformationPresenterControlCreator = informationPresenterControlCreator;
 			fAdditionalInfoAffordance = additionalInfoAffordance;
@@ -375,8 +353,8 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 					: EditorsUI.getTooltipAffordanceString();
 			if (BrowserInformationControl.isAvailable(parent)) {
 				String font = PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT;
-				BrowserInformationControl iControl = new BrowserInformationControl(
-						parent, font, tooltipAffordanceString) {
+				BrowserInformationControl iControl = new BrowserInformationControl(parent, font,
+						tooltipAffordanceString) {
 					/**
 					 * @see IInformationControlExtension5#getInformationPresenterControlCreator()
 					 */
@@ -388,8 +366,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 				// TODO (alex) addLinkListener(iControl);
 				return iControl;
 			}
-			return new DefaultInformationControl(parent,
-					tooltipAffordanceString);
+			return new DefaultInformationControl(parent, tooltipAffordanceString);
 		}
 
 		/**
@@ -404,8 +381,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 				String tooltipAffordanceString = fAdditionalInfoAffordance
 						? DLTKUIPlugin.getAdditionalInfoAffordanceString()
 						: EditorsUI.getTooltipAffordanceString();
-				((IInformationControlExtension4) control)
-						.setStatusText(tooltipAffordanceString);
+				((IInformationControlExtension4) control).setStatusText(tooltipAffordanceString);
 			}
 
 			return true;
@@ -415,8 +391,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		if (fHoverControlCreator == null)
-			fHoverControlCreator = new HoverControlCreator(
-					getInformationPresenterControlCreator());
+			fHoverControlCreator = new HoverControlCreator(getInformationPresenterControlCreator());
 		return fHoverControlCreator;
 	}
 
@@ -430,13 +405,11 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 		boolean hasContents = false;
 		if (nResults > 1) {
 			HTMLPrinter.addSmallHeader(buffer,
-					getInfoText(result[0], titleAdapter.getTitle(result[0]),
-							titleAdapter.getImage(result[0])));
+					getInfoText(result[0], titleAdapter.getTitle(result[0]), titleAdapter.getImage(result[0])));
 			HTMLPrinter.addParagraph(buffer, "<hr>"); //$NON-NLS-1$
 			for (int i = 0; i < result.length; i++) {
 				Object element = result[i];
-				Reader reader = ScriptDocumentationAccess
-						.getHTMLContentReader(nature, element, true, true);
+				Reader reader = ScriptDocumentationAccess.getHTMLContentReader(nature, element, true, true);
 				if (reader == null) {
 					continue;
 				}
@@ -448,18 +421,14 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 			}
 		} else {
 			Object element = result[0];
-			IDocumentationResponse response = ScriptDocumentationAccess
-					.getDocumentation(nature, element, titleAdapter);
+			IDocumentationResponse response = ScriptDocumentationAccess.getDocumentation(nature, element, titleAdapter);
 			// Provide hint why there's no doc
 			if (response == null) {
-				response = new TextDocumentationResponse(element,
-						titleAdapter.getTitle(element),
-						titleAdapter.getImage(element),
-						ScriptHoverMessages.ScriptdocHover_noAttachedInformation);
+				response = new TextDocumentationResponse(element, titleAdapter.getTitle(element),
+						titleAdapter.getImage(element), ScriptHoverMessages.ScriptdocHover_noAttachedInformation);
 			}
 			try {
-				HTMLPrinter.addSmallHeader(buffer, getInfoText(element,
-						response.getTitle(), response.getImage()));
+				HTMLPrinter.addSmallHeader(buffer, getInfoText(element, response.getTitle(), response.getImage()));
 				HTMLPrinter.addParagraph(buffer, response.getReader());
 				hasContents = true;
 			} catch (IOException e) {
@@ -468,41 +437,38 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 			/*
 			 * else if (curr.getElementType() == IModelElement.LOCAL_VARIABLE ||
 			 * curr.getElementType() == IModelElement.TYPE_PARAMETER) {
-			 * HTMLPrinter.addSmallHeader(buffer, getInfoText(curr));
-			 * hasContents= true; }
+			 * HTMLPrinter.addSmallHeader(buffer, getInfoText(curr)); hasContents= true; }
 			 */
 		}
 		if (!hasContents)
 			return null;
 		if (buffer.length() > 0) {
-			HTMLPrinter.insertPageProlog(buffer, 0, getStyleSheet());
+			ColorRegistry registry = JFaceResources.getColorRegistry();
+			RGB fgRGB = registry.getRGB("org.eclipse.dltk.ui.documentation.foregroundColor"); //$NON-NLS-1$
+			RGB bgRGB = registry.getRGB("org.eclipse.dltk.ui.documentation.backgroundColor"); //$NON-NLS-1$
+			HTMLPrinter.insertPageProlog(buffer, 0, bgRGB, fgRGB, getStyleSheet());
 			HTMLPrinter.addPageEpilog(buffer);
 			return buffer.toString();
 		}
 		return null;
 	}
 
-	private String getInfoText(Object element, String title,
-			ImageDescriptor image) {
+	private String getInfoText(Object element, String title, ImageDescriptor image) {
 		String imageName = null;
 		if (image != null) {
-			final URL imageURL = DLTKUIPlugin.getDefault()
-					.getImagesOnFSRegistry().getImageURL(image);
+			final URL imageURL = DLTKUIPlugin.getDefault().getImagesOnFSRegistry().getImageURL(image);
 			if (imageURL != null) {
 				imageName = imageURL.toExternalForm();
 			}
 		}
 		StringBuffer buf = new StringBuffer();
 		addImageAndLabel(buf, element, imageName, 16, 16,
-				org.eclipse.jface.internal.text.html.HTMLPrinter
-						.convertToHTMLContent(title),
-				20, 2);
+				org.eclipse.jface.internal.text.html.HTMLPrinter.convertToHTMLContent(title), 20, 2);
 		return buf.toString();
 	}
 
-	private static void addImageAndLabel(StringBuffer buf, Object element,
-			String imageSrcPath, int imageWidth, int imageHeight, String label,
-			int labelLeft, int labelTop) {
+	private static void addImageAndLabel(StringBuffer buf, Object element, String imageSrcPath, int imageWidth,
+			int imageHeight, String label, int labelLeft, int labelTop) {
 		buf.append("<div style='word-wrap: break-word; position: relative; "); //$NON-NLS-1$
 
 		if (imageSrcPath != null) {
@@ -522,8 +488,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 			// element = null; // no link
 			// }
 			// }
-			StringBuffer imageStyle = new StringBuffer(
-					"border:none; position: absolute; "); //$NON-NLS-1$
+			StringBuffer imageStyle = new StringBuffer("border:none; position: absolute; "); //$NON-NLS-1$
 			imageStyle.append("width: ").append(imageWidth).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
 			imageStyle.append("height: ").append(imageHeight).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
 			imageStyle.append("left: ").append(-labelLeft - 1).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
@@ -533,11 +498,9 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 			buf.append("<!--[if lte IE 6]><![if gte IE 5.5]>\n"); //$NON-NLS-1$
 			String tooltip = element == null ? "" //$NON-NLS-1$
 					: "alt='" //$NON-NLS-1$
-							+ ScriptHoverMessages.ScriptdocHover_openDeclaration
-							+ "' "; //$NON-NLS-1$
+							+ ScriptHoverMessages.ScriptdocHover_openDeclaration + "' "; //$NON-NLS-1$
 			buf.append("<span ").append(tooltip).append("style=\"") //$NON-NLS-1$ //$NON-NLS-2$
-					.append(imageStyle)
-					.append("filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='") //$NON-NLS-1$
+					.append(imageStyle).append("filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='") //$NON-NLS-1$
 					.append(imageSrcPath).append("')\"></span>\n"); //$NON-NLS-1$
 			buf.append("<![endif]><![endif]-->\n"); //$NON-NLS-1$
 
@@ -563,13 +526,16 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 	@Override
 	protected String getHoverInfo(String nature, String content) {
 		try {
-			Reader reader = ScriptDocumentationAccess.getKeywordDocumentation(
-					nature, getEditorInputModelElement(), content);
+			Reader reader = ScriptDocumentationAccess.getKeywordDocumentation(nature, getEditorInputModelElement(),
+					content);
 			if (reader != null) {
 				StringBuffer buffer = new StringBuffer();
 				HTMLPrinter.addParagraph(buffer, reader);
 				if (buffer.length() > 0) {
-					HTMLPrinter.insertPageProlog(buffer, 0, getStyleSheet());
+					ColorRegistry registry = JFaceResources.getColorRegistry();
+					RGB fgRGB = registry.getRGB("org.eclipse.dltk.ui.documentation.foregroundColor"); //$NON-NLS-1$
+					RGB bgRGB = registry.getRGB("org.eclipse.dltk.ui.documentation.backgroundColor"); //$NON-NLS-1$
+					HTMLPrinter.insertPageProlog(buffer, 0, bgRGB, fgRGB, getStyleSheet());
 					HTMLPrinter.addPageEpilog(buffer);
 					return buffer.toString();
 				}
@@ -583,8 +549,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 	private static final ScriptDocumentationTitleAdapter titleAdapter = new ScriptDocumentationTitleAdapter();
 
 	@Internal
-	static class ScriptDocumentationTitleAdapter extends PlatformObject
-			implements IScriptDocumentationTitleAdapter {
+	static class ScriptDocumentationTitleAdapter extends PlatformObject implements IScriptDocumentationTitleAdapter {
 
 		private ScriptElementImageProvider fImageProvider;
 
@@ -592,12 +557,9 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 		public String getTitle(Object element) {
 			if (element instanceof IModelElement) {
 				IModelElement member = (IModelElement) element;
-				long flags = member
-						.getElementType() == IModelElement.LOCAL_VARIABLE
-								? LOCAL_VARIABLE_FLAGS
-								: LABEL_FLAGS;
-				String label = ScriptElementLabels.getDefault()
-						.getElementLabel(member, flags);
+				long flags = member.getElementType() == IModelElement.LOCAL_VARIABLE ? LOCAL_VARIABLE_FLAGS
+						: LABEL_FLAGS;
+				String label = ScriptElementLabels.getDefault().getElementLabel(member, flags);
 				return label;
 			}
 			return null;
@@ -611,8 +573,7 @@ public class DocumentationHover extends AbstractScriptEditorTextHover
 					fImageProvider = new ScriptElementImageProvider();
 				}
 				return fImageProvider.getScriptImageDescriptor(modelElement,
-						ScriptElementImageProvider.OVERLAY_ICONS
-								| ScriptElementImageProvider.SMALL_ICONS);
+						ScriptElementImageProvider.OVERLAY_ICONS | ScriptElementImageProvider.SMALL_ICONS);
 			}
 			return null;
 		}

@@ -1637,6 +1637,24 @@
          %dltkDisplayFontDefiniton.description
        </description>
      </fontDefinition>
+     <colorDefinition
+            label="%dltkDocumentationBackgroundColor.label"
+            categoryId="org.eclipse.dltk.ui.presentation"
+            defaultsTo="org.eclipse.ui.workbench.INFORMATION_BACKGROUND"
+            id="org.eclipse.dltk.ui.documentation.backgroundColor">
+         <description>
+            %dltkDocumentationBackgroundColor.description
+         </description>
+      </colorDefinition>
+      <colorDefinition
+            label="%dltkDocumentationForegroundColor.label"
+            categoryId="org.eclipse.dltk.ui.presentation"
+            defaultsTo="org.eclipse.ui.workbench.INFORMATION_FOREGROUND"
+            id="org.eclipse.dltk.ui.documentation.foregroundColor">
+         <description>
+            %dltkDocumentationForegroundColor.description
+         </description>
+      </colorDefinition>
    </extension>
    
    <extension
@@ -1733,6 +1751,16 @@
 		textStylePreferenceKey="occurrenceTextStyle"
 		textStylePreferenceValue="NONE">
 	</specification>
+</extension>
+
+<extension
+         point="org.eclipse.e4.ui.css.swt.theme">
+      <stylesheet
+            uri="css/e4-dark.css">
+         <themeid
+               refid="org.eclipse.e4.ui.css.theme.e4_dark">
+         </themeid>
+      </stylesheet>
 </extension>
 
 </plugin>

@@ -34,6 +34,7 @@ import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.jface.internal.text.html.BrowserInformationControl;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPositionCategoryException;
@@ -542,9 +543,12 @@ public abstract class AbstractScriptCompletionProposal implements IScriptComplet
 	public Object getAdditionalProposalInfo(IProgressMonitor monitor) {
 		if (getProposalInfo() != null) {
 			String info = getProposalInfo().getInfo(monitor);
-			if (info != null && info.length() > 0) {
+			if (info != null && info.length() > 0 && !info.contains("<html")) { //$NON-NLS-1$
 				StringBuffer buffer = new StringBuffer();
-				HTMLPrinter.insertPageProlog(buffer, 0, getCSSStyles());
+				ColorRegistry registry = JFaceResources.getColorRegistry();
+				RGB fgRGB = registry.getRGB("org.eclipse.dltk.ui.documentation.foregroundColor"); //$NON-NLS-1$
+				RGB bgRGB = registry.getRGB("org.eclipse.dltk.ui.documentation.backgroundColor"); //$NON-NLS-1$
+				HTMLPrinter.insertPageProlog(buffer, 0, bgRGB, fgRGB, getCSSStyles());
 				buffer.append(info);
 				HTMLPrinter.addPageEpilog(buffer);
 				info = buffer.toString();
