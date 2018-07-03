@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,7 +46,6 @@ public class ScriptSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 
 	private ITextEditor fTextEditor;
 	private Position fPosition;
-	private Annotation fAnnotation;
 	private AnnotationPreferenceLookup fAnnotationPreferenceLookup;
 	private IPreferenceStore fStore;
 	private boolean fHasCorrection;
@@ -54,15 +53,13 @@ public class ScriptSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 
 	private String fNatureId;
 
-	public ScriptSelectAnnotationRulerAction(ITextEditor editor,
-			IVerticalRulerInfo ruler, IDLTKUILanguageToolkit toolkit) {
-		this(DLTKEditorMessages.getBundleForConstructedKeys(),
-				"SelectAnnotationRulerAction.", editor, ruler, toolkit);
+	public ScriptSelectAnnotationRulerAction(ITextEditor editor, IVerticalRulerInfo ruler,
+			IDLTKUILanguageToolkit toolkit) {
+		this(DLTKEditorMessages.getBundleForConstructedKeys(), "SelectAnnotationRulerAction.", editor, ruler, toolkit);
 	}
 
-	public ScriptSelectAnnotationRulerAction(ResourceBundle bundle,
-			String prefix, ITextEditor editor, IVerticalRulerInfo ruler,
-			IDLTKUILanguageToolkit toolkit) {
+	public ScriptSelectAnnotationRulerAction(ResourceBundle bundle, String prefix, ITextEditor editor,
+			IVerticalRulerInfo ruler, IDLTKUILanguageToolkit toolkit) {
 		super(bundle, prefix, editor, ruler);
 
 		fBundle = bundle;
@@ -88,8 +85,7 @@ public class ScriptSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.action.IAction#runWithEvent(org.eclipse.swt.widgets
+	 * @see org.eclipse.jface.action.IAction#runWithEvent(org.eclipse.swt.widgets
 	 * .Event)
 	 *
 	 * @since 3.2
@@ -103,12 +99,10 @@ public class ScriptSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 		// }
 
 		if (fHasCorrection) {
-			ITextOperationTarget operation = fTextEditor
-					.getAdapter(ITextOperationTarget.class);
+			ITextOperationTarget operation = fTextEditor.getAdapter(ITextOperationTarget.class);
 			final int opCode = ISourceViewer.QUICK_ASSIST;
 			if (operation != null && operation.canDoOperation(opCode)) {
-				fTextEditor.selectAndReveal(fPosition.getOffset(),
-						fPosition.getLength());
+				fTextEditor.selectAndReveal(fPosition.getOffset(), fPosition.getLength());
 				operation.doOperation(opCode);
 			}
 			return;
@@ -144,7 +138,6 @@ public class ScriptSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 
 	private void findJavaAnnotation() {
 		fPosition = null;
-		fAnnotation = null;
 		fHasCorrection = false;
 
 		AbstractMarkerAnnotationModel model = getAnnotationModel();
@@ -153,9 +146,6 @@ public class ScriptSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 		IDocument document = getDocument();
 		if (model == null)
 			return;
-
-		boolean hasAssistLightbulb = false;
-		// fStore.getBoolean(TclPreferenceConstants.EDITOR_QUICKASSIST_LIGHTBULB);
 
 		Iterator<Annotation> iter = model.getAnnotationIterator();
 		int layer = Integer.MIN_VALUE;
@@ -177,17 +167,14 @@ public class ScriptSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 				continue;
 
 			boolean isReadOnly = fTextEditor instanceof ITextEditorExtension
-					&& ((ITextEditorExtension) fTextEditor)
-							.isEditorInputReadOnly();
+					&& ((ITextEditorExtension) fTextEditor).isEditorInputReadOnly();
 			if (!isReadOnly && hasCorrections(annotation)) {
 				fPosition = position;
-				fAnnotation = annotation;
 				fHasCorrection = true;
 				layer = annotationLayer;
 				continue;
 			}
-			AnnotationPreference preference = fAnnotationPreferenceLookup
-					.getAnnotationPreference(annotation);
+			AnnotationPreference preference = fAnnotationPreferenceLookup.getAnnotationPreference(annotation);
 			if (preference == null)
 				continue;
 
@@ -197,7 +184,6 @@ public class ScriptSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 
 			if (fStore.getBoolean(key)) {
 				fPosition = position;
-				fAnnotation = annotation;
 				fHasCorrection = false;
 				layer = annotationLayer;
 			}

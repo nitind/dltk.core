@@ -59,10 +59,9 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 public abstract class FindAction extends SelectionDispatchAction {
 
 	// A dummy which can't be selected in the UI
-	private static final IModelElement RETURN_WITHOUT_BEEP = DLTKCore
-			.create(DLTKUIPlugin.getWorkspace().getRoot());
+	private static final IModelElement RETURN_WITHOUT_BEEP = DLTKCore.create(DLTKUIPlugin.getWorkspace().getRoot());
 
-	private Class[] fValidTypes;
+	private Class<?>[] fValidTypes;
 	private final IDLTKLanguageToolkit toolkit;
 	private AbstractDecoratedTextEditor fEditor;
 
@@ -84,36 +83,32 @@ public abstract class FindAction extends SelectionDispatchAction {
 	 *
 	 * @since 5.3
 	 */
-	FindAction(IDLTKLanguageToolkit toolkit,
-			AbstractDecoratedTextEditor editor) {
+	FindAction(IDLTKLanguageToolkit toolkit, AbstractDecoratedTextEditor editor) {
 		this(toolkit, editor.getEditorSite());
 		fEditor = editor;
 		setEnabled(SelectionConverter.canOperateOn(fEditor));
 	}
 
 	/**
-	 * Called once by the constructors to initialize label, tooltip, image and
-	 * help support of the action. To be overridden by implementors of this
-	 * action.
+	 * Called once by the constructors to initialize label, tooltip, image and help
+	 * support of the action. To be overridden by implementors of this action.
 	 */
 	abstract void init();
 
 	/**
-	 * Called once by the constructors to get the list of the valid input types
-	 * of the action. To be overridden by implementors of this action.
+	 * Called once by the constructors to get the list of the valid input types of
+	 * the action. To be overridden by implementors of this action.
 	 *
 	 * @return the valid input types of the action
 	 */
-	abstract Class[] getValidTypes();
+	abstract Class<?>[] getValidTypes();
 
 	private boolean canOperateOn(IStructuredSelection sel) {
-		return sel != null && !sel.isEmpty()
-				&& canOperateOn(getModelElement(sel, true));
+		return sel != null && !sel.isEmpty() && canOperateOn(getModelElement(sel, true));
 	}
 
 	boolean canOperateOn(IModelElement element) {
-		if (element == null || fValidTypes == null || fValidTypes.length == 0
-				|| !ActionUtil.isOnBuildPath(element))
+		if (element == null || fValidTypes == null || fValidTypes.length == 0 || !ActionUtil.isOnBuildPath(element))
 			return false;
 
 		for (int i = 0; i < fValidTypes.length; i++) {
@@ -147,16 +142,14 @@ public abstract class FindAction extends SelectionDispatchAction {
 		}
 	}
 
-	IModelElement getModelElement(IStructuredSelection selection,
-			boolean silent) {
+	IModelElement getModelElement(IStructuredSelection selection, boolean silent) {
 		if (selection.size() == 1) {
 			Object firstElement = selection.getFirstElement();
 			IModelElement elem = null;
 			if (firstElement instanceof IModelElement)
 				elem = (IModelElement) firstElement;
 			else if (firstElement instanceof IAdaptable)
-				elem = ((IAdaptable) firstElement)
-						.getAdapter(IModelElement.class);
+				elem = ((IAdaptable) firstElement).getAdapter(IModelElement.class);
 			if (elem != null) {
 				return getTypeIfPossible(elem, silent);
 			}
@@ -166,17 +159,13 @@ public abstract class FindAction extends SelectionDispatchAction {
 	}
 
 	private void showOperationUnavailableDialog() {
-		MessageDialog.openInformation(getShell(),
-				SearchMessages.DLTKElementAction_operationUnavailable_title,
+		MessageDialog.openInformation(getShell(), SearchMessages.DLTKElementAction_operationUnavailable_title,
 				getOperationUnavailableMessage());
 	}
 
 	String getOperationUnavailableMessage() {
-		return NLS.bind(
-				SearchMessages.DLTKElementAction_operationUnavailable_generic,
-				(fEditor instanceof IScriptLanguageProvider
-						? ((IScriptLanguageProvider) fEditor)
-								.getLanguageToolkit()
+		return NLS.bind(SearchMessages.DLTKElementAction_operationUnavailable_generic,
+				(fEditor instanceof IScriptLanguageProvider ? ((IScriptLanguageProvider) fEditor).getLanguageToolkit()
 						: toolkit).getLanguageName());
 	}
 
@@ -186,8 +175,7 @@ public abstract class FindAction extends SelectionDispatchAction {
 			types = cu.getTypes();
 		} catch (ModelException ex) {
 			if (ScriptModelUtil.isExceptionToBeLogged(ex))
-				ExceptionHandler.log(ex,
-						SearchMessages.DLTKElementAction_error_open_message);
+				ExceptionHandler.log(ex, SearchMessages.DLTKElementAction_error_open_message);
 			if (silent) {
 				return RETURN_WITHOUT_BEEP;
 			}
@@ -203,8 +191,8 @@ public abstract class FindAction extends SelectionDispatchAction {
 		String message = SearchMessages.DLTKElementAction_typeSelectionDialog_message;
 		int flags = (ModelElementLabelProvider.SHOW_DEFAULT);
 
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
-				getShell(), new ModelElementLabelProvider(flags));
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(),
+				new ModelElementLabelProvider(flags));
 		dialog.setTitle(title);
 		dialog.setMessage(message);
 		dialog.setElements(types);
@@ -235,13 +223,11 @@ public abstract class FindAction extends SelectionDispatchAction {
 			String title = SearchMessages.SearchElementSelectionDialog_title;
 			String message = SearchMessages.SearchElementSelectionDialog_message;
 
-			IModelElement[] elements = SelectionConverter
-					.codeResolveForked(fEditor, true);
+			IModelElement[] elements = SelectionConverter.codeResolveForked(fEditor, true);
 			if (elements.length > 0 && canOperateOn(elements[0])) {
 				IModelElement element = elements[0];
 				if (elements.length > 1)
-					element = OpenActionUtil.selectModelElement(elements,
-							getShell(), title, message);
+					element = OpenActionUtil.selectModelElement(elements, getShell(), title, message);
 				if (element != null)
 					run(element);
 			} else
@@ -267,8 +253,7 @@ public abstract class FindAction extends SelectionDispatchAction {
 	/**
 	 * Executes this action for the givenscriptelement.
 	 *
-	 * @param element
-	 *                    Thescriptelement to be found.
+	 * @param element Thescriptelement to be found.
 	 */
 	public void run(IModelElement element) {
 
@@ -279,8 +264,7 @@ public abstract class FindAction extends SelectionDispatchAction {
 		try {
 			performNewSearch(element);
 		} catch (ModelException ex) {
-			ExceptionHandler.handle(ex, getShell(),
-					SearchMessages.Search_Error_search_notsuccessful_title,
+			ExceptionHandler.handle(ex, getShell(), SearchMessages.Search_Error_search_notsuccessful_title,
 					SearchMessages.Search_Error_search_notsuccessful_message);
 		}
 	}
@@ -289,29 +273,23 @@ public abstract class FindAction extends SelectionDispatchAction {
 		DLTKSearchQuery query = new DLTKSearchQuery(createQuery(element));
 		if (query.canRunInBackground()) {
 			/*
-			 * This indirection with Object as parameter is needed to prevent
-			 * the loading of the Search plug-in: the Interpreter verifies the
-			 * method call and hence loads the types used in the method
-			 * signature, eventually triggering the loading of a plug-in (in
-			 * this case ISearchQuery results in Search plug-in being loaded).
+			 * This indirection with Object as parameter is needed to prevent the loading of
+			 * the Search plug-in: the Interpreter verifies the method call and hence loads
+			 * the types used in the method signature, eventually triggering the loading of
+			 * a plug-in (in this case ISearchQuery results in Search plug-in being loaded).
 			 */
 			SearchUtil.runQueryInBackground(query);
 		} else {
-			IProgressService progressService = PlatformUI.getWorkbench()
-					.getProgressService();
+			IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 			/*
-			 * This indirection with Object as parameter is needed to prevent
-			 * the loading of the Search plug-in: the Interpreter verifies the
-			 * method call and hence loads the types used in the method
-			 * signature, eventually triggering the loading of a plug-in (in
-			 * this case it would be ISearchQuery).
+			 * This indirection with Object as parameter is needed to prevent the loading of
+			 * the Search plug-in: the Interpreter verifies the method call and hence loads
+			 * the types used in the method signature, eventually triggering the loading of
+			 * a plug-in (in this case it would be ISearchQuery).
 			 */
-			IStatus status = SearchUtil.runQueryInForeground(progressService,
-					query);
-			if (status
-					.matches(IStatus.ERROR | IStatus.INFO | IStatus.WARNING)) {
-				ErrorDialog.openError(getShell(),
-						SearchMessages.Search_Error_search_title,
+			IStatus status = SearchUtil.runQueryInForeground(progressService, query);
+			if (status.matches(IStatus.ERROR | IStatus.INFO | IStatus.WARNING)) {
+				ErrorDialog.openError(getShell(), SearchMessages.Search_Error_search_title,
 						SearchMessages.Search_Error_search_message, status);
 			}
 		}
@@ -321,14 +299,11 @@ public abstract class FindAction extends SelectionDispatchAction {
 		return toolkit;
 	}
 
-	QuerySpecification createQuery(IModelElement element)
-			throws ModelException {
+	QuerySpecification createQuery(IModelElement element) throws ModelException {
 		DLTKSearchScopeFactory factory = DLTKSearchScopeFactory.getInstance();
-		IDLTKSearchScope scope = factory.createWorkspaceScope(true,
-				getLanguageToolkit());
+		IDLTKSearchScope scope = factory.createWorkspaceScope(true, getLanguageToolkit());
 		String description = factory.getWorkspaceScopeDescription(true);
-		return new ElementQuerySpecification(element, getLimitTo(), scope,
-				description);
+		return new ElementQuerySpecification(element, getLimitTo(), scope, description);
 	}
 
 	abstract int getLimitTo();

@@ -23,10 +23,9 @@ import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
-
 /**
- * Finds declarations of the selected element in the workspace.
- * The action is applicable to selections representing a Script element.
+ * Finds declarations of the selected element in the workspace. The action is
+ * applicable to selections representing a Script element.
  *
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
@@ -35,38 +34,35 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 public class FindDeclarationsAction extends FindAction {
 
 	/**
-	 * Creates a new <code>FindDeclarationsAction</code>. The action requires
-	 * that the selection provided by the site's selection provider is of type <code>
+	 * Creates a new <code>FindDeclarationsAction</code>. The action requires that
+	 * the selection provided by the site's selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 *
 	 * @param site the site providing context information for this action
 	 */
-	public FindDeclarationsAction(IDLTKLanguageToolkit toolkit,
-			IWorkbenchSite site) {
+	public FindDeclarationsAction(IDLTKLanguageToolkit toolkit, IWorkbenchSite site) {
 		super(toolkit, site);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 *
 	 * @param editor the Script editor
 	 * @since 5.3
 	 */
-	public FindDeclarationsAction(IDLTKLanguageToolkit toolkit,
-			ScriptEditor editor) {
+	public FindDeclarationsAction(IDLTKLanguageToolkit toolkit, ScriptEditor editor) {
 		super(toolkit, editor);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 *
 	 * @param editor the Script editor
 	 * @since 5.3
 	 */
-	public FindDeclarationsAction(IDLTKLanguageToolkit toolkit,
-			AbstractDecoratedTextEditor editor) {
+	public FindDeclarationsAction(IDLTKLanguageToolkit toolkit, AbstractDecoratedTextEditor editor) {
 		super(toolkit, editor);
 	}
 
@@ -82,13 +78,15 @@ public class FindDeclarationsAction extends FindAction {
 	}
 
 	@Override
-	Class[] getValidTypes() {
-		return new Class[] { IField.class, IMethod.class, IType.class, ISourceModule.class, IPackageDeclaration.class, IScriptFolder.class};
+	Class<?>[] getValidTypes() {
+		return new Class[] { IField.class, IMethod.class, IType.class, ISourceModule.class, IPackageDeclaration.class,
+				IScriptFolder.class };
 	}
 
 	@Override
 	int getLimitTo() {
-		return IDLTKSearchConstants.DECLARATIONS | IDLTKSearchConstants.IGNORE_DECLARING_TYPE | IDLTKSearchConstants.IGNORE_RETURN_TYPE;
+		return IDLTKSearchConstants.DECLARATIONS | IDLTKSearchConstants.IGNORE_DECLARING_TYPE
+				| IDLTKSearchConstants.IGNORE_RETURN_TYPE;
 	}
 
 }

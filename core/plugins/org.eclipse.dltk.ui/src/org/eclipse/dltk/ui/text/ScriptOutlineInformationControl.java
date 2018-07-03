@@ -66,8 +66,7 @@ import org.eclipse.ui.keys.SWTKeySupport;
 /**
  * Show outline in light-weight control.
  */
-public class ScriptOutlineInformationControl
-		extends AbstractInformationControl {
+public class ScriptOutlineInformationControl extends AbstractInformationControl {
 
 	private KeyAdapter fKeyAdapter;
 	private OutlineContentProvider fOutlineContentProvider;
@@ -78,7 +77,6 @@ public class ScriptOutlineInformationControl
 	private OutlineLabelProvider fInnerLabelProvider;
 	protected Color fForegroundColor;
 
-	private boolean fShowOnlyMainType;
 	private LexicalSortingAction fLexicalSortingAction;
 	private SortByDefiningTypeAction fSortByDefiningTypeAction;
 	// private ShowOnlyMainTypeAction fShowOnlyMainTypeAction;
@@ -100,12 +98,9 @@ public class ScriptOutlineInformationControl
 		private boolean fShowDefiningType;
 
 		private OutlineLabelProvider() {
-			super(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
-					| ScriptElementLabels.F_APP_TYPE_SIGNATURE
-					| ScriptElementLabels.M_APP_RETURNTYPE
-					| ScriptElementLabels.ALL_CATEGORY,
-					AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS,
-					getPreferenceStore());
+			super(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | ScriptElementLabels.F_APP_TYPE_SIGNATURE
+					| ScriptElementLabels.M_APP_RETURNTYPE | ScriptElementLabels.ALL_CATEGORY,
+					AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS, getPreferenceStore());
 		}
 
 		@Override
@@ -115,8 +110,7 @@ public class ScriptOutlineInformationControl
 				try {
 					IType type = getDefiningType(element);
 					if (type != null) {
-						StringBuffer buf = new StringBuffer(
-								super.getText(type));
+						StringBuffer buf = new StringBuffer(super.getText(type));
 						buf.append(ScriptElementLabels.CONCAT_STRING);
 						buf.append(text);
 						return buf.toString();
@@ -200,8 +194,7 @@ public class ScriptOutlineInformationControl
 				if (i.getData() instanceof IModelElement) {
 					IModelElement je = (IModelElement) i.getData();
 					if (je.getElementType() == IModelElement.IMPORT_CONTAINER
-							|| (je.getElementType() == ModelElement.METHOD
-									&& !expandMethodChildren((IMethod) je))
+							|| (je.getElementType() == ModelElement.METHOD && !expandMethodChildren((IMethod) je))
 							|| isInnerType(je)) {
 						setExpanded(i, false);
 						return;
@@ -226,17 +219,14 @@ public class ScriptOutlineInformationControl
 
 	}
 
-	private class OutlineContentProvider
-			extends StandardModelElementContentProvider {
+	private class OutlineContentProvider extends StandardModelElementContentProvider {
 
 		private boolean fShowInheritedMembers;
 
 		/**
 		 * Creates a new Outline content provider.
 		 *
-		 * @param showInheritedMembers
-		 *                                 <code>true</code> iff inherited
-		 *                                 members are shown
+		 * @param showInheritedMembers <code>true</code> iff inherited members are shown
 		 */
 		private OutlineContentProvider(boolean showInheritedMembers) {
 			super(true);
@@ -275,8 +265,7 @@ public class ScriptOutlineInformationControl
 						Collections.addAll(children, super.getChildren(type));
 						IType[] superClasses = th.getAllSupertypes(type);
 						for (int i = 0, scLength = superClasses.length; i < scLength; i++) {
-							Collections.addAll(children,
-									super.getChildren(superClasses[i]));
+							Collections.addAll(children, super.getChildren(superClasses[i]));
 						}
 						return children.toArray();
 					}
@@ -286,8 +275,7 @@ public class ScriptOutlineInformationControl
 		}
 
 		@Override
-		public void inputChanged(Viewer viewer, Object oldInput,
-				Object newInput) {
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			super.inputChanged(viewer, oldInput, newInput);
 			fTypeHierarchies.clear();
 		}
@@ -324,20 +312,15 @@ public class ScriptOutlineInformationControl
 		private TreeViewer fOutlineViewer;
 
 		private LexicalSortingAction(TreeViewer outlineViewer) {
-			super(TextMessages.ScriptOutlineInformationControl_LexicalSortingAction_label,
-					IAction.AS_CHECK_BOX);
-			setToolTipText(
-					TextMessages.ScriptOutlineInformationControl_LexicalSortingAction_tooltip);
-			setDescription(
-					TextMessages.ScriptOutlineInformationControl_LexicalSortingAction_description);
+			super(TextMessages.ScriptOutlineInformationControl_LexicalSortingAction_label, IAction.AS_CHECK_BOX);
+			setToolTipText(TextMessages.ScriptOutlineInformationControl_LexicalSortingAction_tooltip);
+			setDescription(TextMessages.ScriptOutlineInformationControl_LexicalSortingAction_description);
 
-			DLTKPluginImages.setLocalImageDescriptors(this,
-					"alphab_sort_co.png"); //$NON-NLS-1$
+			DLTKPluginImages.setLocalImageDescriptors(this, "alphab_sort_co.png"); //$NON-NLS-1$
 
 			fOutlineViewer = outlineViewer;
 
-			boolean checked = getDialogSettings()
-					.getBoolean(STORE_LEXICAL_SORTING_CHECKED);
+			boolean checked = getDialogSettings().getBoolean(STORE_LEXICAL_SORTING_CHECKED);
 			setChecked(checked);
 			// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
 			// IJavaHelpContextIds.LEXICAL_SORTING_BROWSING_ACTION);
@@ -353,8 +336,7 @@ public class ScriptOutlineInformationControl
 
 		private void valueChanged(final boolean on, boolean store) {
 			setChecked(on);
-			BusyIndicator.showWhile(fOutlineViewer.getControl().getDisplay(),
-					() -> fOutlineViewer.refresh(false));
+			BusyIndicator.showWhile(fOutlineViewer.getControl().getDisplay(), () -> fOutlineViewer.refresh(false));
 
 			if (store)
 				getDialogSettings().put(STORE_LEXICAL_SORTING_CHECKED, on);
@@ -370,18 +352,14 @@ public class ScriptOutlineInformationControl
 		/**
 		 * Creates the action.
 		 *
-		 * @param outlineViewer
-		 *                          the outline viewer
+		 * @param outlineViewer the outline viewer
 		 */
 		private SortByDefiningTypeAction(TreeViewer outlineViewer) {
 			super(TextMessages.ScriptOutlineInformationControl_SortByDefiningTypeAction_label);
-			setDescription(
-					TextMessages.ScriptOutlineInformationControl_SortByDefiningTypeAction_description);
-			setToolTipText(
-					TextMessages.ScriptOutlineInformationControl_SortByDefiningTypeAction_tooltip);
+			setDescription(TextMessages.ScriptOutlineInformationControl_SortByDefiningTypeAction_description);
+			setToolTipText(TextMessages.ScriptOutlineInformationControl_SortByDefiningTypeAction_tooltip);
 
-			DLTKPluginImages.setLocalImageDescriptors(this,
-					"definingtype_sort_co.png"); //$NON-NLS-1$
+			DLTKPluginImages.setLocalImageDescriptors(this, "definingtype_sort_co.png"); //$NON-NLS-1$
 
 			fOutlineViewer = outlineViewer;
 
@@ -391,29 +369,25 @@ public class ScriptOutlineInformationControl
 				System.err.println("TODO: add help support here"); //$NON-NLS-1$
 			}
 
-			boolean state = getDialogSettings()
-					.getBoolean(STORE_SORT_BY_DEFINING_TYPE_CHECKED);
+			boolean state = getDialogSettings().getBoolean(STORE_SORT_BY_DEFINING_TYPE_CHECKED);
 			setChecked(state);
 			fInnerLabelProvider.setShowDefiningType(state);
 		}
 
 		@Override
 		public void run() {
-			BusyIndicator.showWhile(fOutlineViewer.getControl().getDisplay(),
-					() -> {
-						fInnerLabelProvider.setShowDefiningType(isChecked());
-						getDialogSettings().put(
-								STORE_SORT_BY_DEFINING_TYPE_CHECKED,
-								isChecked());
+			BusyIndicator.showWhile(fOutlineViewer.getControl().getDisplay(), () -> {
+				fInnerLabelProvider.setShowDefiningType(isChecked());
+				getDialogSettings().put(STORE_SORT_BY_DEFINING_TYPE_CHECKED, isChecked());
 
-						setMatcherString(fPattern, false);
-						fOutlineViewer.refresh(true);
+				setMatcherString(fPattern, false);
+				fOutlineViewer.refresh(true);
 
-						// reveal selection
-						Object selectedElement = getSelectedElement();
-						if (selectedElement != null)
-							fOutlineViewer.reveal(selectedElement);
-					});
+				// reveal selection
+				Object selectedElement = getSelectedElement();
+				if (selectedElement != null)
+					fOutlineViewer.reveal(selectedElement);
+			});
 		}
 	}
 
@@ -425,8 +399,7 @@ public class ScriptOutlineInformationControl
 		private StringMatcher fMatcher1;
 		private StringMatcher fMatcher2;
 
-		private OrStringMatcher(String pattern1, String pattern2,
-				boolean ignoreCase, boolean foo) {
+		private OrStringMatcher(String pattern1, String pattern2, boolean ignoreCase, boolean foo) {
 			super("", false, false); //$NON-NLS-1$
 			fMatcher1 = new StringMatcher(pattern1, ignoreCase, false);
 			fMatcher2 = new StringMatcher(pattern2, ignoreCase, false);
@@ -448,10 +421,8 @@ public class ScriptOutlineInformationControl
 	 * @param commandId
 	 */
 	@Deprecated
-	public ScriptOutlineInformationControl(Shell parent, int shellStyle,
-			int treeStyle, String commandId) {
-		this(parent, shellStyle, treeStyle, commandId,
-				DLTKUIPlugin.getDefault().getPreferenceStore());
+	public ScriptOutlineInformationControl(Shell parent, int shellStyle, int treeStyle, String commandId) {
+		this(parent, shellStyle, treeStyle, commandId, DLTKUIPlugin.getDefault().getPreferenceStore());
 	}
 
 	/**
@@ -464,8 +435,8 @@ public class ScriptOutlineInformationControl
 	 * @param preferenceStore
 	 * @since 2.0
 	 */
-	public ScriptOutlineInformationControl(Shell parent, int shellStyle,
-			int treeStyle, String commandId, IPreferenceStore preferenceStore) {
+	public ScriptOutlineInformationControl(Shell parent, int shellStyle, int treeStyle, String commandId,
+			IPreferenceStore preferenceStore) {
 		super(parent, shellStyle, treeStyle, commandId, true);
 		this.fPreferenceStore = preferenceStore;
 		create();
@@ -499,22 +470,19 @@ public class ScriptOutlineInformationControl
 		treeViewer.addFilter(new NamePatternFilter());
 		treeViewer.addFilter(new MemberFilter());
 
-		fForegroundColor = parent.getDisplay()
-				.getSystemColor(SWT.COLOR_DARK_GRAY);
+		fForegroundColor = parent.getDisplay().getSystemColor(SWT.COLOR_DARK_GRAY);
 
 		fInnerLabelProvider = new OutlineLabelProvider();
 		fInnerLabelProvider.addLabelDecorator(new ProblemsLabelDecorator(null));
 		// IDecoratorManager decoratorMgr=
 		// PlatformUI.getWorkbench().getDecoratorManager();
 		/*
-		 * if
-		 * (decoratorMgr.getEnabled("org.eclipse.dltk.ui.override.decorator"))
+		 * if (decoratorMgr.getEnabled("org.eclipse.dltk.ui.override.decorator"))
 		 * //$NON-NLS-1$ fInnerLabelProvider.addLabelDecorator(new
 		 * OverrideIndicatorLabelDecorator(null));
 		 */
 
-		treeViewer.setLabelProvider(
-				new StyledDecoratingModelLabelProvider(fInnerLabelProvider));
+		treeViewer.setLabelProvider(new StyledDecoratingModelLabelProvider(fInnerLabelProvider));
 
 		fLexicalSortingAction = new LexicalSortingAction(treeViewer);
 		fSortByDefiningTypeAction = new SortByDefiningTypeAction(treeViewer);
@@ -542,13 +510,10 @@ public class ScriptOutlineInformationControl
 		String keySequence = sequences[0].format();
 
 		if (fOutlineContentProvider.isShowingInheritedMembers()) {
-			return Messages.format(
-					TextMessages.ScriptOutlineInformationControl_pressToHideInheritedMembers,
+			return Messages.format(TextMessages.ScriptOutlineInformationControl_pressToHideInheritedMembers,
 					keySequence);
 		}
-		return Messages.format(
-				TextMessages.ScriptOutlineInformationControl_pressToShowInheritedMembers,
-				keySequence);
+		return Messages.format(TextMessages.ScriptOutlineInformationControl_pressToShowInheritedMembers, keySequence);
 	}
 
 	@Override
@@ -563,8 +528,7 @@ public class ScriptOutlineInformationControl
 			return;
 		}
 		IModelElement je = (IModelElement) information;
-		ISourceModule cu = (ISourceModule) je
-				.getAncestor(IModelElement.SOURCE_MODULE);
+		ISourceModule cu = (ISourceModule) je.getAncestor(IModelElement.SOURCE_MODULE);
 		if (cu != null)
 			fInput = cu;
 
@@ -578,11 +542,9 @@ public class ScriptOutlineInformationControl
 			fKeyAdapter = new KeyAdapter() {
 				@Override
 				public void keyPressed(KeyEvent e) {
-					int accelerator = SWTKeySupport
-							.convertEventToUnmodifiedAccelerator(e);
-					KeySequence keySequence = KeySequence.getInstance(
-							SWTKeySupport.convertAcceleratorToKeyStroke(
-									accelerator));
+					int accelerator = SWTKeySupport.convertEventToUnmodifiedAccelerator(e);
+					KeySequence keySequence = KeySequence
+							.getInstance(SWTKeySupport.convertAcceleratorToKeyStroke(accelerator));
 					KeySequence[] sequences = getInvokingCommandKeySequences();
 					if (sequences == null)
 						return;
@@ -637,8 +599,7 @@ public class ScriptOutlineInformationControl
 
 		boolean ignoreCase = pattern.toLowerCase().equals(pattern);
 		String pattern2 = "*" + ScriptElementLabels.CONCAT_STRING + pattern; //$NON-NLS-1$
-		fStringMatcher = new OrStringMatcher(pattern, pattern2, ignoreCase,
-				false);
+		fStringMatcher = new OrStringMatcher(pattern, pattern2, ignoreCase, false);
 
 		if (update)
 			stringMatcherUpdated();
@@ -649,8 +610,7 @@ public class ScriptOutlineInformationControl
 		ITypeHierarchy th = fTypeHierarchies.get(type);
 		if (th == null) {
 			try {
-				th = TypeHierarchyBuilders.getTypeHierarchy(type,
-						ITypeHierarchy.Mode.SUPERTYPE, getProgressMonitor());
+				th = TypeHierarchyBuilders.getTypeHierarchy(type, ITypeHierarchy.Mode.SUPERTYPE, getProgressMonitor());
 			} catch (OperationCanceledException e) {
 				return null;
 			}
@@ -668,8 +628,7 @@ public class ScriptOutlineInformationControl
 		if (editor == null)
 			return null;
 
-		return editor.getEditorSite().getActionBars().getStatusLineManager()
-				.getProgressMonitor();
+		return editor.getEditorSite().getActionBars().getStatusLineManager().getProgressMonitor();
 	}
 
 	protected boolean isInnerType(IModelElement element) {
@@ -678,10 +637,9 @@ public class ScriptOutlineInformationControl
 			// try {
 			return type.getDeclaringType() != null;
 			/*
-			 * } catch (ModelException e) { IModelElement parent=
-			 * type.getParent(); if (parent != null) { int parentElementType=
-			 * parent.getElementType(); return (parentElementType !=
-			 * IModelElement.SOURCE_MODULE); } }
+			 * } catch (ModelException e) { IModelElement parent= type.getParent(); if
+			 * (parent != null) { int parentElementType= parent.getElementType(); return
+			 * (parentElementType != IModelElement.SOURCE_MODULE); } }
 			 */
 		}
 		return false;

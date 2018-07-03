@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,10 +26,9 @@ import org.eclipse.dltk.ui.search.QuerySpecification;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
-
 /**
- * Finds declarations of the selected element in its hierarchy.
- * The action is applicable to selections representing a Script element.
+ * Finds declarations of the selected element in its hierarchy. The action is
+ * applicable to selections representing a Script element.
  *
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
@@ -39,41 +38,38 @@ public class FindDeclarationsInHierarchyAction extends FindDeclarationsAction {
 
 	/**
 	 * Creates a new <code>FindDeclarationsInHierarchyAction</code>. The action
-	 * requires that the selection provided by the site's selection provider is of type
-	 * <code>IStructuredSelection</code>.
+	 * requires that the selection provided by the site's selection provider is of
+	 * type <code>IStructuredSelection</code>.
 	 *
 	 * @param site the site providing context information for this action
 	 */
-	public FindDeclarationsInHierarchyAction(IDLTKLanguageToolkit toolkit,
-			IWorkbenchSite site) {
+	public FindDeclarationsInHierarchyAction(IDLTKLanguageToolkit toolkit, IWorkbenchSite site) {
 		super(toolkit, site);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 *
 	 * @param editor the Script editor
 	 */
-	public FindDeclarationsInHierarchyAction(IDLTKLanguageToolkit toolkit,
-			ScriptEditor editor) {
+	public FindDeclarationsInHierarchyAction(IDLTKLanguageToolkit toolkit, ScriptEditor editor) {
 		super(toolkit, editor);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 *
 	 * @param editor the Script editor
 	 * @since 5.3
 	 */
-	public FindDeclarationsInHierarchyAction(IDLTKLanguageToolkit toolkit,
-			AbstractDecoratedTextEditor editor) {
+	public FindDeclarationsInHierarchyAction(IDLTKLanguageToolkit toolkit, AbstractDecoratedTextEditor editor) {
 		super(toolkit, editor);
 	}
 
 	@Override
-	Class[] getValidTypes() {
+	Class<?>[] getValidTypes() {
 		return new Class[] { IField.class, IMethod.class };
 	}
 
@@ -90,14 +86,14 @@ public class FindDeclarationsInHierarchyAction extends FindDeclarationsAction {
 
 	@Override
 	QuerySpecification createQuery(IModelElement element) throws ModelException {
-		DLTKSearchScopeFactory factory= DLTKSearchScopeFactory.getInstance();
+		DLTKSearchScopeFactory factory = DLTKSearchScopeFactory.getInstance();
 
-		IType type= getType(element);
+		IType type = getType(element);
 		if (type == null) {
 			return super.createQuery(element);
 		}
-		IDLTKSearchScope scope= SearchEngine.createHierarchyScope(type);
-		String description= factory.getHierarchyScopeDescription(type);
+		IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
+		String description = factory.getHierarchyScopeDescription(type);
 		return new ElementQuerySpecification(element, getLimitTo(), scope, description);
 	}
 }

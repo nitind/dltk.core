@@ -27,7 +27,6 @@ import org.eclipse.dltk.ui.search.QuerySpecification;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
-
 /**
  * Finds references of the selected element in its hierarchy. The action is
  * applicable to selections representing a Script element.
@@ -40,42 +39,38 @@ public class FindReferencesInHierarchyAction extends FindReferencesAction {
 
 	/**
 	 * Creates a new <code>FindReferencesInHierarchyAction</code>. The action
-	 * requires that the selection provided by the site's selection provider is
-	 * of type <code>org.eclipse.jface.viewers.IStructuredSelection</code>.
+	 * requires that the selection provided by the site's selection provider is of
+	 * type <code>org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 *
-	 * @param site
-	 *            the site providing context information for this action
+	 * @param site the site providing context information for this action
 	 */
-	public FindReferencesInHierarchyAction(IDLTKLanguageToolkit toolkit,
-			IWorkbenchSite site) {
+	public FindReferencesInHierarchyAction(IDLTKLanguageToolkit toolkit, IWorkbenchSite site) {
 		super(toolkit, site);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 *
 	 * @param editor the Script editor
 	 */
-	public FindReferencesInHierarchyAction(IDLTKLanguageToolkit toolkit,
-			ScriptEditor editor) {
+	public FindReferencesInHierarchyAction(IDLTKLanguageToolkit toolkit, ScriptEditor editor) {
 		super(toolkit, editor);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 *
 	 * @param editor the Script editor
 	 * @since 5.3
 	 */
-	public FindReferencesInHierarchyAction(IDLTKLanguageToolkit toolkit,
-			AbstractDecoratedTextEditor editor) {
+	public FindReferencesInHierarchyAction(IDLTKLanguageToolkit toolkit, AbstractDecoratedTextEditor editor) {
 		super(toolkit, editor);
 	}
 
 	@Override
-	Class[] getValidTypes() {
+	Class<?>[] getValidTypes() {
 		return new Class[] { ISourceModule.class, IType.class, IMethod.class, IField.class };
 	}
 
