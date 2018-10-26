@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="org.eclipse.dltk.core.targetplatform" sequenceNumber="17">
+<?pde version="3.8"?><target name="org.eclipse.dltk.core.targetplatform" sequenceNumber="18">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
             <unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
@@ -9,14 +9,13 @@
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
             <unit id="com.google.guava" version="21.0.0.v20170206-1425"/>
             <unit id="com.google.guava.source" version="21.0.0.v20170206-1425"/>
-            <unit id="org.apache.lucene.analyzers-common" version="7.1.0.v20180122-2126"/>
-            <unit id="org.apache.lucene.analyzers-common.source" version="7.1.0.v20180122-2126"/>
-            <unit id="org.apache.lucene.core" version="7.1.0.v20171214-1510"/>
-            <unit id="org.apache.lucene.core.source" version="7.1.0.v20171214-1510"/>
-            <unit id="org.apache.lucene.misc" version="7.1.0.v20180220-1923"/>
-            <unit id="org.apache.lucene.misc.source" version="7.1.0.v20180220-1923"/>
-            <unit id="org.apache.lucene.queryparser" version="7.1.0.v20180828-2118"/>
-            <unit id="org.apache.lucene.queryparser.source" version="7.1.0.v20180828-2118"/>
+            <unit id="org.apache.lucene.analyzers-common" version="7.5.0.v20181003-1532"/>
+            <unit id="org.apache.lucene.analyzers-common.source" version="7.5.0.v20181003-1532"/>
+            <unit id="org.apache.lucene.core" version="7.5.0.v20181003-1532"/>
+            <unit id="org.apache.lucene.core.source" version="7.5.0.v20181003-1532"/>
+            <unit id="org.apache.lucene.misc" version="7.5.0.v20181003-1532"/>
+            <unit id="org.apache.lucene.misc.source" version="7.5.0.v20181003-1532"/>
+            <!-- DLTK depends on Lucene 7.5, but Mylyn 3.24 depends on Lucene 6.1 -->
             <unit id="org.apache.lucene.core" version="6.1.0.v20170814-1820"/>
             <unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>
             <unit id="org.apache.lucene.queryparser" version="6.1.0.v20161115-1612"/>
@@ -34,20 +33,18 @@
             <unit id="org.objenesis" version="1.0.0.v201505121915"/>
             <unit id="net.bytebuddy.byte-buddy" version="0.0.0"/>
             <unit id="net.bytebuddy.byte-buddy-agent" version="0.0.0"/>
-            <repository location="http://download.eclipse.org/tools/orbit/I-builds/I20180829144012/repository/"/>
+            <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20181031145145/repository/"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
             <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
             <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
             <repository location="http://download.eclipse.org/releases/2018-09/"/>
         </location>
-        <!-- mylyn 3.24 depends on lucene 6.1, but DTP depends on lucene 7.1 -->
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
             <unit id="org.eclipse.mylyn.commons.sdk.feature.group" version="0.0.0"/>
             <unit id="org.eclipse.mylyn.context.sdk.feature.group" version="0.0.0"/>
             <unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
             <repository location="http://download.eclipse.org/mylyn/drops/3.24.1/v20180619-2220/"/>
-            <!-- <repository location="http://download.eclipse.org/mylyn/snapshots/nightly/"/> -->
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
             <unit id="org.eclipse.linuxtools.man.feature.group" version="0.0.0"/>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Zend Technologies and others.
+ * Copyright (c) 2016, 2018 Zend Technologies and others.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +14,7 @@ package org.eclipse.dltk.internal.core.index.lucene;
 import java.io.IOException;
 import java.text.MessageFormat;
 
+import org.apache.lucene.index.DocValues;
 import org.apache.lucene.index.LeafReaderContext;
 import org.apache.lucene.index.NumericDocValues;
 import org.apache.lucene.search.ConstantScoreScorer;
@@ -106,6 +107,11 @@ public class BitFlagsQuery extends Query {
 					}
 				};
 				return new ConstantScoreScorer(this, 10, iterator);
+			}
+
+			@Override
+			public boolean isCacheable(LeafReaderContext ctx) {
+				return DocValues.isCacheable(ctx, IndexFields.NDV_FLAGS);
 			}
 		};
 	}
