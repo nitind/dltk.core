@@ -1778,7 +1778,9 @@ public class DeltaProcessor {
 				try {
 					try {
 						this.stopDeltas();
-						this.checkProjectsBeingAddedOrRemoved(delta);
+						if (delta != null) {
+							this.checkProjectsBeingAddedOrRemoved(delta);
+						}
 						// generate external archive change deltas
 						if (elementsToRefresh != null) {
 							// Call archive or custom deltas only if project are
@@ -1822,10 +1824,11 @@ public class DeltaProcessor {
 							if (!hasDelta)
 								this.currentDelta = null;
 						}
-
-						IModelElementDelta translatedDelta = this.processResourceDelta(delta);
-						if (translatedDelta != null) {
-							this.registerModelDelta(translatedDelta);
+						if (delta != null) {
+							IModelElementDelta translatedDelta = this.processResourceDelta(delta);
+							if (translatedDelta != null) {
+								this.registerModelDelta(translatedDelta);
+							}
 						}
 					} finally {
 						this.startDeltas();
