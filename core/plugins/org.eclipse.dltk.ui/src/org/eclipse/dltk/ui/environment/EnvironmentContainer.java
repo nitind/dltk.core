@@ -25,7 +25,6 @@ import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IEnvironmentChangedListener;
 import org.eclipse.swt.widgets.Display;
-import org.omg.CORBA.Environment;
 
 /**
  * This class collects {@link IEnvironment}s from {@link EnvironmentManager} and
@@ -45,8 +44,8 @@ public class EnvironmentContainer {
 	private IEnvironmentChangedListener listener = null;
 
 	/**
-	 * Initialize the environments maintained by this object. The subsequent
-	 * calls of this method are ignored.
+	 * Initialize the environments maintained by this object. The subsequent calls
+	 * of this method are ignored.
 	 */
 	public void initialize() {
 		if (!initialized) {
@@ -58,8 +57,7 @@ public class EnvironmentContainer {
 		}
 	}
 
-	private static class EnvironmentComparator
-			implements Comparator<IEnvironment> {
+	private static class EnvironmentComparator implements Comparator<IEnvironment> {
 
 		@Override
 		public int compare(final IEnvironment e1, final IEnvironment e2) {
@@ -76,8 +74,7 @@ public class EnvironmentContainer {
 		final IEnvironment[] envs = EnvironmentManager.getEnvironments();
 		Arrays.sort(envs, new EnvironmentComparator());
 		environmentList = Arrays.asList(envs);
-		for (int i = 0; i < envs.length; ++i) {
-			final IEnvironment environment = envs[i];
+		for (final IEnvironment environment : envs) {
 			environments.put(environment.getId(), environment);
 		}
 	}
@@ -91,8 +88,7 @@ public class EnvironmentContainer {
 					synchronized (environments) {
 						initEnvironments();
 					}
-					Display.getDefault()
-							.asyncExec(() -> fireChangeNotifications());
+					Display.getDefault().asyncExec(() -> fireChangeNotifications());
 				}
 
 			};
@@ -167,8 +163,7 @@ public class EnvironmentContainer {
 
 	/**
 	 * Registers the specified change listener to be called when available
-	 * environments are changed. Specified event handler is called on the UI
-	 * thread.
+	 * environments are changed. Specified event handler is called on the UI thread.
 	 *
 	 * @param runnable
 	 */
