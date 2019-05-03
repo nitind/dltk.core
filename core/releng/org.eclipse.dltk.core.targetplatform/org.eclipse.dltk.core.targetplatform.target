@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="org.eclipse.dltk.core.targetplatform" sequenceNumber="20">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="org.eclipse.dltk.core.targetplatform" sequenceNumber="21">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
             <unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
@@ -8,13 +8,13 @@
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
             <unit id="com.google.guava" version="21.0.0.v20170206-1425"/>
             <unit id="com.google.guava.source" version="21.0.0.v20170206-1425"/>
-            <unit id="org.apache.lucene.analyzers-common" version="7.5.0.v20181003-1532"/>
-            <unit id="org.apache.lucene.analyzers-common.source" version="7.5.0.v20181003-1532"/>
-            <unit id="org.apache.lucene.core" version="7.5.0.v20181003-1532"/>
-            <unit id="org.apache.lucene.core.source" version="7.5.0.v20181003-1532"/>
-            <unit id="org.apache.lucene.misc" version="7.5.0.v20181003-1532"/>
-            <unit id="org.apache.lucene.misc.source" version="7.5.0.v20181003-1532"/>
-            <!-- DLTK depends on Lucene 7.5, but Mylyn 3.24 depends on Lucene 6.1 -->
+            <unit id="org.apache.lucene.analyzers-common" version="8.0.0.v20190404-1858"/>
+            <unit id="org.apache.lucene.analyzers-common.source" version="8.0.0.v20190404-1858"/>
+            <unit id="org.apache.lucene.core" version="8.0.0.v20190404-1858"/>
+            <unit id="org.apache.lucene.core.source" version="8.0.0.v20190404-1858"/>
+            <unit id="org.apache.lucene.misc" version="8.0.0.v20190418-1455"/>
+            <unit id="org.apache.lucene.misc.source" version="8.0.0.v20190418-1455"/>
+            <!-- DLTK depends on Lucene 8.0, but Mylyn 3.24 depends on Lucene 6.1 -->
             <unit id="org.apache.lucene.core" version="6.1.0.v20170814-1820"/>
             <unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>
             <unit id="org.apache.lucene.queryparser" version="6.1.0.v20161115-1612"/>
@@ -32,7 +32,7 @@
             <unit id="org.objenesis" version="2.6.0.v20180420-1519"/>
             <unit id="net.bytebuddy.byte-buddy" version="1.9.0.v20181107-1410"/>
             <unit id="net.bytebuddy.byte-buddy-agent" version="1.9.0.v20181106-1534"/>
-            <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20190226160451/repository"/>
+            <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20190501151401/repository"/>
         </location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
             <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>

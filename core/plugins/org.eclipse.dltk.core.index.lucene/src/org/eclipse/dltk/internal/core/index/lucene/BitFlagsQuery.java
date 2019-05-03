@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2018 Zend Technologies and others.
+ * Copyright (c) 2016, 2019 Zend Technologies and others.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -21,6 +21,7 @@ import org.apache.lucene.search.ConstantScoreScorer;
 import org.apache.lucene.search.ConstantScoreWeight;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreMode;
 import org.apache.lucene.search.Scorer;
 import org.apache.lucene.search.TwoPhaseIterator;
 import org.apache.lucene.search.Weight;
@@ -75,7 +76,7 @@ public class BitFlagsQuery extends Query {
 	}
 
 	@Override
-	public Weight createWeight(IndexSearcher searcher, boolean needsScores,
+	public Weight createWeight(IndexSearcher searcher, ScoreMode scoreMode,
 			float boost) throws IOException {
 		return new ConstantScoreWeight(this, 10) {
 
@@ -106,7 +107,7 @@ public class BitFlagsQuery extends Query {
 						return 2;
 					}
 				};
-				return new ConstantScoreScorer(this, 10, iterator);
+				return new ConstantScoreScorer(this, 10, scoreMode, iterator);
 			}
 
 			@Override

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Zend Technologies and others.
+ * Copyright (c) 2016, 2019 Zend Technologies and others.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -25,7 +25,8 @@ import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.LeafCollector;
 import org.apache.lucene.search.MatchAllDocsQuery;
-import org.apache.lucene.search.Scorer;
+import org.apache.lucene.search.Scorable;
+import org.apache.lucene.search.ScoreMode;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
@@ -57,8 +58,8 @@ public class LuceneIndexer extends AbstractIndexer {
 		}
 
 		@Override
-		public boolean needsScores() {
-			return false;
+		public ScoreMode scoreMode() {
+			return ScoreMode.COMPLETE_NO_SCORES;
 		}
 
 		@Override
@@ -71,7 +72,7 @@ public class LuceneIndexer extends AbstractIndexer {
 					.getBinaryDocValues(IndexFields.F_PATH);
 			return new LeafCollector() {
 				@Override
-				public void setScorer(Scorer scorer) throws IOException {
+				public void setScorer(Scorable scorable) throws IOException {
 				}
 
 				@Override
