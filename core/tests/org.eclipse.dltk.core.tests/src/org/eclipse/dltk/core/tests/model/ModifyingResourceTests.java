@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -40,10 +40,9 @@ public class ModifyingResourceTests extends AbstractModelTests {
 	public ModifyingResourceTests(String testProjectName, String name) {
 		super(testProjectName, name);
 	}
-	
-	
 
-	protected void assertElementDescendants(String message, String expected, IModelElement element) throws CoreException {
+	protected void assertElementDescendants(String message, String expected,
+			IModelElement element) throws CoreException {
 		String actual = expandAll(element);
 		if (!expected.equals(actual)) {
 			System.out.println(Util.displayString(actual, 4));
@@ -51,25 +50,29 @@ public class ModifyingResourceTests extends AbstractModelTests {
 		assertEquals(message, expected, actual);
 	}
 
-	protected IFile createFile(String path, InputStream content) throws CoreException {
+	protected IFile createFile(String path, InputStream content)
+			throws CoreException {
 		IFile file = getFile(path);
 		file.create(content, true, null);
 		return file;
 	}
 
-	protected IFile createFile(String path, byte[] content) throws CoreException {
+	protected IFile createFile(String path, byte[] content)
+			throws CoreException {
 		return createFile(path, new ByteArrayInputStream(content));
 	}
 
-	protected IFile createFile(String path, String content) throws CoreException {
+	protected IFile createFile(String path, String content)
+			throws CoreException {
 		return createFile(path, content.getBytes());
 	}
 
-	protected IFile createFile(String path, String content, String charsetName) throws CoreException, UnsupportedEncodingException {
+	protected IFile createFile(String path, String content, String charsetName)
+			throws CoreException, UnsupportedEncodingException {
 		return createFile(path, content.getBytes(charsetName));
 	}
 
-	protected IFolder createFolder(String path) throws CoreException {
+	protected static IFolder createFolder(String path) throws CoreException {
 		return createFolder(new Path(path));
 	}
 
@@ -98,7 +101,8 @@ public class ModifyingResourceTests extends AbstractModelTests {
 		return buffer.toString();
 	}
 
-	private void expandAll(IModelElement element, int tab, StringBuffer buffer) throws CoreException {
+	private void expandAll(IModelElement element, int tab, StringBuffer buffer)
+			throws CoreException {
 		IModelElement[] children = null;
 		// force opening of element by getting its children
 		if (element instanceof IParent) {
@@ -114,7 +118,8 @@ public class ModifyingResourceTests extends AbstractModelTests {
 		}
 	}
 
-	protected void renameProject(String project, String newName) throws CoreException {
+	protected void renameProject(String project, String newName)
+			throws CoreException {
 		getProject(project).move(new Path(newName), true, null);
 	}
 
@@ -131,12 +136,14 @@ public class ModifyingResourceTests extends AbstractModelTests {
 		if (path.indexOf('/', 1) != -1) { // if path as more than one segment
 			IModelElement element = DLTKCore.create(this.getFolder(path));
 			if (element instanceof IProjectFragment) {
-				return ((IProjectFragment) element).getScriptFolder(new Path(""));
+				return ((IProjectFragment) element)
+						.getScriptFolder(new Path(""));
 			}
 			return (IScriptFolder) element;
 		}
 		IProject project = getProject(path);
-		return DLTKCore.create(project).getProjectFragment(project).getScriptFolder(new Path(""));
+		return DLTKCore.create(project).getProjectFragment(project)
+				.getScriptFolder(new Path(""));
 	}
 
 	protected IProjectFragment getProjectFragment(String path) {
@@ -150,22 +157,29 @@ public class ModifyingResourceTests extends AbstractModelTests {
 		return DLTKCore.create(project).getProjectFragment(project);
 	}
 
-	protected void moveFile(String sourcePath, String destPath) throws CoreException {
-		this.getFile(sourcePath).move(this.getFile(destPath).getFullPath(), false, null);
+	protected void moveFile(String sourcePath, String destPath)
+			throws CoreException {
+		this.getFile(sourcePath).move(this.getFile(destPath).getFullPath(),
+				false, null);
 	}
 
-	protected void moveFolder(String sourcePath, String destPath) throws CoreException {
-		this.getFolder(sourcePath).move(this.getFolder(destPath).getFullPath(), false, null);
+	protected void moveFolder(String sourcePath, String destPath)
+			throws CoreException {
+		this.getFolder(sourcePath).move(this.getFolder(destPath).getFullPath(),
+				false, null);
 	}
 
-	protected void swapFiles(String firstPath, String secondPath) throws CoreException {
+	protected void swapFiles(String firstPath, String secondPath)
+			throws CoreException {
 		final IFile first = this.getFile(firstPath);
 		final IFile second = this.getFile(secondPath);
 		IWorkspaceRunnable runnable = monitor -> {
-			IPath tempPath = first.getParent().getFullPath().append("swappingFile.temp");
+			IPath tempPath = first.getParent().getFullPath()
+					.append("swappingFile.temp");
 			first.move(tempPath, false, monitor);
 			second.move(first.getFullPath(), false, monitor);
-			getWorkspaceRoot().getFile(tempPath).move(second.getFullPath(), false, monitor);
+			getWorkspaceRoot().getFile(tempPath).move(second.getFullPath(),
+					false, monitor);
 		};
 		getWorkspace().run(runnable, null);
 	}
@@ -173,8 +187,9 @@ public class ModifyingResourceTests extends AbstractModelTests {
 	/*
 	 * Returns a new buildpath from the given source folders and their
 	 * respective exclusion/inclusion patterns. The folder path is an absolute
-	 * workspace-relative path. The given array as the following form: [<folder>, "<pattern>[|<pattern]*"]*
-	 * E.g. new String[] { "/P/src1", "p/A.java", "/P", "*.txt|com.tests/**" }
+	 * workspace-relative path. The given array as the following form:
+	 * [<folder>, "<pattern>[|<pattern]*"]* E.g. new String[] { "/P/src1",
+	 * "p/A.java", "/P", "*.txt|com.tests/**" }
 	 */
 	protected IBuildpathEntry[] createBuildpath(String[] foldersAndPatterns) {
 		int length = foldersAndPatterns.length;
@@ -189,28 +204,28 @@ public class ModifyingResourceTests extends AbstractModelTests {
 	}
 
 	/*
-	 * Returns a new buildpath from the given source folders and their respective exclusion/inclusion patterns.
-	 * The folder path is an absolute workspace-relative path.
-	 * The given array as the following form:
-	 * [<folder>, "<pattern>[|<pattern]*"]*
-	 * E.g. new String[] {
-	 *   "/P/src1", "p/A.java",
-	 *   "/P", "*.txt|com.tests/**"
-	 * }
+	 * Returns a new buildpath from the given source folders and their
+	 * respective exclusion/inclusion patterns. The folder path is an absolute
+	 * workspace-relative path. The given array as the following form:
+	 * [<folder>, "<pattern>[|<pattern]*"]* E.g. new String[] { "/P/src1",
+	 * "p/A.java", "/P", "*.txt|com.tests/**" }
 	 */
-	protected IBuildpathEntry[] createBuildpath(String[] foldersAndPatterns, boolean hasInclusionPatterns, boolean hasExclusionPatterns) {
+	protected IBuildpathEntry[] createBuildpath(String[] foldersAndPatterns,
+			boolean hasInclusionPatterns, boolean hasExclusionPatterns) {
 		int length = foldersAndPatterns.length;
 		int increment = 1;
-		if (hasInclusionPatterns) increment++;
-		if (hasExclusionPatterns) increment++;
-		IBuildpathEntry[] buildpath = new IBuildpathEntry[length/increment];
-		for (int i = 0; i < length; i+=increment) {
+		if (hasInclusionPatterns)
+			increment++;
+		if (hasExclusionPatterns)
+			increment++;
+		IBuildpathEntry[] buildpath = new IBuildpathEntry[length / increment];
+		for (int i = 0; i < length; i += increment) {
 			String src = foldersAndPatterns[i];
 			IPath[] accessibleFiles = new IPath[0];
 			if (hasInclusionPatterns) {
-				String patterns = foldersAndPatterns[i+1];
+				String patterns = foldersAndPatterns[i + 1];
 				StringTokenizer tokenizer = new StringTokenizer(patterns, "|");
-				int patternsCount =  tokenizer.countTokens();
+				int patternsCount = tokenizer.countTokens();
 				accessibleFiles = new IPath[patternsCount];
 				for (int j = 0; j < patternsCount; j++) {
 					accessibleFiles[j] = new Path(tokenizer.nextToken());
@@ -218,22 +233,25 @@ public class ModifyingResourceTests extends AbstractModelTests {
 			}
 			IPath[] nonAccessibleFiles = new IPath[0];
 			if (hasExclusionPatterns) {
-				String patterns = foldersAndPatterns[i+increment-1];
+				String patterns = foldersAndPatterns[i + increment - 1];
 				StringTokenizer tokenizer = new StringTokenizer(patterns, "|");
-				int patternsCount =  tokenizer.countTokens();
+				int patternsCount = tokenizer.countTokens();
 				nonAccessibleFiles = new IPath[patternsCount];
 				for (int j = 0; j < patternsCount; j++) {
 					nonAccessibleFiles[j] = new Path(tokenizer.nextToken());
 				}
 			}
 			IPath folderPath = new Path(src);
-			buildpath[i/increment] = DLTKCore.newSourceEntry(folderPath, accessibleFiles, nonAccessibleFiles); 
+			buildpath[i / increment] = DLTKCore.newSourceEntry(folderPath,
+					accessibleFiles, nonAccessibleFiles);
 		}
 		return buildpath;
 	}
 
-	public void setReadOnly(IResource resource, boolean readOnly) throws CoreException {
-		org.eclipse.dltk.internal.core.util.Util.setReadOnly(resource, readOnly);
+	public void setReadOnly(IResource resource, boolean readOnly)
+			throws CoreException {
+		org.eclipse.dltk.internal.core.util.Util.setReadOnly(resource,
+				readOnly);
 	}
 
 	public boolean isReadOnly(IResource resource) throws CoreException {

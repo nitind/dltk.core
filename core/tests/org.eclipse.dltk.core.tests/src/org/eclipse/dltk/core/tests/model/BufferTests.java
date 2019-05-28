@@ -18,9 +18,14 @@ import org.eclipse.dltk.core.BufferChangedEvent;
 import org.eclipse.dltk.core.IBuffer;
 import org.eclipse.dltk.core.IBufferChangedListener;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.tests.WorkspaceAutoBuild;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 
-import junit.framework.Test;
-
+@RunWith(BlockJUnit4ClassRunner.class)
 public class BufferTests extends ModifyingResourceTests
 		implements IBufferChangedListener {
 
@@ -29,34 +34,23 @@ public class BufferTests extends ModifyingResourceTests
 
 	protected ArrayList<BufferChangedEvent> events = null;
 
-	public BufferTests(String name) {
-		super(ModelTestsPlugin.PLUGIN_NAME, name);
+	public BufferTests() {
+		super(ModelTestsPlugin.PLUGIN_NAME, "");
 	}
 
-	public static Test suite() {
-		return new Suite(BufferTests.class);
-	}
-
-	/**
-	 * @see AbstractModelTests#setUpSuite()
-	 */
-	@Override
-	public void setUpSuite() throws Exception {
-		super.setUpSuite();
+	@BeforeClass
+	public static void setUpSuite1() throws Exception {
+		WorkspaceAutoBuild.disable();
 		try {
-			this.createScriptProject("P", TEST_NATURES, new String[] { "" });
-			this.createFolder("P/x/y");
+			createScriptProject("P", TEST_NATURES, new String[] { "" });
+			createFolder("P/x/y");
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
 	}
 
-	/**
-	 * @see AbstractModelTests#tearDownSuite()
-	 */
-	@Override
-	public void tearDownSuite() throws Exception {
-		super.tearDownSuite();
+	@AfterClass
+	public static void tearDownSuite1() throws Exception {
 		AbstractModelTests.deleteProject("P");
 	}
 
@@ -100,6 +94,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests appending to a buffer.
 	 */
+	@Test
 	public void testAppend() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -118,6 +113,7 @@ public class BufferTests extends ModifyingResourceTests
 		}
 	}
 
+	@Test
 	public void testClose() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -132,6 +128,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests getting the underlying resource of a buffer.
 	 */
+	@Test
 	public void testGetUnderlyingResource() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -155,6 +152,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests deleting text at the beginning of a buffer.
 	 */
+	@Test
 	public void testDeleteBeginning() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -173,6 +171,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests deleting text in the middle of a buffer.
 	 */
+	@Test
 	public void testDeleteMiddle() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -193,6 +192,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests deleting text at the end of a buffer.
 	 */
+	@Test
 	public void testDeleteEnd() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -212,6 +212,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests the buffer char retrieval via source position
 	 */
+	@Test
 	public void testGetChar() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -228,6 +229,7 @@ public class BufferTests extends ModifyingResourceTests
 	 * exception if the buffer is closed. (regression test for bug 46040 NPE in
 	 * Eclipse console)
 	 */
+	@Test
 	public void testGetChar2() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -243,6 +245,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests the buffer getLength()
 	 */
+	@Test
 	public void testGetLength() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -256,6 +259,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests the buffer text retrieval via source position
 	 */
+	@Test
 	public void testGetText() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -274,6 +278,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests inserting text at the beginning of a buffer.
 	 */
+	@Test
 	public void testInsertBeginning() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -294,6 +299,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests replacing text at the beginning of a buffer.
 	 */
+	@Test
 	public void testReplaceBeginning() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -313,6 +319,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests replacing text in the middle of a buffer.
 	 */
+	@Test
 	public void testReplaceMiddle() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -333,6 +340,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests replacing text at the end of a buffer.
 	 */
+	@Test
 	public void testReplaceEnd() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -354,6 +362,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests inserting text in the middle of a buffer.
 	 */
+	@Test
 	public void testInsertMiddle() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");
@@ -374,6 +383,7 @@ public class BufferTests extends ModifyingResourceTests
 	/**
 	 * Tests inserting text at the end of a buffer.
 	 */
+	@Test
 	public void testInsertEnd() throws CoreException {
 		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
 				"package x.y;\n" + "public class A {\n" + "}");

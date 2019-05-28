@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -396,7 +396,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	/*
 	 * Create simple project.
 	 */
-	protected IProject createProject(final String projectName)
+	protected static IProject createProject(final String projectName)
 			throws CoreException {
 		final IProject project = getProject(projectName);
 		IWorkspaceRunnable create = monitor -> {
@@ -411,14 +411,15 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	 * Creates a script project with the given source folders an output
 	 * location. Add those on the project's buildpath.
 	 */
-	protected IScriptProject createScriptProject(String projectName,
+	protected static IScriptProject createScriptProject(String projectName,
 			String[] natures, String[] sourceFolders) throws CoreException {
 		return createScriptProject(projectName, natures, sourceFolders, null);
 	}
 
-	protected IScriptProject createScriptProject(final String projectName,
-			final String[] natures, final String[] sourceFolders,
-			final String[] projects) throws CoreException {
+	protected static IScriptProject createScriptProject(
+			final String projectName, final String[] natures,
+			final String[] sourceFolders, final String[] projects)
+			throws CoreException {
 		return createScriptProject(projectName, natures, sourceFolders,
 				projects, null);
 	}
@@ -427,10 +428,10 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	 * Creates a script project with the given source folders an output
 	 * location. Add those on the project's buildpath.
 	 */
-	protected IScriptProject createScriptProject(final String projectName,
-			final String[] natures, final String[] sourceFolders,
-			final String[] projects, final String[] containers)
-			throws CoreException {
+	protected static IScriptProject createScriptProject(
+			final String projectName, final String[] natures,
+			final String[] sourceFolders, final String[] projects,
+			final String[] containers) throws CoreException {
 		final IScriptProject[] result = new IScriptProject[1];
 		IWorkspaceRunnable create = monitor -> {
 			// create project
@@ -565,7 +566,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		}
 	}
 
-	protected IFolder createFolder(IPath path) throws CoreException {
+	protected static IFolder createFolder(IPath path) throws CoreException {
 		final IFolder folder = getWorkspaceRoot().getFolder(path);
 		getWorkspace().run(monitor -> {
 			IContainer parent = folder.getParent();
