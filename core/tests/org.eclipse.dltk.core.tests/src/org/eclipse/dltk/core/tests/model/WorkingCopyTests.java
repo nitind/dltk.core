@@ -56,8 +56,8 @@ public class WorkingCopyTests extends ModifyingResourceTests {
 		super.setUp();
 		try {
 
-			this.scriptProject = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
-			this.createFolder("P/src/x/y");
+			this.scriptProject = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			ModifyingResourceTests.createFolder("P/src/x/y");
 			this.createFile("P/src/x/y/A.txt",
 					"package x.y;\n" + "import java.io.File;\n" + "public class A {\n" + "  public class Inner {\n"
 							+ "    public class InnerInner {\n" + "    }\n" + "    int innerField;\n"

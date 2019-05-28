@@ -294,7 +294,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 			URL url = ModelTestsPlugin.getDefault().getBundle().getEntry("workspace/Buildpath3");
 			URL res = FileLocator.resolve(url);
 			IPath filePath = new Path(res.getFile());
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
@@ -327,7 +327,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 
 			IPath localPath = new Path("Testie").append(res.getFile().substring(1));
 			IPath contPath = localPath;
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
@@ -432,7 +432,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathValidation01() throws CoreException {
 		try {
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
@@ -450,7 +450,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 
 	public void testBuildpathLibraryValidation01() throws CoreException {
 		try {
-			IScriptProject proj = this.createScriptProject("Pv0", TEST_NATURE, new String[] { "src" });
+			IScriptProject proj = AbstractModelTests.createScriptProject("Pv0", TEST_NATURE, new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
@@ -475,7 +475,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathValidation02() throws CoreException {
 		try {
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
@@ -495,7 +495,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathValidation03() throws CoreException {
 		try {
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
@@ -517,8 +517,9 @@ public class BuildpathTests extends ModifyingResourceTests {
 		IScriptProject[] p = null;
 		try {
 
-			p = new IScriptProject[] { this.createScriptProject("P0var", TEST_NATURE, new String[] { "src0" }),
-					this.createScriptProject("P1var", TEST_NATURE, new String[] { "src1" }), };
+			p = new IScriptProject[] {
+					AbstractModelTests.createScriptProject("P0var", TEST_NATURE, new String[] { "src0" }),
+					AbstractModelTests.createScriptProject("P1var", TEST_NATURE, new String[] { "src1" }), };
 
 			DLTKCore.setBuildpathVariable("var", new Path("/P1var"), null);
 
@@ -540,8 +541,9 @@ public class BuildpathTests extends ModifyingResourceTests {
 		IScriptProject[] p = null;
 		try {
 
-			p = new IScriptProject[] { this.createScriptProject("P0v", TEST_NATURE, new String[] { "src0", "src1" }),
-					this.createScriptProject("P1v", TEST_NATURE, new String[] { "src1" }), };
+			p = new IScriptProject[] {
+					AbstractModelTests.createScriptProject("P0v", TEST_NATURE, new String[] { "src0", "src1" }),
+					AbstractModelTests.createScriptProject("P1v", TEST_NATURE, new String[] { "src1" }), };
 
 			DLTKCore.setBuildpathContainer(new Path("container/default"), new IScriptProject[] { p[0] },
 					new IBuildpathContainer[] { new TestContainer(new Path("container/default"),
@@ -572,7 +574,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 		IScriptProject[] p = null;
 		try {
 
-			p = new IScriptProject[] { this.createScriptProject("P0", TEST_NATURE, new String[] { "src" }), };
+			p = new IScriptProject[] {
+					AbstractModelTests.createScriptProject("P0", TEST_NATURE, new String[] { "src" }), };
 
 			// validate Buildpath entry
 			IBuildpathEntry[] newBuildpath = new IBuildpathEntry[] { DLTKCore.newSourceEntry(new Path("/P0")),
@@ -592,7 +595,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathValidation07() throws CoreException {
 		try {
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
@@ -613,7 +616,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathValidation08() throws CoreException {
 		try {
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] {});
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] {});
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
@@ -634,7 +637,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathValidation15() throws CoreException {
 		try {
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
@@ -654,7 +657,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathValidation21() throws CoreException {
 		try {
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] {});
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] {});
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
@@ -681,7 +684,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathValidation23() throws CoreException {
 		try {
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] {});
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] {});
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 2];
@@ -705,7 +708,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathValidation34() throws CoreException {
 		try {
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
@@ -728,7 +731,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathValidation36() throws CoreException {
 		try {
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
@@ -749,7 +752,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathValidation37() throws CoreException {
 		try {
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] {});
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] {});
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
 			IBuildpathEntry[] newCP = new IBuildpathEntry[originalCP.length + 1];
@@ -777,7 +780,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathValidation42() throws CoreException {
 		try {
-			IScriptProject proj = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			IScriptProject proj = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			proj.setOption(DLTKCore.CORE_ENABLE_BUILDPATH_EXCLUSION_PATTERNS, DLTKCore.DISABLED);
 			IBuildpathEntry[] originalCP = proj.getRawBuildpath();
 
@@ -800,7 +803,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathWithDuplicateEntries() throws CoreException {
 		try {
-			IScriptProject project = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			IScriptProject project = createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			IBuildpathEntry[] cp = project.getRawBuildpath();
 			IBuildpathEntry[] newCp = new IBuildpathEntry[cp.length * 2];
 			System.arraycopy(cp, 0, newCp, 0, cp.length);
@@ -823,7 +826,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathWithNonExistentProjectEntry() throws CoreException {
 		try {
-			IScriptProject project = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			IScriptProject project = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			IBuildpathEntry[] originalPath = project.getRawBuildpath();
 			IProjectFragment[] originalRoots = project.getProjectFragments();
 
@@ -858,7 +861,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 */
 	public void testBuildpathWithNonExistentSourceEntry() throws CoreException {
 		try {
-			IScriptProject project = this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			IScriptProject project = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
 			IBuildpathEntry[] originalPath = project.getRawBuildpath();
 			IProjectFragment[] originalRoots = project.getProjectFragments();
 
@@ -941,9 +944,9 @@ public class BuildpathTests extends ModifyingResourceTests {
 	public void testCycleReport() throws CoreException {
 
 		try {
-			IScriptProject p1 = this.createScriptProject("p1_", TEST_NATURE, new String[] { "" });
-			IScriptProject p2 = this.createScriptProject("p2_", TEST_NATURE, new String[] { "" });
-			IScriptProject p3 = this.createScriptProject("p3_", TEST_NATURE, new String[] { "" },
+			IScriptProject p1 = AbstractModelTests.createScriptProject("p1_", TEST_NATURE, new String[] { "" });
+			IScriptProject p2 = AbstractModelTests.createScriptProject("p2_", TEST_NATURE, new String[] { "" });
+			IScriptProject p3 = AbstractModelTests.createScriptProject("p3_", TEST_NATURE, new String[] { "" },
 					new String[] { "/p2_" });
 
 			// Ensure no cycle reported
@@ -1011,7 +1014,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 * removed roots.
 	 */
 	public void testEmptyBuildpath() throws CoreException {
-		IScriptProject project = this.createScriptProject("P", TEST_NATURE, new String[] { "" });
+		IScriptProject project = AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "" });
 		try {
 			startDeltas();
 			setBuildpath(project, new IBuildpathEntry[] {});
@@ -1053,8 +1056,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 * Tests the cross project Buildpath setting
 	 */
 	public void testBuildpathCrossProject() throws CoreException {
-		IScriptProject project = this.createScriptProject("P1c", TEST_NATURE, new String[] { "" });
-		this.createScriptProject("P2c", TEST_NATURE, new String[] {});
+		IScriptProject project = AbstractModelTests.createScriptProject("P1c", TEST_NATURE, new String[] { "" });
+		AbstractModelTests.createScriptProject("P2c", TEST_NATURE, new String[] {});
 		try {
 			startDeltas();
 			IProjectFragment oldRoot = getProjectFragment("P1c", "");

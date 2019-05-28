@@ -57,8 +57,8 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		useCacheSuperclass = true;
 		try {
 
-			this.createScriptProject("P", TEST_NATURE, new String[] { "src" });
-			this.createFolder("P/src/x/y");
+			AbstractModelTests.createScriptProject("P", TEST_NATURE, new String[] { "src" });
+			ModifyingResourceTests.createFolder("P/src/x/y");
 			this.createFile("P/src/x/y/Z.txt", "");
 			this.cu = this.getSourceModule("P/src/x/y/Z.txt");
 			this.copy = cu.getWorkingCopy(null);
