@@ -14,12 +14,7 @@ import org.eclipse.dltk.debug.tests.AbstractDebugTests;
 import org.eclipse.dltk.internal.debug.core.model.AbstractScriptBreakpoint;
 import org.eclipse.dltk.internal.debug.core.model.ScriptLineBreakpoint;
 
-import junit.framework.TestSuite;
-
 public class BreakpointTests extends AbstractDebugTests {
-	public static TestSuite suite() {
-		return new Suite(BreakpointTests.class);
-	}
 
 	public BreakpointTests() {
 		super("org.eclipse.dltk.debug.tests", "My Breakpoint tests");

@@ -2,8 +2,6 @@ package org.eclipse.dltk.core.tests.launching;
 
 import java.util.List;
 
-import junit.framework.Test;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -35,10 +33,6 @@ public class InterpreterConfigTests extends AbstractModelTests {
 		super.tearDownSuite();
 	}
 
-	public static Test suite() {
-		return new Suite(InterpreterConfigTests.class);
-	}
-
 	protected InterpreterConfig createInterperterConfig() {
 		IProject project = scriptProject.getProject();
 		IResource member = project.findMember("src/script.xxx");
@@ -59,9 +53,10 @@ public class InterpreterConfigTests extends AbstractModelTests {
 		assertNotNull(config.getScriptFilePath());
 		assertNotNull(config.getWorkingDirectoryPath());
 
-		assertEquals(scriptPath.toOSString(), config.getScriptFilePath().toOSString());
-		assertEquals(scriptPath.removeLastSegments(1).toOSString(), config
-				.getWorkingDirectoryPath().toOSString());
+		assertEquals(scriptPath.toOSString(),
+				config.getScriptFilePath().toOSString());
+		assertEquals(scriptPath.removeLastSegments(1).toOSString(),
+				config.getWorkingDirectoryPath().toOSString());
 
 		// Null as script file
 		try {
@@ -71,12 +66,12 @@ public class InterpreterConfigTests extends AbstractModelTests {
 
 		}
 
-//		try {
-//			config.setScriptFile((File) null);
-//			fail("Should raise an IllegalArgumentException");
-//		} catch (IllegalArgumentException e) {
-//
-//		}
+		// try {
+		// config.setScriptFile((File) null);
+		// fail("Should raise an IllegalArgumentException");
+		// } catch (IllegalArgumentException e) {
+		//
+		// }
 
 		// Null as working directory
 		try {
@@ -86,12 +81,12 @@ public class InterpreterConfigTests extends AbstractModelTests {
 
 		}
 
-//		try {
-//			config.setWorkingDirectory((File) null);
-//			fail("Should raise an IllegalArgumentException");
-//		} catch (IllegalArgumentException e) {
-//
-//		}
+		// try {
+		// config.setWorkingDirectory((File) null);
+		// fail("Should raise an IllegalArgumentException");
+		// } catch (IllegalArgumentException e) {
+		//
+		// }
 	}
 
 	public void testInterpreterConfigEnvArgs() {
