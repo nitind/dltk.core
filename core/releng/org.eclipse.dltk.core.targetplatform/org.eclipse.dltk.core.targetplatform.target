@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="org.eclipse.dltk.core.targetplatform" sequenceNumber="21">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+<target name="org.eclipse.dltk.core.targetplatform" sequenceNumber="21">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
             <unit id="org.antlr.runtime" version="3.0.0.v200803061811"/>
@@ -8,15 +10,15 @@
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
             <unit id="com.google.guava" version="21.0.0.v20170206-1425"/>
             <unit id="com.google.guava.source" version="21.0.0.v20170206-1425"/>
-            <unit id="org.apache.lucene.analyzers-common" version="8.0.0.v20190404-1858"/>
+            <unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>
             <unit id="org.apache.lucene.analyzers-common.source" version="8.0.0.v20190404-1858"/>
-            <unit id="org.apache.lucene.core" version="8.0.0.v20190404-1858"/>
+            <unit id="org.apache.lucene.core" version="6.1.0.v20170814-1820"/>
             <unit id="org.apache.lucene.core.source" version="8.0.0.v20190404-1858"/>
             <unit id="org.apache.lucene.misc" version="8.0.0.v20190418-1455"/>
             <unit id="org.apache.lucene.misc.source" version="8.0.0.v20190418-1455"/>
             <!-- DLTK depends on Lucene 8.0, but Mylyn 3.24 depends on Lucene 6.1 -->
-            <unit id="org.apache.lucene.core" version="6.1.0.v20170814-1820"/>
-            <unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>
+            <unit id="org.apache.lucene.core" version="8.0.0.v20190404-1858"/>
+            <unit id="org.apache.lucene.analyzers-common" version="8.0.0.v20190404-1858"/>
             <unit id="org.apache.lucene.queryparser" version="6.1.0.v20161115-1612"/>
             <unit id="org.h2" version="1.3.168.v201212121212"/>
             <unit id="org.h2.source" version="1.3.168.v201212121212"/>
@@ -42,7 +44,7 @@
             <unit id="org.eclipse.mylyn.context.sdk.feature.group" version="0.0.0"/>
             <unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
             <unit id="org.eclipse.linuxtools.man.feature.group" version="0.0.0"/>
-            <repository location="http://download.eclipse.org/releases/2019-03/"/>
+            <repository location="http://download.eclipse.org/releases/2019-06/"/>
         </location>
     </locations>
     <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
