@@ -17,7 +17,7 @@ import org.eclipse.dltk.internal.debug.core.model.ScriptLineBreakpoint;
 public class BreakpointTests extends AbstractDebugTests {
 
 	public BreakpointTests() {
-		super("org.eclipse.dltk.debug.tests", "My Breakpoint tests");
+		super("My Breakpoint tests");
 	}
 
 	private IScriptLineBreakpoint breakpoint;

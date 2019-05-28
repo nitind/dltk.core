@@ -33,13 +33,14 @@ public class ExternalFragmentTests extends AbstractModelTests {
 	private static final String PRJ_NAME = "Environment1";
 
 	public ExternalFragmentTests(String name) {
-		super(ModelTestsPlugin.PLUGIN_NAME, name);
+		super(name);
 	}
 
 	@Override
 	public void setUp() throws Exception {
 		super.setUpSuite();
-		setUpScriptProjectTo(PRJ_NAME, "Environment1");
+		setUpScriptProjectTo(PRJ_NAME, "Environment1",
+				ModelTestsPlugin.PLUGIN_NAME);
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import org.junit.Assert;
 public class DLTKDebugUILanguageManagerTests extends AbstractModelTests {
 
 	public DLTKDebugUILanguageManagerTests(String name) {
-		super("org.eclipse.dltk.core.tests.language", name);
+		super(name);
 	}
 
 	public void testGetDebugUILanguageToolkit() {

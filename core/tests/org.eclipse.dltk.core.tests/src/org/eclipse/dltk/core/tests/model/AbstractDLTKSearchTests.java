@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -53,14 +53,10 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 	public static List<?> JAVA_SEARCH_SUITES = null;
 	protected IScriptProject SCRIPT_PROJECT;
 	protected static boolean COPY_DIRS = true;
-	protected static int EXACT_RULE = SearchPattern.R_EXACT_MATCH
-			| SearchPattern.R_CASE_SENSITIVE;
-	protected static int EQUIVALENT_RULE = EXACT_RULE
-			| SearchPattern.R_EQUIVALENT_MATCH;
-	protected static int ERASURE_RULE = EXACT_RULE
-			| SearchPattern.R_ERASURE_MATCH;
-	protected static int RAW_RULE = EXACT_RULE | SearchPattern.R_ERASURE_MATCH
-			| SearchPattern.R_EQUIVALENT_MATCH;
+	protected static int EXACT_RULE = SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE;
+	protected static int EQUIVALENT_RULE = EXACT_RULE | SearchPattern.R_EQUIVALENT_MATCH;
+	protected static int ERASURE_RULE = EXACT_RULE | SearchPattern.R_ERASURE_MATCH;
+	protected static int RAW_RULE = EXACT_RULE | SearchPattern.R_ERASURE_MATCH | SearchPattern.R_EQUIVALENT_MATCH;
 
 	// ISourceModule[] workingCopies;
 	// boolean discard;
@@ -81,8 +77,7 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 		public int count = 0;
 
 		@Override
-		public void acceptSearchMatch(SearchMatch searchMatch)
-				throws CoreException {
+		public void acceptSearchMatch(SearchMatch searchMatch) throws CoreException {
 			count++;
 			this.match = searchMatch;
 			writeLine();
@@ -90,8 +85,7 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 		}
 
 		protected void writeLineToResult() {
-			if (match.getAccuracy() == SearchMatch.A_ACCURATE
-					|| showPotential) {
+			if (match.getAccuracy() == SearchMatch.A_ACCURATE || showPotential) {
 				if (results.length() > 0)
 					results.append("\n");
 				results.append(line);
@@ -144,8 +138,7 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 					char[] contents = getSource(resource, element, unit);
 					int start = match.getOffset();
 					int end = start + match.getLength();
-					if (start == -1
-							|| (contents != null && contents.length > 0)) { // retrieving
+					if (start == -1 || (contents != null && contents.length > 0)) { // retrieving
 						// attached
 						// source
 						// not
@@ -154,31 +147,22 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 						line.append(" [");
 						if (start > -1) {
 							if (this.showContext) {
-								int lineStart1 = CharOperation.lastIndexOf('\n',
-										contents, 0, start);
-								int lineStart2 = CharOperation.lastIndexOf('\r',
-										contents, 0, start);
-								int lineStart = Math.max(lineStart1, lineStart2)
-										+ 1;
-								line.append(CharOperation.subarray(contents,
-										lineStart, start));
+								int lineStart1 = CharOperation.lastIndexOf('\n', contents, 0, start);
+								int lineStart2 = CharOperation.lastIndexOf('\r', contents, 0, start);
+								int lineStart = Math.max(lineStart1, lineStart2) + 1;
+								line.append(CharOperation.subarray(contents, lineStart, start));
 								line.append("<");
 							}
-							line.append(CharOperation.subarray(contents, start,
-									end));
+							line.append(CharOperation.subarray(contents, start, end));
 							if (this.showContext) {
 								line.append(">");
-								int lineEnd1 = CharOperation.indexOf('\n',
-										contents, end);
-								int lineEnd2 = CharOperation.indexOf('\r',
-										contents, end);
-								int lineEnd = lineEnd1 > 0 && lineEnd2 > 0
-										? Math.min(lineEnd1, lineEnd2)
+								int lineEnd1 = CharOperation.indexOf('\n', contents, end);
+								int lineEnd2 = CharOperation.indexOf('\r', contents, end);
+								int lineEnd = lineEnd1 > 0 && lineEnd2 > 0 ? Math.min(lineEnd1, lineEnd2)
 										: Math.max(lineEnd1, lineEnd2);
 								if (lineEnd == -1)
 									lineEnd = contents.length;
-								line.append(CharOperation.subarray(contents,
-										end, lineEnd));
+								line.append(CharOperation.subarray(contents, end, lineEnd));
 							}
 						} else {
 							line.append("No source");
@@ -280,8 +264,7 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 			case IModelElement.SOURCE_MODULE:
 				IScriptFolder pkg = type.getScriptFolder();
 				append(pkg);
-				if (!pkg.getElementName()
-						.equals(IScriptFolder.DEFAULT_FOLDER_NAME)) {
+				if (!pkg.getElementName().equals(IScriptFolder.DEFAULT_FOLDER_NAME)) {
 					line.append(IScriptFolder.PACKAGE_DELIMITER);
 				}
 				break;
@@ -317,15 +300,13 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 			return (IModelElement) searchMatch.getElement();
 		}
 
-		protected String getPathString(IResource resource,
-				IModelElement element) {
+		protected String getPathString(IResource resource, IModelElement element) {
 			String pathString;
 			if (resource != null) {
 				IPath path = resource.getProjectRelativePath();
 				if (path.segmentCount() == 0) {
 					IModelElement root = element;
-					while (root != null
-							&& !(root instanceof IProjectFragment)) {
+					while (root != null && !(root instanceof IProjectFragment)) {
 						root = root.getParent();
 					}
 					if (root != null) {
@@ -347,12 +328,10 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 			return pathString;
 		}
 
-		protected char[] getSource(IResource resource, IModelElement element,
-				ISourceModule unit) throws CoreException {
+		protected char[] getSource(IResource resource, IModelElement element, ISourceModule unit) throws CoreException {
 			char[] contents = CharOperation.NO_CHAR;
 			if (Util.isValidSourceModule(resource) && element != null) {
-				ISourceModule cu = (ISourceModule) element
-						.getAncestor(IModelElement.SOURCE_MODULE);
+				ISourceModule cu = (ISourceModule) element.getAncestor(IModelElement.SOURCE_MODULE);
 				if (cu != null && cu.isWorkingCopy()) {
 					// working copy
 					contents = unit.getBuffer().getCharacters();
@@ -369,12 +348,12 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 
 	protected DLTKSearchResultCollector resultCollector;
 
-	public AbstractDLTKSearchTests(String pluginName, String name) {
-		this(pluginName, name, 2);
+	public AbstractDLTKSearchTests(String name) {
+		this(name, 2);
 	}
 
-	public AbstractDLTKSearchTests(String pluginName, String name, int tabs) {
-		super(pluginName, name);
+	public AbstractDLTKSearchTests(String name, int tabs) {
+		super(name);
 		this.displayName = true;
 		this.tabs = tabs;
 	}
@@ -383,13 +362,11 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 		assertSearchResults(expected, resultCollector);
 	}
 
-	protected void assertSearchResults(String expected,
-			DLTKSearchResultCollector collector) {
+	protected void assertSearchResults(String expected, DLTKSearchResultCollector collector) {
 		assertSearchResults("Unexpected search results", expected, collector);
 	}
 
-	protected void assertSearchResults(String message, String expected,
-			DLTKSearchResultCollector collector) {
+	protected void assertSearchResults(String message, String expected, DLTKSearchResultCollector collector) {
 		String actual = collector.toString();
 		if (!expected.equals(actual)) {
 			if (this.displayName) {
@@ -421,8 +398,7 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 						// ignore
 					}
 				}
-				System.out.println(
-						"--------------------------------------------------------------------------------");
+				System.out.println("--------------------------------------------------------------------------------");
 				for (int i = 0; i < length; i += 2) {
 					System.out.println(sources[i]);
 					System.out.println(sources[i + 1]);
@@ -433,8 +409,7 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 	}
 
 	@Override
-	protected void copyDirectory(File sourceDir, File targetDir)
-			throws IOException {
+	protected void copyDirectory(File sourceDir, File targetDir) throws IOException {
 		if (COPY_DIRS) {
 			super.copyDirectory(sourceDir, targetDir);
 		} else {
@@ -458,10 +433,9 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 		return SearchEngine.createSearchScope(element);
 	}
 
-	protected IDLTKSearchScope getScriptSearchPackageScope(String projectName,
-			String packageName, boolean addSubpackages) throws ModelException {
-		IScriptFolder fragment = getScriptFolder(projectName, "src",
-				new Path(packageName));
+	protected IDLTKSearchScope getScriptSearchPackageScope(String projectName, String packageName,
+			boolean addSubpackages) throws ModelException {
+		IScriptFolder fragment = getScriptFolder(projectName, "src", new Path(packageName));
 		if (fragment == null)
 			return null;
 		IModelElement[] searchPackages = null;
@@ -470,15 +444,12 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 			List<IScriptFolder> packages = new ArrayList<>();
 			packages.add(fragment);
 			// Add all possible subpackages
-			IModelElement[] children = ((IProjectFragment) fragment.getParent())
-					.getChildren();
-			String[] names = ((ScriptFolder) fragment).getRelativePath()
-					.segments();
+			IModelElement[] children = ((IProjectFragment) fragment.getParent()).getChildren();
+			String[] names = ((ScriptFolder) fragment).getRelativePath().segments();
 			int namesLength = names.length;
 			nextPackage: for (int i = 0, length = children.length; i < length; i++) {
 				ScriptFolder currentPackage = (ScriptFolder) children[i];
-				String[] otherNames = currentPackage.getRelativePath()
-						.segments();
+				String[] otherNames = currentPackage.getRelativePath().segments();
 				if (otherNames.length <= namesLength)
 					continue nextPackage;
 				for (int j = 0; j < namesLength; j++) {
@@ -494,24 +465,20 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 			searchPackages[0] = fragment;
 		}
 		return SearchEngine.createSearchScope(searchPackages,
-				DLTKLanguageManager
-						.getLanguageToolkit(getScriptProject(projectName)));
+				DLTKLanguageManager.getLanguageToolkit(getScriptProject(projectName)));
 	}
 
-	IDLTKSearchScope getScriptSearchCUScope(String projectName,
-			String packageName, String cuName) throws ModelException {
-		ISourceModule cu = getSourceModule(projectName, "src",
-				new Path(packageName).append(cuName));
+	IDLTKSearchScope getScriptSearchCUScope(String projectName, String packageName, String cuName)
+			throws ModelException {
+		ISourceModule cu = getSourceModule(projectName, "src", new Path(packageName).append(cuName));
 		return SearchEngine.createSearchScope(cu);
 	}
 
-	protected void search(IModelElement element, int limitTo,
-			IDLTKSearchScope scope) throws CoreException {
+	protected void search(IModelElement element, int limitTo, IDLTKSearchScope scope) throws CoreException {
 		search(element, limitTo, EXACT_RULE, scope, resultCollector);
 	}
 
-	IDLTKSearchScope getSearchWorkingCopiesScope(ISourceModule workingCopy)
-			throws ModelException {
+	IDLTKSearchScope getSearchWorkingCopiesScope(ISourceModule workingCopy) throws ModelException {
 		return SearchEngine.createSearchScope(workingCopy);
 	}
 
@@ -519,121 +486,92 @@ public class AbstractDLTKSearchTests extends AbstractModelTests
 	// return SearchEngine.createSearchScope(this.workingCopies);
 	// }
 
-	protected void search(IModelElement element, int limitTo, int matchRule,
-			IDLTKSearchScope scope) throws CoreException {
+	protected void search(IModelElement element, int limitTo, int matchRule, IDLTKSearchScope scope)
+			throws CoreException {
 		search(element, limitTo, matchRule, scope, resultCollector);
 	}
 
-	protected void search(IModelElement element, int limitTo, int matchRule,
-			IDLTKSearchScope scope, SearchRequestor requestor)
-			throws CoreException {
-		SearchPattern pattern = SearchPattern.createPattern(element, limitTo,
-				matchRule, scope.getLanguageToolkit());
-		assertNotNull("Pattern should not be null", pattern);
-		new SearchEngine().search(pattern,
-				new SearchParticipant[] {
-						SearchEngine.getDefaultSearchParticipant() },
-				scope, requestor, null);
-	}
-
-	protected void search(SearchPattern searchPattern, IDLTKSearchScope scope,
+	protected void search(IModelElement element, int limitTo, int matchRule, IDLTKSearchScope scope,
 			SearchRequestor requestor) throws CoreException {
-		new SearchEngine().search(searchPattern,
-				new SearchParticipant[] {
-						SearchEngine.getDefaultSearchParticipant() },
+		SearchPattern pattern = SearchPattern.createPattern(element, limitTo, matchRule, scope.getLanguageToolkit());
+		assertNotNull("Pattern should not be null", pattern);
+		new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() },
 				scope, requestor, null);
 	}
 
-	protected void search(String patternString, int searchFor, int limitTo,
-			IDLTKSearchScope scope) throws CoreException {
-		search(patternString, searchFor, limitTo, EXACT_RULE, scope,
-				resultCollector);
-	}
-
-	protected void search(String patternString, int searchFor, int limitTo,
-			int matchRule, IDLTKSearchScope scope) throws CoreException {
-		search(patternString, searchFor, limitTo, matchRule, scope,
-				resultCollector);
-	}
-
-	protected void search(String patternString, int searchFor, int limitTo,
-			int matchRule, IDLTKSearchScope scope, SearchRequestor requestor)
+	protected void search(SearchPattern searchPattern, IDLTKSearchScope scope, SearchRequestor requestor)
 			throws CoreException {
-		if (patternString.indexOf('*') != -1
-				|| patternString.indexOf('?') != -1) {
+		new SearchEngine().search(searchPattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() },
+				scope, requestor, null);
+	}
+
+	protected void search(String patternString, int searchFor, int limitTo, IDLTKSearchScope scope)
+			throws CoreException {
+		search(patternString, searchFor, limitTo, EXACT_RULE, scope, resultCollector);
+	}
+
+	protected void search(String patternString, int searchFor, int limitTo, int matchRule, IDLTKSearchScope scope)
+			throws CoreException {
+		search(patternString, searchFor, limitTo, matchRule, scope, resultCollector);
+	}
+
+	protected void search(String patternString, int searchFor, int limitTo, int matchRule, IDLTKSearchScope scope,
+			SearchRequestor requestor) throws CoreException {
+		if (patternString.indexOf('*') != -1 || patternString.indexOf('?') != -1) {
 			matchRule |= SearchPattern.R_PATTERN_MATCH;
 		}
-		SearchPattern pattern = SearchPattern.createPattern(patternString,
-				searchFor, limitTo, matchRule, scope.getLanguageToolkit());
+		SearchPattern pattern = SearchPattern.createPattern(patternString, searchFor, limitTo, matchRule,
+				scope.getLanguageToolkit());
 		assertNotNull("Pattern should not be null", pattern);
-		new SearchEngine().search(pattern,
-				new SearchParticipant[] {
-						SearchEngine.getDefaultSearchParticipant() },
+		new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() },
 				scope, requestor, null);
 	}
 
 	// Search for sources only.
-	protected List<?> searchSourceOnly(IModelElement element, int limitTo,
-			int matchRule, IDLTKSearchScope scope) throws CoreException {
-		SearchPattern pattern = SearchPattern.createPattern(element, limitTo,
-				matchRule, scope.getLanguageToolkit());
+	protected List<?> searchSourceOnly(IModelElement element, int limitTo, int matchRule, IDLTKSearchScope scope)
+			throws CoreException {
+		SearchPattern pattern = SearchPattern.createPattern(element, limitTo, matchRule, scope.getLanguageToolkit());
 		assertNotNull("Pattern should not be null", pattern);
 		return new SearchEngine().searchSourceOnly(pattern,
-				new SearchParticipant[] {
-						SearchEngine.getDefaultSearchParticipant() },
-				scope, null);
+				new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, null);
 	}
 
-	protected List<?> searchSourceOnly(SearchPattern searchPattern,
-			IDLTKSearchScope scope) throws CoreException {
+	protected List<?> searchSourceOnly(SearchPattern searchPattern, IDLTKSearchScope scope) throws CoreException {
 		return new SearchEngine().searchSourceOnly(searchPattern,
-				new SearchParticipant[] {
-						SearchEngine.getDefaultSearchParticipant() },
-				scope, null);
+				new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, null);
 	}
 
-	protected List<?> searchSourceOnly(String patternString, int searchFor,
-			int limitTo, IDLTKSearchScope scope) throws CoreException {
-		return searchSourceOnly(patternString, searchFor, limitTo, EXACT_RULE,
-				scope);
-	}
-
-	protected List<?> searchSourceOnly(String patternString, int searchFor,
-			int limitTo, int matchRule, IDLTKSearchScope scope)
+	protected List<?> searchSourceOnly(String patternString, int searchFor, int limitTo, IDLTKSearchScope scope)
 			throws CoreException {
-		if (patternString.indexOf('*') != -1
-				|| patternString.indexOf('?') != -1) {
+		return searchSourceOnly(patternString, searchFor, limitTo, EXACT_RULE, scope);
+	}
+
+	protected List<?> searchSourceOnly(String patternString, int searchFor, int limitTo, int matchRule,
+			IDLTKSearchScope scope) throws CoreException {
+		if (patternString.indexOf('*') != -1 || patternString.indexOf('?') != -1) {
 			matchRule |= SearchPattern.R_PATTERN_MATCH;
 		}
-		SearchPattern pattern = SearchPattern.createPattern(patternString,
-				searchFor, limitTo, matchRule, scope.getLanguageToolkit());
+		SearchPattern pattern = SearchPattern.createPattern(patternString, searchFor, limitTo, matchRule,
+				scope.getLanguageToolkit());
 		assertNotNull("Pattern should not be null", pattern);
 		return new SearchEngine().searchSourceOnly(pattern,
-				new SearchParticipant[] {
-						SearchEngine.getDefaultSearchParticipant() },
-				scope, null);
+				new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, null);
 	}
 
 	// /
-	protected void searchDeclarationsOfAccessedFields(
-			IModelElement enclosingElement, SearchRequestor requestor)
+	protected void searchDeclarationsOfAccessedFields(IModelElement enclosingElement, SearchRequestor requestor)
 			throws ModelException {
-		new SearchEngine().searchDeclarationsOfAccessedFields(enclosingElement,
-				requestor, null);
+		new SearchEngine().searchDeclarationsOfAccessedFields(enclosingElement, requestor, null);
 	}
 
-	protected void searchDeclarationsOfReferencedTypes(
-			IModelElement enclosingElement, SearchRequestor requestor)
+	protected void searchDeclarationsOfReferencedTypes(IModelElement enclosingElement, SearchRequestor requestor)
 			throws ModelException {
-		new SearchEngine().searchDeclarationsOfReferencedTypes(enclosingElement,
-				requestor, null);
+		new SearchEngine().searchDeclarationsOfReferencedTypes(enclosingElement, requestor, null);
 	}
 
-	protected void searchDeclarationsOfSentMessages(
-			IModelElement enclosingElement, SearchRequestor requestor)
+	protected void searchDeclarationsOfSentMessages(IModelElement enclosingElement, SearchRequestor requestor)
 			throws ModelException {
-		new SearchEngine().searchDeclarationsOfSentMessages(enclosingElement,
-				requestor, null);
+		new SearchEngine().searchDeclarationsOfSentMessages(enclosingElement, requestor, null);
 	}
 
 	@Override

@@ -143,14 +143,12 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 
 	protected DeltaListener deltaListener = new DeltaListener();
 
-	public AbstractModelTests(String testProjectName, String name) {
+	public AbstractModelTests(String name) {
 		super(name);
-		this.fTestProjectName = testProjectName;
 	}
 
-	public AbstractModelTests(String testProjectName, String name, int tabs) {
+	public AbstractModelTests(String name, int tabs) {
 		super(name);
-		this.fTestProjectName = testProjectName;
 		this.tabs = tabs;
 	}
 
@@ -172,20 +170,21 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		}
 	}
 
-	public File getSourceWorkspacePath() {
-		return new File(getPluginDirectoryPath(), "workspace");
+	public File getSourceWorkspacePath(String bundleName) {
+		return new File(getPluginDirectoryPath(bundleName), "workspace");
 	}
 
 	/**
 	 * Returns the OS path to the directory that contains this plugin.
+	 *
+	 * @param bundleName
 	 */
-	protected File getPluginDirectoryPath() {
+	protected File getPluginDirectoryPath(String bundleName) {
 		try {
-			final Bundle bundle = Platform.getBundle(this.fTestProjectName);
+			final Bundle bundle = Platform.getBundle(bundleName);
 			if (bundle == null) {
-				throw new IllegalStateException(
-						NLS.bind("Bundle \"{0}\" with test data not found",
-								fTestProjectName));
+				throw new IllegalStateException(NLS.bind(
+						"Bundle \"{0}\" with test data not found", bundleName));
 			}
 			URL platformURL = bundle.getEntry("/");
 			return new File(FileLocator.toFileURL(platformURL).getFile());
@@ -211,21 +210,24 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		FileUtil.copyFile(src, dest);
 	}
 
-	public IProject setUpProject(final String projectName)
+	public IProject setUpProject(final String projectName, String bundleName)
 			throws CoreException, IOException {
-		return setUpProjectTo(projectName, projectName);
+		return setUpProjectTo(projectName, projectName, bundleName);
 	}
 
 	protected IScriptProject setUpScriptProjectTo(final String projectName,
-			final String fromName) throws CoreException, IOException {
-		final IProject project = setUpProjectTo(projectName, fromName);
+			final String fromName, String bundleName)
+			throws CoreException, IOException {
+		final IProject project = setUpProjectTo(projectName, fromName,
+				bundleName);
 		return DLTKCore.create(project);
 	}
 
 	protected IProject setUpProjectTo(final String projectName,
-			final String fromName) throws CoreException, IOException {
+			final String fromName, String bundleName)
+			throws CoreException, IOException {
 		// copy files in project from source workspace to target workspace
-		final File sourceWorkspacePath = getSourceWorkspacePath();
+		final File sourceWorkspacePath = getSourceWorkspacePath(bundleName);
 		final File targetWorkspacePath = getWorkspaceRoot().getLocation()
 				.toFile();
 
@@ -239,9 +241,9 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		return createProject(projectName);
 	}
 
-	protected IScriptProject setUpScriptProject(final String projectName)
-			throws CoreException, IOException {
-		final IProject project = setUpProject(projectName);
+	protected IScriptProject setUpScriptProject(final String projectName,
+			String bundleName) throws CoreException, IOException {
+		final IProject project = setUpProject(projectName, bundleName);
 		return DLTKCore.create(project);
 	}
 

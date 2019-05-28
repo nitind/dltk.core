@@ -18,7 +18,7 @@ import org.junit.Assert;
 public class DLTKUILanguageManagerTests extends AbstractModelTests {
 
 	public DLTKUILanguageManagerTests(String name) {
-		super("org.eclipse.dltk.ui.tests.core", name);
+		super(name);
 	}
 
 	public void testGetUILanguageToolkit() {

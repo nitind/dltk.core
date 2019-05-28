@@ -29,19 +29,9 @@ public class ScriptElementLabelsTest extends AbstractModelTests {
 	private IScriptProject fJProject1;
 
 	public ScriptElementLabelsTest(String name) {
-		super(PROJECT_NAME, name);
+		super(name);
 	}
 
-	/*
-	 * public static Test setUpTest(Test test) { return new
-	 * ProjectTestSetup(test); }
-	 */
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.dltk.core.tests.model.AbstractModelTests#setUpSuite()
-	 */
 	@Override
 	public void setUpSuite() throws Exception {
 		super.setUpSuite();

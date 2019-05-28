@@ -4,8 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -19,13 +17,15 @@ import org.eclipse.dltk.core.tests.model.AbstractModelTests;
 import org.eclipse.dltk.core.tests.model.ModelTestsPlugin;
 import org.eclipse.dltk.internal.core.ModelManager;
 
+import junit.framework.TestCase;
+
 public class CacheTests extends AbstractModelTests {
 
 	private IProject PROJECT;
 	private IFile FILE;
 
 	public CacheTests(String name) {
-		super(ModelTestsPlugin.PLUGIN_NAME, name);
+		super(name);
 	}
 
 	@Override
@@ -34,8 +34,7 @@ public class CacheTests extends AbstractModelTests {
 		PROJECT = createProject("testProject");
 		PROJECT.open(new NullProgressMonitor());
 		FILE = PROJECT.getFile("testFile");
-		FILE.create(new ByteArrayInputStream(new byte[0]), true,
-				new NullProgressMonitor());
+		FILE.create(new ByteArrayInputStream(new byte[0]), true, new NullProgressMonitor());
 	}
 
 	@Override
@@ -47,8 +46,8 @@ public class CacheTests extends AbstractModelTests {
 	public void testCacheItems001() {
 		IEnvironment env = EnvironmentManager.getLocalEnvironment();
 		IFileHandle handle = env.getFile(FILE.getLocation());
-		IContentCache cache = new MetadataContentCache(ModelTestsPlugin
-				.getDefault().getStateLocation().append("cache1"));
+		IContentCache cache = new MetadataContentCache(
+				ModelTestsPlugin.getDefault().getStateLocation().append("cache1"));
 		cache.setCacheEntryAttribute(handle, "attr1", "value1");
 		cache.setCacheEntryAttribute(handle, "attr2", "value2");
 		String value1 = cache.getCacheEntryAttributeString(handle, "attr1");
@@ -71,18 +70,14 @@ public class CacheTests extends AbstractModelTests {
 
 	public void testCacheItems003() throws Throwable {
 		IFile index_file = PROJECT.getFile(".dltk.index");
-		index_file.create(new ByteArrayInputStream(new byte[0]), true,
-				new NullProgressMonitor());
+		index_file.create(new ByteArrayInputStream(new byte[0]), true, new NullProgressMonitor());
 		ArchiveCacheIndexBuilder builder = new ArchiveCacheIndexBuilder(
-				new FileOutputStream(new File(index_file.getLocation()
-						.toOSString())), 0);
+				new FileOutputStream(new File(index_file.getLocation().toOSString())), 0);
 
 		IFile file1 = PROJECT.getFile("file1.te");
-		file1.create(new ByteArrayInputStream(new byte[0]), true,
-				new NullProgressMonitor());
+		file1.create(new ByteArrayInputStream(new byte[0]), true, new NullProgressMonitor());
 		IFile file2 = PROJECT.getFile("file2.te");
-		file2.create(new ByteArrayInputStream(new byte[0]), true,
-				new NullProgressMonitor());
+		file2.create(new ByteArrayInputStream(new byte[0]), true, new NullProgressMonitor());
 
 		builder.addEntry("file1.te", file1.getLocalTimeStamp(), "ast",
 				new ByteArrayInputStream("testValue1".getBytes()));

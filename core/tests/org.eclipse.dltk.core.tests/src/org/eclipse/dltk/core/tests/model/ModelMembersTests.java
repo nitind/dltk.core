@@ -25,13 +25,14 @@ public class ModelMembersTests extends AbstractModelTests {
 	private static final String PRJ_NAME = "ModelMembersq";
 
 	public ModelMembersTests(String name) {
-		super(ModelTestsPlugin.PLUGIN_NAME, name);
+		super(name);
 	}
 
 	@Override
 	public void setUpSuite() throws Exception {
 		super.setUpSuite();
-		setUpScriptProjectTo(PRJ_NAME, "ModelMembers");
+		setUpScriptProjectTo(PRJ_NAME, "ModelMembers",
+				ModelTestsPlugin.PLUGIN_NAME);
 	}
 
 	@Override

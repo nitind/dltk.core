@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -12,14 +12,14 @@
  *******************************************************************************/
 package org.eclipse.dltk.core.tests.mixin;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.core.mixin.MixinModel;
 import org.eclipse.dltk.core.search.index.MixinIndex;
 import org.eclipse.dltk.core.tests.model.AbstractModelTests;
 import org.eclipse.dltk.core.tests.model.TestLanguageToolkit;
+
+import junit.framework.TestCase;
 
 /**
  * Tests for the {@link MixinIndex} class.
@@ -30,13 +30,13 @@ public class MixinModelTests extends AbstractModelTests {
 	private IProject project;
 
 	public MixinModelTests(String name) {
-		super("org.eclipse.dltk.core.tests", name);
+		super(name);
 	}
 
 	@Override
 	public void setUpSuite() throws Exception {
 		super.setUpSuite();
-		project = setUpProject("Mixin0");
+		project = setUpProject("Mixin0", "org.eclipse.dltk.core.tests");
 		waitUntilIndexesReady();
 	}
 

@@ -14,7 +14,7 @@ public class SourceParserTests extends AbstractModelTests {
 	private static final int PARSER_PRIORITY = 1;
 
 	public SourceParserTests(String name) {
-		super("org.eclipse.dltk.core.tests", name);
+		super(name);
 	}
 
 	public void testGetSourceParser() {
@@ -26,8 +26,8 @@ public class SourceParserTests extends AbstractModelTests {
 		assertTrue((parser instanceof TestSourceParser));
 
 		/*
-		 * these tests are 'dependent' upon the two test tests above working -
-		 * this could be broken out into its own top level test
+		 * these tests are 'dependent' upon the two test tests above working - this
+		 * could be broken out into its own top level test
 		 */
 		testParserConfig(parser);
 	}

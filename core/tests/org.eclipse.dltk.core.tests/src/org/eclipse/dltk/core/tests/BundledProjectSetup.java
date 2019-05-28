@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -34,8 +34,7 @@ import junit.framework.TestSuite;
  * tests. Use as follows:
  *
  * <pre>
- * suite.addTest(new BundledProjectSetup(MyPluginActivator.PLUGIN_ID,
- * 		&quot;myProject&quot;, new TestSuite(MyTests.class)));
+ * suite.addTest(new BundledProjectSetup(MyPluginActivator.PLUGIN_ID, &quot;myProject&quot;, new TestSuite(MyTests.class)));
  * </pre>
  *
  * where <code>myProject</code> is the folder with the preconfigured project
@@ -61,8 +60,7 @@ public class BundledProjectSetup extends TestSetup {
 		}
 
 		public BundledProjectSetup suite(Class<?>... testClasses) {
-			return new BundledProjectSetup(bundleName,
-					projectNames.toArray(new String[projectNames.size()]),
+			return new BundledProjectSetup(bundleName, projectNames.toArray(new String[projectNames.size()]),
 					createTests(testClasses), build, disableIndexer);
 		}
 
@@ -77,8 +75,7 @@ public class BundledProjectSetup extends TestSetup {
 					result.addTest(suite);
 					names.add(clazz.getName());
 				}
-				result.setName(findLongestCommonPrefix(
-						names.toArray(new String[names.size()])) + "*.tests");
+				result.setName(findLongestCommonPrefix(names.toArray(new String[names.size()])) + "*.tests");
 				return result;
 			}
 		}
@@ -125,8 +122,8 @@ public class BundledProjectSetup extends TestSetup {
 
 	static class Helper extends AbstractModelTests {
 
-		public Helper(String bundleName) {
-			super(bundleName, BundledProjectSetup.class.getName());
+		public Helper() {
+			super(BundledProjectSetup.class.getName());
 		}
 
 	}
@@ -135,29 +132,27 @@ public class BundledProjectSetup extends TestSetup {
 	private final String[] projectNames;
 	private final boolean build;
 	private final boolean disableIndexer;
+	private final String bundleName;
 
-	public BundledProjectSetup(String bundleName, String projectName,
-			Test test) {
+	public BundledProjectSetup(String bundleName, String projectName, Test test) {
 		this(bundleName, projectName, test, false);
 	}
 
-	public BundledProjectSetup(String bundleName, String projectName, Test test,
-			boolean build) {
+	public BundledProjectSetup(String bundleName, String projectName, Test test, boolean build) {
 		this(bundleName, new String[] { projectName }, test, build);
 	}
 
-	public BundledProjectSetup(String bundleName, String[] projectNames,
-			Test test, boolean build) {
+	public BundledProjectSetup(String bundleName, String[] projectNames, Test test, boolean build) {
 		this(bundleName, projectNames, test, build, false);
 	}
 
-	BundledProjectSetup(String bundleName, String[] projectNames, Test test,
-			boolean build, boolean disableIndexer) {
+	BundledProjectSetup(String bundleName, String[] projectNames, Test test, boolean build, boolean disableIndexer) {
 		super(test);
-		this.helper = new Helper(bundleName);
+		this.helper = new Helper();
 		this.projectNames = projectNames;
 		this.build = build;
 		this.disableIndexer = disableIndexer;
+		this.bundleName = bundleName;
 	}
 
 	@Override
@@ -168,17 +163,15 @@ public class BundledProjectSetup extends TestSetup {
 			ModelManager.getModelManager().getIndexManager().disable();
 		}
 		for (String projectName : projectNames) {
-			helper.setUpProject(projectName);
+			helper.setUpProject(projectName, bundleName);
 		}
 		if (build) {
 			final long start = System.currentTimeMillis();
 			for (String projectName : projectNames) {
-				getProject(projectName)
-						.build(IncrementalProjectBuilder.FULL_BUILD, null);
+				getProject(projectName).build(IncrementalProjectBuilder.FULL_BUILD, null);
 			}
-			System.out.println(
-					(System.currentTimeMillis() - start) + " ms to build "
-							+ Arrays.asList(projectNames) + " project(s)");
+			System.out.println((System.currentTimeMillis() - start) + " ms to build " + Arrays.asList(projectNames)
+					+ " project(s)");
 		}
 	}
 

@@ -27,8 +27,7 @@ import org.eclipse.dltk.internal.core.hierarchy.TypeHierarchy;
 
 public class TypeHierarchyTests extends ModifyingResourceTests {
 	private static boolean DEBUG = false;
-	private static final String[] TEST_NATURE = new String[] {
-			"org.eclipse.dltk.core.tests.testnature" };
+	private static final String[] TEST_NATURE = new String[] { "org.eclipse.dltk.core.tests.testnature" };
 
 	private ISourceModule cu = null;
 	private ISourceModule copy = null;
@@ -46,7 +45,7 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 	private boolean useCacheSuperclass = true;
 
 	public TypeHierarchyTests(String name) {
-		super(ModelTestsPlugin.PLUGIN_NAME, name);
+		super(name);
 	}
 
 	@Override
@@ -107,8 +106,7 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		}
 	}
 
-	private Map<String, SourceType> createFakeTypes(char begin, char end,
-			ModelElement modelElement) {
+	private Map<String, SourceType> createFakeTypes(char begin, char end, ModelElement modelElement) {
 		Map<String, SourceType> types = new HashMap<>();
 		for (char i = begin; i <= end; i++) {
 			String name = Character.toString(i);
@@ -117,8 +115,8 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		return types;
 	}
 
-	private void populate(SourceType parent, boolean isParentOnCyclicPath,
-			SourceType child, boolean isChildOnCyclicPath) {
+	private void populate(SourceType parent, boolean isParentOnCyclicPath, SourceType child,
+			boolean isChildOnCyclicPath) {
 		assertNotNull(parent);
 		assertNotNull(child);
 
@@ -166,70 +164,54 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		System.out.println();
 	}
 
-	private void exploreAllGraphThroughSubclasses(SourceType type,
-			boolean doReset) {
+	private void exploreAllGraphThroughSubclasses(SourceType type, boolean doReset) {
 		assertNotNull(type);
 		if (doReset) {
 			typeHierarchy.resetClassPaths();
 		}
 		typeHierarchy.getSubclasses(type);
 		printCurrentState();
-		assertEquals(typeHierarchy.getExploredClasses(),
-				expectedExploredClasses);
+		assertEquals(typeHierarchy.getExploredClasses(), expectedExploredClasses);
 		assertEquals(typeHierarchy.getCyclicClasses(), expectedCyclicClasses);
 	}
 
-	private void exploreAllGraphThroughSuperclasses(SourceType type,
-			boolean doReset) {
+	private void exploreAllGraphThroughSuperclasses(SourceType type, boolean doReset) {
 		assertNotNull(type);
 		if (doReset) {
 			typeHierarchy.resetClassPaths();
 		}
 		typeHierarchy.getSuperclass(type);
 		printCurrentState();
-		assertEquals(typeHierarchy.getExploredClasses(),
-				expectedExploredClasses);
+		assertEquals(typeHierarchy.getExploredClasses(), expectedExploredClasses);
 		assertEquals(typeHierarchy.getCyclicClasses(), expectedCyclicClasses);
 	}
 
-	private void explorePartialGraphThroughSubclasses(SourceType type,
-			boolean doReset) {
+	private void explorePartialGraphThroughSubclasses(SourceType type, boolean doReset) {
 		assertNotNull(type);
 		if (doReset) {
 			typeHierarchy.resetClassPaths();
 		}
 		typeHierarchy.getSubclasses(type);
 		printCurrentState();
-		assertTrue(!expectedExploredClasses.contains(type)
-				|| !typeHierarchy.getExploredClasses().isEmpty());
-		assertTrue(typeHierarchy.getExploredClasses()
-				.containsAll(typeHierarchy.getCyclicClasses()));
-		assertTrue(expectedExploredClasses
-				.containsAll(typeHierarchy.getExploredClasses()));
-		assertTrue(expectedExploredClasses
-				.containsAll(typeHierarchy.getCyclicClasses()));
-		assertTrue(expectedCyclicClasses
-				.containsAll(typeHierarchy.getCyclicClasses()));
+		assertTrue(!expectedExploredClasses.contains(type) || !typeHierarchy.getExploredClasses().isEmpty());
+		assertTrue(typeHierarchy.getExploredClasses().containsAll(typeHierarchy.getCyclicClasses()));
+		assertTrue(expectedExploredClasses.containsAll(typeHierarchy.getExploredClasses()));
+		assertTrue(expectedExploredClasses.containsAll(typeHierarchy.getCyclicClasses()));
+		assertTrue(expectedCyclicClasses.containsAll(typeHierarchy.getCyclicClasses()));
 	}
 
-	private void explorePartialGraphThroughSuperclasses(SourceType type,
-			boolean doReset) {
+	private void explorePartialGraphThroughSuperclasses(SourceType type, boolean doReset) {
 		assertNotNull(type);
 		if (doReset) {
 			typeHierarchy.resetClassPaths();
 		}
 		typeHierarchy.getSuperclass(type);
 		printCurrentState();
-		assertTrue(!expectedExploredClasses.contains(type)
-				|| !typeHierarchy.getExploredClasses().isEmpty());
-		assertTrue(typeHierarchy.getExploredClasses()
-				.containsAll(typeHierarchy.getCyclicClasses()));
-		assertTrue(expectedExploredClasses
-				.containsAll(typeHierarchy.getExploredClasses()));
-		assertTrue(expectedExploredClasses
-				.containsAll(typeHierarchy.getCyclicClasses()));
-		assertTrue(expectedCyclicClasses
-				.containsAll(typeHierarchy.getCyclicClasses()));
+		assertTrue(!expectedExploredClasses.contains(type) || !typeHierarchy.getExploredClasses().isEmpty());
+		assertTrue(typeHierarchy.getExploredClasses().containsAll(typeHierarchy.getCyclicClasses()));
+		assertTrue(expectedExploredClasses.containsAll(typeHierarchy.getExploredClasses()));
+		assertTrue(expectedExploredClasses.containsAll(typeHierarchy.getCyclicClasses()));
+		assertTrue(expectedCyclicClasses.containsAll(typeHierarchy.getCyclicClasses()));
 	}
 
 	public void testCyclicHierarchy001() throws Exception {
@@ -238,8 +220,7 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		assertTrue(p instanceof ModelElement);
 
 		typeHierarchy.resetClassPaths();
-		Map<String, SourceType> types = createFakeTypes('A', 'U',
-				(ModelElement) p);
+		Map<String, SourceType> types = createFakeTypes('A', 'U', (ModelElement) p);
 
 		// * Class hierarchy representation, "(c)" means that the relevant class
 		// in on a cyclic path
@@ -337,8 +318,7 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		assertTrue(p instanceof ModelElement);
 
 		typeHierarchy.resetClassPaths();
-		Map<String, SourceType> types = createFakeTypes('A', 'Z',
-				(ModelElement) p);
+		Map<String, SourceType> types = createFakeTypes('A', 'Z', (ModelElement) p);
 
 		// * Class hierarchy representation, "(c)" means that the relevant class
 		// in on a cyclic path
@@ -381,8 +361,7 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		assertTrue(p instanceof ModelElement);
 
 		typeHierarchy.resetClassPaths();
-		Map<String, SourceType> types = createFakeTypes('A', 'F',
-				(ModelElement) p);
+		Map<String, SourceType> types = createFakeTypes('A', 'F', (ModelElement) p);
 
 		// * Class hierarchy representation, "(c)" means that the relevant class
 		// in on a cyclic path
@@ -459,8 +438,7 @@ public class TypeHierarchyTests extends ModifyingResourceTests {
 		assertTrue(p instanceof ModelElement);
 
 		typeHierarchy.resetClassPaths();
-		Map<String, SourceType> types = createFakeTypes('A', 'H',
-				(ModelElement) p);
+		Map<String, SourceType> types = createFakeTypes('A', 'H', (ModelElement) p);
 
 		// * Class hierarchy representation, "(c)" means that the relevant class
 		// in on a cyclic path

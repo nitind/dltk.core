@@ -17,14 +17,15 @@ public class InterpreterConfigTests extends AbstractModelTests {
 	private IScriptProject scriptProject;
 
 	public InterpreterConfigTests(String name) {
-		super("org.eclipse.dltk.core.tests", name);
+		super(name);
 	}
 
 	// Configuration
 	@Override
 	public void setUpSuite() throws Exception {
 		super.setUpSuite();
-		scriptProject = setUpScriptProject(PROJECT_NAME);
+		scriptProject = setUpScriptProject(PROJECT_NAME,
+				"org.eclipse.dltk.core.tests");
 	}
 
 	@Override

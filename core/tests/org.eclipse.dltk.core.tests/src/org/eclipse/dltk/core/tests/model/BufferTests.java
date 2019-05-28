@@ -26,16 +26,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 @RunWith(BlockJUnit4ClassRunner.class)
-public class BufferTests extends ModifyingResourceTests
-		implements IBufferChangedListener {
+public class BufferTests extends ModifyingResourceTests implements IBufferChangedListener {
 
-	final static String[] TEST_NATURES = new String[] {
-			ModelTestsPlugin.TEST_NATURE };
+	final static String[] TEST_NATURES = new String[] { ModelTestsPlugin.TEST_NATURE };
 
 	protected ArrayList<BufferChangedEvent> events = null;
 
 	public BufferTests() {
-		super(ModelTestsPlugin.PLUGIN_NAME, "");
+		super("");
 	}
 
 	@BeforeClass
@@ -54,8 +52,7 @@ public class BufferTests extends ModifyingResourceTests
 		AbstractModelTests.deleteProject("P");
 	}
 
-	protected IBuffer createBuffer(String path, String content)
-			throws CoreException {
+	protected IBuffer createBuffer(String path, String content) throws CoreException {
 		waitUntilIndexesReady(); // ensure that the indexer is not reading the
 									// file
 		this.createFile(path, content);
@@ -96,18 +93,14 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testAppend() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
 			int oldLength = buffer.getLength();
 			buffer.append("\nclass B {}");
 			assertBufferEvent(oldLength, 0, "\nclass B {}");
-			assertSourceEquals(
-					"unexpected buffer contents", "package x.y;\n"
-							+ "public class A {\n" + "}\n" + "class B {}",
-					buffer.getContents());
-			assertTrue("should have unsaved changes",
-					buffer.hasUnsavedChanges());
+			assertSourceEquals("unexpected buffer contents",
+					"package x.y;\n" + "public class A {\n" + "}\n" + "class B {}", buffer.getContents());
+			assertTrue("should have unsaved changes", buffer.hasUnsavedChanges());
 		} finally {
 			this.deleteBuffer(buffer);
 		}
@@ -115,8 +108,7 @@ public class BufferTests extends ModifyingResourceTests
 
 	@Test
 	public void testClose() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
 			buffer.close();
 			assertBufferEvent(0, 0, null);
@@ -130,17 +122,14 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testGetUnderlyingResource() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		ISourceModule copy = null;
 		try {
 			IFile file = this.getFile("P/x/y/A.txt");
-			assertEquals("Unexpected underlying resource", file,
-					buffer.getUnderlyingResource());
+			assertEquals("Unexpected underlying resource", file, buffer.getUnderlyingResource());
 
 			copy = this.getSourceModule("P/x/y/A.txt").getWorkingCopy(null);
-			assertEquals("Unexpected underlying resource 2", file,
-					copy.getBuffer().getUnderlyingResource());
+			assertEquals("Unexpected underlying resource 2", file, copy.getBuffer().getUnderlyingResource());
 		} finally {
 			this.deleteBuffer(buffer);
 			if (copy != null) {
@@ -154,15 +143,12 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testDeleteBeginning() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
 			buffer.replace(0, 13, "");
 			assertBufferEvent(0, 13, null);
-			assertSourceEquals("unexpected buffer contents",
-					"public class A {\n" + "}", buffer.getContents());
-			assertTrue("should have unsaved changes",
-					buffer.hasUnsavedChanges());
+			assertSourceEquals("unexpected buffer contents", "public class A {\n" + "}", buffer.getContents());
+			assertTrue("should have unsaved changes", buffer.hasUnsavedChanges());
 		} finally {
 			this.deleteBuffer(buffer);
 		}
@@ -173,17 +159,14 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testDeleteMiddle() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
 			// delete "public "
 			buffer.replace(13, 7, "");
 			assertBufferEvent(13, 7, null);
-			assertSourceEquals("unexpected buffer contents",
-					"package x.y;\n" + "class A {\n" + "}",
+			assertSourceEquals("unexpected buffer contents", "package x.y;\n" + "class A {\n" + "}",
 					buffer.getContents());
-			assertTrue("should have unsaved changes",
-					buffer.hasUnsavedChanges());
+			assertTrue("should have unsaved changes", buffer.hasUnsavedChanges());
 		} finally {
 			this.deleteBuffer(buffer);
 		}
@@ -194,16 +177,13 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testDeleteEnd() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
 			// delete "public class A {\n}"
 			buffer.replace(13, 18, "");
 			assertBufferEvent(13, 18, null);
-			assertSourceEquals("unexpected buffer contents", "package x.y;\n",
-					buffer.getContents());
-			assertTrue("should have unsaved changes",
-					buffer.hasUnsavedChanges());
+			assertSourceEquals("unexpected buffer contents", "package x.y;\n", buffer.getContents());
+			assertTrue("should have unsaved changes", buffer.hasUnsavedChanges());
 		} finally {
 			this.deleteBuffer(buffer);
 		}
@@ -214,11 +194,9 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testGetChar() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
-			assertEquals("Unexpected char at position 17", 'i',
-					buffer.getChar(17));
+			assertEquals("Unexpected char at position 17", 'i', buffer.getChar(17));
 		} finally {
 			this.deleteBuffer(buffer);
 		}
@@ -231,12 +209,10 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testGetChar2() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		buffer.close();
 		try {
-			assertEquals("Unexpected char at position 17", Character.MIN_VALUE,
-					buffer.getChar(17));
+			assertEquals("Unexpected char at position 17", Character.MIN_VALUE, buffer.getChar(17));
 		} finally {
 			this.deleteBuffer(buffer);
 		}
@@ -247,8 +223,7 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testGetLength() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
 			assertEquals("Unexpected length", 31, buffer.getLength());
 		} finally {
@@ -261,15 +236,11 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testGetText() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
-			assertSourceEquals("Unexpected text (1)", "p",
-					buffer.getText(0, 1));
-			assertSourceEquals("Unexpected text (2)", "public",
-					buffer.getText(13, 6));
-			assertSourceEquals("Unexpected text (3)", "",
-					buffer.getText(10, 0));
+			assertSourceEquals("Unexpected text (1)", "p", buffer.getText(0, 1));
+			assertSourceEquals("Unexpected text (2)", "public", buffer.getText(13, 6));
+			assertSourceEquals("Unexpected text (3)", "", buffer.getText(10, 0));
 		} finally {
 			this.deleteBuffer(buffer);
 		}
@@ -280,17 +251,14 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testInsertBeginning() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
 			buffer.replace(0, 0, "/* copyright mycompany */\n");
 			assertBufferEvent(0, 0, "/* copyright mycompany */\n");
-			assertSourceEquals(
-					"unexpected buffer contents", "/* copyright mycompany */\n"
-							+ "package x.y;\n" + "public class A {\n" + "}",
+			assertSourceEquals("unexpected buffer contents",
+					"/* copyright mycompany */\n" + "package x.y;\n" + "public class A {\n" + "}",
 					buffer.getContents());
-			assertTrue("should have unsaved changes",
-					buffer.hasUnsavedChanges());
+			assertTrue("should have unsaved changes", buffer.hasUnsavedChanges());
 		} finally {
 			this.deleteBuffer(buffer);
 		}
@@ -301,16 +269,13 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testReplaceBeginning() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
 			buffer.replace(0, 13, "package other;\n");
 			assertBufferEvent(0, 13, "package other;\n");
-			assertSourceEquals("unexpected buffer contents",
-					"package other;\n" + "public class A {\n" + "}",
+			assertSourceEquals("unexpected buffer contents", "package other;\n" + "public class A {\n" + "}",
 					buffer.getContents());
-			assertTrue("should have unsaved changes",
-					buffer.hasUnsavedChanges());
+			assertTrue("should have unsaved changes", buffer.hasUnsavedChanges());
 		} finally {
 			this.deleteBuffer(buffer);
 		}
@@ -321,17 +286,14 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testReplaceMiddle() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
 			// replace "public class A" after the \n of package statement
 			buffer.replace(13, 14, "public class B");
 			assertBufferEvent(13, 14, "public class B");
-			assertSourceEquals("unexpected buffer contents",
-					"package x.y;\n" + "public class B {\n" + "}",
+			assertSourceEquals("unexpected buffer contents", "package x.y;\n" + "public class B {\n" + "}",
 					buffer.getContents());
-			assertTrue("should have unsaved changes",
-					buffer.hasUnsavedChanges());
+			assertTrue("should have unsaved changes", buffer.hasUnsavedChanges());
 		} finally {
 			this.deleteBuffer(buffer);
 		}
@@ -342,18 +304,15 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testReplaceEnd() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
 			// replace "}" at the end of cu with "}\n"
 			int end = buffer.getLength();
 			buffer.replace(end - 1, 1, "}\n");
 			assertBufferEvent(end - 1, 1, "}\n");
-			assertSourceEquals("unexpected buffer contents",
-					"package x.y;\n" + "public class A {\n" + "}\n",
+			assertSourceEquals("unexpected buffer contents", "package x.y;\n" + "public class A {\n" + "}\n",
 					buffer.getContents());
-			assertTrue("should have unsaved changes",
-					buffer.hasUnsavedChanges());
+			assertTrue("should have unsaved changes", buffer.hasUnsavedChanges());
 		} finally {
 			this.deleteBuffer(buffer);
 		}
@@ -364,17 +323,14 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testInsertMiddle() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
 			// insert after the \n of package statement
 			buffer.replace(13, 0, "/* class comment */\n");
 			assertBufferEvent(13, 0, "/* class comment */\n");
-			assertSourceEquals("unexpected buffer contents", "package x.y;\n"
-					+ "/* class comment */\n" + "public class A {\n" + "}",
-					buffer.getContents());
-			assertTrue("should have unsaved changes",
-					buffer.hasUnsavedChanges());
+			assertSourceEquals("unexpected buffer contents",
+					"package x.y;\n" + "/* class comment */\n" + "public class A {\n" + "}", buffer.getContents());
+			assertTrue("should have unsaved changes", buffer.hasUnsavedChanges());
 		} finally {
 			this.deleteBuffer(buffer);
 		}
@@ -385,19 +341,15 @@ public class BufferTests extends ModifyingResourceTests
 	 */
 	@Test
 	public void testInsertEnd() throws CoreException {
-		IBuffer buffer = this.createBuffer("P/x/y/A.txt",
-				"package x.y;\n" + "public class A {\n" + "}");
+		IBuffer buffer = this.createBuffer("P/x/y/A.txt", "package x.y;\n" + "public class A {\n" + "}");
 		try {
 			// insert after the \n of package statement
 			int end = buffer.getLength();
 			buffer.replace(end, 0, "\nclass B {}");
 			assertBufferEvent(end, 0, "\nclass B {}");
-			assertSourceEquals(
-					"unexpected buffer contents", "package x.y;\n"
-							+ "public class A {\n" + "}\n" + "class B {}",
-					buffer.getContents());
-			assertTrue("should have unsaved changes",
-					buffer.hasUnsavedChanges());
+			assertSourceEquals("unexpected buffer contents",
+					"package x.y;\n" + "public class A {\n" + "}\n" + "class B {}", buffer.getContents());
+			assertTrue("should have unsaved changes", buffer.hasUnsavedChanges());
 		} finally {
 			this.deleteBuffer(buffer);
 		}

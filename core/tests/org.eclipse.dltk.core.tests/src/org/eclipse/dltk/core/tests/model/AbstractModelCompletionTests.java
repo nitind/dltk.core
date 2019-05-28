@@ -3,17 +3,15 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.core.tests.model;
 
 import java.util.Hashtable;
 import java.util.List;
-
-import junit.framework.ComparisonFailure;
 
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
@@ -22,10 +20,12 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.WorkingCopyOwner;
 
+import junit.framework.ComparisonFailure;
 
 public abstract class AbstractModelCompletionTests extends AbstractModelTests {
 	public static List<?> COMPLETION_SUITES = null;
 	protected IScriptProject PROJECT;
+
 	protected class CompletionResult {
 		public String proposals;
 		public String context;
@@ -33,11 +33,12 @@ public abstract class AbstractModelCompletionTests extends AbstractModelTests {
 		public int tokenStart;
 		public int tokenEnd;
 	}
+
 	Hashtable<?, ?> oldOptions;
 	ISourceModule wc = null;
 
-	public AbstractModelCompletionTests(String projectName, String name) {
-		super(projectName, name);
+	public AbstractModelCompletionTests(String name) {
+		super(name);
 	}
 
 	@Override
@@ -49,12 +50,13 @@ public abstract class AbstractModelCompletionTests extends AbstractModelTests {
 		return this.complete(path, source, false, completeBehind);
 	}
 
-	protected CompletionResult complete(String path, String source, boolean showPositions, String completeBehind) throws ModelException {
+	protected CompletionResult complete(String path, String source, boolean showPositions, String completeBehind)
+			throws ModelException {
 		return this.complete(path, source, showPositions, completeBehind, null, null);
 	}
 
-	protected CompletionResult complete(String path, String source, boolean showPositions, String completeBehind, String tokenStartBehind,
-			String token) throws ModelException {
+	protected CompletionResult complete(String path, String source, boolean showPositions, String completeBehind,
+			String tokenStartBehind, String token) throws ModelException {
 		this.wc = getWorkingCopy(path, source);
 		CompletionTestsRequestor2 requestor = new CompletionTestsRequestor2(true, false, showPositions);
 		String str = this.wc.getSource();
@@ -77,7 +79,7 @@ public abstract class AbstractModelCompletionTests extends AbstractModelTests {
 
 	protected CompletionResult contextComplete(ISourceModule cu, int cursorLocation) throws ModelException {
 		CompletionTestsRequestor2 requestor = new CompletionTestsRequestor2(true, false, false, false);
-		cu.codeComplete(cursorLocation, requestor, this.wcOwner,10000);
+		cu.codeComplete(cursorLocation, requestor, this.wcOwner, 10000);
 		CompletionResult result = new CompletionResult();
 		result.proposals = requestor.getResults();
 		result.context = requestor.getContext();
@@ -85,10 +87,11 @@ public abstract class AbstractModelCompletionTests extends AbstractModelTests {
 		return result;
 	}
 
-	protected CompletionResult snippetContextComplete(IType type, String snippet, int insertion, int cursorLocation, boolean isStatic)
-			throws ModelException {
+	protected CompletionResult snippetContextComplete(IType type, String snippet, int insertion, int cursorLocation,
+			boolean isStatic) throws ModelException {
 		CompletionTestsRequestor2 requestor = new CompletionTestsRequestor2(true, false, false, false);
-		type.codeComplete(snippet.toCharArray(), insertion, cursorLocation, null, null, null, isStatic, requestor, this.wcOwner);
+		type.codeComplete(snippet.toCharArray(), insertion, cursorLocation, null, null, null, isStatic, requestor,
+				this.wcOwner);
 		CompletionResult result = new CompletionResult();
 		result.proposals = requestor.getResults();
 		result.context = requestor.getContext();

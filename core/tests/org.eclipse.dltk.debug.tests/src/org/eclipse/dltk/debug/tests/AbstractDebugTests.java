@@ -4,8 +4,8 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.tests.model.AbstractModelTests;
 
 public abstract class AbstractDebugTests extends AbstractModelTests {
-	public AbstractDebugTests(String testProjectName, String name) {
-		super(testProjectName, name);
+	public AbstractDebugTests(String name) {
+		super(name);
 	}
 
 	protected IScriptProject scriptProject;
@@ -15,7 +15,7 @@ public abstract class AbstractDebugTests extends AbstractModelTests {
 	public void setUpSuite() throws Exception {
 		super.setUpSuite();
 
-		scriptProject = setUpScriptProject(getProjectName());
+		scriptProject = setUpScriptProject(getProjectName(), "org.eclipse.dltk.debug.tests");
 
 		// final IProject project = scriptProject.getProject();
 		// IProjectDescription description = project.getDescription();

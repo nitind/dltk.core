@@ -31,13 +31,13 @@ public class ModelElementUtilTests extends AbstractModelTests {
 	 * @param name
 	 */
 	public ModelElementUtilTests(String name) {
-		super(DLTKUITestsPlugin.PLUGIN_ID, name);
+		super(name);
 	}
 
 	public void testGetPackageAndSubpackages() throws CoreException,
 			IOException {
 		final String projectName = "subpackages";
-		setUpScriptProject(projectName);
+		setUpScriptProject(projectName, DLTKUITestsPlugin.PLUGIN_ID);
 		try {
 			waitUntilIndexesReady();
 			IScriptFolder folder0 = getScriptFolder(projectName,
