@@ -980,7 +980,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 	 * be written. (regression test for bug
 	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=70193)
 	 */
-	public void testEncoding() throws CoreException, IOException {
+	public void _testEncoding() throws CoreException, IOException {
 		try {
 			createScriptProject("P", TEST_NATURE, new String[] { "src\u3400" });
 			IFile file = getFile("/P/.buildpath");
