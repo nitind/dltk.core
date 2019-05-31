@@ -109,8 +109,6 @@ public class BuildpathTests extends ModifyingResourceTests {
 		setUpScriptProject(BUILDPATH_PRJ_1, ModelTestsPlugin.PLUGIN_NAME);
 		setUpScriptProject("p1", ModelTestsPlugin.PLUGIN_NAME);
 		setUpScriptProject("p2", ModelTestsPlugin.PLUGIN_NAME);
-		deleteProject("P");
-
 	}
 
 	private void assertEncodeDecodeEntry(String projectName, String expectedEncoded, IBuildpathEntry entry) {
