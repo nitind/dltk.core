@@ -9,6 +9,8 @@
  *******************************************************************************/
 package org.eclipse.dltk.core.tests.buildpath;
 
+import static org.junit.Assert.assertArrayEquals;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -121,19 +123,11 @@ public class BuildpathTests extends ModifyingResourceTests {
 
 	protected void assertStatus(String expected, IStatus status) {
 		String actual = status.getMessage();
-		if (!expected.equals(actual)) {
-			// System.out.print(Util.displayString(actual, 2));
-			// System.out.println(",");
-		}
 		assertEquals(expected, actual);
 	}
 
 	protected void assertStatus(String message, String expected, IStatus status) {
 		String actual = status.getMessage();
-		if (!expected.equals(actual)) {
-			// System.out.print(Util.displayString(actual, 2));
-			// System.out.println(",");
-		}
 		assertEquals(message, expected, actual);
 	}
 
@@ -159,8 +153,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 		IMarker[] markers = scriptProject.getProject().findMarkers(IModelMarker.BUILDPATH_PROBLEM_MARKER, false,
 				IResource.DEPTH_ZERO);
 		int result = 0;
-		for (int i = 0, length = markers.length; i < length; i++) {
-			IMarker marker = markers[i];
+		for (IMarker marker : markers) {
 			String cycleAttr = (String) marker.getAttribute(IModelMarker.CYCLE_DETECTED);
 			if (cycleAttr != null && cycleAttr.equals("true")) { //$NON-NLS-1$
 				result++;
@@ -221,39 +214,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 
 	public void test002() throws ModelException {
 		ScriptProject project = (ScriptProject) getScriptProject(BUILDPATH_PRJ_0);
-		ScriptProject project2 = (ScriptProject) getScriptProject(BUILDPATH_PRJ_1);
 		assertNotNull(project);
-		IProjectFragment fragments[] = project.getProjectFragments();
-		IBuildpathEntry entrys[] = project.getResolvedBuildpath();
-
-		// CorePrinter cPrinter = new CorePrinter(System.out);
-		// System.out.println("Project 1 model:");
-		// project.printNode(cPrinter);
-		// cPrinter.flush();
-		// System.out.println("Project 2 model:");
-		// project2.printNode(cPrinter);
-		// cPrinter.flush();
-	}
-
-	/**
-	 * Testie container test
-	 *
-	 * @throws ModelException
-	 */
-	public void test003() throws ModelException {
-		ScriptProject project = (ScriptProject) getScriptProject(BUILDPATH_PRJ_0);
-		ScriptProject project2 = (ScriptProject) getScriptProject(BUILDPATH_PRJ_1);
-		assertNotNull(project);
-		IProjectFragment fragments[] = project.getProjectFragments();
-		IBuildpathEntry entrys[] = project.getResolvedBuildpath();
-
-		// CorePrinter cPrinter = new CorePrinter(System.out);
-		// System.out.println("Project 1 model:");
-		// project.printNode(cPrinter);
-		// cPrinter.flush();
-		// System.out.println("Project 2 model:");
-		// project2.printNode(cPrinter);
-		// cPrinter.flush();
 	}
 
 	/**
@@ -272,10 +233,7 @@ public class BuildpathTests extends ModifyingResourceTests {
 			IProjectFragment[] fragments = project.getProjectFragments();
 			assertEquals(1, fragments.length);
 			assertTrue(fragments[0] instanceof ArchiveProjectFragment);
-			IProjectFragment fragment = fragments[0];
-			IModelElement[] elements = fragment.getChildren();
 
-			// System.out.println("Model:");
 			CorePrinter printer = new CorePrinter(System.out);
 			((ScriptProject) project).printNode(printer);
 			printer.flush();
@@ -839,16 +797,10 @@ public class BuildpathTests extends ModifyingResourceTests {
 			project.setRawBuildpath(newPath, null);
 
 			IBuildpathEntry[] getPath = project.getRawBuildpath();
-			assertTrue("should be the same length", getPath.length == newPath.length);
-			for (int i = 0; i < getPath.length; i++) {
-				assertTrue("entries should be the same", getPath[i].equals(newPath[i]));
-			}
+			assertArrayEquals(getPath, newPath);
 
 			IProjectFragment[] newRoots = project.getProjectFragments();
-			assertTrue("Should be the same number of roots", originalRoots.length == newRoots.length);
-			for (int i = 0; i < newRoots.length; i++) {
-				assertTrue("roots should be the same", originalRoots[i].equals(newRoots[i]));
-			}
+			assertArrayEquals(originalRoots, newRoots);
 		} finally {
 			AbstractModelTests.deleteProject("P");
 		}
@@ -874,16 +826,10 @@ public class BuildpathTests extends ModifyingResourceTests {
 			project.setRawBuildpath(newPath, null);
 
 			IBuildpathEntry[] getPath = project.getRawBuildpath();
-			assertTrue("should be the same length", getPath.length == newPath.length);
-			for (int i = 0; i < getPath.length; i++) {
-				assertTrue("entries should be the same", getPath[i].equals(newPath[i]));
-			}
+			assertArrayEquals(getPath, newPath);
 
 			IProjectFragment[] newRoots = project.getProjectFragments();
-			assertTrue("Should be the same number of roots", originalRoots.length == newRoots.length);
-			for (int i = 0; i < newRoots.length; i++) {
-				assertTrue("roots should be the same", originalRoots[i].equals(newRoots[i]));
-			}
+			assertArrayEquals(originalRoots, newRoots);
 		} finally {
 			AbstractModelTests.deleteProject("P");
 		}
@@ -977,8 +923,8 @@ public class BuildpathTests extends ModifyingResourceTests {
 
 			waitForAutoBuild(); // wait for cycle markers to be created
 			cycleMarkerCount = 0;
-			for (int i = 0; i < projects.length; i++) {
-				cycleMarkerCount += numberOfCycleMarkers(projects[i]);
+			for (IScriptProject project : projects) {
+				cycleMarkerCount += numberOfCycleMarkers(project);
 			}
 			assertEquals("Unexpected number of projects involved in a buildpath cycle", 3, cycleMarkerCount);
 
