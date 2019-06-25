@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.dltk.core.index.lucene.sdk"
       label="%featureName"
-      version="5.11.0.qualifier"
+      version="6.0.0.qualifier"
       provider-name="%providerName"
       image="eclipse_update_120.jpg"
       license-feature="org.eclipse.license"
@@ -17,7 +17,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.dltk.core.index.lucene" version="5.5.0.qualifier"/>
+      <import feature="org.eclipse.dltk.core.index.lucene" version="6.0.0" match="compatible"/>
    </requires>
 
    <plugin
