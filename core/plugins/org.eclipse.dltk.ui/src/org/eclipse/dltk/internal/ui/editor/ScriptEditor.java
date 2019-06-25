@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -193,8 +193,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import com.ibm.icu.text.BreakIterator;
 
 public abstract class ScriptEditor extends AbstractDecoratedTextEditor
-		implements IScriptReconcilingListener, IScriptLanguageProvider,
-		IScriptEditor {
+		implements IScriptReconcilingListener, IScriptLanguageProvider, IScriptEditor {
 
 	/** The editor's save policy */
 	protected ISavePolicy fSavePolicy = null;
@@ -208,10 +207,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 	private OccurrencesFinder occurrencesFinder;
 
-	private static String[] GLOBAL_FOLDING_PROPERTIES = {
-			PreferenceConstants.EDITOR_FOLDING_ENABLED,
-			PreferenceConstants.EDITOR_COMMENTS_FOLDING_ENABLED,
-			PreferenceConstants.EDITOR_FOLDING_LINES_LIMIT,
+	private static String[] GLOBAL_FOLDING_PROPERTIES = { PreferenceConstants.EDITOR_FOLDING_ENABLED,
+			PreferenceConstants.EDITOR_COMMENTS_FOLDING_ENABLED, PreferenceConstants.EDITOR_FOLDING_LINES_LIMIT,
 			PreferenceConstants.EDITOR_COMMENT_FOLDING_JOIN_NEWLINES };
 
 	public ISourceViewer getScriptSourceViewer() {
@@ -233,8 +230,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		public final Stack fStack;
 		public final int fSize;
 
-		public ExitPolicy(char exitCharacter, char escapeCharacter,
-				Stack stack) {
+		public ExitPolicy(char exitCharacter, char escapeCharacter, Stack stack) {
 			fExitCharacter = exitCharacter;
 			fEscapeCharacter = escapeCharacter;
 			fStack = stack;
@@ -242,25 +238,21 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		}
 
 		/*
-		 * @see
-		 * org.eclipse.jdt.internal.ui.text.link.LinkedPositionUI.ExitPolicy
+		 * @see org.eclipse.jdt.internal.ui.text.link.LinkedPositionUI.ExitPolicy
 		 * #doExit(org.eclipse.jdt.internal.ui.text.link.LinkedPositionManager,
 		 * org.eclipse.swt.events.VerifyEvent, int, int)
 		 */
 		@Override
-		public ExitFlags doExit(LinkedModeModel model, VerifyEvent event,
-				int offset, int length) {
+		public ExitFlags doExit(LinkedModeModel model, VerifyEvent event, int offset, int length) {
 
 			if (fSize == fStack.size() && !isMasked(offset)) {
 				if (event.character == fExitCharacter) {
 					BracketLevel level = (BracketLevel) fStack.peek();
-					if (level.fFirstPosition.offset > offset
-							|| level.fSecondPosition.offset < offset)
+					if (level.fFirstPosition.offset > offset || level.fSecondPosition.offset < offset)
 						return null;
 					if (level.fSecondPosition.offset == offset && length == 0)
 						// don't enter the character if if its the closing peer
-						return new ExitFlags(ILinkedModeListener.UPDATE_CARET,
-								false);
+						return new ExitFlags(ILinkedModeListener.UPDATE_CARET, false);
 				}
 				// when entering an anonymous class between the parenthesis', we
 				// don't want
@@ -274,8 +266,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 					IDocument document = getSourceViewer().getDocument();
 					try {
 						if (document.getChar(offset - 1) == '{')
-							return new ExitFlags(ILinkedModeListener.EXIT_ALL,
-									true);
+							return new ExitFlags(ILinkedModeListener.EXIT_ALL, true);
 					} catch (BadLocationException e) {
 					}
 				}
@@ -301,16 +292,14 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		/**
 		 * Creates a new updater for the given <code>category</code>.
 		 *
-		 * @param category
-		 *                     the new category.
+		 * @param category the new category.
 		 */
 		public ExclusivePositionUpdater(String category) {
 			fCategory = category;
 		}
 
 		/*
-		 * @see
-		 * org.eclipse.jface.text.IPositionUpdater#update(org.eclipse.jface.
+		 * @see org.eclipse.jface.text.IPositionUpdater#update(org.eclipse.jface.
 		 * text.DocumentEvent)
 		 */
 		@Override
@@ -318,13 +307,11 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 			int eventOffset = event.getOffset();
 			int eventOldLength = event.getLength();
-			int eventNewLength = event.getText() == null ? 0
-					: event.getText().length();
+			int eventNewLength = event.getText() == null ? 0 : event.getText().length();
 			int deltaLength = eventNewLength - eventOldLength;
 
 			try {
-				Position[] positions = event.getDocument()
-						.getPositions(fCategory);
+				Position[] positions = event.getDocument().getPositions(fCategory);
 
 				for (int i = 0; i != positions.length; i++) {
 
@@ -344,8 +331,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 					else if (end <= eventOffset) {
 						// position comes way before change -
 						// leave alone
-					} else if (offset <= eventOffset
-							&& end >= eventOffset + eventOldLength) {
+					} else if (offset <= eventOffset && end >= eventOffset + eventOldLength) {
 						// event completely internal to the position - adjust
 						// length
 						position.setLength(length + deltaLength);
@@ -389,12 +375,10 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	public static final int CONTENTASSIST_COMPLETE_PREFIX = 60;
 
 	interface ITextConverter {
-		void customizeDocumentCommand(IDocument document,
-				DocumentCommand command);
+		void customizeDocumentCommand(IDocument document, DocumentCommand command);
 	}
 
-	class AdaptedSourceViewer extends ScriptSourceViewer
-			implements ICompletionListener {
+	class AdaptedSourceViewer extends ScriptSourceViewer implements ICompletionListener {
 		private List<ITextConverter> fTextConverters;
 
 		private boolean fIgnoreTextConverters = false;
@@ -404,12 +388,9 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			return fContentAssistant;
 		}
 
-		public AdaptedSourceViewer(Composite parent,
-				IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
-				boolean showAnnotationsOverview, int styles,
-				IPreferenceStore store) {
-			super(parent, verticalRuler, overviewRuler, showAnnotationsOverview,
-					styles, store);
+		public AdaptedSourceViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
+				boolean showAnnotationsOverview, int styles, IPreferenceStore store) {
+			super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles, store);
 		}
 
 		@Override
@@ -426,8 +407,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		public void unconfigure() {
 			final IContentAssistant ca = getContentAssistant();
 			if (ca instanceof IContentAssistantExtension2) {
-				((IContentAssistantExtension2) ca)
-						.removeCompletionListener(this);
+				((IContentAssistantExtension2) ca).removeCompletionListener(this);
 			}
 
 			super.unconfigure();
@@ -449,9 +429,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 				return;
 			case QUICK_ASSIST:
 				/*
-				 * XXX: We can get rid of this once the SourceViewer has a way
-				 * to update the status line
-				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=133787
+				 * XXX: We can get rid of this once the SourceViewer has a way to update the
+				 * status line https://bugs.eclipse.org/bugs/show_bug.cgi?id=133787
 				 */
 				msg = fQuickAssistAssistant.showPossibleQuickAssists();
 				setStatusLineErrorMessage(msg);
@@ -471,8 +450,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			super.doOperation(operation);
 		}
 
-		public void insertTextConverter(ITextConverter textConverter,
-				int index) {
+		public void insertTextConverter(ITextConverter textConverter, int index) {
 			throw new UnsupportedOperationException();
 		}
 
@@ -506,17 +484,14 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 		@Override
 		public boolean requestWidgetToken(IWidgetTokenKeeper requester) {
-			if (PlatformUI.getWorkbench().getHelpSystem()
-					.isContextHelpDisplayed())
+			if (PlatformUI.getWorkbench().getHelpSystem().isContextHelpDisplayed())
 				return false;
 			return super.requestWidgetToken(requester);
 		}
 
 		@Override
-		public boolean requestWidgetToken(IWidgetTokenKeeper requester,
-				int priority) {
-			if (PlatformUI.getWorkbench().getHelpSystem()
-					.isContextHelpDisplayed())
+		public boolean requestWidgetToken(IWidgetTokenKeeper requester, int priority) {
+			if (PlatformUI.getWorkbench().getHelpSystem().isContextHelpDisplayed())
 				return false;
 			return super.requestWidgetToken(requester, priority);
 		}
@@ -532,8 +507,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		}
 
 		@Override
-		public void selectionChanged(ICompletionProposal proposal,
-				boolean smartToggle) {
+		public void selectionChanged(ICompletionProposal proposal, boolean smartToggle) {
 		}
 
 		private IProject getProject() {
@@ -550,8 +524,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		private ISourceModule getSourceModule() {
 			final IModelElement input = getInputModelElement();
 			if (input != null) {
-				return (ISourceModule) input
-						.getAncestor(IModelElement.SOURCE_MODULE);
+				return (ISourceModule) input.getAncestor(IModelElement.SOURCE_MODULE);
 			}
 			return null;
 		}
@@ -559,23 +532,16 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		@Override
 		public IFormattingContext createFormattingContext() {
 			final IFormattingContext context = super.createFormattingContext();
-			context.setProperty(ScriptFormattingContextProperties.MODULE,
-					getSourceModule());
+			context.setProperty(ScriptFormattingContextProperties.MODULE, getSourceModule());
 			final IProject project = getProject();
-			context.setProperty(
-					ScriptFormattingContextProperties.CONTEXT_PROJECT, project);
+			context.setProperty(ScriptFormattingContextProperties.CONTEXT_PROJECT, project);
 			final IScriptFormatterFactory factory = ScriptFormatterManager
 					.getSelected(getLanguageToolkit().getNatureId(), project);
 			if (factory != null) {
-				context.setProperty(
-						ScriptFormattingContextProperties.CONTEXT_FORMATTER_ID,
-						factory.getId());
+				context.setProperty(ScriptFormattingContextProperties.CONTEXT_FORMATTER_ID, factory.getId());
 				final Map<String, String> preferences = factory
-						.retrievePreferences(
-								new PreferencesLookupDelegate(project));
-				context.setProperty(
-						FormattingContextProperties.CONTEXT_PREFERENCES,
-						preferences);
+						.retrievePreferences(new PreferencesLookupDelegate(project));
+				context.setProperty(FormattingContextProperties.CONTEXT_PREFERENCES, preferences);
 			}
 			return context;
 		}
@@ -586,13 +552,12 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 *
 	 *
 	 */
-	protected abstract class AbstractSelectionChangedListener
-			implements ISelectionChangedListener {
+	protected abstract class AbstractSelectionChangedListener implements ISelectionChangedListener {
 		/**
-		 * Installs this selection changed listener with the given selection
-		 * provider. If the selection provider is a post selection provider,
-		 * post selection changed events are the preferred choice, otherwise
-		 * normal selection changed events are requested.
+		 * Installs this selection changed listener with the given selection provider.
+		 * If the selection provider is a post selection provider, post selection
+		 * changed events are the preferred choice, otherwise normal selection changed
+		 * events are requested.
 		 *
 		 * @param selectionProvider
 		 */
@@ -608,11 +573,9 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		}
 
 		/**
-		 * Removes this selection changed listener from the given selection
-		 * provider.
+		 * Removes this selection changed listener from the given selection provider.
 		 *
-		 * @param selectionProvider
-		 *                              the selection provider
+		 * @param selectionProvider the selection provider
 		 */
 		public void uninstall(ISelectionProvider selectionProvider) {
 			if (selectionProvider == null)
@@ -630,8 +593,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * Updates the selection in the editor's widget with the selection of the
 	 * outline page.
 	 */
-	class OutlineSelectionChangedListener
-			extends AbstractSelectionChangedListener {
+	class OutlineSelectionChangedListener extends AbstractSelectionChangedListener {
 		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			doSelectionChanged(event);
@@ -664,16 +626,13 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	private AbstractSelectionChangedListener fOutlineSelectionChangedListener = new OutlineSelectionChangedListener();
 
 	/**
-	 * Updates the script outline page selection and this editor's range
-	 * indicator.
+	 * Updates the script outline page selection and this editor's range indicator.
 	 *
 	 *
 	 */
-	private class EditorSelectionChangedListener
-			extends AbstractSelectionChangedListener {
+	private class EditorSelectionChangedListener extends AbstractSelectionChangedListener {
 		/*
-		 * @see
-		 * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged
+		 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged
 		 * (org.eclipse.jface.viewers.SelectionChangedEvent)
 		 */
 		@Override
@@ -690,8 +649,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 	public ScriptEditor() {
 		super();
-		setDocumentProvider(
-				DLTKUIPlugin.getDefault().getSourceModuleDocumentProvider());
+		setDocumentProvider(DLTKUIPlugin.getDefault().getSourceModuleDocumentProvider());
 		fScriptEditorErrorTickUpdater = new ScriptEditorErrorTickUpdater(this);
 	}
 
@@ -702,12 +660,10 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	protected void handleElementContentReplaced() {
 		super.handleElementContentReplaced();
 
-		IAnnotationModel annotationModel = getScriptSourceViewer()
-				.getAnnotationModel();
+		IAnnotationModel annotationModel = getScriptSourceViewer().getAnnotationModel();
 		if (annotationModel instanceof IPersistableAnnotationModel) {
 			try {
-				((IPersistableAnnotationModel) annotationModel)
-						.reinitialize(getScriptSourceViewer().getDocument());
+				((IPersistableAnnotationModel) annotationModel).reinitialize(getScriptSourceViewer().getDocument());
 			} catch (CoreException ex) {
 				ex.printStackTrace();
 			}
@@ -754,8 +710,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		setPreferenceStore(store);
 		ScriptTextTools textTools = getTextTools();
 		if (textTools != null) {
-			setSourceViewerConfiguration(
-					textTools.createSourceViewerConfiguraton(store, this));
+			setSourceViewerConfiguration(textTools.createSourceViewerConfiguraton(store, this));
 		}
 	}
 
@@ -763,9 +718,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * Creates and returns the preference store for this editor with the given
 	 * input.
 	 *
-	 * @param input
-	 *                  The editor input for which to create the preference
-	 *                  store
+	 * @param input The editor input for which to create the preference store
 	 * @return the preference store for this editor
 	 */
 	private IPreferenceStore createCombinedPreferenceStore(IEditorInput input) {
@@ -775,34 +728,25 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		final String preferenceQualifier = toolkit.getPreferenceQualifier();
 		if (project != null) {
 			if (preferenceQualifier != null) {
-				stores.add(new EclipsePreferencesAdapter(
-						new ProjectScope(project.getProject()),
-						preferenceQualifier));
+				stores.add(new EclipsePreferencesAdapter(new ProjectScope(project.getProject()), preferenceQualifier));
 			}
-			stores.add(new EclipsePreferencesAdapter(
-					new ProjectScope(project.getProject()),
-					DLTKCore.PLUGIN_ID));
+			stores.add(new EclipsePreferencesAdapter(new ProjectScope(project.getProject()), DLTKCore.PLUGIN_ID));
 		}
 		stores.add(getScriptPreferenceStore());
 		if (preferenceQualifier != null) {
-			stores.add(new EclipsePreferencesAdapter(InstanceScope.INSTANCE,
-					preferenceQualifier));
-			stores.add(new EclipsePreferencesAdapter(DefaultScope.INSTANCE,
-					preferenceQualifier));
+			stores.add(new EclipsePreferencesAdapter(InstanceScope.INSTANCE, preferenceQualifier));
+			stores.add(new EclipsePreferencesAdapter(DefaultScope.INSTANCE, preferenceQualifier));
 		}
-		stores.add(new PreferencesAdapter(
-				DLTKCore.getDefault().getPluginPreferences()));
+		stores.add(new PreferencesAdapter(DLTKCore.getDefault().getPluginPreferences()));
 		stores.add(EditorsUI.getPreferenceStore());
 		stores.add(PlatformUI.getPreferenceStore());
-		return new ChainedPreferenceStore(
-				stores.toArray(new IPreferenceStore[stores.size()]));
+		return new ChainedPreferenceStore(stores.toArray(new IPreferenceStore[stores.size()]));
 	}
 
 	public IPreferenceStore getScriptPreferenceStore() {
 		IDLTKLanguageToolkit toolkit = getLanguageToolkit();
 		if (toolkit != null) {
-			IDLTKUILanguageToolkit uiToolkit = DLTKUILanguageManager
-					.getLanguageToolkit(toolkit.getNatureId());
+			IDLTKUILanguageToolkit uiToolkit = DLTKUILanguageManager.getLanguageToolkit(toolkit.getNatureId());
 			if (uiToolkit != null) {
 				return uiToolkit.getPreferenceStore();
 			}
@@ -814,8 +758,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		return null;
 	}
 
-	protected void connectPartitioningToElement(IEditorInput input,
-			IDocument document) {
+	protected void connectPartitioningToElement(IEditorInput input, IDocument document) {
 	}
 
 	protected void internalDoSetInput(IEditorInput input) throws CoreException {
@@ -825,8 +768,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			scriptSourceViewer = (ScriptSourceViewer) sourceViewer;
 		IPreferenceStore store = getPreferenceStore();
 
-		if (scriptSourceViewer != null && isFoldingEnabled() && (store == null
-				|| !store.getBoolean(PreferenceConstants.EDITOR_SHOW_SEGMENTS)))
+		if (scriptSourceViewer != null && isFoldingEnabled()
+				&& (store == null || !store.getBoolean(PreferenceConstants.EDITOR_SHOW_SEGMENTS)))
 			scriptSourceViewer.prepareDelayedProjection();
 
 		// correct connection code here.
@@ -836,24 +779,20 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		final IDocumentProvider docProvider = getDocumentProvider();
 		final IAnnotationModel model = docProvider.getAnnotationModel(input);
 		if (model instanceof SourceModuleAnnotationModel) {
-			((SourceModuleAnnotationModel) model).problemFactory = DLTKLanguageManager
-					.getProblemFactory(getNatureId());
+			((SourceModuleAnnotationModel) model).problemFactory = DLTKLanguageManager.getProblemFactory(getNatureId());
 		}
 		final IDocument doc = docProvider.getDocument(input);
 		connectPartitioningToElement(input, doc);
 
-		if (scriptSourceViewer != null
-				&& scriptSourceViewer.getReconciler() == null) {
-			IReconciler reconciler = getSourceViewerConfiguration()
-					.getReconciler(scriptSourceViewer);
+		if (scriptSourceViewer != null && scriptSourceViewer.getReconciler() == null) {
+			IReconciler reconciler = getSourceViewerConfiguration().getReconciler(scriptSourceViewer);
 			if (reconciler != null) {
 				reconciler.install(scriptSourceViewer);
 				scriptSourceViewer.setReconciler(reconciler);
 			}
 		}
 		if (DLTKCore.DEBUG) {
-			System.err.println(
-					"TODO: Add encoding support and overriding indicator support"); //$NON-NLS-1$
+			System.err.println("TODO: Add encoding support and overriding indicator support"); //$NON-NLS-1$
 		}
 		// if (fEncodingSupport != null)
 		// fEncodingSupport.reset();
@@ -863,8 +802,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	}
 
 	private boolean isFoldingEnabled() {
-		return getPreferenceStore()
-				.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
+		return getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
 	}
 
 	@Override
@@ -888,18 +826,15 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	public void editorContextMenuAboutToShow(IMenuManager menu) {
 		super.editorContextMenuAboutToShow(menu);
 
-		menu.insertAfter(IContextMenuConstants.GROUP_OPEN,
-				new GroupMarker(IContextMenuConstants.GROUP_SHOW));
+		menu.insertAfter(IContextMenuConstants.GROUP_OPEN, new GroupMarker(IContextMenuConstants.GROUP_SHOW));
 
-		ActionContext context = new ActionContext(
-				getSelectionProvider().getSelection());
+		ActionContext context = new ActionContext(getSelectionProvider().getSelection());
 		context.setInput(getEditorInput());
 		fContextMenuGroup.setContext(context);
 		fContextMenuGroup.fillContextMenu(menu);
 		fContextMenuGroup.setContext(null);
 		// Quick views
-		menu.appendToGroup(IContextMenuConstants.GROUP_OPEN,
-				getAction(IScriptEditorActionDefinitionIds.SHOW_OUTLINE));
+		menu.appendToGroup(IContextMenuConstants.GROUP_OPEN, getAction(IScriptEditorActionDefinitionIds.SHOW_OUTLINE));
 		menu.appendToGroup(IContextMenuConstants.GROUP_OPEN,
 				getAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY));
 	}
@@ -912,13 +847,11 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		ActionGroup ovg = new OpenViewActionGroup(this);
 		ActionGroup dsg = new SearchActionGroup(this);
 
-		fActionGroups = new CompositeActionGroup(
-				new ActionGroup[] { oeg, ovg, dsg });
+		fActionGroups = new CompositeActionGroup(new ActionGroup[] { oeg, ovg, dsg });
 
 		// fSelectionHistory= new SelectionHistory(this);
 
-		fContextMenuGroup = new CompositeActionGroup(
-				new ActionGroup[] { oeg, ovg, dsg });
+		fContextMenuGroup = new CompositeActionGroup(new ActionGroup[] { oeg, ovg, dsg });
 		loadContributedContextActionGroups();
 
 		fFoldingGroup = createFoldingActionGroup();
@@ -937,84 +870,64 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		// setAction("ShowDocumentation", resAction);
 
 		Action action = new GotoMatchingBracketAction(this);
-		action.setActionDefinitionId(
-				IScriptEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
+		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
 		setAction(GotoMatchingBracketAction.GOTO_MATCHING_BRACKET, action);
 
-		Action outlineAction = new TextOperationAction(
-				DLTKEditorMessages.getBundleForConstructedKeys(),
-				"ShowOutline.", this, //$NON-NLS-1$
-				ScriptSourceViewer.SHOW_OUTLINE, true);
-		outlineAction.setActionDefinitionId(
-				IScriptEditorActionDefinitionIds.SHOW_OUTLINE);
+		Action outlineAction = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(), "ShowOutline.", //$NON-NLS-1$
+				this, ScriptSourceViewer.SHOW_OUTLINE, true);
+		outlineAction.setActionDefinitionId(IScriptEditorActionDefinitionIds.SHOW_OUTLINE);
 		setAction(IScriptEditorActionDefinitionIds.SHOW_OUTLINE, outlineAction);
 
-		action = new TextOperationAction(
-				DLTKEditorMessages.getBundleForConstructedKeys(),
-				"OpenHierarchy.", this, ScriptSourceViewer.SHOW_HIERARCHY, //$NON-NLS-1$
-				true);
-		action.setActionDefinitionId(
-				IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
+		action = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(), "OpenHierarchy.", this, //$NON-NLS-1$
+				ScriptSourceViewer.SHOW_HIERARCHY, true);
+		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
 		setAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, action);
 
 		// ContentAssistProposal
-		action = new ContentAssistAction(
-				DLTKEditorMessages.getBundleForConstructedKeys(),
-				"ContentAssistProposal.", this); //$NON-NLS-1$
-		action.setActionDefinitionId(
-				ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
+		action = new ContentAssistAction(DLTKEditorMessages.getBundleForConstructedKeys(), "ContentAssistProposal.", //$NON-NLS-1$
+				this);
+		action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		setAction("ContentAssistProposal", action); //$NON-NLS-1$
 		markAsStateDependentAction("ContentAssistProposal", true); //$NON-NLS-1$
 
 		// ContentAssistContextInformation
-		action = new TextOperationAction(
-				DLTKEditorMessages.getBundleForConstructedKeys(),
+		action = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(),
 				"ContentAssistContextInformation.", this, //$NON-NLS-1$
 				ISourceViewer.CONTENTASSIST_CONTEXT_INFORMATION);
-		action.setActionDefinitionId(
-				ITextEditorActionDefinitionIds.CONTENT_ASSIST_CONTEXT_INFORMATION);
+		action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_CONTEXT_INFORMATION);
 		setAction("ContentAssistContextInformation", action); //$NON-NLS-1$
 		markAsStateDependentAction("ContentAssistContextInformation", true); //$NON-NLS-1$
 
 		// GroupEdit
-		ActionGroup rg = new RefactorActionGroup(this,
-				ITextEditorActionConstants.GROUP_EDIT);
+		ActionGroup rg = new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
 		fActionGroups.addGroup(rg);
 		fContextMenuGroup.addGroup(rg);
 
 		// GoToNextMember
 		action = GoToNextPreviousMemberAction.newGoToNextMemberAction(this);
-		action.setActionDefinitionId(
-				IScriptEditorActionDefinitionIds.GOTO_NEXT_MEMBER);
+		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.GOTO_NEXT_MEMBER);
 		setAction(GoToNextPreviousMemberAction.NEXT_MEMBER, action);
 
 		// GoToPreviousMember
 		action = GoToNextPreviousMemberAction.newGoToPreviousMemberAction(this);
-		action.setActionDefinitionId(
-				IScriptEditorActionDefinitionIds.GOTO_PREVIOUS_MEMBER);
+		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.GOTO_PREVIOUS_MEMBER);
 		setAction(GoToNextPreviousMemberAction.PREVIOUS_MEMBER, action);
 
 		// Source menu actions
-		action = new TextOperationAction(
-				DLTKEditorMessages.getBundleForConstructedKeys(), "Comment.", //$NON-NLS-1$
+		action = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(), "Comment.", //$NON-NLS-1$
 				this, ITextOperationTarget.PREFIX);
 		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.COMMENT);
 		setAction(DLTKActionConstants.COMMENT, action);
 		markAsStateDependentAction(DLTKActionConstants.COMMENT, true);
 
-		action = new TextOperationAction(
-				DLTKEditorMessages.getBundleForConstructedKeys(), "Uncomment.", //$NON-NLS-1$
+		action = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(), "Uncomment.", //$NON-NLS-1$
 				this, ITextOperationTarget.STRIP_PREFIX);
-		action.setActionDefinitionId(
-				IScriptEditorActionDefinitionIds.UNCOMMENT);
+		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.UNCOMMENT);
 		setAction(DLTKActionConstants.UNCOMMENT, action);
 		markAsStateDependentAction(DLTKActionConstants.UNCOMMENT, true);
 
-		action = new ToggleCommentAction(
-				DLTKEditorMessages.getBundleForConstructedKeys(),
-				"ToggleComment.", this); //$NON-NLS-1$
-		action.setActionDefinitionId(
-				IScriptEditorActionDefinitionIds.TOGGLE_COMMENT);
+		action = new ToggleCommentAction(DLTKEditorMessages.getBundleForConstructedKeys(), "ToggleComment.", this); //$NON-NLS-1$
+		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.TOGGLE_COMMENT);
 		setAction(DLTKActionConstants.TOGGLE_COMMENT, action);
 		markAsStateDependentAction(DLTKActionConstants.TOGGLE_COMMENT, true);
 
@@ -1033,8 +946,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * @since 3.0
 	 */
 	protected ActionGroup createGenerateActionGroup() {
-		return new GenerateActionGroup(this,
-				ITextEditorActionConstants.GROUP_EDIT);
+		return new GenerateActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
 	}
 
 	private static final String EXTENSION_EDITOR_CONTEXT_ACTION_GROUPS = "editorContextActionGroup"; //$NON-NLS-1$
@@ -1043,22 +955,18 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 	private void loadContributedContextActionGroups() {
 		final IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(DLTKUIPlugin.PLUGIN_ID,
-						EXTENSION_EDITOR_CONTEXT_ACTION_GROUPS);
+				.getConfigurationElementsFor(DLTKUIPlugin.PLUGIN_ID, EXTENSION_EDITOR_CONTEXT_ACTION_GROUPS);
 		final String natureId = getNatureId();
 		for (int i = 0; i < elements.length; ++i) {
 			final IConfigurationElement element = elements[i];
 			final String elementNature = element.getAttribute(ATTR_NATURE);
 			if (elementNature == null || elementNature.equals(natureId)) {
 				try {
-					final Object actionGroup = element
-							.createExecutableExtension(ATTR_CLASS);
+					final Object actionGroup = element.createExecutableExtension(ATTR_CLASS);
 					if (actionGroup instanceof ActionGroup) {
 						fContextMenuGroup.addGroup((ActionGroup) actionGroup);
 					} else {
-						DLTKUIPlugin.logErrorMessage(
-								actionGroup.getClass().getName()
-										+ " should extend ActionGroup"); //$NON-NLS-1$
+						DLTKUIPlugin.logErrorMessage(actionGroup.getClass().getName() + " should extend ActionGroup"); //$NON-NLS-1$
 					}
 				} catch (CoreException e) {
 					DLTKUIPlugin.log(e);
@@ -1074,45 +982,38 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * @since 3.0
 	 */
 	protected ActionGroup createFoldingActionGroup() {
-		return new FoldingActionGroup(this, getViewer(),
-				getScriptPreferenceStore());
+		return new FoldingActionGroup(this, getViewer(), getScriptPreferenceStore());
 	}
 
 	@Override
-	protected IVerticalRulerColumn createAnnotationRulerColumn(
-			CompositeRuler ruler) {
-		if (!getPreferenceStore()
-				.getBoolean(PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER))
+	protected IVerticalRulerColumn createAnnotationRulerColumn(CompositeRuler ruler) {
+		if (!getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER))
 			return super.createAnnotationRulerColumn(ruler);
 
-		AnnotationRulerColumn column = new AnnotationRulerColumn(
-				VERTICAL_RULER_WIDTH, getAnnotationAccess());
-		column.setHover(new ScriptExpandHover(ruler, getAnnotationAccess(),
-				new IDoubleClickListener() {
+		AnnotationRulerColumn column = new AnnotationRulerColumn(VERTICAL_RULER_WIDTH, getAnnotationAccess());
+		column.setHover(new ScriptExpandHover(ruler, getAnnotationAccess(), new IDoubleClickListener() {
 
-					@Override
-					public void doubleClick(DoubleClickEvent event) {
-						// for now: just invoke ruler double click action
-						triggerAction(
-								ITextEditorActionConstants.RULER_DOUBLE_CLICK);
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				// for now: just invoke ruler double click action
+				triggerAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK);
+			}
+
+			private void triggerAction(String actionID) {
+				IAction action = getAction(actionID);
+				if (action != null) {
+					if (action instanceof IUpdate)
+						((IUpdate) action).update();
+					// hack to propagate line change
+					if (action instanceof ISelectionListener) {
+						((ISelectionListener) action).selectionChanged(null, null);
 					}
+					if (action.isEnabled())
+						action.run();
+				}
+			}
 
-					private void triggerAction(String actionID) {
-						IAction action = getAction(actionID);
-						if (action != null) {
-							if (action instanceof IUpdate)
-								((IUpdate) action).update();
-							// hack to propagate line change
-							if (action instanceof ISelectionListener) {
-								((ISelectionListener) action)
-										.selectionChanged(null, null);
-							}
-							if (action.isEnabled())
-								action.run();
-						}
-					}
-
-				}));
+		}));
 
 		return column;
 	}
@@ -1149,8 +1050,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			setPreferenceStore(createCombinedPreferenceStore(input));
 			// install & register preference store listener
 			sourceViewer.configure(getSourceViewerConfiguration());
-			getSourceViewerDecorationSupport(sourceViewer)
-					.install(getPreferenceStore());
+			getSourceViewerDecorationSupport(sourceViewer).install(getPreferenceStore());
 			try {
 				internalDoSetInput(input);
 			} catch (ModelException e) {
@@ -1160,20 +1060,17 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		}
 
 		if (fScriptEditorErrorTickUpdater != null)
-			fScriptEditorErrorTickUpdater
-					.updateEditorImage(getInputModelElement());
+			fScriptEditorErrorTickUpdater.updateEditorImage(getInputModelElement());
 	}
 
 	@Override
 	protected void setPreferenceStore(IPreferenceStore store) {
 		super.setPreferenceStore(store);
 		final SourceViewerConfiguration svConfiguration = getSourceViewerConfiguration();
-		if (svConfiguration == null
-				|| svConfiguration instanceof ScriptSourceViewerConfiguration) {
+		if (svConfiguration == null || svConfiguration instanceof ScriptSourceViewerConfiguration) {
 			final ScriptTextTools textTools = getTextTools();
 			if (textTools != null) {
-				setSourceViewerConfiguration(
-						textTools.createSourceViewerConfiguraton(store, this));
+				setSourceViewerConfiguration(textTools.createSourceViewerConfiguraton(store, this));
 			}
 		}
 		if (getSourceViewer() instanceof ScriptSourceViewer) {
@@ -1220,8 +1117,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		}
 	}
 
-	private void setOutlinePageInput(ScriptOutlinePage page,
-			IEditorInput input) {
+	private void setOutlinePageInput(ScriptOutlinePage page, IEditorInput input) {
 		if (page == null) {
 			return;
 		}
@@ -1276,8 +1172,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			return (T) fOutlinePage;
 		}
 		if (required == IShowInTargetList.class) {
-			return (T) (IShowInTargetList) () -> new String[] {
-					DLTKUIPlugin.ID_SCRIPT_EXPLORER, IPageLayout.ID_OUTLINE };
+			return (T) (IShowInTargetList) () -> new String[] { DLTKUIPlugin.ID_SCRIPT_EXPLORER,
+					IPageLayout.ID_OUTLINE };
 		}
 		if (required == OccurrencesFinder.class) {
 			return (T) occurrencesFinder;
@@ -1288,8 +1184,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			return (T) fProjectionModelUpdater;
 
 		if (fProjectionSupport != null) {
-			Object adapter = fProjectionSupport.getAdapter(getSourceViewer(),
-					required);
+			Object adapter = fProjectionSupport.getAdapter(getSourceViewer(), required);
 			if (adapter != null)
 				return (T) adapter;
 		}
@@ -1299,8 +1194,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 	/**
 	 * Returns the mutex for the reconciler. See
-	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63898 for a description of
-	 * the problem.
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63898 for a description of the
+	 * problem.
 	 * <p>
 	 * XXX remove once the underlying problem
 	 * (https://bugs.eclipse.org/bugs/show_bug.cgi?id=66176) is solved.
@@ -1343,8 +1238,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		return part;
 	}
 
-	protected void setSelection(ISourceReference reference,
-			boolean moveCursor) {
+	protected void setSelection(ISourceReference reference, boolean moveCursor) {
 		if (getSelectionProvider() == null)
 			return;
 		ISelection selection = getSelectionProvider().getSelection();
@@ -1356,8 +1250,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			// (which it isn't if
 			// this is called from a PostSelectionEvent that should only update
 			// the magnet)
-			if (moveCursor && (textSelection.getOffset() != 0
-					|| textSelection.getLength() != 0))
+			if (moveCursor && (textSelection.getOffset() != 0 || textSelection.getLength() != 0))
 				markInNavigationHistory();
 		}
 		if (reference != null) {
@@ -1393,8 +1286,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 						offset = range.getOffset();
 						length = range.getLength();
 					}
-				} else if (reference instanceof IImportDeclaration
-						|| reference instanceof IPackageDeclaration) {
+				} else if (reference instanceof IImportDeclaration || reference instanceof IPackageDeclaration) {
 					// range is still getSourceRange()
 					offset = range.getOffset();
 					length = range.getLength();
@@ -1429,9 +1321,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 		if (element == null || element instanceof ISourceModule) {
 			/*
-			 * If the element is an ISourceModule this unit is either the input
-			 * of this editor or not being displayed. In both cases, nothing
-			 * should happened.
+			 * If the element is an ISourceModule this unit is either the input of this
+			 * editor or not being displayed. In both cases, nothing should happened.
 			 * (http://dev.eclipse.org/bugs/show_bug.cgi?id=5128)
 			 */
 			return;
@@ -1452,32 +1343,27 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	}
 
 	/**
-	 * Synchronizes the outliner selection with the given element position in
-	 * the editor.
+	 * Synchronizes the outliner selection with the given element position in the
+	 * editor.
 	 *
-	 * @param element
-	 *                    thescriptelement to select
+	 * @param element thescriptelement to select
 	 */
 	protected void synchronizeOutlinePage(ISourceReference element) {
 		synchronizeOutlinePage(element, true);
 	}
 
 	/**
-	 * Synchronizes the outliner selection with the given element position in
-	 * the editor.
+	 * Synchronizes the outliner selection with the given element position in the
+	 * editor.
 	 *
-	 * @param element
-	 *                                     thescriptelement to select
-	 * @param checkIfOutlinePageActive
-	 *                                     <code>true</code> if check for active
-	 *                                     outline page needs to be done
+	 * @param element                  thescriptelement to select
+	 * @param checkIfOutlinePageActive <code>true</code> if check for active outline
+	 *                                 page needs to be done
 	 * @since 2.0
 	 */
 	@Override
-	public void synchronizeOutlinePage(ISourceReference element,
-			boolean checkIfOutlinePageActive) {
-		if (fOutlinePage != null && element != null
-				&& !(checkIfOutlinePageActive && isOutlinePageActive())) {
+	public void synchronizeOutlinePage(ISourceReference element, boolean checkIfOutlinePageActive) {
+		if (fOutlinePage != null && element != null && !(checkIfOutlinePageActive && isOutlinePageActive())) {
 			fOutlineSelectionChangedListener.uninstall(fOutlinePage);
 			fOutlinePage.select(element);
 			fOutlineSelectionChangedListener.install(fOutlinePage);
@@ -1485,8 +1371,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	}
 
 	/**
-	 * Synchronizes the outliner selection with the actual cursor position in
-	 * the editor.
+	 * Synchronizes the outliner selection with the actual cursor position in the
+	 * editor.
 	 */
 	public void synchronizeOutlinePageSelection() {
 		synchronizeOutlinePage(computeHighlightRangeSourceReference());
@@ -1494,8 +1380,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 	private boolean isOutlinePageActive() {
 		IWorkbenchPart part = getActivePart();
-		return part instanceof ContentOutline
-				&& ((ContentOutline) part).getCurrentPage() == fOutlinePage;
+		return part instanceof ContentOutline && ((ContentOutline) part).getCurrentPage() == fOutlinePage;
 	}
 
 	/**
@@ -1504,20 +1389,16 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * Overrides the default implementation to handle {@link IJavaAnnotation}.
 	 * </p>
 	 *
-	 * @param offset
-	 *                               the region offset
-	 * @param length
-	 *                               the region length
-	 * @param forward
-	 *                               <code>true</code> for forwards,
-	 *                               <code>false</code> for backward
-	 * @param annotationPosition
-	 *                               the position of the found annotation
+	 * @param offset             the region offset
+	 * @param length             the region length
+	 * @param forward            <code>true</code> for forwards, <code>false</code>
+	 *                           for backward
+	 * @param annotationPosition the position of the found annotation
 	 * @return the found annotation
 	 */
 	@Override
-	protected Annotation findAnnotation(final int offset, final int length,
-			boolean forward, Position annotationPosition) {
+	protected Annotation findAnnotation(final int offset, final int length, boolean forward,
+			Position annotationPosition) {
 
 		Annotation nextAnnotation = null;
 		Position nextAnnotationPosition = null;
@@ -1525,33 +1406,26 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		Position containingAnnotationPosition = null;
 		boolean currentAnnotation = false;
 
-		IDocument document = getDocumentProvider()
-				.getDocument(getEditorInput());
+		IDocument document = getDocumentProvider().getDocument(getEditorInput());
 		int endOfDocument = document.getLength();
 		int distance = Integer.MAX_VALUE;
 
-		IAnnotationModel model = getDocumentProvider()
-				.getAnnotationModel(getEditorInput());
+		IAnnotationModel model = getDocumentProvider().getAnnotationModel(getEditorInput());
 		Iterator<Annotation> e = new ScriptAnnotationIterator(model, true);
 		while (e.hasNext()) {
 			Annotation a = e.next();
-			if ((a instanceof IScriptAnnotation)
-					&& ((IScriptAnnotation) a).hasOverlay()
-					|| !isNavigationTarget(a))
+			if ((a instanceof IScriptAnnotation) && ((IScriptAnnotation) a).hasOverlay() || !isNavigationTarget(a))
 				continue;
 
 			Position p = model.getPosition(a);
 			if (p == null)
 				continue;
 
-			if (forward && p.offset == offset || !forward
-					&& p.offset + p.getLength() == offset + length) {// ||
+			if (forward && p.offset == offset || !forward && p.offset + p.getLength() == offset + length) {// ||
 				// p.includes(offset))
 				// {
-				if (containingAnnotation == null || (forward
-						&& p.length >= containingAnnotationPosition.length
-						|| !forward
-								&& p.length >= containingAnnotationPosition.length)) {
+				if (containingAnnotation == null || (forward && p.length >= containingAnnotationPosition.length
+						|| !forward && p.length >= containingAnnotationPosition.length)) {
 					containingAnnotation = a;
 					containingAnnotationPosition = p;
 					currentAnnotation = p.length == length;
@@ -1565,21 +1439,18 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 						currentDistance = endOfDocument + currentDistance;
 
 					if (currentDistance < distance
-							|| currentDistance == distance
-									&& p.length < nextAnnotationPosition.length) {
+							|| currentDistance == distance && p.length < nextAnnotationPosition.length) {
 						distance = currentDistance;
 						nextAnnotation = a;
 						nextAnnotationPosition = p;
 					}
 				} else {
-					currentDistance = offset + length
-							- (p.getOffset() + p.length);
+					currentDistance = offset + length - (p.getOffset() + p.length);
 					if (currentDistance < 0)
 						currentDistance = endOfDocument + currentDistance;
 
 					if (currentDistance < distance
-							|| currentDistance == distance
-									&& p.length < nextAnnotationPosition.length) {
+							|| currentDistance == distance && p.length < nextAnnotationPosition.length) {
 						distance = currentDistance;
 						nextAnnotation = a;
 						nextAnnotationPosition = p;
@@ -1587,12 +1458,9 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 				}
 			}
 		}
-		if (containingAnnotationPosition != null
-				&& (!currentAnnotation || nextAnnotation == null)) {
-			annotationPosition
-					.setOffset(containingAnnotationPosition.getOffset());
-			annotationPosition
-					.setLength(containingAnnotationPosition.getLength());
+		if (containingAnnotationPosition != null && (!currentAnnotation || nextAnnotation == null)) {
+			annotationPosition.setOffset(containingAnnotationPosition.getOffset());
+			annotationPosition.setLength(containingAnnotationPosition.getLength());
 			return containingAnnotation;
 		}
 		if (nextAnnotationPosition != null) {
@@ -1604,19 +1472,15 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	}
 
 	/**
-	 * Returns the annotation overlapping with the given range or
-	 * <code>null</code>.
+	 * Returns the annotation overlapping with the given range or <code>null</code>.
 	 *
-	 * @param offset
-	 *                   the region offset
-	 * @param length
-	 *                   the region length
+	 * @param offset the region offset
+	 * @param length the region length
 	 * @return the found annotation or <code>null</code>
 	 * @since 3.0
 	 */
 	private Annotation getAnnotation(int offset, int length) {
-		IAnnotationModel model = getDocumentProvider()
-				.getAnnotationModel(getEditorInput());
+		IAnnotationModel model = getDocumentProvider().getAnnotationModel(getEditorInput());
 		Iterator<Annotation> e = new ScriptAnnotationIterator(model, false);
 		while (e.hasNext()) {
 			Annotation a = e.next();
@@ -1628,8 +1492,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#gotoAnnotation(
+	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#gotoAnnotation(
 	 * boolean)
 	 *
 	 * @since 3.2
@@ -1641,9 +1504,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	}
 
 	/**
-	 * Computes and returns the source reference that includes the caret and
-	 * serves as provider for the outline page selection and the editor range
-	 * indication.
+	 * Computes and returns the source reference that includes the caret and serves
+	 * as provider for the outline page selection and the editor range indication.
 	 *
 	 * @return the computed source reference
 	 * @since 2.0
@@ -1659,8 +1521,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		int caret = 0;
 		if (sourceViewer instanceof ITextViewerExtension5) {
 			ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
-			caret = extension
-					.widgetOffset2ModelOffset(styledText.getCaretOffset());
+			caret = extension.widgetOffset2ModelOffset(styledText.getCaretOffset());
 		} else {
 			int offset = sourceViewer.getVisibleRegion().getOffset();
 			caret = offset + styledText.getCaretOffset();
@@ -1696,19 +1557,15 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			// return new DefaultInformationControl(shell, SWT.RESIZE
 			// | SWT.TOOL, style, new HTMLTextPresenter(cutDown));
 			if (BrowserInformationControl.isAvailable(shell)) {
-				return new BrowserInformationControl(shell,
-						JFaceResources.DIALOG_FONT, true);
+				return new BrowserInformationControl(shell, JFaceResources.DIALOG_FONT, true);
 			}
-			return new DefaultInformationControl(shell,
-					new HTMLTextPresenter(cutDown));
+			return new DefaultInformationControl(shell, new HTMLTextPresenter(cutDown));
 		};
 
-		fInformationPresenter = new InformationPresenter(
-				informationControlCreator);
+		fInformationPresenter = new InformationPresenter(informationControlCreator);
 		fInformationPresenter.setSizeConstraints(60, 10, true, true);
 		fInformationPresenter.install(getSourceViewer());
-		fInformationPresenter
-				.setDocumentPartitioning(IDocument.DEFAULT_CONTENT_TYPE);
+		fInformationPresenter.setDocumentPartitioning(IDocument.DEFAULT_CONTENT_TYPE);
 
 		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
 		fEditorSelectionChangedListener.install(getSelectionProvider());
@@ -1716,10 +1573,10 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			installSemanticHighlighting();
 		if (!isEditable()) {
 			/*
-			 * Manually call semantic highlighting for read only editor, since
-			 * usually it's done from reconciler, but
-			 * ScriptSourceViewerConfiguration.getReconciler(ISourceViewer)
-			 * doesn't create reconciler for read only editor.
+			 * Manually call semantic highlighting for read only editor, since usually it's
+			 * done from reconciler, but
+			 * ScriptSourceViewerConfiguration.getReconciler(ISourceViewer) doesn't create
+			 * reconciler for read only editor.
 			 */
 			updateSemanticHighlighting();
 		}
@@ -1737,8 +1594,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		if (getSelectionProvider() == null)
 			return;
 		ISourceReference element = computeHighlightRangeSourceReference();
-		if (getPreferenceStore().getBoolean(
-				PreferenceConstants.EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE))
+		if (getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE))
 			synchronizeOutlinePage(element);
 		setSelection(element, false);
 		if (!fSelectionChangedViaGotoAnnotation)
@@ -1747,16 +1603,13 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	}
 
 	protected void updateStatusLine() {
-		ITextSelection selection = (ITextSelection) getSelectionProvider()
-				.getSelection();
-		Annotation annotation = getAnnotation(selection.getOffset(),
-				selection.getLength());
+		ITextSelection selection = (ITextSelection) getSelectionProvider().getSelection();
+		Annotation annotation = getAnnotation(selection.getOffset(), selection.getLength());
 		setStatusLineErrorMessage(null);
 		setStatusLineMessage(null);
 		if (annotation != null) {
 			updateMarkerViews(annotation);
-			if (annotation instanceof IScriptAnnotation
-					&& ((IScriptAnnotation) annotation).isProblem())
+			if (annotation instanceof IScriptAnnotation && ((IScriptAnnotation) annotation).isProblem())
 				setStatusLineMessage(annotation.getText());
 		}
 	}
@@ -1772,11 +1625,10 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	}
 
 	/**
-	 * Returns thescriptelement of this editor's input corresponding to the
-	 * given IModelElement.
+	 * Returns thescriptelement of this editor's input corresponding to the given
+	 * IModelElement.
 	 *
-	 * @param element
-	 *                    thescriptelement
+	 * @param element thescriptelement
 	 * @return the corresponding model element
 	 */
 	protected IModelElement getCorrespondingElement(IModelElement element) {
@@ -1786,8 +1638,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	/**
 	 * Returns the most narrow model element including the given offset.
 	 *
-	 * @param offset
-	 *                   the offset inside of the requested element
+	 * @param offset the offset inside of the requested element
 	 * @return the most narrow model element
 	 */
 	@Override
@@ -1798,15 +1649,11 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	/**
 	 * Returns the most narrow element including the given offset. If
 	 * <code>reconcile</code> is <code>true</code> the editor's input element is
-	 * reconciled in advance. If it is <code>false</code> this method only
-	 * returns a result if the editor's input element does not need to be
-	 * reconciled.
+	 * reconciled in advance. If it is <code>false</code> this method only returns a
+	 * result if the editor's input element does not need to be reconciled.
 	 *
-	 * @param offset
-	 *                      the offset included by the retrieved element
-	 * @param reconcile
-	 *                      <code>true</code> if working copy should be
-	 *                      reconciled
+	 * @param offset    the offset included by the retrieved element
+	 * @param reconcile <code>true</code> if working copy should be reconciled
 	 * @return the most narrow element which includes the given offset
 	 */
 	public IModelElement getElementAt(int offset, boolean reconcile) {
@@ -1843,13 +1690,13 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	private boolean fSelectionChangedViaGotoAnnotation;
 
 	/**
-	 * Runner that will toggle folding either instantly (if the editor is
-	 * visible) or the next time it becomes visible. If a runner is started when
-	 * there is already one registered, the registered one is canceled as
-	 * toggling folding twice is a no-op.
+	 * Runner that will toggle folding either instantly (if the editor is visible)
+	 * or the next time it becomes visible. If a runner is started when there is
+	 * already one registered, the registered one is canceled as toggling folding
+	 * twice is a no-op.
 	 * <p>
-	 * The access to the fFoldingRunner field is not thread-safe, it is assumed
-	 * that <code>runWhenNextVisible</code> is only called from the UI thread.
+	 * The access to the fFoldingRunner field is not thread-safe, it is assumed that
+	 * <code>runWhenNextVisible</code> is only called from the UI thread.
 	 * </p>
 	 *
 	 *
@@ -1879,11 +1726,10 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		}
 
 		/**
-		 * Makes sure that the editor's folding state is correct the next time
-		 * it becomes visible. If it already is visible, it toggles the folding
-		 * state. If not, it either registers a part listener to toggle folding
-		 * when the editor becomes visible, or cancels an already registered
-		 * runner.
+		 * Makes sure that the editor's folding state is correct the next time it
+		 * becomes visible. If it already is visible, it toggles the folding state. If
+		 * not, it either registers a part listener to toggle folding when the editor
+		 * becomes visible, or cancels an already registered runner.
 		 */
 		public void runWhenNextVisible() {
 			// if there is one already: toggling twice is the identity
@@ -1969,22 +1815,11 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	/**
 	 * Creates folding structure provider to use in this editor. Default
 	 * implementation queries the
-	 * <code>org.eclipse.dltk.ui.folding/structureProvider</code> extension
-	 * point.
+	 * <code>org.eclipse.dltk.ui.folding/structureProvider</code> extension point.
 	 *
 	 * @return folding structure provider or <code>null</code>.
 	 */
 	protected IFoldingStructureProvider createFoldingStructureProvider() {
-		return getFoldingStructureProvider();
-	}
-
-	/**
-	 * Returns folding structure provider.
-	 *
-	 * @return
-	 */
-	@Deprecated
-	protected IFoldingStructureProvider getFoldingStructureProvider() {
 		return FoldingProviderManager.getStructureProvider(getNatureId());
 	}
 
@@ -1997,8 +1832,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 */
 	private void updateHoverBehavior() {
 		SourceViewerConfiguration configuration = getSourceViewerConfiguration();
-		String[] types = configuration
-				.getConfiguredContentTypes(getSourceViewer());
+		String[] types = configuration.getConfiguredContentTypes(getSourceViewer());
 
 		for (int i = 0; i < types.length; i++) {
 
@@ -2009,27 +1843,21 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 				// Remove existing hovers
 				((ITextViewerExtension2) sourceViewer).removeTextHovers(t);
 
-				int[] stateMasks = configuration
-						.getConfiguredTextHoverStateMasks(getSourceViewer(), t);
+				int[] stateMasks = configuration.getConfiguredTextHoverStateMasks(getSourceViewer(), t);
 
 				if (stateMasks != null) {
 					for (int j = 0; j < stateMasks.length; j++) {
 						int stateMask = stateMasks[j];
-						ITextHover textHover = configuration
-								.getTextHover(sourceViewer, t, stateMask);
-						((ITextViewerExtension2) sourceViewer)
-								.setTextHover(textHover, t, stateMask);
+						ITextHover textHover = configuration.getTextHover(sourceViewer, t, stateMask);
+						((ITextViewerExtension2) sourceViewer).setTextHover(textHover, t, stateMask);
 					}
 				} else {
-					ITextHover textHover = configuration
-							.getTextHover(sourceViewer, t);
-					((ITextViewerExtension2) sourceViewer).setTextHover(
-							textHover, t,
+					ITextHover textHover = configuration.getTextHover(sourceViewer, t);
+					((ITextViewerExtension2) sourceViewer).setTextHover(textHover, t,
 							ITextViewerExtension2.DEFAULT_HOVER_STATE_MASK);
 				}
 			} else
-				sourceViewer.setTextHover(
-						configuration.getTextHover(sourceViewer, t), t);
+				sourceViewer.setTextHover(configuration.getTextHover(sourceViewer, t), t);
 		}
 	}
 
@@ -2049,27 +1877,22 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 				updateHoverBehavior();
 
 			if (newValue != null)
-				newBooleanValue = Boolean.valueOf(newValue.toString())
-						.booleanValue();
-			if (PreferenceConstants.EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE
-					.equals(property)) {
+				newBooleanValue = Boolean.valueOf(newValue.toString()).booleanValue();
+			if (PreferenceConstants.EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE.equals(property)) {
 				if (newBooleanValue)
 					selectionChanged();
 				return;
 			}
 
-			if (occurrencesFinder != null && occurrencesFinder
-					.handlePreferenceStoreChanged(property, newBooleanValue)) {
+			if (occurrencesFinder != null
+					&& occurrencesFinder.handlePreferenceStoreChanged(property, newBooleanValue)) {
 				return;
 			}
 
 			if (CodeFormatterConstants.FORMATTER_TAB_SIZE.equals(property)
-					|| CodeFormatterConstants.FORMATTER_INDENTATION_SIZE
-							.equals(property)
-					|| CodeFormatterConstants.FORMATTER_TAB_CHAR
-							.equals(property)) {
-				if (CodeFormatterConstants.FORMATTER_TAB_CHAR
-						.equals(property)) {
+					|| CodeFormatterConstants.FORMATTER_INDENTATION_SIZE.equals(property)
+					|| CodeFormatterConstants.FORMATTER_TAB_CHAR.equals(property)) {
+				if (CodeFormatterConstants.FORMATTER_TAB_CHAR.equals(property)) {
 					if (isTabsToSpacesConversionEnabled())
 						installTabsToSpacesConverter();
 					else
@@ -2077,41 +1900,33 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 				}
 				updateIndentPrefixes();
 				StyledText textWidget = sourceViewer.getTextWidget();
-				int tabWidth = getSourceViewerConfiguration()
-						.getTabWidth(sourceViewer);
+				int tabWidth = getSourceViewerConfiguration().getTabWidth(sourceViewer);
 				if (textWidget.getTabs() != tabWidth)
 					textWidget.setTabs(tabWidth);
 				return;
 			}
 			if (PreferenceConstants.EDITOR_SMART_TAB.equals(property)) {
-				if (getPreferenceStore()
-						.getBoolean(PreferenceConstants.EDITOR_SMART_TAB)) {
-					setActionActivationCode(DLTKActionConstants.INDENT_ON_TAB,
-							SWT.TAB, -1, SWT.NONE);
+				if (getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SMART_TAB)) {
+					setActionActivationCode(DLTKActionConstants.INDENT_ON_TAB, SWT.TAB, -1, SWT.NONE);
 				} else {
-					removeActionActivationCode(
-							DLTKActionConstants.INDENT_ON_TAB);
+					removeActionActivationCode(DLTKActionConstants.INDENT_ON_TAB);
 				}
 			}
 
-			if (isFoldingPropertyEvent(property)
-					&& sourceViewer instanceof ProjectionViewer) {
+			if (isFoldingPropertyEvent(property) && sourceViewer instanceof ProjectionViewer) {
 				handleFoldingPropertyEvent(property);
 			}
 
 			final ScriptSourceViewerConfiguration ssvc = (ScriptSourceViewerConfiguration) getSourceViewerConfiguration();
-			final IContentAssistant c = ((AdaptedSourceViewer) sourceViewer)
-					.getContentAssistant();
+			final IContentAssistant c = ((AdaptedSourceViewer) sourceViewer).getContentAssistant();
 			if (c instanceof ContentAssistant) {
-				ssvc.changeContentAssistantConfiguration((ContentAssistant) c,
-						event);
+				ssvc.changeContentAssistantConfiguration((ContentAssistant) c, event);
 			}
 			ssvc.handlePropertyChangeEvent(event);
 		} finally {
 			super.handlePreferenceStoreChanged(event);
 		}
-		if (AbstractDecoratedTextEditorPreferenceConstants.SHOW_RANGE_INDICATOR
-				.equals(property)) {
+		if (AbstractDecoratedTextEditorPreferenceConstants.SHOW_RANGE_INDICATOR.equals(property)) {
 			// superclass already installed the range indicator
 			Object newValue = event.getNewValue();
 			ISourceViewer viewer = getSourceViewer();
@@ -2128,8 +1943,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 	@Override
 	protected boolean affectsTextPresentation(PropertyChangeEvent event) {
-		return ((ScriptSourceViewerConfiguration) getSourceViewerConfiguration())
-				.affectsTextPresentation(event)
+		return ((ScriptSourceViewerConfiguration) getSourceViewerConfiguration()).affectsTextPresentation(event)
 				|| super.affectsTextPresentation(event);
 	}
 
@@ -2156,9 +1970,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	}
 
 	/**
-	 * Returns a string array containing the language specific folding
-	 * preference keys that should be handed when a property change event is
-	 * fired.
+	 * Returns a string array containing the language specific folding preference
+	 * keys that should be handed when a property change event is fired.
 	 *
 	 * <p>
 	 * Default implementation returns an empty array. Subclasses should override
@@ -2180,9 +1993,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		/**
 		 * Creates a new next sub-word action.
 		 *
-		 * @param code
-		 *                 Action code for the default operation. Must be an
-		 *                 action code from
+		 * @param code Action code for the default operation. Must be an action code
+		 *             from
 		 * @see org.eclipse.swt.custom.ST.
 		 */
 		protected NextSubWordAction(int code) {
@@ -2197,17 +2009,14 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			// Check whether we are in ascriptcode partition and the preference
 			// is enabled
 			final IPreferenceStore store = getPreferenceStore();
-			if (!store.getBoolean(
-					PreferenceConstants.EDITOR_SUB_WORD_NAVIGATION)) {
+			if (!store.getBoolean(PreferenceConstants.EDITOR_SUB_WORD_NAVIGATION)) {
 				super.run();
 				return;
 			}
 			final ISourceViewer viewer = getSourceViewer();
 			final IDocument document = viewer.getDocument();
-			fIterator.setText((CharacterIterator) new DocumentCharacterIterator(
-					document));
-			int position = widgetOffset2ModelOffset(viewer,
-					viewer.getTextWidget().getCaretOffset());
+			fIterator.setText((CharacterIterator) new DocumentCharacterIterator(document));
+			int position = widgetOffset2ModelOffset(viewer, viewer.getTextWidget().getCaretOffset());
 			if (position == -1)
 				return;
 			int next = findNextPosition(position);
@@ -2221,8 +2030,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		/**
 		 * Finds the next position after the given position.
 		 *
-		 * @param position
-		 *                     the current position
+		 * @param position the current position
 		 * @return the next position
 		 */
 		protected int findNextPosition(int position) {
@@ -2241,8 +2049,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		 * Sets the caret position to the sub-word boundary given with
 		 * <code>position</code>.
 		 *
-		 * @param position
-		 *                     Position where the action should move the caret
+		 * @param position Position where the action should move the caret
 		 */
 		protected abstract void setCaretPosition(int position);
 	}
@@ -2260,16 +2067,14 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 		@Override
 		protected void setCaretPosition(final int position) {
-			getTextWidget().setCaretOffset(
-					modelOffset2WidgetOffset(getSourceViewer(), position));
+			getTextWidget().setCaretOffset(modelOffset2WidgetOffset(getSourceViewer(), position));
 		}
 	}
 
 	/**
 	 * Text operation action to delete the next sub-word.
 	 */
-	protected class DeleteNextSubWordAction extends NextSubWordAction
-			implements IUpdate {
+	protected class DeleteNextSubWordAction extends NextSubWordAction implements IUpdate {
 		/**
 		 * Creates a new delete next sub-word action.
 		 */
@@ -2288,8 +2093,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 				caret = selection.x;
 				length = selection.y;
 			} else {
-				caret = widgetOffset2ModelOffset(viewer,
-						viewer.getTextWidget().getCaretOffset());
+				caret = widgetOffset2ModelOffset(viewer, viewer.getTextWidget().getCaretOffset());
 				length = position - caret;
 			}
 			try {
@@ -2347,16 +2151,14 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 *
 	 *
 	 */
-	protected abstract class PreviousSubWordAction
-			extends TextNavigationAction {
+	protected abstract class PreviousSubWordAction extends TextNavigationAction {
 		protected DLTKWordIterator fIterator = new DLTKWordIterator();
 
 		/**
 		 * Creates a new previous sub-word action.
 		 *
-		 * @param code
-		 *                 Action code for the default operation. Must be an
-		 *                 action code from
+		 * @param code Action code for the default operation. Must be an action code
+		 *             from
 		 * @see org.eclipse.swt.custom.ST.
 		 */
 		protected PreviousSubWordAction(final int code) {
@@ -2371,17 +2173,14 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			// Check whether we are in ascriptcode partition and the preference
 			// is enabled
 			final IPreferenceStore store = getPreferenceStore();
-			if (!store.getBoolean(
-					PreferenceConstants.EDITOR_SUB_WORD_NAVIGATION)) {
+			if (!store.getBoolean(PreferenceConstants.EDITOR_SUB_WORD_NAVIGATION)) {
 				super.run();
 				return;
 			}
 			final ISourceViewer viewer = getSourceViewer();
 			final IDocument document = viewer.getDocument();
-			fIterator.setText((CharacterIterator) new DocumentCharacterIterator(
-					document));
-			int position = widgetOffset2ModelOffset(viewer,
-					viewer.getTextWidget().getCaretOffset());
+			fIterator.setText((CharacterIterator) new DocumentCharacterIterator(document));
+			int position = widgetOffset2ModelOffset(viewer, viewer.getTextWidget().getCaretOffset());
 			if (position == -1)
 				return;
 			int previous = findPreviousPosition(position);
@@ -2395,8 +2194,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		/**
 		 * Finds the previous position before the given position.
 		 *
-		 * @param position
-		 *                     the current position
+		 * @param position the current position
 		 * @return the previous position
 		 */
 		protected int findPreviousPosition(int position) {
@@ -2415,8 +2213,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		 * Sets the caret position to the sub-word boundary given with
 		 * <code>position</code>.
 		 *
-		 * @param position
-		 *                     Position where the action should move the caret
+		 * @param position Position where the action should move the caret
 		 */
 		protected abstract void setCaretPosition(int position);
 	}
@@ -2424,8 +2221,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	/**
 	 * Text navigation action to navigate to the previous sub-word.
 	 */
-	protected class NavigatePreviousSubWordAction
-			extends PreviousSubWordAction {
+	protected class NavigatePreviousSubWordAction extends PreviousSubWordAction {
 		/**
 		 * Creates a new navigate previous sub-word action.
 		 */
@@ -2435,16 +2231,14 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 		@Override
 		protected void setCaretPosition(final int position) {
-			getTextWidget().setCaretOffset(
-					modelOffset2WidgetOffset(getSourceViewer(), position));
+			getTextWidget().setCaretOffset(modelOffset2WidgetOffset(getSourceViewer(), position));
 		}
 	}
 
 	/**
 	 * Text operation action to delete the previous sub-word.
 	 */
-	protected class DeletePreviousSubWordAction extends PreviousSubWordAction
-			implements IUpdate {
+	protected class DeletePreviousSubWordAction extends PreviousSubWordAction implements IUpdate {
 		/**
 		 * Creates a new delete previous sub-word action.
 		 */
@@ -2463,8 +2257,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 				position = selection.x;
 				length = selection.y;
 			} else {
-				length = widgetOffset2ModelOffset(viewer,
-						viewer.getTextWidget().getCaretOffset()) - position;
+				length = widgetOffset2ModelOffset(viewer, viewer.getTextWidget().getCaretOffset()) - position;
 			}
 			try {
 				viewer.getDocument().replace(position, length, ""); //$NON-NLS-1$
@@ -2520,8 +2313,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		final StyledText textWidget = getSourceViewer().getTextWidget();
 
 		IAction action = new NavigatePreviousSubWordAction();
-		action.setActionDefinitionId(
-				ITextEditorActionDefinitionIds.WORD_PREVIOUS);
+		action.setActionDefinitionId(ITextEditorActionDefinitionIds.WORD_PREVIOUS);
 		setAction(ITextEditorActionDefinitionIds.WORD_PREVIOUS, action);
 		textWidget.setKeyBinding(SWT.CTRL | SWT.ARROW_LEFT, SWT.NULL);
 
@@ -2531,43 +2323,34 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		textWidget.setKeyBinding(SWT.CTRL | SWT.ARROW_RIGHT, SWT.NULL);
 
 		action = new SelectPreviousSubWordAction();
-		action.setActionDefinitionId(
-				ITextEditorActionDefinitionIds.SELECT_WORD_PREVIOUS);
+		action.setActionDefinitionId(ITextEditorActionDefinitionIds.SELECT_WORD_PREVIOUS);
 		setAction(ITextEditorActionDefinitionIds.SELECT_WORD_PREVIOUS, action);
-		textWidget.setKeyBinding(SWT.CTRL | SWT.SHIFT | SWT.ARROW_LEFT,
-				SWT.NULL);
+		textWidget.setKeyBinding(SWT.CTRL | SWT.SHIFT | SWT.ARROW_LEFT, SWT.NULL);
 
 		action = new SelectNextSubWordAction();
-		action.setActionDefinitionId(
-				ITextEditorActionDefinitionIds.SELECT_WORD_NEXT);
+		action.setActionDefinitionId(ITextEditorActionDefinitionIds.SELECT_WORD_NEXT);
 		setAction(ITextEditorActionDefinitionIds.SELECT_WORD_NEXT, action);
-		textWidget.setKeyBinding(SWT.CTRL | SWT.SHIFT | SWT.ARROW_RIGHT,
-				SWT.NULL);
+		textWidget.setKeyBinding(SWT.CTRL | SWT.SHIFT | SWT.ARROW_RIGHT, SWT.NULL);
 
 		action = new DeletePreviousSubWordAction();
-		action.setActionDefinitionId(
-				ITextEditorActionDefinitionIds.DELETE_PREVIOUS_WORD);
+		action.setActionDefinitionId(ITextEditorActionDefinitionIds.DELETE_PREVIOUS_WORD);
 		setAction(ITextEditorActionDefinitionIds.DELETE_PREVIOUS_WORD, action);
 		textWidget.setKeyBinding(SWT.CTRL | SWT.BS, SWT.NULL);
-		markAsStateDependentAction(
-				ITextEditorActionDefinitionIds.DELETE_PREVIOUS_WORD, true);
+		markAsStateDependentAction(ITextEditorActionDefinitionIds.DELETE_PREVIOUS_WORD, true);
 
 		action = new DeleteNextSubWordAction();
-		action.setActionDefinitionId(
-				ITextEditorActionDefinitionIds.DELETE_NEXT_WORD);
+		action.setActionDefinitionId(ITextEditorActionDefinitionIds.DELETE_NEXT_WORD);
 		setAction(ITextEditorActionDefinitionIds.DELETE_NEXT_WORD, action);
 		textWidget.setKeyBinding(SWT.CTRL | SWT.DEL, SWT.NULL);
-		markAsStateDependentAction(
-				ITextEditorActionDefinitionIds.DELETE_NEXT_WORD, true);
+		markAsStateDependentAction(ITextEditorActionDefinitionIds.DELETE_NEXT_WORD, true);
 	}
 
 	@Override
-	protected final ISourceViewer createSourceViewer(Composite parent,
-			IVerticalRuler verticalRuler, int styles) {
+	protected final ISourceViewer createSourceViewer(Composite parent, IVerticalRuler verticalRuler, int styles) {
 
 		IPreferenceStore store = getPreferenceStore();
-		ISourceViewer viewer = createScriptSourceViewer(parent, verticalRuler,
-				getOverviewRuler(), isOverviewRulerVisible(), styles, store);
+		ISourceViewer viewer = createScriptSourceViewer(parent, verticalRuler, getOverviewRuler(),
+				isOverviewRulerVisible(), styles, store);
 
 		if (DLTKCore.DEBUG) {
 			System.err.println("Create help contexts"); //$NON-NLS-1$
@@ -2580,40 +2363,34 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			scriptSourceViewer = (ScriptSourceViewer) viewer;
 
 		/*
-		 * This is a performance optimization to reduce the computation of the
-		 * text presentation triggered by {@link #setVisibleDocument(IDocument)}
+		 * This is a performance optimization to reduce the computation of the text
+		 * presentation triggered by {@link #setVisibleDocument(IDocument)}
 		 */
-		if (scriptSourceViewer != null && isFoldingEnabled() && (store == null
-				|| !store.getBoolean(PreferenceConstants.EDITOR_SHOW_SEGMENTS)))
+		if (scriptSourceViewer != null && isFoldingEnabled()
+				&& (store == null || !store.getBoolean(PreferenceConstants.EDITOR_SHOW_SEGMENTS)))
 			scriptSourceViewer.prepareDelayedProjection();
 
 		ProjectionViewer projectionViewer = (ProjectionViewer) viewer;
-		fProjectionSupport = new ProjectionSupport(projectionViewer,
-				getAnnotationAccess(), getSharedColors());
-		fProjectionSupport.addSummarizableAnnotationType(
-				"org.eclipse.ui.workbench.texteditor.error"); //$NON-NLS-1$
-		fProjectionSupport.addSummarizableAnnotationType(
-				"org.eclipse.ui.workbench.texteditor.warning"); //$NON-NLS-1$
+		fProjectionSupport = new ProjectionSupport(projectionViewer, getAnnotationAccess(), getSharedColors());
+		fProjectionSupport.addSummarizableAnnotationType("org.eclipse.ui.workbench.texteditor.error"); //$NON-NLS-1$
+		fProjectionSupport.addSummarizableAnnotationType("org.eclipse.ui.workbench.texteditor.warning"); //$NON-NLS-1$
 		final IDLTKLanguageToolkit toolkit = this.getLanguageToolkit();
 		fProjectionSupport.setHoverControlCreator(shell -> {
 			int shellStyle = SWT.TOOL | SWT.NO_TRIM | getOrientation();
 			String statusFieldText = EditorsUI.getTooltipAffordanceString();
-			return new SourceViewerInformationControl(shell, shellStyle,
-					SWT.NONE, statusFieldText, toolkit);
+			return new SourceViewerInformationControl(shell, shellStyle, SWT.NONE, statusFieldText, toolkit);
 		});
 		fProjectionSupport.setInformationPresenterControlCreator(shell -> {
 			int shellStyle = SWT.RESIZE | SWT.TOOL | getOrientation();
 			int style = SWT.V_SCROLL | SWT.H_SCROLL;
-			return new SourceViewerInformationControl(shell, shellStyle, style,
-					toolkit);
+			return new SourceViewerInformationControl(shell, shellStyle, style, toolkit);
 		});
 
 		fProjectionSupport.install();
 
 		fProjectionModelUpdater = createFoldingStructureProvider();
 		if (fProjectionModelUpdater != null)
-			fProjectionModelUpdater.install(this, projectionViewer,
-					getPreferenceStore());
+			fProjectionModelUpdater.install(this, projectionViewer, getPreferenceStore());
 
 		// ensure source viewer decoration support has been created and
 		// configured
@@ -2622,12 +2399,10 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		return viewer;
 	}
 
-	protected ISourceViewer createScriptSourceViewer(Composite parent,
-			IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
-			boolean isOverviewRulerVisible, int styles,
-			IPreferenceStore store) {
-		return new AdaptedSourceViewer(parent, verticalRuler,
-				getOverviewRuler(), isOverviewRulerVisible(), styles, store);
+	protected ISourceViewer createScriptSourceViewer(Composite parent, IVerticalRuler verticalRuler,
+			IOverviewRuler overviewRuler, boolean isOverviewRulerVisible, int styles, IPreferenceStore store) {
+		return new AdaptedSourceViewer(parent, verticalRuler, getOverviewRuler(), isOverviewRulerVisible(), styles,
+				store);
 	}
 
 	/**
@@ -2671,10 +2446,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	@Override
 	protected void rulerContextMenuAboutToShow(IMenuManager menu) {
 		super.rulerContextMenuAboutToShow(menu);
-		IMenuManager foldingMenu = new MenuManager(
-				DLTKEditorMessages.Editor_FoldingMenu_name, "projection"); //$NON-NLS-1$
-		menu.appendToGroup(ITextEditorActionConstants.GROUP_RULERS,
-				foldingMenu);
+		IMenuManager foldingMenu = new MenuManager(DLTKEditorMessages.Editor_FoldingMenu_name, "projection"); //$NON-NLS-1$
+		menu.appendToGroup(ITextEditorActionConstants.GROUP_RULERS, foldingMenu);
 
 		IAction action = getAction("FoldingToggle"); //$NON-NLS-1$
 		if (action != null) {
@@ -2722,8 +2495,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 			if (projectionMode) {
 				if (fProjectionModelUpdater != null)
-					fProjectionModelUpdater.install(this, projectionViewer,
-							getPreferenceStore());
+					fProjectionModelUpdater.install(this, projectionViewer, getPreferenceStore());
 				projectionViewer.enableProjection();
 			}
 
@@ -2756,8 +2528,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * @see AbstractTextEditor#performSave(boolean, IProgressMonitor)
 	 */
 	@Override
-	protected void performSave(boolean overwrite,
-			IProgressMonitor progressMonitor) {
+	protected void performSave(boolean overwrite, IProgressMonitor progressMonitor) {
 		IDocumentProvider p = getDocumentProvider();
 		if (p instanceof ISourceModuleDocumentProvider) {
 			ISourceModuleDocumentProvider cp = (ISourceModuleDocumentProvider) p;
@@ -2790,22 +2561,20 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			if (isSaveAsAllowed()) {
 
 				/*
-				 * 1GEUSSR: ITPUI:ALL - User should never loose changes made in
-				 * the editors. Changed Behavior to make sure that if called
-				 * inside a regular save (because of deletion of input element)
-				 * there is a way to report back to the caller.
+				 * 1GEUSSR: ITPUI:ALL - User should never loose changes made in the editors.
+				 * Changed Behavior to make sure that if called inside a regular save (because
+				 * of deletion of input element) there is a way to report back to the caller.
 				 */
 				performSaveAs(progressMonitor);
 
 			} else {
 
 				/*
-				 * 1GF5YOX: ITPJUI:ALL - Save of delete file claims it's still
-				 * there Missing resources.
+				 * 1GF5YOX: ITPJUI:ALL - Save of delete file claims it's still there Missing
+				 * resources.
 				 */
 				Shell shell = getSite().getShell();
-				MessageDialog.openError(shell,
-						DLTKEditorMessages.SourceModuleEditor_error_saving_title1,
+				MessageDialog.openError(shell, DLTKEditorMessages.SourceModuleEditor_error_saving_title1,
 						DLTKEditorMessages.SourceModuleEditor_error_saving_message1);
 			}
 
@@ -2816,8 +2585,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			updateState(getEditorInput());
 			validateState(getEditorInput());
 
-			IWorkingCopyManager manager = DLTKUIPlugin.getDefault()
-					.getWorkingCopyManager();
+			IWorkingCopyManager manager = DLTKUIPlugin.getDefault().getWorkingCopyManager();
 			ISourceModule unit = manager.getWorkingCopy(getEditorInput());
 
 			if (unit != null) {
@@ -2836,10 +2604,9 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * The selection offset is model based.
 	 * </p>
 	 *
-	 * @param sourceViewer
-	 *                         the source viewer
-	 * @return a region denoting the current signed selection, for a resulting
-	 *         RtoL selections length is < 0
+	 * @param sourceViewer the source viewer
+	 * @return a region denoting the current signed selection, for a resulting RtoL
+	 *         selections length is < 0
 	 */
 	protected IRegion getSignedSelection(ISourceViewer sourceViewer) {
 		StyledText text = sourceViewer.getTextWidget();
@@ -2864,14 +2631,12 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		return false;
 	}
 
-	protected static boolean isSurroundedByBrackets(IDocument document,
-			int offset) {
+	protected static boolean isSurroundedByBrackets(IDocument document, int offset) {
 		if (offset == 0 || offset == document.getLength())
 			return false;
 
 		try {
-			return isBracket(document.getChar(offset - 1))
-					&& isBracket(document.getChar(offset));
+			return isBracket(document.getChar(offset - 1)) && isBracket(document.getChar(offset));
 
 		} catch (BadLocationException e) {
 			return false;
@@ -2894,8 +2659,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	}
 
 	/**
-	 * Override in your editor class to create bracket matcher for your
-	 * language.
+	 * Override in your editor class to create bracket matcher for your language.
 	 *
 	 * @return
 	 */
@@ -2904,19 +2668,16 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	}
 
 	@Override
-	protected void configureSourceViewerDecorationSupport(
-			SourceViewerDecorationSupport support) {
+	protected void configureSourceViewerDecorationSupport(SourceViewerDecorationSupport support) {
 		configureBracketMatcher(support);
 		super.configureSourceViewerDecorationSupport(support);
 	}
 
-	protected void configureBracketMatcher(
-			SourceViewerDecorationSupport support) {
+	protected void configureBracketMatcher(SourceViewerDecorationSupport support) {
 		final ICharacterPairMatcher bracketMatcher = getBracketMatcher();
 		if (bracketMatcher != null) {
 			support.setCharacterPairMatcher(bracketMatcher);
-			support.setMatchingCharacterPainterPreferenceKeys(MATCHING_BRACKETS,
-					MATCHING_BRACKETS_COLOR);
+			support.setMatchingCharacterPainterPreferenceKeys(MATCHING_BRACKETS, MATCHING_BRACKETS_COLOR);
 		}
 	}
 
@@ -2937,8 +2698,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 		int selectionLength = Math.abs(selection.getLength());
 		if (selectionLength > 1) {
-			setStatusLineErrorMessage(
-					DLTKEditorMessages.ScriptEditor_nobracketSelected);
+			setStatusLineErrorMessage(DLTKEditorMessages.ScriptEditor_nobracketSelected);
 			sourceViewer.getTextWidget().getDisplay().beep();
 			return;
 		}
@@ -2950,8 +2710,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 		IRegion region = bracketMatcher.match(document, sourceCaretOffset);
 		if (region == null) {
-			setStatusLineErrorMessage(
-					DLTKEditorMessages.ScriptEditor_noMatchingBracketFound);
+			setStatusLineErrorMessage(DLTKEditorMessages.ScriptEditor_noMatchingBracketFound);
 			sourceViewer.getTextWidget().getDisplay().beep();
 			return;
 		}
@@ -2964,8 +2723,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 
 		int anchor = bracketMatcher.getAnchor();
 		// http://dev.eclipse.org/bugs/show_bug.cgi?id=34195
-		int targetOffset = (ICharacterPairMatcher.RIGHT == anchor) ? offset + 1
-				: offset + length;
+		int targetOffset = (ICharacterPairMatcher.RIGHT == anchor) ? offset + 1 : offset + length;
 
 		boolean visible = false;
 		if (sourceViewer instanceof ITextViewerExtension5) {
@@ -2975,13 +2733,11 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 			IRegion visibleRegion = sourceViewer.getVisibleRegion();
 			// http://dev.eclipse.org/bugs/show_bug.cgi?id=34195
 			visible = (targetOffset >= visibleRegion.getOffset()
-					&& targetOffset <= visibleRegion.getOffset()
-							+ visibleRegion.getLength());
+					&& targetOffset <= visibleRegion.getOffset() + visibleRegion.getLength());
 		}
 
 		if (!visible) {
-			setStatusLineErrorMessage(
-					DLTKEditorMessages.ScriptEditor_matchingBracketIsOutsideSelectedElement);
+			setStatusLineErrorMessage(DLTKEditorMessages.ScriptEditor_matchingBracketIsOutsideSelectedElement);
 			sourceViewer.getTextWidget().getDisplay().beep();
 			return;
 		}
@@ -2997,13 +2753,12 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		setTitleImage(image);
 	}
 
-	private ListenerList<IScriptReconcilingListener> fReconcilingListeners = new ListenerList<>(
-			ListenerList.IDENTITY);
+	private ListenerList<IScriptReconcilingListener> fReconcilingListeners = new ListenerList<>(ListenerList.IDENTITY);
 
 	/**
 	 * Mutex for the reconciler. See
-	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63898 for a description of
-	 * the problem.
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63898 for a description of the
+	 * problem.
 	 * <p>
 	 * XXX remove once the underlying problem
 	 * (https://bugs.eclipse.org/bugs/show_bug.cgi?id=66176) is solved.
@@ -3031,8 +2786,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 * @since 3.0
 	 */
 	@Override
-	public void reconciled(ISourceModule ast, boolean forced,
-			IProgressMonitor progressMonitor) {
+	public void reconciled(ISourceModule ast, boolean forced, IProgressMonitor progressMonitor) {
 
 		// see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=58245
 		// JavaPlugin javaPlugin= JavaPlugin.getDefault();
@@ -3056,13 +2810,11 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		}
 	}
 
-	public void addReconcileListener(
-			IScriptReconcilingListener semanticHighlightingReconciler) {
+	public void addReconcileListener(IScriptReconcilingListener semanticHighlightingReconciler) {
 		fReconcilingListeners.add(semanticHighlightingReconciler);
 	}
 
-	public void removeReconcileListener(
-			IScriptReconcilingListener semanticHighlightingReconciler) {
+	public void removeReconcileListener(IScriptReconcilingListener semanticHighlightingReconciler) {
 		fReconcilingListeners.remove(semanticHighlightingReconciler);
 	}
 
@@ -3071,13 +2823,11 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	private void installSemanticHighlighting() {
 		ScriptTextTools textTools = getTextTools();
 		if (fSemanticManager == null && textTools != null) {
-			final ISemanticHighlightingUpdater updater = textTools
-					.getSemanticPositionUpdater(getNatureId());
+			final ISemanticHighlightingUpdater updater = textTools.getSemanticPositionUpdater(getNatureId());
 			if (updater != null) {
 				fSemanticManager = new SemanticHighlightingManager(updater);
-				fSemanticManager.install(this,
-						(ScriptSourceViewer) getSourceViewer(),
-						textTools.getColorManager(), getPreferenceStore());
+				fSemanticManager.install(this, (ScriptSourceViewer) getSourceViewer(), textTools.getColorManager(),
+						getPreferenceStore());
 			}
 		}
 	}
@@ -3087,16 +2837,13 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		if (!(element instanceof ISourceModule)) {
 			return;
 		}
-		Job job = new Job(
-				DLTKEditorMessages.ScriptEditor_InitializeSemanticHighlighting) {
+		Job job = new Job(DLTKEditorMessages.ScriptEditor_InitializeSemanticHighlighting) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				if (fSemanticManager != null) {
-					SemanticHighlightingReconciler reconciler = fSemanticManager
-							.getReconciler();
+					SemanticHighlightingReconciler reconciler = fSemanticManager.getReconciler();
 					if (reconciler != null)
-						reconciler.reconciled((ISourceModule) element, false,
-								monitor);
+						reconciler.reconciled((ISourceModule) element, false, monitor);
 				}
 				return Status.OK_STATUS;
 			}
@@ -3147,9 +2894,8 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	 */
 	@Override
 	protected boolean isTabsToSpacesConversionEnabled() {
-		return getPreferenceStore() != null
-				&& CodeFormatterConstants.SPACE.equals(getPreferenceStore()
-						.getString(CodeFormatterConstants.FORMATTER_TAB_CHAR));
+		return getPreferenceStore() != null && CodeFormatterConstants.SPACE
+				.equals(getPreferenceStore().getString(CodeFormatterConstants.FORMATTER_TAB_CHAR));
 	}
 
 	private boolean isHandledPropertyEvent(String property, String[] handled) {
@@ -3167,8 +2913,7 @@ public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 	}
 
 	/*
-	 * Increase visibility for this package - called from {@link
-	 * OccurrencesFinder}
+	 * Increase visibility for this package - called from {@link OccurrencesFinder}
 	 */
 	@Override
 	protected IProgressMonitor getProgressMonitor() {

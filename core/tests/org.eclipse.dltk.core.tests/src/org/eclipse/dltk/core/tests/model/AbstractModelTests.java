@@ -84,8 +84,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 
 		@Override
 		public void elementChanged(ElementChangedEvent ev) {
-			IModelElementDelta[] copy = new IModelElementDelta[deltas.length
-					+ 1];
+			IModelElementDelta[] copy = new IModelElementDelta[deltas.length + 1];
 			System.arraycopy(deltas, 0, copy, 0, deltas.length);
 			copy[deltas.length] = ev.getDelta();
 			deltas = copy;
@@ -99,8 +98,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 				IModelElementDelta[] children = delta.getAffectedChildren();
 				int childrenLength = children.length;
 				IResourceDelta[] resourceDeltas = delta.getResourceDeltas();
-				int resourceDeltasLength = resourceDeltas == null ? 0
-						: resourceDeltas.length;
+				int resourceDeltasLength = resourceDeltas == null ? 0 : resourceDeltas.length;
 				if (childrenLength == 0 && resourceDeltasLength == 0) {
 					buffer.append(delta);
 				} else {
@@ -133,11 +131,9 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 			Comparer comparer = (a, b) -> {
 				IModelElementDelta deltaA = (IModelElementDelta) a;
 				IModelElementDelta deltaB = (IModelElementDelta) b;
-				return deltaA.getElement().getElementName()
-						.compareTo(deltaB.getElement().getElementName());
+				return deltaA.getElement().getElementName().compareTo(deltaB.getElement().getElementName());
 			};
-			org.eclipse.dltk.internal.core.util.Util.sort(elementDeltas,
-					comparer);
+			org.eclipse.dltk.internal.core.util.Util.sort(elementDeltas, comparer);
 		}
 	}
 
@@ -183,8 +179,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		try {
 			final Bundle bundle = Platform.getBundle(bundleName);
 			if (bundle == null) {
-				throw new IllegalStateException(NLS.bind(
-						"Bundle \"{0}\" with test data not found", bundleName));
+				throw new IllegalStateException(NLS.bind("Bundle \"{0}\" with test data not found", bundleName));
 			}
 			URL platformURL = bundle.getEntry("/");
 			return new File(FileLocator.toFileURL(platformURL).getFile());
@@ -195,8 +190,8 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/**
-	 * Copy the given source directory (and all its contents) to the given
-	 * target directory.
+	 * Copy the given source directory (and all its contents) to the given target
+	 * directory.
 	 */
 	protected void copyDirectory(File source, File target) throws IOException {
 		FileUtil.copyDirectory(source, target);
@@ -210,61 +205,51 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		FileUtil.copyFile(src, dest);
 	}
 
-	public IProject setUpProject(final String projectName, String bundleName)
-			throws CoreException, IOException {
+	public IProject setUpProject(final String projectName, String bundleName) throws CoreException, IOException {
 		return setUpProjectTo(projectName, projectName, bundleName);
 	}
 
-	protected IScriptProject setUpScriptProjectTo(final String projectName,
-			final String fromName, String bundleName)
+	protected IScriptProject setUpScriptProjectTo(final String projectName, final String fromName, String bundleName)
 			throws CoreException, IOException {
-		final IProject project = setUpProjectTo(projectName, fromName,
-				bundleName);
+		final IProject project = setUpProjectTo(projectName, fromName, bundleName);
 		return DLTKCore.create(project);
 	}
 
-	protected IProject setUpProjectTo(final String projectName,
-			final String fromName, String bundleName)
+	protected IProject setUpProjectTo(final String projectName, final String fromName, String bundleName)
 			throws CoreException, IOException {
 		// copy files in project from source workspace to target workspace
 		final File sourceWorkspacePath = getSourceWorkspacePath(bundleName);
-		final File targetWorkspacePath = getWorkspaceRoot().getLocation()
-				.toFile();
+		final File targetWorkspacePath = getWorkspaceRoot().getLocation().toFile();
 
 		final File source = new File(sourceWorkspacePath, fromName);
 		if (!source.isDirectory()) {
-			throw new IllegalArgumentException(
-					NLS.bind("Source directory \"{0}\" doesn't exist", source));
+			throw new IllegalArgumentException(NLS.bind("Source directory \"{0}\" doesn't exist", source));
 		}
 		copyDirectory(source, new File(targetWorkspacePath, projectName));
 
 		return createProject(projectName);
 	}
 
-	protected IScriptProject setUpScriptProject(final String projectName,
-			String bundleName) throws CoreException, IOException {
+	protected IScriptProject setUpScriptProject(final String projectName, String bundleName)
+			throws CoreException, IOException {
 		final IProject project = setUpProject(projectName, bundleName);
 		return DLTKCore.create(project);
 	}
 
 	/**
-	 * Returns the specified source module in the given project, root, and
-	 * folder or <code>null</code> if it does not exist.
+	 * Returns the specified source module in the given project, root, and folder or
+	 * <code>null</code> if it does not exist.
 	 */
-	public ISourceModule getSourceModule(String projectName, String rootPath,
-			IPath path) throws ModelException {
-		IScriptFolder folder = getScriptFolder(projectName, rootPath,
-				path.removeLastSegments(1));
+	public ISourceModule getSourceModule(String projectName, String rootPath, IPath path) throws ModelException {
+		IScriptFolder folder = getScriptFolder(projectName, rootPath, path.removeLastSegments(1));
 		if (folder == null) {
 			return null;
 		}
 		return folder.getSourceModule(path.lastSegment());
 	}
 
-	public ISourceModule getSourceModule(String projectName, String rootPath,
-			String path) throws ModelException {
-		IScriptFolder folder = getScriptFolder(projectName, rootPath,
-				new Path(path).removeLastSegments(1));
+	public ISourceModule getSourceModule(String projectName, String rootPath, String path) throws ModelException {
+		IScriptFolder folder = getScriptFolder(projectName, rootPath, new Path(path).removeLastSegments(1));
 		if (folder == null) {
 			return null;
 		}
@@ -273,12 +258,10 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 
 	/**
 	 * Returns the specified script folder in the given project and fragment, or
-	 * <code>null</code> if it does not exist. The rootPath must be specified as
-	 * a project relative path. The empty path refers to the default package
-	 * fragment.
+	 * <code>null</code> if it does not exist. The rootPath must be specified as a
+	 * project relative path. The empty path refers to the default package fragment.
 	 */
-	public IScriptFolder getScriptFolder(String projectName,
-			String fragmentPath, IPath path) throws ModelException {
+	public IScriptFolder getScriptFolder(String projectName, String fragmentPath, IPath path) throws ModelException {
 		IProjectFragment root = getProjectFragment(projectName, fragmentPath);
 		if (root == null) {
 			return null;
@@ -289,13 +272,11 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	/**
 	 * Returns the specified package fragment root in the given project, or
 	 * <code>null</code> if it does not exist. If relative, the rootPath must be
-	 * specified as a project relative path. The empty path refers to the
-	 * package fragment root that is the project folder iteslf. If absolute, the
-	 * rootPath refers to either an external zip, or a resource internal to the
-	 * workspace
+	 * specified as a project relative path. The empty path refers to the package
+	 * fragment root that is the project folder iteslf. If absolute, the rootPath
+	 * refers to either an external zip, or a resource internal to the workspace
 	 */
-	public IProjectFragment getProjectFragment(String projectName,
-			String fragmentPath) throws ModelException {
+	public IProjectFragment getProjectFragment(String projectName, String fragmentPath) throws ModelException {
 
 		IScriptProject project = getScriptProject(projectName);
 		if (project == null) {
@@ -303,8 +284,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		}
 		IPath path = Path.fromPortableString(fragmentPath);
 		if (path.isAbsolute() && path.getDevice() == null) {
-			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
-					.getRoot();
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 			IResource resource = workspaceRoot.findMember(path);
 			IProjectFragment root;
 			// resource in the workspace
@@ -318,8 +298,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 			for (int i = 0; i < roots.length; i++) {
 				IProjectFragment root = roots[i];
 				IResource underlyingResource = root.getUnderlyingResource();
-				if (underlyingResource != null && underlyingResource
-						.getProjectRelativePath().equals(path)) {
+				if (underlyingResource != null && underlyingResource.getProjectRelativePath().equals(path)) {
 					return root;
 				}
 				if (root.getPath().equals(path)) {
@@ -331,16 +310,15 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/**
-	 * Returns the script Project with the given name in this test suite's
-	 * model. This is a convenience method.
+	 * Returns the script Project with the given name in this test suite's model.
+	 * This is a convenience method.
 	 */
 	public IScriptProject getScriptProject(String name) {
 		IProject project = getProject(name);
 		return DLTKCore.create(project);
 	}
 
-	protected void discardWorkingCopies(ISourceModule[] units)
-			throws ModelException {
+	protected void discardWorkingCopies(ISourceModule[] units) throws ModelException {
 		if (units == null)
 			return;
 		for (int i = 0, length = units.length; i < length; i++)
@@ -353,14 +331,6 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		super.setUpSuite();
 
 		// ensure autobuilding is turned off
-		WorkspaceAutoBuild.disable();
-	}
-
-	/**
-	 * Deprecated since 2012-01-11 because of the typo in method name.
-	 */
-	@Deprecated
-	public static void disableAutoBulid() throws CoreException {
 		WorkspaceAutoBuild.disable();
 	}
 
@@ -398,8 +368,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	/*
 	 * Create simple project.
 	 */
-	protected static IProject createProject(final String projectName)
-			throws CoreException {
+	protected static IProject createProject(final String projectName) throws CoreException {
 		final IProject project = getProject(projectName);
 		IWorkspaceRunnable create = monitor -> {
 			project.create(null);
@@ -410,30 +379,25 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/*
-	 * Creates a script project with the given source folders an output
-	 * location. Add those on the project's buildpath.
+	 * Creates a script project with the given source folders an output location.
+	 * Add those on the project's buildpath.
 	 */
-	protected static IScriptProject createScriptProject(String projectName,
-			String[] natures, String[] sourceFolders) throws CoreException {
+	protected static IScriptProject createScriptProject(String projectName, String[] natures, String[] sourceFolders)
+			throws CoreException {
 		return createScriptProject(projectName, natures, sourceFolders, null);
 	}
 
-	protected static IScriptProject createScriptProject(
-			final String projectName, final String[] natures,
-			final String[] sourceFolders, final String[] projects)
-			throws CoreException {
-		return createScriptProject(projectName, natures, sourceFolders,
-				projects, null);
+	protected static IScriptProject createScriptProject(final String projectName, final String[] natures,
+			final String[] sourceFolders, final String[] projects) throws CoreException {
+		return createScriptProject(projectName, natures, sourceFolders, projects, null);
 	}
 
 	/*
-	 * Creates a script project with the given source folders an output
-	 * location. Add those on the project's buildpath.
+	 * Creates a script project with the given source folders an output location.
+	 * Add those on the project's buildpath.
 	 */
-	protected static IScriptProject createScriptProject(
-			final String projectName, final String[] natures,
-			final String[] sourceFolders, final String[] projects,
-			final String[] containers) throws CoreException {
+	protected static IScriptProject createScriptProject(final String projectName, final String[] natures,
+			final String[] sourceFolders, final String[] projects, final String[] containers) throws CoreException {
 		final IScriptProject[] result = new IScriptProject[1];
 		IWorkspaceRunnable create = monitor -> {
 			// create project
@@ -451,8 +415,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 			int sourceLength = sourceFolders == null ? 0 : sourceFolders.length;
 			int containersLength = containers == null ? 0 : containers.length;
 			int projectLength = projects == null ? 0 : projects.length;
-			IBuildpathEntry[] entries = new IBuildpathEntry[sourceLength
-					+ projectLength + containersLength];
+			IBuildpathEntry[] entries = new IBuildpathEntry[sourceLength + projectLength + containersLength];
 			for (int i1 = 0; i1 < sourceLength; i1++) {
 				IPath sourcePath = new Path(sourceFolders[i1]);
 				int segmentCount = sourcePath.segmentCount();
@@ -460,8 +423,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 					// create folder and its parents
 					IContainer container = project;
 					for (int j = 0; j < segmentCount; j++) {
-						IFolder folder = container
-								.getFolder(new Path(sourcePath.segment(j)));
+						IFolder folder = container.getFolder(new Path(sourcePath.segment(j)));
 						if (!folder.exists()) {
 							folder.create(true, true, null);
 						}
@@ -469,8 +431,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 					}
 				}
 				// create source entry
-				entries[i1] = DLTKCore
-						.newSourceEntry(projectPath.append(sourcePath));
+				entries[i1] = DLTKCore.newSourceEntry(projectPath.append(sourcePath));
 			}
 
 			for (int i2 = 0; i2 < projectLength; i2++) {
@@ -483,16 +444,13 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 				IPath[] nonAccessibleFiles;
 				nonAccessibleFiles = new IPath[0];
 
-				entries[sourceLength + i2] = DLTKCore.newProjectEntry(
-						new Path(projects[i2]),
-						BuildpathEntry.getAccessRules(accessibleFiles,
-								nonAccessibleFiles),
-						true, new IBuildpathAttribute[0], false);
+				entries[sourceLength + i2] = DLTKCore.newProjectEntry(new Path(projects[i2]),
+						BuildpathEntry.getAccessRules(accessibleFiles, nonAccessibleFiles), true,
+						new IBuildpathAttribute[0], false);
 			}
 
 			for (int i3 = 0; i3 < containersLength; i3++) {
-				entries[sourceLength + projectLength + i3] = DLTKCore
-						.newContainerEntry(new Path(containers[i3]));
+				entries[sourceLength + projectLength + i3] = DLTKCore.newContainerEntry(new Path(containers[i3]));
 			}
 			// set buildpath and output location
 			IScriptProject scriptProject = DLTKCore.create(project);
@@ -505,22 +463,19 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/*
-	 * Asserts that the given actual source (usually coming from a file content)
-	 * is equal to the expected one. Note that 'expected' is assumed to have the
-	 * '\n' line separator. The line separators in 'actual' are converted to
-	 * '\n' before the comparison.
+	 * Asserts that the given actual source (usually coming from a file content) is
+	 * equal to the expected one. Note that 'expected' is assumed to have the '\n'
+	 * line separator. The line separators in 'actual' are converted to '\n' before
+	 * the comparison.
 	 */
-	protected void assertSourceEquals(String message, String expected,
-			String actual) {
+	protected void assertSourceEquals(String message, String expected, String actual) {
 		if (actual == null) {
 			assertEquals(message, expected, null);
 			return;
 		}
-		actual = org.eclipse.dltk.core.tests.util.Util
-				.convertToIndependantLineDelimiter(actual);
+		actual = org.eclipse.dltk.core.tests.util.Util.convertToIndependantLineDelimiter(actual);
 		if (!actual.equals(expected)) {
-			System.out.print(org.eclipse.dltk.core.tests.util.Util
-					.displayString(actual.toString(), 2));
+			System.out.print(org.eclipse.dltk.core.tests.util.Util.displayString(actual.toString(), 2));
 			System.out.println(this.endChar);
 		}
 		assertEquals(message, expected, actual);
@@ -552,12 +507,10 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 			} catch (CoreException e) {
 				lastException = e;
 				// just print for info
-				System.out
-						.println("Retry " + retryCount + ": " + e.getMessage());
+				System.out.println("Retry " + retryCount + ": " + e.getMessage());
 			} catch (IllegalArgumentException iae) {
 				// just print for info
-				System.out.println(
-						"Retry " + retryCount + ": " + iae.getMessage());
+				System.out.println("Retry " + retryCount + ": " + iae.getMessage());
 			}
 		}
 		if (!resource.isAccessible())
@@ -596,8 +549,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	/**
 	 * Batch deletion of projects
 	 */
-	protected void deleteProjects(final String... projectNames)
-			throws CoreException {
+	protected void deleteProjects(final String... projectNames) throws CoreException {
 		ResourcesPlugin.getWorkspace().run(monitor -> {
 			if (projectNames != null) {
 				for (int i = 0, max = projectNames.length; i < max; i++) {
@@ -644,29 +596,25 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 			// elementB.toStringWithAncestors().toCharArray(),
 			// getExternalJCLPathString().toCharArray(),
 			// tempJCLPath));
-			return elementA.toStringWithAncestors()
-					.compareTo(elementB.toStringWithAncestors().toString());
+			return elementA.toStringWithAncestors().compareTo(elementB.toStringWithAncestors().toString());
 			// return idA.compareTo(idB);
 		};
 		org.eclipse.dltk.internal.core.util.Util.sort(elements, comparer);
 	}
 
-	protected void assertSortedElementsEqual(String message, String expected,
-			IModelElement[] elements) {
+	protected void assertSortedElementsEqual(String message, String expected, IModelElement[] elements) {
 		sortElements(elements);
 		assertElementsEqual(message, expected, elements);
 	}
 
-	protected void assertElementsEqual(String message, String expected,
-			IModelElement[] elements) {
-		assertElementsEqual(message, expected, elements,
-				false/*
-						 * don't show key
-						 */);
+	protected void assertElementsEqual(String message, String expected, IModelElement[] elements) {
+		assertElementsEqual(message, expected, elements, false/*
+																 * don't show key
+																 */);
 	}
 
-	protected void assertElementsEqual(String message, String expected,
-			IModelElement[] elements, boolean showResolvedInfo) {
+	protected void assertElementsEqual(String message, String expected, IModelElement[] elements,
+			boolean showResolvedInfo) {
 		StringBuffer buffer = new StringBuffer();
 		if (elements != null) {
 			for (int i = 0, length = elements.length; i < length; i++) {
@@ -674,8 +622,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 				if (element == null) {
 					buffer.append("<null>");
 				} else {
-					buffer.append(
-							element.toStringWithAncestors(showResolvedInfo));
+					buffer.append(element.toStringWithAncestors(showResolvedInfo));
 				}
 				if (i != length - 1)
 					buffer.append("\n");
@@ -687,8 +634,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		if (!expected.equals(actual)) {
 			if (this.displayName)
 				System.out.println(getName() + " actual result is:");
-			System.out.println(org.eclipse.dltk.core.tests.util.Util
-					.displayString(actual, this.tabs) + this.endChar);
+			System.out.println(org.eclipse.dltk.core.tests.util.Util.displayString(actual, this.tabs) + this.endChar);
 		}
 		assertEquals(message, expected, actual);
 	}
@@ -697,14 +643,12 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		Util.Comparer comparer = (a, b) -> {
 			IResource resourceA = (IResource) a;
 			IResource resourceB = (IResource) b;
-			return resourceA.getFullPath().toString()
-					.compareTo(resourceB.getFullPath().toString());
+			return resourceA.getFullPath().toString().compareTo(resourceB.getFullPath().toString());
 		};
 		Util.sort(resources, comparer);
 	}
 
-	protected void assertResourceNamesEqual(String message, String expected,
-			Object[] resources) {
+	protected void assertResourceNamesEqual(String message, String expected, Object[] resources) {
 		sortResources(resources);
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0, length = resources.length; i < length; i++) {
@@ -714,8 +658,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 				buffer.append("\n");
 		}
 		if (!expected.equals(buffer.toString())) {
-			System.out.print(org.eclipse.dltk.core.tests.util.Util
-					.displayString(buffer.toString(), 2));
+			System.out.print(org.eclipse.dltk.core.tests.util.Util.displayString(buffer.toString(), 2));
 			System.out.println(this.endChar);
 		}
 		assertEquals(message, expected, buffer.toString());
@@ -729,8 +672,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		assertEquals(message, expected, actual);
 	}
 
-	protected void assertDeltas(String message, String expected,
-			IModelElementDelta delta) {
+	protected void assertDeltas(String message, String expected, IModelElementDelta delta) {
 		String actual = delta == null ? "<null>" : delta.toString();
 		if (!expected.equals(actual)) {
 			System.out.println(actual);
@@ -738,17 +680,14 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		assertEquals(message, expected, actual);
 	}
 
-	protected void assertMarkers(String message, String expectedMarkers,
-			IScriptProject project) throws CoreException {
-		IMarker[] markers = project.getProject().findMarkers(
-				IScriptModelMarker.BUILDPATH_PROBLEM_MARKER, false,
+	protected void assertMarkers(String message, String expectedMarkers, IScriptProject project) throws CoreException {
+		IMarker[] markers = project.getProject().findMarkers(IScriptModelMarker.BUILDPATH_PROBLEM_MARKER, false,
 				IResource.DEPTH_ZERO);
 		sortMarkers(markers);
 		assertMarkers(message, expectedMarkers, markers);
 	}
 
-	protected void assertMarkers(String message, String expectedMarkers,
-			IMarker[] markers) throws CoreException {
+	protected void assertMarkers(String message, String expectedMarkers, IMarker[] markers) throws CoreException {
 		StringBuffer buffer = new StringBuffer();
 		if (markers != null) {
 			for (int i = 0, length = markers.length; i < length; i++) {
@@ -761,8 +700,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		}
 		String actual = buffer.toString();
 		if (!expectedMarkers.equals(actual)) {
-			System.out.println(org.eclipse.dltk.core.tests.util.Util
-					.displayString(actual, 2));
+			System.out.println(org.eclipse.dltk.core.tests.util.Util.displayString(actual, 2));
 		}
 		assertEquals(message, expectedMarkers, actual);
 	}
@@ -780,8 +718,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	/**
 	 * Sets the class path of the script project.
 	 */
-	public void setBuildpath(IScriptProject scriptProject,
-			IBuildpathEntry[] buildpath) {
+	public void setBuildpath(IScriptProject scriptProject, IBuildpathEntry[] buildpath) {
 		try {
 			scriptProject.setRawBuildpath(buildpath, null);
 		} catch (ModelException e) {
@@ -797,18 +734,16 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/**
-	 * Returns the delta for the given element from the cached delta. If the
-	 * boolean is true returns the first delta found.
+	 * Returns the delta for the given element from the cached delta. If the boolean
+	 * is true returns the first delta found.
 	 */
-	protected IModelElementDelta getDeltaFor(IModelElement element,
-			boolean returnFirst) {
+	protected IModelElementDelta getDeltaFor(IModelElement element, boolean returnFirst) {
 		IModelElementDelta[] deltas = this.deltaListener.deltas;
 		if (deltas == null)
 			return null;
 		IModelElementDelta result = null;
 		for (int i = 0; i < deltas.length; i++) {
-			IModelElementDelta delta = searchForDelta(element,
-					this.deltaListener.deltas[i]);
+			IModelElementDelta delta = searchForDelta(element, this.deltaListener.deltas[i]);
 			if (delta != null) {
 				if (returnFirst) {
 					return delta;
@@ -822,8 +757,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	/**
 	 * Returns a delta for the given element in the delta tree
 	 */
-	protected IModelElementDelta searchForDelta(IModelElement element,
-			IModelElementDelta delta) {
+	protected IModelElementDelta searchForDelta(IModelElement element, IModelElementDelta delta) {
 
 		if (delta == null) {
 			return null;
@@ -832,8 +766,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 			return delta;
 		}
 		for (int i = 0; i < delta.getAffectedChildren().length; i++) {
-			IModelElementDelta child = searchForDelta(element,
-					delta.getAffectedChildren()[i]);
+			IModelElementDelta child = searchForDelta(element, delta.getAffectedChildren()[i]);
 			if (child != null) {
 				return child;
 			}
@@ -847,8 +780,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	public void assertCreation(IModelElement[] newElements) {
 		for (int i = 0; i < newElements.length; i++) {
 			IModelElement newElement = newElements[i];
-			assertTrue("Element should be present after creation",
-					newElement.exists());
+			assertTrue("Element should be present after creation", newElement.exists());
 		}
 	}
 
@@ -860,25 +792,21 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/**
-	 * Creates an operation to delete the given elements, asserts the operation
-	 * is successful, and ensures the elements are no longer present in the
-	 * model.
+	 * Creates an operation to delete the given elements, asserts the operation is
+	 * successful, and ensures the elements are no longer present in the model.
 	 */
-	public void assertDeletion(IModelElement[] elementsToDelete)
-			throws ModelException {
+	public void assertDeletion(IModelElement[] elementsToDelete) throws ModelException {
 		IModelElement elementToDelete = null;
 		for (int i = 0; i < elementsToDelete.length; i++) {
 			elementToDelete = elementsToDelete[i];
-			assertTrue("Element must be present to be deleted",
-					elementToDelete.exists());
+			assertTrue("Element must be present to be deleted", elementToDelete.exists());
 		}
 
 		getScriptModel().delete(elementsToDelete, false, null);
 
 		for (int i = 0; i < elementsToDelete.length; i++) {
 			elementToDelete = elementsToDelete[i];
-			assertTrue("Element should not be present after deletion: "
-					+ elementToDelete, !elementToDelete.exists());
+			assertTrue("Element should not be present after deletion: " + elementToDelete, !elementToDelete.exists());
 		}
 	}
 
@@ -896,8 +824,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		WorkspaceAutoBuild.waitFor();
 	}
 
-	public void ensureCorrectPositioning(IParent container,
-			IModelElement sibling, IModelElement positioned)
+	public void ensureCorrectPositioning(IParent container, IModelElement sibling, IModelElement positioned)
 			throws ModelException {
 		IModelElement[] children = container.getChildren();
 		if (sibling != null) {
@@ -905,8 +832,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 			boolean found = false;
 			for (int i = 0; i < children.length; i++) {
 				if (children[i].equals(sibling)) {
-					assertTrue("element should be before sibling",
-							i > 0 && children[i - 1].equals(positioned));
+					assertTrue("element should be before sibling", i > 0 && children[i - 1].equals(positioned));
 					found = true;
 					break;
 				}
@@ -915,64 +841,55 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		}
 	}
 
-	public ISourceModule getWorkingCopy(String path, boolean computeProblems)
-			throws ModelException {
+	public ISourceModule getWorkingCopy(String path, boolean computeProblems) throws ModelException {
 		return getWorkingCopy(path, "", computeProblems);
 	}
 
-	public ISourceModule getWorkingCopy(String path, String source)
-			throws ModelException {
+	public ISourceModule getWorkingCopy(String path, String source) throws ModelException {
 		return getWorkingCopy(path, source, false);
 	}
 
-	public ISourceModule getWorkingCopy(String path, String source,
-			boolean computeProblems) throws ModelException {
+	public ISourceModule getWorkingCopy(String path, String source, boolean computeProblems) throws ModelException {
 		if (this.wcOwner == null)
 			this.wcOwner = new WorkingCopyOwner() {
 			};
 		return getWorkingCopy(path, source, this.wcOwner, computeProblems);
 	}
 
-	public ISourceModule getWorkingCopy(String path, String source,
-			WorkingCopyOwner owner, boolean computeProblems)
+	public ISourceModule getWorkingCopy(String path, String source, WorkingCopyOwner owner, boolean computeProblems)
 			throws ModelException {
-		IProblemRequestor problemRequestor = computeProblems
-				? new IProblemRequestor() {
-					@Override
-					public void acceptProblem(IProblem problem) {
-					}
+		IProblemRequestor problemRequestor = computeProblems ? new IProblemRequestor() {
+			@Override
+			public void acceptProblem(IProblem problem) {
+			}
 
-					@Override
-					public void beginReporting() {
-					}
+			@Override
+			public void beginReporting() {
+			}
 
-					@Override
-					public void endReporting() {
-					}
+			@Override
+			public void endReporting() {
+			}
 
-					@Override
-					public boolean isActive() {
-						return true;
-					}
-				}
-				: null;
+			@Override
+			public boolean isActive() {
+				return true;
+			}
+		} : null;
 		return getWorkingCopy(path, source, owner, problemRequestor);
 	}
 
-	public ISourceModule getWorkingCopy(String path, String source,
-			WorkingCopyOwner owner, IProblemRequestor problemRequestor)
-			throws ModelException {
+	public ISourceModule getWorkingCopy(String path, String source, WorkingCopyOwner owner,
+			IProblemRequestor problemRequestor) throws ModelException {
 		ISourceModule workingCopy = getSourceModule(path);
 		if (owner != null)
-			workingCopy = workingCopy.getWorkingCopy(
-					/* owner, problemRequestor, */null/*
-														 * no progress monitor
-														 */);
+			workingCopy = workingCopy.getWorkingCopy(/* owner, problemRequestor, */null/*
+																						 * no progress monitor
+																						 */);
 		else
-			workingCopy.becomeWorkingCopy(problemRequestor,
-					null/*
-						 * no progress monitor
-						 */);
+			workingCopy.becomeWorkingCopy(problemRequestor, null/*
+																 * no progress monitor
+																 */);
 		workingCopy.getBuffer().setContents(source);
 		// if (problemRequestor instanceof ProblemRequestor)
 		// ((ProblemRequestor)
@@ -987,8 +904,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 
 	public static void storeFile(File dest, URL url) throws IOException {
 		try (InputStream input = new BufferedInputStream(url.openStream());
-				OutputStream output = new BufferedOutputStream(
-						new FileOutputStream(dest))) {
+				OutputStream output = new BufferedOutputStream(new FileOutputStream(dest))) {
 			// Simple copy
 			int ch = -1;
 			while ((ch = input.read()) != -1) {
@@ -997,10 +913,8 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		}
 	}
 
-	public static File storeToMetadata(Bundle bundle, String name, String path)
-			throws IOException {
-		File pathFile = DLTKCore.getDefault().getStateLocation().append(name)
-				.toFile();
+	public static File storeToMetadata(Bundle bundle, String name, String path) throws IOException {
+		File pathFile = DLTKCore.getDefault().getStateLocation().append(name).toFile();
 		storeFile(pathFile, FileLocator.resolve(bundle.getEntry(path)));
 		return pathFile;
 	}

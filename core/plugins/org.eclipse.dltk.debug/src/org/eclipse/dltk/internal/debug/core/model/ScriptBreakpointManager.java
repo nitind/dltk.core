@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.core.model;
@@ -41,7 +41,6 @@ import org.eclipse.dltk.debug.core.DLTKDebugPlugin;
 import org.eclipse.dltk.debug.core.DebugOption;
 import org.eclipse.dltk.debug.core.IDLTKDebugToolkit;
 import org.eclipse.dltk.debug.core.IDLTKDebugToolkit2;
-import org.eclipse.dltk.debug.core.ScriptDebugManager;
 import org.eclipse.dltk.debug.core.model.IScriptBreakpoint;
 import org.eclipse.dltk.debug.core.model.IScriptBreakpointLineMapper;
 import org.eclipse.dltk.debug.core.model.IScriptBreakpointPathMapper;
@@ -88,15 +87,6 @@ public class ScriptBreakpointManager
 			config.setLineNo(lineBreakpoint.getLineNumber());
 		}
 		return config;
-	}
-
-	/** Use makeExpression(IScriptWatchpoint) */
-	@Deprecated
-	protected static String makeWatchpointExpression(
-			IScriptWatchpoint watchpoint) throws CoreException {
-		final IDLTKDebugToolkit debugToolkit = ScriptDebugManager.getInstance()
-				.getDebugToolkitByDebugModel(watchpoint.getModelIdentifier());
-		return makeExpression(watchpoint, debugToolkit);
 	}
 
 	protected String makeExpression(IScriptWatchpoint watchpoint)
@@ -630,10 +620,9 @@ public class ScriptBreakpointManager
 	 * @see IBreakpointListener#breakpointChanged(IBreakpoint, IMarkerDelta)
 	 * @param breakpoint
 	 * @param delta
-	 *                       if delta is <code>null</code> then there was a call
-	 *                       to
-	 *                       BreakPointManager.fireBreakpointChanged(IBreakpoint
-	 *                       breakpoint), so see it as a major change.
+	 *            if delta is <code>null</code> then there was a call to
+	 *            BreakPointManager.fireBreakpointChanged(IBreakpoint
+	 *            breakpoint), so see it as a major change.
 	 */
 	@Override
 	public void breakpointChanged(final IBreakpoint breakpoint,

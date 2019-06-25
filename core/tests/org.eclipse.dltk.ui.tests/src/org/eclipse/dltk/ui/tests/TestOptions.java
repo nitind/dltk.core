@@ -21,14 +21,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 public class TestOptions {
 	
-	/**
-	 * @deprecated use getDefaultOptions() instead
-	 */
-	@Deprecated
-	public static Hashtable getFormatterOptions() {
-		return getDefaultOptions();
-	}
-	
 	public static Hashtable getDefaultOptions() {
 		Hashtable result= DLTKCore.getDefaultOptions();	
 		// should cover all compiler settings

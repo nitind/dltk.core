@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -49,27 +49,13 @@ public class EditorTextHoverDescriptor {
 	private IConfigurationElement fElement;
 
 	/**
-	 * Returns all editor text hovers contributed to the workbench.
-	 *
-	 * @deprecated
+	 * Returns all editor text hovers contributed to the workbench for the specified
+	 * nature.
 	 */
-	@Deprecated
-	public static EditorTextHoverDescriptor[] getContributedHovers(
-			IPreferenceStore store) {
-		return getContributedHovers(null, store);
-	}
-
-	/**
-	 * Returns all editor text hovers contributed to the workbench for the
-	 * specified nature.
-	 */
-	public static EditorTextHoverDescriptor[] getContributedHovers(
-			String natureId, IPreferenceStore store) {
+	public static EditorTextHoverDescriptor[] getContributedHovers(String natureId, IPreferenceStore store) {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry
-				.getConfigurationElementsFor(EDITOR_TEXT_HOVER_EXTENSION_POINT);
-		EditorTextHoverDescriptor[] hoverDescs = createDescriptors(elements,
-				natureId);
+		IConfigurationElement[] elements = registry.getConfigurationElementsFor(EDITOR_TEXT_HOVER_EXTENSION_POINT);
+		EditorTextHoverDescriptor[] hoverDescs = createDescriptors(elements, natureId);
 		initializeFromPreferences(hoverDescs, store);
 		return hoverDescs;
 	}
@@ -77,9 +63,8 @@ public class EditorTextHoverDescriptor {
 	/**
 	 * Computes the state mask for the given modifier string.
 	 *
-	 * @param modifiers
-	 *                      the string with the modifiers, separated by '+',
-	 *                      '-', ';', ',' or '.'
+	 * @param modifiers the string with the modifiers, separated by '+', '-', ';',
+	 *                  ',' or '.'
 	 * @return the state mask or -1 if the input is invalid
 	 */
 	public static int computeStateMask(String modifiers) {
@@ -88,11 +73,9 @@ public class EditorTextHoverDescriptor {
 		if (modifiers.length() == 0)
 			return SWT.NONE;
 		int stateMask = 0;
-		StringTokenizer modifierTokenizer = new StringTokenizer(modifiers,
-				",;.:+-* "); //$NON-NLS-1$
+		StringTokenizer modifierTokenizer = new StringTokenizer(modifiers, ",;.:+-* "); //$NON-NLS-1$
 		while (modifierTokenizer.hasMoreTokens()) {
-			int modifier = EditorUtility
-					.findLocalizedModifier(modifierTokenizer.nextToken());
+			int modifier = EditorUtility.findLocalizedModifier(modifierTokenizer.nextToken());
 			if (modifier == 0 || (stateMask & modifier) == modifier)
 				return -1;
 			stateMask = stateMask | modifier;
@@ -113,15 +96,12 @@ public class EditorTextHoverDescriptor {
 	 */
 	public IScriptEditorTextHover createTextHover() {
 		String pluginId = fElement.getContributor().getName();
-		boolean isHoversPlugInActivated = Platform.getBundle(pluginId)
-				.getState() == Bundle.ACTIVE;
+		boolean isHoversPlugInActivated = Platform.getBundle(pluginId).getState() == Bundle.ACTIVE;
 		if (isHoversPlugInActivated || canActivatePlugIn()) {
 			try {
-				return (IScriptEditorTextHover) fElement
-						.createExecutableExtension(CLASS_ATTRIBUTE);
+				return (IScriptEditorTextHover) fElement.createExecutableExtension(CLASS_ATTRIBUTE);
 			} catch (CoreException x) {
-				DLTKUIPlugin.log(new Status(IStatus.ERROR,
-						DLTKUIPlugin.getPluginId(), 0,
+				DLTKUIPlugin.log(new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), 0,
 						"DLTKHoverMessages.JavaTextHover_createTextHover", //$NON-NLS-1$
 						null));
 			}
@@ -175,15 +155,12 @@ public class EditorTextHoverDescriptor {
 	}
 
 	public boolean canActivatePlugIn() {
-		return Boolean
-				.valueOf(fElement.getAttribute(ACTIVATE_PLUG_IN_ATTRIBUTE))
-				.booleanValue();
+		return Boolean.valueOf(fElement.getAttribute(ACTIVATE_PLUG_IN_ATTRIBUTE)).booleanValue();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !obj.getClass().equals(this.getClass())
-				|| getId() == null)
+		if (obj == null || !obj.getClass().equals(this.getClass()) || getId() == null)
 			return false;
 		return getId().equals(((EditorTextHoverDescriptor) obj).getId());
 	}
@@ -193,18 +170,14 @@ public class EditorTextHoverDescriptor {
 		return getId().hashCode();
 	}
 
-	private static EditorTextHoverDescriptor[] createDescriptors(
-			IConfigurationElement[] elements, String natureId) {
-		List<EditorTextHoverDescriptor> result = new ArrayList<>(
-				elements.length);
+	private static EditorTextHoverDescriptor[] createDescriptors(IConfigurationElement[] elements, String natureId) {
+		List<EditorTextHoverDescriptor> result = new ArrayList<>(elements.length);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (HOVER_TAG.equals(element.getName())) {
-				final String elementNature = element
-						.getAttribute(NATURE_ATTRIBUTE);
+				final String elementNature = element.getAttribute(NATURE_ATTRIBUTE);
 				if (elementNature == null || elementNature.equals(natureId)) {
-					EditorTextHoverDescriptor desc = new EditorTextHoverDescriptor(
-							element);
+					EditorTextHoverDescriptor desc = new EditorTextHoverDescriptor(element);
 					result.add(desc);
 				}
 			}
@@ -212,25 +185,18 @@ public class EditorTextHoverDescriptor {
 		return result.toArray(new EditorTextHoverDescriptor[result.size()]);
 	}
 
-	private static void initializeFromPreferences(
-			EditorTextHoverDescriptor[] hovers, IPreferenceStore store) {
-		String compiledTextHoverModifiers = store
-				.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS);
-		StringTokenizer tokenizer = new StringTokenizer(
-				compiledTextHoverModifiers, VALUE_SEPARATOR);
-		HashMap<String, String> idToModifier = new HashMap<>(
-				tokenizer.countTokens() / 2);
+	private static void initializeFromPreferences(EditorTextHoverDescriptor[] hovers, IPreferenceStore store) {
+		String compiledTextHoverModifiers = store.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS);
+		StringTokenizer tokenizer = new StringTokenizer(compiledTextHoverModifiers, VALUE_SEPARATOR);
+		HashMap<String, String> idToModifier = new HashMap<>(tokenizer.countTokens() / 2);
 		while (tokenizer.hasMoreTokens()) {
 			String id = tokenizer.nextToken();
 			if (tokenizer.hasMoreTokens())
 				idToModifier.put(id, tokenizer.nextToken());
 		}
-		String compiledTextHoverModifierMasks = store.getString(
-				PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
-		tokenizer = new StringTokenizer(compiledTextHoverModifierMasks,
-				VALUE_SEPARATOR);
-		HashMap<String, String> idToModifierMask = new HashMap<>(
-				tokenizer.countTokens() / 2);
+		String compiledTextHoverModifierMasks = store.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
+		tokenizer = new StringTokenizer(compiledTextHoverModifierMasks, VALUE_SEPARATOR);
+		HashMap<String, String> idToModifierMask = new HashMap<>(tokenizer.countTokens() / 2);
 		while (tokenizer.hasMoreTokens()) {
 			String id = tokenizer.nextToken();
 			if (tokenizer.hasMoreTokens())
@@ -253,8 +219,7 @@ public class EditorTextHoverDescriptor {
 			if (hovers[i].fStateMask == -1) {
 				// Fallback: use stored modifier masks
 				try {
-					hovers[i].fStateMask = Integer
-							.parseInt(idToModifierMask.get(hovers[i].getId()));
+					hovers[i].fStateMask = Integer.parseInt(idToModifierMask.get(hovers[i].getId()));
 				} catch (NumberFormatException ex) {
 					hovers[i].fStateMask = -1;
 				}
@@ -263,8 +228,7 @@ public class EditorTextHoverDescriptor {
 				if (stateMask == -1)
 					hovers[i].fModifierString = ""; //$NON-NLS-1$
 				else
-					hovers[i].fModifierString = EditorUtility
-							.getModifierString(stateMask);
+					hovers[i].fModifierString = EditorUtility.getModifierString(stateMask);
 			}
 		}
 	}

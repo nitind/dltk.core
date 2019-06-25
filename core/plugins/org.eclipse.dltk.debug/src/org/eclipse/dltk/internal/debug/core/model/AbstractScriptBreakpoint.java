@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -30,26 +30,6 @@ import org.eclipse.dltk.debug.core.model.IScriptBreakpoint;
 
 public abstract class AbstractScriptBreakpoint extends Breakpoint
 		implements IScriptBreakpoint {
-
-	/**
-	 * Debugging engine breakpoint identifier (available only during debug
-	 * session)
-	 *
-	 * @deprecated
-	 */
-	@Deprecated
-	public static final String ENGINE_IDENTIFIER = DLTKDebugPlugin.PLUGIN_ID
-			+ ".id"; //$NON-NLS-1$
-
-	/**
-	 * The number of breakpoint hits during debug session (available only during
-	 * debug session)
-	 *
-	 * @deprecated
-	 */
-	@Deprecated
-	public static final String HIT_COUNT = DLTKDebugPlugin.PLUGIN_ID
-			+ ".hit_count"; //$NON-NLS-1$
 
 	/**
 	 * Condition expression that should be valid for suspend on this breakpoint

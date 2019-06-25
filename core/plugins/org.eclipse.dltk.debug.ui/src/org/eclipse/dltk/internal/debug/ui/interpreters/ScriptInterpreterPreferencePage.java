@@ -3,17 +3,14 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.debug.ui.interpreters;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IScriptModel;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.debug.ui.DLTKDebugUIPlugin;
@@ -178,11 +175,6 @@ public abstract class ScriptInterpreterPreferencePage extends PreferencePage
 			}
 		}
 		return section;
-	}
-
-	@Deprecated
-	protected IScriptModel getScriptModel() {
-		return DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot());
 	}
 
 	/**

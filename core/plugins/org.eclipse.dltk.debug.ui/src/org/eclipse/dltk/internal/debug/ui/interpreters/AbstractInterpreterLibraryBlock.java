@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -27,7 +27,6 @@ import org.eclipse.dltk.launching.LibraryLocation;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.ui.dialogs.TimeTriggeredProgressMonitorDialog;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -88,7 +87,7 @@ public abstract class AbstractInterpreterLibraryBlock
 	 * Creates and returns the source lookup control.
 	 *
 	 * @param parent
-	 *                   the parent widget of this control
+	 *            the parent widget of this control
 	 */
 	public Control createControl(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);
@@ -227,9 +226,9 @@ public abstract class AbstractInterpreterLibraryBlock
 	 * Creates and returns a button
 	 *
 	 * @param parent
-	 *                   parent widget
+	 *            parent widget
 	 * @param label
-	 *                   label
+	 *            label
 	 * @return Button
 	 */
 	protected Button createPushButton(Composite parent, String label) {
@@ -462,9 +461,9 @@ public abstract class AbstractInterpreterLibraryBlock
 	 * install and type.
 	 *
 	 * @param Interpreter
-	 *                        Interpreter or <code>null</code> if none
+	 *            Interpreter or <code>null</code> if none
 	 * @param type
-	 *                        type of Interpreter install
+	 *            type of Interpreter install
 	 */
 
 	public void initializeFrom(IInterpreterInstall Interpreter,
@@ -508,14 +507,6 @@ public abstract class AbstractInterpreterLibraryBlock
 
 	protected void setButtonLayoutData(Button button) {
 		fDialog.setButtonLayoutData(button);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	protected IDialogSettings getDialogSettions() {
-		return null;
 	}
 
 	protected LibraryLocation add() {
