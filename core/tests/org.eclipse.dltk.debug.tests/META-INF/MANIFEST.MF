@@ -12,8 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.debug.core,
  org.eclipse.dltk.core.tests,
- org.mockito,
- org.hamcrest
+ org.mockito
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dltk.debug.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

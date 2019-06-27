@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?>
-<target name="org.eclipse.dltk.core.targetplatform" sequenceNumber="23">
+<target name="org.eclipse.dltk.core.targetplatform" sequenceNumber="24">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
-            <unit id="com.google.guava" version="27.1.0.v20190517-1946"/>
-            <unit id="com.google.guava.source" version="27.1.0.v20190517-1946"/>
             <unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>
-            <unit id="org.apache.lucene.analyzers-common.source" version="8.0.0.v20190404-1858"/>
             <unit id="org.apache.lucene.core" version="6.1.0.v20170814-1820"/>
-            <unit id="org.apache.lucene.core.source" version="8.0.0.v20190404-1858"/>
-            <unit id="org.apache.lucene.misc" version="8.0.0.v20190418-1455"/>
-            <unit id="org.apache.lucene.misc.source" version="8.0.0.v20190418-1455"/>
+            <unit id="org.apache.lucene.queryparser" version="6.1.0.v20161115-1612"/>
             <!-- DLTK depends on Lucene 8.0, but Mylyn 3.24 depends on Lucene 6.1 -->
             <unit id="org.apache.lucene.core" version="8.0.0.v20190404-1858"/>
             <unit id="org.apache.lucene.analyzers-common" version="8.0.0.v20190404-1858"/>
-            <unit id="org.apache.lucene.queryparser" version="6.1.0.v20161115-1612"/>
-            <unit id="org.h2" version="1.3.168.v201212121212"/>
-            <unit id="org.h2.source" version="1.3.168.v201212121212"/>
-            <unit id="org.hamcrest" version="0.0.0"/>
+            <unit id="org.apache.lucene.misc" version="8.0.0.v20190418-1455"/>
             <unit id="org.hamcrest.core" version="0.0.0"/>
-            <unit id="org.hamcrest.core.source" version="0.0.0"/>
             <unit id="org.hamcrest.integration" version="0.0.0"/>
             <unit id="org.hamcrest.library" version="0.0.0"/>
             <unit id="org.hamcrest.text" version="0.0.0"/>
