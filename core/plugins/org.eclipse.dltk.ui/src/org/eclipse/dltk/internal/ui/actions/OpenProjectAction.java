@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2017 IBM Corporation and others.
+ * Copyright (c) 2000, 2019 IBM Corporation and others.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
@@ -175,7 +176,7 @@ public class OpenProjectAction extends SelectionDispatchAction
 			for (int i = 0; i < projects.length; i++) {
 				IProject project = (IProject) projects[i];
 				try {
-					project.open(new SubProgressMonitor(monitor, 1));
+					project.open(IResource.BACKGROUND_REFRESH, new SubProgressMonitor(monitor, 1));
 				} catch (CoreException e) {
 					if (errorStatus == null)
 						errorStatus = new MultiStatus(DLTKUIPlugin.PLUGIN_ID,
