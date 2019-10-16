@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?>
-<target name="org.eclipse.dltk.core.targetplatform" sequenceNumber="24">
+<target name="org.eclipse.dltk.core.targetplatform" sequenceNumber="25">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
             <unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>
@@ -28,7 +28,7 @@
             <unit id="org.eclipse.mylyn.commons.sdk.feature.group" version="0.0.0"/>
             <unit id="org.eclipse.mylyn.context.sdk.feature.group" version="0.0.0"/>
             <unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
-            <repository location="http://download.eclipse.org/releases/2019-06/"/>
+            <repository location="http://download.eclipse.org/releases/2019-09"/>
         </location>
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.license.feature.group" version="0.0.0"/>
