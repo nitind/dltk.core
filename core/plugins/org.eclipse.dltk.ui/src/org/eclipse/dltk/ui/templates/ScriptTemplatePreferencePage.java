@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -20,7 +20,6 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.Template;
-import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -28,14 +27,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.text.templates.TemplatePersistenceData;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 
-public abstract class ScriptTemplatePreferencePage
-		extends TemplatePreferencePage implements IWorkbenchPreferencePage {
+public abstract class ScriptTemplatePreferencePage extends TemplatePreferencePage implements IWorkbenchPreferencePage {
 	protected class ScriptEditTemplateDialog extends EditTemplateDialog {
-		public ScriptEditTemplateDialog(Shell parent, Template template,
-				boolean edit, boolean isNameModifiable,
+		public ScriptEditTemplateDialog(Shell parent, Template template, boolean edit, boolean isNameModifiable,
 				ContextTypeRegistry registry) {
 			super(parent, template, edit, isNameModifiable, registry);
 		}
@@ -48,25 +46,23 @@ public abstract class ScriptTemplatePreferencePage
 		 * Creates the viewer to be used to display the pattern. Subclasses may
 		 * override.
 		 *
-		 * @param parent
-		 *                   the parent composite of the viewer
+		 * @param parent the parent composite of the viewer
 		 * @return a configured <code>SourceViewer</code>
 		 */
 		@Override
 		protected SourceViewer createViewer(Composite parent) {
 			IPreferenceStore store = getPreferenceStore();
-			SourceViewer viewer = new ScriptSourceViewer(parent, null, null,
-					false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL, store);
+			SourceViewer viewer = new ScriptSourceViewer(parent, null, null, false,
+					SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL, store);
 			SourceViewerConfiguration origConfig = createSourceViewerConfiguration();
-			SourceViewerConfiguration configuration = new CodeTemplateSourceViewerConfigurationAdapter(
-					origConfig, getTemplateProcessor());
+			SourceViewerConfiguration configuration = new CodeTemplateSourceViewerConfigurationAdapter(origConfig,
+					getTemplateProcessor());
 			IDocument document = new Document();
 			setDocumentPartitioner(document);
 
 			viewer.configure(configuration);
 			if (origConfig instanceof ScriptSourceViewerConfiguration) {
-				final String fontKey = ((ScriptSourceViewerConfiguration) origConfig)
-						.getFontPropertyPreferenceKey();
+				final String fontKey = ((ScriptSourceViewerConfiguration) origConfig).getFontPropertyPreferenceKey();
 				viewer.getTextWidget().setFont(JFaceResources.getFont(fontKey));
 			}
 			viewer.setDocument(document);
@@ -83,10 +79,9 @@ public abstract class ScriptTemplatePreferencePage
 	}
 
 	@Override
-	protected Template editTemplate(Template template, boolean edit,
-			boolean isNameModifiable) {
-		EditTemplateDialog dialog = new ScriptEditTemplateDialog(getShell(),
-				template, edit, isNameModifiable, getContextTypeRegistry());
+	protected Template editTemplate(Template template, boolean edit, boolean isNameModifiable) {
+		EditTemplateDialog dialog = new ScriptEditTemplateDialog(getShell(), template, edit, isNameModifiable,
+				getContextTypeRegistry());
 		if (dialog.open() == Window.OK) {
 			return dialog.getTemplate();
 		}
@@ -109,8 +104,7 @@ public abstract class ScriptTemplatePreferencePage
 		viewer.setDocument(document);
 
 		Control control = viewer.getControl();
-		control.setLayoutData(new GridData(
-				GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL));
+		control.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_VERTICAL));
 
 		// Font font = JFaceResources
 		// .getFont(TPreferenceConstants.EDITOR_TEXT_FONT);
@@ -123,17 +117,13 @@ public abstract class ScriptTemplatePreferencePage
 
 	@Override
 	protected void updateViewerInput() {
-		IStructuredSelection selection = getTableViewer()
-				.getStructuredSelection();
+		IStructuredSelection selection = getTableViewer().getStructuredSelection();
 		SourceViewer viewer = getViewer();
 
-		if (selection.size() == 1 && selection
-				.getFirstElement() instanceof TemplatePersistenceData) {
-			final TemplatePersistenceData data = (TemplatePersistenceData) selection
-					.getFirstElement();
+		if (selection.size() == 1 && selection.getFirstElement() instanceof TemplatePersistenceData) {
+			final TemplatePersistenceData data = (TemplatePersistenceData) selection.getFirstElement();
 			final Template template = data.getTemplate();
-			final IViewerInputUpdater updater = getViewerInputUpdater(viewer,
-					template);
+			final IViewerInputUpdater updater = getViewerInputUpdater(viewer, template);
 			if (updater != null) {
 				updater.updateInput(viewer, template);
 			} else {
@@ -163,13 +153,12 @@ public abstract class ScriptTemplatePreferencePage
 	}
 
 	/**
-	 * {@link IViewerInputUpdater} implementation adding hidden prefix and
-	 * suffix to the template content. Can be used to "javadoc" style comments,
-	 * so template content is colored like inside "javadoc", but prefix and
-	 * suffix strings are invisible.
+	 * {@link IViewerInputUpdater} implementation adding hidden prefix and suffix to
+	 * the template content. Can be used to "javadoc" style comments, so template
+	 * content is colored like inside "javadoc", but prefix and suffix strings are
+	 * invisible.
 	 */
-	protected static class ViewerInputDecorations
-			implements IViewerInputUpdater {
+	protected static class ViewerInputDecorations implements IViewerInputUpdater {
 		private final String prefix;
 		private final String suffix;
 
@@ -198,8 +187,7 @@ public abstract class ScriptTemplatePreferencePage
 			}
 			final IDocument doc = viewer.getDocument();
 			doc.set(sb.toString());
-			viewer.setDocument(doc, offset,
-					doc.getLength() - offset - endOffset);
+			viewer.setDocument(doc, offset, doc.getLength() - offset - endOffset);
 		}
 
 	}
@@ -213,8 +201,7 @@ public abstract class ScriptTemplatePreferencePage
 	 * @param template
 	 * @return
 	 */
-	protected IViewerInputUpdater getViewerInputUpdater(SourceViewer viewer,
-			Template template) {
+	protected IViewerInputUpdater getViewerInputUpdater(SourceViewer viewer, Template template) {
 		return null;
 	}
 

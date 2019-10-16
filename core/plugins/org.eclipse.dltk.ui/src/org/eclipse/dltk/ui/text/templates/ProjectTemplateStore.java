@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -25,9 +25,9 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.text.templates.ITemplateAccess.ITemplateAccessInternal;
 import org.eclipse.jface.text.templates.Template;
-import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
-import org.eclipse.jface.text.templates.persistence.TemplateReaderWriter;
+import org.eclipse.text.templates.TemplateReaderWriter;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.text.templates.TemplatePersistenceData;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 public class ProjectTemplateStore {
@@ -36,23 +36,19 @@ public class ProjectTemplateStore {
 	private final TemplateStore fInstanceStore;
 	private final TemplateStore fProjectStore;
 
-	public ProjectTemplateStore(ITemplateAccess templateAccess,
-			IProject project) {
+	public ProjectTemplateStore(ITemplateAccess templateAccess, IProject project) {
 		this.fTemplateAccess = templateAccess;
 		this.fInstanceStore = templateAccess.getTemplateStore();
-		if (project == null
-				|| templateAccess instanceof ITemplateAccessInternal) {
+		if (project == null || templateAccess instanceof ITemplateAccessInternal) {
 			fProjectStore = null;
 		} else {
 			final ITemplateAccessInternal internal = (ITemplateAccessInternal) templateAccess;
-			final ScopedPreferenceStore projectSettings = new ScopedPreferenceStore(
-					new ProjectScope(project),
+			final ScopedPreferenceStore projectSettings = new ScopedPreferenceStore(new ProjectScope(project),
 					internal.getPreferenceQualifier());
-			fProjectStore = new TemplateStore(projectSettings,
-					internal.getPreferenceKey()) {
+			fProjectStore = new TemplateStore(projectSettings, internal.getPreferenceKey()) {
 				/*
-				 * Make sure we keep the id of added code templates - add
-				 * removes it in the usual add() method
+				 * Make sure we keep the id of added code templates - add removes it in the
+				 * usual add() method
 				 */
 				@Override
 				public void add(TemplatePersistenceData data) {
@@ -62,17 +58,14 @@ public class ProjectTemplateStore {
 				@Override
 				public void save() throws IOException {
 
-					TemplatePersistenceData[] templateData = ProjectTemplateStore.this
-							.getTemplateData();
+					TemplatePersistenceData[] templateData = ProjectTemplateStore.this.getTemplateData();
 					for (int i = 0; i < templateData.length; i++) {
 						if (isProjectSpecific(templateData[i].getId())) {
 							StringWriter output = new StringWriter();
 							TemplateReaderWriter writer = new TemplateReaderWriter();
 							writer.save(getTemplateData(false), output);
 
-							projectSettings.setValue(
-									internal.getPreferenceKey(),
-									output.toString());
+							projectSettings.setValue(internal.getPreferenceKey(), output.toString());
 							projectSettings.save();
 
 							return;
@@ -91,8 +84,7 @@ public class ProjectTemplateStore {
 			return false;
 		}
 		final ITemplateAccessInternal internal = (ITemplateAccessInternal) fTemplateAccess;
-		final String pref = new ProjectScope(project)
-				.getNode(internal.getPreferenceQualifier())
+		final String pref = new ProjectScope(project).getNode(internal.getPreferenceQualifier())
 				.get(internal.getPreferenceKey(), null);
 		if (pref != null && pref.trim().length() > 0) {
 			Reader input = new StringReader(pref);
@@ -130,8 +122,7 @@ public class ProjectTemplateStore {
 			fProjectStore.load();
 
 			Set<String> datas = new HashSet<>();
-			TemplatePersistenceData[] data = fProjectStore
-					.getTemplateData(false);
+			TemplatePersistenceData[] data = fProjectStore.getTemplateData(false);
 			for (int i = 0; i < data.length; i++) {
 				datas.add(data[i].getId());
 			}
@@ -140,9 +131,8 @@ public class ProjectTemplateStore {
 			for (int i = 0; i < data.length; i++) {
 				TemplatePersistenceData orig = data[i];
 				if (!datas.contains(orig.getId())) {
-					TemplatePersistenceData copy = new TemplatePersistenceData(
-							new Template(orig.getTemplate()), orig.isEnabled(),
-							orig.getId());
+					TemplatePersistenceData copy = new TemplatePersistenceData(new Template(orig.getTemplate()),
+							orig.isEnabled(), orig.getId());
 					fProjectStore.add(copy);
 					copy.setDeleted(true);
 				}

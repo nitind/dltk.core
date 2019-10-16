@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 xored software, Inc. and others.
+ * Copyright (c) 2009, 2019 xored software, Inc. and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -20,9 +20,9 @@ import org.eclipse.dltk.internal.ui.dialogs.StatusUtil;
 import org.eclipse.dltk.internal.ui.preferences.PropertyAndPreferencePage;
 import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
 import org.eclipse.dltk.ui.text.templates.ICodeTemplateArea;
-import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.text.templates.TemplatePersistenceData;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /*
@@ -30,8 +30,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  *
  * TODO extends AbstractConfigurationBlockPropertyAndPreferencePage?
  */
-public abstract class CodeTemplatesPreferencePage extends
-		PropertyAndPreferencePage {
+public abstract class CodeTemplatesPreferencePage extends PropertyAndPreferencePage {
 
 	public static final String DATA_SELECT_TEMPLATE = "CodeTemplatePreferencePage.select_template"; //$NON-NLS-1$
 
@@ -40,8 +39,7 @@ public abstract class CodeTemplatesPreferencePage extends
 
 	private CodeTemplateBlock fCodeTemplateConfigurationBlock;
 
-	protected CodeTemplatesPreferencePage(IDLTKUILanguageToolkit toolkit,
-			ICodeTemplateArea codeTemplateArea) {
+	protected CodeTemplatesPreferencePage(IDLTKUILanguageToolkit toolkit, ICodeTemplateArea codeTemplateArea) {
 		this.toolkit = toolkit;
 		this.codeTemplateArea = codeTemplateArea;
 		setTitle(PreferencesMessages.CodeTemplatesPreferencePage_title);
@@ -50,8 +48,7 @@ public abstract class CodeTemplatesPreferencePage extends
 	@Override
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
-		fCodeTemplateConfigurationBlock = new CodeTemplateBlock(
-				getNewStatusChangedListener(), getProject(), container,
+		fCodeTemplateConfigurationBlock = new CodeTemplateBlock(getNewStatusChangedListener(), getProject(), container,
 				toolkit, codeTemplateArea.getTemplateAccess());
 
 		super.createControl(parent);
@@ -65,20 +62,17 @@ public abstract class CodeTemplatesPreferencePage extends
 	}
 
 	@Override
-	protected void enableProjectSpecificSettings(
-			boolean useProjectSpecificSettings) {
+	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		super.enableProjectSpecificSettings(useProjectSpecificSettings);
 		if (fCodeTemplateConfigurationBlock != null) {
-			fCodeTemplateConfigurationBlock
-					.useProjectSpecificSettings(useProjectSpecificSettings);
+			fCodeTemplateConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
 		}
 	}
 
 	@Override
 	public boolean performOk() {
 		if (fCodeTemplateConfigurationBlock != null) {
-			return fCodeTemplateConfigurationBlock
-					.performOk(useProjectSettings());
+			return fCodeTemplateConfigurationBlock.performOk(useProjectSettings());
 		}
 		return true;
 	}
@@ -114,8 +108,7 @@ public abstract class CodeTemplatesPreferencePage extends
 
 	@Override
 	protected boolean hasProjectSpecificOptions(IProject project) {
-		return fCodeTemplateConfigurationBlock
-				.hasProjectSpecificOptions(project);
+		return fCodeTemplateConfigurationBlock.hasProjectSpecificOptions(project);
 	}
 
 	@Override
@@ -127,10 +120,8 @@ public abstract class CodeTemplatesPreferencePage extends
 						.getTemplateData();
 				for (int index = 0; index < templates.length; index++) {
 					TemplatePersistenceData template = templates[index];
-					if (id.equals(template.getId())
-							|| id.equals(template.getTemplate().getName())) {
-						fCodeTemplateConfigurationBlock
-								.postSetSelection(template);
+					if (id.equals(template.getId()) || id.equals(template.getTemplate().getName())) {
+						fCodeTemplateConfigurationBlock.postSetSelection(template);
 						break;
 					}
 				}
