@@ -3,8 +3,3 @@ IEclipsePreferences#org-eclipse-ui-workbench:org-eclipse-dltk-ui {
 		'org.eclipse.dltk.ui.documentation.backgroundColor=52,57,61'
 		'org.eclipse.dltk.ui.documentation.foregroundColor=238,238,238'
 }
-
-#org-eclipse-dltk-debug-ui-ScriptDisplayView SashForm > * {
-    background-color: inherit;
-    color: #CCCCCC;
-}
