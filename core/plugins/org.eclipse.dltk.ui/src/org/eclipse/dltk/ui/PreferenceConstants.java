@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -518,9 +518,19 @@ public class PreferenceConstants {
 					new RGB(237, 233, 227));
 			return;
 		}
-		final RGB rgb[] = new RGB[1];
-		display.syncExec(() -> rgb[0] = display.getSystemColor(SWT.COLOR_INFO_BACKGROUND).getRGB());
-		PreferenceConverter.setValue(store, PreferenceConstants.EDITOR_SOURCE_HOVER_BACKGROUND_COLOR, rgb[0]);
+
+		Runnable uiTask = () -> {
+			final RGB rgb = display.getSystemColor(SWT.COLOR_INFO_BACKGROUND).getRGB();
+			PreferenceConverter.setValue(store, PreferenceConstants.EDITOR_SOURCE_HOVER_BACKGROUND_COLOR, rgb);
+		};
+
+		if (Display.getCurrent() != null) {
+			// In UI thread call the code directly
+			uiTask.run();
+		} else {
+			// Note: do not try to use syncExec(), this can lead to deadlocks on startup.
+			display.asyncExec(uiTask);
+		}
 	}
 
 	/**
