@@ -1,6 +1,7 @@
 package org.eclipse.dltk.internal.ui.rse;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +20,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IEnvironmentChangedListener;
 import org.eclipse.dltk.core.environment.IEnvironmentProvider;
 import org.eclipse.dltk.core.internal.rse.RSEEnvironment;
 import org.eclipse.dltk.core.internal.rse.RSEEnvironmentProvider;
@@ -36,7 +38,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * @since 2.0
  */
-public class RSEConnectionMonitor implements Runnable {
+public class RSEConnectionMonitor {
 
 	private static final class ProjectUpdateFamily {
 		private final RSEEnvironment environment;
@@ -58,21 +60,17 @@ public class RSEConnectionMonitor implements Runnable {
 
 		@Override
 		protected IStatus run(IProgressMonitor inputMonitor) {
-			final SubMonitor monitor = SubMonitor.convert(inputMonitor,
-					"Checking projects consistency", 100);
-			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-					.getProjects();
+			final SubMonitor monitor = SubMonitor.convert(inputMonitor, "Checking projects consistency", 100);
+			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 			List<IScriptProject> projectsToProcess = new ArrayList<>();
 			SubMonitor m = monitor.newChild(10);
 			m.beginTask("Locate projects for environment", projects.length);
 			for (IProject project : projects) {
 				if (project.isAccessible()) {
-					final String envId = EnvironmentManager.getEnvironmentId(
-							project, false);
+					final String envId = EnvironmentManager.getEnvironmentId(project, false);
 					if (envId != null) {
 						if (envId.equals(environment.getId())) {
-							final IScriptProject scriptProject = DLTKCore
-									.create(project);
+							final IScriptProject scriptProject = DLTKCore.create(project);
 							projectsToProcess.add(scriptProject);
 						}
 
@@ -80,8 +78,7 @@ public class RSEConnectionMonitor implements Runnable {
 				}
 				m.worked(1);
 			}
-			IEnvironmentProvider provider = EnvironmentManager
-					.getEnvironmentProvider(RSEEnvironmentProvider.ID);
+			IEnvironmentProvider provider = EnvironmentManager.getEnvironmentProvider(RSEEnvironmentProvider.ID);
 			if (provider != null && provider instanceof RSEEnvironmentProvider) {
 				((RSEEnvironmentProvider) provider).fireAdded(environment);
 			}
@@ -91,12 +88,9 @@ public class RSEConnectionMonitor implements Runnable {
 				((ScriptProject) project).updateProjectFragments();
 				mm.worked(1);
 				try {
-					DeltaProcessor processor = ModelManager.getModelManager()
-							.getDeltaProcessor();
-					processor.clearCustomTimestampsFor(project
-							.getProjectFragments());
-					processor.checkExternalChanges(
-							new IModelElement[] { project }, mm.newChild(1));
+					DeltaProcessor processor = ModelManager.getModelManager().getDeltaProcessor();
+					processor.clearCustomTimestampsFor(project.getProjectFragments());
+					processor.checkExternalChanges(new IModelElement[] { project }, mm.newChild(1));
 				} catch (ModelException e) {
 					DLTKCore.error(e);
 				}
@@ -111,18 +105,14 @@ public class RSEConnectionMonitor implements Runnable {
 		@Override
 		public boolean belongsTo(Object family) {
 			return family instanceof ProjectUpdateFamily
-					&& environment
-							.equals(((ProjectUpdateFamily) family).environment);
+					&& environment.equals(((ProjectUpdateFamily) family).environment);
 		}
 
 	}
 
 	private void updateDecorator() {
-		Display display = PlatformUI.getWorkbench().getDisplay();
-		if (display.isDisposed()) {
-			return;
-		}
-		display.asyncExec(new Runnable() {
+		Runnable uiTask = new Runnable() {
+			
 			@Override
 			public void run() {
 				if (updatingDecorators) {
@@ -130,81 +120,109 @@ public class RSEConnectionMonitor implements Runnable {
 				}
 				updatingDecorators = true;
 				try {
-					PlatformUI.getWorkbench().getDecoratorManager().update(
-							RemoteProjectLabelDecorator.ID);
+					PlatformUI.getWorkbench().getDecoratorManager().update(RemoteProjectLabelDecorator.ID);
 				} finally {
 					updatingDecorators = false;
 				}
+				
 			}
-		});
+		};
+		if (Display.getCurrent() != null) {
+				uiTask.run();
+		} else {
+			Display current = PlatformUI.getWorkbench().getDisplay();
+			if (!current.isDisposed()) {
+				current.asyncExec(uiTask);
+			}	
+		}
 	}
 
 	private boolean updatingDecorators = false;
 
 	private static RSEConnectionMonitor monitor = new RSEConnectionMonitor();
+	final private Set<String> eventListenerAdded = Collections.synchronizedSet(new HashSet<>());
 
 	public static void start() {
-		Thread t = new Thread(monitor);
-		t.setName("RSE Connection Monitor");
-		t.start();
+		new Job("Install RSE Connection Minitor") { //$NON-NLS-1$
+			
+			@Override
+			protected IStatus run(IProgressMonitor progressMonitor) {
+				EnvironmentManager.waitInitialized();
+				monitor.scanEnvironments();
+				EnvironmentManager.addEnvironmentChangedListener(new IEnvironmentChangedListener() {
+
+					@Override
+					public void environmentsModified() {
+						monitor.scanEnvironments();
+					}
+
+					@Override
+					public void environmentRemoved(IEnvironment environment) {
+						// do nothing
+					}
+
+					@Override
+					public void environmentChanged(IEnvironment environment) {
+						// do nothing
+					}
+
+					@Override
+					public void environmentAdded(IEnvironment environment) {
+						// do nothing
+					}
+				});
+				return Status.OK_STATUS;
+			}
+		}.schedule();
 	}
 
-	@Override
-	public void run() {
-		EnvironmentManager.waitInitialized();
-		final Set<String> eventListenerAdded = new HashSet<>();
-		while (Platform.isRunning()) {
 
-			IEnvironment[] environments = EnvironmentManager.getEnvironments();
-			for (final IEnvironment env : environments) {
-				if (env instanceof RSEEnvironment) {
-					final RSEEnvironment rseENV = (RSEEnvironment) env;
-					if (eventListenerAdded.add(rseENV.getId())) {
-						// Add connection status listener
-						IHost host = rseENV.getHost();
-						IConnectorService[] services = host
-								.getConnectorServices();
-						for (IConnectorService service : services) {
-							service
-									.addCommunicationsListener(new ICommunicationsListener() {
-										@Override
-										public boolean isPassiveCommunicationsListener() {
-											return false;
-										}
+	protected void scanEnvironments() {
+		new Job("Scan environments") { //$NON-NLS-1$
+			
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				if (!Platform.isRunning()) {
+					return Status.CANCEL_STATUS;
+				}
+				IEnvironment[] environments = EnvironmentManager.getEnvironments(false);
+				for (final IEnvironment env : environments) {
+					if (env instanceof RSEEnvironment) {
+						final RSEEnvironment rseENV = (RSEEnvironment) env;
+						if (eventListenerAdded.add(rseENV.getId())) {
+							// Add connection status listener
+							IHost host = rseENV.getHost();
+							IConnectorService[] services = host.getConnectorServices();
+							for (IConnectorService service : services) {
+								service.addCommunicationsListener(new ICommunicationsListener() {
+									@Override
+									public boolean isPassiveCommunicationsListener() {
+										return false;
+									}
 
-										@Override
-										public void communicationsStateChange(
-												CommunicationsEvent e) {
-											if (e.getState() == CommunicationsEvent.AFTER_CONNECT) {
-												if (rseENV.isConnected()) {
-													// Need to update
-													// environment.
-													rseENV
-															.setTryToConnect(true);
-													if (Job
-															.getJobManager()
-															.find(
-																	new ProjectUpdateFamily(
-																			rseENV)).length == 0) {
-														ProjectUpdateJob job = new ProjectUpdateJob(
-																rseENV);
-														job.setUser(true);
-														job.schedule();
-													}
+									@Override
+									public void communicationsStateChange(CommunicationsEvent e) {
+										if (e.getState() == CommunicationsEvent.AFTER_CONNECT) {
+											if (rseENV.isConnected()) {
+												// Need to update
+												// environment.
+												rseENV.setTryToConnect(true);
+												if (Job.getJobManager().find(new ProjectUpdateFamily(rseENV)).length == 0) {
+													ProjectUpdateJob job = new ProjectUpdateJob(rseENV);
+													job.setUser(true);
+													job.schedule();
 												}
 											}
-											updateDecorator();
 										}
-									});
+										updateDecorator();
+									}
+								});
+							}
 						}
 					}
 				}
+				return Status.OK_STATUS;
 			}
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				return;
-			}
-		}
+		}.schedule();
 	}
 }
