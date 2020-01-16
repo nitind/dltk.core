@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -13,7 +13,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.ui.actions.ActionMessages;
-import org.eclipse.dltk.internal.ui.dialogs.OpenTypeSelectionDialog2;
+import org.eclipse.dltk.internal.ui.dialogs.OpenTypeSelectionDialog;
 import org.eclipse.dltk.internal.ui.typehierarchy.OpenTypeHierarchyUtil;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
@@ -29,7 +29,9 @@ import org.eclipse.ui.PlatformUI;
 public abstract class OpenTypeInHierarchyAction extends Action implements IWorkbenchWindowActionDelegate {
 
 	private IWorkbenchWindow fWindow;
+
 	protected abstract IDLTKUILanguageToolkit getLanguageToolkit();
+
 	public OpenTypeInHierarchyAction() {
 		super();
 		setText(ActionMessages.OpenTypeInHierarchyAction_label);
@@ -40,25 +42,27 @@ public abstract class OpenTypeInHierarchyAction extends Action implements IWorkb
 
 	@Override
 	public void run() {
-		Shell parent= DLTKUIPlugin.getActiveWorkbenchShell();
-		OpenTypeSelectionDialog2 dialog= new OpenTypeSelectionDialog2(parent, false,
-			PlatformUI.getWorkbench().getProgressService(),
-			SearchEngine.createWorkspaceScope(this.getLanguageToolkit().getCoreToolkit()), IDLTKSearchConstants.TYPE, this.getLanguageToolkit() );
+		Shell parent = DLTKUIPlugin.getActiveWorkbenchShell();
+		OpenTypeSelectionDialog dialog = new OpenTypeSelectionDialog(parent, false,
+				PlatformUI.getWorkbench().getProgressService(),
+				SearchEngine.createWorkspaceScope(this.getLanguageToolkit().getCoreToolkit()),
+				IDLTKSearchConstants.TYPE, this.getLanguageToolkit());
 
 		dialog.setTitle(ActionMessages.OpenTypeInHierarchyAction_dialogTitle);
 		dialog.setMessage(ActionMessages.OpenTypeInHierarchyAction_dialogMessage);
-		int result= dialog.open();
+		int result = dialog.open();
 		if (result != IDialogConstants.OK_ID)
 			return;
 
-		Object[] types= dialog.getResult();
+		Object[] types = dialog.getResult();
 		if (types != null && types.length > 0) {
-			IType type= (IType)types[0];
+			IType type = (IType) types[0];
 			OpenTypeHierarchyUtil.open(new IType[] { type }, fWindow);
 		}
 	}
 
-	//---- IWorkbenchWindowActionDelegate ------------------------------------------------
+	// ---- IWorkbenchWindowActionDelegate
+	// ------------------------------------------------
 
 	@Override
 	public void run(IAction action) {
@@ -67,12 +71,12 @@ public abstract class OpenTypeInHierarchyAction extends Action implements IWorkb
 
 	@Override
 	public void dispose() {
-		fWindow= null;
+		fWindow = null;
 	}
 
 	@Override
 	public void init(IWorkbenchWindow window) {
-		fWindow= window;
+		fWindow = window;
 	}
 
 	@Override

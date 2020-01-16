@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.internal.ui.DLTKUIMessages;
-import org.eclipse.dltk.internal.ui.dialogs.OpenTypeSelectionDialog2;
+import org.eclipse.dltk.internal.ui.dialogs.OpenTypeSelectionDialog;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
@@ -29,8 +29,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SelectionDialog;
 
-public abstract class OpenTypeAction extends Action implements
-		IWorkbenchWindowActionDelegate {
+public abstract class OpenTypeAction extends Action implements IWorkbenchWindowActionDelegate {
 
 	public OpenTypeAction() {
 		super();
@@ -60,8 +59,7 @@ public abstract class OpenTypeAction extends Action implements
 				try {
 					DLTKUIPlugin.openInEditor(type, true, true);
 				} catch (CoreException x) {
-					ExceptionHandler.handle(x, getOpenTypeErrorTitle(),
-							getOpenTypeErrorMessage());
+					ExceptionHandler.handle(x, getOpenTypeErrorTitle(), getOpenTypeErrorMessage());
 				}
 			}
 		}
@@ -69,9 +67,9 @@ public abstract class OpenTypeAction extends Action implements
 
 	protected SelectionDialog createDialog() {
 		final Shell parent = DLTKUIPlugin.getActiveWorkbenchShell();
-		OpenTypeSelectionDialog2 dialog = new OpenTypeSelectionDialog2(parent,
-				true, PlatformUI.getWorkbench().getProgressService(), null,
-				IDLTKSearchConstants.TYPE, this.getUILanguageToolkit());
+		OpenTypeSelectionDialog dialog = new OpenTypeSelectionDialog(parent, true,
+				PlatformUI.getWorkbench().getProgressService(), null, IDLTKSearchConstants.TYPE,
+				this.getUILanguageToolkit());
 		dialog.setTitle(getOpenTypeDialogTitle());
 		dialog.setMessage(getOpenTypeDialogMessage());
 		return dialog;
@@ -86,8 +84,7 @@ public abstract class OpenTypeAction extends Action implements
 	}
 
 	protected String getOpenTypeErrorTitle() {
-		return NLS.bind(DLTKUIMessages.OpenTypeAction_errorTitle,
-				getLanguageName());
+		return NLS.bind(DLTKUIMessages.OpenTypeAction_errorTitle, getLanguageName());
 	}
 
 	protected String getOpenTypeDialogMessage() {
@@ -95,8 +92,7 @@ public abstract class OpenTypeAction extends Action implements
 	}
 
 	protected String getOpenTypeDialogTitle() {
-		return NLS.bind(DLTKUIMessages.OpenTypeAction_dialogTitle,
-				getLanguageName());
+		return NLS.bind(DLTKUIMessages.OpenTypeAction_dialogTitle, getLanguageName());
 	}
 
 	// ---- IWorkbenchWindowActionDelegate

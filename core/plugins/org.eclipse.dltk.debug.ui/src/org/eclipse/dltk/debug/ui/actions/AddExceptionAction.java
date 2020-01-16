@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -26,10 +26,10 @@ import org.eclipse.dltk.debug.core.model.IScriptBreakpoint;
 import org.eclipse.dltk.debug.core.model.IScriptExceptionBreakpoint;
 import org.eclipse.dltk.debug.ui.DLTKDebugUIPlugin;
 import org.eclipse.dltk.debug.ui.breakpoints.BreakpointUtils;
-import org.eclipse.dltk.internal.ui.dialogs.TypeSelectionDialog2;
 import org.eclipse.dltk.ui.DLTKUILanguageManager;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
+import org.eclipse.dltk.ui.dialogs.FilteredTypesSelectionDialog;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -61,11 +61,11 @@ public abstract class AddExceptionAction
 				null, settings.getBoolean(CAUGHT_CHECKED),
 				settings.getBoolean(UNCAUGHT_CHECKED));
 
-		TypeSelectionDialog2 dialog = new TypeSelectionDialog2(
+		FilteredTypesSelectionDialog dialog = new FilteredTypesSelectionDialog(
 				DLTKUIPlugin.getActiveWorkbenchShell(), false,
 				PlatformUI.getWorkbench().getProgressService(),
 				SearchEngine.createWorkspaceScope(fToolkit.getCoreToolkit()),
-				IDLTKSearchConstants.TYPE, ext, fToolkit);
+				IDLTKSearchConstants.TYPE, ext, fToolkit.getCoreToolkit());
 
 		dialog.setMessage(Messages.AddExceptionAction_search);
 		dialog.setTitle(Messages.AddExceptionAction_addExceptionBreakpoint);
@@ -114,7 +114,7 @@ public abstract class AddExceptionAction
 
 	/**
 	 * creates a single breakpoint of the specified type
-	 * 
+	 *
 	 * @param caught
 	 *            if the exception is caught
 	 * @param uncaught

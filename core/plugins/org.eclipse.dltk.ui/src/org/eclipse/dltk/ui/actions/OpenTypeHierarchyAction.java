@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -56,13 +56,11 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 	private IEditorPart fEditor;
 
 	/**
-	 * Creates a new <code>OpenTypeHierarchyAction</code>. The action requires
-	 * that the selection provided by the site's selection provider is of type
-	 * <code>
+	 * Creates a new <code>OpenTypeHierarchyAction</code>. The action requires that
+	 * the selection provided by the site's selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 *
-	 * @param site
-	 *            the site providing context information for this action
+	 * @param site the site providing context information for this action
 	 */
 	public OpenTypeHierarchyAction(IWorkbenchSite site) {
 		super(site);
@@ -74,35 +72,30 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 	}
 
 	/**
-	 * Creates a new <code>OpenTypeHierarchyAction</code>. The action requires
-	 * that the selection provided by the given selection provider is of type
-	 * <code>
+	 * Creates a new <code>OpenTypeHierarchyAction</code>. The action requires that
+	 * the selection provided by the given selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 *
-	 * @param site
-	 *            the site providing context information for this action
-	 * @param provider
-	 *            a special selection provider which is used instead of the
-	 *            site's selection provider or <code>null</code> to use the
-	 *            site's selection provider
+	 * @param site     the site providing context information for this action
+	 * @param provider a special selection provider which is used instead of the
+	 *                 site's selection provider or <code>null</code> to use the
+	 *                 site's selection provider
 	 *
 	 * @since 3.2
 	 * @deprecated Use {@link #setSpecialSelectionProvider(ISelectionProvider)}
 	 *             instead. This API will be removed after 3.2 M5.
 	 */
 	@Deprecated
-	public OpenTypeHierarchyAction(IWorkbenchSite site,
-			ISelectionProvider provider) {
+	public OpenTypeHierarchyAction(IWorkbenchSite site, ISelectionProvider provider) {
 		this(site);
 		setSpecialSelectionProvider(provider);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 *
-	 * @param editor
-	 *            the Script editor
+	 * @param editor the Script editor
 	 */
 	public OpenTypeHierarchyAction(IEditorPart editor) {
 		this(editor.getEditorSite());
@@ -128,28 +121,27 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 	private boolean isEnabled(IStructuredSelection selection) {
 		if (selection.size() != 1)
 			return false;
-		Object input = selection.getFirstElement();
+		Object firstElement = selection.getFirstElement();
 
-		if (input instanceof LogicalPackage)
+		if (firstElement instanceof LogicalPackage)
 			return true;
 
-		if (!(input instanceof IModelElement))
+		if (!(firstElement instanceof IModelElement))
 			return false;
-		switch (((IModelElement) input).getElementType()) {
+		switch (((IModelElement) firstElement).getElementType()) {
 		// case IModelElement.INITIALIZER:
 		case IModelElement.METHOD:
 		case IModelElement.FIELD:
 		case IModelElement.TYPE:
 			return true;
 		case IModelElement.PROJECT_FRAGMENT:
-		case IModelElement.SCRIPT_PROJECT:
-		case IModelElement.SCRIPT_FOLDER:
-		case IModelElement.PACKAGE_DECLARATION:
-			// case IModelElement.IMPORT_DECLARATION:
-			// case IModelElement.CLASS_FILE:
 		case IModelElement.SOURCE_MODULE:
+		case IModelElement.PACKAGE_DECLARATION:
+		case IModelElement.IMPORT_DECLARATION:
 			return true;
 		// case IModelElement.LOCAL_VARIABLE:
+		case IModelElement.SCRIPT_PROJECT:
+		case IModelElement.SCRIPT_FOLDER:
 		default:
 			return false;
 		}
@@ -165,14 +157,12 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 			return;
 
 		try {
-			IModelElement[] elements = SelectionConverter
-					.codeResolveOrInputForked(fEditor);
+			IModelElement[] elements = SelectionConverter.codeResolveOrInputForked(fEditor);
 			if (elements == null)
 				return;
 			List<IModelElement> candidates = new ArrayList<>(elements.length);
 			for (int i = 0; i < elements.length; i++) {
-				IModelElement[] resolvedElements = OpenTypeHierarchyUtil
-						.getCandidates(elements[i]);
+				IModelElement[] resolvedElements = OpenTypeHierarchyUtil.getCandidates(elements[i]);
 				if (resolvedElements != null)
 					Collections.addAll(candidates, resolvedElements);
 			}
@@ -202,10 +192,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 		}
 
 		if (!(input instanceof IModelElement)) {
-			IStatus status = createStatus(
-					ActionMessages.OpenTypeHierarchyAction_messages_no_script_element);
-			ErrorDialog.openError(getShell(), getDialogTitle(),
-					ActionMessages.OpenTypeHierarchyAction_messages_title,
+			IStatus status = createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_script_element);
+			ErrorDialog.openError(getShell(), getDialogTitle(), ActionMessages.OpenTypeHierarchyAction_messages_title,
 					status);
 			return;
 		}
@@ -218,8 +206,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 		if (status.isOK()) {
 			run(result.toArray(new IModelElement[result.size()]));
 		} else {
-			ErrorDialog.openError(getShell(), getDialogTitle(),
-					ActionMessages.OpenTypeHierarchyAction_messages_title,
+			ErrorDialog.openError(getShell(), getDialogTitle(), ActionMessages.OpenTypeHierarchyAction_messages_title,
 					status);
 		}
 	}
@@ -240,8 +227,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 		return ActionMessages.OpenTypeHierarchyAction_dialog_title;
 	}
 
-	private static IStatus compileCandidates(List<IModelElement> result,
-			IModelElement elem) {
+	private static IStatus compileCandidates(List<IModelElement> result, IModelElement elem) {
 		IStatus ok = new Status(IStatus.OK, DLTKUIPlugin.getPluginId(), 0, "", //$NON-NLS-1$
 				null);
 		try {
@@ -259,8 +245,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 					result.add(elem);
 					return ok;
 				}
-				return createStatus(
-						ActionMessages.OpenTypeHierarchyAction_messages_no_script_resources);
+				return createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_script_resources);
 			case IModelElement.PACKAGE_DECLARATION:
 				result.add(elem.getAncestor(IModelElement.SCRIPT_FOLDER));
 				return ok;
@@ -288,18 +273,15 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 					result.addAll(Arrays.asList(types));
 					return ok;
 				}
-				return createStatus(
-						ActionMessages.OpenTypeHierarchyAction_messages_no_types);
+				return createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_types);
 			}
 		} catch (ModelException e) {
 			return e.getStatus();
 		}
-		return createStatus(
-				ActionMessages.OpenTypeHierarchyAction_messages_no_valid_script_element);
+		return createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_valid_script_element);
 	}
 
 	private static IStatus createStatus(String message) {
-		return new Status(IStatus.INFO, DLTKUIPlugin.getPluginId(),
-				IDLTKStatusConstants.INTERNAL_ERROR, message, null);
+		return new Status(IStatus.INFO, DLTKUIPlugin.getPluginId(), IDLTKStatusConstants.INTERNAL_ERROR, message, null);
 	}
 }
