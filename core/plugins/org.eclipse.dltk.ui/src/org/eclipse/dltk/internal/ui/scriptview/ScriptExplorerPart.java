@@ -804,7 +804,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 			return (T) getShowInSource();
 		}
 		if (key == IShowInTargetList.class) {
-			return (T) (IShowInTargetList) () -> new String[] { IPageLayout.ID_RES_NAV };
+			return (T) (IShowInTargetList) () -> new String[] { IPageLayout.ID_PROJECT_EXPLORER };
 		}
 		// if (key == IContextProvider.class) {
 		// return ScriptUIHelp.getHelpContextProvider(this,
