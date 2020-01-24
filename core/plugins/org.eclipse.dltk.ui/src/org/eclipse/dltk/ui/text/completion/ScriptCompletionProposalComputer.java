@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- *
+ * 
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -24,7 +24,6 @@ import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.ITextViewerExtension9;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationExtension;
@@ -157,21 +156,16 @@ public abstract class ScriptCompletionProposalComputer extends AbstractScriptCom
 		}
 
 		collector.setInvocationContext(context);
-		if (context.getViewer() instanceof ITextViewerExtension9) {
-			collector.setReplacementLength(
-					((ITextViewerExtension9) context.getViewer()).getLastKnownSelection().getLength());
-		} else {
-			Runnable collectLength = () -> {
-				Point selection = context.getViewer().getSelectedRange();
-				if (selection.y > 0) {
-					collector.setReplacementLength(selection.y);
-				}
-			};
-			if (Display.getCurrent() != null) {
-				collectLength.run();
-			} else {
-				Display.getDefault().syncExec(collectLength);
+		Runnable collectLength = () -> {
+			Point selection = context.getViewer().getSelectedRange();
+			if (selection.y > 0) {
+				collector.setReplacementLength(selection.y);
 			}
+		};
+		if (Display.getCurrent() != null) {
+			collectLength.run();
+		} else {
+			Display.getDefault().syncExec(collectLength);
 		}
 
 		// Filling collector with proposals

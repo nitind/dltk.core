@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- *
+ * 
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -49,7 +49,6 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.ITextViewerExtension5;
-import org.eclipse.jface.text.ITextViewerExtension9;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.BoldStylerProvider;
@@ -1093,12 +1092,7 @@ public abstract class AbstractScriptCompletionProposal implements IScriptComplet
 	}
 
 	protected ITextSelection getTextSelection(ITextViewer viewer) {
-		if (viewer instanceof ITextViewerExtension9) {
-			return ((ITextViewerExtension9) viewer).getLastKnownSelection();
-		}
-
 		final ITextSelection[] selection = new ITextSelection[1];
-
 		Runnable getSelection = () -> {
 			selection[0] = (ITextSelection) viewer.getSelectionProvider().getSelection();
 		};
