@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
 
@@ -21,41 +21,37 @@ import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 
 public class UserInterfaceManager {
 
-	private Map fMap = new HashMap();
+	private Map<Class<?>, Tuple> fMap = new HashMap<>();
 
 	private static class Tuple {
-		private Class starter;
-		private Class wizard;
+		private Class<?> starter;
+		private Class<?> wizard;
 
-		public Tuple(Class s, Class w) {
+		public Tuple(Class<?> s, Class<?> w) {
 			starter = s;
 			wizard = w;
 		}
 	}
 
-	protected void put(Class processor, Class starter, Class wizard) {
+	protected void put(Class<?> processor, Class<?> starter, Class<?> wizard) {
 		fMap.put(processor, new Tuple(starter, wizard));
 	}
 
 	public UserInterfaceStarter getStarter(Refactoring refactoring) {
-		RefactoringProcessor processor = refactoring
-				.getAdapter(RefactoringProcessor.class);
+		RefactoringProcessor processor = refactoring.getAdapter(RefactoringProcessor.class);
 		if (processor == null)
 			return null;
 		Tuple tuple = null;
-		Class clazz = processor.getClass();
+		Class<?> clazz = processor.getClass();
 		do {
-			tuple = (Tuple) fMap.get(clazz);
+			tuple = fMap.get(clazz);
 			clazz = clazz.getSuperclass();
 		} while (tuple == null);
 		try {
-			UserInterfaceStarter starter = (UserInterfaceStarter) tuple.starter
-					.newInstance();
-			Class wizardClass = tuple.wizard;
-			Constructor constructor = wizardClass
-					.getConstructor(new Class[] { Refactoring.class });
-			RefactoringWizard wizard = (RefactoringWizard) constructor
-					.newInstance(new Object[] { refactoring });
+			UserInterfaceStarter starter = (UserInterfaceStarter) tuple.starter.getConstructor().newInstance();
+			Class<?> wizardClass = tuple.wizard;
+			Constructor<?> constructor = wizardClass.getConstructor(Refactoring.class);
+			RefactoringWizard wizard = (RefactoringWizard) constructor.newInstance(refactoring);
 			starter.initialize(wizard);
 			return starter;
 		} catch (NoSuchMethodException e) {

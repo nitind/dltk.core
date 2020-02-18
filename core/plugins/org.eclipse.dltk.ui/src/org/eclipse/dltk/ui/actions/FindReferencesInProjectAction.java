@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -43,41 +43,40 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 public class FindReferencesInProjectAction extends FindReferencesAction {
 
 	/**
-	 * Creates a new <code>FindReferencesInProjectAction</code>. The action
-	 * requires that the selection provided by the site's selection provider is of type
+	 * Creates a new <code>FindReferencesInProjectAction</code>. The action requires
+	 * that the selection provided by the site's selection provider is of type
 	 * <code>IStructuredSelection</code>.
 	 *
 	 * @param site the site providing context information for this action
 	 */
-	public FindReferencesInProjectAction(IDLTKLanguageToolkit toolkit,
-			IWorkbenchSite site) {
+	public FindReferencesInProjectAction(IDLTKLanguageToolkit toolkit, IWorkbenchSite site) {
 		super(toolkit, site);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
+	 *
 	 * @param editor the Script editor
 	 */
-	public FindReferencesInProjectAction(IDLTKLanguageToolkit toolkit,
-			ScriptEditor editor) {
+	public FindReferencesInProjectAction(IDLTKLanguageToolkit toolkit, ScriptEditor editor) {
 		super(toolkit, editor);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
+	 *
 	 * @param editor the Script editor
 	 * @since 5.3
 	 */
-	public FindReferencesInProjectAction(IDLTKLanguageToolkit toolkit,
-			AbstractDecoratedTextEditor editor) {
+	public FindReferencesInProjectAction(IDLTKLanguageToolkit toolkit, AbstractDecoratedTextEditor editor) {
 		super(toolkit, editor);
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	Class[] getValidTypes() {
-		return new Class[] { IField.class, IMethod.class, IType.class,
-				ISourceModule.class, IPackageDeclaration.class,
+	Class<?>[] getValidTypes() {
+		return new Class[] { IField.class, IMethod.class, IType.class, ISourceModule.class, IPackageDeclaration.class,
 				IScriptFolder.class, ILocalVariable.class };
 	}
 
@@ -94,18 +93,19 @@ public class FindReferencesInProjectAction extends FindReferencesAction {
 
 	@Override
 	QuerySpecification createQuery(IModelElement element) throws ModelException {
-		DLTKSearchScopeFactory factory= DLTKSearchScopeFactory.getInstance();
+		DLTKSearchScopeFactory factory = DLTKSearchScopeFactory.getInstance();
 		AbstractTextEditor editor = getTextEditor();
 
 		IDLTKSearchScope scope;
 		String description;
-		boolean isInsideInterpreterEnvironment= factory.isInsideInterpreter(element);
+		boolean isInsideInterpreterEnvironment = factory.isInsideInterpreter(element);
 		if (editor != null) {
-			scope= factory.createProjectSearchScope(editor.getEditorInput(), isInsideInterpreterEnvironment);
-			description= factory.getProjectScopeDescription(editor.getEditorInput(), isInsideInterpreterEnvironment);
+			scope = factory.createProjectSearchScope(editor.getEditorInput(), isInsideInterpreterEnvironment);
+			description = factory.getProjectScopeDescription(editor.getEditorInput(), isInsideInterpreterEnvironment);
 		} else {
-			scope= factory.createProjectSearchScope(element.getScriptProject(), isInsideInterpreterEnvironment);
-			description=  factory.getProjectScopeDescription(element.getScriptProject(), isInsideInterpreterEnvironment);
+			scope = factory.createProjectSearchScope(element.getScriptProject(), isInsideInterpreterEnvironment);
+			description = factory.getProjectScopeDescription(element.getScriptProject(),
+					isInsideInterpreterEnvironment);
 		}
 		return new ElementQuerySpecification(element, getLimitTo(), scope, description);
 	}

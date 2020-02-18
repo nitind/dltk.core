@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -15,7 +15,6 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
-
 
 /**
  * Wraps a <code>ModelElementSearchActions</code> to find its results in the
@@ -35,7 +34,8 @@ public class WorkingSetFindAction extends FindAction {
 	private FindAction fAction;
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 */
 	public WorkingSetFindAction(IWorkbenchSite site, FindAction action, String workingSetName) {
 		super(action.getLanguageToolkit(), site);
@@ -43,25 +43,26 @@ public class WorkingSetFindAction extends FindAction {
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 */
-	public WorkingSetFindAction(ScriptEditor editor,
-			FindAction action, String workingSetName) {
+	public WorkingSetFindAction(ScriptEditor editor, FindAction action, String workingSetName) {
 		this((AbstractDecoratedTextEditor) editor, action, workingSetName);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
+	 * 
 	 * @since 5.3
 	 */
-	public WorkingSetFindAction(AbstractDecoratedTextEditor editor,
-			FindAction action, String workingSetName) {
+	public WorkingSetFindAction(AbstractDecoratedTextEditor editor, FindAction action, String workingSetName) {
 		super(action.getLanguageToolkit(), editor);
 		init(action, workingSetName);
 	}
 
 	@Override
-	Class[] getValidTypes() {
+	Class<?>[] getValidTypes() {
 		return null; // ignore, we override canOperateOn
 	}
 
@@ -72,7 +73,7 @@ public class WorkingSetFindAction extends FindAction {
 
 	private void init(FindAction action, String workingSetName) {
 		Assert.isNotNull(action);
-		fAction= action;
+		fAction = action;
 		setText(workingSetName);
 		setImageDescriptor(action.getImageDescriptor());
 		setToolTipText(action.getToolTipText());
