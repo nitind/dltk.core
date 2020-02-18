@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -12,6 +12,7 @@
 package org.eclipse.dltk.internal.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -89,16 +90,15 @@ import org.eclipse.jface.viewers.Viewer;
  * </p>
  *
  */
-public class StandardModelElementContentProvider
-		implements ITreeContentProvider, IWorkingCopyProvider {
+public class StandardModelElementContentProvider implements ITreeContentProvider, IWorkingCopyProvider {
 
 	protected static final Object[] NO_CHILDREN = new Object[0];
 	protected boolean fProvideMembers;
 	protected boolean fProvideWorkingCopy;
 
 	/**
-	 * Creates a new content provider. The content provider does not provide
-	 * members of compilation units or class files.
+	 * Creates a new content provider. The content provider does not provide members
+	 * of compilation units or class files.
 	 */
 	public StandardModelElementContentProvider() {
 		this(false);
@@ -107,9 +107,8 @@ public class StandardModelElementContentProvider
 	/**
 	 * Creates a new <code>StandardJavaElementContentProvider</code>.
 	 *
-	 * @param provideMembers
-	 *                           if <code>true</code> members below compilation
-	 *                           units and class files are provided.
+	 * @param provideMembers if <code>true</code> members below compilation units
+	 *                       and class files are provided.
 	 */
 	public StandardModelElementContentProvider(boolean provideMembers) {
 		fProvideMembers = provideMembers;
@@ -117,24 +116,23 @@ public class StandardModelElementContentProvider
 	}
 
 	/**
-	 * Returns whether members are provided when asking for a compilation units
-	 * or class file for its children.
+	 * Returns whether members are provided when asking for a compilation units or
+	 * class file for its children.
 	 *
-	 * @return <code>true</code> if the content provider provides members;
-	 *         otherwise <code>false</code> is returned
+	 * @return <code>true</code> if the content provider provides members; otherwise
+	 *         <code>false</code> is returned
 	 */
 	public boolean getProvideMembers() {
 		return fProvideMembers;
 	}
 
 	/**
-	 * Sets whether the content provider is supposed to return members when
-	 * asking a compilation unit or class file for its children.
+	 * Sets whether the content provider is supposed to return members when asking a
+	 * compilation unit or class file for its children.
 	 *
-	 * @param b
-	 *              if <code>true</code> then members are provided. If
-	 *              <code>false</code> compilation units and class files are the
-	 *              leaves provided by this content provider.
+	 * @param b if <code>true</code> then members are provided. If
+	 *          <code>false</code> compilation units and class files are the leaves
+	 *          provided by this content provider.
 	 */
 	public void setProvideMembers(boolean b) {
 		fProvideMembers = b;
@@ -159,13 +157,12 @@ public class StandardModelElementContentProvider
 	}
 
 	public Object[] getExtendedChildren(Object element, Object[] children) {
-		final IModelContentProvider[] providers = UIModelProviderManager
-				.getContentProviders(getToolkitID(element));
+		final IModelContentProvider[] providers = UIModelProviderManager.getContentProviders(getToolkitID(element));
 		if (providers.length > 0) {
 			final List<Object> elements = new ArrayList<>(children.length + 2);
 			Collections.addAll(elements, children);
-			for (int i = 0; i < providers.length; i++) {
-				providers[i].provideModelChanges(element, elements, this);
+			for (IModelContentProvider provider : providers) {
+				provider.provideModelChanges(element, elements, this);
 			}
 			return elements.toArray();
 		}
@@ -174,8 +171,7 @@ public class StandardModelElementContentProvider
 
 	private String getToolkitID(Object element) {
 		if (element instanceof IModelElement) {
-			IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-					.getLanguageToolkit((IModelElement) element);
+			IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit((IModelElement) element);
 			if (toolkit != null) {
 				return toolkit.getNatureId();
 			}
@@ -184,11 +180,10 @@ public class StandardModelElementContentProvider
 	}
 
 	public Object getExtendedParent(Object element) {
-		IModelContentProvider[] providers = UIModelProviderManager
-				.getContentProviders(getToolkitID(element));
+		IModelContentProvider[] providers = UIModelProviderManager.getContentProviders(getToolkitID(element));
 		if (providers.length > 0) {
-			for (int i = 0; i < providers.length; i++) {
-				Object parent = providers[i].getParentElement(element, this);
+			for (IModelContentProvider provider : providers) {
+				Object parent = provider.getParentElement(element, this);
 				if (parent != null) {
 					return parent;
 				}
@@ -197,9 +192,6 @@ public class StandardModelElementContentProvider
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on ITreeContentProvider.
-	 */
 	@Override
 	public Object[] getChildren(Object element) {
 		if (!exists(element))
@@ -207,33 +199,21 @@ public class StandardModelElementContentProvider
 
 		try {
 			if (element instanceof IScriptModel)
-				return getExtendedChildren(element,
-						getScriptProjects((IScriptModel) element));
+				return getExtendedChildren(element, getScriptProjects((IScriptModel) element));
 
 			if (element instanceof IScriptProject)
-				return getExtendedChildren(element,
-						getProjectFragments((IScriptProject) element));
+				return getExtendedChildren(element, getProjectFragments((IScriptProject) element));
 
 			if (element instanceof IProjectFragment)
-				return getExtendedChildren(element,
-						getProjectFragmentContent((IProjectFragment) element));
+				return getExtendedChildren(element, getProjectFragmentContent((IProjectFragment) element));
 
 			if (element instanceof IScriptFolder)
-				return getExtendedChildren(element,
-						getScriptFolderContent((IScriptFolder) element));
+				return getExtendedChildren(element, getScriptFolderContent((IScriptFolder) element));
 
 			if (element instanceof IFolder)
-				return getExtendedChildren(element,
-						getFolderContent((IFolder) element));
-			//
-			// if (element instanceof IJarEntryResource) {
-			// return ((IJarEntryResource) element).getChildren();
-			// }
-			//
-			if (getProvideMembers() && element instanceof ISourceReference
-					&& element instanceof IParent) {
-				return getExtendedChildren(element,
-						((IParent) element).getChildren());
+				return getExtendedChildren(element, getFolderContent((IFolder) element));
+			if (getProvideMembers() && element instanceof ISourceReference && element instanceof IParent) {
+				return getExtendedChildren(element, ((IParent) element).getChildren());
 			}
 		} catch (CoreException e) {
 			if (DLTKCore.DEBUG) {
@@ -244,11 +224,6 @@ public class StandardModelElementContentProvider
 		return getExtendedChildren(element, NO_CHILDREN);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see ITreeContentProvider
-	 */
 	@Override
 	public boolean hasChildren(Object element) {
 		if (getProvideMembers()) {
@@ -283,9 +258,6 @@ public class StandardModelElementContentProvider
 		return (children != null) && children.length > 0;
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on ITreeContentProvider.
-	 */
 	@Override
 	public Object getParent(Object element) {
 		if (!exists(element))
@@ -298,38 +270,32 @@ public class StandardModelElementContentProvider
 	}
 
 	/**
-	 * Evaluates all children of a given {@link IPackageFragmentRoot}. Clients
-	 * can override this method.
+	 * Evaluates all children of a given {@link IPackageFragmentRoot}. Clients can
+	 * override this method.
 	 *
-	 * @param root
-	 *                 The root to evaluate the children for.
+	 * @param root The root to evaluate the children for.
 	 * @return The children of the root
-	 * @exception JavaModelException
-	 *                                   if the package fragment root does not
-	 *                                   exist or if an exception occurs while
-	 *                                   accessing its corresponding resource
+	 * @exception JavaModelException if the package fragment root does not exist or
+	 *                               if an exception occurs while accessing its
+	 *                               corresponding resource
 	 *
 	 */
-	protected Object[] getProjectFragmentContent(IProjectFragment root)
-			throws ModelException {
+	protected Object[] getProjectFragmentContent(IProjectFragment root) throws ModelException {
 		IModelElement[] fragments = root.getChildren();
 
 		List<IModelElement> newFragments = new ArrayList<>();
-		for (int i = 0; i < fragments.length; ++i) {
-			if (fragments[i] instanceof IScriptFolder) {
-				IScriptFolder scriptFolder = ((IScriptFolder) fragments[i]);
+		for (IModelElement modelElement : fragments) {
+			if (modelElement instanceof IScriptFolder) {
+				IScriptFolder scriptFolder = ((IScriptFolder) modelElement);
 				if (scriptFolder.isRootFolder()) {
 					IModelElement[] children = scriptFolder.getChildren();
-					for (int j = 0; j < children.length; ++j) {
-						newFragments.add(children[j]);
-					}
+					newFragments.addAll(Arrays.asList(children));
 					continue;
 				}
 			}
-			newFragments.add(fragments[i]);
+			newFragments.add(modelElement);
 		}
-		fragments = newFragments
-				.toArray(new IModelElement[newFragments.size()]);
+		fragments = newFragments.toArray(new IModelElement[0]);
 
 		if (isProjectProjectFragment(root)) {
 			return fragments;
@@ -341,20 +307,17 @@ public class StandardModelElementContentProvider
 	}
 
 	/**
-	 * Evaluates all children of a given {@link IJavaProject}. Clients can
-	 * override this method.
+	 * Evaluates all children of a given {@link IJavaProject}. Clients can override
+	 * this method.
 	 *
-	 * @param project
-	 *                    The Java project to evaluate the children for.
+	 * @param project The Java project to evaluate the children for.
 	 * @return The children of the project. Typically these are package fragment
 	 *         roots but can also be other elements.
-	 * @exception JavaModelException
-	 *                                   if the Java project does not exist or
-	 *                                   if an exception occurs while accessing
-	 *                                   its corresponding resource
+	 * @exception JavaModelException if the Java project does not exist or if an
+	 *                               exception occurs while accessing its
+	 *                               corresponding resource
 	 */
-	protected Object[] getProjectFragments(IScriptProject project)
-			throws ModelException {
+	protected Object[] getProjectFragments(IScriptProject project) throws ModelException {
 		if (!project.getProject().isOpen())
 			return NO_CHILDREN;
 
@@ -362,21 +325,17 @@ public class StandardModelElementContentProvider
 		List<Object> list = new ArrayList<>(roots.length);
 		// filter out package fragments that correspond to projects and
 		// replace them with the package fragments directly
-		for (int i = 0; i < roots.length; i++) {
-			IProjectFragment root = roots[i];
+		for (IProjectFragment root : roots) {
 			if (isProjectProjectFragment(root)) {
 				Object[] fragments = getProjectFragmentContent(root);
-				for (int j = 0; j < fragments.length; j++) {
-					list.add(fragments[j]);
-				}
+
+				list.addAll(Arrays.asList(fragments));
 			} else {
 				list.add(root);
 			}
 		}
 		Object[] resources = project.getForeignResources();
-		for (int i = 0; i < resources.length; i++) {
-			list.add(resources[i]);
-		}
+		list.addAll(Arrays.asList(resources));
 		return list.toArray();
 	}
 
@@ -384,8 +343,7 @@ public class StandardModelElementContentProvider
 	 * Note: This method is for internal use only. Clients should not call this
 	 * method.
 	 */
-	protected Object[] getScriptProjects(IScriptModel jm)
-			throws ModelException {
+	protected Object[] getScriptProjects(IScriptModel jm) throws ModelException {
 		return jm.getScriptProjects();
 	}
 
@@ -393,35 +351,29 @@ public class StandardModelElementContentProvider
 	 * Evaluates all children of a given {@link IPackageFragment}. Clients can
 	 * override this method.
 	 *
-	 * @param fragment
-	 *                     The fragment to evaluate the children for.
+	 * @param fragment The fragment to evaluate the children for.
 	 * @return The children of the given package fragment.
-	 * @exception JavaModelException
-	 *                                   if the package fragment does not exist
-	 *                                   or if an exception occurs while
-	 *                                   accessing its corresponding resource
+	 * @exception JavaModelException if the package fragment does not exist or if an
+	 *                               exception occurs while accessing its
+	 *                               corresponding resource
 	 *
 	 * @since 3.3
 	 */
-	protected Object[] getScriptFolderContent(IScriptFolder fragment)
-			throws ModelException {
+	protected Object[] getScriptFolderContent(IScriptFolder fragment) throws ModelException {
 		// if (fragment.getKind() == IProjectFragment.K_SOURCE) {
-		return concatenate(fragment.getSourceModules(),
-				fragment.getForeignResources());
+		return concatenate(fragment.getSourceModules(), fragment.getForeignResources());
 		// }
 		// return concatenate(fragment.getClassFiles(),
 		// fragment.getForeignResources());
 	}
 
 	/**
-	 * Evaluates all children of a given {@link IFolder}. Clients can override
-	 * this method.
+	 * Evaluates all children of a given {@link IFolder}. Clients can override this
+	 * method.
 	 *
-	 * @param folder
-	 *                   The folder to evaluate the children for.
+	 * @param folder The folder to evaluate the children for.
 	 * @return The children of the given package fragment.
-	 * @exception CoreException
-	 *                              if the folder does not exist.
+	 * @exception CoreException if the folder does not exist.
 	 *
 	 */
 	protected Object[] getFolderContent(IFolder folder) throws CoreException {
@@ -439,8 +391,7 @@ public class StandardModelElementContentProvider
 			// We therefore exclude Java elements from the list
 			// of non-Java resources.
 			if (isFolderOnClasspath) {
-				if (javaProject
-						.findProjectFragment(member.getFullPath()) == null) {
+				if (javaProject.findProjectFragment(member.getFullPath()) == null) {
 					nonJavaResources.add(member);
 				}
 			} else if (!javaProject.isOnBuildpath(member)) {
@@ -457,8 +408,7 @@ public class StandardModelElementContentProvider
 	protected boolean isBuildPathChange(IModelElementDelta delta) {
 
 		// need to test the flags only for package fragment roots
-		if (delta.getElement()
-				.getElementType() != IModelElement.PROJECT_FRAGMENT)
+		if (delta.getElement().getElementType() != IModelElement.PROJECT_FRAGMENT)
 			return false;
 
 		int flags = delta.getFlags();
@@ -482,13 +432,10 @@ public class StandardModelElementContentProvider
 	 * Note: This method is for internal use only. Clients should not call this
 	 * method.
 	 */
-	protected boolean isScriptFolderEmpty(IModelElement element)
-			throws ModelException {
+	protected boolean isScriptFolderEmpty(IModelElement element) throws ModelException {
 		if (element instanceof IScriptFolder) {
 			IScriptFolder fragment = (IScriptFolder) element;
-			if (fragment.exists()
-					&& !(fragment.hasChildren()
-							|| fragment.getForeignResources().length > 0)
+			if (fragment.exists() && !(fragment.hasChildren() || fragment.getForeignResources().length > 0)
 					&& fragment.hasSubfolders())
 				return true;
 		}
@@ -501,8 +448,7 @@ public class StandardModelElementContentProvider
 	 */
 	protected boolean isProjectProjectFragment(IProjectFragment root) {
 		IScriptProject javaProject = root.getScriptProject();
-		return javaProject != null
-				&& javaProject.getPath().equals(root.getPath());
+		return javaProject != null && javaProject.getPath().equals(root.getPath());
 	}
 
 	/**
@@ -546,17 +492,15 @@ public class StandardModelElementContentProvider
 			}
 			// for ISourceModule in <default> IScriptFolders, tree parent is
 			// actually IProjectFragment
-			if (parent instanceof IScriptFolder
-					&& parent.getPath().equals(parent.getParent().getPath())
-					// unless source path is root of project path
-					&& !parent.getPath()
-							.equals(parent.getScriptProject().getPath())) {
+			if (parent instanceof IScriptFolder && parent.getPath().equals(parent.getParent().getPath())
+			// unless source path is root of project path
+					&& !parent.getPath().equals(parent.getScriptProject().getPath())) {
 				return parent.getParent();
 			}
 			return parent;
 		} /*
-			 * else if (element instanceof IJarEntryResource) { return
-			 * ((IJarEntryResource) element).getParent(); }
+			 * else if (element instanceof IJarEntryResource) { return ((IJarEntryResource)
+			 * element).getParent(); }
 			 */
 		return null;
 	}
