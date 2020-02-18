@@ -27,7 +27,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.SimpleFSLockFactory;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.SleepingLockWrapper;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -127,8 +127,8 @@ class IndexContainer {
 	}
 
 	private IndexWriter createWriter(Path path) throws IOException {
-		Directory indexDir = new IndexDirectory(path,
-				SimpleFSLockFactory.INSTANCE);
+
+		Directory indexDir = FSDirectory.open(path);
 		purgeLocks(path);
 		IndexWriterConfig config = new IndexWriterConfig(new SimpleAnalyzer());
 		ConcurrentMergeScheduler mergeScheduler = new ConcurrentMergeScheduler();
