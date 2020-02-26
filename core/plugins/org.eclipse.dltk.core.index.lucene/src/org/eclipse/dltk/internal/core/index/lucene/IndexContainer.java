@@ -186,7 +186,11 @@ class IndexContainer {
 	public synchronized IndexWriter getIndexWriter(IndexType dataType,
 			int elementType) {
 		IndexWriter writer = fIndexWriters.get(dataType).get(elementType);
+		if (writer != null && !writer.isOpen()) {
+			writer = null;
+		}
 		if (writer == null) {
+
 			Path writerPath = Paths.get(fIndexRoot, fContainerId,
 					dataType.getDirectory(), String.valueOf(elementType));
 			writer = getWriter(writerPath);
@@ -255,7 +259,7 @@ class IndexContainer {
 			for (Map<Integer, IndexWriter> dataWriters : fIndexWriters
 					.values()) {
 				for (IndexWriter writer : dataWriters.values()) {
-					if (writer != null)
+					if (writer != null && writer.isOpen())
 						writer.close();
 				}
 			}
