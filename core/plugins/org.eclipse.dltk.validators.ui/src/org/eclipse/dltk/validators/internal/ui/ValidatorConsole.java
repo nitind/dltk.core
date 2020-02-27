@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -12,13 +12,12 @@
  *******************************************************************************/
 package org.eclipse.dltk.validators.internal.ui;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.console.IOConsole;
-
-import com.ibm.icu.text.DateFormat;
 
 public class ValidatorConsole extends IOConsole {
 

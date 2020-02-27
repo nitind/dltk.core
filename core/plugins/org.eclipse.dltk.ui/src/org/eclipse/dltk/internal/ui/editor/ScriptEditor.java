@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.editor;
 
+import java.text.BreakIterator;
 import java.text.CharacterIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -189,8 +190,6 @@ import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.texteditor.templates.ITemplatesPage;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-
-import com.ibm.icu.text.BreakIterator;
 
 public abstract class ScriptEditor extends AbstractDecoratedTextEditor
 		implements IScriptReconcilingListener, IScriptLanguageProvider, IScriptEditor {

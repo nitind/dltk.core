@@ -1,5 +1,6 @@
 package org.eclipse.dltk.ui.dialogs;
 
+import java.text.MessageFormat;
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceNode;
@@ -15,8 +16,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.internal.WorkbenchMessages;
 
-import com.ibm.icu.text.MessageFormat;
-
 /**
  * Creates a link between a property page and preference page
  */
@@ -24,20 +23,18 @@ public class PropToPrefLinkArea {
 
 	private Link pageLink;
 
-	public PropToPrefLinkArea(Composite parent, int style, final String pageId,
-			String message, final Shell shell, final Object pageData) {
+	public PropToPrefLinkArea(Composite parent, int style, final String pageId, String message, final Shell shell,
+			final Object pageData) {
 		/*
-		 * breaking new ground yet again - want to link between property and
-		 * preference paes. ie: project specific debug engine options to
-		 * general debugging options
+		 * breaking new ground yet again - want to link between property and preference
+		 * paes. ie: project specific debug engine options to general debugging options
 		 */
 		pageLink = new Link(parent, style);
 
 		IPreferenceNode node = getPreferenceNode(pageId);
 		String result;
 		if (node == null) {
-			result = NLS
-					.bind(WorkbenchMessages.PreferenceNode_NotFound, pageId);
+			result = NLS.bind(WorkbenchMessages.PreferenceNode_NotFound, pageId);
 		} else {
 			result = MessageFormat.format(message, node.getLabelText());
 
@@ -46,8 +43,7 @@ public class PropToPrefLinkArea {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					PreferencesUtil.createPreferenceDialogOn(shell, pageId,
-							new String[] { pageId }, pageData).open();
+					PreferencesUtil.createPreferenceDialogOn(shell, pageId, new String[] { pageId }, pageData).open();
 				}
 
 			});
@@ -64,8 +60,8 @@ public class PropToPrefLinkArea {
 	}
 
 	private IPreferenceNode getPreferenceNode(String pageId) {
-		Iterator iterator = PlatformUI.getWorkbench().getPreferenceManager()
-				.getElements(PreferenceManager.PRE_ORDER).iterator();
+		Iterator iterator = PlatformUI.getWorkbench().getPreferenceManager().getElements(PreferenceManager.PRE_ORDER)
+				.iterator();
 		while (iterator.hasNext()) {
 			IPreferenceNode next = (IPreferenceNode) iterator.next();
 			if (next.getId().equals(pageId)) {

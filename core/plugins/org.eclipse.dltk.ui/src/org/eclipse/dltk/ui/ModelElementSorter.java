@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.ui;
 
+import java.text.Collator;
 import java.util.Comparator;
 
 import org.eclipse.core.resources.IContainer;
@@ -38,15 +39,12 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
-import com.ibm.icu.text.Collator;
-
 /**
  * Sorter for Script elements. Ordered by element category, then by element
  * name. Package fragment roots are sorted as ordered on the buildpath.
  *
  */
-public class ModelElementSorter extends ViewerSorter
-		implements IModelCompareCategories {
+public class ModelElementSorter extends ViewerSorter implements IModelCompareCategories {
 
 	private MembersOrderPreferenceCache fMemberOrderCache;
 	private Collator fNewCollator; // collator from ICU
@@ -59,8 +57,7 @@ public class ModelElementSorter extends ViewerSorter
 	 */
 	public ModelElementSorter() {
 		super(null); // delay initialization of collator
-		fMemberOrderCache = DLTKUIPlugin.getDefault()
-				.getMemberOrderPreferenceCache();
+		fMemberOrderCache = DLTKUIPlugin.getDefault().getMemberOrderPreferenceCache();
 		fNewCollator = null;
 	}
 
@@ -91,15 +88,12 @@ public class ModelElementSorter extends ViewerSorter
 				case IModelElement.METHOD: {
 					IMethod method = (IMethod) je;
 					if (method.isConstructor()) {
-						return getMemberCategory(
-								MembersOrderPreferenceCache.CONSTRUCTORS_INDEX);
+						return getMemberCategory(MembersOrderPreferenceCache.CONSTRUCTORS_INDEX);
 					}
-					return getMemberCategory(
-							MembersOrderPreferenceCache.METHOD_INDEX);
+					return getMemberCategory(MembersOrderPreferenceCache.METHOD_INDEX);
 				}
 				case IModelElement.FIELD: {
-					return getMemberCategory(
-							MembersOrderPreferenceCache.FIELDS_INDEX);
+					return getMemberCategory(MembersOrderPreferenceCache.FIELDS_INDEX);
 				}
 				// case IModelElement.INITIALIZER :
 				// {
@@ -112,8 +106,7 @@ public class ModelElementSorter extends ViewerSorter
 				// getMemberCategory(MembersOrderPreferenceCache.INIT_INDEX);
 				// }
 				case IModelElement.TYPE:
-					return getMemberCategory(
-							MembersOrderPreferenceCache.TYPE_INDEX);
+					return getMemberCategory(MembersOrderPreferenceCache.TYPE_INDEX);
 				case IModelElement.PACKAGE_DECLARATION:
 					return PACKAGE_DECL;
 				case IModelElement.IMPORT_CONTAINER:
@@ -152,14 +145,12 @@ public class ModelElementSorter extends ViewerSorter
 	private IModelCompareProvider[] getCompareProviders(Object element) {
 		String toolkit = null;
 		if (element instanceof IModelElement) {
-			IDLTKLanguageToolkit tk = DLTKLanguageManager
-					.getLanguageToolkit((IModelElement) element);
+			IDLTKLanguageToolkit tk = DLTKLanguageManager.getLanguageToolkit((IModelElement) element);
 			if (tk != null) {
 				toolkit = tk.getNatureId();
 			}
 		}
-		IModelCompareProvider[] providers = UIModelProviderManager
-				.getCompareProviders(toolkit);
+		IModelCompareProvider[] providers = UIModelProviderManager.getCompareProviders(toolkit);
 		return providers;
 	}
 
@@ -205,8 +196,7 @@ public class ModelElementSorter extends ViewerSorter
 		if (cat1 != cat2)
 			return cat1 - cat2;
 
-		if (cat1 == PROJECTS || cat1 == RESOURCES || cat1 == RESOURCEFOLDERS
-				|| cat1 == STORAGE || cat1 == OTHERS) {
+		if (cat1 == PROJECTS || cat1 == RESOURCES || cat1 == RESOURCEFOLDERS || cat1 == STORAGE || cat1 == OTHERS) {
 			String name1 = getNonScriptElementLabel(viewer, e1);
 			String name2 = getNonScriptElementLabel(viewer, e2);
 			if (name1 != null && name2 != null) {
@@ -233,8 +223,7 @@ public class ModelElementSorter extends ViewerSorter
 					try {
 						String sc1[] = ((IType) e1).getSuperClasses();
 						String sc2[] = ((IType) e2).getSuperClasses();
-						if (sc1 != null && sc2 != null && sc1.length > 0
-								&& sc2.length > 0) {
+						if (sc1 != null && sc2 != null && sc1.length > 0 && sc2.length > 0) {
 							return getNewCollator().compare(sc1[0], sc2[0]);
 						}
 						return 0;
@@ -301,15 +290,13 @@ public class ModelElementSorter extends ViewerSorter
 		// available, use the viewers label provider
 
 		if (element instanceof IAdaptable) {
-			IWorkbenchAdapter adapter = ((IAdaptable) element)
-					.getAdapter(IWorkbenchAdapter.class);
+			IWorkbenchAdapter adapter = ((IAdaptable) element).getAdapter(IWorkbenchAdapter.class);
 			if (adapter != null) {
 				return adapter.getLabel(element);
 			}
 		}
 		if (viewer instanceof ContentViewer) {
-			IBaseLabelProvider prov = ((ContentViewer) viewer)
-					.getLabelProvider();
+			IBaseLabelProvider prov = ((ContentViewer) viewer).getLabelProvider();
 			if (prov instanceof ILabelProvider) {
 				return ((ILabelProvider) prov).getText(element);
 			}
@@ -320,8 +307,7 @@ public class ModelElementSorter extends ViewerSorter
 	private int getBuildpathIndex(IProjectFragment root) {
 		try {
 			IPath rootPath = root.getPath();
-			IProjectFragment[] roots = root.getScriptProject()
-					.getProjectFragments();
+			IProjectFragment[] roots = root.getScriptProject().getProjectFragments();
 			for (int i = 0; i < roots.length; i++) {
 				if (roots[i].getPath().equals(rootPath)) {
 					return i;
@@ -340,17 +326,12 @@ public class ModelElementSorter extends ViewerSorter
 		return fNewCollator;
 	}
 
-	private boolean needsBuildpathComparision(Object e1, int cat1, Object e2,
-			int cat2) {
-		if ((cat1 == PROJECTFRAGMENT && cat2 == PROJECTFRAGMENT)
-				|| (cat1 == CONTAINER && cat2 == CONTAINER)
-				|| (cat1 == SCRIPTFOLDER
-						&& ((IScriptFolder) e1).getParent()
-								.getResource() instanceof IProject
+	private boolean needsBuildpathComparision(Object e1, int cat1, Object e2, int cat2) {
+		if ((cat1 == PROJECTFRAGMENT && cat2 == PROJECTFRAGMENT) || (cat1 == CONTAINER && cat2 == CONTAINER)
+				|| (cat1 == SCRIPTFOLDER && ((IScriptFolder) e1).getParent().getResource() instanceof IProject
 						&& cat2 == PROJECTFRAGMENT)
 				|| (cat1 == PROJECTFRAGMENT && cat2 == SCRIPTFOLDER
-						&& ((IScriptFolder) e2).getParent()
-								.getResource() instanceof IProject)) {
+						&& ((IScriptFolder) e2).getParent().getResource() instanceof IProject)) {
 			IScriptProject p1 = getScriptProject(e1);
 			return p1 != null && p1.equals(getScriptProject(e2));
 		}

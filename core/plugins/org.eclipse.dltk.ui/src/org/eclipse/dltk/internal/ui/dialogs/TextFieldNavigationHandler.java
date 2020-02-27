@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.dialogs;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -37,8 +38,6 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-
-import com.ibm.icu.text.BreakIterator;
 
 /**
  * Support for camelCase-aware sub-word navigation in dialog fields.
@@ -71,9 +70,9 @@ public class TextFieldNavigationHandler {
 
 	private abstract static class WorkaroundNavigable extends Navigable {
 		/*
-		 * workarounds for: - bug 103630: Add API: Combo#getCaretPosition() -
-		 * bug 106024: Text#setSelection(int, int) does not handle start > end
-		 * with SWT.SINGLE
+		 * workarounds for: - bug 103630: Add API: Combo#getCaretPosition() - bug
+		 * 106024: Text#setSelection(int, int) does not handle start > end with
+		 * SWT.SINGLE
 		 */
 		Point fLastSelection;
 		int fCaretPosition;
@@ -312,58 +311,45 @@ public class TextFieldNavigationHandler {
 				fKeyListener = new KeyAdapter() {
 					private static final String TEXT_EDITOR_CONTEXT_ID = "org.eclipse.ui.textEditorScope"; //$NON-NLS-1$
 					private final boolean IS_WORKAROUND = (fNavigable instanceof ComboNavigable)
-							|| (fNavigable instanceof TextNavigable
-									&& TextNavigable.BUG_106024_TEXT_SELECTION);
+							|| (fNavigable instanceof TextNavigable && TextNavigable.BUG_106024_TEXT_SELECTION);
 					private List/* <Submission> */ fSubmissions;
 
 					@Override
 					public void keyPressed(KeyEvent e) {
 						if (IS_WORKAROUND) {
-							if (e.keyCode == SWT.ARROW_LEFT
-									&& e.stateMask == SWT.MOD2) {
-								int caretPosition = fNavigable
-										.getCaretPosition();
+							if (e.keyCode == SWT.ARROW_LEFT && e.stateMask == SWT.MOD2) {
+								int caretPosition = fNavigable.getCaretPosition();
 								if (caretPosition != 0) {
 									Point selection = fNavigable.getSelection();
 									if (caretPosition == selection.x)
-										fNavigable.setSelection(selection.y,
-												caretPosition - 1);
+										fNavigable.setSelection(selection.y, caretPosition - 1);
 									else
-										fNavigable.setSelection(selection.x,
-												caretPosition - 1);
+										fNavigable.setSelection(selection.x, caretPosition - 1);
 								}
 								e.doit = false;
 								return;
 
-							} else if (e.keyCode == SWT.ARROW_RIGHT
-									&& e.stateMask == SWT.MOD2) {
+							} else if (e.keyCode == SWT.ARROW_RIGHT && e.stateMask == SWT.MOD2) {
 								String text = fNavigable.getText();
-								int caretPosition = fNavigable
-										.getCaretPosition();
+								int caretPosition = fNavigable.getCaretPosition();
 								if (caretPosition != text.length()) {
 									Point selection = fNavigable.getSelection();
 									if (caretPosition == selection.y)
-										fNavigable.setSelection(selection.x,
-												caretPosition + 1);
+										fNavigable.setSelection(selection.x, caretPosition + 1);
 									else
-										fNavigable.setSelection(selection.y,
-												caretPosition + 1);
+										fNavigable.setSelection(selection.y, caretPosition + 1);
 								}
 								e.doit = false;
 								return;
 							}
 						}
-						int accelerator = SWTKeySupport
-								.convertEventToUnmodifiedAccelerator(e);
-						KeySequence keySequence = KeySequence.getInstance(
-								SWTKeySupport.convertAcceleratorToKeyStroke(
-										accelerator));
+						int accelerator = SWTKeySupport.convertEventToUnmodifiedAccelerator(e);
+						KeySequence keySequence = KeySequence
+								.getInstance(SWTKeySupport.convertAcceleratorToKeyStroke(accelerator));
 						getSubmissions();
-						for (Iterator iter = getSubmissions().iterator(); iter
-								.hasNext();) {
+						for (Iterator iter = getSubmissions().iterator(); iter.hasNext();) {
 							Submission submission = (Submission) iter.next();
-							TriggerSequence[] triggerSequences = submission
-									.getTriggerSequences();
+							TriggerSequence[] triggerSequences = submission.getTriggerSequences();
 							for (int i = 0; i < triggerSequences.length; i++) {
 								if (triggerSequences[i].equals(keySequence)) { // XXX
 																				// does
@@ -386,112 +372,84 @@ public class TextFieldNavigationHandler {
 
 						fSubmissions = new ArrayList();
 
-						IContextService contextService = PlatformUI
-								.getWorkbench()
-								.getAdapter(IContextService.class);
-						ICommandService commandService = PlatformUI
-								.getWorkbench()
-								.getAdapter(ICommandService.class);
-						IHandlerService handlerService = PlatformUI
-								.getWorkbench()
-								.getAdapter(IHandlerService.class);
-						IBindingService bindingService = PlatformUI
-								.getWorkbench()
-								.getAdapter(IBindingService.class);
-						if (contextService == null || commandService == null
-								|| handlerService == null
+						IContextService contextService = PlatformUI.getWorkbench().getAdapter(IContextService.class);
+						ICommandService commandService = PlatformUI.getWorkbench().getAdapter(ICommandService.class);
+						IHandlerService handlerService = PlatformUI.getWorkbench().getAdapter(IHandlerService.class);
+						IBindingService bindingService = PlatformUI.getWorkbench().getAdapter(IBindingService.class);
+						if (contextService == null || commandService == null || handlerService == null
 								|| bindingService == null)
 							return fSubmissions;
 
 						IContextActivation[] contextActivations;
 						contextActivations = new IContextActivation[] {
-								contextService.activateContext(
-										IContextService.CONTEXT_ID_WINDOW), // XXX
-																			// relying
-																			// on
-																			// workbench
-																			// feature
-																			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=115460#c11
-								contextService.activateContext(
-										TEXT_EDITOR_CONTEXT_ID) };
+								contextService.activateContext(IContextService.CONTEXT_ID_WINDOW), // XXX
+																									// relying
+																									// on
+																									// workbench
+																									// feature
+																									// https://bugs.eclipse.org/bugs/show_bug.cgi?id=115460#c11
+								contextService.activateContext(TEXT_EDITOR_CONTEXT_ID) };
 
 						fSubmissions.add(new Submission(
-								bindingService.getActiveBindingsFor(
-										ITextEditorActionDefinitionIds.SELECT_WORD_NEXT)) {
+								bindingService.getActiveBindingsFor(ITextEditorActionDefinitionIds.SELECT_WORD_NEXT)) {
 							@Override
 							public void execute() {
 								fIterator.setText(fNavigable.getText());
-								int caretPosition = fNavigable
-										.getCaretPosition();
-								int newCaret = fIterator
-										.following(caretPosition);
+								int caretPosition = fNavigable.getCaretPosition();
+								int newCaret = fIterator.following(caretPosition);
 								if (newCaret != BreakIterator.DONE) {
 									Point selection = fNavigable.getSelection();
 									if (caretPosition == selection.y)
-										fNavigable.setSelection(selection.x,
-												newCaret);
+										fNavigable.setSelection(selection.x, newCaret);
 									else
-										fNavigable.setSelection(selection.y,
-												newCaret);
+										fNavigable.setSelection(selection.y, newCaret);
 								}
 								fIterator.setText(EMPTY_TEXT);
 							}
 						});
-						fSubmissions.add(new Submission(
-								bindingService.getActiveBindingsFor(
-										ITextEditorActionDefinitionIds.SELECT_WORD_PREVIOUS)) {
+						fSubmissions.add(new Submission(bindingService
+								.getActiveBindingsFor(ITextEditorActionDefinitionIds.SELECT_WORD_PREVIOUS)) {
 							@Override
 							public void execute() {
 								fIterator.setText(fNavigable.getText());
-								int caretPosition = fNavigable
-										.getCaretPosition();
-								int newCaret = fIterator
-										.preceding(caretPosition);
+								int caretPosition = fNavigable.getCaretPosition();
+								int newCaret = fIterator.preceding(caretPosition);
 								if (newCaret != BreakIterator.DONE) {
 									Point selection = fNavigable.getSelection();
 									if (caretPosition == selection.x)
-										fNavigable.setSelection(selection.y,
-												newCaret);
+										fNavigable.setSelection(selection.y, newCaret);
 									else
-										fNavigable.setSelection(selection.x,
-												newCaret);
+										fNavigable.setSelection(selection.x, newCaret);
 								}
 								fIterator.setText(EMPTY_TEXT);
 							}
 						});
 						fSubmissions.add(new Submission(
-								bindingService.getActiveBindingsFor(
-										ITextEditorActionDefinitionIds.WORD_NEXT)) {
+								bindingService.getActiveBindingsFor(ITextEditorActionDefinitionIds.WORD_NEXT)) {
 							@Override
 							public void execute() {
 								fIterator.setText(fNavigable.getText());
-								int caretPosition = fNavigable
-										.getCaretPosition();
-								int newCaret = fIterator
-										.following(caretPosition);
+								int caretPosition = fNavigable.getCaretPosition();
+								int newCaret = fIterator.following(caretPosition);
 								if (newCaret != BreakIterator.DONE)
 									fNavigable.setSelection(newCaret, newCaret);
 								fIterator.setText(EMPTY_TEXT);
 							}
 						});
 						fSubmissions.add(new Submission(
-								bindingService.getActiveBindingsFor(
-										ITextEditorActionDefinitionIds.WORD_PREVIOUS)) {
+								bindingService.getActiveBindingsFor(ITextEditorActionDefinitionIds.WORD_PREVIOUS)) {
 							@Override
 							public void execute() {
 								fIterator.setText(fNavigable.getText());
-								int caretPosition = fNavigable
-										.getCaretPosition();
-								int newCaret = fIterator
-										.preceding(caretPosition);
+								int caretPosition = fNavigable.getCaretPosition();
+								int newCaret = fIterator.preceding(caretPosition);
 								if (newCaret != BreakIterator.DONE)
 									fNavigable.setSelection(newCaret, newCaret);
 								fIterator.setText(EMPTY_TEXT);
 							}
 						});
 						fSubmissions.add(new Submission(
-								bindingService.getActiveBindingsFor(
-										ITextEditorActionDefinitionIds.DELETE_NEXT_WORD)) {
+								bindingService.getActiveBindingsFor(ITextEditorActionDefinitionIds.DELETE_NEXT_WORD)) {
 							@Override
 							public void execute() {
 								Point selection = fNavigable.getSelection();
@@ -509,14 +467,12 @@ public class TextFieldNavigationHandler {
 									if (end == BreakIterator.DONE)
 										return;
 								}
-								fNavigable.setText(text.substring(0, start)
-										+ text.substring(end));
+								fNavigable.setText(text.substring(0, start) + text.substring(end));
 								fNavigable.setSelection(start, start);
 							}
 						});
-						fSubmissions.add(new Submission(
-								bindingService.getActiveBindingsFor(
-										ITextEditorActionDefinitionIds.DELETE_PREVIOUS_WORD)) {
+						fSubmissions.add(new Submission(bindingService
+								.getActiveBindingsFor(ITextEditorActionDefinitionIds.DELETE_PREVIOUS_WORD)) {
 							@Override
 							public void execute() {
 								Point selection = fNavigable.getSelection();
@@ -534,15 +490,13 @@ public class TextFieldNavigationHandler {
 									if (start == BreakIterator.DONE)
 										return;
 								}
-								fNavigable.setText(text.substring(0, start)
-										+ text.substring(end));
+								fNavigable.setText(text.substring(0, start) + text.substring(end));
 								fNavigable.setSelection(start, start);
 							}
 						});
 
 						for (int i = 0; i < contextActivations.length; i++) {
-							contextService
-									.deactivateContext(contextActivations[i]);
+							contextService.deactivateContext(contextActivations[i]);
 						}
 
 						return fSubmissions;

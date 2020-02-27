@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.dltk.ui.text.templates;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +30,6 @@ import org.eclipse.jface.text.templates.TemplateVariableResolver;
 import org.eclipse.jface.text.templates.TemplateVariableType;
 import org.eclipse.osgi.util.NLS;
 
-import com.ibm.icu.text.DateFormat;
-import com.ibm.icu.text.SimpleDateFormat;
-
 /**
  * A generic template context type for file resources based on content-type.
  */
@@ -46,8 +45,7 @@ public class FileTemplateContextType extends TemplateContextType {
 	/**
 	 * Resolver that resolves to the variable defined in the context.
 	 */
-	static class FileTemplateVariableResolver extends
-			SimpleTemplateVariableResolver {
+	static class FileTemplateVariableResolver extends SimpleTemplateVariableResolver {
 		public FileTemplateVariableResolver(String type, String description) {
 			super(type, description);
 		}
@@ -66,8 +64,7 @@ public class FileTemplateContextType extends TemplateContextType {
 		private String fFormat;
 
 		public DateVariableResolver() {
-			super(
-					"date", TemplateMessages.FileTemplateContextType_variable_description_date); //$NON-NLS-1$
+			super("date", TemplateMessages.FileTemplateContextType_variable_description_date); //$NON-NLS-1$
 		}
 
 		@Override
@@ -101,9 +98,7 @@ public class FileTemplateContextType extends TemplateContextType {
 		private String[] fArguments;
 
 		public CoreVariableResolver(String type) {
-			super(
-					type,
-					TemplateMessages.FileTemplateContextType__variable_description_eclipse);
+			super(type, TemplateMessages.FileTemplateContextType__variable_description_eclipse);
 		}
 
 		@Override
@@ -123,8 +118,7 @@ public class FileTemplateContextType extends TemplateContextType {
 				expr.append(':').append(fArguments[i]);
 			}
 			expr.append('}');
-			IStringVariableManager mgr = VariablesPlugin.getDefault()
-					.getStringVariableManager();
+			IStringVariableManager mgr = VariablesPlugin.getDefault().getStringVariableManager();
 			try {
 				return mgr.performStringSubstitution(expr.toString(), false);
 			} catch (CoreException exc) {
@@ -141,25 +135,20 @@ public class FileTemplateContextType extends TemplateContextType {
 		addResolver(new GlobalTemplateVariables.Year());
 		addResolver(new GlobalTemplateVariables.Time());
 		addResolver(new GlobalTemplateVariables.User());
-		//addResolver(new CoreVariableResolver("eclipse")); //$NON-NLS-1$
+		// addResolver(new CoreVariableResolver("eclipse")); //$NON-NLS-1$
 		addResourceVariables();
 	}
 
 	protected void addResourceVariables() {
-		addResolver(new FileTemplateVariableResolver(
-				FILENAME,
+		addResolver(new FileTemplateVariableResolver(FILENAME,
 				TemplateMessages.FileTemplateContextType_variable_description_filename));
-		addResolver(new FileTemplateVariableResolver(
-				FILEBASE,
+		addResolver(new FileTemplateVariableResolver(FILEBASE,
 				TemplateMessages.FileTemplateContextType_variable_description_filebase));
-		addResolver(new FileTemplateVariableResolver(
-				FILELOCATION,
+		addResolver(new FileTemplateVariableResolver(FILELOCATION,
 				TemplateMessages.FileTemplateContextType_variable_description_fileloc));
-		addResolver(new FileTemplateVariableResolver(
-				FILEPATH,
+		addResolver(new FileTemplateVariableResolver(FILEPATH,
 				TemplateMessages.FileTemplateContextType_variable_description_filepath));
-		addResolver(new FileTemplateVariableResolver(
-				PROJECTNAME,
+		addResolver(new FileTemplateVariableResolver(PROJECTNAME,
 				TemplateMessages.FileTemplateContextType_variable_description_projectname));
 	}
 
@@ -175,27 +164,20 @@ public class FileTemplateContextType extends TemplateContextType {
 	}
 
 	@Override
-	protected void validateVariables(TemplateVariable[] variables)
-			throws TemplateException {
+	protected void validateVariables(TemplateVariable[] variables) throws TemplateException {
 		ArrayList required = new ArrayList(5);
 		for (int i = 0; i < variables.length; i++) {
 			String type = variables[i].getType();
 			if (getResolver(type) == null) {
 				throw new TemplateException(
-						NLS
-								.bind(
-										TemplateMessages.FileTemplateContextType_validate_unknownvariable,
-										type));
+						NLS.bind(TemplateMessages.FileTemplateContextType_validate_unknownvariable, type));
 			}
 			required.remove(type);
 		}
 		if (!required.isEmpty()) {
 			String missing = (String) required.get(0);
 			throw new TemplateException(
-					NLS
-							.bind(
-									TemplateMessages.FileTemplateContextType_validate_missingvariable,
-									missing));
+					NLS.bind(TemplateMessages.FileTemplateContextType_validate_missingvariable, missing));
 		}
 		super.validateVariables(variables);
 	}

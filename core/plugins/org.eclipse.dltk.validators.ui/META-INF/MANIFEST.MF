@@ -19,6 +19,5 @@ Export-Package: org.eclipse.dltk.validators.internal.ui;x-internal:=true,
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: com.ibm.icu.text
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.eclipse.dltk.validators.ui

@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -13,6 +13,7 @@
 package org.eclipse.dltk.internal.testing.model;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -52,8 +53,6 @@ import org.eclipse.dltk.testing.model.ITestElement;
 import org.eclipse.dltk.testing.model.ITestElementContainer;
 import org.eclipse.dltk.testing.model.ITestElementPredicate;
 import org.eclipse.dltk.testing.model.ITestRunSession;
-
-import com.ibm.icu.text.SimpleDateFormat;
 
 /**
  * A test run session holds all information about a test run, i.e. launch

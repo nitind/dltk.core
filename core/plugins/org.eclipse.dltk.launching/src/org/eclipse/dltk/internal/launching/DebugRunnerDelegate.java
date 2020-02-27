@@ -1,5 +1,7 @@
 package org.eclipse.dltk.internal.launching;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -19,14 +21,12 @@ import org.eclipse.dltk.launching.ScriptLaunchConfigurationConstants;
 import org.eclipse.dltk.launching.debug.DebuggingEngineManager;
 import org.eclipse.dltk.launching.debug.IDebuggingEngine;
 
-import com.ibm.icu.text.MessageFormat;
-
 /**
  * Class used to delegate debug engine discovery before run operation is
  * executed.
- * 
+ *
  * @author haiodo
- * 
+ *
  */
 public class DebugRunnerDelegate implements IInterpreterRunner {
 	private IInterpreterInstall install;

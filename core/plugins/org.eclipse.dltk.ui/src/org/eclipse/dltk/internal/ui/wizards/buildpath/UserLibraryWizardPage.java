@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,11 +59,8 @@ import org.eclipse.ui.IDecoratorManager;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
-import com.ibm.icu.text.Collator;
-
-public class UserLibraryWizardPage extends NewElementWizardPage implements
-		IBuildpathContainerPage, IBuildpathContainerPageExtension,
-		IBuildpathContainerPageExtension2 {
+public class UserLibraryWizardPage extends NewElementWizardPage
+		implements IBuildpathContainerPage, IBuildpathContainerPageExtension, IBuildpathContainerPageExtension2 {
 
 	private CheckedListDialogField fLibrarySelector;
 	private BPUserLibraryElement fEditResult;
@@ -82,14 +80,11 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 
 		LibraryListAdapter adapter = new LibraryListAdapter();
 		String[] buttonLabels = new String[] { NewWizardMessages.UserLibraryWizardPage_list_config_button };
-		IDecoratorManager decoratorManager = PlatformUI.getWorkbench()
-				.getDecoratorManager();
+		IDecoratorManager decoratorManager = PlatformUI.getWorkbench().getDecoratorManager();
 		fLibrarySelector = new CheckedListDialogField(adapter, buttonLabels,
-				new DecoratingLabelProvider(new BPListLabelProvider(),
-						decoratorManager));
+				new DecoratingLabelProvider(new BPListLabelProvider(), decoratorManager));
 		fLibrarySelector.setDialogFieldListener(adapter);
-		fLibrarySelector
-				.setLabelText(NewWizardMessages.UserLibraryWizardPage_list_label);
+		fLibrarySelector.setLabelText(NewWizardMessages.UserLibraryWizardPage_list_label);
 		fEditResult = null;
 		updateStatus(validateSetting(Collections.EMPTY_LIST));
 	}
@@ -107,8 +102,7 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 	}
 
 	private void updateDescription(IBuildpathEntry containerEntry) {
-		if (containerEntry == null
-				|| containerEntry.getPath().segmentCount() != 2) {
+		if (containerEntry == null || containerEntry.getPath().segmentCount() != 2) {
 			setDescription(NewWizardMessages.UserLibraryWizardPage_description_new);
 		} else {
 			setDescription(NewWizardMessages.UserLibraryWizardPage_description_edit);
@@ -120,8 +114,7 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 		HashSet oldCheckedNames = new HashSet();
 		List oldElements = fLibrarySelector.getElements();
 		for (int i = 0; i < oldElements.size(); i++) {
-			BPUserLibraryElement curr = (BPUserLibraryElement) oldElements
-					.get(i);
+			BPUserLibraryElement curr = (BPUserLibraryElement) oldElements.get(i);
 			oldNames.add(curr.getName());
 			if (fLibrarySelector.isChecked(curr)) {
 				oldCheckedNames.add(curr.getName());
@@ -132,7 +125,7 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 
 		IDLTKLanguageToolkit toolkit = null;
 		toolkit = DLTKLanguageManager.getLanguageToolkit(fProject);
-		if( toolkit == null ) {
+		if (toolkit == null) {
 			toolkit = this.languageToolkit;
 		}
 		String[] names = DLTKCore.getUserLibraryNames(toolkit);
@@ -141,17 +134,14 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 		ArrayList elements = new ArrayList(names.length);
 		for (int i = 0; i < names.length; i++) {
 			String curr = names[i];
-			UserLibrary lib = ModelManager.getUserLibraryManager()
-					.getUserLibrary(curr, toolkit);
+			UserLibrary lib = ModelManager.getUserLibraryManager().getUserLibrary(curr, toolkit);
 			if (lib != null) {
 				IPath path = new Path(DLTKCore.USER_LIBRARY_CONTAINER_ID)
-						.append(UserLibraryManager.makeLibraryName(curr,
-								toolkit));
+						.append(UserLibraryManager.makeLibraryName(curr, toolkit));
 				try {
-					IBuildpathContainer container = DLTKCore
-							.getBuildpathContainer(path, fProject);
-					BPUserLibraryElement elem = new BPUserLibraryElement(curr,
-							container, fProject, lib.getAttributes());
+					IBuildpathContainer container = DLTKCore.getBuildpathContainer(path, fProject);
+					BPUserLibraryElement elem = new BPUserLibraryElement(curr, container, fProject,
+							lib.getAttributes());
 					elements.add(elem);
 					if (!oldCheckedNames.isEmpty()) {
 						if (oldCheckedNames.contains(curr)) {
@@ -178,15 +168,13 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 			if (fIsEditMode) {
 				if (list.size() > 1) {
 					if (fEditResult != null && list.remove(fEditResult)) {
-						fLibrarySelector.setCheckedWithoutUpdate(fEditResult,
-								false);
+						fLibrarySelector.setCheckedWithoutUpdate(fEditResult, false);
 					}
 					fEditResult = (BPUserLibraryElement) list.get(0); // take
 					// the
 					// first
 					for (int i = 1; i < list.size(); i++) { // uncheck the rest
-						fLibrarySelector.setCheckedWithoutUpdate(list.get(i),
-								false);
+						fLibrarySelector.setCheckedWithoutUpdate(list.get(i), false);
 					}
 				} else if (list.size() == 1) {
 					fEditResult = (BPUserLibraryElement) list.get(0);
@@ -199,18 +187,14 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 	private IStatus validateSetting(List selected) {
 		int nSelected = selected.size();
 		if (nSelected == 0) {
-			return new StatusInfo(IStatus.ERROR,
-					NewWizardMessages.UserLibraryWizardPage_error_selectentry);
+			return new StatusInfo(IStatus.ERROR, NewWizardMessages.UserLibraryWizardPage_error_selectentry);
 		} else if (fIsEditMode && nSelected > 1) {
-			return new StatusInfo(IStatus.ERROR,
-					NewWizardMessages.UserLibraryWizardPage_error_selectonlyone);
+			return new StatusInfo(IStatus.ERROR, NewWizardMessages.UserLibraryWizardPage_error_selectonlyone);
 		}
 		for (int i = 0; i < selected.size(); i++) {
 			BPUserLibraryElement curr = (BPUserLibraryElement) selected.get(i);
 			if (fUsedPaths.contains(curr.getPath())) {
-				return new StatusInfo(
-						IStatus.ERROR,
-						NewWizardMessages.UserLibraryWizardPage_error_alreadyoncp);
+				return new StatusInfo(IStatus.ERROR, NewWizardMessages.UserLibraryWizardPage_error_alreadyoncp);
 			}
 		}
 		return new StatusInfo();
@@ -220,12 +204,10 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 		if (index == 0) {
 			HashMap data = new HashMap(3);
 			if (fEditResult != null) {
-				data.put(UserLibraryPreferencePage.DATA_LIBRARY_TO_SELECT,
-						fEditResult.getName());
+				data.put(UserLibraryPreferencePage.DATA_LIBRARY_TO_SELECT, fEditResult.getName());
 			}
 			String id = UserLibraryPreferencePage.getPreferencePageId(languageToolkit);
-			PreferencesUtil.createPreferenceDialogOn(getShell(), id,
-					new String[] { id }, data).open();
+			PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, data).open();
 
 			List newEntries = updateLibraryList();
 			if (newEntries.size() > 0) {
@@ -236,8 +218,7 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 				}
 			}
 		} else {
-			fLibrarySelector.setCheckedElements(fLibrarySelector
-					.getSelectedElements());
+			fLibrarySelector.setCheckedElements(fLibrarySelector.getSelectedElements());
 		}
 	}
 
@@ -259,9 +240,7 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setFont(parent.getFont());
 
-		LayoutUtil.doDefaultLayout(composite,
-				new DialogField[] { fLibrarySelector }, true, SWT.DEFAULT,
-				SWT.DEFAULT);
+		LayoutUtil.doDefaultLayout(composite, new DialogField[] { fLibrarySelector }, true, SWT.DEFAULT, SWT.DEFAULT);
 		LayoutUtil.setHorizontalGrabbing(fLibrarySelector.getListControl(null));
 		Dialog.applyDialogFont(composite);
 		setControl(composite);
@@ -275,8 +254,7 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 	@Override
 	public IBuildpathEntry getSelection() {
 		if (fEditResult != null) {
-			return DLTKCore.newContainerEntry(fEditResult.getPath(),
-					fIsExported);
+			return DLTKCore.newContainerEntry(fEditResult.getPath(), fIsExported);
 		}
 		return null;
 	}
@@ -303,8 +281,7 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 		}
 
 		String selected = null;
-		if (containerEntry != null
-				&& containerEntry.getPath().segmentCount() == 2) {
+		if (containerEntry != null && containerEntry.getPath().segmentCount() == 2) {
 			selected = containerEntry.getPath().segment(1);
 		} else {
 			// get from dialog store
@@ -313,8 +290,7 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 		if (selected != null) {
 			List elements = fLibrarySelector.getElements();
 			for (int i = 0; i < elements.size(); i++) {
-				BPUserLibraryElement curr = (BPUserLibraryElement) elements
-						.get(i);
+				BPUserLibraryElement curr = (BPUserLibraryElement) elements.get(i);
 				if (curr.getName().equals(selected)) {
 					fLibrarySelector.setChecked(curr, true);
 					return;
@@ -323,8 +299,7 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 		}
 	}
 
-	private class LibraryListAdapter implements IListAdapter,
-			IDialogFieldListener {
+	private class LibraryListAdapter implements IListAdapter, IDialogFieldListener {
 
 		public LibraryListAdapter() {
 		}
@@ -350,10 +325,8 @@ public class UserLibraryWizardPage extends NewElementWizardPage implements
 	}
 
 	@Override
-	public void initialize(IScriptProject project,
-			IBuildpathEntry[] currentEntries) {
-		this.languageToolkit = DLTKLanguageManager
-				.getLanguageToolkit(project);
+	public void initialize(IScriptProject project, IBuildpathEntry[] currentEntries) {
+		this.languageToolkit = DLTKLanguageManager.getLanguageToolkit(project);
 		for (int i = 0; i < currentEntries.length; i++) {
 			IBuildpathEntry curr = currentEntries[i];
 			if (curr.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {

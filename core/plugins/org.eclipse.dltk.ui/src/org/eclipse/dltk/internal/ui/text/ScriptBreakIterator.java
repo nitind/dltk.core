@@ -3,17 +3,16 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.text;
 
+import java.text.BreakIterator;
 import java.text.CharacterIterator;
 
 import org.eclipse.core.runtime.Assert;
-
-import com.ibm.icu.text.BreakIterator;
 
 /**
  * A script break iterator. It returns all breaks, including before and after
@@ -39,11 +38,10 @@ public class ScriptBreakIterator extends BreakIterator {
 
 		/**
 		 * Returns <code>true</code> if this run consumes <code>ch</code>,
-		 * <code>false</code> otherwise. If <code>true</code> is returned, the
-		 * length of the receiver is adjusted accordingly.
+		 * <code>false</code> otherwise. If <code>true</code> is returned, the length of
+		 * the receiver is adjusted accordingly.
 		 *
-		 * @param ch
-		 *               the character to test
+		 * @param ch the character to test
 		 * @return <code>true</code> if <code>ch</code> was consumed
 		 */
 		protected boolean consume(char ch) {
@@ -55,11 +53,10 @@ public class ScriptBreakIterator extends BreakIterator {
 		}
 
 		/**
-		 * Whether this run accepts that character; does not update state.
-		 * Called from the default implementation of <code>consume</code>.
+		 * Whether this run accepts that character; does not update state. Called from
+		 * the default implementation of <code>consume</code>.
 		 *
-		 * @param ch
-		 *               the character to test
+		 * @param ch the character to test
 		 * @return <code>true</code> if <code>ch</code> is accepted
 		 */
 		protected abstract boolean isValid(char ch);
@@ -177,8 +174,7 @@ public class ScriptBreakIterator extends BreakIterator {
 		/**
 		 * Determines the kind of a character.
 		 *
-		 * @param ch
-		 *               the character to test
+		 * @param ch the character to test
 		 */
 		private int getKind(char ch) {
 			if (Character.isUpperCase(ch))
@@ -200,8 +196,7 @@ public class ScriptBreakIterator extends BreakIterator {
 
 		@Override
 		protected boolean isValid(char ch) {
-			return !Character.isWhitespace(ch)
-					&& !Character.isJavaIdentifierPart(ch);
+			return !Character.isWhitespace(ch) && !Character.isJavaIdentifierPart(ch);
 		}
 	}
 
@@ -259,8 +254,7 @@ public class ScriptBreakIterator extends BreakIterator {
 	/**
 	 * Consumes a run of characters at the limits of which we introduce a break.
 	 *
-	 * @param offset
-	 *                   the offset to start at
+	 * @param offset the offset to start at
 	 * @return the run that was consumed
 	 */
 	private Run consumeRun(int offset) {
@@ -280,8 +274,7 @@ public class ScriptBreakIterator extends BreakIterator {
 	/**
 	 * Returns a run based on a character.
 	 *
-	 * @param ch
-	 *               the character to test
+	 * @param ch the character to test
 	 * @return the correct character given <code>ch</code>
 	 */
 	private Run getRun(char ch) {
@@ -369,8 +362,7 @@ public class ScriptBreakIterator extends BreakIterator {
 	/**
 	 * Creates a break iterator given a char sequence.
 	 *
-	 * @param newText
-	 *                    the new text
+	 * @param newText the new text
 	 */
 	public void setText(CharSequence newText) {
 		fText = newText;
@@ -385,8 +377,7 @@ public class ScriptBreakIterator extends BreakIterator {
 			fIterator.setText(newText);
 			first();
 		} else {
-			throw new UnsupportedOperationException(
-					"CharacterIterator not supported"); //$NON-NLS-1$
+			throw new UnsupportedOperationException("CharacterIterator not supported"); //$NON-NLS-1$
 		}
 	}
 }

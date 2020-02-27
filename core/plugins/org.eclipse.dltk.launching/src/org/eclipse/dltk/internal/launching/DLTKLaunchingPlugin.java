@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -13,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -59,8 +60,6 @@ import org.eclipse.dltk.utils.DLTKLoggingOption;
 import org.osgi.framework.BundleContext;
 import org.w3c.dom.Document;
 import org.xml.sax.helpers.DefaultHandler;
-
-import com.ibm.icu.text.MessageFormat;
 
 public class DLTKLaunchingPlugin extends Plugin
 		implements Preferences.IPropertyChangeListener,

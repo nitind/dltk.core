@@ -3,18 +3,16 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.text;
 
+import java.text.BreakIterator;
 import java.text.CharacterIterator;
 
 import org.eclipse.core.runtime.Assert;
-
-import com.ibm.icu.text.BreakIterator;
-
 
 /**
  * Breaksscripttext into word starts, also stops at line start and end. No
@@ -25,8 +23,8 @@ import com.ibm.icu.text.BreakIterator;
 public class DLTKWordIterator extends BreakIterator {
 
 	/**
-	 * The underlyingscriptbreak iterator. It returns all breaks, including
-	 * before and after every whitespace.
+	 * The underlyingscriptbreak iterator. It returns all breaks, including before
+	 * and after every whitespace.
 	 */
 	private ScriptBreakIterator fIterator;
 	/** The current index for the stateful operations. */
@@ -36,49 +34,48 @@ public class DLTKWordIterator extends BreakIterator {
 	 * Creates a new word iterator.
 	 */
 	public DLTKWordIterator() {
-		fIterator= new ScriptBreakIterator();
+		fIterator = new ScriptBreakIterator();
 		first();
 	}
 
 	@Override
 	public int first() {
-		fIndex= fIterator.first();
+		fIndex = fIterator.first();
 		return fIndex;
 	}
 
 	@Override
 	public int last() {
-		fIndex= fIterator.last();
+		fIndex = fIterator.last();
 		return fIndex;
 	}
 
 	@Override
 	public int next(int n) {
-		int next= 0;
+		int next = 0;
 		while (--n > 0 && next != DONE) {
-			next= next();
+			next = next();
 		}
 		return next;
 	}
 
 	@Override
 	public int next() {
-		fIndex= following(fIndex);
+		fIndex = following(fIndex);
 		return fIndex;
 	}
 
 	@Override
 	public int previous() {
-		fIndex= preceding(fIndex);
+		fIndex = preceding(fIndex);
 		return fIndex;
 	}
 
-
 	@Override
 	public int preceding(int offset) {
-		int first= fIterator.preceding(offset);
+		int first = fIterator.preceding(offset);
 		if (isWhitespace(first, offset)) {
-			int second= fIterator.preceding(first);
+			int second = fIterator.preceding(first);
 			if (second != DONE && !isDelimiter(second, first))
 				return second;
 		}
@@ -87,9 +84,9 @@ public class DLTKWordIterator extends BreakIterator {
 
 	@Override
 	public int following(int offset) {
-		int first= fIterator.following(offset);
+		int first = fIterator.following(offset);
 		if (eatFollowingWhitespace(offset, first)) {
-			int second= fIterator.following(first);
+			int second = fIterator.following(first);
 			if (isWhitespace(first, second))
 				return second;
 		}
@@ -112,7 +109,7 @@ public class DLTKWordIterator extends BreakIterator {
 	 * Returns <code>true</code> if the given sequence into the underlying text
 	 * represents a delimiter, <code>false</code> otherwise.
 	 *
-	 * @param offset the offset
+	 * @param offset       the offset
 	 * @param exclusiveEnd the end offset
 	 * @return <code>true</code> if the given range is a delimiter
 	 */
@@ -124,10 +121,10 @@ public class DLTKWordIterator extends BreakIterator {
 		Assert.isTrue(exclusiveEnd <= getText().getEndIndex());
 		Assert.isTrue(exclusiveEnd > offset);
 
-		CharSequence seq= fIterator.fText;
+		CharSequence seq = fIterator.fText;
 
 		while (offset < exclusiveEnd) {
-			char ch= seq.charAt(offset);
+			char ch = seq.charAt(offset);
 			if (ch != '\n' && ch != '\r')
 				return false;
 			offset++;
@@ -140,7 +137,7 @@ public class DLTKWordIterator extends BreakIterator {
 	 * Returns <code>true</code> if the given sequence into the underlying text
 	 * represents whitespace, but not a delimiter, <code>false</code> otherwise.
 	 *
-	 * @param offset the offset
+	 * @param offset       the offset
 	 * @param exclusiveEnd the end offset
 	 * @return <code>true</code> if the given range is whitespace
 	 */
@@ -152,10 +149,10 @@ public class DLTKWordIterator extends BreakIterator {
 		Assert.isTrue(exclusiveEnd <= getText().getEndIndex());
 		Assert.isTrue(exclusiveEnd > offset);
 
-		CharSequence seq= fIterator.fText;
+		CharSequence seq = fIterator.fText;
 
 		while (offset < exclusiveEnd) {
-			char ch= seq.charAt(offset);
+			char ch = seq.charAt(offset);
 			if (!Character.isWhitespace(ch))
 				return false;
 			if (ch == '\n' || ch == '\r')
@@ -178,6 +175,7 @@ public class DLTKWordIterator extends BreakIterator {
 
 	/**
 	 * Sets the text as <code>CharSequence</code>.
+	 * 
 	 * @param newText the new text
 	 */
 	public void setText(CharSequence newText) {

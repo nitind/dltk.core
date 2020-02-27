@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,8 +38,6 @@ import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.ui.wizards.IBuildpathDetector;
 
-import com.ibm.icu.text.Collator;
-
 /**
  */
 public class BuildpathDetector implements IBuildpathDetector {
@@ -55,8 +54,7 @@ public class BuildpathDetector implements IBuildpathDetector {
 
 		@Override
 		public int compare(IBuildpathEntry e1, IBuildpathEntry e2) {
-			return fCollator.compare(e1.getPath().toString(),
-					e2.getPath().toString());
+			return fCollator.compare(e1.getPath().toString(), e2.getPath().toString());
 		}
 	}
 
@@ -82,8 +80,7 @@ public class BuildpathDetector implements IBuildpathDetector {
 	/**
 	 * Method detectBuildpath.
 	 *
-	 * @param monitor
-	 *            The progress monitor (not null)
+	 * @param monitor The progress monitor (not null)
 	 * @throws CoreException
 	 */
 	@Override
@@ -92,13 +89,10 @@ public class BuildpathDetector implements IBuildpathDetector {
 			monitor = new NullProgressMonitor();
 		}
 		try {
-			monitor.beginTask(Messages.BuildpathDetector_detectingBuildpath,
-					120);
+			monitor.beginTask(Messages.BuildpathDetector_detectingBuildpath, 120);
 			fMonitor = monitor;
 			final List<IFile> correctFiles = new ArrayList<>();
-			fProject.accept(
-					proxy -> BuildpathDetector.this.visit(proxy, correctFiles),
-					IResource.NONE);
+			fProject.accept(proxy -> BuildpathDetector.this.visit(proxy, correctFiles), IResource.NONE);
 			monitor.worked(10);
 			SubProgressMonitor sub = new SubProgressMonitor(monitor, 80);
 			processSources(correctFiles, sub);
@@ -122,8 +116,7 @@ public class BuildpathDetector implements IBuildpathDetector {
 			if (cpEntries.size() == 1) {
 				IBuildpathEntry entry = cpEntries.get(0);
 				if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
-					cpEntries.add(0,
-							DLTKCore.newSourceEntry(fProject.getFullPath()));
+					cpEntries.add(0, DLTKCore.newSourceEntry(fProject.getFullPath()));
 				}
 
 			}
@@ -131,11 +124,8 @@ public class BuildpathDetector implements IBuildpathDetector {
 				return;
 			}
 
-			IBuildpathEntry[] entries = cpEntries
-					.toArray(new IBuildpathEntry[cpEntries.size()]);
-			if (!BuildpathEntry
-					.validateBuildpath(DLTKCore.create(fProject), entries)
-					.isOK()) {
+			IBuildpathEntry[] entries = cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
+			if (!BuildpathEntry.validateBuildpath(DLTKCore.create(fProject), entries).isOK()) {
 				return;
 			}
 			fResultBuildpath = entries;
@@ -144,14 +134,11 @@ public class BuildpathDetector implements IBuildpathDetector {
 		}
 	}
 
-	protected void processSources(List<IFile> correctFiles,
-			SubProgressMonitor sub) {
+	protected void processSources(List<IFile> correctFiles, SubProgressMonitor sub) {
 	}
 
-	protected void addInterpreterContainer(
-			ArrayList<IBuildpathEntry> cpEntries) {
-		cpEntries.add(DLTKCore.newContainerEntry(
-				new Path(ScriptRuntime.INTERPRETER_CONTAINER)));
+	protected void addInterpreterContainer(ArrayList<IBuildpathEntry> cpEntries) {
+		cpEntries.add(DLTKCore.newContainerEntry(new Path(ScriptRuntime.INTERPRETER_CONTAINER)));
 	}
 
 	private void detectLibraries(ArrayList<IBuildpathEntry> cpEntries) {
@@ -174,13 +161,11 @@ public class BuildpathDetector implements IBuildpathDetector {
 	private void detectSourceFolders(ArrayList<IBuildpathEntry> resEntries) {
 		ArrayList<IBuildpathEntry> res = new ArrayList<>();
 		Set<IPath> sourceFolderSet = fSourceFolders.keySet();
-		for (Iterator<IPath> iter = sourceFolderSet.iterator(); iter
-				.hasNext();) {
+		for (Iterator<IPath> iter = sourceFolderSet.iterator(); iter.hasNext();) {
 			IPath path = iter.next();
 			// ArrayList excluded = new ArrayList();
 			boolean primary = true;
-			for (Iterator<IPath> inner = sourceFolderSet.iterator(); inner
-					.hasNext();) {
+			for (Iterator<IPath> inner = sourceFolderSet.iterator(); inner.hasNext();) {
 				IPath other = inner.next();
 				if (!path.equals(other) && other.isPrefixOf(path)) {
 					primary = false;
@@ -206,8 +191,7 @@ public class BuildpathDetector implements IBuildpathDetector {
 		resEntries.addAll(res);
 	}
 
-	private void addToMap(HashMap<IPath, List<IPath>> map, IPath folderPath,
-			IPath relPath) {
+	private void addToMap(HashMap<IPath, List<IPath>> map, IPath folderPath, IPath relPath) {
 		List<IPath> list = map.get(folderPath);
 		if (list == null) {
 			list = new ArrayList<>(50);
@@ -241,8 +225,7 @@ public class BuildpathDetector implements IBuildpathDetector {
 			IFile res = (IFile) proxy.requestResource();
 			if (visitSourceModule(res)) {
 				files.add(res);
-			} else if (res.getType() == IResource.FILE
-					&& hasExtension(name, ".zip")) { //$NON-NLS-1$
+			} else if (res.getType() == IResource.FILE && hasExtension(name, ".zip")) { //$NON-NLS-1$
 				fZIPFiles.add(proxy.requestFullPath());
 			}
 			return false;
@@ -251,8 +234,7 @@ public class BuildpathDetector implements IBuildpathDetector {
 	}
 
 	protected boolean visitSourceModule(IFile file) {
-		if (DLTKContentTypeManager.isValidResourceForContentType(fToolkit,
-				file)) {
+		if (DLTKContentTypeManager.isValidResourceForContentType(fToolkit, file)) {
 			IPath packPath = file.getParent().getFullPath();
 			String cuName = file.getName();
 			addToMap(fSourceFolders, packPath, new Path(cuName));

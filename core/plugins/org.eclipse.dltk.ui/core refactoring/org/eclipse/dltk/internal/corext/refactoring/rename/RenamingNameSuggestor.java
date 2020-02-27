@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.rename;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.text.DLTKWordIterator;
-
-import com.ibm.icu.text.BreakIterator;
 
 /**
  * This class contains methods for suggesting new names for variables or methods
@@ -101,35 +100,34 @@ public class RenamingNameSuggestor {
 	 * ADDITIONAL OPTIONS
 	 * ----------------------------------------------------------------
 	 *
-	 * There are two additional flags which may be set in this class to allow
-	 * better matching of special cases:
+	 * There are two additional flags which may be set in this class to allow better
+	 * matching of special cases:
 	 *
-	 * a) Special treatment of leading "I"s in type names, i.e. interface names
-	 * like "IScriptElement". If the corresponding flag is set, leading "I"s are
-	 * stripped from type names if the second char is also uppercase to allow
-	 * exact matching of variable names like "modelElement" for type
-	 * "IScriptElement". Note that embedded matching already matches cases like
-	 * this.
+	 * a) Special treatment of leading "I"s in type names, i.e. interface names like
+	 * "IScriptElement". If the corresponding flag is set, leading "I"s are stripped
+	 * from type names if the second char is also uppercase to allow exact matching
+	 * of variable names like "modelElement" for type "IScriptElement". Note that
+	 * embedded matching already matches cases like this.
 	 *
-	 * b) Special treatment of all-uppercase type names or all-uppercase type
-	 * name camel-case hunks, i.e. names like "AST" or "PersonalURL". If the
-	 * corresponding flag is set, the type name hunks will be transformed such
-	 * that variables like "fAst", "ast", "personalUrl", or "url" are found as
-	 * well. The target name will be transformed too if it is an all-uppercase
-	 * type name camel-case hunk as well.
+	 * b) Special treatment of all-uppercase type names or all-uppercase type name
+	 * camel-case hunks, i.e. names like "AST" or "PersonalURL". If the
+	 * corresponding flag is set, the type name hunks will be transformed such that
+	 * variables like "fAst", "ast", "personalUrl", or "url" are found as well. The
+	 * target name will be transformed too if it is an all-uppercase type name
+	 * camel-case hunk as well.
 	 *
 	 * NOTE that in exact or embedded mode, the whole type name must be
-	 * all-uppercase to allow matching custom-lowercased variable names, i.e.
-	 * there are no attempts to "guess" which hunk of the new name should be
-	 * lowercased to match a partly lowercased variable name. In suffix mode,
-	 * hunks of the new type which are at the same position as in the old type
-	 * will be lowercased if necessary.
+	 * all-uppercase to allow matching custom-lowercased variable names, i.e. there
+	 * are no attempts to "guess" which hunk of the new name should be lowercased to
+	 * match a partly lowercased variable name. In suffix mode, hunks of the new
+	 * type which are at the same position as in the old type will be lowercased if
+	 * necessary.
 	 *
-	 * c) Support for (english) plural forms. If the corresponding flag is set,
-	 * the suggestor will try to match variables which have plural forms of the
-	 * type name, for example "handies" for "Handy" or "phones" for
-	 * "MobilePhone". The target name will be transformed as well, i.e.
-	 * conversion like "fHandies" -> "fPhones" are supported.
+	 * c) Support for (english) plural forms. If the corresponding flag is set, the
+	 * suggestor will try to match variables which have plural forms of the type
+	 * name, for example "handies" for "Handy" or "phones" for "MobilePhone". The
+	 * target name will be transformed as well, i.e. conversion like "fHandies" ->
+	 * "fPhones" are supported.
 	 *
 	 */
 
@@ -171,37 +169,30 @@ public class RenamingNameSuggestor {
 		resetPrefixes();
 	}
 
-	public String suggestNewFieldName(IScriptProject project,
-			String oldFieldName, boolean isStatic, String oldTypeName,
+	public String suggestNewFieldName(IScriptProject project, String oldFieldName, boolean isStatic, String oldTypeName,
 			String newTypeName) {
 
 		initializePrefixesAndSuffixes(project);
 
 		if (isStatic) {
-			return suggestNewVariableName(fStaticFieldPrefixes,
-					fStaticFieldSuffixes, oldFieldName, oldTypeName,
+			return suggestNewVariableName(fStaticFieldPrefixes, fStaticFieldSuffixes, oldFieldName, oldTypeName,
 					newTypeName);
 		}
-		return suggestNewVariableName(fFieldPrefixes, fFieldSuffixes,
-				oldFieldName, oldTypeName, newTypeName);
+		return suggestNewVariableName(fFieldPrefixes, fFieldSuffixes, oldFieldName, oldTypeName, newTypeName);
 	}
 
-	public String suggestNewLocalName(IScriptProject project,
-			String oldLocalName, boolean isArgument, String oldTypeName,
-			String newTypeName) {
+	public String suggestNewLocalName(IScriptProject project, String oldLocalName, boolean isArgument,
+			String oldTypeName, String newTypeName) {
 
 		initializePrefixesAndSuffixes(project);
 
 		if (isArgument) {
-			return suggestNewVariableName(fArgumentPrefixes, fArgumentSuffixes,
-					oldLocalName, oldTypeName, newTypeName);
+			return suggestNewVariableName(fArgumentPrefixes, fArgumentSuffixes, oldLocalName, oldTypeName, newTypeName);
 		}
-		return suggestNewVariableName(fLocalPrefixes, fLocalSuffixes,
-				oldLocalName, oldTypeName, newTypeName);
+		return suggestNewVariableName(fLocalPrefixes, fLocalSuffixes, oldLocalName, oldTypeName, newTypeName);
 	}
 
-	public String suggestNewMethodName(String oldMethodName, String oldTypeName,
-			String newTypeName) {
+	public String suggestNewMethodName(String oldMethodName, String oldTypeName, String newTypeName) {
 
 		Assert.isNotNull(oldMethodName);
 		Assert.isNotNull(oldTypeName);
@@ -215,8 +206,8 @@ public class RenamingNameSuggestor {
 		return match(oldTypeName, newTypeName, oldMethodName);
 	}
 
-	public String suggestNewVariableName(String[] prefixes, String[] suffixes,
-			String oldVariableName, String oldTypeName, String newTypeName) {
+	public String suggestNewVariableName(String[] prefixes, String[] suffixes, String oldVariableName,
+			String oldTypeName, String newTypeName) {
 
 		Assert.isNotNull(prefixes);
 		Assert.isNotNull(suffixes);
@@ -229,77 +220,59 @@ public class RenamingNameSuggestor {
 
 		final String usedPrefix = findLongestPrefix(oldVariableName, prefixes);
 		final String usedSuffix = findLongestSuffix(oldVariableName, suffixes);
-		final String strippedVariableName = oldVariableName.substring(
-				usedPrefix.length(),
+		final String strippedVariableName = oldVariableName.substring(usedPrefix.length(),
 				oldVariableName.length() - usedSuffix.length());
 
-		String newVariableName = match(oldTypeName, newTypeName,
-				strippedVariableName);
-		return (newVariableName != null)
-				? usedPrefix + newVariableName + usedSuffix
-				: null;
+		String newVariableName = match(oldTypeName, newTypeName, strippedVariableName);
+		return (newVariableName != null) ? usedPrefix + newVariableName + usedSuffix : null;
 	}
 
 	// -------------------------------------- Match methods
 
-	private String match(final String oldTypeName, final String newTypeName,
-			final String strippedVariableName) {
+	private String match(final String oldTypeName, final String newTypeName, final String strippedVariableName) {
 
 		String oldType = oldTypeName;
 		String newType = newTypeName;
 
-		if (fExtendedInterfaceNameMatching && isInterfaceName(oldType)
-				&& isInterfaceName(newType)) {
+		if (fExtendedInterfaceNameMatching && isInterfaceName(oldType) && isInterfaceName(newType)) {
 			oldType = getInterfaceName(oldType);
 			newType = getInterfaceName(newType);
 		}
 
-		String newVariableName = matchDirect(oldType, newType,
-				strippedVariableName);
+		String newVariableName = matchDirect(oldType, newType, strippedVariableName);
 
-		if (fExtendedPluralMatching && newVariableName == null
-				&& canPluralize(oldType))
-			newVariableName = matchDirect(pluralize(oldType),
-					pluralize(newType), strippedVariableName);
+		if (fExtendedPluralMatching && newVariableName == null && canPluralize(oldType))
+			newVariableName = matchDirect(pluralize(oldType), pluralize(newType), strippedVariableName);
 
 		return newVariableName;
 	}
 
-	private String matchDirect(String oldType, String newType,
-			final String strippedVariableName) {
+	private String matchDirect(String oldType, String newType, final String strippedVariableName) {
 		/*
-		 * Use all strategies applied by the user. Always start with exact
-		 * matching.
+		 * Use all strategies applied by the user. Always start with exact matching.
 		 *
-		 * Note that suffix matching may not match the whole type name if the
-		 * new type name has a smaller camel case chunk count.
+		 * Note that suffix matching may not match the whole type name if the new type
+		 * name has a smaller camel case chunk count.
 		 */
 
-		String newVariableName = exactMatch(oldType, newType,
-				strippedVariableName);
+		String newVariableName = exactMatch(oldType, newType, strippedVariableName);
 		if (newVariableName == null && fStrategy >= STRATEGY_EMBEDDED)
-			newVariableName = embeddedMatch(oldType, newType,
-					strippedVariableName);
+			newVariableName = embeddedMatch(oldType, newType, strippedVariableName);
 		if (newVariableName == null && fStrategy >= STRATEGY_SUFFIX)
-			newVariableName = suffixMatch(oldType, newType,
-					strippedVariableName);
+			newVariableName = suffixMatch(oldType, newType, strippedVariableName);
 
 		return newVariableName;
 	}
 
-	private String exactMatch(final String oldTypeName,
-			final String newTypeName, final String strippedVariableName) {
+	private String exactMatch(final String oldTypeName, final String newTypeName, final String strippedVariableName) {
 
-		String newName = exactDirectMatch(oldTypeName, newTypeName,
-				strippedVariableName);
+		String newName = exactDirectMatch(oldTypeName, newTypeName, strippedVariableName);
 		if (newName != null)
 			return newName;
 
-		if (fExtendedAllUpperCaseHunkMatching
-				&& isUpperCaseCamelCaseHunk(oldTypeName)) {
+		if (fExtendedAllUpperCaseHunkMatching && isUpperCaseCamelCaseHunk(oldTypeName)) {
 			String oldTN = getFirstUpperRestLowerCased(oldTypeName);
-			String newTN = isUpperCaseCamelCaseHunk(newTypeName)
-					? getFirstUpperRestLowerCased(newTypeName)
+			String newTN = isUpperCaseCamelCaseHunk(newTypeName) ? getFirstUpperRestLowerCased(newTypeName)
 					: newTypeName;
 			newName = exactDirectMatch(oldTN, newTN, strippedVariableName);
 		}
@@ -307,8 +280,8 @@ public class RenamingNameSuggestor {
 		return newName;
 	}
 
-	private String exactDirectMatch(final String oldTypeName,
-			final String newTypeName, final String strippedVariableName) {
+	private String exactDirectMatch(final String oldTypeName, final String newTypeName,
+			final String strippedVariableName) {
 
 		if (strippedVariableName.equals(oldTypeName))
 			return newTypeName;
@@ -319,8 +292,7 @@ public class RenamingNameSuggestor {
 		return null;
 	}
 
-	private String embeddedMatch(String oldTypeName, String newTypeName,
-			String strippedVariableName) {
+	private String embeddedMatch(String oldTypeName, String newTypeName, String strippedVariableName) {
 
 		// possibility of a match?
 		final String lowerCaseVariable = strippedVariableName.toLowerCase();
@@ -329,32 +301,27 @@ public class RenamingNameSuggestor {
 
 		while (presumedIndex != -1) {
 			// it may be there
-			final String presumedTypeName = strippedVariableName.substring(
-					presumedIndex, presumedIndex + oldTypeName.length());
-			final String prefix = strippedVariableName.substring(0,
-					presumedIndex);
-			final String suffix = strippedVariableName
-					.substring(presumedIndex + oldTypeName.length());
+			final String presumedTypeName = strippedVariableName.substring(presumedIndex,
+					presumedIndex + oldTypeName.length());
+			final String prefix = strippedVariableName.substring(0, presumedIndex);
+			final String suffix = strippedVariableName.substring(presumedIndex + oldTypeName.length());
 
 			// can match at all? (depends on suffix)
 			if (startsNewHunk(suffix)) {
 
-				String name = exactMatch(oldTypeName, newTypeName,
-						presumedTypeName);
+				String name = exactMatch(oldTypeName, newTypeName, presumedTypeName);
 				if (name != null)
 					return prefix + name + suffix;
 			}
 
 			// did not match -> find next occurrence
-			presumedIndex = lowerCaseVariable.indexOf(lowerCaseOldTypeName,
-					presumedIndex + 1);
+			presumedIndex = lowerCaseVariable.indexOf(lowerCaseOldTypeName, presumedIndex + 1);
 		}
 
 		return null;
 	}
 
-	private String suffixMatch(final String oldType, final String newType,
-			final String strippedVariableName) {
+	private String suffixMatch(final String oldType, final String newType, final String strippedVariableName) {
 
 		// get an array of all camel-cased elements from both types + the
 		// variable
@@ -366,19 +333,15 @@ public class RenamingNameSuggestor {
 		int min = Math.min(suffixesOld.length, suffixesNew.length);
 		String[] suffixesOldEqual = new String[min];
 		String[] suffixesNewEqual = new String[min];
-		System.arraycopy(suffixesOld, suffixesOld.length - min,
-				suffixesOldEqual, 0, min);
-		System.arraycopy(suffixesNew, suffixesNew.length - min,
-				suffixesNewEqual, 0, min);
+		System.arraycopy(suffixesOld, suffixesOld.length - min, suffixesOldEqual, 0, min);
+		System.arraycopy(suffixesNew, suffixesNew.length - min, suffixesNewEqual, 0, min);
 
 		// find endIndex. endIndex is the index of the last hunk of the old type
 		// name in the variable name.
 		int endIndex = -1;
 		for (int j = suffixesVar.length - 1; j >= 0; j--) {
-			String newHunkName = exactMatch(
-					suffixesOldEqual[suffixesOldEqual.length - 1],
-					suffixesNewEqual[suffixesNewEqual.length - 1],
-					suffixesVar[j]);
+			String newHunkName = exactMatch(suffixesOldEqual[suffixesOldEqual.length - 1],
+					suffixesNewEqual[suffixesNewEqual.length - 1], suffixesVar[j]);
 			if (newHunkName != null) {
 				endIndex = j;
 				break;
@@ -402,8 +365,7 @@ public class RenamingNameSuggestor {
 			}
 
 			// try to match this hunk:
-			String newHunkName = exactMatch(suffixesOldEqual[i],
-					suffixesNewEqual[i], suffixesVar[hunkInVarName]);
+			String newHunkName = exactMatch(suffixesOldEqual[i], suffixesNewEqual[i], suffixesVar[hunkInVarName]);
 
 			if (newHunkName == null)
 				break; // only match complete suffixes
@@ -420,23 +382,18 @@ public class RenamingNameSuggestor {
 
 				// Propagate lowercased start to the front
 				if (Character.isLowerCase(suffixesVar[hunkInVarName].charAt(0))
-						&& Character
-								.isUpperCase(suffixesOldEqual[lastSuffixMatched]
-										.charAt(0))) {
-					suffixesVar[hunkInVarName] = getUpperCased(
-							suffixesVar[hunkInVarName]);
+						&& Character.isUpperCase(suffixesOldEqual[lastSuffixMatched].charAt(0))) {
+					suffixesVar[hunkInVarName] = getUpperCased(suffixesVar[hunkInVarName]);
 					suffixesNew[0] = getLowerCased(suffixesNew[0]);
 				}
 
-				String[] newVariableName = new String[suffixesVar.length
-						+ newPrefixes];
-				System.arraycopy(suffixesVar, 0, newVariableName, 0,
-						hunkInVarName); // hunks before type name in variable
-										// name
-				System.arraycopy(suffixesNew, 0, newVariableName, hunkInVarName,
-						newPrefixes); // new hunks in new type name
-				System.arraycopy(suffixesVar, hunkInVarName, newVariableName,
-						hunkInVarName + newPrefixes,
+				String[] newVariableName = new String[suffixesVar.length + newPrefixes];
+				System.arraycopy(suffixesVar, 0, newVariableName, 0, hunkInVarName); // hunks before type name in
+																						// variable
+																						// name
+				System.arraycopy(suffixesNew, 0, newVariableName, hunkInVarName, newPrefixes); // new hunks in new type
+																								// name
+				System.arraycopy(suffixesVar, hunkInVarName, newVariableName, hunkInVarName + newPrefixes,
 						suffixesVar.length - hunkInVarName); // matched + rest
 																// hunks
 				suffixesVar = newVariableName;
@@ -453,8 +410,8 @@ public class RenamingNameSuggestor {
 	// ---------------- Helper methods
 
 	/**
-	 * True if the string is the beginning of a new camel case hunk. False if it
-	 * is not.
+	 * True if the string is the beginning of a new camel case hunk. False if it is
+	 * not.
 	 */
 	private boolean startsNewHunk(String string) {
 
@@ -490,8 +447,7 @@ public class RenamingNameSuggestor {
 	}
 
 	/**
-	 * Grab a list of camelCase-separated suffixes from the typeName, for
-	 * example:
+	 * Grab a list of camelCase-separated suffixes from the typeName, for example:
 	 *
 	 * "ScriptElementName" => { "Script", "Element", "Name }
 	 *
@@ -535,15 +491,13 @@ public class RenamingNameSuggestor {
 
 	private String getFirstUpperRestLowerCased(String name) {
 		if (name.length() > 1) {
-			return Character.toUpperCase(name.charAt(0))
-					+ name.substring(1).toLowerCase();
+			return Character.toUpperCase(name.charAt(0)) + name.substring(1).toLowerCase();
 		}
 		return name.toLowerCase();
 	}
 
 	private boolean isInterfaceName(String typeName) {
-		return ((typeName.length() >= 2) && typeName.charAt(0) == 'I'
-				&& Character.isUpperCase(typeName.charAt(1)));
+		return ((typeName.length() >= 2) && typeName.charAt(0) == 'I' && Character.isUpperCase(typeName.charAt(1)));
 	}
 
 	private String getInterfaceName(String typeName) {
@@ -579,8 +533,8 @@ public class RenamingNameSuggestor {
 	}
 
 	/**
-	 * Returns true if the type name can be pluralized by a string operation.
-	 * This is always the case if it does not already end with an "s".
+	 * Returns true if the type name can be pluralized by a string operation. This
+	 * is always the case if it does not already end with an "s".
 	 */
 	private boolean canPluralize(String typeName) {
 		return !typeName.endsWith(PLURAL_S);
@@ -588,8 +542,7 @@ public class RenamingNameSuggestor {
 
 	private String pluralize(String typeName) {
 		if (typeName.endsWith(SINGULAR_Y))
-			typeName = typeName.substring(0, typeName.length() - 1)
-					.concat(PLURAL_IES);
+			typeName = typeName.substring(0, typeName.length() - 1).concat(PLURAL_IES);
 		else if (!typeName.endsWith(PLURAL_S))
 			typeName = typeName.concat(PLURAL_S);
 		return typeName;

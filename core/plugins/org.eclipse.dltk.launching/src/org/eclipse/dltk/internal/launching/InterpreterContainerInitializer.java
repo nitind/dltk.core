@@ -3,14 +3,15 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.internal.launching;
 
 import java.io.File;
+import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -32,8 +33,6 @@ import org.eclipse.dltk.launching.LibraryLocation;
 import org.eclipse.dltk.launching.ScriptLaunchConfigurationConstants;
 import org.eclipse.dltk.launching.ScriptRuntime;
 import org.eclipse.dltk.launching.ScriptRuntime.DefaultInterpreterEntry;
-
-import com.ibm.icu.text.MessageFormat;
 
 /**
  * Resolves a container for a InterpreterEnvironment buildpath container entry.
@@ -70,7 +69,7 @@ public class InterpreterContainerInitializer
 	/**
 	 * Returns the Interpreter install associated with the container path, or
 	 * <code>null</code> if it does not exist.
-	 * 
+	 *
 	 * @throws CoreException
 	 *             if cannt resolve interpreter, for example no default
 	 *             interpreter is specified
@@ -92,7 +91,7 @@ public class InterpreterContainerInitializer
 
 	/**
 	 * Returns the Interpreter type identifier from the given container ID path.
-	 * 
+	 *
 	 * @return the Interpreter type identifier from the given container ID path
 	 */
 	public static String getInterpreterTypeId(IPath path) {
@@ -101,7 +100,7 @@ public class InterpreterContainerInitializer
 
 	/**
 	 * Returns the Interpreter name from the given container ID path.
-	 * 
+	 *
 	 * @return the Interpreter name from the given container ID path
 	 */
 	public static String getInterpreterName(IPath path) {
@@ -110,7 +109,7 @@ public class InterpreterContainerInitializer
 
 	/**
 	 * The container can be updated if it refers to an existing Interpreter.
-	 * 
+	 *
 	 */
 	@Override
 	public boolean canUpdateBuildpathContainer(IPath containerPath,
@@ -146,7 +145,7 @@ public class InterpreterContainerInitializer
 	@Override
 	public void requestBuildpathContainerUpdate(IPath containerPath,
 			IScriptProject project, IBuildpathContainer containerSuggestion)
-					throws CoreException {
+			throws CoreException {
 		IInterpreterInstall interpreter = resolveInterpreter(
 				getNatureFromProject(project),
 				getEnvironmentFromProject(project), containerPath);
