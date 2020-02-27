@@ -3,10 +3,10 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.util;
 
@@ -152,58 +152,13 @@ public class Messages extends NLS {
 	}
 
 	/**
-	 * Bind the given message's substitution locations with the given string
-	 * values.
-	 * 
-	 * @param message
-	 *            the message to be manipulated
+	 * Bind the given message's substitution locations with the given string values.
+	 *
+	 * @param message  the message to be manipulated
+	 * @param bindings An array of objects to be inserted into the message
 	 * @return the manipulated String
 	 */
-	public static String bind(String message) {
-		return bind(message, null);
-	}
-
-	/**
-	 * Bind the given message's substitution locations with the given string
-	 * values.
-	 * 
-	 * @param message
-	 *            the message to be manipulated
-	 * @param binding
-	 *            the object to be inserted into the message
-	 * @return the manipulated String
-	 */
-	public static String bind(String message, Object binding) {
-		return bind(message, new Object[] { binding });
-	}
-
-	/**
-	 * Bind the given message's substitution locations with the given string
-	 * values.
-	 * 
-	 * @param message
-	 *            the message to be manipulated
-	 * @param binding1
-	 *            An object to be inserted into the message
-	 * @param binding2
-	 *            A second object to be inserted into the message
-	 * @return the manipulated String
-	 */
-	public static String bind(String message, Object binding1, Object binding2) {
-		return bind(message, new Object[] { binding1, binding2 });
-	}
-
-	/**
-	 * Bind the given message's substitution locations with the given string
-	 * values.
-	 * 
-	 * @param message
-	 *            the message to be manipulated
-	 * @param bindings
-	 *            An array of objects to be inserted into the message
-	 * @return the manipulated String
-	 */
-	public static String bind(String message, Object[] bindings) {
+	public static String bind(String message, Object... bindings) {
 		return NLS.bind(message, bindings);
 	}
 }

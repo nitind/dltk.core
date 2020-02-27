@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -46,13 +46,16 @@ public final class Messages {
 				if (field == null) {
 					return null;
 				}
-				//can only set value of public static non-final fields
+				// can only set value of public static non-final fields
 				if ((field.getModifiers() & MOD_MASK) != MOD_EXPECTED)
 					return null;
 				// Set the value into the field. We should never get an exception here because
-				// we know we have a public static non-final field. If we do get an exception, silently
-				// log it and continue. This means that the field will (most likely) be un-initialized and
-				// will fail later in the code and if so then we will see both the NPE and this error.
+				// we know we have a public static non-final field. If we do get an exception,
+				// silently
+				// log it and continue. This means that the field will (most likely) be
+				// un-initialized and
+				// will fail later in the code and if so then we will see both the NPE and this
+				// error.
 				try {
 					field.set(null, value);
 				} catch (Exception e) {
@@ -65,7 +68,6 @@ public final class Messages {
 		}
 	}
 
-	
 	private static String[] nlSuffixes;
 	private static final String EXTENSION = ".properties"; //$NON-NLS-1$
 
@@ -112,57 +114,24 @@ public final class Messages {
 	static {
 		initializeMessages(BUNDLE_NAME, Messages.class);
 	}
-	
-	/**
-	 * Bind the given message's substitution locations with the given string values.
-	 * 
-	 * @param message the message to be manipulated
-	 * @return the manipulated String
-	 */
-	public static String bind(String message) {
-		return bind(message, null);
-	}
-	
-	/**
-	 * Bind the given message's substitution locations with the given string values.
-	 * 
-	 * @param message the message to be manipulated
-	 * @param binding the object to be inserted into the message
-	 * @return the manipulated String
-	 */
-	public static String bind(String message, Object binding) {
-		return bind(message, new Object[] {binding});
-	}
 
 	/**
 	 * Bind the given message's substitution locations with the given string values.
-	 * 
-	 * @param message the message to be manipulated
-	 * @param binding1 An object to be inserted into the message
-	 * @param binding2 A second object to be inserted into the message
-	 * @return the manipulated String
-	 */
-	public static String bind(String message, Object binding1, Object binding2) {
-		return bind(message, new Object[] {binding1, binding2});
-	}
-
-	/**
-	 * Bind the given message's substitution locations with the given string values.
-	 * 
-	 * @param message the message to be manipulated
+	 *
+	 * @param message  the message to be manipulated
 	 * @param bindings An array of objects to be inserted into the message
 	 * @return the manipulated String
 	 */
-	public static String bind(String message, Object[] bindings) {
+	public static String bind(String message, Object... bindings) {
 		return NLS.bind(message, bindings);
 	}
-	
+
 	/*
 	 * Build an array of directories to search
 	 */
 	private static String[] buildVariants(String root) {
 		if (nlSuffixes == null) {
-			//build list of suffixes for loading resource bundles
+			// build list of suffixes for loading resource bundles
 			String nl = Locale.getDefault().toString();
 			ArrayList result = new ArrayList(4);
 			int lastSeparator;
@@ -173,7 +142,7 @@ public final class Messages {
 					break;
 				nl = nl.substring(0, lastSeparator);
 			}
-			//add the empty suffix last (most general)
+			// add the empty suffix last (most general)
 			result.add(EXTENSION);
 			nlSuffixes = (String[]) result.toArray(new String[result.size()]);
 		}
@@ -183,12 +152,14 @@ public final class Messages {
 			variants[i] = root + nlSuffixes[i];
 		return variants;
 	}
+
 	public static void initializeMessages(String bundleName, Class clazz) {
 		// load the resource bundle and set the fields
 		final Field[] fields = clazz.getDeclaredFields();
 		load(bundleName, clazz.getClassLoader(), fields);
 
-		// iterate over the fields in the class to make sure that there aren't any empty ones
+		// iterate over the fields in the class to make sure that there aren't any empty
+		// ones
 		final int MOD_EXPECTED = Modifier.PUBLIC | Modifier.STATIC;
 		final int MOD_MASK = MOD_EXPECTED | Modifier.FINAL;
 		final int numFields = fields.length;
@@ -197,10 +168,14 @@ public final class Messages {
 			if ((field.getModifiers() & MOD_MASK) != MOD_EXPECTED)
 				continue;
 			try {
-				// Set the value into the field if its empty. We should never get an exception here because
-				// we know we have a public static non-final field. If we do get an exception, silently
-				// log it and continue. This means that the field will (most likely) be un-initialized and
-				// will fail later in the code and if so then we will see both the NPE and this error.
+				// Set the value into the field if its empty. We should never get an exception
+				// here because
+				// we know we have a public static non-final field. If we do get an exception,
+				// silently
+				// log it and continue. This means that the field will (most likely) be
+				// un-initialized and
+				// will fail later in the code and if so then we will see both the NPE and this
+				// error.
 				if (field.get(clazz) == null) {
 					String value = "Missing message: " + field.getName() + " in: " + bundleName; //$NON-NLS-1$ //$NON-NLS-2$
 					field.set(null, value);
@@ -212,6 +187,7 @@ public final class Messages {
 			}
 		}
 	}
+
 	/**
 	 * Load the given resource bundle using the specified class loader.
 	 */

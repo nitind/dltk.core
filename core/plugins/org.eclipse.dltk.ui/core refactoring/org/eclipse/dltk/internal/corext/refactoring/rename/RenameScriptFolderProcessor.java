@@ -374,7 +374,7 @@ public class RenameScriptFolderProcessor extends ScriptRenameProcessor
 		for (int i = 0; i < roots.length; i++) {
 			if (!isPackageNameOkInRoot(newName, roots[i])) {
 				String message = MessageFormat.format(RefactoringCoreMessages.RenamePackageRefactoring_aleady_exists,
-						new Object[] { getNewElementName(), roots[i].getElementName() });
+						getNewElementName(), roots[i].getElementName());
 				status.merge(RefactoringStatus.createWarningStatus(message));
 				status.merge(checkTypeNameConflicts(roots[i], newName, topLevelTypeNames));
 			}
