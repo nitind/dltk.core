@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.ui.text.completion;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,7 +29,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -229,9 +229,8 @@ public final class CompletionProposalComputerRegistry {
 				 * for some other reason. Do not include the extension in the list and inform
 				 * the user about it.
 				 */
-				Object[] args = { element.toString() };
-				String message = Messages.format(ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message,
-						args);
+				String message = MessageFormat.format(
+						ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message, element.toString());
 				IStatus status = new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(), IStatus.OK, message, x);
 				informUser(status);
 			}
@@ -303,9 +302,8 @@ public final class CompletionProposalComputerRegistry {
 				 * for some other reason. Do not include the extension in the list and inform
 				 * the user about it.
 				 */
-				Object[] args = { element.toString() };
-				String message = Messages.format(ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message,
-						args);
+				String message = MessageFormat.format(
+						ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message, element.toString());
 				IStatus status = new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(), IStatus.OK, message, x);
 				informUser(status);
 			}
@@ -329,12 +327,12 @@ public final class CompletionProposalComputerRegistry {
 		final String avoidHint;
 		final String culpritName = culprit == null ? null : culprit.getName();
 		if (affectedPlugins.isEmpty())
-			avoidHint = Messages.format(ScriptTextMessages.CompletionProposalComputerRegistry_messageAvoidanceHint,
-					new Object[] { culpritName, category.getDisplayName() });
+			avoidHint = MessageFormat.format(ScriptTextMessages.CompletionProposalComputerRegistry_messageAvoidanceHint,
+					culpritName, category.getDisplayName());
 		else
-			avoidHint = Messages.format(
-					ScriptTextMessages.CompletionProposalComputerRegistry_messageAvoidanceHintWithWarning,
-					new Object[] { culpritName, category.getDisplayName(), toString(affectedPlugins) });
+			avoidHint = MessageFormat.format(
+					ScriptTextMessages.CompletionProposalComputerRegistry_messageAvoidanceHintWithWarning, culpritName,
+					category.getDisplayName(), toString(affectedPlugins));
 
 		String message = status.getMessage();
 		// inlined from MessageDialog.openError

@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
@@ -18,7 +19,6 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.dialogs.TextFieldNavigationHandler;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
@@ -47,39 +47,40 @@ public class NewSourceFolderDialog extends StatusDialog {
 	private List fExistingFolders;
 	private IProject fCurrProject;
 
-	public NewSourceFolderDialog(Shell parent, String title, IProject project, List existingFolders, BPListElement entryToEdit) {
+	public NewSourceFolderDialog(Shell parent, String title, IProject project, List existingFolders,
+			BPListElement entryToEdit) {
 		super(parent);
 		setTitle(title);
 
-		fContainerFieldStatus= new StatusInfo();
+		fContainerFieldStatus = new StatusInfo();
 
-		SourceContainerAdapter adapter= new SourceContainerAdapter();
+		SourceContainerAdapter adapter = new SourceContainerAdapter();
 
-		fUseProjectButton= new SelectionButtonDialogField(SWT.RADIO);
+		fUseProjectButton = new SelectionButtonDialogField(SWT.RADIO);
 		fUseProjectButton.setLabelText(NewWizardMessages.NewSourceFolderDialog_useproject_button);
 		fUseProjectButton.setDialogFieldListener(adapter);
 
-		fUseFolderButton= new SelectionButtonDialogField(SWT.RADIO);
+		fUseFolderButton = new SelectionButtonDialogField(SWT.RADIO);
 		fUseFolderButton.setLabelText(NewWizardMessages.NewSourceFolderDialog_usefolder_button);
 		fUseFolderButton.setDialogFieldListener(adapter);
 
-		fContainerDialogField= new StringDialogField();
+		fContainerDialogField = new StringDialogField();
 		fContainerDialogField.setDialogFieldListener(adapter);
 		fContainerDialogField.setLabelText(NewWizardMessages.NewSourceFolderDialog_sourcefolder_label);
 
 		fUseFolderButton.attachDialogField(fContainerDialogField);
 
-		fFolder= null;
-		fExistingFolders= existingFolders;
-		fCurrProject= project;
+		fFolder = null;
+		fExistingFolders = existingFolders;
+		fCurrProject = project;
 
-		boolean useFolders= true;
+		boolean useFolders = true;
 		if (entryToEdit == null) {
 			fContainerDialogField.setText(""); //$NON-NLS-1$
 		} else {
-			IPath editPath= entryToEdit.getPath().removeFirstSegments(1);
+			IPath editPath = entryToEdit.getPath().removeFirstSegments(1);
 			fContainerDialogField.setText(editPath.toString());
-			useFolders= !editPath.isEmpty();
+			useFolders = !editPath.isEmpty();
 		}
 		fUseFolderButton.setSelection(useFolders);
 		fUseProjectButton.setSelection(!useFolders);
@@ -91,20 +92,19 @@ public class NewSourceFolderDialog extends StatusDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite composite= (Composite)super.createDialogArea(parent);
+		Composite composite = (Composite) super.createDialogArea(parent);
 
-		Composite inner= new Composite(composite, SWT.NONE);
-		GridLayout layout= new GridLayout();
-		layout.marginHeight= 0;
-		layout.marginWidth= 0;
-		layout.numColumns= 1;
+		Composite inner = new Composite(composite, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.numColumns = 1;
 		inner.setLayout(layout);
 
-		int widthHint= convertWidthInCharsToPixels(50);
+		int widthHint = convertWidthInCharsToPixels(50);
 
-
-		GridData data= new GridData(GridData.FILL_HORIZONTAL);
-		data.widthHint= widthHint;
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		data.widthHint = widthHint;
 
 		if (fExistingFolders.contains(fCurrProject)) {
 			fContainerDialogField.doFillIntoGrid(inner, 2);
@@ -113,10 +113,10 @@ public class NewSourceFolderDialog extends StatusDialog {
 			fUseFolderButton.doFillIntoGrid(inner, 1);
 			fContainerDialogField.getTextControl(inner);
 
-			int horizontalIndent= convertWidthInCharsToPixels(3);
-			data.horizontalIndent= horizontalIndent;
+			int horizontalIndent = convertWidthInCharsToPixels(3);
+			data.horizontalIndent = horizontalIndent;
 		}
-		Text text= fContainerDialogField.getTextControl(null);
+		Text text = fContainerDialogField.getTextControl(null);
 		text.setLayoutData(data);
 		TextFieldNavigationHandler.install(text);
 
@@ -124,7 +124,6 @@ public class NewSourceFolderDialog extends StatusDialog {
 		applyDialogFont(composite);
 		return composite;
 	}
-
 
 	// -------- SourceContainerAdapter --------
 
@@ -144,39 +143,38 @@ public class NewSourceFolderDialog extends StatusDialog {
 	}
 
 	protected void checkIfPathValid() {
-		fFolder= null;
-		IContainer folder= null;
+		fFolder = null;
+		IContainer folder = null;
 		if (fUseFolderButton.isSelected()) {
-			String pathStr= fContainerDialogField.getText();
+			String pathStr = fContainerDialogField.getText();
 			if (pathStr.length() == 0) {
 				fContainerFieldStatus.setError(NewWizardMessages.NewSourceFolderDialog_error_enterpath);
 				return;
 			}
-			IPath path= fCurrProject.getFullPath().append(pathStr);
-			IWorkspace workspace= fCurrProject.getWorkspace();
+			IPath path = fCurrProject.getFullPath().append(pathStr);
+			IWorkspace workspace = fCurrProject.getWorkspace();
 
-			IStatus pathValidation= workspace.validatePath(path.toString(), IResource.FOLDER);
+			IStatus pathValidation = workspace.validatePath(path.toString(), IResource.FOLDER);
 			if (!pathValidation.isOK()) {
-				fContainerFieldStatus.setError(Messages.format(NewWizardMessages.NewSourceFolderDialog_error_invalidpath, pathValidation.getMessage()));
+				fContainerFieldStatus.setError(MessageFormat.format(
+						NewWizardMessages.NewSourceFolderDialog_error_invalidpath, pathValidation.getMessage()));
 				return;
 			}
-			folder= fCurrProject.getFolder(pathStr);
+			folder = fCurrProject.getFolder(pathStr);
 		} else {
-			folder= fCurrProject;
+			folder = fCurrProject;
 		}
 		if (isExisting(folder)) {
 			fContainerFieldStatus.setError(NewWizardMessages.NewSourceFolderDialog_error_pathexists);
 			return;
 		}
 		fContainerFieldStatus.setOK();
-		fFolder= folder;
+		fFolder = folder;
 	}
 
 	private boolean isExisting(IContainer folder) {
 		return fExistingFolders.contains(folder);
 	}
-
-
 
 	public IContainer getSourceFolder() {
 		return fFolder;
@@ -188,8 +186,8 @@ public class NewSourceFolderDialog extends StatusDialog {
 		if (DLTKCore.DEBUG) {
 			System.err.println("NewSourceFolderDialog: Add help support"); //$NON-NLS-1$
 		}
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IDLTKHelpContextIds.NEW_CONTAINER_DIALOG);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell,
+		// IDLTKHelpContextIds.NEW_CONTAINER_DIALOG);
 	}
-
 
 }

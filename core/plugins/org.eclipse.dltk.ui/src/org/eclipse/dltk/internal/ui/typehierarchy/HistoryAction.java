@@ -3,14 +3,15 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.typehierarchy;
 
+import java.text.MessageFormat;
+
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.jface.action.Action;
@@ -25,22 +26,24 @@ public class HistoryAction extends Action {
 	private IModelElement fElement;
 
 	public HistoryAction(TypeHierarchyViewPart viewPart, IModelElement element) {
-        super("", AS_RADIO_BUTTON); //$NON-NLS-1$
-		fViewPart= viewPart;
-		fElement= element;
+		super("", AS_RADIO_BUTTON); //$NON-NLS-1$
+		fViewPart = viewPart;
+		fElement = element;
 
-		String elementName= ScriptElementLabels.getDefault().getElementLabel(element, ScriptElementLabels.ALL_POST_QUALIFIED | ScriptElementLabels.ALL_DEFAULT);
+		String elementName = ScriptElementLabels.getDefault().getElementLabel(element,
+				ScriptElementLabels.ALL_POST_QUALIFIED | ScriptElementLabels.ALL_DEFAULT);
 		setText(elementName);
 		setImageDescriptor(getImageDescriptor(element));
 
-		setDescription(Messages.format(TypeHierarchyMessages.HistoryAction_description, elementName));
-		setToolTipText(Messages.format(TypeHierarchyMessages.HistoryAction_tooltip, elementName));
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IJavaHelpContextIds.HISTORY_ACTION);
+		setDescription(MessageFormat.format(TypeHierarchyMessages.HistoryAction_description, elementName));
+		setToolTipText(MessageFormat.format(TypeHierarchyMessages.HistoryAction_tooltip, elementName));
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+		// IJavaHelpContextIds.HISTORY_ACTION);
 	}
 
 	private ImageDescriptor getImageDescriptor(IModelElement elem) {
-		ScriptElementImageProvider imageProvider= new ScriptElementImageProvider();
-		ImageDescriptor desc= imageProvider.getBaseImageDescriptor(elem, 0);
+		ScriptElementImageProvider imageProvider = new ScriptElementImageProvider();
+		ImageDescriptor desc = imageProvider.getBaseImageDescriptor(elem, 0);
 		imageProvider.dispose();
 		return desc;
 	}

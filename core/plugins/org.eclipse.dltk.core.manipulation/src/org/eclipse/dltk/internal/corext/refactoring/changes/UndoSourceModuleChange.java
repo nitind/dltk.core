@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.changes;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -16,7 +18,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.internal.core.manipulation.Messages;
 import org.eclipse.dltk.internal.core.manipulation.ScriptManipulationPlugin;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.ltk.core.refactoring.Change;
@@ -38,7 +39,8 @@ public class UndoSourceModuleChange extends UndoTextFileChange {
 		IFile file = (IFile) cunit.getResource();
 		if (file == null)
 			throw new CoreException(new Status(IStatus.ERROR, ScriptManipulationPlugin.getPluginId(), IStatus.ERROR,
-					Messages.format(RefactoringCoreMessages.UndoSourceModuleChange_no_resource, cunit.getElementName()),
+					MessageFormat.format(RefactoringCoreMessages.UndoSourceModuleChange_no_resource,
+							cunit.getElementName()),
 					null));
 		return file;
 	}

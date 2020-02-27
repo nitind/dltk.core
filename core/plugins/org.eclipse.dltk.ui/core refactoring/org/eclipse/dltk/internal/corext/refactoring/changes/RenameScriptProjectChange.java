@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.changes;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -23,7 +25,6 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.corext.refactoring.AbstractModelElementRenameChange;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
@@ -84,7 +85,8 @@ public final class RenameScriptProjectChange extends AbstractModelElementRenameC
 
 	@Override
 	public String getName() {
-		return Messages.format(RefactoringCoreMessages.RenameScriptProjectChange_rename, getOldName(), getNewName());
+		return MessageFormat.format(RefactoringCoreMessages.RenameScriptProjectChange_rename, getOldName(),
+				getNewName());
 	}
 
 	private IProject getProject() {

@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -15,6 +15,7 @@ import static org.eclipse.dltk.ui.PreferenceConstants.SRC_SRCNAME;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
@@ -29,7 +30,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.internal.core.BuildpathEntry;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.dialogs.StatusUtil;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.dialogs.StatusInfo;
@@ -57,18 +57,15 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * The page for defaults for classpath entries in newscriptprojects.
  * See PreferenceConstants to access or change these values through public API.
  */
-public abstract class NewScriptProjectPreferencePage extends PreferencePage
-		implements IWorkbenchPreferencePage {
+public abstract class NewScriptProjectPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-	private static String fgDefaultEncoding = System
-			.getProperty("file.encoding"); //$NON-NLS-1$
+	private static String fgDefaultEncoding = System.getProperty("file.encoding"); //$NON-NLS-1$
 
 	public abstract IBuildpathEntry[] getDefaultLanguageLibrary();
 
 	// InterpreterEnvironment Entry
 
-	public static String decodeInterpreterEnvironmentLibraryDescription(
-			String encoded) {
+	public static String decodeInterpreterEnvironmentLibraryDescription(String encoded) {
 		int end = encoded.indexOf(' ');
 		if (end != -1) {
 			return decode(encoded.substring(0, end));
@@ -94,8 +91,7 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 		return ""; //$NON-NLS-1$
 	}
 
-	public static IBuildpathEntry[] decodeInterpreterEnvironmentLibraryBuildpathEntries(
-			String encoded) {
+	public static IBuildpathEntry[] decodeInterpreterEnvironmentLibraryBuildpathEntries(String encoded) {
 		StringTokenizer tok = new StringTokenizer(encoded, " "); //$NON-NLS-1$
 		ArrayList<IBuildpathEntry> res = new ArrayList<>();
 		while (tok.hasMoreTokens()) {
@@ -103,8 +99,7 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 				tok.nextToken(); // desc: ignore
 				int kind = Integer.parseInt(tok.nextToken());
 				IPath path = decodePath(tok.nextToken());
-				boolean isExported = Boolean.valueOf(tok.nextToken())
-						.booleanValue();
+				boolean isExported = Boolean.valueOf(tok.nextToken()).booleanValue();
 				switch (kind) {
 				case IBuildpathEntry.BPE_SOURCE:
 					res.add(DLTKCore.newSourceEntry(path));
@@ -121,19 +116,16 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 				}
 			} catch (NumberFormatException e) {
 				String message = PreferencesMessages.NewScriptProjectPreferencePage_error_decode;
-				DLTKUIPlugin.log(new Status(IStatus.ERROR,
-						DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR, message, e));
+				DLTKUIPlugin.log(new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR, message, e));
 			} catch (NoSuchElementException e) {
 				String message = PreferencesMessages.NewScriptProjectPreferencePage_error_decode;
-				DLTKUIPlugin.log(new Status(IStatus.ERROR,
-						DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR, message, e));
+				DLTKUIPlugin.log(new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR, message, e));
 			}
 		}
 		return res.toArray(new IBuildpathEntry[res.size()]);
 	}
 
-	public static String encodeInterpreterEnvironmentLibrary(String desc,
-			IBuildpathEntry[] cpentries) {
+	public static String encodeInterpreterEnvironmentLibrary(String desc, IBuildpathEntry[] cpentries) {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < cpentries.length; i++) {
 			IBuildpathEntry entry = cpentries[i];
@@ -188,8 +180,7 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 	public NewScriptProjectPreferencePage() {
 		super();
 		setPreferenceStore(DLTKUIPlugin.getDefault().getPreferenceStore());
-		setDescription(
-				PreferencesMessages.NewScriptProjectPreferencePage_description);
+		setDescription(PreferencesMessages.NewScriptProjectPreferencePage_description);
 
 		// title used when opened programatically
 		setTitle(PreferencesMessages.NewScriptProjectPreferencePage_title);
@@ -239,8 +230,7 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 		// IDLTKHelpContextIds.NEW_JAVA_PROJECT_PREFERENCE_PAGE);
 	}
 
-	private Button addRadioButton(Composite parent, String label, String key,
-			String value, int indent) {
+	private Button addRadioButton(Composite parent, String label, String key, String value, int indent) {
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		gd.horizontalSpan = 2;
 		gd.horizontalIndent = indent;
@@ -256,8 +246,7 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 		return button;
 	}
 
-	private Text addTextControl(Composite parent, Label labelControl,
-			String key, int indent) {
+	private Text addTextControl(Composite parent, Label labelControl, String key, int indent) {
 		GridData gd = new GridData();
 		gd.horizontalIndent = indent;
 
@@ -281,12 +270,10 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 
 		Composite result = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
-		layout.marginHeight = convertVerticalDLUsToPixels(
-				IDialogConstants.VERTICAL_MARGIN);
+		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
 		layout.marginWidth = 0;
 		layout.verticalSpacing = convertVerticalDLUsToPixels(10);
-		layout.horizontalSpacing = convertHorizontalDLUsToPixels(
-				IDialogConstants.HORIZONTAL_SPACING);
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
 		layout.numColumns = 2;
 		result.setLayout(layout);
 
@@ -298,28 +285,25 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 		layout.numColumns = 2;
 		sourceFolderGroup.setLayout(layout);
 		sourceFolderGroup.setLayoutData(gd);
-		sourceFolderGroup.setText(
-				PreferencesMessages.NewScriptProjectPreferencePage_sourcefolder_label);
+		sourceFolderGroup.setText(PreferencesMessages.NewScriptProjectPreferencePage_sourcefolder_label);
 
 		int indent = 0;
 
 		fProjectAsSourceFolder = addRadioButton(sourceFolderGroup,
-				PreferencesMessages.NewScriptProjectPreferencePage_sourcefolder_project,
-				SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.FALSE, indent);
+				PreferencesMessages.NewScriptProjectPreferencePage_sourcefolder_project, SRCBIN_FOLDERS_IN_NEWPROJ,
+				IPreferenceStore.FALSE, indent);
 		fProjectAsSourceFolder.addSelectionListener(fSelectionListener);
 
 		fFoldersAsSourceFolder = addRadioButton(sourceFolderGroup,
-				PreferencesMessages.NewScriptProjectPreferencePage_sourcefolder_folder,
-				SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.TRUE, indent);
+				PreferencesMessages.NewScriptProjectPreferencePage_sourcefolder_folder, SRCBIN_FOLDERS_IN_NEWPROJ,
+				IPreferenceStore.TRUE, indent);
 		fFoldersAsSourceFolder.addSelectionListener(fSelectionListener);
 
 		indent = convertWidthInCharsToPixels(4);
 
 		fSrcFolderNameLabel = new Label(sourceFolderGroup, SWT.NONE);
-		fSrcFolderNameLabel.setText(
-				PreferencesMessages.NewScriptProjectPreferencePage_folders_src);
-		fSrcFolderNameText = addTextControl(sourceFolderGroup,
-				fSrcFolderNameLabel, SRC_SRCNAME, indent);
+		fSrcFolderNameLabel.setText(PreferencesMessages.NewScriptProjectPreferencePage_folders_src);
+		fSrcFolderNameText = addTextControl(sourceFolderGroup, fSrcFolderNameLabel, SRC_SRCNAME, indent);
 		fSrcFolderNameText.addModifyListener(fModifyListener);
 
 		// String[] InterpreterEnvironmentNames=
@@ -363,10 +347,9 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 			IStatus status;
 			IPath srcPath = dmy.getFullPath().append(srcName);
 			if (srcName.length() != 0) {
-				status = workspace.validatePath(srcPath.toString(),
-						IResource.FOLDER);
+				status = workspace.validatePath(srcPath.toString(), IResource.FOLDER);
 				if (!status.isOK()) {
-					String message = Messages.format(
+					String message = MessageFormat.format(
 							PreferencesMessages.NewScriptProjectPreferencePage_folders_error_invalidsrcname,
 							status.getMessage());
 					updateStatus(new StatusInfo(IStatus.ERROR, message));
@@ -374,8 +357,7 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 				}
 			}
 			IBuildpathEntry entry = DLTKCore.newSourceEntry(srcPath);
-			status = BuildpathEntry.validateBuildpath(DLTKCore.create(dmy),
-					new IBuildpathEntry[] { entry });
+			status = BuildpathEntry.validateBuildpath(DLTKCore.create(dmy), new IBuildpathEntry[] { entry });
 			if (!status.isOK()) {
 				String message = PreferencesMessages.NewScriptProjectPreferencePage_folders_error_invalidcp;
 				updateStatus(new StatusInfo(IStatus.ERROR, message));
@@ -391,8 +373,7 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 	}
 
 	private void controlChanged(Widget widget) {
-		if (widget == fFoldersAsSourceFolder
-				|| widget == fProjectAsSourceFolder) {
+		if (widget == fFoldersAsSourceFolder || widget == fProjectAsSourceFolder) {
 			validateFolders();
 		}
 	}
@@ -414,8 +395,7 @@ public abstract class NewScriptProjectPreferencePage extends PreferencePage
 		for (int i = 0; i < fRadioButtons.size(); i++) {
 			Button button = (Button) fRadioButtons.get(i);
 			String[] info = (String[]) button.getData();
-			button.setSelection(
-					info[1].equals(store.getDefaultString(info[0])));
+			button.setSelection(info[1].equals(store.getDefaultString(info[0])));
 		}
 		for (int i = 0; i < fTextControls.size(); i++) {
 			Text text = (Text) fTextControls.get(i);

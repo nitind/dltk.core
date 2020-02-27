@@ -3,13 +3,14 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.ui.preferences;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,7 +22,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.dialogs.StatusUtil;
 import org.eclipse.dltk.internal.ui.preferences.ScrolledPageContent;
 import org.eclipse.dltk.ui.dialogs.StatusInfo;
@@ -57,8 +57,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
  * Configures preferences.
  *
  */
-public abstract class AbstractConfigurationBlock
-		implements IPreferenceConfigurationBlock {
+public abstract class AbstractConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	protected static class FilePathValidator implements IInputValidator {
 		@Override
@@ -105,16 +104,14 @@ public abstract class AbstractConfigurationBlock
 		private ExpansionAdapter fListener = new ExpansionAdapter() {
 			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
-				ExpandableComposite source = (ExpandableComposite) e
-						.getSource();
+				ExpandableComposite source = (ExpandableComposite) e.getSource();
 				updateSectionStyle(source);
 				if (fIsBeingManaged)
 					return;
 				if (e.getState()) {
 					try {
 						fIsBeingManaged = true;
-						for (Iterator<ExpandableComposite> iter = fSections
-								.iterator(); iter.hasNext();) {
+						for (Iterator<ExpandableComposite> iter = fSections.iterator(); iter.hasNext();) {
 							ExpandableComposite composite = iter.next();
 							if (composite != source)
 								composite.setExpanded(false);
@@ -123,19 +120,15 @@ public abstract class AbstractConfigurationBlock
 						fIsBeingManaged = false;
 					}
 					if (fLastOpenKey != null && fDialogSettingsStore != null)
-						fDialogSettingsStore.setValue(fLastOpenKey,
-								source.getText());
+						fDialogSettingsStore.setValue(fLastOpenKey, source.getText());
 				} else {
-					if (!fIsBeingManaged && fLastOpenKey != null
-							&& fDialogSettingsStore != null)
+					if (!fIsBeingManaged && fLastOpenKey != null && fDialogSettingsStore != null)
 						fDialogSettingsStore.setValue(fLastOpenKey, __NONE);
 				}
-				ExpandableComposite exComp = getParentExpandableComposite(
-						source);
+				ExpandableComposite exComp = getParentExpandableComposite(source);
 				if (exComp != null)
 					exComp.layout(true, true);
-				ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(
-						source);
+				ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(source);
 				if (parentScrolledComposite != null) {
 					parentScrolledComposite.reflow(true);
 				}
@@ -160,8 +153,7 @@ public abstract class AbstractConfigurationBlock
 		/**
 		 * Creates a new section manager.
 		 */
-		public SectionManager(IPreferenceStore dialogSettingsStore,
-				String lastOpenKey) {
+		public SectionManager(IPreferenceStore dialogSettingsStore, String lastOpenKey) {
 			fDialogSettingsStore = dialogSettingsStore;
 			fLastOpenKey = lastOpenKey;
 		}
@@ -175,20 +167,18 @@ public abstract class AbstractConfigurationBlock
 		}
 
 		/**
-		 * Creates a new composite that can contain a set of expandable
-		 * sections. A <code>ScrolledPageComposite</code> is created and a new
-		 * composite within that, to ensure that expanding the sections will
-		 * always have enough space, unless there already is a
-		 * <code>ScrolledComposite</code> along the parent chain of
-		 * <code>parent</code>, in which case a normal <code>Composite</code> is
-		 * created.
+		 * Creates a new composite that can contain a set of expandable sections. A
+		 * <code>ScrolledPageComposite</code> is created and a new composite within
+		 * that, to ensure that expanding the sections will always have enough space,
+		 * unless there already is a <code>ScrolledComposite</code> along the parent
+		 * chain of <code>parent</code>, in which case a normal <code>Composite</code>
+		 * is created.
 		 * <p>
-		 * The receiver keeps a reference to the inner body composite, so that
-		 * new sections can be added via <code>createSection</code>.
+		 * The receiver keeps a reference to the inner body composite, so that new
+		 * sections can be added via <code>createSection</code>.
 		 * </p>
 		 *
-		 * @param parent
-		 *                   the parent composite
+		 * @param parent the parent composite
 		 * @return the newly created composite
 		 */
 		public Composite createSectionComposite(Composite parent) {
@@ -209,21 +199,17 @@ public abstract class AbstractConfigurationBlock
 		}
 
 		/**
-		 * Creates an expandable section within the parent created previously by
-		 * calling <code>createSectionComposite</code>. Controls can be added
-		 * directly to the returned composite, which has no layout initially.
+		 * Creates an expandable section within the parent created previously by calling
+		 * <code>createSectionComposite</code>. Controls can be added directly to the
+		 * returned composite, which has no layout initially.
 		 *
-		 * @param label
-		 *                  the display name of the section
+		 * @param label the display name of the section
 		 * @return a composite within the expandable section
 		 */
 		public Composite createSection(String label) {
 			Assert.isNotNull(fBody);
-			final ExpandableComposite excomposite = new ExpandableComposite(
-					fBody, SWT.NONE,
-					ExpandableComposite.TWISTIE
-							| ExpandableComposite.CLIENT_INDENT
-							| ExpandableComposite.COMPACT);
+			final ExpandableComposite excomposite = new ExpandableComposite(fBody, SWT.NONE,
+					ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.COMPACT);
 			if (fFirstChild == null)
 				fFirstChild = excomposite;
 			excomposite.setText(label);
@@ -231,16 +217,14 @@ public abstract class AbstractConfigurationBlock
 			if (fLastOpenKey != null && fDialogSettingsStore != null)
 				last = fDialogSettingsStore.getString(fLastOpenKey);
 
-			if (fFirstChild == excomposite && !__NONE.equals(last)
-					|| label.equals(last)) {
+			if (fFirstChild == excomposite && !__NONE.equals(last) || label.equals(last)) {
 				excomposite.setExpanded(true);
 				if (fFirstChild != excomposite)
 					fFirstChild.setExpanded(false);
 			} else {
 				excomposite.setExpanded(false);
 			}
-			excomposite.setLayoutData(new GridData(GridData.FILL,
-					GridData.BEGINNING, true, false));
+			excomposite.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
 
 			updateSectionStyle(excomposite);
 			manage(excomposite);
@@ -316,8 +300,7 @@ public abstract class AbstractConfigurationBlock
 
 	private ArrayList fNumberFields = new ArrayList();
 
-	private ModifyListener fNumberFieldListener = e -> numberFieldChanged(
-			(Text) e.widget);
+	private ModifyListener fNumberFieldListener = e -> numberFieldChanged((Text) e.widget);
 
 	/**
 	 * List of master/slave listeners when there's a dependency.
@@ -341,16 +324,14 @@ public abstract class AbstractConfigurationBlock
 		fMainPage = null;
 	}
 
-	public AbstractConfigurationBlock(OverlayPreferenceStore store,
-			PreferencePage mainPreferencePage) {
+	public AbstractConfigurationBlock(OverlayPreferenceStore store, PreferencePage mainPreferencePage) {
 		Assert.isNotNull(store);
 		Assert.isNotNull(mainPreferencePage);
 		fStore = store;
 		fMainPage = mainPreferencePage;
 	}
 
-	protected final ScrolledPageContent getParentScrolledComposite(
-			Control control) {
+	protected final ScrolledPageContent getParentScrolledComposite(Control control) {
 		Control parent = control.getParent();
 		while (!(parent instanceof ScrolledPageContent) && parent != null) {
 			parent = parent.getParent();
@@ -361,8 +342,7 @@ public abstract class AbstractConfigurationBlock
 		return null;
 	}
 
-	private final ExpandableComposite getParentExpandableComposite(
-			Control control) {
+	private final ExpandableComposite getParentExpandableComposite(Control control) {
 		Control parent = control.getParent();
 		while (!(parent instanceof ExpandableComposite) && parent != null) {
 			parent = parent.getParent();
@@ -374,13 +354,11 @@ public abstract class AbstractConfigurationBlock
 	}
 
 	protected void updateSectionStyle(ExpandableComposite excomposite) {
-		excomposite.setFont(JFaceResources.getFontRegistry()
-				.getBold(JFaceResources.DIALOG_FONT));
+		excomposite.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
 	}
 
 	private void makeScrollableCompositeAware(Control control) {
-		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(
-				control);
+		ScrolledPageContent parentScrolledComposite = getParentScrolledComposite(control);
 		if (parentScrolledComposite != null) {
 			parentScrolledComposite.adaptChild(control);
 		}
@@ -390,15 +368,12 @@ public abstract class AbstractConfigurationBlock
 		return getParentScrolledComposite(parent) != null;
 	}
 
-	protected Composite createComposite(Composite parent, Font font,
-			int columns, int hspan, int fill, int marginwidth,
+	protected Composite createComposite(Composite parent, Font font, int columns, int hspan, int fill, int marginwidth,
 			int marginheight) {
-		return SWTFactory.createComposite(parent, font, columns, hspan, fill,
-				marginwidth, marginheight);
+		return SWTFactory.createComposite(parent, font, columns, hspan, fill, marginwidth, marginheight);
 	}
 
-	protected Group createGroup(Composite parent, String text, int columns,
-			int hspan, int fill) {
+	protected Group createGroup(Composite parent, String text, int columns, int hspan, int fill) {
 		return SWTFactory.createGroup(parent, text, columns, hspan, fill);
 	}
 
@@ -406,8 +381,7 @@ public abstract class AbstractConfigurationBlock
 		return SWTFactory.createLabel(parent, text, hspan);
 	}
 
-	protected Button addCheckBox(Composite parent, String label, String key,
-			int indentation) {
+	protected Button addCheckBox(Composite parent, String label, String key, int indentation) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(label);
 
@@ -423,10 +397,8 @@ public abstract class AbstractConfigurationBlock
 		return checkBox;
 	}
 
-	protected Combo addComboBox(Composite parent, String label, String key,
-			String[] items, String[] values) {
-		if (values == null || items == null || label == null
-				|| items.length != values.length)
+	protected Combo addComboBox(Composite parent, String label, String key, String[] items, String[] values) {
+		if (values == null || items == null || label == null || items.length != values.length)
 			throw new IllegalArgumentException(
 					PreferencesMessages.AbstractConfigurationBlock_valuesItemsAndLabelMustNotBeNull);
 
@@ -455,8 +427,7 @@ public abstract class AbstractConfigurationBlock
 		return combo;
 	}
 
-	protected Button addRadioButton(Composite parent, String label, String key,
-			int value) {
+	protected Button addRadioButton(Composite parent, String label, String key, int value) {
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 
 		Button button = new Button(parent, SWT.RADIO);
@@ -473,29 +444,21 @@ public abstract class AbstractConfigurationBlock
 	}
 
 	/**
-	 * Returns an array of size 2: - first element is of type <code>Label</code>
-	 * - second element is of type <code>Text</code> Use
-	 * <code>getLabelControl</code> and <code>getTextControl</code> to get the 2
-	 * controls.
+	 * Returns an array of size 2: - first element is of type <code>Label</code> -
+	 * second element is of type <code>Text</code> Use <code>getLabelControl</code>
+	 * and <code>getTextControl</code> to get the 2 controls.
 	 *
-	 * @param composite
-	 *                        the parent composite
-	 * @param label
-	 *                        the text field's label
-	 * @param key
-	 *                        the preference key
-	 * @param textLimit
-	 *                        the text limit
-	 * @param indentation
-	 *                        the field's indentation
-	 * @param isNumber
-	 *                        <code>true</code> iff this text field is used to
-	 *                        edit a number
+	 * @param composite   the parent composite
+	 * @param label       the text field's label
+	 * @param key         the preference key
+	 * @param textLimit   the text limit
+	 * @param indentation the field's indentation
+	 * @param isNumber    <code>true</code> iff this text field is used to edit a
+	 *                    number
 	 * @return the controls added
 	 */
-	protected Control[] addLabelledTextField(Composite composite, String label,
-			String key, int textLimit, int indentation, boolean isNumber,
-			IInputValidator validator) {
+	protected Control[] addLabelledTextField(Composite composite, String label, String key, int textLimit,
+			int indentation, boolean isNumber, IInputValidator validator) {
 
 		PixelConverter pixelConverter = new PixelConverter(composite);
 
@@ -507,8 +470,7 @@ public abstract class AbstractConfigurationBlock
 
 		Text textControl = new Text(composite, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		gd.widthHint = pixelConverter
-				.convertWidthInCharsToPixels(textLimit + 2);
+		gd.widthHint = pixelConverter.convertWidthInCharsToPixels(textLimit + 2);
 		textControl.setLayoutData(gd);
 		textControl.setTextLimit(textLimit);
 		if (validator != null)
@@ -524,18 +486,16 @@ public abstract class AbstractConfigurationBlock
 		return new Control[] { labelControl, textControl };
 	}
 
-	protected Control[] addLabelledTextField(Composite composite, String label,
-			String key, int textLimit, int indentation, boolean isNumber) {
-		return addLabelledTextField(composite, label, key, textLimit,
-				indentation, isNumber, null);
+	protected Control[] addLabelledTextField(Composite composite, String label, String key, int textLimit,
+			int indentation, boolean isNumber) {
+		return addLabelledTextField(composite, label, key, textLimit, indentation, isNumber, null);
 	}
 
 	protected void createDependency(final Button master, final Control slave) {
 		createDependency(master, new Control[] { slave });
 	}
 
-	protected void createDependency(final Button master,
-			final Control[] slaves) {
+	protected void createDependency(final Button master, final Control[] slaves) {
 		Assert.isTrue(slaves.length > 0);
 		indent(slaves[0]);
 		SelectionListener listener = new SelectionListener() {
@@ -586,8 +546,7 @@ public abstract class AbstractConfigurationBlock
 			Combo b = (Combo) iter2.next();
 			String value = fStore.getString((String) b.getData());
 			Map data = (Map) fComboBoxes.get(b);
-			for (Iterator iterator = data.keySet().iterator(); iterator
-					.hasNext();) {
+			for (Iterator iterator = data.keySet().iterator(); iterator.hasNext();) {
 				String title = (String) iterator.next();
 				if (data.get(title).equals(value)) {
 					b.setText(title);
@@ -654,19 +613,16 @@ public abstract class AbstractConfigurationBlock
 	private IStatus validatePositiveNumber(String number) {
 		StatusInfo status = new StatusInfo();
 		if (number.length() == 0) {
-			status.setError(
-					PreferencesMessages.DLTKEditorPreferencePage_empty_input);
+			status.setError(PreferencesMessages.DLTKEditorPreferencePage_empty_input);
 		} else {
 			try {
 				int value = Integer.parseInt(number);
 				if (value < 0)
-					status.setError(Messages.format(
-							PreferencesMessages.DLTKEditorPreferencePage_invalid_input,
-							number));
+					status.setError(
+							MessageFormat.format(PreferencesMessages.DLTKEditorPreferencePage_invalid_input, number));
 			} catch (NumberFormatException e) {
-				status.setError(Messages.format(
-						PreferencesMessages.DLTKEditorPreferencePage_invalid_input,
-						number));
+				status.setError(
+						MessageFormat.format(PreferencesMessages.DLTKEditorPreferencePage_invalid_input, number));
 			}
 		}
 		return status;
@@ -683,8 +639,7 @@ public abstract class AbstractConfigurationBlock
 		return fStore;
 	}
 
-	protected Composite createSubsection(Composite parent,
-			SectionManager manager, String label) {
+	protected Composite createSubsection(Composite parent, SectionManager manager, String label) {
 		if (manager != null) {
 			return manager.createSection(label);
 		}
@@ -698,15 +653,14 @@ public abstract class AbstractConfigurationBlock
 	private FontMetrics fFontMetrics;
 
 	/**
-	 * Initializes the computation of horizontal and vertical dialog units based
-	 * on the size of current font.
+	 * Initializes the computation of horizontal and vertical dialog units based on
+	 * the size of current font.
 	 * <p>
 	 * This method must be called before any of the dialog unit based conversion
 	 * methods are called.
 	 * </p>
 	 *
-	 * @param testControl
-	 *                        a control from which to obtain the current font
+	 * @param testControl a control from which to obtain the current font
 	 */
 	protected void initializeDialogUnits(Control testControl) {
 		// Compute and store a font metric
@@ -717,18 +671,17 @@ public abstract class AbstractConfigurationBlock
 	}
 
 	/**
-	 * Returns the number of pixels corresponding to the width of the given
-	 * number of characters.
+	 * Returns the number of pixels corresponding to the width of the given number
+	 * of characters.
 	 * <p>
-	 * This method may only be called after <code>initializeDialogUnits</code>
-	 * has been called.
+	 * This method may only be called after <code>initializeDialogUnits</code> has
+	 * been called.
 	 * </p>
 	 * <p>
 	 * Clients may call this framework method, but should not override it.
 	 * </p>
 	 *
-	 * @param chars
-	 *                  the number of characters
+	 * @param chars the number of characters
 	 * @return the number of pixels
 	 */
 	protected int convertWidthInCharsToPixels(int chars) {
@@ -739,18 +692,17 @@ public abstract class AbstractConfigurationBlock
 	}
 
 	/**
-	 * Returns the number of pixels corresponding to the height of the given
-	 * number of characters.
+	 * Returns the number of pixels corresponding to the height of the given number
+	 * of characters.
 	 * <p>
-	 * This method may only be called after <code>initializeDialogUnits</code>
-	 * has been called.
+	 * This method may only be called after <code>initializeDialogUnits</code> has
+	 * been called.
 	 * </p>
 	 * <p>
 	 * Clients may call this framework method, but should not override it.
 	 * </p>
 	 *
-	 * @param chars
-	 *                  the number of characters
+	 * @param chars the number of characters
 	 * @return the number of pixels
 	 */
 	protected int convertHeightInCharsToPixels(int chars) {

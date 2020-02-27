@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +21,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
@@ -50,8 +50,7 @@ public class ExclusionInclusionDialog extends StatusDialog {
 		private Image fElementImage;
 
 		public ExclusionInclusionLabelProvider(ImageDescriptor descriptor) {
-			ImageDescriptorRegistry registry = DLTKUIPlugin
-					.getImageDescriptorRegistry();
+			ImageDescriptorRegistry registry = DLTKUIPlugin.getImageDescriptorRegistry();
 			fElementImage = registry.get(descriptor);
 		}
 
@@ -79,8 +78,7 @@ public class ExclusionInclusionDialog extends StatusDialog {
 	private static final int IDX_EDIT = 2;
 	private static final int IDX_REMOVE = 4;
 
-	public ExclusionInclusionDialog(Shell parent, BPListElement entryToEdit,
-			boolean focusOnExcluded) {
+	public ExclusionInclusionDialog(Shell parent, BPListElement entryToEdit, boolean focusOnExcluded) {
 		super(parent);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 
@@ -97,40 +95,31 @@ public class ExclusionInclusionDialog extends StatusDialog {
 
 		String excLabel = NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_label;
 		ImageDescriptor excDescriptor = DLTKPluginImages.DESC_OBJS_EXCLUSION_FILTER_ATTRIB;
-		String[] excButtonLabels = new String[] {
-				NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_add,
+		String[] excButtonLabels = new String[] { NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_add,
 				NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_add_multiple,
-				NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_edit,
-				null,
+				NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_edit, null,
 				NewWizardMessages.ExclusionInclusionDialog_exclusion_pattern_remove };
 
 		String incLabel = NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_label;
 		ImageDescriptor incDescriptor = DLTKPluginImages.DESC_OBJS_INCLUSION_FILTER_ATTRIB;
-		String[] incButtonLabels = new String[] {
-				NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_add,
+		String[] incButtonLabels = new String[] { NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_add,
 				NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_add_multiple,
-				NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_edit,
-				null,
+				NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_edit, null,
 				NewWizardMessages.ExclusionInclusionDialog_inclusion_pattern_remove };
 
-		fExclusionPatternList = createListContents(entryToEdit,
-				BPListElement.EXCLUSION, excLabel, excDescriptor,
+		fExclusionPatternList = createListContents(entryToEdit, BPListElement.EXCLUSION, excLabel, excDescriptor,
 				excButtonLabels);
-		fInclusionPatternList = createListContents(entryToEdit,
-				BPListElement.INCLUSION, incLabel, incDescriptor,
+		fInclusionPatternList = createListContents(entryToEdit, BPListElement.INCLUSION, incLabel, incDescriptor,
 				incButtonLabels);
 		if (focusOnExcluded) {
-			fExclusionPatternList
-					.postSetFocusOnDialogField(parent.getDisplay());
+			fExclusionPatternList.postSetFocusOnDialogField(parent.getDisplay());
 		} else {
-			fInclusionPatternList
-					.postSetFocusOnDialogField(parent.getDisplay());
+			fInclusionPatternList.postSetFocusOnDialogField(parent.getDisplay());
 		}
 	}
 
-	private ListDialogField createListContents(BPListElement entryToEdit,
-			String key, String label, ImageDescriptor descriptor,
-			String[] buttonLabels) {
+	private ListDialogField createListContents(BPListElement entryToEdit, String key, String label,
+			ImageDescriptor descriptor, String[] buttonLabels) {
 		ExclusionPatternAdapter adapter = new ExclusionPatternAdapter();
 
 		ListDialogField patternList = new ListDialogField(adapter, buttonLabels,
@@ -169,21 +158,16 @@ public class ExclusionInclusionDialog extends StatusDialog {
 
 		DialogField labelField = new DialogField();
 		String name = fCurrElement.getPath().makeRelative().toString();
-		labelField.setLabelText(Messages.format(
-				NewWizardMessages.ExclusionInclusionDialog_description, name));
+		labelField.setLabelText(MessageFormat.format(NewWizardMessages.ExclusionInclusionDialog_description, name));
 		labelField.doFillIntoGrid(inner, 2);
 
 		fInclusionPatternList.doFillIntoGrid(inner, 3);
-		LayoutUtil.setHorizontalSpan(
-				fInclusionPatternList.getLabelControl(null), 2);
-		LayoutUtil.setHorizontalGrabbing(
-				fInclusionPatternList.getListControl(null));
+		LayoutUtil.setHorizontalSpan(fInclusionPatternList.getLabelControl(null), 2);
+		LayoutUtil.setHorizontalGrabbing(fInclusionPatternList.getListControl(null));
 
 		fExclusionPatternList.doFillIntoGrid(inner, 3);
-		LayoutUtil.setHorizontalSpan(
-				fExclusionPatternList.getLabelControl(null), 2);
-		LayoutUtil.setHorizontalGrabbing(
-				fExclusionPatternList.getListControl(null));
+		LayoutUtil.setHorizontalSpan(fExclusionPatternList.getLabelControl(null), 2);
+		LayoutUtil.setHorizontalGrabbing(fExclusionPatternList.getListControl(null));
 
 		applyDialogFont(composite);
 		return composite;
@@ -219,8 +203,8 @@ public class ExclusionInclusionDialog extends StatusDialog {
 		}
 		List existing = field.getElements();
 		String entry = (String) selElements.get(0);
-		ExclusionInclusionEntryDialog dialog = new ExclusionInclusionEntryDialog(
-				getShell(), isExclusion(field), entry, existing, fCurrElement);
+		ExclusionInclusionEntryDialog dialog = new ExclusionInclusionEntryDialog(getShell(), isExclusion(field), entry,
+				existing, fCurrElement);
 		if (dialog.open() == Window.OK) {
 			field.replaceElement(entry, dialog.getExclusionPattern());
 		}
@@ -232,8 +216,8 @@ public class ExclusionInclusionDialog extends StatusDialog {
 
 	private void addEntry(ListDialogField field) {
 		List existing = field.getElements();
-		ExclusionInclusionEntryDialog dialog = new ExclusionInclusionEntryDialog(
-				getShell(), isExclusion(field), null, existing, fCurrElement);
+		ExclusionInclusionEntryDialog dialog = new ExclusionInclusionEntryDialog(getShell(), isExclusion(field), null,
+				existing, fCurrElement);
 		if (dialog.open() == Window.OK) {
 			field.addElement(dialog.getExclusionPattern());
 		}
@@ -241,8 +225,7 @@ public class ExclusionInclusionDialog extends StatusDialog {
 
 	// -------- ExclusionPatternAdapter --------
 
-	private class ExclusionPatternAdapter
-			implements IListAdapter, IDialogFieldListener {
+	private class ExclusionPatternAdapter implements IListAdapter, IDialogFieldListener {
 		@Override
 		public void customButtonPressed(ListDialogField field, int index) {
 			doCustomButtonPressed(field, index);
@@ -292,8 +275,7 @@ public class ExclusionInclusionDialog extends StatusDialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		if (DLTKCore.DEBUG) {
-			System.err
-					.println("ExclusionInclusionDialog add help support here"); //$NON-NLS-1$
+			System.err.println("ExclusionInclusionDialog add help support here"); //$NON-NLS-1$
 		}
 		// PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell,
 		// IDLTKHelpContextIds.EXCLUSION_PATTERN_DIALOG);
@@ -309,8 +291,8 @@ public class ExclusionInclusionDialog extends StatusDialog {
 			message = NewWizardMessages.ExclusionInclusionDialog_ChooseInclusionPattern_description;
 		}
 
-		IPath[] res = ExclusionInclusionEntryDialog.chooseExclusionPattern(
-				getShell(), fCurrSourceFolder, title, message, null, true);
+		IPath[] res = ExclusionInclusionEntryDialog.chooseExclusionPattern(getShell(), fCurrSourceFolder, title,
+				message, null, true);
 		if (res != null) {
 			for (int i = 0; i < res.length; i++) {
 				field.addElement(res[i].toString());

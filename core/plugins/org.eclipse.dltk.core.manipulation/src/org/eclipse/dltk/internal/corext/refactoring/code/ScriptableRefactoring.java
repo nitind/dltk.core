@@ -3,14 +3,15 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.code;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.dltk.internal.core.manipulation.Messages;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.tagging.ICommentProvider;
 import org.eclipse.dltk.internal.corext.refactoring.tagging.IScriptableRefactoring;
@@ -27,30 +28,24 @@ public abstract class ScriptableRefactoring extends Refactoring implements IScri
 	/**
 	 * Creates a fatal error status telling that the input element does not exist.
 	 *
-	 * @param element
-	 *            the input element, or <code>null</code>
-	 * @param name
-	 *            the name of the refactoring
-	 * @param id
-	 *            the id of the refactoring
+	 * @param element the input element, or <code>null</code>
+	 * @param name    the name of the refactoring
+	 * @param id      the id of the refactoring
 	 * @return the refactoring status
 	 */
 	public static RefactoringStatus createInputFatalStatus(final Object element, final String name, final String id) {
 		Assert.isNotNull(name);
 		Assert.isNotNull(id);
-		return RefactoringStatus.createFatalErrorStatus(Messages.format(
-				RefactoringCoreMessages.InitializableRefactoring_inputs_do_not_exist, new String[] { name, id }));
+		return RefactoringStatus.createFatalErrorStatus(
+				MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_inputs_do_not_exist, name, id));
 	}
 
 	/**
 	 * Creates a warning status telling that the input element does not exist.
 	 *
-	 * @param element
-	 *            the input element, or <code>null</code>
-	 * @param name
-	 *            the name of the refactoring
-	 * @param id
-	 *            the id of the refactoring
+	 * @param element the input element, or <code>null</code>
+	 * @param name    the name of the refactoring
+	 * @param id      the id of the refactoring
 	 * @return the refactoring status
 	 */
 	public static RefactoringStatus createInputWarningStatus(final Object element, final String name, final String id) {
@@ -58,14 +53,10 @@ public abstract class ScriptableRefactoring extends Refactoring implements IScri
 		Assert.isNotNull(id);
 		if (element != null)
 			return RefactoringStatus.createWarningStatus(
-					Messages.format(RefactoringCoreMessages.InitializableRefactoring_input_not_exists,
-							new String[] { /*
-											 * ScriptElementLabels.getDefault().getTextLabel(element,
-											 * ScriptElementLabels.ALL_FULLY_QUALIFIED),
-											 */ name, id }));
+					MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_input_not_exists, name, id));
 		else
-			return RefactoringStatus.createWarningStatus(Messages.format(
-					RefactoringCoreMessages.InitializableRefactoring_inputs_do_not_exist, new String[] { name, id }));
+			return RefactoringStatus.createWarningStatus(MessageFormat
+					.format(RefactoringCoreMessages.InitializableRefactoring_inputs_do_not_exist, name, id));
 	}
 
 	/** The comment */
@@ -79,10 +70,8 @@ public abstract class ScriptableRefactoring extends Refactoring implements IScri
 	/**
 	 * Creates a fatal error status telling that the input element does not exist.
 	 *
-	 * @param element
-	 *            the input element, or <code>null</code>
-	 * @param id
-	 *            the id of the refactoring
+	 * @param element the input element, or <code>null</code>
+	 * @param id      the id of the refactoring
 	 * @return the refactoring status
 	 */
 	public final RefactoringStatus createInputFatalStatus(final Object element, final String id) {
@@ -92,10 +81,8 @@ public abstract class ScriptableRefactoring extends Refactoring implements IScri
 	/**
 	 * Creates a warning status telling that the input element does not exist.
 	 *
-	 * @param element
-	 *            the input element, or <code>null</code>
-	 * @param id
-	 *            the id of the refactoring
+	 * @param element the input element, or <code>null</code>
+	 * @param id      the id of the refactoring
 	 * @return the refactoring status
 	 */
 	public final RefactoringStatus createInputWarningStatus(final Object element, final String id) {

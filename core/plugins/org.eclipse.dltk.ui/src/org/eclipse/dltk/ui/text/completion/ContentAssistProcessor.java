@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.ui.text.completion;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,7 +24,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.DLTKUIMessages;
 import org.eclipse.dltk.internal.ui.dialogs.OptionalMessageDialog;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -477,7 +477,7 @@ public abstract class ContentAssistProcessor implements IContentAssistProcessor 
 			String message = ScriptTextMessages.ContentAssistProcessor_all_disabled_message;
 			// see PreferencePage#createControl for the 'defaults' label
 			final String restoreButtonLabel = JFaceResources.getString("defaults"); //$NON-NLS-1$
-			final String linkMessage = Messages.format(
+			final String linkMessage = MessageFormat.format(
 					ScriptTextMessages.ContentAssistProcessor_all_disabled_preference_link,
 					LegacyActionTools.removeMnemonics(restoreButtonLabel));
 			final int restoreId = IDialogConstants.CLIENT_ID + 10;
@@ -559,11 +559,12 @@ public abstract class ContentAssistProcessor implements IContentAssistProcessor 
 	}
 
 	private String createEmptyMessage() {
-		return Messages.format(ScriptTextMessages.ContentAssistProcessor_empty_message, getCategoryLabel(fRepetition));
+		return MessageFormat.format(ScriptTextMessages.ContentAssistProcessor_empty_message,
+				getCategoryLabel(fRepetition));
 	}
 
 	private String createIterationMessage() {
-		return Messages.format(ScriptTextMessages.ContentAssistProcessor_toggle_affordance_update_message,
+		return MessageFormat.format(ScriptTextMessages.ContentAssistProcessor_toggle_affordance_update_message,
 				getCategoryLabel(fRepetition), fIterationGesture, getCategoryLabel(fRepetition + 1));
 	}
 
@@ -581,8 +582,8 @@ public abstract class ContentAssistProcessor implements IContentAssistProcessor 
 	private String getIterationGesture() {
 		TriggerSequence binding = getIterationBinding();
 		return binding != null
-				? Messages.format(ScriptTextMessages.ContentAssistProcessor_toggle_affordance_press_gesture,
-						new Object[] { binding.format() })
+				? MessageFormat.format(ScriptTextMessages.ContentAssistProcessor_toggle_affordance_press_gesture,
+						binding.format())
 				: ScriptTextMessages.ContentAssistProcessor_toggle_affordance_click_gesture;
 	}
 

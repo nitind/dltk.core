@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -24,7 +26,6 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.dltk.internal.corext.refactoring.changes.RenameResourceChange;
 import org.eclipse.dltk.internal.corext.refactoring.util.ResourceUtil;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.corext.util.Resources;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
@@ -44,8 +45,7 @@ public class Checks {
 	public static final int NOT_RVALUE_MISC = 1;
 	public static final int NOT_RVALUE_VOID = 2;
 
-	public static boolean isAvailable(IModelElement modelElement)
-			throws ModelException {
+	public static boolean isAvailable(IModelElement modelElement) throws ModelException {
 		if (modelElement == null)
 			return false;
 		if (!modelElement.exists())
@@ -57,8 +57,7 @@ public class Checks {
 		// shouldn't
 		// call isStructureKnown if the project isn't open.
 		// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=52474
-		if (!(modelElement instanceof IScriptProject)
-				&& !modelElement.isStructureKnown())
+		if (!(modelElement instanceof IScriptProject) && !modelElement.isStructureKnown())
 			return false;
 		if (DLTKCore.DEBUG) {
 			System.err.println("Add binary modules support."); //$NON-NLS-1$
@@ -73,32 +72,28 @@ public class Checks {
 		if (res == null)
 			return true;
 		IProject definingProject = res.getProject();
-		if (res.getParent() != null && pkgRoot.isArchive()
-				&& !res.getParent().equals(definingProject))
+		if (res.getParent() != null && pkgRoot.isArchive() && !res.getParent().equals(definingProject))
 			return true;
 
 		IProject occurringProject = pkgRoot.getScriptProject().getProject();
 		return !definingProject.equals(occurringProject);
 	}
 
-	public static RefactoringStatus checkSourceModuleNewName(ISourceModule cu,
-			String newName) {
+	public static RefactoringStatus checkSourceModuleNewName(ISourceModule cu, String newName) {
 		String newCUName = ScriptModelUtil.getRenamedCUName(cu, newName);
-		if (resourceExists(RenameResourceChange.renamedResourcePath(
-				ResourceUtil.getResource(cu).getFullPath(), newCUName))) {
-			return RefactoringStatus.createFatalErrorStatus(Messages.format(
-					RefactoringCoreMessages.Checks_cu_name_used, newName));
+		if (resourceExists(
+				RenameResourceChange.renamedResourcePath(ResourceUtil.getResource(cu).getFullPath(), newCUName))) {
+			return RefactoringStatus
+					.createFatalErrorStatus(MessageFormat.format(RefactoringCoreMessages.Checks_cu_name_used, newName));
 		}
 		return new RefactoringStatus();
 	}
 
 	public static boolean resourceExists(IPath resourcePath) {
-		return ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(resourcePath) != null;
+		return ResourcesPlugin.getWorkspace().getRoot().findMember(resourcePath) != null;
 	}
 
-	public static RefactoringStatus validateModifiesFiles(IFile[] filesToModify,
-			Object context) {
+	public static RefactoringStatus validateModifiesFiles(IFile[] filesToModify, Object context) {
 		RefactoringStatus result = new RefactoringStatus();
 		IStatus status = Resources.checkInSync(filesToModify);
 		if (!status.isOK())
@@ -107,8 +102,7 @@ public class Checks {
 		if (!status.isOK()) {
 			result.merge(RefactoringStatus.create(status));
 			if (!result.hasFatalError()) {
-				result.addFatalError(
-						RefactoringCoreMessages.Checks_validateEdit);
+				result.addFatalError(RefactoringCoreMessages.Checks_validateEdit);
 			}
 		}
 		return result;

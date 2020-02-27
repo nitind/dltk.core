@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath.newsourcepage;
 
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,7 +27,6 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IScriptProjectFilenames;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.corext.buildpath.BuildpathModifier;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 import org.eclipse.dltk.internal.ui.filters.LibraryFilter;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
@@ -61,14 +61,12 @@ import org.eclipse.swt.widgets.Menu;
  * content provider, label provider, element sorter and filter to display
  * elements that are not shown usually in the package explorer of the workspace.
  */
-public abstract class DialogPackageExplorer
-		implements IMenuListener, ISelectionChangedListener {
+public abstract class DialogPackageExplorer implements IMenuListener, ISelectionChangedListener {
 	/**
-	 * A extended content provider for the package explorer which can
-	 * additionally display an output folder item.
+	 * A extended content provider for the package explorer which can additionally
+	 * display an output folder item.
 	 */
-	private final class PackageContentProvider
-			extends StandardModelElementContentProvider {
+	private final class PackageContentProvider extends StandardModelElementContentProvider {
 		public PackageContentProvider() {
 			super();
 		}
@@ -76,10 +74,8 @@ public abstract class DialogPackageExplorer
 		/**
 		 * Get the elements of the current project
 		 *
-		 * @param element
-		 *                    the element to get the children from, will not be
-		 *                    used, instead the project childrens are returned
-		 *                    directly
+		 * @param element the element to get the children from, will not be used,
+		 *                instead the project childrens are returned directly
 		 * @return returns the children of the project
 		 */
 		@Override
@@ -94,11 +90,9 @@ public abstract class DialogPackageExplorer
 	 * A extended label provider for the package explorer which can additionally
 	 * display an output folder item.
 	 */
-	private final class PackageLabelProvider
-			extends AppearanceAwareLabelProvider {
+	private final class PackageLabelProvider extends AppearanceAwareLabelProvider {
 
-		public PackageLabelProvider(long textFlags, int imageFlags,
-				IPreferenceStore store) {
+		public PackageLabelProvider(long textFlags, int imageFlags, IPreferenceStore store) {
 			super(textFlags, imageFlags, store);
 		}
 
@@ -112,40 +106,35 @@ public abstract class DialogPackageExplorer
 						IBuildpathEntry entry = root.getRawBuildpathEntry();
 						int excluded = entry.getExclusionPatterns().length;
 						if (excluded == 1)
-							return Messages.format(
-									NewWizardMessages.DialogPackageExplorer_LabelProvider_SingleExcluded,
-									text);
+							return MessageFormat
+									.format(NewWizardMessages.DialogPackageExplorer_LabelProvider_SingleExcluded, text);
 						else if (excluded > 1)
-							return Messages.format(
-									NewWizardMessages.DialogPackageExplorer_LabelProvider_MultiExcluded,
-									new Object[] { text, excluded });
+							return MessageFormat.format(
+									NewWizardMessages.DialogPackageExplorer_LabelProvider_MultiExcluded, text,
+									excluded);
 					}
 				}
 				if (element instanceof IScriptProject) {
 					IScriptProject project = (IScriptProject) element;
 					if (project.exists() && project.isOnBuildpath(project)) {
-						IProjectFragment root = project
-								.findProjectFragment(project.getPath());
+						IProjectFragment root = project.findProjectFragment(project.getPath());
 						if (BuildpathModifier.filtersSet(root)) {
 							IBuildpathEntry entry = root.getRawBuildpathEntry();
 							int excluded = entry.getExclusionPatterns().length;
 							if (excluded == 1)
-								return Messages.format(
-										NewWizardMessages.DialogPackageExplorer_LabelProvider_SingleExcluded,
-										text);
+								return MessageFormat.format(
+										NewWizardMessages.DialogPackageExplorer_LabelProvider_SingleExcluded, text);
 							else if (excluded > 1)
-								return Messages.format(
-										NewWizardMessages.DialogPackageExplorer_LabelProvider_MultiExcluded,
-										new Object[] { text, excluded });
+								return MessageFormat.format(
+										NewWizardMessages.DialogPackageExplorer_LabelProvider_MultiExcluded, text,
+										excluded);
 						}
 					}
 				}
 				if (element instanceof IFile || element instanceof IFolder) {
 					IResource resource = (IResource) element;
-					if (resource.exists() && BuildpathModifier
-							.isExcluded(resource, fCurrJProject))
-						return Messages.format(
-								NewWizardMessages.DialogPackageExplorer_LabelProvider_Excluded,
+					if (resource.exists() && BuildpathModifier.isExcluded(resource, fCurrJProject))
+						return MessageFormat.format(NewWizardMessages.DialogPackageExplorer_LabelProvider_Excluded,
 								text);
 				}
 			} catch (ModelException e) {
@@ -165,16 +154,14 @@ public abstract class DialogPackageExplorer
 				if (element instanceof IScriptProject) {
 					IScriptProject project = (IScriptProject) element;
 					if (project.exists() && project.isOnBuildpath(project)) {
-						IProjectFragment root = project
-								.findProjectFragment(project.getPath());
+						IProjectFragment root = project.findProjectFragment(project.getPath());
 						if (root != null && BuildpathModifier.filtersSet(root))
 							return getBlueColor();
 					}
 				}
 				if (element instanceof IFile || element instanceof IFolder) {
 					IResource resource = (IResource) element;
-					if (resource.exists() && BuildpathModifier
-							.isExcluded(resource, fCurrJProject))
+					if (resource.exists() && BuildpathModifier.isExcluded(resource, fCurrJProject))
 						return getBlueColor();
 				}
 			} catch (ModelException e) {
@@ -200,9 +187,9 @@ public abstract class DialogPackageExplorer
 	}
 
 	/**
-	 * A extended element sorter for the package explorer which displays the
-	 * output folder (if any) as first child of a source folder. The other
-	 * script elements are sorted in the normal way.
+	 * A extended element sorter for the package explorer which displays the output
+	 * folder (if any) as first child of a source folder. The other script elements
+	 * are sorted in the normal way.
 	 */
 	private final class ExtendedModelElementSorter extends ModelElementSorter {
 		public ExtendedModelElementSorter() {
@@ -220,27 +207,22 @@ public abstract class DialogPackageExplorer
 	}
 
 	/**
-	 * A extended filter for the package explorer which filters libraries and
-	 * files if their name is either ".Buildpath" or ".project".
+	 * A extended filter for the package explorer which filters libraries and files
+	 * if their name is either ".Buildpath" or ".project".
 	 */
 	private final class PackageFilter extends LibraryFilter {
 		@Override
-		public boolean select(Viewer viewer, Object parentElement,
-				Object element) {
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			try {
 				if (element instanceof IFile) {
 					IFile file = (IFile) element;
-					if (file.getName()
-							.equals(IScriptProjectFilenames.BUILDPATH_FILENAME)
-							|| file.getName().equals(
-									IScriptProjectFilenames.PROJECT_FILENAME))
+					if (file.getName().equals(IScriptProjectFilenames.BUILDPATH_FILENAME)
+							|| file.getName().equals(IScriptProjectFilenames.PROJECT_FILENAME))
 						return false;
 				}
 				if (element instanceof IProjectFragment) {
-					IBuildpathEntry cpe = ((IProjectFragment) element)
-							.getRawBuildpathEntry();
-					if (cpe == null || cpe
-							.getEntryKind() == IBuildpathEntry.BPE_CONTAINER)
+					IBuildpathEntry cpe = ((IProjectFragment) element).getRawBuildpathEntry();
+					if (cpe == null || cpe.getEntryKind() == IBuildpathEntry.BPE_CONTAINER)
 						return false;
 				}
 			} catch (ModelException e) {
@@ -263,8 +245,8 @@ public abstract class DialogPackageExplorer
 	/** The tree's context menu */
 	private Menu fContextMenu;
 	/**
-	 * The action group which is used to fill the context menu. The action group
-	 * is also called if the selection on the tree changes
+	 * The action group which is used to fill the context menu. The action group is
+	 * also called if the selection on the tree changes
 	 */
 	private DialogPackageExplorerActionGroup fActionGroup;
 
@@ -297,11 +279,9 @@ public abstract class DialogPackageExplorer
 		fPackageViewer.addFilter(new PackageFilter());
 		fPackageViewer.setComparator(new ExtendedModelElementSorter());
 		fPackageViewer.addDoubleClickListener(event -> {
-			Object element = ((IStructuredSelection) event.getSelection())
-					.getFirstElement();
+			Object element = ((IStructuredSelection) event.getSelection()).getFirstElement();
 			if (fPackageViewer.isExpandable(element)) {
-				fPackageViewer.setExpandedState(element,
-						!fPackageViewer.getExpandedState(element));
+				fPackageViewer.setExpandedState(element, !fPackageViewer.getExpandedState(element));
 			}
 		});
 		fPackageViewer.addSelectionChangedListener(this);
@@ -317,17 +297,15 @@ public abstract class DialogPackageExplorer
 	}
 
 	/**
-	 * Sets the action group for the package explorer. The action group is
-	 * necessary to populate the context menu with available actions. If no
-	 * context menu is needed, then this method does not have to be called.
+	 * Sets the action group for the package explorer. The action group is necessary
+	 * to populate the context menu with available actions. If no context menu is
+	 * needed, then this method does not have to be called.
 	 *
 	 * Should only be called once.
 	 *
-	 * @param actionGroup
-	 *                        the action group to be used for the context menu.
+	 * @param actionGroup the action group to be used for the context menu.
 	 */
-	public void setActionGroup(
-			final DialogPackageExplorerActionGroup actionGroup) {
+	public void setActionGroup(final DialogPackageExplorerActionGroup actionGroup) {
 		fActionGroup = actionGroup;
 		fPackageViewer.getControl().addDisposeListener(e -> {
 			if (actionGroup != null)
@@ -354,14 +332,11 @@ public abstract class DialogPackageExplorer
 	public void setContentProvider() {
 		PackageContentProvider contentProvider = new PackageContentProvider();
 		PackageLabelProvider labelProvider = new PackageLabelProvider(
-				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
-						| ScriptElementLabels.P_COMPRESSED,
-				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS
-						| ScriptElementImageProvider.SMALL_ICONS,
+				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | ScriptElementLabels.P_COMPRESSED,
+				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | ScriptElementImageProvider.SMALL_ICONS,
 				getPreferenceStore());
 		fPackageViewer.setContentProvider(contentProvider);
-		fPackageViewer.setLabelProvider(
-				new StyledDecoratingModelLabelProvider(labelProvider, false));
+		fPackageViewer.setLabelProvider(new StyledDecoratingModelLabelProvider(labelProvider, false));
 	}
 
 	protected abstract IPreferenceStore getPreferenceStore();
@@ -369,8 +344,7 @@ public abstract class DialogPackageExplorer
 	/**
 	 * Set the input for the package explorer.
 	 *
-	 * @param project
-	 *                    the project to be displayed
+	 * @param project the project to be displayed
 	 */
 	public void setInput(IScriptProject project) {
 		fCurrJProject = project;
@@ -389,8 +363,7 @@ public abstract class DialogPackageExplorer
 	/**
 	 * Set the selection and focus to the list of elements
 	 *
-	 * @param elements
-	 *                     the object to be selected and displayed
+	 * @param elements the object to be selected and displayed
 	 */
 	public void setSelection(final List<?> elements) {
 		if (elements == null || elements.size() == 0)
@@ -398,27 +371,23 @@ public abstract class DialogPackageExplorer
 		try {
 			ResourcesPlugin.getWorkspace().run(monitor -> {
 				fPackageViewer.refresh();
-				final IStructuredSelection selection = new StructuredSelection(
-						elements);
+				final IStructuredSelection selection = new StructuredSelection(elements);
 				fPackageViewer.setSelection(selection, true);
 				fPackageViewer.getTree().setFocus();
 				if (fActionGroup != null)
-					fActionGroup.refresh(new DialogExplorerActionContext(
-							selection, fCurrJProject));
+					fActionGroup.refresh(new DialogExplorerActionContext(selection, fCurrJProject));
 
-				if (elements.size() == 1
-						&& elements.get(0) instanceof IScriptProject)
+				if (elements.size() == 1 && elements.get(0) instanceof IScriptProject)
 					fPackageViewer.expandToLevel(elements.get(0), 1);
-			}, ResourcesPlugin.getWorkspace().getRoot(),
-					IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
+			}, ResourcesPlugin.getWorkspace().getRoot(), IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
 		} catch (CoreException e) {
 			DLTKUIPlugin.log(e);
 		}
 	}
 
 	/**
-	 * The current list of selected elements. The list may be empty if no
-	 * element is selected.
+	 * The current list of selected elements. The list may be empty if no element is
+	 * selected.
 	 *
 	 * @return the current selection
 	 */
@@ -436,8 +405,8 @@ public abstract class DialogPackageExplorer
 	}
 
 	/**
-	 * Inform the <code>fActionGroup</code> about the selection change and store
-	 * the latest selection.
+	 * Inform the <code>fActionGroup</code> about the selection change and store the
+	 * latest selection.
 	 *
 	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
 	 * @see DialogPackageExplorerActionGroup#setContext(DialogExplorerActionContext)
@@ -447,8 +416,7 @@ public abstract class DialogPackageExplorer
 		fCurrentSelection = event.getStructuredSelection();
 		try {
 			if (fActionGroup != null)
-				fActionGroup.setContext(new DialogExplorerActionContext(
-						fCurrentSelection, fCurrJProject));
+				fActionGroup.setContext(new DialogExplorerActionContext(fCurrentSelection, fCurrJProject));
 		} catch (ModelException e) {
 			DLTKUIPlugin.log(e);
 		}

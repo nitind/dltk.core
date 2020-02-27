@@ -10,6 +10,7 @@
 package org.eclipse.dltk.internal.ui.filters;
 
 import java.text.Collator;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +22,6 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -115,7 +115,7 @@ public class FilterDescriptor implements Comparable, IPluginContribution {
 			return null;
 
 		final ViewerFilter[] result = new ViewerFilter[1];
-		String message = Messages.format(FilterMessages.FilterDescriptor_filterCreationError_message, getId());
+		String message = MessageFormat.format(FilterMessages.FilterDescriptor_filterCreationError_message, getId());
 		ISafeRunnable code = new SafeRunnable(message) {
 			/*
 			 * @see org.eclipse.core.runtime.ISafeRunnable#run()

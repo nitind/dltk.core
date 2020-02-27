@@ -3,13 +3,15 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.dltk.ui.browsing;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
@@ -20,7 +22,6 @@ import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.actions.MultiActionGroup;
 import org.eclipse.dltk.internal.ui.filters.LibraryFilter;
 import org.eclipse.dltk.internal.ui.filters.NonScriptElementFilter;
@@ -67,11 +68,9 @@ public class PackagesView extends ScriptBrowsingPart {
 	private static final int LIST_VIEW_STATE = 0;
 	private static final int TREE_VIEW_STATE = 1;
 
-	private static class StatusBarUpdater4LogicalPackage
-			extends StatusBarUpdater {
+	private static class StatusBarUpdater4LogicalPackage extends StatusBarUpdater {
 
-		private StatusBarUpdater4LogicalPackage(
-				IStatusLineManager statusLineManager) {
+		private StatusBarUpdater4LogicalPackage(IStatusLineManager statusLineManager) {
 			super(statusLineManager);
 		}
 
@@ -87,11 +86,9 @@ public class PackagesView extends ScriptBrowsingPart {
 			return super.formatMessage(sel);
 		}
 
-		private String formatLogicalPackageMessage(
-				LogicalPackage logicalPackage) {
+		private String formatLogicalPackageMessage(LogicalPackage logicalPackage) {
 			IScriptFolder[] fragments = logicalPackage.getScriptFolders();
-			StringBuffer buf = new StringBuffer(
-					logicalPackage.getElementName());
+			StringBuffer buf = new StringBuffer(logicalPackage.getElementName());
 			buf.append(ScriptElementLabels.CONCAT_STRING);
 			String message = ""; //$NON-NLS-1$
 			boolean firstTime = true;
@@ -100,17 +97,13 @@ public class PackagesView extends ScriptBrowsingPart {
 				IModelElement element = fragment.getParent();
 				if (element instanceof IProjectFragment) {
 					IProjectFragment root = (IProjectFragment) element;
-					String label = ScriptElementLabels.getDefault()
-							.getElementLabel(root,
-									ScriptElementLabels.DEFAULT_QUALIFIED
-											| ScriptElementLabels.ROOT_QUALIFIED);
+					String label = ScriptElementLabels.getDefault().getElementLabel(root,
+							ScriptElementLabels.DEFAULT_QUALIFIED | ScriptElementLabels.ROOT_QUALIFIED);
 					if (firstTime) {
 						buf.append(label);
 						firstTime = false;
 					} else
-						message = Messages.format(
-								ScriptBrowsingMessages.StatusBar_concat,
-								message, label);
+						message = MessageFormat.format(ScriptBrowsingMessages.StatusBar_concat, message, label);
 				}
 			}
 			buf.append(message);
@@ -146,18 +139,15 @@ public class PackagesView extends ScriptBrowsingPart {
 	protected NonScriptElementFilter createNonJavaElementFilter() {
 		return new NonScriptElementFilter() {
 			@Override
-			public boolean select(Viewer viewer, Object parent,
-					Object element) {
-				return ((element instanceof IModelElement)
-						|| (element instanceof LogicalPackage)
+			public boolean select(Viewer viewer, Object parent, Object element) {
+				return ((element instanceof IModelElement) || (element instanceof LogicalPackage)
 						|| (element instanceof IFolder));
 			}
 		};
 	}
 
 	@Override
-	public void init(IViewSite site, IMemento memento)
-			throws PartInitException {
+	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 		// this must be created before all actions and filters
 		fWrappedViewer = new PackageViewerWrapper();
@@ -167,14 +157,11 @@ public class PackagesView extends ScriptBrowsingPart {
 	private void restoreLayoutState(IMemento memento) {
 		if (memento == null) {
 			// read state from the preference store
-			IPreferenceStore store = DLTKUIPlugin.getDefault()
-					.getPreferenceStore();
-			fCurrViewState = store
-					.getInt(this.getViewSite().getId() + TAG_VIEW_STATE);
+			IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
+			fCurrViewState = store.getInt(this.getViewSite().getId() + TAG_VIEW_STATE);
 		} else {
 			// restore from memento
-			Integer integer = memento
-					.getInteger(this.getViewSite().getId() + TAG_VIEW_STATE);
+			Integer integer = memento.getInteger(this.getViewSite().getId() + TAG_VIEW_STATE);
 			if ((integer == null) || !isValidState(integer.intValue())) {
 				fCurrViewState = LIST_VIEW_STATE;
 			} else
@@ -192,15 +179,13 @@ public class PackagesView extends ScriptBrowsingPart {
 	@Override
 	public void saveState(IMemento memento) {
 		super.saveState(memento);
-		memento.putInteger(this.getViewSite().getId() + TAG_VIEW_STATE,
-				fCurrViewState);
+		memento.putInteger(this.getViewSite().getId() + TAG_VIEW_STATE, fCurrViewState);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#createViewer(org.
+	 * @see org.eclipse.jdt.internal.ui.browsing.JavaBrowsingPart#createViewer(org.
 	 * eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -242,17 +227,15 @@ public class PackagesView extends ScriptBrowsingPart {
 	}
 
 	/**
-	 * Overrides the createContentProvider from JavaBrowsingPart Creates the
-	 * content provider of this part.
+	 * Overrides the createContentProvider from JavaBrowsingPart Creates the content
+	 * provider of this part.
 	 */
 	@Override
 	protected IContentProvider createContentProvider() {
 		if (isInListState()) {
-			return new PackagesViewFlatContentProvider(
-					fWrappedViewer.getViewer());
+			return new PackagesViewFlatContentProvider(fWrappedViewer.getViewer());
 		}
-		return new PackagesViewHierarchicalContentProvider(
-				fWrappedViewer.getViewer());
+		return new PackagesViewHierarchicalContentProvider(fWrappedViewer.getViewer());
 	}
 
 	@Override
@@ -264,13 +247,11 @@ public class PackagesView extends ScriptBrowsingPart {
 	}
 
 	private ScriptUILabelProvider createTreeLabelProvider() {
-		return new PackagesViewLabelProvider(
-				PackagesViewLabelProvider.HIERARCHICAL_VIEW_STATE);
+		return new PackagesViewLabelProvider(PackagesViewLabelProvider.HIERARCHICAL_VIEW_STATE);
 	}
 
 	private ScriptUILabelProvider createListLabelProvider() {
-		return new PackagesViewLabelProvider(
-				PackagesViewLabelProvider.FLAT_VIEW_STATE);
+		return new PackagesViewLabelProvider(PackagesViewLabelProvider.FLAT_VIEW_STATE);
 	}
 
 	/**
@@ -292,31 +273,24 @@ public class PackagesView extends ScriptBrowsingPart {
 	/**
 	 * Answers if the given <code>element</code> is a valid input for this part.
 	 *
-	 * @param element
-	 *                    the object to test
+	 * @param element the object to test
 	 * @return <true> if the given element is a valid input
 	 */
 	@Override
 	protected boolean isValidInput(Object element) {
-		if (element instanceof IScriptProject
-				|| (element instanceof IProjectFragment
-						&& ((IModelElement) element)
-								.getElementName() != IProjectFragment.DEFAULT_PACKAGE_ROOT)) {
-			IScriptProject jProject = ((IModelElement) element)
-					.getScriptProject();
+		if (element instanceof IScriptProject || (element instanceof IProjectFragment
+				&& ((IModelElement) element).getElementName() != IProjectFragment.DEFAULT_PACKAGE_ROOT)) {
+			IScriptProject jProject = ((IModelElement) element).getScriptProject();
 			if (jProject != null)
-				return DLTKLanguageManager
-						.hasScriptNature(jProject.getProject());
+				return DLTKLanguageManager.hasScriptNature(jProject.getProject());
 		}
 		return false;
 	}
 
 	/**
-	 * Answers if the given <code>element</code> is a valid element for this
-	 * part.
+	 * Answers if the given <code>element</code> is a valid element for this part.
 	 *
-	 * @param element
-	 *                    the object to test
+	 * @param element the object to test
 	 * @return <true> if the given element is a valid element
 	 */
 	@Override
@@ -324,8 +298,7 @@ public class PackagesView extends ScriptBrowsingPart {
 		if (element instanceof IScriptFolder) {
 			IModelElement parent = ((IScriptFolder) element).getParent();
 			if (parent != null)
-				return super.isValidElement(parent)
-						|| super.isValidElement(parent.getScriptProject());
+				return super.isValidElement(parent) || super.isValidElement(parent.getScriptProject());
 		}
 		return false;
 	}
@@ -427,8 +400,7 @@ public class PackagesView extends ScriptBrowsingPart {
 	}
 
 	@Override
-	protected StatusBarUpdater createStatusBarUpdater(
-			IStatusLineManager slManager) {
+	protected StatusBarUpdater createStatusBarUpdater(IStatusLineManager slManager) {
 		return new StatusBarUpdater4LogicalPackage(slManager);
 	}
 
@@ -464,18 +436,14 @@ public class PackagesView extends ScriptBrowsingPart {
 	private MultiActionGroup createSwitchActionGroup() {
 
 		LayoutAction switchToFlatViewAction = new LayoutAction(
-				ScriptBrowsingMessages.PackagesView_flatLayoutAction_label,
-				LIST_VIEW_STATE);
+				ScriptBrowsingMessages.PackagesView_flatLayoutAction_label, LIST_VIEW_STATE);
 		LayoutAction switchToHierarchicalViewAction = new LayoutAction(
-				ScriptBrowsingMessages.PackagesView_HierarchicalLayoutAction_label,
-				TREE_VIEW_STATE);
-		DLTKPluginImages.setLocalImageDescriptors(switchToFlatViewAction,
-				"flatLayout.png"); //$NON-NLS-1$
-		DLTKPluginImages.setLocalImageDescriptors(
-				switchToHierarchicalViewAction, "hierarchicalLayout.png"); //$NON-NLS-1$
+				ScriptBrowsingMessages.PackagesView_HierarchicalLayoutAction_label, TREE_VIEW_STATE);
+		DLTKPluginImages.setLocalImageDescriptors(switchToFlatViewAction, "flatLayout.png"); //$NON-NLS-1$
+		DLTKPluginImages.setLocalImageDescriptors(switchToHierarchicalViewAction, "hierarchicalLayout.png"); //$NON-NLS-1$
 
-		return new LayoutActionGroup(new IAction[] { switchToFlatViewAction,
-				switchToHierarchicalViewAction }, fCurrViewState);
+		return new LayoutActionGroup(new IAction[] { switchToFlatViewAction, switchToHierarchicalViewAction },
+				fCurrViewState);
 	}
 
 	private static class LayoutActionGroup extends MultiActionGroup {
@@ -536,8 +504,7 @@ public class PackagesView extends ScriptBrowsingPart {
 		ISelection selection = viewer.getSelection();
 
 		// create and set up the new viewer
-		Control control = createViewer(fWrappedViewer.getControl().getParent())
-				.getControl();
+		Control control = createViewer(fWrappedViewer.getControl().getParent()).getControl();
 
 		setUpViewer(fWrappedViewer);
 
@@ -562,13 +529,10 @@ public class PackagesView extends ScriptBrowsingPart {
 	private void createSelectAllAction() {
 		IActionBars actionBars = getViewSite().getActionBars();
 		if (isInListState()) {
-			fSelectAllAction = new SelectAllAction(
-					(TableViewer) fWrappedViewer.getViewer());
-			actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(),
-					fSelectAllAction);
+			fSelectAllAction = new SelectAllAction((TableViewer) fWrappedViewer.getViewer());
+			actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), fSelectAllAction);
 		} else {
-			actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(),
-					null);
+			actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), null);
 			fSelectAllAction = null;
 		}
 		actionBars.updateActionBars();
@@ -589,8 +553,7 @@ public class PackagesView extends ScriptBrowsingPart {
 
 	}
 
-	protected IModelElement findInputForJavaElement(IModelElement je,
-			boolean canChangeInputType) {
+	protected IModelElement findInputForJavaElement(IModelElement je, boolean canChangeInputType) {
 		if (je == null || !je.exists())
 			return null;
 
@@ -599,12 +562,10 @@ public class PackagesView extends ScriptBrowsingPart {
 			// don't update if input must be project (i.e. project is used as
 			// source folder)
 			if (canChangeInputType)
-				fLastInputWasProject = je
-						.getElementType() == IModelElement.SCRIPT_PROJECT;
+				fLastInputWasProject = je.getElementType() == IModelElement.SCRIPT_PROJECT;
 			return je;
 		} else if (fLastInputWasProject) {
-			IProjectFragment packageFragmentRoot = (IProjectFragment) je
-					.getAncestor(IModelElement.PROJECT_FRAGMENT);
+			IProjectFragment packageFragmentRoot = (IProjectFragment) je.getAncestor(IModelElement.PROJECT_FRAGMENT);
 			if (!packageFragmentRoot.isExternal())
 				return je.getScriptProject();
 		}
@@ -613,16 +574,14 @@ public class PackagesView extends ScriptBrowsingPart {
 	}
 
 	/**
-	 * Override the getText and getImage methods for the DecoratingLabelProvider
-	 * to handel the decoration of logical packages.
+	 * Override the getText and getImage methods for the DecoratingLabelProvider to
+	 * handel the decoration of logical packages.
 	 *
 	 * @see org.eclipse.jdt.internal.ui.browsing.ScriptBrowsingPart#createDecoratingLabelProvider(JavaUILabelProvider)
 	 */
 	@Override
-	protected DecoratingModelLabelProvider createDecoratingLabelProvider(
-			ScriptUILabelProvider provider) {
-		return new DecoratingModelLabelProvider(provider, false,
-				isInListState()) {
+	protected DecoratingModelLabelProvider createDecoratingLabelProvider(ScriptUILabelProvider provider) {
+		return new DecoratingModelLabelProvider(provider, false, isInListState()) {
 
 			@Override
 			public String getText(Object element) {
@@ -643,8 +602,7 @@ public class PackagesView extends ScriptBrowsingPart {
 					Image image = super.getImage(el);
 					for (int i = 0; i < fragments.length; i++) {
 						IScriptFolder fragment = fragments[i];
-						Image decoratedImage = decorator.decorateImage(image,
-								fragment);
+						Image decoratedImage = decorator.decorateImage(image, fragment);
 						if (decoratedImage != null)
 							image = decoratedImage;
 					}
@@ -666,12 +624,10 @@ public class PackagesView extends ScriptBrowsingPart {
 	void adjustInputAndSetSelection(IModelElement je) {
 
 		IModelElement jElementToSelect = findElementToSelect(je);
-		LogicalPackagesProvider p = (LogicalPackagesProvider) fWrappedViewer
-				.getContentProvider();
+		LogicalPackagesProvider p = (LogicalPackagesProvider) fWrappedViewer.getContentProvider();
 
 		Object elementToSelect = jElementToSelect;
-		if (jElementToSelect != null && jElementToSelect
-				.getElementType() == IModelElement.SCRIPT_FOLDER) {
+		if (jElementToSelect != null && jElementToSelect.getElementType() == IModelElement.SCRIPT_FOLDER) {
 			IScriptFolder pkgFragment = (IScriptFolder) jElementToSelect;
 			elementToSelect = p.findLogicalPackage(pkgFragment);
 			if (elementToSelect == null)
@@ -681,8 +637,7 @@ public class PackagesView extends ScriptBrowsingPart {
 		IModelElement newInput = findInputForJavaElement(je);
 		if (elementToSelect == null && !isValidInput(newInput))
 			setInput(null);
-		else if (elementToSelect == null
-				|| getViewer().testFindItem(elementToSelect) == null) {
+		else if (elementToSelect == null || getViewer().testFindItem(elementToSelect) == null) {
 
 			// optimization, if you are in the same project but expansion hasn't
 			// happened

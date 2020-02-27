@@ -3,19 +3,19 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.callhierarchy;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.search.LRUWorkingSetsList;
 import org.eclipse.dltk.internal.ui.search.WorkingSetComparator;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -134,7 +134,7 @@ public class SearchUtil {
 			for (int i = 0; i < workingSets.length; i++) {
 				String workingSetName = workingSets[i].getLabel();
 				if (firstFound)
-					result = Messages.format(CallHierarchyMessages.SearchUtil_workingSetConcatenation, result,
+					result = MessageFormat.format(CallHierarchyMessages.SearchUtil_workingSetConcatenation, result,
 							workingSetName);
 				else {
 					result = workingSetName;

@@ -3,13 +3,14 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.typehierarchy;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.IMethod;
@@ -19,7 +20,6 @@ import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.dltk.internal.core.util.MethodOverrideTester;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.text.AbstractInformationControl;
 import org.eclipse.dltk.internal.ui.typehierarchy.SuperTypeHierarchyViewer.SuperTypeHierarchyContentProvider;
 import org.eclipse.dltk.internal.ui.typehierarchy.TraditionalHierarchyViewer.TraditionalHierarchyContentProvider;
@@ -307,10 +307,10 @@ public abstract class HierarchyInformationControl extends AbstractInformationCon
 		if (input instanceof IMethod) {
 			Object[] args = { input.getParent().getElementName(),
 					ScriptElementLabels.getDefault().getElementLabel(input, ScriptElementLabels.ALL_DEFAULT) };
-			return Messages.format(TypeHierarchyMessages.HierarchyInformationControl_methodhierarchy_label, args);
+			return MessageFormat.format(TypeHierarchyMessages.HierarchyInformationControl_methodhierarchy_label, args);
 		} else if (input != null) {
 			String arg = ScriptElementLabels.getDefault().getElementLabel(input, ScriptElementLabels.DEFAULT_QUALIFIED);
-			return Messages.format(TypeHierarchyMessages.HierarchyInformationControl_hierarchy_label, arg);
+			return MessageFormat.format(TypeHierarchyMessages.HierarchyInformationControl_hierarchy_label, arg);
 		} else {
 			return ""; //$NON-NLS-1$
 		}
@@ -324,10 +324,11 @@ public abstract class HierarchyInformationControl extends AbstractInformationCon
 			keyName = sequences[0].format();
 
 		if (fOtherContentProvider instanceof TraditionalHierarchyContentProvider) {
-			return Messages.format(TypeHierarchyMessages.HierarchyInformationControl_toggle_traditionalhierarchy_label,
-					keyName);
+			return MessageFormat.format(
+					TypeHierarchyMessages.HierarchyInformationControl_toggle_traditionalhierarchy_label, keyName);
 		}
-		return Messages.format(TypeHierarchyMessages.HierarchyInformationControl_toggle_superhierarchy_label, keyName);
+		return MessageFormat.format(TypeHierarchyMessages.HierarchyInformationControl_toggle_superhierarchy_label,
+				keyName);
 	}
 
 	@Override

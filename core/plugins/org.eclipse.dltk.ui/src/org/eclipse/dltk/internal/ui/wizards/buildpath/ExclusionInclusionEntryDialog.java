@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
@@ -19,7 +20,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.TypedElementSelectionValidator;
 import org.eclipse.dltk.internal.ui.wizards.TypedViewerFilter;
@@ -47,7 +47,6 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 
-
 public class ExclusionInclusionEntryDialog extends StatusDialog {
 
 	private StringButtonDialogField fExclusionPatternDialog;
@@ -58,42 +57,44 @@ public class ExclusionInclusionEntryDialog extends StatusDialog {
 	private List fExistingPatterns;
 	private boolean fIsExclusion;
 
-	public ExclusionInclusionEntryDialog(Shell parent, boolean isExclusion, String patternToEdit, List existingPatterns, BPListElement entryToEdit) {
+	public ExclusionInclusionEntryDialog(Shell parent, boolean isExclusion, String patternToEdit, List existingPatterns,
+			BPListElement entryToEdit) {
 		super(parent);
-		fIsExclusion= isExclusion;
-		fExistingPatterns= existingPatterns;
+		fIsExclusion = isExclusion;
+		fExistingPatterns = existingPatterns;
 		String title, message;
 		if (isExclusion) {
 			if (patternToEdit == null) {
-				title= NewWizardMessages.ExclusionInclusionEntryDialog_exclude_add_title;
+				title = NewWizardMessages.ExclusionInclusionEntryDialog_exclude_add_title;
 			} else {
-				title= NewWizardMessages.ExclusionInclusionEntryDialog_exclude_edit_title;
+				title = NewWizardMessages.ExclusionInclusionEntryDialog_exclude_edit_title;
 			}
-			message= Messages.format(NewWizardMessages.ExclusionInclusionEntryDialog_exclude_pattern_label, entryToEdit.getPath().makeRelative().toString());
+			message = MessageFormat.format(NewWizardMessages.ExclusionInclusionEntryDialog_exclude_pattern_label,
+					entryToEdit.getPath().makeRelative().toString());
 		} else {
 			if (patternToEdit == null) {
-				title= NewWizardMessages.ExclusionInclusionEntryDialog_include_add_title;
+				title = NewWizardMessages.ExclusionInclusionEntryDialog_include_add_title;
 			} else {
-				title= NewWizardMessages.ExclusionInclusionEntryDialog_include_edit_title;
+				title = NewWizardMessages.ExclusionInclusionEntryDialog_include_edit_title;
 			}
-			message= Messages.format(NewWizardMessages.ExclusionInclusionEntryDialog_include_pattern_label, entryToEdit.getPath().makeRelative().toString());
+			message = MessageFormat.format(NewWizardMessages.ExclusionInclusionEntryDialog_include_pattern_label,
+					entryToEdit.getPath().makeRelative().toString());
 		}
 		setTitle(title);
 		if (patternToEdit != null) {
 			fExistingPatterns.remove(patternToEdit);
 		}
 
-
-		IWorkspaceRoot root= entryToEdit.getScriptProject().getProject().getWorkspace().getRoot();
-		IResource res= root.findMember(entryToEdit.getPath());
+		IWorkspaceRoot root = entryToEdit.getScriptProject().getProject().getWorkspace().getRoot();
+		IResource res = root.findMember(entryToEdit.getPath());
 		if (res instanceof IContainer) {
-			fCurrSourceFolder= (IContainer) res;
+			fCurrSourceFolder = (IContainer) res;
 		}
 
-		fExclusionPatternStatus= new StatusInfo();
+		fExclusionPatternStatus = new StatusInfo();
 
-		ExclusionPatternAdapter adapter= new ExclusionPatternAdapter();
-		fExclusionPatternDialog= new StringButtonDialogField(adapter);
+		ExclusionPatternAdapter adapter = new ExclusionPatternAdapter();
+		fExclusionPatternDialog = new StringButtonDialogField(adapter);
 		fExclusionPatternDialog.setLabelText(message);
 		fExclusionPatternDialog.setButtonLabel(NewWizardMessages.ExclusionInclusionEntryDialog_pattern_button);
 		fExclusionPatternDialog.setDialogFieldListener(adapter);
@@ -106,30 +107,29 @@ public class ExclusionInclusionEntryDialog extends StatusDialog {
 		}
 	}
 
-
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite composite= (Composite)super.createDialogArea(parent);
+		Composite composite = (Composite) super.createDialogArea(parent);
 
-		int widthHint= convertWidthInCharsToPixels(60);
+		int widthHint = convertWidthInCharsToPixels(60);
 
-		Composite inner= new Composite(composite, SWT.NONE);
-		GridLayout layout= new GridLayout();
-		layout.marginHeight= 0;
-		layout.marginWidth= 0;
-		layout.numColumns= 2;
+		Composite inner = new Composite(composite, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.numColumns = 2;
 		inner.setLayout(layout);
 
-		Label description= new Label(inner, SWT.WRAP);
+		Label description = new Label(inner, SWT.WRAP);
 
 		if (fIsExclusion) {
 			description.setText(NewWizardMessages.ExclusionInclusionEntryDialog_exclude_description);
 		} else {
 			description.setText(NewWizardMessages.ExclusionInclusionEntryDialog_include_description);
 		}
-		GridData gd= new GridData();
-		gd.horizontalSpan= 2;
-		gd.widthHint= convertWidthInCharsToPixels(80);
+		GridData gd = new GridData();
+		gd.horizontalSpan = 2;
+		gd.widthHint = convertWidthInCharsToPixels(80);
 		description.setLayoutData(gd);
 
 		fExclusionPatternDialog.doFillIntoGrid(inner, 3);
@@ -144,7 +144,6 @@ public class ExclusionInclusionEntryDialog extends StatusDialog {
 		applyDialogFont(composite);
 		return composite;
 	}
-
 
 	// -------- ExclusionPatternAdapter --------
 
@@ -164,7 +163,7 @@ public class ExclusionInclusionEntryDialog extends StatusDialog {
 	}
 
 	protected void doChangeControlPressed() {
-		IPath pattern= chooseExclusionPattern();
+		IPath pattern = chooseExclusionPattern();
 		if (pattern != null) {
 			fExclusionPatternDialog.setText(pattern.toString());
 		}
@@ -176,12 +175,12 @@ public class ExclusionInclusionEntryDialog extends StatusDialog {
 	}
 
 	protected void checkIfPatternValid() {
-		String pattern= fExclusionPatternDialog.getText().trim();
+		String pattern = fExclusionPatternDialog.getText().trim();
 		if (pattern.length() == 0) {
 			fExclusionPatternStatus.setError(NewWizardMessages.ExclusionInclusionEntryDialog_error_empty);
 			return;
 		}
-		IPath path= new Path(pattern);
+		IPath path = new Path(pattern);
 		if (path.isAbsolute() || path.getDevice() != null) {
 			fExclusionPatternStatus.setError(NewWizardMessages.ExclusionInclusionEntryDialog_error_notrelative);
 			return;
@@ -191,10 +190,9 @@ public class ExclusionInclusionEntryDialog extends StatusDialog {
 			return;
 		}
 
-		fExclusionPattern= pattern;
+		fExclusionPattern = pattern;
 		fExclusionPatternStatus.setOK();
 	}
-
 
 	public String getExclusionPattern() {
 		return fExclusionPattern;
@@ -203,10 +201,11 @@ public class ExclusionInclusionEntryDialog extends StatusDialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		if(DLTKCore.DEBUG) {
+		if (DLTKCore.DEBUG) {
 			System.err.println("TODO: ExclusionInclusionEntryDialog: Add help support"); //$NON-NLS-1$
 		}
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IDLTKHelpContextIds.EXCLUSION_PATTERN_DIALOG);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell,
+		// IDLTKHelpContextIds.EXCLUSION_PATTERN_DIALOG);
 	}
 
 	// ---------- util method ------------
@@ -214,48 +213,48 @@ public class ExclusionInclusionEntryDialog extends StatusDialog {
 	private IPath chooseExclusionPattern() {
 		String title, message;
 		if (fIsExclusion) {
-			title= NewWizardMessages.ExclusionInclusionEntryDialog_ChooseExclusionPattern_title;
-			message= NewWizardMessages.ExclusionInclusionEntryDialog_ChooseExclusionPattern_description;
+			title = NewWizardMessages.ExclusionInclusionEntryDialog_ChooseExclusionPattern_title;
+			message = NewWizardMessages.ExclusionInclusionEntryDialog_ChooseExclusionPattern_description;
 		} else {
-			title= NewWizardMessages.ExclusionInclusionEntryDialog_ChooseInclusionPattern_title;
-			message= NewWizardMessages.ExclusionInclusionEntryDialog_ChooseInclusionPattern_description;
+			title = NewWizardMessages.ExclusionInclusionEntryDialog_ChooseInclusionPattern_title;
+			message = NewWizardMessages.ExclusionInclusionEntryDialog_ChooseInclusionPattern_description;
 		}
-		IPath initialPath= new Path(fExclusionPatternDialog.getText());
+		IPath initialPath = new Path(fExclusionPatternDialog.getText());
 
-		IPath[] res= chooseExclusionPattern(getShell(), fCurrSourceFolder, title, message, initialPath, false);
+		IPath[] res = chooseExclusionPattern(getShell(), fCurrSourceFolder, title, message, initialPath, false);
 		if (res == null) {
 			return null;
 		}
 		return res[0];
 	}
 
-	public static IPath[] chooseExclusionPattern(Shell shell, IContainer currentSourceFolder, String title, String message, IPath initialPath, boolean multiSelection) {
-		Class[] acceptedClasses= new Class[] { IFolder.class, IFile.class };
-		ISelectionStatusValidator validator= new TypedElementSelectionValidator(acceptedClasses, multiSelection);
-		ViewerFilter filter= new TypedViewerFilter(acceptedClasses);
+	public static IPath[] chooseExclusionPattern(Shell shell, IContainer currentSourceFolder, String title,
+			String message, IPath initialPath, boolean multiSelection) {
+		Class[] acceptedClasses = new Class[] { IFolder.class, IFile.class };
+		ISelectionStatusValidator validator = new TypedElementSelectionValidator(acceptedClasses, multiSelection);
+		ViewerFilter filter = new TypedViewerFilter(acceptedClasses);
 
+		ILabelProvider lp = new WorkbenchLabelProvider();
+		ITreeContentProvider cp = new WorkbenchContentProvider();
 
-		ILabelProvider lp= new WorkbenchLabelProvider();
-		ITreeContentProvider cp= new WorkbenchContentProvider();
-
-		IResource initialElement= null;
+		IResource initialElement = null;
 		if (initialPath != null) {
-			IContainer curr= currentSourceFolder;
-			int nSegments= initialPath.segmentCount();
-			for (int i= 0; i < nSegments; i++) {
-				IResource elem= curr.findMember(initialPath.segment(i));
+			IContainer curr = currentSourceFolder;
+			int nSegments = initialPath.segmentCount();
+			for (int i = 0; i < nSegments; i++) {
+				IResource elem = curr.findMember(initialPath.segment(i));
 				if (elem != null) {
-					initialElement= elem;
+					initialElement = elem;
 				}
 				if (elem instanceof IContainer) {
-					curr= (IContainer) elem;
+					curr = (IContainer) elem;
 				} else {
 					break;
 				}
 			}
 		}
 
-		ElementTreeSelectionDialog dialog= new ElementTreeSelectionDialog(shell, lp, cp);
+		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(shell, lp, cp);
 		dialog.setTitle(title);
 		dialog.setValidator(validator);
 		dialog.setMessage(message);
@@ -266,23 +265,21 @@ public class ExclusionInclusionEntryDialog extends StatusDialog {
 		dialog.setHelpAvailable(false);
 
 		if (dialog.open() == Window.OK) {
-			Object[] objects= dialog.getResult();
-			int existingSegments= currentSourceFolder.getFullPath().segmentCount();
+			Object[] objects = dialog.getResult();
+			int existingSegments = currentSourceFolder.getFullPath().segmentCount();
 
-			IPath[] resArr= new IPath[objects.length];
-			for (int i= 0; i < objects.length; i++) {
-				IResource currRes= (IResource) objects[i];
-				IPath path= currRes.getFullPath().removeFirstSegments(existingSegments).makeRelative();
+			IPath[] resArr = new IPath[objects.length];
+			for (int i = 0; i < objects.length; i++) {
+				IResource currRes = (IResource) objects[i];
+				IPath path = currRes.getFullPath().removeFirstSegments(existingSegments).makeRelative();
 				if (currRes instanceof IContainer) {
-					path= path.addTrailingSeparator();
+					path = path.addTrailingSeparator();
 				}
-				resArr[i]= path;
+				resArr[i] = path;
 			}
 			return resArr;
 		}
 		return null;
 	}
-
-
 
 }

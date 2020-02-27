@@ -3,13 +3,14 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.ui.text.completion;
 
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,7 +24,6 @@ import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -58,8 +58,7 @@ public final class CompletionProposalCategory {
 
 	private String fToolkitID = null;
 
-	CompletionProposalCategory(IConfigurationElement element,
-			CompletionProposalComputerRegistry registry) {
+	CompletionProposalCategory(IConfigurationElement element, CompletionProposalComputerRegistry registry) {
 		fElement = element;
 		fRegistry = registry;
 		IExtension parent = (IExtension) element.getParent();
@@ -82,13 +81,11 @@ public final class CompletionProposalCategory {
 			}
 		}
 		fImage = img;
-		fToolkitID = element
-				.getAttribute(CompletionProposalComputerDescriptor.TOOLKITID);
+		fToolkitID = element.getAttribute(CompletionProposalComputerDescriptor.TOOLKITID);
 
 	}
 
-	CompletionProposalCategory(String id, String name,
-			CompletionProposalComputerRegistry registry, String toolkitID) {
+	CompletionProposalCategory(String id, String name, CompletionProposalComputerRegistry registry, String toolkitID) {
 		fRegistry = registry;
 		fId = id;
 		fName = name;
@@ -98,8 +95,7 @@ public final class CompletionProposalCategory {
 	}
 
 	private Bundle getBundle() {
-		String namespace = fElement.getDeclaringExtension().getContributor()
-				.getName();
+		String namespace = fElement.getDeclaringExtension().getContributor().getName();
 		Bundle bundle = Platform.getBundle(namespace);
 		return bundle;
 	}
@@ -109,16 +105,12 @@ public final class CompletionProposalCategory {
 	 * schema. Throws an <code>InvalidRegistryObjectException</code> if
 	 * <code>obj</code> is <code>null</code>.
 	 */
-	private void checkNotNull(Object obj, String attribute)
-			throws InvalidRegistryObjectException {
+	private void checkNotNull(Object obj, String attribute) throws InvalidRegistryObjectException {
 		if (obj == null) {
-			Object[] args = { getId(), fElement.getContributor().getName(),
-					attribute };
-			String message = Messages.format(
-					ScriptTextMessages.CompletionProposalComputerDescriptor_illegal_attribute_message,
-					args);
-			IStatus status = new Status(IStatus.WARNING, DLTKUIPlugin.PLUGIN_ID,
-					IStatus.OK, message, null);
+			Object[] args = { getId(), fElement.getContributor().getName(), attribute };
+			String message = MessageFormat
+					.format(ScriptTextMessages.CompletionProposalComputerDescriptor_illegal_attribute_message, args);
+			IStatus status = new Status(IStatus.WARNING, DLTKUIPlugin.PLUGIN_ID, IStatus.OK, message, null);
 			DLTKUIPlugin.log(status);
 			throw new InvalidRegistryObjectException();
 		}
@@ -143,8 +135,8 @@ public final class CompletionProposalCategory {
 	}
 
 	/**
-	 * Returns the name of the described extension without mnemonic hint in
-	 * order to be displayed in a message.
+	 * Returns the name of the described extension without mnemonic hint in order to
+	 * be displayed in a message.
 	 *
 	 * @return Returns the name
 	 */
@@ -164,8 +156,7 @@ public final class CompletionProposalCategory {
 	/**
 	 * Sets the separate command state of the category.
 	 *
-	 * @param enabled
-	 *            the new enabled state.
+	 * @param enabled the new enabled state.
 	 */
 	public void setSeparateCommand(boolean enabled) {
 		fIsSeparateCommand = enabled;
@@ -181,8 +172,7 @@ public final class CompletionProposalCategory {
 	}
 
 	/**
-	 * @param included
-	 *            the included
+	 * @param included the included
 	 */
 	public void setIncluded(boolean included) {
 		fIsIncluded = included;
@@ -211,10 +201,8 @@ public final class CompletionProposalCategory {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean hasComputers() {
-		List<CompletionProposalComputerDescriptor> descriptors = fRegistry
-				.getProposalComputerDescriptors();
-		for (Iterator<CompletionProposalComputerDescriptor> it = descriptors
-				.iterator(); it.hasNext();) {
+		List<CompletionProposalComputerDescriptor> descriptors = fRegistry.getProposalComputerDescriptors();
+		for (Iterator<CompletionProposalComputerDescriptor> it = descriptors.iterator(); it.hasNext();) {
 			CompletionProposalComputerDescriptor desc = it.next();
 			if (desc.getCategory() == this)
 				return true;
@@ -223,19 +211,16 @@ public final class CompletionProposalCategory {
 	}
 
 	/**
-	 * Returns <code>true</code> if the category contains any computers in the
-	 * given partition, <code>false</code> otherwise.
+	 * Returns <code>true</code> if the category contains any computers in the given
+	 * partition, <code>false</code> otherwise.
 	 *
-	 * @param partition
-	 *            the partition
+	 * @param partition the partition
 	 * @return <code>true</code> if the category contains any computers,
 	 *         <code>false</code> otherwise
 	 */
 	public boolean hasComputers(String partition) {
-		List<CompletionProposalComputerDescriptor> descriptors = fRegistry
-				.getProposalComputerDescriptors(partition);
-		for (Iterator<CompletionProposalComputerDescriptor> it = descriptors
-				.iterator(); it.hasNext();) {
+		List<CompletionProposalComputerDescriptor> descriptors = fRegistry.getProposalComputerDescriptors(partition);
+		for (Iterator<CompletionProposalComputerDescriptor> it = descriptors.iterator(); it.hasNext();) {
 			CompletionProposalComputerDescriptor desc = it.next();
 			if (desc.getCategory() == this)
 				return true;
@@ -251,8 +236,7 @@ public final class CompletionProposalCategory {
 	}
 
 	/**
-	 * @param sortOrder
-	 *            the sortOrder
+	 * @param sortOrder the sortOrder
 	 */
 	public void setSortOrder(int sortOrder) {
 		fSortOrder = sortOrder;
@@ -260,40 +244,33 @@ public final class CompletionProposalCategory {
 
 	/**
 	 * Safely computes completion proposals of all computers of this category
-	 * through their extension. If an extension is disabled, throws an exception
-	 * or otherwise does not adhere to the contract described in
+	 * through their extension. If an extension is disabled, throws an exception or
+	 * otherwise does not adhere to the contract described in
 	 * {@link IScriptCompletionProposalComputer}, it is disabled.
 	 *
-	 * @param context
-	 *            the invocation context passed on to the extension
-	 * @param partition
-	 *            the partition type where to invocation occurred
-	 * @param monitor
-	 *            the progress monitor passed on to the extension
+	 * @param context   the invocation context passed on to the extension
+	 * @param partition the partition type where to invocation occurred
+	 * @param monitor   the progress monitor passed on to the extension
 	 * @return the list of computed completion proposals (element type:
 	 *         {@link org.eclipse.jface.text.contentassist.ICompletionProposal})
 	 */
-	public List<ICompletionProposal> computeCompletionProposals(
-			ContentAssistInvocationContext context, String partition,
-			IProgressMonitor monitor) {
+	public List<ICompletionProposal> computeCompletionProposals(ContentAssistInvocationContext context,
+			String partition, IProgressMonitor monitor) {
 		fLastError = null;
 
 		List<ICompletionProposal> result = new ArrayList<>();
 		List<CompletionProposalComputerDescriptor> descriptors = new ArrayList<>(
 				fRegistry.getProposalComputerDescriptors(partition));
-		for (Iterator<CompletionProposalComputerDescriptor> it = descriptors
-				.iterator(); it.hasNext();) {
+		for (Iterator<CompletionProposalComputerDescriptor> it = descriptors.iterator(); it.hasNext();) {
 			CompletionProposalComputerDescriptor desc = it.next();
 			if (context instanceof ScriptContentAssistInvocationContext) {
 				ScriptContentAssistInvocationContext scriptContext = (ScriptContentAssistInvocationContext) context;
-				if (!scriptContext.getLanguageNatureID()
-						.equals(desc.getLanguageToolkitID())) {
+				if (!scriptContext.getLanguageNatureID().equals(desc.getLanguageToolkitID())) {
 					continue;
 				}
 			}
 			if (desc.getCategory() == this)
-				result.addAll(
-						desc.computeCompletionProposals(context, monitor));
+				result.addAll(desc.computeCompletionProposals(context, monitor));
 			if (fLastError == null)
 				fLastError = desc.getErrorMessage();
 		}
@@ -301,34 +278,28 @@ public final class CompletionProposalCategory {
 	}
 
 	/**
-	 * Safely computes context information objects of all computers of this
-	 * category through their extension. If an extension is disabled, throws an
-	 * exception or otherwise does not adhere to the contract described in
+	 * Safely computes context information objects of all computers of this category
+	 * through their extension. If an extension is disabled, throws an exception or
+	 * otherwise does not adhere to the contract described in
 	 * {@link IScriptCompletionProposalComputer}, it is disabled.
 	 *
-	 * @param context
-	 *            the invocation context passed on to the extension
-	 * @param partition
-	 *            the partition type where to invocation occurred
-	 * @param monitor
-	 *            the progress monitor passed on to the extension
+	 * @param context   the invocation context passed on to the extension
+	 * @param partition the partition type where to invocation occurred
+	 * @param monitor   the progress monitor passed on to the extension
 	 * @return the list of computed context information objects (element type:
 	 *         {@link org.eclipse.jface.text.contentassist.IContextInformation})
 	 */
-	public List<IContextInformation> computeContextInformation(
-			ContentAssistInvocationContext context, String partition,
+	public List<IContextInformation> computeContextInformation(ContentAssistInvocationContext context, String partition,
 			IProgressMonitor monitor) {
 		fLastError = null;
 		List<IContextInformation> result = new ArrayList<>();
 		List<CompletionProposalComputerDescriptor> descriptors = new ArrayList<>(
 				fRegistry.getProposalComputerDescriptors(partition));
-		for (Iterator<CompletionProposalComputerDescriptor> it = descriptors
-				.iterator(); it.hasNext();) {
+		for (Iterator<CompletionProposalComputerDescriptor> it = descriptors.iterator(); it.hasNext();) {
 			CompletionProposalComputerDescriptor desc = it.next();
 			if (context instanceof ScriptContentAssistInvocationContext) {
 				ScriptContentAssistInvocationContext scriptContext = (ScriptContentAssistInvocationContext) context;
-				if (!scriptContext.getLanguageNatureID()
-						.equals(desc.getLanguageToolkitID())) {
+				if (!scriptContext.getLanguageNatureID().equals(desc.getLanguageToolkitID())) {
 					continue;
 				}
 			}
@@ -356,8 +327,7 @@ public final class CompletionProposalCategory {
 	public void sessionStarted() {
 		List<CompletionProposalComputerDescriptor> descriptors = new ArrayList<>(
 				fRegistry.getProposalComputerDescriptors());
-		for (Iterator<CompletionProposalComputerDescriptor> it = descriptors
-				.iterator(); it.hasNext();) {
+		for (Iterator<CompletionProposalComputerDescriptor> it = descriptors.iterator(); it.hasNext();) {
 			CompletionProposalComputerDescriptor desc = it.next();
 			if (desc.getCategory() == this)
 				desc.sessionStarted();
@@ -373,8 +343,7 @@ public final class CompletionProposalCategory {
 	public void sessionEnded() {
 		List<CompletionProposalComputerDescriptor> descriptors = new ArrayList<>(
 				fRegistry.getProposalComputerDescriptors());
-		for (Iterator<CompletionProposalComputerDescriptor> it = descriptors
-				.iterator(); it.hasNext();) {
+		for (Iterator<CompletionProposalComputerDescriptor> it = descriptors.iterator(); it.hasNext();) {
 			CompletionProposalComputerDescriptor desc = it.next();
 			if (desc.getCategory() == this)
 				desc.sessionEnded();

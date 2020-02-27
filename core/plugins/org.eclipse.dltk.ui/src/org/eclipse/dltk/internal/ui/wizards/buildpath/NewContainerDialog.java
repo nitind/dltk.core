@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -16,7 +18,6 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
@@ -39,19 +40,20 @@ public class NewContainerDialog extends StatusDialog {
 	private IPath[] fExistingFolders;
 	private IProject fCurrProject;
 
-	public NewContainerDialog(Shell parent, String title, IProject project, IPath[] existingFolders, BPListElement entryToEdit) {
+	public NewContainerDialog(Shell parent, String title, IProject project, IPath[] existingFolders,
+			BPListElement entryToEdit) {
 		super(parent);
 		setTitle(title);
 
-		fContainerFieldStatus= new StatusInfo();
+		fContainerFieldStatus = new StatusInfo();
 
-		SourceContainerAdapter adapter= new SourceContainerAdapter();
-		fContainerDialogField= new StringDialogField();
+		SourceContainerAdapter adapter = new SourceContainerAdapter();
+		fContainerDialogField = new StringDialogField();
 		fContainerDialogField.setDialogFieldListener(adapter);
 
-		fFolder= null;
-		fExistingFolders= existingFolders;
-		fCurrProject= project;
+		fFolder = null;
+		fExistingFolders = existingFolders;
+		fCurrProject = project;
 
 		if (entryToEdit == null) {
 			fContainerDialogField.setText(""); //$NON-NLS-1$
@@ -66,15 +68,15 @@ public class NewContainerDialog extends StatusDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		Composite composite= (Composite)super.createDialogArea(parent);
+		Composite composite = (Composite) super.createDialogArea(parent);
 
-		int widthHint= convertWidthInCharsToPixels(80);
+		int widthHint = convertWidthInCharsToPixels(80);
 
-		Composite inner= new Composite(composite, SWT.NONE);
-		GridLayout layout= new GridLayout();
-		layout.marginHeight= 0;
-		layout.marginWidth= 0;
-		layout.numColumns= 1;
+		Composite inner = new Composite(composite, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.numColumns = 1;
 		inner.setLayout(layout);
 
 		fContainerDialogField.doFillIntoGrid(inner, 2);
@@ -87,7 +89,6 @@ public class NewContainerDialog extends StatusDialog {
 		applyDialogFont(composite);
 		return composite;
 	}
-
 
 	// -------- SourceContainerAdapter --------
 
@@ -107,40 +108,39 @@ public class NewContainerDialog extends StatusDialog {
 	}
 
 	protected void checkIfPathValid() {
-		fFolder= null;
+		fFolder = null;
 
-		String pathStr= fContainerDialogField.getText();
+		String pathStr = fContainerDialogField.getText();
 		if (pathStr.length() == 0) {
 			fContainerFieldStatus.setError(NewWizardMessages.NewContainerDialog_error_enterpath);
 			return;
 		}
-		IPath path= fCurrProject.getFullPath().append(pathStr);
-		IWorkspace workspace= fCurrProject.getWorkspace();
+		IPath path = fCurrProject.getFullPath().append(pathStr);
+		IWorkspace workspace = fCurrProject.getWorkspace();
 
-		IStatus pathValidation= workspace.validatePath(path.toString(), IResource.FOLDER);
+		IStatus pathValidation = workspace.validatePath(path.toString(), IResource.FOLDER);
 		if (!pathValidation.isOK()) {
-			fContainerFieldStatus.setError(Messages.format(NewWizardMessages.NewContainerDialog_error_invalidpath, pathValidation.getMessage()));
+			fContainerFieldStatus.setError(MessageFormat.format(NewWizardMessages.NewContainerDialog_error_invalidpath,
+					pathValidation.getMessage()));
 			return;
 		}
-		IFolder folder= fCurrProject.getFolder(pathStr);
+		IFolder folder = fCurrProject.getFolder(pathStr);
 		if (isFolderExisting(folder)) {
 			fContainerFieldStatus.setError(NewWizardMessages.NewContainerDialog_error_pathexists);
 			return;
 		}
 		fContainerFieldStatus.setOK();
-		fFolder= folder;
+		fFolder = folder;
 	}
 
 	private boolean isFolderExisting(IFolder folder) {
-		for (int i= 0; i < fExistingFolders.length; i++) {
+		for (int i = 0; i < fExistingFolders.length; i++) {
 			if (folder.getFullPath().equals(fExistingFolders[i])) {
 				return true;
 			}
 		}
 		return false;
 	}
-
-
 
 	public IFolder getFolder() {
 		return fFolder;
@@ -152,8 +152,8 @@ public class NewContainerDialog extends StatusDialog {
 		if (DLTKCore.DEBUG) {
 			System.err.println("NewContainerDialog: Add help support"); //$NON-NLS-1$
 		}
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IDLTKHelpContextIds.NEW_CONTAINER_DIALOG);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell,
+		// IDLTKHelpContextIds.NEW_CONTAINER_DIALOG);
 	}
-
 
 }

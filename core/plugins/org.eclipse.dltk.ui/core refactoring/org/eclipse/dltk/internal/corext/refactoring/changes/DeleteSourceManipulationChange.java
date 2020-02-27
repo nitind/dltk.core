@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.changes;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -22,7 +24,6 @@ import org.eclipse.dltk.core.ISourceManipulation;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.NullChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
@@ -33,8 +34,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 	private final String fHandle;
 	private final boolean fIsExecuteChange;
 
-	public DeleteSourceManipulationChange(ISourceManipulation sm,
-			boolean isExecuteChange) {
+	public DeleteSourceManipulationChange(ISourceManipulation sm, boolean isExecuteChange) {
 		Assert.isNotNull(sm);
 		fHandle = getScriptElement(sm).getHandleIdentifier();
 		fIsExecuteChange = isExecuteChange;
@@ -42,9 +42,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 
 	@Override
 	public String getName() {
-		return Messages.format(
-				RefactoringCoreMessages.DeleteSourceManipulationChange_0,
-				getElementName());
+		return MessageFormat.format(RefactoringCoreMessages.DeleteSourceManipulationChange_0, getElementName());
 	}
 
 	@Override
@@ -93,11 +91,9 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 
 			IResource resource = unit.getResource();
 			if (resource != null) {
-				ResourceDescription resourceDescription = ResourceDescription
-						.fromResource(resource);
+				ResourceDescription resourceDescription = ResourceDescription.fromResource(resource);
 				element.delete(false, new SubProgressMonitor(pm, 1));
-				resourceDescription.recordStateFromHistory(resource,
-						new SubProgressMonitor(pm, 1));
+				resourceDescription.recordStateFromHistory(resource, new SubProgressMonitor(pm, 1));
 				return new UndoDeleteResourceChange(resourceDescription);
 			}
 			element.delete(false, pm);
@@ -105,8 +101,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 
 			// begin fix https://bugs.eclipse.org/bugs/show_bug.cgi?id=66835
 		} else if (element instanceof IScriptFolder) {
-			ISourceModule[] units = ((IScriptFolder) element)
-					.getSourceModules();
+			ISourceModule[] units = ((IScriptFolder) element).getSourceModules();
 			pm.beginTask("", units.length + 1); //$NON-NLS-1$
 			for (int i = 0; i < units.length; i++) {
 				saveCUnitIfNeeded(units[i], new SubProgressMonitor(pm, 1));
@@ -129,8 +124,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 		return (IModelElement) sm;
 	}
 
-	private static void saveCUnitIfNeeded(ISourceModule unit,
-			IProgressMonitor pm) throws CoreException {
+	private static void saveCUnitIfNeeded(ISourceModule unit, IProgressMonitor pm) throws CoreException {
 		if (unit.getResource() != null) {
 			saveFileIfNeeded((IFile) unit.getResource(), pm);
 		}

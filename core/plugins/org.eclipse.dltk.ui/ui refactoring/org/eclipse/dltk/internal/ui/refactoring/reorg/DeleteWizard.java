@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.refactoring.reorg;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.IModelElement;
@@ -19,7 +21,6 @@ import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgUtils;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ScriptDeleteProcessor;
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.refactoring.MessageWizardPage;
 import org.eclipse.dltk.internal.ui.refactoring.RefactoringMessages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -40,11 +41,11 @@ import org.eclipse.swt.widgets.Composite;
 public class DeleteWizard extends RefactoringWizard {
 
 	public DeleteWizard(Refactoring refactoring) {
-		super(refactoring, DIALOG_BASED_USER_INTERFACE | YES_NO_BUTTON_STYLE
-				| NO_PREVIEW_PAGE | NO_BACK_BUTTON_ON_STATUS_DIALOG);
+		super(refactoring,
+				DIALOG_BASED_USER_INTERFACE | YES_NO_BUTTON_STYLE | NO_PREVIEW_PAGE | NO_BACK_BUTTON_ON_STATUS_DIALOG);
 		setDefaultPageTitle(RefactoringMessages.DeleteWizard_1);
-		((ScriptDeleteProcessor) ((DeleteRefactoring) getRefactoring())
-				.getProcessor()).setQueries(new ReorgQueries(this));
+		((ScriptDeleteProcessor) ((DeleteRefactoring) getRefactoring()).getProcessor())
+				.setQueries(new ReorgQueries(this));
 	}
 
 	@Override
@@ -82,11 +83,10 @@ public class DeleteWizard extends RefactoringWizard {
 				if (1 == numberOfSelectedElements()) {
 					String pattern = createConfirmationStringForOneElement();
 					String name = getNameOfSingleSelectedElement();
-					return Messages.format(pattern, name);
+					return MessageFormat.format(pattern, name);
 				}
 				String pattern = createConfirmationStringForManyElements();
-				return Messages.format(pattern,
-						String.valueOf(numberOfSelectedElements()));
+				return MessageFormat.format(pattern, String.valueOf(numberOfSelectedElements()));
 			} catch (ModelException e) {
 				// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 				if (ScriptModelUtil.isExceptionToBeLogged(e))
@@ -107,9 +107,9 @@ public class DeleteWizard extends RefactoringWizard {
 		}
 
 		/**
-		 * Adds the "delete subpackages" checkbox to the composite. Note that
-		 * this code assumes that the control of the parent is a Composite with
-		 * GridLayout and a horizontal span of 2.
+		 * Adds the "delete subpackages" checkbox to the composite. Note that this code
+		 * assumes that the control of the parent is a Composite with GridLayout and a
+		 * horizontal span of 2.
 		 *
 		 * @see MessageWizardPage#createControl(Composite)
 		 */
@@ -124,26 +124,21 @@ public class DeleteWizard extends RefactoringWizard {
 			data.horizontalSpan = 2;
 			c.setLayoutData(data);
 
-			final boolean selection = getRefactoringSettings()
-					.getBoolean(DIALOG_SETTINGS_DELETE_SUB_PACKAGES);
+			final boolean selection = getRefactoringSettings().getBoolean(DIALOG_SETTINGS_DELETE_SUB_PACKAGES);
 
 			fDeleteSubPackagesCheckBox = new Button(c, SWT.CHECK);
-			fDeleteSubPackagesCheckBox.setText(
-					RefactoringMessages.DeleteWizard_also_delete_sub_packages);
+			fDeleteSubPackagesCheckBox.setText(RefactoringMessages.DeleteWizard_also_delete_sub_packages);
 			fDeleteSubPackagesCheckBox.setSelection(selection);
 
-			fDeleteSubPackagesCheckBox
-					.addSelectionListener(new SelectionAdapter() {
+			fDeleteSubPackagesCheckBox.addSelectionListener(new SelectionAdapter() {
 
-						@Override
-						public void widgetSelected(SelectionEvent event) {
-							getDeleteProcessor().setDeleteSubPackages(
-									fDeleteSubPackagesCheckBox.getSelection());
-						}
-					});
+				@Override
+				public void widgetSelected(SelectionEvent event) {
+					getDeleteProcessor().setDeleteSubPackages(fDeleteSubPackagesCheckBox.getSelection());
+				}
+			});
 
-			getDeleteProcessor().setDeleteSubPackages(
-					fDeleteSubPackagesCheckBox.getSelection());
+			getDeleteProcessor().setDeleteSubPackages(fDeleteSubPackagesCheckBox.getSelection());
 		}
 
 		private String getNameOfSingleSelectedElement() throws ModelException {
@@ -164,8 +159,7 @@ public class DeleteWizard extends RefactoringWizard {
 		}
 
 		private int numberOfSelectedElements() {
-			return getSelectedScriptElements().length
-					+ getSelectedResources().length;
+			return getSelectedScriptElements().length + getSelectedResources().length;
 		}
 
 		@Override
@@ -179,22 +173,19 @@ public class DeleteWizard extends RefactoringWizard {
 
 		protected boolean saveSettings() {
 			if (getContainer() instanceof Dialog)
-				return ((Dialog) getContainer())
-						.getReturnCode() == IDialogConstants.OK_ID;
+				return ((Dialog) getContainer()).getReturnCode() == IDialogConstants.OK_ID;
 			return true;
 		}
 
 		@Override
 		public void dispose() {
 			if (fDeleteSubPackagesCheckBox != null && saveSettings())
-				getRefactoringSettings().put(
-						DIALOG_SETTINGS_DELETE_SUB_PACKAGES,
+				getRefactoringSettings().put(DIALOG_SETTINGS_DELETE_SUB_PACKAGES,
 						fDeleteSubPackagesCheckBox.getSelection());
 			super.dispose();
 		}
 
-		private String createConfirmationStringForOneElement()
-				throws ModelException {
+		private String createConfirmationStringForOneElement() throws ModelException {
 			IModelElement[] elements = getSelectedScriptElements();
 			if (elements.length == 1) {
 				IModelElement element = elements[0];
@@ -218,8 +209,7 @@ public class DeleteWizard extends RefactoringWizard {
 			return RefactoringMessages.DeleteWizard_8;
 		}
 
-		private String createConfirmationStringForManyElements()
-				throws ModelException {
+		private String createConfirmationStringForManyElements() throws ModelException {
 			IResource[] resources = getSelectedResources();
 			IModelElement[] modelElements = getSelectedScriptElements();
 			if (!containsLinkedResources(resources, modelElements))
@@ -233,17 +223,14 @@ public class DeleteWizard extends RefactoringWizard {
 			return RefactoringMessages.DeleteWizard_11;
 		}
 
-		private static boolean isLinkedPackageOrProjectFragment(
-				IModelElement element) {
-			if ((element instanceof IScriptFolder)
-					|| (element instanceof IProjectFragment)) {
+		private static boolean isLinkedPackageOrProjectFragment(IModelElement element) {
+			if ((element instanceof IScriptFolder) || (element instanceof IProjectFragment)) {
 				return isLinkedResource(element);
 			}
 			return false;
 		}
 
-		private static boolean containsLinkedPackagesOrProjectFragments(
-				IModelElement[] modelElements) {
+		private static boolean containsLinkedPackagesOrProjectFragments(IModelElement[] modelElements) {
 			for (int i = 0; i < modelElements.length; i++) {
 				IModelElement element = modelElements[i];
 				if (isLinkedPackageOrProjectFragment(element))
@@ -252,8 +239,8 @@ public class DeleteWizard extends RefactoringWizard {
 			return false;
 		}
 
-		private static boolean containsLinkedResources(IResource[] resources,
-				IModelElement[] modelElements) throws ModelException {
+		private static boolean containsLinkedResources(IResource[] resources, IModelElement[] modelElements)
+				throws ModelException {
 			for (int i = 0; i < modelElements.length; i++) {
 				IModelElement element = modelElements[i];
 				if (isLinkedResource(element))
@@ -269,8 +256,7 @@ public class DeleteWizard extends RefactoringWizard {
 			return false;
 		}
 
-		private static boolean isDefaultPackageWithLinkedFiles(
-				Object firstElement) throws ModelException {
+		private static boolean isDefaultPackageWithLinkedFiles(Object firstElement) throws ModelException {
 			if (!ModelElementUtil.isDefaultPackage(firstElement))
 				return false;
 			IScriptFolder defaultPackage = (IScriptFolder) firstElement;
@@ -299,8 +285,7 @@ public class DeleteWizard extends RefactoringWizard {
 		}
 
 		private ScriptDeleteProcessor getDeleteProcessor() {
-			return (ScriptDeleteProcessor) ((DeleteRefactoring) getRefactoring())
-					.getProcessor();
+			return (ScriptDeleteProcessor) ((DeleteRefactoring) getRefactoring()).getProcessor();
 		}
 
 	}

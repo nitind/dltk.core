@@ -3,13 +3,14 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.reorg;
 
 import java.net.URI;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,7 +40,6 @@ import org.eclipse.dltk.internal.core.ExternalSourceModule;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
 import org.eclipse.dltk.internal.corext.refactoring.util.ResourceUtil;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ui.IWorkingSet;
 
 public class ReorgUtils {
@@ -93,13 +93,13 @@ public class ReorgUtils {
 	public static String getName(IModelElement element) throws ModelException {
 		String pattern = createNamePattern(element);
 		Object[] args = createNameArguments(element);
-		return Messages.format(pattern, args);
+		return MessageFormat.format(pattern, args);
 	}
 
 	public static String getName(IResource resource) {
 		String pattern = createNamePattern(resource);
 		Object[] args = createNameArguments(resource);
-		return Messages.format(pattern, args);
+		return MessageFormat.format(pattern, args);
 	}
 
 	private static String[] createNameArguments(IResource resource) {

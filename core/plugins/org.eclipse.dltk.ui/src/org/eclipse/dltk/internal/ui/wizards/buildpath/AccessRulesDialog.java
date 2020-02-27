@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,6 @@ import org.eclipse.dltk.core.IAccessRule;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
@@ -179,7 +179,8 @@ public class AccessRulesDialog extends StatusDialog {
 				text.setFont(inner.getFont());
 				if (fParentCanSwitchPage) {
 					// with link
-					text.setText(Messages.format(NewWizardMessages.AccessRulesDialog_severity_info_with_link, args),
+					text.setText(
+							MessageFormat.format(NewWizardMessages.AccessRulesDialog_severity_info_with_link, args),
 							true, false);
 					text.addHyperlinkListener(new HyperlinkAdapter() {
 						@Override
@@ -189,8 +190,8 @@ public class AccessRulesDialog extends StatusDialog {
 					});
 				} else {
 					// no link
-					text.setText(Messages.format(NewWizardMessages.AccessRulesDialog_severity_info_no_link, args), true,
-							false);
+					text.setText(MessageFormat.format(NewWizardMessages.AccessRulesDialog_severity_info_no_link, args),
+							true, false);
 				}
 				data = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
 				data.widthHint = convertWidthInCharsToPixels(70);
@@ -246,7 +247,7 @@ public class AccessRulesDialog extends StatusDialog {
 			desc = NewWizardMessages.AccessRulesDialog_description;
 		}
 
-		return Messages.format(desc, name);
+		return MessageFormat.format(desc, name);
 	}
 
 	protected void doCustomButtonPressed(ListDialogField field, int index) {

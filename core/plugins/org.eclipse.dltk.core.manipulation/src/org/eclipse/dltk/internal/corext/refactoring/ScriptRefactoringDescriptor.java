@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,7 +28,6 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.dltk.core.manipulation.ScriptManipulation;
-import org.eclipse.dltk.internal.core.manipulation.Messages;
 import org.eclipse.dltk.internal.core.refactoring.descriptors.DescriptorMessages;
 import org.eclipse.dltk.internal.corext.refactoring.tagging.IScriptableRefactoring;
 import org.eclipse.ltk.core.refactoring.Refactoring;
@@ -142,10 +142,8 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	/**
 	 * Converts the specified element to an input handle.
 	 *
-	 * @param project
-	 *            the project, or <code>null</code> for the workspace
-	 * @param element
-	 *            the element
+	 * @param project the project, or <code>null</code> for the workspace
+	 * @param element the element
 	 * @return a corresponding input handle
 	 */
 	public static String elementToHandle(final String project, final IModelElement element) {
@@ -160,10 +158,8 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	/**
 	 * Converts an input handle back to the corresponding script element.
 	 *
-	 * @param project
-	 *            the project, or <code>null</code> for the workspace
-	 * @param handle
-	 *            the input handle
+	 * @param project the project, or <code>null</code> for the workspace
+	 * @param handle  the input handle
 	 * @return the corresponding script element, or <code>null</code> if no such
 	 *         element exists
 	 */
@@ -174,13 +170,10 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	/**
 	 * Converts an input handle back to the corresponding script element.
 	 *
-	 * @param project
-	 *            the project, or <code>null</code> for the workspace
-	 * @param handle
-	 *            the input handle
-	 * @param check
-	 *            <code>true</code> to check for existence of the element,
-	 *            <code>false</code> otherwise
+	 * @param project the project, or <code>null</code> for the workspace
+	 * @param handle  the input handle
+	 * @param check   <code>true</code> to check for existence of the element,
+	 *                <code>false</code> otherwise
 	 * @return the corresponding script element, or <code>null</code> if no such
 	 *         element exists
 	 */
@@ -191,15 +184,11 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	/**
 	 * Converts an input handle back to the corresponding script element.
 	 *
-	 * @param owner
-	 *            the working copy owner
-	 * @param project
-	 *            the project, or <code>null</code> for the workspace
-	 * @param handle
-	 *            the input handle
-	 * @param check
-	 *            <code>true</code> to check for existence of the element,
-	 *            <code>false</code> otherwise
+	 * @param owner   the working copy owner
+	 * @param project the project, or <code>null</code> for the workspace
+	 * @param handle  the input handle
+	 * @param check   <code>true</code> to check for existence of the element,
+	 *                <code>false</code> otherwise
 	 * @return the corresponding script element, or <code>null</code> if no such
 	 *         element exists
 	 */
@@ -237,10 +226,8 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	 * Converts an input handle with the given prefix back to the corresponding
 	 * resource.
 	 *
-	 * @param project
-	 *            the project, or <code>null</code> for the workspace
-	 * @param handle
-	 *            the input handle
+	 * @param project the project, or <code>null</code> for the workspace
+	 * @param handle  the input handle
 	 *
 	 * @return the corresponding resource, or <code>null</code> if no such resource
 	 *         exists
@@ -260,10 +247,8 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	/**
 	 * Converts the specified resource to an input handle.
 	 *
-	 * @param project
-	 *            the project, or <code>null</code> for the workspace
-	 * @param resource
-	 *            the resource
+	 * @param project  the project, or <code>null</code> for the workspace
+	 * @param resource the resource
 	 *
 	 * @return the input handle
 	 */
@@ -282,20 +267,13 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	/**
 	 * Creates a new script refactoring descriptor.
 	 *
-	 * @param contribution
-	 *            the refactoring contribution, or <code>null</code>
-	 * @param id
-	 *            the unique id of the refactoring
-	 * @param project
-	 *            the project name, or <code>null</code>
-	 * @param description
-	 *            the description
-	 * @param comment
-	 *            the comment, or <code>null</code>
-	 * @param arguments
-	 *            the argument map
-	 * @param flags
-	 *            the flags
+	 * @param contribution the refactoring contribution, or <code>null</code>
+	 * @param id           the unique id of the refactoring
+	 * @param project      the project name, or <code>null</code>
+	 * @param description  the description
+	 * @param comment      the comment, or <code>null</code>
+	 * @param arguments    the argument map
+	 * @param flags        the flags
 	 */
 	public ScriptRefactoringDescriptor(final ScriptRefactoringContribution contribution, final String id,
 			final String project, final String description, final String comment, final Map<String, String> arguments,
@@ -309,8 +287,7 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	/**
 	 * Creates a new java refactoring descriptor.
 	 *
-	 * @param id
-	 *            the unique id of the refactoring
+	 * @param id the unique id of the refactoring
 	 */
 	protected ScriptRefactoringDescriptor(final String id) {
 		this(id, null, DescriptorMessages.ScriptRefactoringDescriptor_not_available, null, new HashMap<>(),
@@ -320,18 +297,12 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	/**
 	 * Creates a new script refactoring descriptor.
 	 *
-	 * @param id
-	 *            the unique id of the refactoring
-	 * @param project
-	 *            the project name, or <code>null</code>
-	 * @param description
-	 *            the description
-	 * @param comment
-	 *            the comment, or <code>null</code>
-	 * @param arguments
-	 *            the argument map
-	 * @param flags
-	 *            the flags
+	 * @param id          the unique id of the refactoring
+	 * @param project     the project name, or <code>null</code>
+	 * @param description the description
+	 * @param comment     the comment, or <code>null</code>
+	 * @param arguments   the argument map
+	 * @param flags       the flags
 	 */
 	public ScriptRefactoringDescriptor(final String id, final String project, final String description,
 			final String comment, final Map<String, String> arguments, final int flags) {
@@ -377,7 +348,7 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 				status.merge(result);
 			} else
 				throw new CoreException(new Status(IStatus.ERROR, ScriptManipulation.ID_PLUGIN, 0,
-						Messages.format(DescriptorMessages.ScriptRefactoringDescriptor_no_resulting_descriptor,
+						MessageFormat.format(DescriptorMessages.ScriptRefactoringDescriptor_no_resulting_descriptor,
 								getDescription()),
 						null));
 		}
@@ -387,8 +358,7 @@ public class ScriptRefactoringDescriptor extends RefactoringDescriptor {
 	/**
 	 * Converts the specified element to an input handle.
 	 *
-	 * @param element
-	 *            the element
+	 * @param element the element
 	 * @return a corresponding input handle
 	 */
 	public String elementToHandle(final IModelElement element) {

@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -38,7 +39,6 @@ import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.IProjectFragmentManipulationQuery;
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
@@ -54,8 +54,7 @@ public class DeleteProjectFragmentChange extends AbstractDeleteChange {
 	private final boolean fIsExecuteChange;
 	private final IProjectFragmentManipulationQuery fUpdateClasspathQuery;
 
-	public DeleteProjectFragmentChange(IProjectFragment root,
-			boolean isExecuteChange,
+	public DeleteProjectFragmentChange(IProjectFragment root, boolean isExecuteChange,
 			IProjectFragmentManipulationQuery updateClasspathQuery) {
 		Assert.isNotNull(root);
 		Assert.isTrue(!root.isExternal());
@@ -66,8 +65,7 @@ public class DeleteProjectFragmentChange extends AbstractDeleteChange {
 
 	@Override
 	public String getName() {
-		return Messages.format(
-				RefactoringCoreMessages.DeleteProjectFragmentChange_delete,
+		return MessageFormat.format(RefactoringCoreMessages.DeleteProjectFragmentChange_delete,
 				getRoot().getElementName());
 	}
 
@@ -105,38 +103,32 @@ public class DeleteProjectFragmentChange extends AbstractDeleteChange {
 		IResource rootResource = root.getResource();
 		CompositeChange result = new CompositeChange(getName());
 
-		ResourceDescription rootDescription = ResourceDescription
-				.fromResource(rootResource);
-		IScriptProject[] referencingProjects = ModelElementUtil
-				.getReferencingProjects(root);
+		ResourceDescription rootDescription = ResourceDescription.fromResource(rootResource);
+		IScriptProject[] referencingProjects = ModelElementUtil.getReferencingProjects(root);
 		HashMap<IFile, String> classpathFilesContents = new HashMap<>();
 		for (int i = 0; i < referencingProjects.length; i++) {
 			IScriptProject javaProject = referencingProjects[i];
-			IFile classpathFile = javaProject.getProject()
-					.getFile(ScriptProject.BUILDPATH_FILENAME);
+			IFile classpathFile = javaProject.getProject().getFile(ScriptProject.BUILDPATH_FILENAME);
 			if (classpathFile.exists()) {
-				classpathFilesContents.put(classpathFile,
-						getFileContents(classpathFile));
+				classpathFilesContents.put(classpathFile, getFileContents(classpathFile));
 			}
 		}
 
-		root.delete(resourceUpdateFlags, jCoreUpdateFlags,
-				new SubProgressMonitor(pm, 1));
+		root.delete(resourceUpdateFlags, jCoreUpdateFlags, new SubProgressMonitor(pm, 1));
 
-		rootDescription.recordStateFromHistory(rootResource,
-				new SubProgressMonitor(pm, 1));
-		for (Iterator<Entry<IFile, String>> iterator = classpathFilesContents
-				.entrySet().iterator(); iterator.hasNext();) {
+		rootDescription.recordStateFromHistory(rootResource, new SubProgressMonitor(pm, 1));
+		for (Iterator<Entry<IFile, String>> iterator = classpathFilesContents.entrySet().iterator(); iterator
+				.hasNext();) {
 			Entry<IFile, String> entry = iterator.next();
 			IFile file = entry.getKey();
 			String contents = entry.getValue();
 			// Restore time stamps? This should probably be some sort of
 			// UndoTextFileChange.
-			TextFileChange classpathUndo = new TextFileChange(Messages.format(
-					RefactoringCoreMessages.DeleteProjectFragmentChange_restore_file,
-					file.getFullPath().toOSString()), file);
-			classpathUndo
-					.setEdit(new ReplaceEdit(0, getFileLength(file), contents));
+			TextFileChange classpathUndo = new TextFileChange(
+					MessageFormat.format(RefactoringCoreMessages.DeleteProjectFragmentChange_restore_file,
+							file.getFullPath().toOSString()),
+					file);
+			classpathUndo.setEdit(new ReplaceEdit(0, getFileLength(file), contents));
 			result.add(classpathUndo);
 		}
 		result.add(new UndoDeleteResourceChange(rootDescription));
@@ -151,12 +143,10 @@ public class DeleteProjectFragmentChange extends AbstractDeleteChange {
 			return true;
 		if (fUpdateClasspathQuery == null)
 			return true;
-		IScriptProject[] referencingProjects = ModelElementUtil
-				.getReferencingProjects(getRoot());
+		IScriptProject[] referencingProjects = ModelElementUtil.getReferencingProjects(getRoot());
 		if (referencingProjects.length == 0)
 			return true;
-		return fUpdateClasspathQuery.confirmManipulation(getRoot(),
-				referencingProjects);
+		return fUpdateClasspathQuery.confirmManipulation(getRoot(), referencingProjects);
 	}
 
 	private static int getFileLength(IFile file) throws CoreException {
@@ -173,8 +163,7 @@ public class DeleteProjectFragmentChange extends AbstractDeleteChange {
 		try {
 			return (int) reader.skip(Integer.MAX_VALUE);
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR,
-					DLTKUIPlugin.getPluginId(), e.getMessage(), e));
+			throw new CoreException(new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), e.getMessage(), e));
 		}
 	}
 
@@ -183,11 +172,9 @@ public class DeleteProjectFragmentChange extends AbstractDeleteChange {
 		IPath path = file.getFullPath();
 		manager.connect(path, LocationKind.IFILE, new NullProgressMonitor());
 		try {
-			return manager.getTextFileBuffer(path, LocationKind.IFILE)
-					.getDocument().get();
+			return manager.getTextFileBuffer(path, LocationKind.IFILE).getDocument().get();
 		} finally {
-			manager.disconnect(path, LocationKind.IFILE,
-					new NullProgressMonitor());
+			manager.disconnect(path, LocationKind.IFILE, new NullProgressMonitor());
 		}
 	}
 }

@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.changes;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -21,7 +23,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ui.ide.undo.ResourceDescription;
@@ -41,8 +42,8 @@ public class DeleteFolderChange extends AbstractDeleteChange {
 	}
 
 	public static IPath getFolderPath(IFolder folder) {
-		return folder.getFullPath().removeFirstSegments(ResourcesPlugin
-				.getWorkspace().getRoot().getFullPath().segmentCount());
+		return folder.getFullPath()
+				.removeFirstSegments(ResourcesPlugin.getWorkspace().getRoot().getFullPath().segmentCount());
 	}
 
 	public static IFolder getFolder(IPath path) {
@@ -51,8 +52,7 @@ public class DeleteFolderChange extends AbstractDeleteChange {
 
 	@Override
 	public String getName() {
-		return Messages.format(RefactoringCoreMessages.DeleteFolderChange_0,
-				fPath.lastSegment());
+		return MessageFormat.format(RefactoringCoreMessages.DeleteFolderChange_0, fPath.lastSegment());
 	}
 
 	@Override
@@ -86,11 +86,9 @@ public class DeleteFolderChange extends AbstractDeleteChange {
 		}, IResource.DEPTH_INFINITE, false);
 		pm.worked(1);
 
-		ResourceDescription resourceDescription = ResourceDescription
-				.fromResource(folder);
+		ResourceDescription resourceDescription = ResourceDescription.fromResource(folder);
 		folder.delete(false, true, new SubProgressMonitor(pm, 1));
-		resourceDescription.recordStateFromHistory(folder,
-				new SubProgressMonitor(pm, 1));
+		resourceDescription.recordStateFromHistory(folder, new SubProgressMonitor(pm, 1));
 		pm.done();
 
 		return new UndoDeleteResourceChange(resourceDescription);

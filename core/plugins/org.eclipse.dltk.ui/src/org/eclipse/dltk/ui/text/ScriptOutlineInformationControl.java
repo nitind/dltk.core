@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.ui.text;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,7 +27,6 @@ import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.hierarchy.TypeHierarchyBuilders;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 import org.eclipse.dltk.internal.ui.text.AbstractInformationControl;
 import org.eclipse.dltk.internal.ui.text.TextMessages;
@@ -511,10 +511,11 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 		String keySequence = sequences[0].format();
 
 		if (fOutlineContentProvider.isShowingInheritedMembers()) {
-			return Messages.format(TextMessages.ScriptOutlineInformationControl_pressToHideInheritedMembers,
+			return MessageFormat.format(TextMessages.ScriptOutlineInformationControl_pressToHideInheritedMembers,
 					keySequence);
 		}
-		return Messages.format(TextMessages.ScriptOutlineInformationControl_pressToShowInheritedMembers, keySequence);
+		return MessageFormat.format(TextMessages.ScriptOutlineInformationControl_pressToShowInheritedMembers,
+				keySequence);
 	}
 
 	@Override

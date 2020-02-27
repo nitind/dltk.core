@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.search;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IFile;
@@ -18,7 +19,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.dnd.DLTKViewerDragAdapter;
 import org.eclipse.dltk.internal.ui.dnd.EditorInputTransferDragAdapter;
 import org.eclipse.dltk.internal.ui.dnd.ResourceTransferDragAdapter;
@@ -440,12 +440,12 @@ public class DLTKSearchResultPage extends AbstractTextSearchViewPage implements 
 		if (input != null && input.getActiveMatchFilters() != null && input.getActiveMatchFilters().length > 0) {
 			if (isQueryRunning()) {
 				String message = SearchMessages.DLTKSearchResultPage_filtered_message;
-				return Messages.format(message, label);
+				return MessageFormat.format(message, label);
 
 			}
 			int filteredOut = input.getMatchCount() - getFilteredMatchCount();
 			String message = SearchMessages.DLTKSearchResultPage_filteredWithCount_message;
-			return Messages.format(message, label, String.valueOf(filteredOut));
+			return MessageFormat.format(message, label, String.valueOf(filteredOut));
 		}
 		return label;
 	}

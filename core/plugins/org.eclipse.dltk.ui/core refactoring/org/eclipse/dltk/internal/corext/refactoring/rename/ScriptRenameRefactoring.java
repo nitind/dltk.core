@@ -3,22 +3,22 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.rename;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.tagging.IScriptableRefactoring;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringArguments;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor;
 import org.eclipse.ltk.core.refactoring.participants.RenameProcessor;
 import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
-
 
 /**
  * A rename refactoring which can be initialized with refactoring arguments.
@@ -30,8 +30,7 @@ public class ScriptRenameRefactoring extends RenameRefactoring implements IScrip
 	/**
 	 * Creates a new script rename refactoring.
 	 *
-	 * @param processor
-	 *            the rename processor to use
+	 * @param processor the rename processor to use
 	 */
 	public ScriptRenameRefactoring(final RenameProcessor processor) {
 		super(processor);
@@ -40,10 +39,12 @@ public class ScriptRenameRefactoring extends RenameRefactoring implements IScrip
 	@Override
 	public final RefactoringStatus initialize(final RefactoringArguments arguments) {
 		Assert.isNotNull(arguments);
-		final RefactoringProcessor processor= getProcessor();
+		final RefactoringProcessor processor = getProcessor();
 		if (processor instanceof IScriptableRefactoring) {
 			return ((IScriptableRefactoring) processor).initialize(arguments);
 		}
-		return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.ProcessorBasedRefactoring_error_unsupported_initialization, getProcessor().getIdentifier()));
+		return RefactoringStatus.createFatalErrorStatus(
+				MessageFormat.format(RefactoringCoreMessages.ProcessorBasedRefactoring_error_unsupported_initialization,
+						getProcessor().getIdentifier()));
 	}
 }

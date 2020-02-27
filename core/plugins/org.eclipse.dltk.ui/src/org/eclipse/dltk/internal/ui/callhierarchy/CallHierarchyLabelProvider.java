@@ -3,16 +3,16 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.callhierarchy;
 
+import java.text.MessageFormat;
 import java.util.Collection;
 
 import org.eclipse.dltk.internal.corext.callhierarchy.MethodWrapper;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.dltk.ui.ScriptElementLabels;
@@ -83,7 +83,7 @@ class CallHierarchyLabelProvider extends AppearanceAwareLabelProvider {
 		Collection callLocations = methodWrapper.getMethodCall().getCallLocations();
 
 		if ((callLocations != null) && (callLocations.size() > 1)) {
-			return Messages.format(CallHierarchyMessages.CallHierarchyLabelProvider_matches, label,
+			return MessageFormat.format(CallHierarchyMessages.CallHierarchyLabelProvider_matches, label,
 					String.valueOf(callLocations.size()));
 		}
 

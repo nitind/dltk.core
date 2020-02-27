@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -11,8 +11,9 @@
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.dialogs;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.jface.contentassist.SubjectControlContentAssistant;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -54,8 +55,8 @@ public class TableTextCellEditor extends CellEditor {
 	private final int fColumn;
 	private final String fProperty;
 	/**
-	 * The editor's value on activation. This value is reset to the cell when
-	 * the editor is left via ESC key.
+	 * The editor's value on activation. This value is reset to the cell when the
+	 * editor is left via ESC key.
 	 */
 	String fOriginalValue;
 	SubjectControlContentAssistant fContentAssistant;
@@ -86,15 +87,13 @@ public class TableTextCellEditor extends CellEditor {
 	}
 
 	private void fireModifyEvent(Object newValue) {
-		fTableViewer.getCellModifier().modify(
-				fTableViewer.getStructuredSelection().getFirstElement(),
-				fProperty, newValue);
+		fTableViewer.getCellModifier().modify(fTableViewer.getStructuredSelection().getFirstElement(), fProperty,
+				newValue);
 	}
 
 	@Override
 	protected void focusLost() {
-		if (fContentAssistant != null
-				&& fContentAssistant.hasProposalPopupFocus()) {
+		if (fContentAssistant != null && fContentAssistant.hasProposalPopupFocus()) {
 			// skip focus lost if it went to the content assist popup
 		} else {
 			super.focusLost();
@@ -159,8 +158,7 @@ public class TableTextCellEditor extends CellEditor {
 			public void keyPressed(KeyEvent e) {
 				// support switching rows while editing:
 				if (e.stateMask == SWT.MOD1 || e.stateMask == SWT.MOD2) {
-					if (e.keyCode == SWT.ARROW_UP
-							|| e.keyCode == SWT.ARROW_DOWN) {
+					if (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.ARROW_DOWN) {
 						// allow starting multi-selection even if in edit mode
 						deactivate();
 						e.doit = false;
@@ -174,8 +172,7 @@ public class TableTextCellEditor extends CellEditor {
 				switch (e.keyCode) {
 				case SWT.ARROW_DOWN:
 					e.doit = false;
-					int nextRow = fTableViewer.getTable().getSelectionIndex()
-							+ 1;
+					int nextRow = fTableViewer.getTable().getSelectionIndex() + 1;
 					if (nextRow >= fTableViewer.getTable().getItemCount())
 						break;
 					editRow(nextRow);
@@ -183,8 +180,7 @@ public class TableTextCellEditor extends CellEditor {
 
 				case SWT.ARROW_UP:
 					e.doit = false;
-					int prevRow = fTableViewer.getTable().getSelectionIndex()
-							- 1;
+					int prevRow = fTableViewer.getTable().getSelectionIndex() - 1;
 					if (prevRow < 0)
 						break;
 					editRow(prevRow);
@@ -199,11 +195,9 @@ public class TableTextCellEditor extends CellEditor {
 
 			private void editRow(int row) {
 				fTableViewer.getTable().setSelection(row);
-				IStructuredSelection newSelection = fTableViewer
-						.getStructuredSelection();
+				IStructuredSelection newSelection = fTableViewer.getStructuredSelection();
 				if (newSelection.size() == 1)
-					fTableViewer.editElement(newSelection.getFirstElement(),
-							fColumn);
+					fTableViewer.editElement(newSelection.getFirstElement(), fColumn);
 			}
 		});
 		text.addKeyListener(new KeyAdapter() {
@@ -222,8 +216,7 @@ public class TableTextCellEditor extends CellEditor {
 			}
 		});
 		text.addTraverseListener(e -> {
-			if (e.detail == SWT.TRAVERSE_ESCAPE
-					|| e.detail == SWT.TRAVERSE_RETURN) {
+			if (e.detail == SWT.TRAVERSE_ESCAPE || e.detail == SWT.TRAVERSE_RETURN) {
 				e.doit = false;
 			}
 		});
@@ -256,8 +249,8 @@ public class TableTextCellEditor extends CellEditor {
 	@Override
 	protected void fireCancelEditor() {
 		/*
-		 * bug 58540: change signature refactoring interaction: validate as you
-		 * type [refactoring]
+		 * bug 58540: change signature refactoring interaction: validate as you type
+		 * [refactoring]
 		 */
 		text.setText(fOriginalValue);
 		super.fireApplyEditorValue();
@@ -290,8 +283,7 @@ public class TableTextCellEditor extends CellEditor {
 	 * <code>CellEditor</code> framework method accepts a text string (type
 	 * <code>String</code>).
 	 *
-	 * @param value
-	 *                  a text string (type <code>String</code>)
+	 * @param value a text string (type <code>String</code>)
 	 */
 	@Override
 	protected void doSetValue(Object value) {
@@ -303,13 +295,12 @@ public class TableTextCellEditor extends CellEditor {
 
 	/**
 	 * Processes a modify event that occurred in this text cell editor. This
-	 * framework method performs validation and sets the error message
-	 * accordingly, and then reports a change via
-	 * <code>fireEditorValueChanged</code>. Subclasses should call this method
-	 * at appropriate times. Subclasses may extend or reimplement.
+	 * framework method performs validation and sets the error message accordingly,
+	 * and then reports a change via <code>fireEditorValueChanged</code>. Subclasses
+	 * should call this method at appropriate times. Subclasses may extend or
+	 * reimplement.
 	 *
-	 * @param e
-	 *              the SWT modify event
+	 * @param e the SWT modify event
 	 */
 	protected void editOccured(ModifyEvent e) {
 		String value = text.getText();
@@ -317,8 +308,7 @@ public class TableTextCellEditor extends CellEditor {
 		boolean newValidState = isCorrect(value);
 		if (!newValidState) {
 			// try to insert the current value into the error message.
-			setErrorMessage(
-					Messages.format(getErrorMessage(), new Object[] { value }));
+			setErrorMessage(MessageFormat.format(getErrorMessage(), value));
 		}
 		valueChanged(oldValidState, newValidState);
 		fireModifyEvent(text.getText()); // update model on-the-fly
@@ -353,8 +343,7 @@ public class TableTextCellEditor extends CellEditor {
 	public boolean isDeleteEnabled() {
 		if (text == null || text.isDisposed())
 			return false;
-		return text.getSelectionCount() > 0
-				|| text.getCaretPosition() < text.getCharCount();
+		return text.getSelectionCount() > 0 || text.getCaretPosition() < text.getCharCount();
 	}
 
 	@Override
@@ -383,8 +372,7 @@ public class TableTextCellEditor extends CellEditor {
 			//
 			// An exception is made for Ctrl+Enter for multi-line texts, since
 			// a default selection event is not sent in this case.
-			if (text != null && !text.isDisposed()
-					&& (text.getStyle() & SWT.MULTI) != 0) {
+			if (text != null && !text.isDisposed() && (text.getStyle() & SWT.MULTI) != 0) {
 				if ((keyEvent.stateMask & SWT.CTRL) != 0) {
 					super.keyReleaseOccured(keyEvent);
 				}

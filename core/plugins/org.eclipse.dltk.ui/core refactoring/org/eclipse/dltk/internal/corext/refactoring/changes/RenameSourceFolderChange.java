@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.changes;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
@@ -18,31 +20,27 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.internal.corext.refactoring.AbstractModelElementRenameChange;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
-public final class RenameSourceFolderChange
-		extends AbstractModelElementRenameChange {
+public final class RenameSourceFolderChange extends AbstractModelElementRenameChange {
 
-	private static RefactoringStatus checkIfModifiable(IProjectFragment root,
-			IProgressMonitor pm) throws CoreException {
+	private static RefactoringStatus checkIfModifiable(IProjectFragment root, IProgressMonitor pm)
+			throws CoreException {
 		RefactoringStatus result = new RefactoringStatus();
 		checkExistence(result, root);
 		if (result.hasFatalError())
 			return result;
 
 		if (root.isArchive()) {
-			result.addFatalError(Messages.format(
-					RefactoringCoreMessages.RenameSourceFolderChange_rename_archive,
+			result.addFatalError(MessageFormat.format(RefactoringCoreMessages.RenameSourceFolderChange_rename_archive,
 					root.getElementName()));
 			return result;
 		}
 
 		if (root.isExternal()) {
-			result.addFatalError(Messages.format(
-					RefactoringCoreMessages.RenameSourceFolderChange_rename_external,
+			result.addFatalError(MessageFormat.format(RefactoringCoreMessages.RenameSourceFolderChange_rename_external,
 					root.getElementName()));
 			return result;
 		}
@@ -52,8 +50,7 @@ public final class RenameSourceFolderChange
 			return result;
 
 		if (root.getCorrespondingResource().isLinked()) {
-			result.addFatalError(Messages.format(
-					RefactoringCoreMessages.RenameSourceFolderChange_rename_linked,
+			result.addFatalError(MessageFormat.format(RefactoringCoreMessages.RenameSourceFolderChange_rename_linked,
 					root.getElementName()));
 			return result;
 		}
@@ -61,17 +58,15 @@ public final class RenameSourceFolderChange
 		return result;
 	}
 
-	public RenameSourceFolderChange(RefactoringDescriptor descriptor,
-			IProjectFragment sourceFolder, String newName, String comment) {
-		this(descriptor, sourceFolder.getPath(), sourceFolder.getElementName(),
-				newName, comment, IResource.NULL_STAMP);
+	public RenameSourceFolderChange(RefactoringDescriptor descriptor, IProjectFragment sourceFolder, String newName,
+			String comment) {
+		this(descriptor, sourceFolder.getPath(), sourceFolder.getElementName(), newName, comment, IResource.NULL_STAMP);
 		Assert.isTrue(!sourceFolder.isReadOnly(), "should not be read only"); //$NON-NLS-1$
 		Assert.isTrue(!sourceFolder.isArchive(), "should not be an archive"); //$NON-NLS-1$
 	}
 
-	private RenameSourceFolderChange(RefactoringDescriptor descriptor,
-			IPath resourcePath, String oldName, String newName, String comment,
-			long stampToRestore) {
+	private RenameSourceFolderChange(RefactoringDescriptor descriptor, IPath resourcePath, String oldName,
+			String newName, String comment, long stampToRestore) {
 		super(descriptor, resourcePath, oldName, newName, comment);
 	}
 
@@ -82,16 +77,15 @@ public final class RenameSourceFolderChange
 
 	@Override
 	protected Change createUndoChange(long stampToRestore) {
-		return new RenameSourceFolderChange(null, createNewPath(), getNewName(),
-				getOldName(), getComment(), stampToRestore);
+		return new RenameSourceFolderChange(null, createNewPath(), getNewName(), getOldName(), getComment(),
+				stampToRestore);
 	}
 
 	@Override
 	protected void doRename(IProgressMonitor pm) throws CoreException {
 		IProjectFragment sourceFolder = getSourceFolder();
 		if (sourceFolder != null)
-			sourceFolder.move(getNewPath(), getCoreMoveFlags(),
-					getScriptModelUpdateFlags(), null, pm);
+			sourceFolder.move(getNewPath(), getCoreMoveFlags(), getScriptModelUpdateFlags(), null, pm);
 	}
 
 	private int getCoreMoveFlags() {
@@ -102,22 +96,18 @@ public final class RenameSourceFolderChange
 	}
 
 	private int getScriptModelUpdateFlags() {
-		return IProjectFragment.DESTINATION_PROJECT_BUILDPATH
-				| IProjectFragment.ORIGINATING_PROJECT_BUILDPATH
-				| IProjectFragment.OTHER_REFERRING_PROJECTS_BUILDPATH
-				| IProjectFragment.REPLACE;
+		return IProjectFragment.DESTINATION_PROJECT_BUILDPATH | IProjectFragment.ORIGINATING_PROJECT_BUILDPATH
+				| IProjectFragment.OTHER_REFERRING_PROJECTS_BUILDPATH | IProjectFragment.REPLACE;
 	}
 
 	@Override
 	public String getName() {
-		return Messages.format(
-				RefactoringCoreMessages.RenameSourceFolderChange_rename,
-				getOldName(), getNewName());
+		return MessageFormat.format(RefactoringCoreMessages.RenameSourceFolderChange_rename, getOldName(),
+				getNewName());
 	}
 
 	private IPath getNewPath() {
-		return getResource().getFullPath().removeLastSegments(1)
-				.append(getNewName());
+		return getResource().getFullPath().removeLastSegments(1).append(getNewName());
 	}
 
 	private IProjectFragment getSourceFolder() {
@@ -132,8 +122,7 @@ public final class RenameSourceFolderChange
 		if (result.hasFatalError())
 			return result;
 		IProjectFragment sourceFolder = getSourceFolder();
-		result.merge(
-				checkIfModifiable(sourceFolder, new SubProgressMonitor(pm, 1)));
+		result.merge(checkIfModifiable(sourceFolder, new SubProgressMonitor(pm, 1)));
 
 		return result;
 	}

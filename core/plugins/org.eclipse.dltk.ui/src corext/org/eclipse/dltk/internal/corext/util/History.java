@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -62,10 +63,8 @@ public abstract class History {
 	private static final String DEFAULT_INFO_NODE_NAME = "infoNode"; //$NON-NLS-1$
 	private static final int MAX_HISTORY_SIZE = 60;
 
-	private static DLTKUIException createException(Throwable t,
-			String message) {
-		return new DLTKUIException(
-				DLTKUIStatus.createError(IStatus.ERROR, message, t));
+	private static DLTKUIException createException(Throwable t, String message) {
+		return new DLTKUIException(DLTKUIStatus.createError(IStatus.ERROR, message, t));
 	}
 
 	private final Map fHistory;
@@ -123,13 +122,11 @@ public abstract class History {
 	}
 
 	/**
-	 * Normalized position in history of object denoted by key. The position is
-	 * a value between zero and one where zero means not contained in history
-	 * and one means newest element in history. The lower the value the older
-	 * the element.
+	 * Normalized position in history of object denoted by key. The position is a
+	 * value between zero and one where zero means not contained in history and one
+	 * means newest element in history. The lower the value the older the element.
 	 *
-	 * @param key
-	 *            The key of the object to inspect
+	 * @param key The key of the object to inspect
 	 * @return value in [0.0, 1.0] the lower the older the element
 	 */
 	public synchronized float getNormalizedPosition(Object key) {
@@ -146,8 +143,7 @@ public abstract class History {
 	 * Absolute position of object denoted by key in the history or -1 if
 	 * !containsKey(key). The higher the newer.
 	 *
-	 * @param key
-	 *            The key of the object to inspect
+	 * @param key The key of the object to inspect
 	 * @return value between 0 and MAX_HISTORY_SIZE - 1, or -1
 	 */
 	public synchronized int getPosition(Object key) {
@@ -158,12 +154,10 @@ public abstract class History {
 	}
 
 	public synchronized void load() {
-		IPath stateLocation = DLTKUIPlugin.getDefault().getStateLocation()
-				.append(fFileName);
+		IPath stateLocation = DLTKUIPlugin.getDefault().getStateLocation().append(fFileName);
 		File file = new File(stateLocation.toOSString());
 		if (file.exists()) {
-			try (InputStreamReader reader = new InputStreamReader(
-					new FileInputStream(file), StandardCharsets.UTF_8)) {
+			try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
 
 				load(new InputSource(reader));
 			} catch (IOException e) {
@@ -175,8 +169,7 @@ public abstract class History {
 	}
 
 	public synchronized void save() {
-		IPath stateLocation = DLTKUIPlugin.getDefault().getStateLocation()
-				.append(fFileName);
+		IPath stateLocation = DLTKUIPlugin.getDefault().getStateLocation().append(fFileName);
 		File file = new File(stateLocation.toOSString());
 		try (OutputStream out = new FileOutputStream(file)) {
 			save(out);
@@ -202,27 +195,23 @@ public abstract class History {
 	/**
 	 * Store <code>Object</code> in <code>Element</code>
 	 *
-	 * @param object
-	 *            The object to store
-	 * @param element
-	 *            The Element to store to
+	 * @param object  The object to store
+	 * @param element The Element to store to
 	 */
 	protected abstract void setAttributes(Object object, Element element);
 
 	/**
 	 * Return a new instance of an Object given <code>element</code>
 	 *
-	 * @param element
-	 *            The element containing required information to create the
-	 *            Object
+	 * @param element The element containing required information to create the
+	 *                Object
 	 */
 	protected abstract Object createFromElement(Element element);
 
 	/**
 	 * Get key for object
 	 *
-	 * @param object
-	 *            The object to calculate a key for, not null
+	 * @param object The object to calculate a key for, not null
 	 * @return The key for object, not null
 	 */
 	protected abstract Object getKey(Object object);
@@ -245,18 +234,14 @@ public abstract class History {
 	private void load(InputSource inputSource) throws CoreException {
 		Element root;
 		try {
-			DocumentBuilder parser = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
+			DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			root = parser.parse(inputSource).getDocumentElement();
 		} catch (SAXException e) {
-			throw createException(e, Messages
-					.format(CorextMessages.History_error_read, fFileName));
+			throw createException(e, MessageFormat.format(CorextMessages.History_error_read, fFileName));
 		} catch (ParserConfigurationException e) {
-			throw createException(e, Messages
-					.format(CorextMessages.History_error_read, fFileName));
+			throw createException(e, MessageFormat.format(CorextMessages.History_error_read, fFileName));
 		} catch (IOException e) {
-			throw createException(e, Messages
-					.format(CorextMessages.History_error_read, fFileName));
+			throw createException(e, MessageFormat.format(CorextMessages.History_error_read, fFileName));
 		}
 
 		if (root == null)
@@ -289,8 +274,7 @@ public abstract class History {
 
 	private void save(OutputStream stream) throws CoreException {
 		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document document = builder.newDocument();
 
@@ -305,8 +289,7 @@ public abstract class History {
 				rootElement.appendChild(element);
 			}
 
-			Transformer transformer = TransformerFactory.newInstance()
-					.newTransformer();
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 			transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
 			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
@@ -315,11 +298,9 @@ public abstract class History {
 
 			transformer.transform(source, result);
 		} catch (TransformerException e) {
-			throw createException(e, Messages
-					.format(CorextMessages.History_error_serialize, fFileName));
+			throw createException(e, MessageFormat.format(CorextMessages.History_error_serialize, fFileName));
 		} catch (ParserConfigurationException e) {
-			throw createException(e, Messages
-					.format(CorextMessages.History_error_serialize, fFileName));
+			throw createException(e, MessageFormat.format(CorextMessages.History_error_serialize, fFileName));
 		}
 	}
 

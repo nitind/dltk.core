@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.ui.wizards;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -27,7 +29,6 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.dltk.internal.core.ExternalScriptFolder;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.TypedViewerFilter;
@@ -80,13 +81,12 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	private IWorkspaceRoot workspaceRoot;
 
 	/**
-	 * Filter used in {@link NewContainerWizardPage#chooseContainer()} to show
-	 * only selectable elements.
+	 * Filter used in {@link NewContainerWizardPage#chooseContainer()} to show only
+	 * selectable elements.
 	 */
 	protected static class ContainerViewerFilter extends TypedViewerFilter {
 		public ContainerViewerFilter() {
-			this(new Class[] { IScriptModel.class, IScriptFolder.class,
-					IScriptProject.class, IProjectFragment.class });
+			this(new Class[] { IScriptModel.class, IScriptFolder.class, IScriptProject.class, IProjectFragment.class });
 		}
 
 		public ContainerViewerFilter(Class<?>[] acceptedTypes) {
@@ -98,8 +98,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 			if (element instanceof IProjectFragment) {
 				try {
 					IProjectFragment fragment = (IProjectFragment) element;
-					if (fragment.getKind() != IProjectFragment.K_SOURCE
-							|| fragment.isExternal())
+					if (fragment.getKind() != IProjectFragment.K_SOURCE || fragment.isExternal())
 						return false;
 				} catch (ModelException e) {
 					return false;
@@ -110,8 +109,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 		}
 	}
 
-	private class ContainerFieldAdapter
-			implements IStringButtonAdapter, IDialogFieldListener {
+	private class ContainerFieldAdapter implements IStringButtonAdapter, IDialogFieldListener {
 		@Override
 		public void changeControlPressed(DialogField field) {
 			containerChangeControlPressed(field);
@@ -126,8 +124,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	/**
 	 * Create a new <code>NewContainerWizardPage</code>
 	 *
-	 * @param name
-	 *                 the wizard page's name
+	 * @param name the wizard page's name
 	 */
 	public NewContainerWizardPage(String name) {
 		super(name);
@@ -136,8 +133,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 		containerDialogField = new StringButtonDialogField(adapter);
 		containerDialogField.setDialogFieldListener(adapter);
 		containerDialogField.setLabelText(getContainerLabel());
-		containerDialogField.setButtonLabel(
-				NewWizardMessages.NewContainerWizardPage_container_button);
+		containerDialogField.setButtonLabel(NewWizardMessages.NewContainerWizardPage_container_button);
 		containerStatus = new StatusInfo();
 		currRoot = null;
 	}
@@ -153,28 +149,23 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	}
 
 	/**
-	 * Initializes the source folder field with a valid package fragment root.
-	 * The package fragment root is computed from the given Script element.
+	 * Initializes the source folder field with a valid package fragment root. The
+	 * package fragment root is computed from the given Script element.
 	 *
-	 * @param elem
-	 *                 the Script element used to compute the initial package
-	 *                 fragment root used as the source folder
+	 * @param elem the Script element used to compute the initial package fragment
+	 *             root used as the source folder
 	 */
 	protected void initContainerPage(IModelElement elem) {
 		IScriptFolder initRoot = null;
 		if (elem != null) {
-			initRoot = (IScriptFolder) elem
-					.getAncestor(IModelElement.SCRIPT_FOLDER);
+			initRoot = (IScriptFolder) elem.getAncestor(IModelElement.SCRIPT_FOLDER);
 			if (initRoot instanceof ExternalScriptFolder)
 				initRoot = null;
 			// TODO: I think this piece of code is a mess, please fix it
 			try {
 				if (initRoot == null) {
-					IProjectFragment fragment = ScriptModelUtil
-							.getProjectFragment(elem);
-					if (fragment != null
-							&& fragment.getKind() == IProjectFragment.K_SOURCE
-							&& !fragment.isExternal())
+					IProjectFragment fragment = ScriptModelUtil.getProjectFragment(elem);
+					if (fragment != null && fragment.getKind() == IProjectFragment.K_SOURCE && !fragment.isExternal())
 						initRoot = fragment.getScriptFolder(""); //$NON-NLS-1$
 
 					if (initRoot == null) {
@@ -182,21 +173,16 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 						if (project != null) {
 							initRoot = null;
 							if (project.exists()) {
-								IProjectFragment[] roots = project
-										.getProjectFragments();
+								IProjectFragment[] roots = project.getProjectFragments();
 								for (int i = 0; i < roots.length; i++) {
-									if (roots[i]
-											.getKind() == IProjectFragment.K_SOURCE) {
+									if (roots[i].getKind() == IProjectFragment.K_SOURCE) {
 										initRoot = roots[i].getScriptFolder(""); //$NON-NLS-1$
 										break;
 									}
 								}
 							}
 							if (initRoot == null) {
-								initRoot = project
-										.getProjectFragment(
-												project.getResource())
-										.getScriptFolder(""); //$NON-NLS-1$
+								initRoot = project.getProjectFragment(project.getResource()).getScriptFolder(""); //$NON-NLS-1$
 							}
 						}
 					}
@@ -212,14 +198,11 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	/**
 	 * Utility method to inspect a selection to find a Script element.
 	 *
-	 * @param selection
-	 *                      the selection to be inspected
+	 * @param selection the selection to be inspected
 	 * @return a Script element to be used as the initial selection, or
-	 *         <code>null</code>, if no Script element exists in the given
-	 *         selection
+	 *         <code>null</code>, if no Script element exists in the given selection
 	 */
-	protected IModelElement getInitialScriptElement(
-			IStructuredSelection selection) {
+	protected IModelElement getInitialScriptElement(IStructuredSelection selection) {
 		IModelElement scriptElement = null;
 
 		// Check selection
@@ -234,13 +217,10 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 				}
 				if (scriptElement == null) {
 					IResource resource = adaptable.getAdapter(IResource.class);
-					if (resource != null
-							&& resource.getType() != IResource.ROOT) {
-						while (scriptElement == null
-								&& resource.getType() != IResource.PROJECT) {
+					if (resource != null && resource.getType() != IResource.ROOT) {
+						while (scriptElement == null && resource.getType() != IResource.PROJECT) {
 							resource = resource.getParent();
-							scriptElement = resource
-									.getAdapter(IModelElement.class);
+							scriptElement = resource.getAdapter(IModelElement.class);
 						}
 
 						if (scriptElement == null) {
@@ -259,19 +239,16 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 			}
 
 			if (part instanceof IViewPartInputProvider) {
-				Object provider = ((IViewPartInputProvider) part)
-						.getViewPartInput();
+				Object provider = ((IViewPartInputProvider) part).getViewPartInput();
 				if (provider instanceof IModelElement) {
 					scriptElement = (IModelElement) provider;
 				}
 			}
 		}
 
-		if (scriptElement == null || scriptElement
-				.getElementType() == IModelElement.SCRIPT_MODEL) {
+		if (scriptElement == null || scriptElement.getElementType() == IModelElement.SCRIPT_MODEL) {
 			try {
-				IScriptProject[] projects = DLTKCore.create(getWorkspaceRoot())
-						.getScriptProjects();
+				IScriptProject[] projects = DLTKCore.create(getWorkspaceRoot()).getScriptProjects();
 				if (projects.length == 1) {
 					scriptElement = projects[0];
 				}
@@ -286,8 +263,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	/**
 	 * Returns the recommended maximum width for text fields (in pixels). This
 	 * method requires that createContent has been called before this method is
-	 * call. Subclasses may override to change the maximum width for text
-	 * fields.
+	 * call. Subclasses may override to change the maximum width for text fields.
 	 *
 	 * @return the recommended maximum width for text fields.
 	 */
@@ -296,21 +272,18 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	}
 
 	/**
-	 * Creates the necessary controls (label, text field and browse button) to
-	 * edit the source folder location. The method expects that the parent
-	 * composite uses a <code>GridLayout</code> as its layout manager and that
-	 * the grid layout has at least 3 columns.
+	 * Creates the necessary controls (label, text field and browse button) to edit
+	 * the source folder location. The method expects that the parent composite uses
+	 * a <code>GridLayout</code> as its layout manager and that the grid layout has
+	 * at least 3 columns.
 	 *
-	 * @param parent
-	 *                     the parent composite
-	 * @param nColumns
-	 *                     the number of columns to span. This number must be
-	 *                     greater or equal three
+	 * @param parent   the parent composite
+	 * @param nColumns the number of columns to span. This number must be greater or
+	 *                 equal three
 	 */
 	protected void createContainerControls(Composite parent, int nColumns) {
 		containerDialogField.doFillIntoGrid(parent, nColumns);
-		LayoutUtil.setWidthHint(containerDialogField.getTextControl(null),
-				getMaxFieldWidth());
+		LayoutUtil.setWidthHint(containerDialogField.getTextControl(null), getMaxFieldWidth());
 	}
 
 	/**
@@ -342,10 +315,10 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	protected abstract String getRequiredNature();
 
 	/**
-	 * This method is a hook which gets called after the source folder's text
-	 * input field has changed. This default implementation updates the model
-	 * and returns an error status. The underlying model is only valid if the
-	 * returned status is OK.
+	 * This method is a hook which gets called after the source folder's text input
+	 * field has changed. This default implementation updates the model and returns
+	 * an error status. The underlying model is only valid if the returned status is
+	 * OK.
 	 *
 	 * @return the model's error status
 	 */
@@ -354,8 +327,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 		currRoot = null;
 		String str = getScriptFolderText();
 		if (str.length() == 0) {
-			status.setError(
-					NewWizardMessages.NewContainerWizardPage_error_EnterContainerName);
+			status.setError(NewWizardMessages.NewContainerWizardPage_error_EnterContainerName);
 			return status;
 		}
 		IPath path = new Path(str);
@@ -365,16 +337,14 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 			if (resType == IResource.PROJECT || resType == IResource.FOLDER) {
 				IProject proj = res.getProject();
 				if (!proj.isOpen()) {
-					status.setError(Messages.format(
-							NewWizardMessages.NewContainerWizardPage_error_ProjectClosed,
+					status.setError(MessageFormat.format(NewWizardMessages.NewContainerWizardPage_error_ProjectClosed,
 							proj.getFullPath().toString()));
 					return status;
 				}
 
 				IScriptProject jproject = DLTKCore.create(proj);
 				if (resType == IResource.PROJECT)
-					currRoot = jproject.getProjectFragment(res)
-							.getScriptFolder(""); //$NON-NLS-1$
+					currRoot = jproject.getProjectFragment(res).getScriptFolder(""); //$NON-NLS-1$
 				else {
 					IProjectFragment[] fragments = null;
 					try {
@@ -395,8 +365,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 						if (projectFragment != null) {
 							IPath fragmentPath = projectFragment.getPath();
 							currRoot = projectFragment
-									.getScriptFolder(path.removeFirstSegments(
-											fragmentPath.segmentCount()));
+									.getScriptFolder(path.removeFirstSegments(fragmentPath.segmentCount()));
 						}
 					}
 				}
@@ -409,49 +378,41 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 						String nature = getRequiredNature();
 						if (nature != null && !proj.hasNature(nature)) {
 							if (resType == IResource.PROJECT) {
-								status.setError(
-										NewWizardMessages.NewContainerWizardPage_warning_NotAScriptProject);
+								status.setError(NewWizardMessages.NewContainerWizardPage_warning_NotAScriptProject);
 							} else {
-								status.setWarning(
-										NewWizardMessages.NewContainerWizardPage_warning_NotInAScriptProject);
+								status.setWarning(NewWizardMessages.NewContainerWizardPage_warning_NotInAScriptProject);
 							}
 							return status;
 						}
 						// }
 
 					} catch (CoreException e) {
-						status.setWarning(
-								NewWizardMessages.NewContainerWizardPage_warning_NotAScriptProject);
+						status.setWarning(NewWizardMessages.NewContainerWizardPage_warning_NotAScriptProject);
 					}
 				}
 				return status;
 			}
-			status.setError(Messages.format(
-					NewWizardMessages.NewContainerWizardPage_error_NotAFolder,
-					str));
+			status.setError(MessageFormat.format(NewWizardMessages.NewContainerWizardPage_error_NotAFolder, str));
 			return status;
 		}
-		status.setError(Messages.format(
-				NewWizardMessages.NewContainerWizardPage_error_ContainerDoesNotExist,
-				str));
+		status.setError(
+				MessageFormat.format(NewWizardMessages.NewContainerWizardPage_error_ContainerDoesNotExist, str));
 		return status;
 	}
 
 	// -------- update message ----------------
 	/**
-	 * Hook method that gets called when a field on this page has changed. For
-	 * this page the method gets called when the source folder field changes.
+	 * Hook method that gets called when a field on this page has changed. For this
+	 * page the method gets called when the source folder field changes.
 	 * <p>
-	 * Every sub type is responsible to call this method when a field on its
-	 * page has changed. Subtypes override (extend) the method to add
-	 * verification when a own field has a dependency to an other field. For
-	 * example the class name input must be verified again when the package
-	 * field changes (check for duplicated class names).
+	 * Every sub type is responsible to call this method when a field on its page
+	 * has changed. Subtypes override (extend) the method to add verification when a
+	 * own field has a dependency to an other field. For example the class name
+	 * input must be verified again when the package field changes (check for
+	 * duplicated class names).
 	 *
-	 * @param fieldName
-	 *                      The name of the field that has changed (field id).
-	 *                      For the source folder the field id is
-	 *                      <code>CONTAINER</code>
+	 * @param fieldName The name of the field that has changed (field id). For the
+	 *                  source folder the field id is <code>CONTAINER</code>
 	 */
 	protected void handleFieldChanged(String fieldName) {
 	}
@@ -477,8 +438,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	public IProjectFragment getProjectFragment() {
 		if (currRoot == null)
 			return null;
-		IProjectFragment fragment = (IProjectFragment) currRoot
-				.getAncestor(IModelElement.PROJECT_FRAGMENT);
+		IProjectFragment fragment = (IProjectFragment) currRoot.getAncestor(IModelElement.PROJECT_FRAGMENT);
 		if (fragment != null)
 			return fragment;
 		IScriptProject project = currRoot.getScriptProject();
@@ -510,15 +470,13 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	}
 
 	/**
-	 * Sets the current source folder (model and text field) to the given
-	 * package fragment root.
+	 * Sets the current source folder (model and text field) to the given package
+	 * fragment root.
 	 *
-	 * @param root
-	 *                          The new root.
-	 * @param canBeModified
-	 *                          if <code>false</code> the source folder field
-	 *                          can not be changed by the user. If
-	 *                          <code>true</code> the field is editable
+	 * @param root          The new root.
+	 * @param canBeModified if <code>false</code> the source folder field can not be
+	 *                      changed by the user. If <code>true</code> the field is
+	 *                      editable
 	 */
 	public void setScriptFolder(IScriptFolder root, boolean canBeModified) {
 		currRoot = root;
@@ -532,12 +490,12 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	/**
 	 * Opens a selection dialog that allows to select a source container.
 	 *
-	 * @return returns the selected package fragment root or <code>null</code>
-	 *         if the dialog has been canceled. The caller typically sets the
-	 *         result to the container input field.
+	 * @return returns the selected package fragment root or <code>null</code> if
+	 *         the dialog has been canceled. The caller typically sets the result to
+	 *         the container input field.
 	 *         <p>
-	 *         Clients can override this method if they want to offer a
-	 *         different dialog.
+	 *         Clients can override this method if they want to offer a different
+	 *         dialog.
 	 *         </p>
 	 *
 	 *
@@ -551,29 +509,21 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	}
 
 	/**
-	 * Called by {@link #chooseContainer()} with initial element and viewer
-	 * filter.
+	 * Called by {@link #chooseContainer()} with initial element and viewer filter.
 	 *
-	 * @param initElement
-	 *                        initially selected element
-	 * @param filter
-	 *                        viewer filter
-	 * @param validator
-	 *                        selection validator, may be null
+	 * @param initElement initially selected element
+	 * @param filter      viewer filter
+	 * @param validator   selection validator, may be null
 	 */
-	protected IScriptFolder doChooseContainer(IModelElement initElement,
-			ViewerFilter filter, ISelectionStatusValidator validator) {
+	protected IScriptFolder doChooseContainer(IModelElement initElement, ViewerFilter filter,
+			ISelectionStatusValidator validator) {
 		StandardModelElementContentProvider provider = new StandardModelElementContentProvider();
-		ILabelProvider labelProvider = new ModelElementLabelProvider(
-				ModelElementLabelProvider.SHOW_DEFAULT);
-		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
-				getShell(), labelProvider, provider);
+		ILabelProvider labelProvider = new ModelElementLabelProvider(ModelElementLabelProvider.SHOW_DEFAULT);
+		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), labelProvider, provider);
 
 		dialog.setComparator(new ModelElementSorter());
-		dialog.setTitle(
-				NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_title);
-		dialog.setMessage(
-				NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_description);
+		dialog.setTitle(NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_title);
+		dialog.setMessage(NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_description);
 		dialog.addFilter(filter);
 		if (validator != null) {
 			dialog.setValidator(validator);
@@ -585,8 +535,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 			Object element = dialog.getFirstResult();
 			if (element instanceof IScriptProject) {
 				IScriptProject jproject = (IScriptProject) element;
-				return jproject.getProjectFragment(jproject.getResource())
-						.getScriptFolder(""); //$NON-NLS-1$
+				return jproject.getProjectFragment(jproject.getResource()).getScriptFolder(""); //$NON-NLS-1$
 			} else if (element instanceof IScriptFolder) {
 				return (IScriptFolder) element;
 			} else if (element instanceof IProjectFragment) {

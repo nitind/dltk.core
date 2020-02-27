@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.rename;
 
+import java.text.MessageFormat;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IFile;
@@ -35,7 +36,6 @@ import org.eclipse.dltk.core.search.SearchMatch;
 import org.eclipse.dltk.core.search.SearchParticipant;
 import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.core.search.SearchRequestor;
-import org.eclipse.dltk.internal.core.manipulation.Messages;
 import org.eclipse.dltk.internal.core.manipulation.ScriptManipulationPlugin;
 import org.eclipse.dltk.internal.core.refactoring.descriptors.RenameModelElementDescriptor;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
@@ -113,14 +113,14 @@ public abstract class RenameModelElementProcessor extends ScriptRenameProcessor 
 						IScriptRefactorings.RENAME_LOCAL_VARIABLE);
 		} else
 			return RefactoringStatus.createFatalErrorStatus(
-					Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+					MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
 							ScriptRefactoringDescriptor.ATTRIBUTE_INPUT));
 		final String name = extended.getAttribute(ScriptRefactoringDescriptor.ATTRIBUTE_NAME);
 		if (name != null && !"".equals(name)) //$NON-NLS-1$
 			setNewElementName(name);
 		else
 			return RefactoringStatus.createFatalErrorStatus(
-					Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+					MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
 							ScriptRefactoringDescriptor.ATTRIBUTE_NAME));
 		if (fCu != null && fModelElement == null) {
 			final String selection = extended.getAttribute(ScriptRefactoringDescriptor.ATTRIBUTE_SELECTION);
@@ -150,11 +150,11 @@ public abstract class RenameModelElementProcessor extends ScriptRenameProcessor 
 					}
 				} else
 					return RefactoringStatus.createFatalErrorStatus(
-							Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument,
-									new Object[] { selection, ScriptRefactoringDescriptor.ATTRIBUTE_SELECTION }));
+							MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument,
+									selection, ScriptRefactoringDescriptor.ATTRIBUTE_SELECTION));
 			} else
 				return RefactoringStatus.createFatalErrorStatus(
-						Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+						MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
 								ScriptRefactoringDescriptor.ATTRIBUTE_SELECTION));
 		}
 		final String references = extended.getAttribute(ScriptRefactoringDescriptor.ATTRIBUTE_REFERENCES);
@@ -162,7 +162,7 @@ public abstract class RenameModelElementProcessor extends ScriptRenameProcessor 
 			fUpdateReferences = Boolean.valueOf(references).booleanValue();
 		} else
 			return RefactoringStatus.createFatalErrorStatus(
-					Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+					MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
 							ScriptRefactoringDescriptor.ATTRIBUTE_REFERENCES));
 		return new RefactoringStatus();
 	}
@@ -277,7 +277,7 @@ public abstract class RenameModelElementProcessor extends ScriptRenameProcessor 
 
 	/**
 	 * Creates {@link ReplaceEdit} for the specified {@link SearchMatch}
-	 * 
+	 *
 	 * @param match
 	 * @return
 	 * @since 5.0.0
@@ -342,7 +342,7 @@ public abstract class RenameModelElementProcessor extends ScriptRenameProcessor 
 	 * PerWorkingCopyInfo perWorkingCopyInfo = getPerWorkingCopyInfo(); if
 	 * (perWorkingCopyInfo != null && perWorkingCopyInfo.isActive()) { final
 	 * IScriptProject project = getScriptProject();
-	 * 
+	 *
 	 * // https://bugs.eclipse.org/bugs/show_bug.cgi?id=267008 // Script nature
 	 * check is not enough. It's possible that the // external project created //
 	 * has a name of ExternalScriptProject.EXTERNAL_PROJECT_NAME, but no // script

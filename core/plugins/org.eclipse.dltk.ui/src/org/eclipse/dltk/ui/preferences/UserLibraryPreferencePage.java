@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,7 +62,6 @@ import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.core.UserLibraryBuildpathContainerInitializer;
 import org.eclipse.dltk.internal.core.UserLibraryManager;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.IUIConstants;
 import org.eclipse.dltk.internal.ui.wizards.BuildpathAttributeConfiguration;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.AccessRulesDialog;
@@ -116,14 +116,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public abstract class UserLibraryPreferencePage extends PreferencePage
-		implements IWorkbenchPreferencePage {
+public abstract class UserLibraryPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	public static final String DATA_DO_CREATE = "do_create"; //$NON-NLS-1$
 	public static final String DATA_LIBRARY_TO_SELECT = "select_library"; //$NON-NLS-1$
 
-	public static class LibraryNameDialog extends StatusDialog
-			implements IDialogFieldListener {
+	public static class LibraryNameDialog extends StatusDialog implements IDialogFieldListener {
 
 		private StringDialogField fNameField;
 		private SelectionButtonDialogField fIsSystemField;
@@ -131,15 +129,12 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		private BPUserLibraryElement fElementToEdit;
 		private List fExistingLibraries;
 
-		public LibraryNameDialog(Shell parent,
-				BPUserLibraryElement elementToEdit, List existingLibraries) {
+		public LibraryNameDialog(Shell parent, BPUserLibraryElement elementToEdit, List existingLibraries) {
 			super(parent);
 			if (elementToEdit == null) {
-				setTitle(
-						PreferencesMessages.UserLibraryPreferencePage_LibraryNameDialog_new_title);
+				setTitle(PreferencesMessages.UserLibraryPreferencePage_LibraryNameDialog_new_title);
 			} else {
-				setTitle(
-						PreferencesMessages.UserLibraryPreferencePage_LibraryNameDialog_edit_title);
+				setTitle(PreferencesMessages.UserLibraryPreferencePage_LibraryNameDialog_edit_title);
 			}
 
 			fElementToEdit = elementToEdit;
@@ -147,12 +142,10 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 
 			fNameField = new StringDialogField();
 			fNameField.setDialogFieldListener(this);
-			fNameField.setLabelText(
-					PreferencesMessages.UserLibraryPreferencePage_LibraryNameDialog_name_label);
+			fNameField.setLabelText(PreferencesMessages.UserLibraryPreferencePage_LibraryNameDialog_name_label);
 
 			fIsSystemField = new SelectionButtonDialogField(SWT.CHECK);
-			fIsSystemField.setLabelText(
-					PreferencesMessages.UserLibraryPreferencePage_LibraryNameDialog_issystem_label);
+			fIsSystemField.setLabelText(PreferencesMessages.UserLibraryPreferencePage_LibraryNameDialog_issystem_label);
 
 			if (elementToEdit != null) {
 				fNameField.setText(elementToEdit.getName());
@@ -166,9 +159,8 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		@Override
 		protected Control createDialogArea(Composite parent) {
 			Composite composite = (Composite) super.createDialogArea(parent);
-			LayoutUtil.doDefaultLayout(composite,
-					new DialogField[] { fNameField, fIsSystemField }, false,
-					SWT.DEFAULT, SWT.DEFAULT);
+			LayoutUtil.doDefaultLayout(composite, new DialogField[] { fNameField, fIsSystemField }, false, SWT.DEFAULT,
+					SWT.DEFAULT);
 			fNameField.postSetFocusOnDialogField(parent.getDisplay());
 			// fNameField.doFillIntoGrid(composite, 2);
 
@@ -194,19 +186,15 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 						PreferencesMessages.UserLibraryPreferencePage_LibraryNameDialog_name_error_entername);
 			}
 			for (int i = 0; i < fExistingLibraries.size(); i++) {
-				BPUserLibraryElement curr = (BPUserLibraryElement) fExistingLibraries
-						.get(i);
+				BPUserLibraryElement curr = (BPUserLibraryElement) fExistingLibraries.get(i);
 				if (curr != fElementToEdit && name.equals(curr.getName())) {
-					return new StatusInfo(IStatus.ERROR, Messages.format(
-							PreferencesMessages.UserLibraryPreferencePage_LibraryNameDialog_name_error_exists,
-							name));
+					return new StatusInfo(IStatus.ERROR, MessageFormat.format(
+							PreferencesMessages.UserLibraryPreferencePage_LibraryNameDialog_name_error_exists, name));
 				}
 			}
-			IStatus status = ResourcesPlugin.getWorkspace().validateName(name,
-					IResource.FILE);
+			IStatus status = ResourcesPlugin.getWorkspace().validateName(name, IResource.FILE);
 			if (status.matches(IStatus.ERROR)) {
-				return new StatusInfo(IStatus.ERROR,
-						"Name contains invalid characters."); //$NON-NLS-1$
+				return new StatusInfo(IStatus.ERROR, "Name contains invalid characters."); //$NON-NLS-1$
 			}
 			return StatusInfo.OK_STATUS;
 		}
@@ -218,14 +206,13 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 				entries = fElementToEdit.getChildren();
 				attributes = fElementToEdit.getAttributes();
 			}
-			return new BPUserLibraryElement(fNameField.getText(),
-					fIsSystemField.isSelected(), entries, attributes);
+			return new BPUserLibraryElement(fNameField.getText(), fIsSystemField.isSelected(), entries, attributes);
 		}
 
 	}
 
-	public static class LoadSaveDialog extends StatusDialog implements
-			IStringButtonAdapter, IDialogFieldListener, IListAdapter {
+	public static class LoadSaveDialog extends StatusDialog
+			implements IStringButtonAdapter, IDialogFieldListener, IListAdapter {
 
 		private static final String VERSION1 = "1"; //$NON-NLS-1$ // using OS
 													// strings for archive path
@@ -246,8 +233,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		private static final String TAG_RULE_KIND = "kind"; //$NON-NLS-1$
 		private static final String TAG_RULE_PATTERN = "pattern"; //$NON-NLS-1$
 
-		private static final String PREF_LASTPATH = DLTKUIPlugin.PLUGIN_ID
-				+ ".lastuserlibrary"; //$NON-NLS-1$
+		private static final String PREF_LASTPATH = DLTKUIPlugin.PLUGIN_ID + ".lastuserlibrary"; //$NON-NLS-1$
 		private static final String PREF_USER_LIBRARY_LOADSAVE_SIZE = "UserLibraryLoadSaveDialog.size"; //$NON-NLS-1$
 
 		private List fExistingLibraries;
@@ -260,8 +246,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		private Point fInitialSize;
 		private final boolean fIsSave;
 
-		public LoadSaveDialog(Shell shell, boolean isSave,
-				List existingLibraries, IDialogSettings dialogSettings) {
+		public LoadSaveDialog(Shell shell, boolean isSave, List existingLibraries, IDialogSettings dialogSettings) {
 			super(shell);
 			initializeDialogUnits(shell);
 
@@ -274,44 +259,38 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 			int defaultHeigth = convertHeightInCharsToPixels(34);
 			String lastSize = fSettings.get(PREF_USER_LIBRARY_LOADSAVE_SIZE);
 			if (lastSize != null) {
-				fInitialSize = StringConverter.asPoint(lastSize,
-						new Point(defaultWidth, defaultHeigth));
+				fInitialSize = StringConverter.asPoint(lastSize, new Point(defaultWidth, defaultHeigth));
 			} else {
 				fInitialSize = new Point(defaultWidth, defaultHeigth);
 			}
 
 			if (isSave()) {
-				setTitle(
-						PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_save_title);
+				setTitle(PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_save_title);
 			} else {
-				setTitle(
-						PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_load_title);
+				setTitle(PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_load_title);
 			}
 
 			fLocationField = new StringButtonDialogField(this);
-			fLocationField.setLabelText(
-					PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_location_label);
-			fLocationField.setButtonLabel(
-					PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_location_button);
+			fLocationField.setLabelText(PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_location_label);
+			fLocationField.setButtonLabel(PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_location_button);
 			fLocationField.setDialogFieldListener(this);
 
 			String[] buttonNames = new String[] {
 					PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_list_selectall_button,
 					PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_list_deselectall_button };
-			fExportImportList = new CheckedListDialogField(this, buttonNames,
-					new BPListLabelProvider());
+			fExportImportList = new CheckedListDialogField(this, buttonNames, new BPListLabelProvider());
 			fExportImportList.setCheckAllButtonIndex(0);
 			fExportImportList.setUncheckAllButtonIndex(1);
 			fExportImportList.setViewerComparator(new BPListElementSorter());
 			fExportImportList.setDialogFieldListener(this);
 			if (isSave()) {
-				fExportImportList.setLabelText(
-						PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_list_save_label);
+				fExportImportList
+						.setLabelText(PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_list_save_label);
 				fExportImportList.setElements(fExistingLibraries);
 				fExportImportList.checkAll(true);
 			} else {
-				fExportImportList.setLabelText(
-						PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_list_load_label);
+				fExportImportList
+						.setLabelText(PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_list_load_label);
 			}
 			String lastPath = fSettings.get(PREF_LASTPATH);
 			if (lastPath != null) {
@@ -340,16 +319,12 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 			Composite composite = (Composite) super.createDialogArea(parent);
 			DialogField[] fields;
 			if (isSave()) {
-				fields = new DialogField[] { fExportImportList,
-						fLocationField };
+				fields = new DialogField[] { fExportImportList, fLocationField };
 			} else {
-				fields = new DialogField[] { fLocationField,
-						fExportImportList };
+				fields = new DialogField[] { fLocationField, fExportImportList };
 			}
-			LayoutUtil.doDefaultLayout(composite, fields, true, SWT.DEFAULT,
-					SWT.DEFAULT);
-			fExportImportList.getListControl(null)
-					.setLayoutData(new GridData(GridData.FILL_BOTH));
+			LayoutUtil.doDefaultLayout(composite, fields, true, SWT.DEFAULT, SWT.DEFAULT);
+			fExportImportList.getListControl(null).setLayoutData(new GridData(GridData.FILL_BOTH));
 
 			fLocationField.postSetFocusOnDialogField(parent.getDisplay());
 
@@ -368,14 +343,11 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 
 		@Override
 		public void changeControlPressed(DialogField field) {
-			String label = isSave()
-					? PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_filedialog_save_title
+			String label = isSave() ? PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_filedialog_save_title
 					: PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_filedialog_load_title;
-			FileDialog dialog = new FileDialog(getShell(),
-					isSave() ? SWT.SAVE : SWT.OPEN);
+			FileDialog dialog = new FileDialog(getShell(), isSave() ? SWT.SAVE : SWT.OPEN);
 			dialog.setText(label);
-			dialog.setFilterExtensions(
-					new String[] { "*.userlibraries", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
+			dialog.setFilterExtensions(new String[] { "*.userlibraries", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
 			String lastPath = fLocationField.getText();
 			if (lastPath.length() == 0 || !new File(lastPath).exists()) {
 				lastPath = fSettings.get(PREF_LASTPATH);
@@ -445,8 +417,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 			List selectedElements = fExportImportList.getSelectedElements();
 			if (selectedElements.size() == 1) {
 				Object elem = selectedElements.get(0);
-				fExportImportList.setChecked(elem,
-						!fExportImportList.isChecked(elem));
+				fExportImportList.setChecked(elem, !fExportImportList.isChecked(elem));
 			}
 		}
 
@@ -457,23 +428,18 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 				if (file.exists()) {
 					String title = PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_overwrite_title;
 					String message = PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_overwrite_message;
-					if (!MessageDialog.openQuestion(getShell(), title,
-							message)) {
+					if (!MessageDialog.openQuestion(getShell(), title, message)) {
 						return;
 					}
 				}
 				try {
 					String encoding = "UTF-8"; //$NON-NLS-1$
 					IPath filePath = Path.fromOSString(file.getCanonicalPath());
-					final IPath workspacePath = ResourcesPlugin.getWorkspace()
-							.getRoot().getLocation();
-					if (filePath.matchingFirstSegments(
-							workspacePath) == workspacePath.segmentCount()) {
-						IPath path = filePath.removeFirstSegments(
-								workspacePath.segmentCount());
+					final IPath workspacePath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+					if (filePath.matchingFirstSegments(workspacePath) == workspacePath.segmentCount()) {
+						IPath path = filePath.removeFirstSegments(workspacePath.segmentCount());
 						if (path.segmentCount() > 1) {
-							IFile result = ResourcesPlugin.getWorkspace()
-									.getRoot().getFile(path);
+							IFile result = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 							try {
 								encoding = result.getCharset(true);
 							} catch (CoreException exception) {
@@ -481,11 +447,9 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 							}
 						}
 					}
-					final List elements = fExportImportList
-							.getCheckedElements();
+					final List elements = fExportImportList.getCheckedElements();
 					final String charset = encoding;
-					IRunnableContext context = PlatformUI.getWorkbench()
-							.getProgressService();
+					IRunnableContext context = PlatformUI.getWorkbench().getProgressService();
 					try {
 						context.run(true, true, monitor -> {
 							try {
@@ -497,11 +461,10 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 						fSettings.put(PREF_LASTPATH, file.getPath());
 					} catch (InvocationTargetException e) {
 						String errorTitle = PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_save_errordialog_title;
-						String errorMessage = Messages.format(
+						String errorMessage = MessageFormat.format(
 								PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_save_errordialog_message,
 								e.getMessage());
-						ExceptionHandler.handle(e, getShell(), errorTitle,
-								errorMessage);
+						ExceptionHandler.handle(e, getShell(), errorTitle, errorMessage);
 						return;
 					} catch (InterruptedException e) {
 						// cancelled
@@ -509,23 +472,20 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 					}
 					String savedTitle = PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_save_ok_title;
 					String savedMessage = PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_save_ok_message;
-					MessageDialog.openInformation(getShell(), savedTitle,
-							savedMessage);
+					MessageDialog.openInformation(getShell(), savedTitle, savedMessage);
 				} catch (IOException exception) {
 					DLTKUIPlugin.log(exception);
 				}
 			} else {
 				HashSet map = new HashSet(fExistingLibraries.size());
 				for (int k = 0; k < fExistingLibraries.size(); k++) {
-					BPUserLibraryElement elem = (BPUserLibraryElement) fExistingLibraries
-							.get(k);
+					BPUserLibraryElement elem = (BPUserLibraryElement) fExistingLibraries.get(k);
 					map.add(elem.getName());
 				}
 				int nReplaced = 0;
 				List elements = getLoadedLibraries();
 				for (int i = 0; i < elements.size(); i++) {
-					BPUserLibraryElement curr = (BPUserLibraryElement) elements
-							.get(i);
+					BPUserLibraryElement curr = (BPUserLibraryElement) elements.get(i);
 					if (map.contains(curr.getName())) {
 						nReplaced++;
 					}
@@ -536,12 +496,11 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 					if (nReplaced == 1) {
 						replaceMessage = PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_load_replace_message;
 					} else {
-						replaceMessage = Messages.format(
+						replaceMessage = MessageFormat.format(
 								PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_load_replace_multiple_message,
 								String.valueOf(nReplaced));
 					}
-					if (!MessageDialog.openConfirm(getShell(), replaceTitle,
-							replaceMessage)) {
+					if (!MessageDialog.openConfirm(getShell(), replaceTitle, replaceMessage)) {
 						return;
 					}
 				}
@@ -552,8 +511,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		@Override
 		public boolean close() {
 			Point point = getShell().getSize();
-			fSettings.put(PREF_USER_LIBRARY_LOADSAVE_SIZE,
-					StringConverter.asString(point));
+			fSettings.put(PREF_USER_LIBRARY_LOADSAVE_SIZE, StringConverter.asString(point));
 			return super.close();
 		}
 
@@ -584,8 +542,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 					return new StatusInfo(IStatus.ERROR,
 							PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_location_error_load_invalid);
 				}
-				if (fExportImportList.getSize() > 0
-						&& fExportImportList.getCheckedSize() == 0) {
+				if (fExportImportList.getSize() > 0 && fExportImportList.getCheckedSize() == 0) {
 					return new StatusInfo(IStatus.ERROR,
 							PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_list_error_load_nothingselected);
 				}
@@ -593,13 +550,12 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 			return new StatusInfo();
 		}
 
-		protected static void saveLibraries(List libraries, File file,
-				String encoding, IProgressMonitor monitor) throws IOException {
+		protected static void saveLibraries(List libraries, File file, String encoding, IProgressMonitor monitor)
+				throws IOException {
 
 			try (OutputStream stream = new FileOutputStream(file)) {
 				DocumentBuilder docBuilder = null;
-				DocumentBuilderFactory factory = DocumentBuilderFactory
-						.newInstance();
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				factory.setValidating(false);
 				docBuilder = factory.newDocumentBuilder();
 				Document document = docBuilder.newDocument();
@@ -611,61 +567,47 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 				rootElement.setAttribute(TAG_VERSION, CURRENT_VERSION);
 
 				for (int i = 0; i < libraries.size(); i++) {
-					Element libraryElement = document
-							.createElement(TAG_LIBRARY);
+					Element libraryElement = document.createElement(TAG_LIBRARY);
 					rootElement.appendChild(libraryElement);
 
-					BPUserLibraryElement curr = (BPUserLibraryElement) libraries
-							.get(i);
+					BPUserLibraryElement curr = (BPUserLibraryElement) libraries.get(i);
 					libraryElement.setAttribute(TAG_NAME, curr.getName());
-					libraryElement.setAttribute(TAG_SYSTEMLIBRARY,
-							String.valueOf(curr.isSystemLibrary()));
+					libraryElement.setAttribute(TAG_SYSTEMLIBRARY, String.valueOf(curr.isSystemLibrary()));
 
 					BPListElement[] children = curr.getChildren();
 					for (int k = 0; k < children.length; k++) {
 						BPListElement child = children[k];
 
-						Element childElement = document
-								.createElement(TAG_ARCHIVE);
+						Element childElement = document.createElement(TAG_ARCHIVE);
 						libraryElement.appendChild(childElement);
 
-						childElement.setAttribute(TAG_ARCHIVE_PATH,
-								child.getPath().toPortableString());
+						childElement.setAttribute(TAG_ARCHIVE_PATH, child.getPath().toPortableString());
 
-						String nativeLibPath = (String) child
-								.getAttribute(BPListElement.NATIVE_LIB_PATH);
+						String nativeLibPath = (String) child.getAttribute(BPListElement.NATIVE_LIB_PATH);
 						if (nativeLibPath != null) {
-							childElement.setAttribute(TAG_NATIVELIB_PATHS,
-									nativeLibPath);
+							childElement.setAttribute(TAG_NATIVELIB_PATHS, nativeLibPath);
 						}
-						IAccessRule[] accessRules = (IAccessRule[]) child
-								.getAttribute(BPListElement.ACCESSRULES);
+						IAccessRule[] accessRules = (IAccessRule[]) child.getAttribute(BPListElement.ACCESSRULES);
 						if (accessRules != null && accessRules.length > 0) {
-							Element rulesElement = document
-									.createElement(TAG_ACCESSRULES);
+							Element rulesElement = document.createElement(TAG_ACCESSRULES);
 							childElement.appendChild(rulesElement);
 							for (int n = 0; n < accessRules.length; n++) {
 								IAccessRule rule = accessRules[n];
-								Element ruleElement = document
-										.createElement(TAG_ACCESSRULE);
+								Element ruleElement = document.createElement(TAG_ACCESSRULE);
 								rulesElement.appendChild(ruleElement);
-								ruleElement.setAttribute(TAG_RULE_KIND,
-										String.valueOf(rule.getKind()));
-								ruleElement.setAttribute(TAG_RULE_PATTERN,
-										rule.getPattern().toPortableString());
+								ruleElement.setAttribute(TAG_RULE_KIND, String.valueOf(rule.getKind()));
+								ruleElement.setAttribute(TAG_RULE_PATTERN, rule.getPattern().toPortableString());
 							}
 						}
 					}
 				}
 
 				// Write the document to the stream
-				Transformer transformer = TransformerFactory.newInstance()
-						.newTransformer();
+				Transformer transformer = TransformerFactory.newInstance().newTransformer();
 				transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
 				transformer.setOutputProperty(OutputKeys.ENCODING, encoding);
 				transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-				transformer.setOutputProperty(
-						"{http://xml.apache.org/xslt}indent-amount", "4"); //$NON-NLS-1$ //$NON-NLS-2$
+				transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4"); //$NON-NLS-1$ //$NON-NLS-2$
 
 				DOMSource source = new DOMSource(document);
 				StreamResult result = new StreamResult(stream);
@@ -685,23 +627,18 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 			InputStream stream = new FileInputStream(file);
 			Element cpElement;
 			try {
-				DocumentBuilder parser = DocumentBuilderFactory.newInstance()
-						.newDocumentBuilder();
-				cpElement = parser.parse(new InputSource(stream))
-						.getDocumentElement();
+				DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				cpElement = parser.parse(new InputSource(stream)).getDocumentElement();
 			} catch (SAXException e) {
-				throw new IOException(
-						PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_load_badformat);
+				throw new IOException(PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_load_badformat);
 			} catch (ParserConfigurationException e) {
-				throw new IOException(
-						PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_load_badformat);
+				throw new IOException(PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_load_badformat);
 			} finally {
 				stream.close();
 			}
 
 			if (!cpElement.getNodeName().equalsIgnoreCase(TAG_ROOT)) {
-				throw new IOException(
-						PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_load_badformat);
+				throw new IOException(PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_load_badformat);
 			}
 
 			String version = cpElement.getAttribute(TAG_VERSION);
@@ -719,16 +656,12 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 				}
 				Element libElement = (Element) lib;
 				String name = libElement.getAttribute(TAG_NAME);
-				boolean isSystem = Boolean
-						.valueOf(libElement.getAttribute(TAG_SYSTEMLIBRARY))
-						.booleanValue();
+				boolean isSystem = Boolean.valueOf(libElement.getAttribute(TAG_SYSTEMLIBRARY)).booleanValue();
 
-				BPUserLibraryElement newLibrary = new BPUserLibraryElement(name,
-						isSystem, null);
+				BPUserLibraryElement newLibrary = new BPUserLibraryElement(name, isSystem, null);
 				result.add(newLibrary);
 
-				NodeList archiveList = libElement
-						.getElementsByTagName(TAG_ARCHIVE);
+				NodeList archiveList = libElement.getElementsByTagName(TAG_ARCHIVE);
 				for (int k = 0; k < archiveList.getLength(); k++) {
 					Node archiveNode = archiveList.item(k);
 					if (!(archiveNode instanceof Element)) {
@@ -736,10 +669,8 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 					}
 					Element archiveElement = (Element) archiveNode;
 
-					String pathString = archiveElement
-							.getAttribute(TAG_ARCHIVE_PATH);
-					IPath path = version.equals(VERSION1)
-							? Path.fromOSString(pathString)
+					String pathString = archiveElement.getAttribute(TAG_ARCHIVE_PATH);
+					IPath path = version.equals(VERSION1) ? Path.fromOSString(pathString)
 							: Path.fromPortableString(pathString);
 					path = path.makeAbsolute(); // only necessary for manually
 					// edited files: bug 202373
@@ -752,50 +683,37 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 						resource = null;
 					}
 
-					BPListElement newArchive = new BPListElement(newLibrary,
-							null, IBuildpathEntry.BPE_LIBRARY, path, resource,
-							true);
+					BPListElement newArchive = new BPListElement(newLibrary, null, IBuildpathEntry.BPE_LIBRARY, path,
+							resource, true);
 					newLibrary.add(newArchive);
 
 					if (archiveElement.hasAttribute(TAG_NATIVELIB_PATHS)) {
-						String nativeLibPath = archiveElement
-								.getAttribute(TAG_NATIVELIB_PATHS);
-						newArchive.setAttribute(BPListElement.NATIVE_LIB_PATH,
-								nativeLibPath);
+						String nativeLibPath = archiveElement.getAttribute(TAG_NATIVELIB_PATHS);
+						newArchive.setAttribute(BPListElement.NATIVE_LIB_PATH, nativeLibPath);
 					}
-					NodeList rulesParentNodes = archiveElement
-							.getElementsByTagName(TAG_ACCESSRULES);
-					if (rulesParentNodes.getLength() > 0
-							&& rulesParentNodes.item(0) instanceof Element) {
-						Element ruleParentElement = (Element) rulesParentNodes
-								.item(0); // take first, ignore others
-						NodeList ruleElements = ruleParentElement
-								.getElementsByTagName(TAG_ACCESSRULE);
+					NodeList rulesParentNodes = archiveElement.getElementsByTagName(TAG_ACCESSRULES);
+					if (rulesParentNodes.getLength() > 0 && rulesParentNodes.item(0) instanceof Element) {
+						Element ruleParentElement = (Element) rulesParentNodes.item(0); // take first, ignore others
+						NodeList ruleElements = ruleParentElement.getElementsByTagName(TAG_ACCESSRULE);
 						int nRuleElements = ruleElements.getLength();
 						if (nRuleElements > 0) {
-							ArrayList resultingRules = new ArrayList(
-									nRuleElements);
+							ArrayList resultingRules = new ArrayList(nRuleElements);
 							for (int n = 0; n < nRuleElements; n++) {
 								Node node = ruleElements.item(n);
 								if (node instanceof Element) {
 									Element ruleElement = (Element) node;
 									try {
-										int kind = Integer.parseInt(ruleElement
-												.getAttribute(TAG_RULE_KIND));
-										IPath pattern = Path.fromPortableString(
-												ruleElement.getAttribute(
-														TAG_RULE_PATTERN));
-										resultingRules.add(DLTKCore
-												.newAccessRule(pattern, kind));
+										int kind = Integer.parseInt(ruleElement.getAttribute(TAG_RULE_KIND));
+										IPath pattern = Path
+												.fromPortableString(ruleElement.getAttribute(TAG_RULE_PATTERN));
+										resultingRules.add(DLTKCore.newAccessRule(pattern, kind));
 									} catch (NumberFormatException e) {
 										// ignore
 									}
 								}
 							}
 							newArchive.setAttribute(BPListElement.ACCESSRULES,
-									resultingRules.toArray(
-											new IAccessRule[resultingRules
-													.size()]));
+									resultingRules.toArray(new IAccessRule[resultingRules.size()]));
 						}
 					}
 				}
@@ -831,54 +749,41 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		setPreferenceStore(DLTKUIPlugin.getDefault().getPreferenceStore());
 		fDummyProject = createPlaceholderProject();
 
-		fAttributeDescriptors = DLTKUIPlugin.getDefault()
-				.getClasspathAttributeConfigurationDescriptors();
+		fAttributeDescriptors = DLTKUIPlugin.getDefault().getClasspathAttributeConfigurationDescriptors();
 
 		// title only used when page is shown programatically
 		setTitle(PreferencesMessages.UserLibraryPreferencePage_title);
-		setDescription(
-				PreferencesMessages.UserLibraryPreferencePage_description);
+		setDescription(PreferencesMessages.UserLibraryPreferencePage_description);
 		noDefaultAndApplyButton();
 
 		fDialogSettings = DLTKUIPlugin.getDefault().getDialogSettings();
 
 		UserLibraryAdapter adapter = new UserLibraryAdapter();
-		String[] buttonLabels = new String[] {
-				PreferencesMessages.UserLibraryPreferencePage_libraries_new_button,
+		String[] buttonLabels = new String[] { PreferencesMessages.UserLibraryPreferencePage_libraries_new_button,
 				PreferencesMessages.UserLibraryPreferencePage_libraries_edit_button,
 				PreferencesMessages.UserLibraryPreferencePage_libraries_addzip_button,
 				PreferencesMessages.UserLibraryPreferencePage_libraries_addext_button,
-				PreferencesMessages.UserLibraryPreferencePage_libraries_remove_button,
-				null,
+				PreferencesMessages.UserLibraryPreferencePage_libraries_remove_button, null,
 				PreferencesMessages.UserLibraryPreferencePage_UserLibraryPreferencePage_libraries_up_button,
-				PreferencesMessages.UserLibraryPreferencePage_UserLibraryPreferencePage_libraries_down_button,
-				null,
+				PreferencesMessages.UserLibraryPreferencePage_UserLibraryPreferencePage_libraries_down_button, null,
 
 				PreferencesMessages.UserLibraryPreferencePage_libraries_load_button,
 				PreferencesMessages.UserLibraryPreferencePage_libraries_save_button /*
-																					 * ,
-																					 * null
-																					 * ,
-																					 * "Detect"
+																					 * , null , "Detect"
 																					 */ };
 
-		fLibraryList = new TreeListDialogField(adapter, buttonLabels,
-				new BPListLabelProvider());
-		fLibraryList.setLabelText(
-				PreferencesMessages.UserLibraryPreferencePage_libraries_label);
+		fLibraryList = new TreeListDialogField(adapter, buttonLabels, new BPListLabelProvider());
+		fLibraryList.setLabelText(PreferencesMessages.UserLibraryPreferencePage_libraries_label);
 
 		String[] names = DLTKCore.getUserLibraryNames(getLanguageToolkit());
 		ArrayList elements = new ArrayList();
 
 		for (int i = 0; i < names.length; i++) {
 			IPath path = new Path(DLTKCore.USER_LIBRARY_CONTAINER_ID)
-					.append(UserLibraryManager.makeLibraryName(names[i],
-							getLanguageToolkit()));
+					.append(UserLibraryManager.makeLibraryName(names[i], getLanguageToolkit()));
 			try {
-				IBuildpathContainer container = DLTKCore
-						.getBuildpathContainer(path, fDummyProject);
-				elements.add(new BPUserLibraryElement(names[i], container,
-						fDummyProject));
+				IBuildpathContainer container = DLTKCore.getBuildpathContainer(path, fDummyProject);
+				elements.add(new BPUserLibraryElement(names[i], container, fDummyProject));
 			} catch (ModelException e) {
 				DLTKUIPlugin.log(e);
 				// ignore
@@ -907,23 +812,19 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		if (data instanceof Map) {
 			Map map = (Map) data;
 			Object selectedLibrary = map.get(DATA_LIBRARY_TO_SELECT);
-			boolean createIfNotExists = Boolean.TRUE
-					.equals(map.get(DATA_DO_CREATE));
+			boolean createIfNotExists = Boolean.TRUE.equals(map.get(DATA_DO_CREATE));
 			if (selectedLibrary instanceof String) {
 				int nElements = fLibraryList.getSize();
 				for (int i = 0; i < nElements; i++) {
-					BPUserLibraryElement curr = (BPUserLibraryElement) fLibraryList
-							.getElement(i);
+					BPUserLibraryElement curr = (BPUserLibraryElement) fLibraryList.getElement(i);
 					if (curr.getName().equals(selectedLibrary)) {
-						fLibraryList
-								.selectElements(new StructuredSelection(curr));
+						fLibraryList.selectElements(new StructuredSelection(curr));
 						fLibraryList.expandElement(curr, 1);
 						break;
 					}
 				}
 				if (createIfNotExists) {
-					BPUserLibraryElement elem = new BPUserLibraryElement(
-							(String) selectedLibrary, null,
+					BPUserLibraryElement elem = new BPUserLibraryElement((String) selectedLibrary, null,
 							createPlaceholderProject());
 					fLibraryList.addElement(elem);
 					fLibraryList.selectElements(new StructuredSelection(elem));
@@ -943,8 +844,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 	protected Control createContents(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setFont(parent.getFont());
-		LayoutUtil.doDefaultLayout(composite,
-				new DialogField[] { fLibraryList }, true);
+		LayoutUtil.doDefaultLayout(composite, new DialogField[] { fLibraryList }, true);
 		LayoutUtil.setHorizontalGrabbing(fLibraryList.getTreeControl(null));
 		Dialog.applyDialogFont(composite);
 		return composite;
@@ -962,20 +862,19 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 	@Override
 	public boolean performOk() {
 		try {
-			PlatformUI.getWorkbench().getProgressService().run(true, true,
-					monitor -> {
-						try {
-							if (monitor != null) {
-								monitor = new NullProgressMonitor();
-							}
+			PlatformUI.getWorkbench().getProgressService().run(true, true, monitor -> {
+				try {
+					if (monitor != null) {
+						monitor = new NullProgressMonitor();
+					}
 
-							updateUserLibararies(monitor);
-						} catch (CoreException e) {
-							throw new InvocationTargetException(e);
-						} finally {
-							monitor.done();
-						}
-					});
+					updateUserLibararies(monitor);
+				} catch (CoreException e) {
+					throw new InvocationTargetException(e);
+				} finally {
+					monitor.done();
+				}
+			});
 		} catch (InterruptedException e) {
 			// cancelled by user
 		} catch (InvocationTargetException e) {
@@ -986,11 +885,9 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		return true;
 	}
 
-	private void updateUserLibararies(IProgressMonitor monitor)
-			throws CoreException {
+	private void updateUserLibararies(IProgressMonitor monitor) throws CoreException {
 		List list = fLibraryList.getElements();
-		HashSet oldNames = new HashSet(Arrays
-				.asList(DLTKCore.getUserLibraryNames(getLanguageToolkit())));
+		HashSet oldNames = new HashSet(Arrays.asList(DLTKCore.getUserLibraryNames(getLanguageToolkit())));
 		int nExisting = list.size();
 
 		HashSet newEntries = new HashSet(list.size());
@@ -1003,32 +900,25 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		}
 
 		int len = nExisting + oldNames.size();
-		monitor.beginTask(
-				PreferencesMessages.UserLibraryPreferencePage_operation, len);
-		MultiStatus multiStatus = new MultiStatus(DLTKUIPlugin.PLUGIN_ID,
-				IStatus.OK,
-				PreferencesMessages.UserLibraryPreferencePage_operation_error,
-				null);
+		monitor.beginTask(PreferencesMessages.UserLibraryPreferencePage_operation, len);
+		MultiStatus multiStatus = new MultiStatus(DLTKUIPlugin.PLUGIN_ID, IStatus.OK,
+				PreferencesMessages.UserLibraryPreferencePage_operation_error, null);
 
 		BuildpathContainerInitializer initializer = DLTKCore
-				.getBuildpathContainerInitializer(
-						DLTKCore.USER_LIBRARY_CONTAINER_ID);
+				.getBuildpathContainerInitializer(DLTKCore.USER_LIBRARY_CONTAINER_ID);
 		if (initializer instanceof UserLibraryBuildpathContainerInitializer) {
-			((UserLibraryBuildpathContainerInitializer) initializer)
-					.setToolkit(getLanguageToolkit());
+			((UserLibraryBuildpathContainerInitializer) initializer).setToolkit(getLanguageToolkit());
 		}
 		IScriptProject project = fDummyProject;
 
 		for (int i = 0; i < nExisting; i++) {
 			BPUserLibraryElement element = (BPUserLibraryElement) list.get(i);
 			IPath path = element.getPath();
-			if (newEntries.contains(element) || element.hasChanges(
-					DLTKCore.getBuildpathContainer(path, project), project)) {
-				IBuildpathContainer updatedContainer = element
-						.getUpdatedContainer();
+			if (newEntries.contains(element)
+					|| element.hasChanges(DLTKCore.getBuildpathContainer(path, project), project)) {
+				IBuildpathContainer updatedContainer = element.getUpdatedContainer();
 				try {
-					initializer.requestBuildpathContainerUpdate(path, project,
-							updatedContainer);
+					initializer.requestBuildpathContainerUpdate(path, project, updatedContainer);
 				} catch (CoreException e) {
 					multiStatus.add(e.getStatus());
 				}
@@ -1040,11 +930,9 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		while (iter.hasNext()) {
 			String name = (String) iter.next();
 
-			IPath path = new Path(DLTKCore.USER_LIBRARY_CONTAINER_ID)
-					.append(name);
+			IPath path = new Path(DLTKCore.USER_LIBRARY_CONTAINER_ID).append(name);
 			try {
-				initializer.requestBuildpathContainerUpdate(path, project,
-						null);
+				initializer.requestBuildpathContainerUpdate(path, project, null);
 			} catch (CoreException e) {
 				multiStatus.add(e.getStatus());
 			}
@@ -1057,8 +945,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 	}
 
 	private BPUserLibraryElement getSingleSelectedLibrary(List selected) {
-		if (selected.size() == 1
-				&& selected.get(0) instanceof BPUserLibraryElement) {
+		if (selected.size() == 1 && selected.get(0) instanceof BPUserLibraryElement) {
 			return (BPUserLibraryElement) selected.get(0);
 		}
 		return null;
@@ -1068,20 +955,16 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		String key = elem.getKey();
 		BPListElement selElement = elem.getParent();
 		if (key.equals(BPListElement.ACCESSRULES)) {
-			AccessRulesDialog dialog = new AccessRulesDialog(getShell(),
-					selElement, null, false);
+			AccessRulesDialog dialog = new AccessRulesDialog(getShell(), selElement, null, false);
 			if (dialog.open() == Window.OK) {
-				selElement.setAttribute(BPListElement.ACCESSRULES,
-						dialog.getAccessRules());
+				selElement.setAttribute(BPListElement.ACCESSRULES, dialog.getAccessRules());
 				fLibraryList.refresh(elem);
 				fLibraryList.expandElement(elem, 2);
 			}
 		} else if (!elem.isBuiltIn()) {
-			BuildpathAttributeConfiguration config = fAttributeDescriptors
-					.get(key);
+			BuildpathAttributeConfiguration config = fAttributeDescriptors.get(key);
 			if (config != null) {
-				IBuildpathAttribute result = config.performEdit(getShell(),
-						elem.getBuildpathAttributeAccess());
+				IBuildpathAttribute result = config.performEdit(getShell(), elem.getBuildpathAttributeAccess());
 				if (result != null) {
 					elem.setValue(result.getValue());
 					fLibraryList.refresh(elem);
@@ -1094,8 +977,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		List list = field.getSelectedElements();
 		field.enableButton(IDX_REMOVE, canRemove(list));
 		field.enableButton(IDX_EDIT, canEdit(list));
-		field.enableButton(IDX_ADD, canAdd(list)
-				&& this.getLanguageToolkit().languageSupportZIPBuildpath());
+		field.enableButton(IDX_ADD, canAdd(list) && this.getLanguageToolkit().languageSupportZIPBuildpath());
 		field.enableButton(IDX_ADD_EXTERNAL, canAdd(list));
 		field.enableButton(IDX_UP, canMoveUp(list));
 		field.enableButton(IDX_DOWN, canMoveDown(list));
@@ -1160,11 +1042,9 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 			} else if (curr instanceof BPListElement) {
 				BPListElement elem = (BPListElement) curr;
 				if (((BPListElement) curr).isExternalFolder()) {
-					editExternalElement(elem,
-							(BPUserLibraryElement) elem.getParentContainer());
+					editExternalElement(elem, (BPUserLibraryElement) elem.getParentContainer());
 				} else {
-					editArchiveElement(elem,
-							(BPUserLibraryElement) elem.getParentContainer());
+					editArchiveElement(elem, (BPUserLibraryElement) elem.getParentContainer());
 				}
 			}
 			doSelectionChanged(fLibraryList);
@@ -1172,8 +1052,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 	}
 
 	private void editUserLibraryElement(BPUserLibraryElement element) {
-		LibraryNameDialog dialog = new LibraryNameDialog(getShell(), element,
-				fLibraryList.getElements());
+		LibraryNameDialog dialog = new LibraryNameDialog(getShell(), element, fLibraryList.getElements());
 		if (dialog.open() == Window.OK) {
 			BPUserLibraryElement newLibrary = dialog.getNewLibrary();
 			if (element != null) {
@@ -1181,16 +1060,13 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 			} else {
 				fLibraryList.addElement(newLibrary);
 			}
-			fLibraryList.expandElement(newLibrary,
-					AbstractTreeViewer.ALL_LEVELS);
+			fLibraryList.expandElement(newLibrary, AbstractTreeViewer.ALL_LEVELS);
 			fLibraryList.selectElements(new StructuredSelection(newLibrary));
 		}
 	}
 
-	private void editArchiveElement(BPListElement existingElement,
-			BPUserLibraryElement parent) {
-		BPListElement[] elements = openExtZipFileDialog(existingElement,
-				parent);
+	private void editArchiveElement(BPListElement existingElement, BPUserLibraryElement parent) {
+		BPListElement[] elements = openExtZipFileDialog(existingElement, parent);
 		if (elements != null) {
 			for (int i = 0; i < elements.length; i++) {
 				if (existingElement != null) {
@@ -1200,16 +1076,13 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 				}
 			}
 			fLibraryList.refresh(parent);
-			fLibraryList.selectElements(
-					new StructuredSelection(Arrays.asList(elements)));
+			fLibraryList.selectElements(new StructuredSelection(Arrays.asList(elements)));
 			fLibraryList.expandElement(parent, 2);
 		}
 	}
 
-	private void editExternalElement(BPListElement existingElement,
-			BPUserLibraryElement parent) {
-		BPListElement[] elements = openExtSourceFolderDialog(existingElement,
-				parent);
+	private void editExternalElement(BPListElement existingElement, BPUserLibraryElement parent) {
+		BPListElement[] elements = openExtSourceFolderDialog(existingElement, parent);
 		if (elements != null) {
 			for (int i = 0; i < elements.length; i++) {
 				if (existingElement != null) {
@@ -1219,8 +1092,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 				}
 			}
 			fLibraryList.refresh(parent);
-			fLibraryList.selectElements(
-					new StructuredSelection(Arrays.asList(elements)));
+			fLibraryList.selectElements(new StructuredSelection(Arrays.asList(elements)));
 			fLibraryList.expandElement(parent, 2);
 		}
 	}
@@ -1250,11 +1122,9 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 					attrib.getParent().setAttribute(key, value);
 					fLibraryList.refresh(attrib);
 				} else {
-					BuildpathAttributeConfiguration config = fAttributeDescriptors
-							.get(attrib.getKey());
+					BuildpathAttributeConfiguration config = fAttributeDescriptors.get(attrib.getKey());
 					if (config != null) {
-						IBuildpathAttribute result = config.performRemove(
-								attrib.getBuildpathAttributeAccess());
+						IBuildpathAttribute result = config.performRemove(attrib.getBuildpathAttributeAccess());
 						if (result != null) {
 							attrib.setValue(result.getValue());
 							fLibraryList.refresh(attrib);
@@ -1265,8 +1135,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		}
 		if (fLibraryList.getSelectedElements().isEmpty()) {
 			if (selectionAfter != null) {
-				fLibraryList.selectElements(
-						new StructuredSelection(selectionAfter));
+				fLibraryList.selectElements(new StructuredSelection(selectionAfter));
 			} else {
 				fLibraryList.selectFirstElement();
 			}
@@ -1291,21 +1160,18 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 
 	private void doLoad() {
 		List existing = fLibraryList.getElements();
-		LoadSaveDialog dialog = new LoadSaveDialog(getShell(), false, existing,
-				fDialogSettings);
+		LoadSaveDialog dialog = new LoadSaveDialog(getShell(), false, existing, fDialogSettings);
 		if (dialog.open() == Window.OK) {
 			HashMap map = new HashMap(existing.size());
 			for (int k = 0; k < existing.size(); k++) {
-				BPUserLibraryElement elem = (BPUserLibraryElement) existing
-						.get(k);
+				BPUserLibraryElement elem = (BPUserLibraryElement) existing.get(k);
 				map.put(elem.getName(), elem);
 			}
 
 			List list = dialog.getLoadedLibraries();
 			for (int i = 0; i < list.size(); i++) {
 				BPUserLibraryElement elem = (BPUserLibraryElement) list.get(i);
-				BPUserLibraryElement found = (BPUserLibraryElement) map
-						.get(elem.getName());
+				BPUserLibraryElement found = (BPUserLibraryElement) map.get(elem.getName());
 				if (found == null) {
 					existing.add(elem);
 					map.put(elem.getName(), elem);
@@ -1319,8 +1185,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 	}
 
 	private void doSave() {
-		LoadSaveDialog dialog = new LoadSaveDialog(getShell(), true,
-				fLibraryList.getElements(), fDialogSettings);
+		LoadSaveDialog dialog = new LoadSaveDialog(getShell(), true, fLibraryList.getElements(), fDialogSettings);
 		dialog.open();
 	}
 
@@ -1338,10 +1203,8 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		if (firstElement instanceof BPListElementAttribute) {
 			BPListElementAttribute attrib = (BPListElementAttribute) firstElement;
 			if (!attrib.isBuiltIn()) {
-				BuildpathAttributeConfiguration config = fAttributeDescriptors
-						.get(attrib.getKey());
-				return config != null
-						&& config.canEdit(attrib.getBuildpathAttributeAccess());
+				BuildpathAttributeConfiguration config = fAttributeDescriptors.get(attrib.getKey());
+				return config != null && config.canEdit(attrib.getBuildpathAttributeAccess());
 			}
 		}
 		return true;
@@ -1366,10 +1229,8 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 						return false;
 					}
 				} else {
-					BuildpathAttributeConfiguration config = fAttributeDescriptors
-							.get(attrib.getKey());
-					if (config == null || !config
-							.canRemove(attrib.getBuildpathAttributeAccess())) {
+					BuildpathAttributeConfiguration config = fAttributeDescriptors.get(attrib.getKey());
+					if (config == null || !config.canRemove(attrib.getBuildpathAttributeAccess())) {
 						return false;
 					}
 				}
@@ -1428,8 +1289,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		BPUserLibraryElement parent = getCommonParent(list);
 		if (parent != null) {
 			BPListElement[] children = parent.getChildren();
-			for (int i = 0, len = Math.min(list.size(),
-					children.length); i < len; i++) {
+			for (int i = 0, len = Math.min(list.size(), children.length); i < len; i++) {
 				if (!list.contains(children[i])) {
 					return true;
 				}
@@ -1442,8 +1302,7 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		BPUserLibraryElement parent = getCommonParent(list);
 		if (parent != null) {
 			BPListElement[] children = parent.getChildren();
-			for (int i = children.length - 1, end = Math.max(0,
-					children.length - list.size()); i >= end; i--) {
+			for (int i = children.length - 1, end = Math.max(0, children.length - list.size()); i >= end; i--) {
 				if (!list.contains(children[i])) {
 					return true;
 				}
@@ -1452,25 +1311,20 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		return false;
 	}
 
-	private BPListElement[] openExtZipFileDialog(BPListElement existing,
-			Object parent) {
+	private BPListElement[] openExtZipFileDialog(BPListElement existing, Object parent) {
 		String lastUsedPath;
 		if (existing != null) {
-			lastUsedPath = existing.getPath().removeLastSegments(1)
-					.toOSString();
+			lastUsedPath = existing.getPath().removeLastSegments(1).toOSString();
 		} else {
-			lastUsedPath = fDialogSettings
-					.get(IUIConstants.DIALOGSTORE_LASTEXTZIP);
+			lastUsedPath = fDialogSettings.get(IUIConstants.DIALOGSTORE_LASTEXTZIP);
 			if (lastUsedPath == null) {
 				lastUsedPath = ""; //$NON-NLS-1$
 			}
 		}
-		String title = (existing == null)
-				? PreferencesMessages.UserLibraryPreferencePage_browsejar_new_title
+		String title = (existing == null) ? PreferencesMessages.UserLibraryPreferencePage_browsejar_new_title
 				: PreferencesMessages.UserLibraryPreferencePage_browsejar_edit_title;
 
-		FileDialog dialog = new FileDialog(getShell(),
-				existing == null ? SWT.MULTI : SWT.SINGLE);
+		FileDialog dialog = new FileDialog(getShell(), existing == null ? SWT.MULTI : SWT.SINGLE);
 		dialog.setText(title);
 		dialog.setFilterExtensions(new String[] { "*.zip" }); //$NON-NLS-1$
 		dialog.setFilterPath(lastUsedPath);
@@ -1498,38 +1352,29 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 				path = file.getFullPath();
 			}
 
-			path = EnvironmentPathUtils.getFullPath(
-					EnvironmentManager.getLocalEnvironment(), path);
-			BPListElement curr = new BPListElement(parent, null,
-					IBuildpathEntry.BPE_LIBRARY, path, file, true);
+			path = EnvironmentPathUtils.getFullPath(EnvironmentManager.getLocalEnvironment(), path);
+			BPListElement curr = new BPListElement(parent, null, IBuildpathEntry.BPE_LIBRARY, path, file, true);
 			elems[i] = curr;
 		}
-		fDialogSettings.put(IUIConstants.DIALOGSTORE_LASTEXTZIP,
-				dialog.getFilterPath());
+		fDialogSettings.put(IUIConstants.DIALOGSTORE_LASTEXTZIP, dialog.getFilterPath());
 
 		return elems;
 	}
 
-	private BPListElement[] openExtSourceFolderDialog(BPListElement existing,
-			Object parent) {
+	private BPListElement[] openExtSourceFolderDialog(BPListElement existing, Object parent) {
 		String lastUsedPath;
 		if (existing != null) {
-			lastUsedPath = EnvironmentPathUtils
-					.getLocalPath(existing.getPath().removeLastSegments(1))
-					.toOSString();
+			lastUsedPath = EnvironmentPathUtils.getLocalPath(existing.getPath().removeLastSegments(1)).toOSString();
 		} else {
-			lastUsedPath = fDialogSettings
-					.get(IUIConstants.DIALOGSTORE_LASTEXTSOURCE);
+			lastUsedPath = fDialogSettings.get(IUIConstants.DIALOGSTORE_LASTEXTSOURCE);
 			if (lastUsedPath == null) {
 				lastUsedPath = ""; //$NON-NLS-1$
 			}
 		}
-		String title = (existing == null)
-				? PreferencesMessages.UserLibraryPreferencePage_browseext_new_title
+		String title = (existing == null) ? PreferencesMessages.UserLibraryPreferencePage_browseext_new_title
 				: PreferencesMessages.UserLibraryPreferencePage_browseext_edit_title;
 
-		DirectoryDialog dialog = new DirectoryDialog(getShell(),
-				existing == null ? SWT.MULTI : SWT.SINGLE);
+		DirectoryDialog dialog = new DirectoryDialog(getShell(), existing == null ? SWT.MULTI : SWT.SINGLE);
 		dialog.setText(title);
 		// dialog.setFilterExtensions(new String[] { "*.zip" }); //$NON-NLS-1$
 		dialog.setFilterPath(lastUsedPath);
@@ -1549,15 +1394,11 @@ public abstract class UserLibraryPreferencePage extends PreferencePage
 		BPListElement[] elems = new BPListElement[1];
 		IPath path = Path.fromOSString(res).makeAbsolute();
 
-		BPListElement curr = new BPListElement(parent, null,
-				IBuildpathEntry.BPE_LIBRARY,
-				EnvironmentPathUtils.getFullPath(
-						EnvironmentManager.getLocalEnvironment(), path),
-				null, true);
+		BPListElement curr = new BPListElement(parent, null, IBuildpathEntry.BPE_LIBRARY,
+				EnvironmentPathUtils.getFullPath(EnvironmentManager.getLocalEnvironment(), path), null, true);
 		elems[0] = curr;
 
-		fDialogSettings.put(IUIConstants.DIALOGSTORE_LASTEXTSOURCE,
-				dialog.getFilterPath());
+		fDialogSettings.put(IUIConstants.DIALOGSTORE_LASTEXTSOURCE, dialog.getFilterPath());
 
 		return elems;
 	}

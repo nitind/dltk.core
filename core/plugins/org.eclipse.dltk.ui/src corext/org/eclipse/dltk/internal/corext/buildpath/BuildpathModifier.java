@@ -10,6 +10,7 @@
 package org.eclipse.dltk.internal.corext.buildpath;
 
 import java.net.URI;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -43,7 +44,6 @@ import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.BuildpathEntry;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.ArchiveFileFilter;
@@ -1770,7 +1770,7 @@ public class BuildpathModifier {
 		rootStatus.setOK();
 		boolean isExternal = isExternalArchiveOrLibrary(entry, project);
 		if (!isExternal && validate.matches(IStatus.ERROR) && !project.getPath().equals(path)) {
-			rootStatus.setError(Messages.format(NewWizardMessages.NewSourceFolderWizardPage_error_InvalidRootName,
+			rootStatus.setError(MessageFormat.format(NewWizardMessages.NewSourceFolderWizardPage_error_InvalidRootName,
 					validate.getMessage()));
 			throw new CoreException(rootStatus);
 		} else {

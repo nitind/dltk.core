@@ -3,18 +3,19 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 
 package org.eclipse.dltk.internal.ui.search;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.search.IQueryParticipant;
 
@@ -40,26 +41,26 @@ public class SearchParticipantDescriptor {
 	protected IStatus checkSyntax() {
 		if (fConfigurationElement.getAttribute(ID) == null) {
 			String format = SearchMessages.SearchParticipant_error_noID;
-			String message = Messages.format(format,
+			String message = MessageFormat.format(format,
 					fConfigurationElement.getDeclaringExtension().getUniqueIdentifier());
 			return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), 0, message, null);
 		}
 
 		if (fConfigurationElement.getAttribute(LANGUAGE) == null) {
 			String format = SearchMessages.SearchParticipant_error_noLanguage;
-			String message = Messages.format(format, fConfigurationElement.getAttribute(ID));
+			String message = MessageFormat.format(format, fConfigurationElement.getAttribute(ID));
 			return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), 0, message, null);
 		}
 
 		if (fConfigurationElement.getAttribute(NATURE) == null) {
 			String format = SearchMessages.SearchParticipant_error_noNature;
-			String message = Messages.format(format, fConfigurationElement.getAttribute(ID));
+			String message = MessageFormat.format(format, fConfigurationElement.getAttribute(ID));
 			return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), 0, message, null);
 		}
 
 		if (fConfigurationElement.getAttribute(CLASS) == null) {
 			String format = SearchMessages.SearchParticipant_error_noClass;
-			String message = Messages.format(format, fConfigurationElement.getAttribute(ID));
+			String message = MessageFormat.format(format, fConfigurationElement.getAttribute(ID));
 			return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), 0, message, null);
 		}
 		return Status.OK_STATUS;

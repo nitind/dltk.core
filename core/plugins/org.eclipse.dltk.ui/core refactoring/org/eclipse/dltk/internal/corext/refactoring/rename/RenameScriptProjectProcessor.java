@@ -3,13 +3,14 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.rename;
 
 import java.net.URI;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,6 @@ import org.eclipse.dltk.internal.corext.refactoring.changes.RenameScriptProjectC
 import org.eclipse.dltk.internal.corext.refactoring.code.ScriptableRefactoring;
 import org.eclipse.dltk.internal.corext.refactoring.participants.ScriptProcessors;
 import org.eclipse.dltk.internal.corext.refactoring.tagging.IReferenceUpdating;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.corext.util.Resources;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
@@ -167,7 +167,7 @@ public class RenameScriptProjectProcessor extends ScriptRenameProcessor implemen
 		pm.beginTask("", 1); //$NON-NLS-1$
 		try {
 			if (isReadOnly()) {
-				String message = Messages.format(RefactoringCoreMessages.RenameScriptProjectRefactoring_read_only,
+				String message = MessageFormat.format(RefactoringCoreMessages.RenameScriptProjectRefactoring_read_only,
 						fProject.getElementName());
 				return RefactoringStatus.createErrorStatus(message);
 			}
@@ -202,10 +202,10 @@ public class RenameScriptProjectProcessor extends ScriptRenameProcessor implemen
 		pm.beginTask("", 1); //$NON-NLS-1$
 		try {
 			final Map arguments = new HashMap();
-			final String description = Messages.format(
+			final String description = MessageFormat.format(
 					RefactoringCoreMessages.RenameScriptProjectProcessor_descriptor_description_short,
 					fProject.getElementName());
-			final String header = Messages.format(
+			final String header = MessageFormat.format(
 					RefactoringCoreMessages.RenameScriptProjectChange_descriptor_description, fProject.getElementName(),
 					getNewElementName());
 			final String comment = new ScriptRefactoringDescriptorComment(this, header).asString();
@@ -238,20 +238,20 @@ public class RenameScriptProjectProcessor extends ScriptRenameProcessor implemen
 				fProject = (IScriptProject) element;
 			} else
 				return RefactoringStatus.createFatalErrorStatus(
-						Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+						MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
 								ScriptRefactoringDescriptor.ATTRIBUTE_INPUT));
 			final String name = extended.getAttribute(ScriptRefactoringDescriptor.ATTRIBUTE_NAME);
 			if (name != null && !"".equals(name)) //$NON-NLS-1$
 				setNewElementName(name);
 			else
 				return RefactoringStatus.createFatalErrorStatus(
-						Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+						MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
 								ScriptRefactoringDescriptor.ATTRIBUTE_NAME));
 			final String references = extended.getAttribute(ATTRIBUTE_REFERENCES);
 			if (references != null) {
 				fUpdateReferences = Boolean.valueOf(references).booleanValue();
 			} else
-				return RefactoringStatus.createFatalErrorStatus(Messages.format(
+				return RefactoringStatus.createFatalErrorStatus(MessageFormat.format(
 						RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, ATTRIBUTE_REFERENCES));
 		} else
 			return RefactoringStatus

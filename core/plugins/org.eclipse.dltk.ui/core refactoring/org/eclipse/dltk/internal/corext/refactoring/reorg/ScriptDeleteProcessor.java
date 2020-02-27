@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.reorg;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,7 +51,6 @@ import org.eclipse.dltk.internal.corext.refactoring.tagging.ICommentProvider;
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
 import org.eclipse.dltk.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.dltk.internal.corext.refactoring.util.TextChangeManager;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.corext.util.Resources;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.ltk.core.refactoring.Change;
@@ -310,10 +310,10 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 				LocationKind.NORMALIZE);
 		if (buffer != null && buffer.isDirty()) {
 			if (buffer.isStateValidated() && buffer.isSynchronized()) {
-				result.addWarning(Messages.format(RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
+				result.addWarning(MessageFormat.format(RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
 						file.getFullPath().toString()));
 			} else {
-				result.addFatalError(Messages.format(RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
+				result.addFatalError(MessageFormat.format(RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
 						file.getFullPath().toString()));
 			}
 		}
@@ -486,7 +486,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 					RefactoringCoreMessages.ScriptDeleteProcessor_confirm_linked_folder_delete, false,
 					IReorgQueries.CONFIRM_DELETE_LINKED_PARENT);
 			if (!query.confirm(
-					Messages.format(RefactoringCoreMessages.ScriptDeleteProcessor_delete_linked_folder_question,
+					MessageFormat.format(RefactoringCoreMessages.ScriptDeleteProcessor_delete_linked_folder_question,
 							frag.getResource().getName())))
 				return;
 		}
@@ -558,7 +558,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 			List referencingProjects) throws OperationCanceledException {
 		if (referencingProjects.isEmpty() || root == null || !root.exists() || !root.isArchive())
 			return false;
-		String question = Messages.format(RefactoringCoreMessages.DeleteRefactoring_3, root.getElementName());
+		String question = MessageFormat.format(RefactoringCoreMessages.DeleteRefactoring_3, root.getElementName());
 		return !query.confirm(question, referencingProjects.toArray());
 	}
 
@@ -572,7 +572,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 			if (resource instanceof IFolder) {
 				IFolder folder = (IFolder) resource;
 				if (containsSourceFolder(folder)) {
-					String question = Messages.format(RefactoringCoreMessages.DeleteRefactoring_5, folder.getName());
+					String question = MessageFormat.format(RefactoringCoreMessages.DeleteRefactoring_5,
+							folder.getName());
 					if (!query.confirm(question))
 						foldersToSkip.add(folder);
 				}

@@ -3,13 +3,15 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.changes;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -18,7 +20,6 @@ import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.INewNameQuery;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.ltk.core.refactoring.Change;
 
@@ -40,6 +41,6 @@ public class CopyScriptFolderChange extends PackageReorgChange {
 				ScriptElementLabels.ALL_DEFAULT);
 		String destinationName = ScriptElementLabels.getDefault().getElementLabel(getDestination(),
 				ScriptElementLabels.ALL_DEFAULT);
-		return Messages.format(RefactoringCoreMessages.CopyPackageChange_copy, packageName, destinationName);
+		return MessageFormat.format(RefactoringCoreMessages.CopyPackageChange_copy, packageName, destinationName);
 	}
 }

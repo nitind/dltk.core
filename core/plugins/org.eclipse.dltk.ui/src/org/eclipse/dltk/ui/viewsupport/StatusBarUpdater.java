@@ -3,17 +3,18 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.ui.viewsupport;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.DLTKUIMessages;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.dltk.ui.ScriptElementLabels;
@@ -30,14 +31,10 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
  */
 public class StatusBarUpdater implements ISelectionChangedListener {
 
-	private final long LABEL_FLAGS = ScriptElementLabels.DEFAULT_QUALIFIED
-			| ScriptElementLabels.ROOT_POST_QUALIFIED
-			| ScriptElementLabels.APPEND_ROOT_PATH
-			| ScriptElementLabels.M_PARAMETER_TYPES
-			| ScriptElementLabels.M_PARAMETER_NAMES
-			| ScriptElementLabels.M_APP_RETURNTYPE
-			| ScriptElementLabels.M_EXCEPTIONS
-			| ScriptElementLabels.F_APP_TYPE_SIGNATURE
+	private final long LABEL_FLAGS = ScriptElementLabels.DEFAULT_QUALIFIED | ScriptElementLabels.ROOT_POST_QUALIFIED
+			| ScriptElementLabels.APPEND_ROOT_PATH | ScriptElementLabels.M_PARAMETER_TYPES
+			| ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.M_APP_RETURNTYPE
+			| ScriptElementLabels.M_EXCEPTIONS | ScriptElementLabels.F_APP_TYPE_SIGNATURE
 			| ScriptElementLabels.T_TYPE_PARAMETERS;
 
 	private IStatusLineManager fStatusLineManager;
@@ -58,8 +55,7 @@ public class StatusBarUpdater implements ISelectionChangedListener {
 
 			int nElements = selection.size();
 			if (nElements > 1) {
-				return Messages.format(
-						DLTKUIMessages.StatusBarUpdater_num_elements_selected,
+				return MessageFormat.format(DLTKUIMessages.StatusBarUpdater_num_elements_selected,
 						String.valueOf(nElements));
 			}
 			Object elem = selection.getFirstElement();
@@ -72,8 +68,7 @@ public class StatusBarUpdater implements ISelectionChangedListener {
 				return container.getLabel() + ScriptElementLabels.CONCAT_STRING
 						+ container.getScriptProject().getElementName();
 			} else if (elem instanceof IAdaptable) {
-				IWorkbenchAdapter wbadapter = ((IAdaptable) elem)
-						.getAdapter(IWorkbenchAdapter.class);
+				IWorkbenchAdapter wbadapter = ((IAdaptable) elem).getAdapter(IWorkbenchAdapter.class);
 				if (wbadapter != null) {
 					return wbadapter.getLabel(elem);
 				}
@@ -83,8 +78,7 @@ public class StatusBarUpdater implements ISelectionChangedListener {
 	}
 
 	private String formatModelElementMessage(IModelElement element) {
-		return ScriptElementLabels.getDefault().getElementLabel(element,
-				LABEL_FLAGS);
+		return ScriptElementLabels.getDefault().getElementLabel(element, LABEL_FLAGS);
 	}
 
 	private String formatResourceMessage(IResource element) {

@@ -906,14 +906,14 @@ public abstract class AbstractScriptLaunchConfigurationDelegate
 
 			monitor.beginTask(MessageFormat.format(
 					LaunchingMessages.AbstractScriptLaunchConfigurationDelegate_startingLaunchConfiguration,
-					new Object[] { configuration.getName() }), 10);
+					configuration.getName()), 10);
 			if (monitor.isCanceled()) {
 				return;
 			}
 
 			monitor.subTask(MessageFormat.format(
 					LaunchingMessages.AbstractScriptLaunchConfigurationDelegate_validatingLaunchConfiguration,
-					new Object[] { configuration.getName() }));
+					configuration.getName()));
 			validateLaunchConfiguration(configuration, mode, project);
 			monitor.worked(1);
 			if (monitor.isCanceled()) {

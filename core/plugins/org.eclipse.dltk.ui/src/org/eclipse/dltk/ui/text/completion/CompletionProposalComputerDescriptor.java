@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.ui.text.completion;
 
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +27,6 @@ import org.eclipse.core.runtime.PerformanceStats;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
@@ -60,20 +60,17 @@ final class CompletionProposalComputerDescriptor {
 	/** Set of Script partition types. */
 	private static final Set<String> PARTITION_SET = new HashSet<>();
 	/** The name of the performance event used to trace extensions. */
-	private static final String PERFORMANCE_EVENT = DLTKUIPlugin.getPluginId()
-			+ "/perf/content_assist/extensions"; //$NON-NLS-1$
+	private static final String PERFORMANCE_EVENT = DLTKUIPlugin.getPluginId() + "/perf/content_assist/extensions"; //$NON-NLS-1$
 	/**
-	 * If <code>true</code>, execution time of extensions is measured and the
-	 * data forwarded to core's {@link PerformanceStats} service.
+	 * If <code>true</code>, execution time of extensions is measured and the data
+	 * forwarded to core's {@link PerformanceStats} service.
 	 */
-	private static final boolean MEASURE_PERFORMANCE = PerformanceStats
-			.isEnabled(PERFORMANCE_EVENT);
+	private static final boolean MEASURE_PERFORMANCE = PerformanceStats.isEnabled(PERFORMANCE_EVENT);
 	/**
 	 * Independently of the {@link PerformanceStats} service, any operation that
-	 * takes longer than {@value} milliseconds will be flagged as an violation.
-	 * This timeout does not apply to the first invocation, as it may take
-	 * longer due to plug-in initialization etc. See also
-	 * {@link #fIsReportingDelay}.
+	 * takes longer than {@value} milliseconds will be flagged as an violation. This
+	 * timeout does not apply to the first invocation, as it may take longer due to
+	 * plug-in initialization etc. See also {@link #fIsReportingDelay}.
 	 */
 	private static final long MAX_DELAY = 25000;
 
@@ -111,14 +108,13 @@ final class CompletionProposalComputerDescriptor {
 	/** The ui category. */
 	private final CompletionProposalCategory fCategory;
 	/**
-	 * The first error message in the most recent operation, or
-	 * <code>null</code>.
+	 * The first error message in the most recent operation, or <code>null</code>.
 	 */
 	private String fLastError;
 	/**
 	 * Tells whether to inform the user when <code>MAX_DELAY</code> has been
-	 * exceeded. We start timing execution after the first session because the
-	 * first may take longer due to plug-in activation and initialization.
+	 * exceeded. We start timing execution after the first session because the first
+	 * may take longer due to plug-in activation and initialization.
 	 */
 	private boolean fIsReportingDelay = false;
 	/** The start of the last operation. */
@@ -128,15 +124,11 @@ final class CompletionProposalComputerDescriptor {
 	/**
 	 * Creates a new descriptor.
 	 *
-	 * @param element
-	 *            the configuration element to read
-	 * @param registry
-	 *            the computer registry creating this descriptor
+	 * @param element  the configuration element to read
+	 * @param registry the computer registry creating this descriptor
 	 */
-	CompletionProposalComputerDescriptor(IConfigurationElement element,
-			CompletionProposalComputerRegistry registry,
-			List<CompletionProposalCategory> categories)
-			throws InvalidRegistryObjectException {
+	CompletionProposalComputerDescriptor(IConfigurationElement element, CompletionProposalComputerRegistry registry,
+			List<CompletionProposalCategory> categories) throws InvalidRegistryObjectException {
 		Assert.isLegal(registry != null);
 		Assert.isLegal(element != null);
 
@@ -187,8 +179,7 @@ final class CompletionProposalComputerDescriptor {
 		this.fToolkitID = toolkitId;
 		if (category == null) {
 			// create a category if it does not exist
-			fCategory = new CompletionProposalCategory(categoryId, fName,
-					registry, toolkitId);
+			fCategory = new CompletionProposalCategory(categoryId, fName, registry, toolkitId);
 			categories.add(fCategory);
 		} else {
 			fCategory = category;
@@ -204,16 +195,12 @@ final class CompletionProposalComputerDescriptor {
 	 * schema. Throws an <code>InvalidRegistryObjectException</code> if
 	 * <code>obj</code> is <code>null</code>.
 	 */
-	private void checkNotNull(Object obj, String attribute)
-			throws InvalidRegistryObjectException {
+	private void checkNotNull(Object obj, String attribute) throws InvalidRegistryObjectException {
 		if (obj == null) {
-			Object[] args = { getId(), fElement.getContributor().getName(),
-					attribute };
-			String message = Messages.format(
-					ScriptTextMessages.CompletionProposalComputerDescriptor_illegal_attribute_message,
-					args);
-			IStatus status = new Status(IStatus.WARNING,
-					DLTKUIPlugin.getPluginId(), IStatus.OK, message, null);
+			Object[] args = { getId(), fElement.getContributor().getName(), attribute };
+			String message = MessageFormat
+					.format(ScriptTextMessages.CompletionProposalComputerDescriptor_illegal_attribute_message, args);
+			IStatus status = new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(), IStatus.OK, message, null);
 			DLTKUIPlugin.log(status);
 			throw new InvalidRegistryObjectException();
 		}
@@ -255,22 +242,18 @@ final class CompletionProposalComputerDescriptor {
 
 	/**
 	 * Returns a cached instance of the computer as described in the extension's
-	 * xml. The computer is {@link #createComputer() created} the first time
-	 * that this method is called and then cached.
+	 * xml. The computer is {@link #createComputer() created} the first time that
+	 * this method is called and then cached.
 	 *
-	 * @return a new instance of the completion proposal computer as described
-	 *         by this descriptor
-	 * @throws CoreException
-	 *             if the creation fails
-	 * @throws InvalidRegistryObjectException
-	 *             if the extension is not valid any longer (e.g. due to plug-in
-	 *             unloading)
+	 * @return a new instance of the completion proposal computer as described by
+	 *         this descriptor
+	 * @throws CoreException                  if the creation fails
+	 * @throws InvalidRegistryObjectException if the extension is not valid any
+	 *                                        longer (e.g. due to plug-in unloading)
 	 */
-	private synchronized IScriptCompletionProposalComputer getComputer(
-			boolean canCreate)
+	private synchronized IScriptCompletionProposalComputer getComputer(boolean canCreate)
 			throws CoreException, InvalidRegistryObjectException {
-		if (fComputer == null && canCreate && !fTriedLoadingComputer
-				&& (fActivate || isPluginLoaded())) {
+		if (fComputer == null && canCreate && !fTriedLoadingComputer && (fActivate || isPluginLoaded())) {
 			fTriedLoadingComputer = true;
 			fComputer = createComputer();
 		}
@@ -283,51 +266,43 @@ final class CompletionProposalComputerDescriptor {
 	}
 
 	private Bundle getBundle() {
-		String namespace = fElement.getDeclaringExtension().getContributor()
-				.getName();
+		String namespace = fElement.getDeclaringExtension().getContributor().getName();
 		Bundle bundle = Platform.getBundle(namespace);
 		return bundle;
 	}
 
 	/**
-	 * Returns a new instance of the computer as described in the extension's
-	 * xml. Note that the safest way to access the computer is by using the
+	 * Returns a new instance of the computer as described in the extension's xml.
+	 * Note that the safest way to access the computer is by using the
 	 * {@linkplain #computeCompletionProposals(ContentAssistInvocationContext, IProgressMonitor)
 	 * computeCompletionProposals} and
 	 * {@linkplain #computeContextInformation(ContentAssistInvocationContext, IProgressMonitor)
-	 * computeContextInformation} methods. These delegate the functionality to
-	 * the contributed computer, but handle instance creation and any exceptions
-	 * thrown.
+	 * computeContextInformation} methods. These delegate the functionality to the
+	 * contributed computer, but handle instance creation and any exceptions thrown.
 	 *
-	 * @return a new instance of the completion proposal computer as described
-	 *         by this descriptor
-	 * @throws CoreException
-	 *             if the creation fails
-	 * @throws InvalidRegistryObjectException
-	 *             if the extension is not valid any longer (e.g. due to plug-in
-	 *             unloading)
+	 * @return a new instance of the completion proposal computer as described by
+	 *         this descriptor
+	 * @throws CoreException                  if the creation fails
+	 * @throws InvalidRegistryObjectException if the extension is not valid any
+	 *                                        longer (e.g. due to plug-in unloading)
 	 */
-	public IScriptCompletionProposalComputer createComputer()
-			throws CoreException, InvalidRegistryObjectException {
-		return (IScriptCompletionProposalComputer) fElement
-				.createExecutableExtension(CLASS);
+	public IScriptCompletionProposalComputer createComputer() throws CoreException, InvalidRegistryObjectException {
+		return (IScriptCompletionProposalComputer) fElement.createExecutableExtension(CLASS);
 	}
 
 	/**
-	 * Safely computes completion proposals through the described extension. If
-	 * the extension is disabled, throws an exception or otherwise does not
-	 * adhere to the contract described in
-	 * {@link IScriptCompletionProposalComputer}, an empty list is returned.
+	 * Safely computes completion proposals through the described extension. If the
+	 * extension is disabled, throws an exception or otherwise does not adhere to
+	 * the contract described in {@link IScriptCompletionProposalComputer}, an empty
+	 * list is returned.
 	 *
-	 * @param context
-	 *            the invocation context passed on to the extension
-	 * @param monitor
-	 *            the progress monitor passed on to the extension
+	 * @param context the invocation context passed on to the extension
+	 * @param monitor the progress monitor passed on to the extension
 	 * @return the list of computed completion proposals (element type:
 	 *         {@link org.eclipse.jface.text.contentassist.ICompletionProposal})
 	 */
-	public List<ICompletionProposal> computeCompletionProposals(
-			ContentAssistInvocationContext context, IProgressMonitor monitor) {
+	public List<ICompletionProposal> computeCompletionProposals(ContentAssistInvocationContext context,
+			IProgressMonitor monitor) {
 		if (!isEnabled())
 			return Collections.emptyList();
 
@@ -339,8 +314,7 @@ final class CompletionProposalComputerDescriptor {
 
 			try {
 				PerformanceStats stats = startMeter(context, computer);
-				List<ICompletionProposal> proposals = computer
-						.computeCompletionProposals(context, monitor);
+				List<ICompletionProposal> proposals = computer.computeCompletionProposals(context, monitor);
 				stopMeter(stats, COMPUTE_COMPLETION_PROPOSALS);
 
 				if (proposals != null) {
@@ -368,20 +342,18 @@ final class CompletionProposalComputerDescriptor {
 	}
 
 	/**
-	 * Safely computes context information objects through the described
-	 * extension. If the extension is disabled, throws an exception or otherwise
-	 * does not adhere to the contract described in
+	 * Safely computes context information objects through the described extension.
+	 * If the extension is disabled, throws an exception or otherwise does not
+	 * adhere to the contract described in
 	 * {@link IScriptCompletionProposalComputer}, an empty list is returned.
 	 *
-	 * @param context
-	 *            the invocation context passed on to the extension
-	 * @param monitor
-	 *            the progress monitor passed on to the extension
+	 * @param context the invocation context passed on to the extension
+	 * @param monitor the progress monitor passed on to the extension
 	 * @return the list of computed context information objects (element type:
 	 *         {@link org.eclipse.jface.text.contentassist.IContextInformation})
 	 */
-	public List<IContextInformation> computeContextInformation(
-			ContentAssistInvocationContext context, IProgressMonitor monitor) {
+	public List<IContextInformation> computeContextInformation(ContentAssistInvocationContext context,
+			IProgressMonitor monitor) {
 		if (!isEnabled())
 			return Collections.emptyList();
 
@@ -392,8 +364,7 @@ final class CompletionProposalComputerDescriptor {
 				return Collections.emptyList();
 
 			PerformanceStats stats = startMeter(context, computer);
-			List<IContextInformation> proposals = computer
-					.computeContextInformation(context, monitor);
+			List<IContextInformation> proposals = computer.computeContextInformation(context, monitor);
 			stopMeter(stats, COMPUTE_CONTEXT_INFORMATION);
 
 			if (proposals != null) {
@@ -483,8 +454,7 @@ final class CompletionProposalComputerDescriptor {
 		fRegistry.informUser(this, status);
 	}
 
-	private PerformanceStats startMeter(Object context,
-			IScriptCompletionProposalComputer computer) {
+	private PerformanceStats startMeter(Object context, IScriptCompletionProposalComputer computer) {
 		final PerformanceStats stats;
 		if (MEASURE_PERFORMANCE) {
 			stats = PerformanceStats.getStats(PERFORMANCE_EVENT, computer);
@@ -523,51 +493,41 @@ final class CompletionProposalComputerDescriptor {
 		// extension has become invalid - log & disable
 		String blame = createBlameMessage();
 		String reason = ScriptTextMessages.CompletionProposalComputerDescriptor_reason_invalid;
-		return new Status(IStatus.INFO, DLTKUIPlugin.getPluginId(), IStatus.OK,
-				blame + " " + reason, x); //$NON-NLS-1$
+		return new Status(IStatus.INFO, DLTKUIPlugin.getPluginId(), IStatus.OK, blame + " " + reason, x); //$NON-NLS-1$
 	}
 
 	private IStatus createExceptionStatus(CoreException x) {
 		// unable to instantiate the extension - log & disable
 		String blame = createBlameMessage();
 		String reason = ScriptTextMessages.CompletionProposalComputerDescriptor_reason_instantiation;
-		return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), IStatus.OK,
-				blame + " " + reason, x); //$NON-NLS-1$
+		return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), IStatus.OK, blame + " " + reason, x); //$NON-NLS-1$
 	}
 
 	private IStatus createExceptionStatus(RuntimeException x) {
 		// misbehaving extension - log & disable
 		String blame = createBlameMessage();
 		String reason = ScriptTextMessages.CompletionProposalComputerDescriptor_reason_runtime_ex;
-		return new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(),
-				IStatus.OK, blame + " " + reason, x); //$NON-NLS-1$
+		return new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(), IStatus.OK, blame + " " + reason, x); //$NON-NLS-1$
 	}
 
 	private IStatus createAPIViolationStatus(String operation) {
 		String blame = createBlameMessage();
 		Object[] args = { operation };
-		String reason = Messages.format(
-				ScriptTextMessages.CompletionProposalComputerDescriptor_reason_API,
-				args);
-		return new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(),
-				IStatus.OK, blame + " " + reason, null); //$NON-NLS-1$
+		String reason = MessageFormat.format(ScriptTextMessages.CompletionProposalComputerDescriptor_reason_API, args);
+		return new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(), IStatus.OK, blame + " " + reason, null); //$NON-NLS-1$
 	}
 
 	private IStatus createPerformanceStatus(String operation) {
 		String blame = createBlameMessage();
 		Object[] args = { operation };
-		String reason = Messages.format(
-				ScriptTextMessages.CompletionProposalComputerDescriptor_reason_performance,
+		String reason = MessageFormat.format(ScriptTextMessages.CompletionProposalComputerDescriptor_reason_performance,
 				args);
-		return new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(),
-				IStatus.OK, blame + " " + reason, null); //$NON-NLS-1$
+		return new Status(IStatus.WARNING, DLTKUIPlugin.getPluginId(), IStatus.OK, blame + " " + reason, null); //$NON-NLS-1$
 	}
 
 	private String createBlameMessage() {
-		Object[] args = { getName(),
-				fElement.getDeclaringExtension().getContributor().getName() };
-		String disable = Messages.format(
-				ScriptTextMessages.CompletionProposalComputerDescriptor_blame_message,
+		Object[] args = { getName(), fElement.getDeclaringExtension().getContributor().getName() };
+		String disable = MessageFormat.format(ScriptTextMessages.CompletionProposalComputerDescriptor_blame_message,
 				args);
 		return disable;
 	}

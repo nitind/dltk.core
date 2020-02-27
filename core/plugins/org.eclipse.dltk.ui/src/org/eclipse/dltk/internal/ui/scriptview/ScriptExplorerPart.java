@@ -12,6 +12,7 @@ package org.eclipse.dltk.internal.ui.scriptview;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -38,7 +39,6 @@ import org.eclipse.dltk.core.IScriptModel;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 import org.eclipse.dltk.internal.ui.dnd.DLTKViewerDragSupport;
 import org.eclipse.dltk.internal.ui.dnd.DLTKViewerDropSupport;
@@ -849,9 +849,9 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 				return result;
 			}
 			if (result.length() == 0) {
-				return Messages.format(ScriptMessages.PackageExplorer_toolTip, fWorkingSetLabel);
+				return MessageFormat.format(ScriptMessages.PackageExplorer_toolTip, fWorkingSetLabel);
 			}
-			return Messages.format(ScriptMessages.PackageExplorer_toolTip2, result, fWorkingSetLabel);
+			return MessageFormat.format(ScriptMessages.PackageExplorer_toolTip2, result, fWorkingSetLabel);
 		}
 		// Working set mode. During initialization element and
 		// action set can be null.
@@ -872,7 +872,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 				index--;
 			}
 			if (ws != null) {
-				return Messages.format(ScriptMessages.PackageExplorer_toolTip3, ws.getLabel(), result);
+				return MessageFormat.format(ScriptMessages.PackageExplorer_toolTip3, ws.getLabel(), result);
 			}
 			return result;
 		}
@@ -1462,10 +1462,10 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 					ScriptElementLabels labels = toolkit.getScriptElementLabels();
 					String elementLabel = labels.getElementLabel((IModelElement) element,
 							ScriptElementLabels.ALL_DEFAULT);
-					message = Messages.format(ScriptMessages.PackageExplorer_notFound, elementLabel,
+					message = MessageFormat.format(ScriptMessages.PackageExplorer_notFound, elementLabel,
 							workingSet.getLabel());
 				} else {
-					message = Messages.format(ScriptMessages.PackageExplorer_notFound, workingSet.getLabel());
+					message = MessageFormat.format(ScriptMessages.PackageExplorer_notFound, workingSet.getLabel());
 				}
 				if (MessageDialog.openQuestion(getSite().getShell(),
 						ScriptMessages.PackageExplorer_filteredDialog_title, message)) {
@@ -1489,7 +1489,7 @@ public class ScriptExplorerPart extends ViewPart implements ISetSelectionTarget,
 				IDLTKUILanguageToolkit toolkit = DLTKUILanguageManager.getLanguageToolkit((IModelElement) element);
 				ScriptElementLabels labels = toolkit.getScriptElementLabels();
 				String elementLabel = labels.getElementLabel((IModelElement) element, ScriptElementLabels.ALL_DEFAULT);
-				message = Messages.format(ScriptMessages.PackageExplorer_removeFilters, elementLabel);
+				message = MessageFormat.format(ScriptMessages.PackageExplorer_removeFilters, elementLabel);
 			} else {
 				message = ScriptMessages.PackageExplorer_removeFilters;
 			}

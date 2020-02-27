@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.ui.preferences;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,7 +18,6 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.dialogs.StatusUtil;
 import org.eclipse.dltk.internal.ui.text.hover.EditorTextHoverDescriptor;
 import org.eclipse.dltk.internal.ui.util.SWTUtil;
@@ -324,15 +324,15 @@ public class ScriptEditorHoverConfigurationBlock implements IPreferenceConfigura
 					String insertString;
 
 					if (needsPrefixDelimiter && needsPostfixDelimiter)
-						insertString = Messages.format(
+						insertString = MessageFormat.format(
 								PreferencesMessages.DLTKEditorHoverConfigurationBlock_insertDelimiterAndModifierAndDelimiter,
 								Action.findModifierString(e.stateMask));
 					else if (needsPrefixDelimiter)
-						insertString = Messages.format(
+						insertString = MessageFormat.format(
 								PreferencesMessages.DLTKEditorHoverConfigurationBlock_insertDelimiterAndModifier,
 								Action.findModifierString(e.stateMask));
 					else if (needsPostfixDelimiter)
-						insertString = Messages.format(
+						insertString = MessageFormat.format(
 								PreferencesMessages.DLTKEditorHoverConfigurationBlock_insertModifierAndDelimiter,
 								Action.findModifierString(e.stateMask));
 					else
@@ -530,7 +530,7 @@ public class ScriptEditorHoverConfigurationBlock implements IPreferenceConfigura
 	private void updateStatus(HoverConfig hoverConfig) {
 		if (hoverConfig != null && hoverConfig.fIsEnabled && hoverConfig.fStateMask == -1)
 			fStatus = new StatusInfo(IStatus.ERROR,
-					Messages.format(PreferencesMessages.DLTKEditorHoverConfigurationBlock_modifierIsNotValid,
+					MessageFormat.format(PreferencesMessages.DLTKEditorHoverConfigurationBlock_modifierIsNotValid,
 							hoverConfig.fModifierString));
 		else
 			fStatus = new StatusInfo();
@@ -543,13 +543,14 @@ public class ScriptEditorHoverConfigurationBlock implements IPreferenceConfigura
 				Integer stateMask = Integer.valueOf(fHoverConfigs[i].fStateMask);
 				if (fHoverConfigs[i].fStateMask == -1)
 					fStatus = new StatusInfo(IStatus.ERROR,
-							Messages.format(
+							MessageFormat.format(
 									PreferencesMessages.DLTKEditorHoverConfigurationBlock_modifierIsNotValidForHover,
 									fHoverConfigs[i].fModifierString, label));
 				else if (stateMasks.containsKey(stateMask))
 					fStatus = new StatusInfo(IStatus.ERROR,
-							Messages.format(PreferencesMessages.DLTKEditorHoverConfigurationBlock_duplicateModifier,
-									label, stateMasks.get(stateMask)));
+							MessageFormat.format(
+									PreferencesMessages.DLTKEditorHoverConfigurationBlock_duplicateModifier, label,
+									stateMasks.get(stateMask)));
 				else
 					stateMasks.put(stateMask, label);
 			}

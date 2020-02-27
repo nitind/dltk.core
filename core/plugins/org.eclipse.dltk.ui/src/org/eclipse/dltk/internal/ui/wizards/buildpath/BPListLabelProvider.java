@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
@@ -19,7 +21,6 @@ import org.eclipse.dltk.core.IBuildpathContainer;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -50,8 +51,7 @@ public class BPListLabelProvider extends LabelProvider {
 
 		IWorkbench workbench = DLTKUIPlugin.getDefault().getWorkbench();
 
-		fProjectImage = workbench.getSharedImages()
-				.getImageDescriptor(IDE.SharedImages.IMG_OBJ_PROJECT);
+		fProjectImage = workbench.getSharedImages().getImageDescriptor(IDE.SharedImages.IMG_OBJ_PROJECT);
 	}
 
 	@Override
@@ -63,19 +63,15 @@ public class BPListLabelProvider extends LabelProvider {
 			BPListElementAttribute attribute = (BPListElementAttribute) element;
 			String text = getCPListElementAttributeText(attribute);
 			if (attribute.isInNonModifiableContainer()) {
-				return Messages.format(
-						NewWizardMessages.CPListLabelProvider_non_modifiable_attribute,
-						text);
+				return MessageFormat.format(NewWizardMessages.CPListLabelProvider_non_modifiable_attribute, text);
 			}
 			return text;
 		} else if (element instanceof BPUserLibraryElement) {
 			return getCPUserLibraryText((BPUserLibraryElement) element);
 		} else if (element instanceof IAccessRule) {
 			IAccessRule rule = (IAccessRule) element;
-			return Messages.format(
-					NewWizardMessages.CPListLabelProvider_access_rules_label,
-					AccessRulesLabelProvider.getResolutionLabel(rule.getKind()),
-					rule.getPattern().toString());
+			return MessageFormat.format(NewWizardMessages.CPListLabelProvider_access_rules_label,
+					AccessRulesLabelProvider.getResolutionLabel(rule.getKind()), rule.getPattern().toString());
 		}
 		return super.getText(element);
 	}
@@ -84,8 +80,7 @@ public class BPListLabelProvider extends LabelProvider {
 
 		String name = element.getName();
 		if (element.isSystemLibrary()) {
-			name = Messages.format(
-					NewWizardMessages.CPListLabelProvider_systemlibrary, name);
+			name = MessageFormat.format(NewWizardMessages.CPListLabelProvider_systemlibrary, name);
 		}
 		return name;
 	}
@@ -104,8 +99,7 @@ public class BPListLabelProvider extends LabelProvider {
 					String pattern = patterns[i].toString();
 					if (pattern.length() > 0) {
 						if (patternsCount > 0) {
-							buf.append(
-									NewWizardMessages.CPListLabelProvider_exclusion_filter_separator);
+							buf.append(NewWizardMessages.CPListLabelProvider_exclusion_filter_separator);
 						}
 						buf.append(pattern);
 						patternsCount++;
@@ -119,9 +113,7 @@ public class BPListLabelProvider extends LabelProvider {
 			} else {
 				arg = notAvailable;
 			}
-			return Messages.format(
-					NewWizardMessages.CPListLabelProvider_exclusion_filter_label,
-					arg);
+			return MessageFormat.format(NewWizardMessages.CPListLabelProvider_exclusion_filter_label, arg);
 		} else if (key.equals(BPListElement.INCLUSION)) {
 			String arg = null;
 			IPath[] patterns = (IPath[]) attrib.getValue();
@@ -132,8 +124,7 @@ public class BPListLabelProvider extends LabelProvider {
 					String pattern = patterns[i].toString();
 					if (pattern.length() > 0) {
 						if (patternsCount > 0) {
-							buf.append(
-									NewWizardMessages.CPListLabelProvider_inclusion_filter_separator);
+							buf.append(NewWizardMessages.CPListLabelProvider_inclusion_filter_separator);
 						}
 						buf.append(pattern);
 						patternsCount++;
@@ -147,39 +138,32 @@ public class BPListLabelProvider extends LabelProvider {
 			} else {
 				arg = NewWizardMessages.CPListLabelProvider_all;
 			}
-			return Messages.format(
-					NewWizardMessages.CPListLabelProvider_inclusion_filter_label,
-					arg);
+			return MessageFormat.format(NewWizardMessages.CPListLabelProvider_inclusion_filter_label, arg);
 		} else if (key.equals(BPListElement.ACCESSRULES)) {
 			IAccessRule[] rules = (IAccessRule[]) attrib.getValue();
 			int nRules = rules != null ? rules.length : 0;
 
 			int parentKind = attrib.getParent().getEntryKind();
 			if (parentKind == IBuildpathEntry.BPE_PROJECT) {
-				Boolean combined = (Boolean) attrib.getParent()
-						.getAttribute(BPListElement.COMBINE_ACCESSRULES);
+				Boolean combined = (Boolean) attrib.getParent().getAttribute(BPListElement.COMBINE_ACCESSRULES);
 				if (nRules > 0) {
 					if (combined.booleanValue()) {
-						return Messages.format(
-								NewWizardMessages.CPListLabelProvider_project_access_rules_combined,
+						return MessageFormat.format(NewWizardMessages.CPListLabelProvider_project_access_rules_combined,
 								String.valueOf(nRules));
 					}
-					return Messages.format(
-							NewWizardMessages.CPListLabelProvider_project_access_rules_not_combined,
+					return MessageFormat.format(NewWizardMessages.CPListLabelProvider_project_access_rules_not_combined,
 							String.valueOf(nRules));
 				}
 				return NewWizardMessages.CPListLabelProvider_project_access_rules_no_rules;
 			} else if (parentKind == IBuildpathEntry.BPE_CONTAINER) {
 				if (nRules > 0) {
-					return Messages.format(
-							NewWizardMessages.CPListLabelProvider_container_access_rules,
+					return MessageFormat.format(NewWizardMessages.CPListLabelProvider_container_access_rules,
 							String.valueOf(nRules));
 				}
 				return NewWizardMessages.CPListLabelProvider_container_no_access_rules;
 			} else {
 				if (nRules > 0) {
-					return Messages.format(
-							NewWizardMessages.CPListLabelProvider_access_rules_enabled,
+					return MessageFormat.format(NewWizardMessages.CPListLabelProvider_access_rules_enabled,
 							String.valueOf(nRules));
 				}
 				return NewWizardMessages.CPListLabelProvider_access_rules_disabled;
@@ -204,8 +188,7 @@ public class BPListLabelProvider extends LabelProvider {
 	public String getCPListElementText(BPListElement cpentry) {
 
 		IPath path = cpentry.getPath();
-		if (path.toString()
-				.startsWith(IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
+		if (path.toString().startsWith(IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
 			return ScriptElementLabels.BUILTINS_FRAGMENT;
 		}
 		if (EnvironmentPathUtils.isFull(path)) {
@@ -215,8 +198,7 @@ public class BPListLabelProvider extends LabelProvider {
 		case IBuildpathEntry.BPE_LIBRARY: {
 			IResource resource = cpentry.getResource();
 			if (resource instanceof IContainer) {
-				StringBuffer buf = new StringBuffer(
-						path.makeRelative().toString());
+				StringBuffer buf = new StringBuffer(path.makeRelative().toString());
 				IPath linkTarget = cpentry.getLinkTarget();
 				if (linkTarget != null) {
 					buf.append(ScriptElementLabels.CONCAT_STRING);
@@ -246,19 +228,14 @@ public class BPListLabelProvider extends LabelProvider {
 			return path.lastSegment();
 		case IBuildpathEntry.BPE_CONTAINER:
 			try {
-				IBuildpathContainer container = DLTKCore.getBuildpathContainer(
-						path, cpentry.getScriptProject());
+				IBuildpathContainer container = DLTKCore.getBuildpathContainer(path, cpentry.getScriptProject());
 				if (container != null) {
 					return container.getDescription();
 				}
-				BuildpathContainerInitializer initializer = DLTKCore
-						.getBuildpathContainerInitializer(path.segment(0));
+				BuildpathContainerInitializer initializer = DLTKCore.getBuildpathContainerInitializer(path.segment(0));
 				if (initializer != null) {
-					String description = initializer.getDescription(path,
-							cpentry.getScriptProject());
-					return Messages.format(
-							NewWizardMessages.CPListLabelProvider_unbound_library,
-							description);
+					String description = initializer.getDescription(path, cpentry.getScriptProject());
+					return MessageFormat.format(NewWizardMessages.CPListLabelProvider_unbound_library, description);
 				}
 			} catch (ModelException e) {
 
@@ -295,11 +272,8 @@ public class BPListLabelProvider extends LabelProvider {
 
 		if (ArchiveFileFilter.isArchivePath(path)) {
 			IPath appendedPath = path.removeLastSegments(1);
-			String appended = isExternal ? appendedPath.toOSString()
-					: appendedPath.makeRelative().toString();
-			return Messages.format(
-					NewWizardMessages.CPListLabelProvider_twopart,
-					path.lastSegment(), appended);
+			String appended = isExternal ? appendedPath.toOSString() : appendedPath.makeRelative().toString();
+			return MessageFormat.format(NewWizardMessages.CPListLabelProvider_twopart, path.lastSegment(), appended);
 		}
 		return isExternal ? path.toOSString() : path.makeRelative().toString();
 	}
@@ -311,16 +285,13 @@ public class BPListLabelProvider extends LabelProvider {
 			if (cpentry.getPath().segmentCount() == 1) {
 				return fProjectImage;
 			}
-			return DLTKPluginImages
-					.getDescriptor(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT);
+			return DLTKPluginImages.getDescriptor(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT);
 		case IBuildpathEntry.BPE_LIBRARY:
-			return DLTKPluginImages
-					.getDescriptor(DLTKPluginImages.IMG_OBJS_EXTZIP_WSRC);
+			return DLTKPluginImages.getDescriptor(DLTKPluginImages.IMG_OBJS_EXTZIP_WSRC);
 		case IBuildpathEntry.BPE_PROJECT:
 			return fProjectImage;
 		case IBuildpathEntry.BPE_CONTAINER:
-			return DLTKPluginImages
-					.getDescriptor(DLTKPluginImages.IMG_OBJS_LIBRARY);
+			return DLTKPluginImages.getDescriptor(DLTKPluginImages.IMG_OBJS_LIBRARY);
 		default:
 			return null;
 		}
@@ -331,28 +302,22 @@ public class BPListLabelProvider extends LabelProvider {
 
 		if (element instanceof BPListElement) {
 			BPListElement cpentry = (BPListElement) element;
-			ImageDescriptor imageDescriptor = getCPListElementBaseImage(
-					cpentry);
+			ImageDescriptor imageDescriptor = getCPListElementBaseImage(cpentry);
 			if (imageDescriptor != null) {
 				if (cpentry.isMissing()) {
-					imageDescriptor = new ScriptElementImageDescriptor(
-							imageDescriptor,
-							ScriptElementImageDescriptor.WARNING,
-							ScriptElementImageProvider.SMALL_SIZE);
+					imageDescriptor = new ScriptElementImageDescriptor(imageDescriptor,
+							ScriptElementImageDescriptor.WARNING, ScriptElementImageProvider.SMALL_SIZE);
 				}
 				return fRegistry.get(imageDescriptor);
 			}
 		} else if (element instanceof BPListElementAttribute) {
 			String key = ((BPListElementAttribute) element).getKey();
 			if (key.equals(BPListElement.EXCLUSION)) {
-				return fRegistry.get(
-						DLTKPluginImages.DESC_OBJS_EXCLUSION_FILTER_ATTRIB);
+				return fRegistry.get(DLTKPluginImages.DESC_OBJS_EXCLUSION_FILTER_ATTRIB);
 			} else if (key.equals(BPListElement.INCLUSION)) {
-				return fRegistry.get(
-						DLTKPluginImages.DESC_OBJS_INCLUSION_FILTER_ATTRIB);
+				return fRegistry.get(DLTKPluginImages.DESC_OBJS_INCLUSION_FILTER_ATTRIB);
 			} else if (key.equals(BPListElement.ACCESSRULES)) {
-				return fRegistry
-						.get(DLTKPluginImages.DESC_OBJS_ACCESSRULES_ATTRIB);
+				return fRegistry.get(DLTKPluginImages.DESC_OBJS_ACCESSRULES_ATTRIB);
 			}
 			// else if (key.equals(CPListElement.NATIVE_LIB_PATH)) {
 			// return

@@ -3,14 +3,15 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.typehierarchy;
 
+import java.text.MessageFormat;
+
 import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.util.SelectionUtil;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.jface.action.Action;
@@ -28,13 +29,14 @@ public class FocusOnSelectionAction extends Action {
 		super(TypeHierarchyMessages.FocusOnSelectionAction_label);
 		setDescription(TypeHierarchyMessages.FocusOnSelectionAction_description);
 		setToolTipText(TypeHierarchyMessages.FocusOnSelectionAction_tooltip);
-		fViewPart= part;
+		fViewPart = part;
 
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IJavaHelpContextIds.FOCUS_ON_SELECTION_ACTION);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+		// IJavaHelpContextIds.FOCUS_ON_SELECTION_ACTION);
 	}
 
 	private ISelection getSelection() {
-		ISelectionProvider provider= fViewPart.getSite().getSelectionProvider();
+		ISelectionProvider provider = fViewPart.getSite().getSelectionProvider();
 		if (provider != null) {
 			return provider.getSelection();
 		}
@@ -43,18 +45,17 @@ public class FocusOnSelectionAction extends Action {
 
 	@Override
 	public void run() {
-		Object element= SelectionUtil.getSingleElement(getSelection());
+		Object element = SelectionUtil.getSingleElement(getSelection());
 		if (element instanceof IType) {
-			fViewPart.setInputElement((IType)element);
+			fViewPart.setInputElement((IType) element);
 		}
 	}
 
 	public boolean canActionBeAdded() {
-		Object element= SelectionUtil.getSingleElement(getSelection());
+		Object element = SelectionUtil.getSingleElement(getSelection());
 		if (element instanceof IType) {
-			IType type= (IType)element;
-			setText(Messages.format(
-					TypeHierarchyMessages.FocusOnSelectionAction_label,
+			IType type = (IType) element;
+			setText(MessageFormat.format(TypeHierarchyMessages.FocusOnSelectionAction_label,
 					ScriptElementLabels.getDefault().getTextLabel(type, 0)));
 			return true;
 		}

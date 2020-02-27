@@ -10,6 +10,7 @@
 package org.eclipse.dltk.internal.ui.typehierarchy;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,6 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.actions.CCPActionGroup;
 import org.eclipse.dltk.internal.ui.actions.CompositeActionGroup;
 import org.eclipse.dltk.internal.ui.actions.NewWizardsActionGroup;
@@ -1106,7 +1106,7 @@ public class TypeHierarchyViewPart extends ViewPart implements ITypeHierarchyVie
 					setViewerVisibility(true);
 				}
 			} else {
-				fEmptyTypesViewer.setText(Messages.format(TypeHierarchyMessages.TypeHierarchyViewPart_nodecl,
+				fEmptyTypesViewer.setText(MessageFormat.format(TypeHierarchyMessages.TypeHierarchyViewPart_nodecl,
 						fInputElement.getElementName()));
 				setViewerVisibility(false);
 			}
@@ -1245,13 +1245,13 @@ public class TypeHierarchyViewPart extends ViewPart implements ITypeHierarchyVie
 			if (workingSet == null) {
 				Object[] args = new String[] { viewerTitle, ScriptElementLabels.getDefault()
 						.getElementLabel(fInputElement, ScriptElementLabels.ALL_DEFAULT) };
-				title = Messages.format(TypeHierarchyMessages.TypeHierarchyViewPart_title, args);
-				tooltip = Messages.format(TypeHierarchyMessages.TypeHierarchyViewPart_tooltip, args);
+				title = MessageFormat.format(TypeHierarchyMessages.TypeHierarchyViewPart_title, args);
+				tooltip = MessageFormat.format(TypeHierarchyMessages.TypeHierarchyViewPart_tooltip, args);
 			} else {
 				Object[] args = new String[] { viewerTitle, ScriptElementLabels.getDefault()
 						.getElementLabel(fInputElement, ScriptElementLabels.ALL_DEFAULT), workingSet.getLabel() };
-				title = Messages.format(TypeHierarchyMessages.TypeHierarchyViewPart_ws_title, args);
-				tooltip = Messages.format(TypeHierarchyMessages.TypeHierarchyViewPart_ws_tooltip, args);
+				title = MessageFormat.format(TypeHierarchyMessages.TypeHierarchyViewPart_ws_title, args);
+				tooltip = MessageFormat.format(TypeHierarchyMessages.TypeHierarchyViewPart_ws_tooltip, args);
 			}
 		} else {
 			title = ""; //$NON-NLS-1$
@@ -1521,7 +1521,7 @@ public class TypeHierarchyViewPart extends ViewPart implements ITypeHierarchyVie
 			final IModelElement hierarchyInput = input;
 
 			synchronized (this) {
-				String label = Messages.format(TypeHierarchyMessages.TypeHierarchyViewPart_restoreinput,
+				String label = MessageFormat.format(TypeHierarchyMessages.TypeHierarchyViewPart_restoreinput,
 						hierarchyInput.getElementName());
 				fNoHierarchyShownLabel.setText(label);
 

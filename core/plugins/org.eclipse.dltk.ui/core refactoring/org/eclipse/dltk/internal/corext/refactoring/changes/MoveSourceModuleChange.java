@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.changes;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -15,7 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
@@ -29,19 +30,16 @@ public class MoveSourceModuleChange extends SourceModuleReorgChange {
 		fStampToRestore = IResource.NULL_STAMP;
 	}
 
-	private MoveSourceModuleChange(IScriptFolder oldPackage, String cuName,
-			IScriptFolder newPackage, long stampToRestore) {
-		super(oldPackage.getHandleIdentifier(),
-				newPackage.getHandleIdentifier(),
+	private MoveSourceModuleChange(IScriptFolder oldPackage, String cuName, IScriptFolder newPackage,
+			long stampToRestore) {
+		super(oldPackage.getHandleIdentifier(), newPackage.getHandleIdentifier(),
 				oldPackage.getSourceModule(cuName).getHandleIdentifier());
 		fStampToRestore = stampToRestore;
 	}
 
 	@Override
 	public String getName() {
-		return Messages.format(
-				RefactoringCoreMessages.MoveSourceModuleChange_name,
-				getCu().getElementName(),
+		return MessageFormat.format(RefactoringCoreMessages.MoveSourceModuleChange_name, getCu().getElementName(),
 				getPackageName(getDestinationPackage()));
 	}
 
@@ -79,8 +77,8 @@ public class MoveSourceModuleChange extends SourceModuleReorgChange {
 		}
 
 		if (fUndoable) {
-			return new MoveSourceModuleChange(getDestinationPackage(),
-					getCu().getElementName(), getOldPackage(), currentStamp);
+			return new MoveSourceModuleChange(getDestinationPackage(), getCu().getElementName(), getOldPackage(),
+					currentStamp);
 		}
 		return null;
 	}

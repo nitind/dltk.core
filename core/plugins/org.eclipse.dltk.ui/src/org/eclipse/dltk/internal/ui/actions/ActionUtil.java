@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.actions;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -17,7 +19,6 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.ui.viewsupport.BasicElementLabels;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -40,19 +41,15 @@ public class ActionUtil {
 	}
 
 	// bug 31998 we will have to disable renaming of linked packages (and cus)
-	public static boolean mustDisableScriptModelAction(Shell shell,
-			Object element) {
-		if (!(element instanceof IScriptFolder)
-				&& !(element instanceof IProjectFragment))
+	public static boolean mustDisableScriptModelAction(Shell shell, Object element) {
+		if (!(element instanceof IScriptFolder) && !(element instanceof IProjectFragment))
 			return false;
 
 		IResource resource = ResourceUtil.getResource(element);
-		if ((resource == null) || (!(resource instanceof IFolder))
-				|| (!resource.isLinked()))
+		if ((resource == null) || (!(resource instanceof IFolder)) || (!resource.isLinked()))
 			return false;
 
-		MessageDialog.openInformation(shell,
-				ActionMessages.ActionUtil_not_possible,
+		MessageDialog.openInformation(shell, ActionMessages.ActionUtil_not_possible,
 				ActionMessages.ActionUtil_no_linked);
 		return true;
 	}
@@ -65,8 +62,7 @@ public class ActionUtil {
 		// if a Java editor doesn't have an input of type Java element
 		// then it is for sure not on the build path
 		if (input == null) {
-			MessageDialog.openInformation(shell,
-					ActionMessages.ActionUtil_notOnBuildPath_title,
+			MessageDialog.openInformation(shell, ActionMessages.ActionUtil_notOnBuildPath_title,
 					ActionMessages.ActionUtil_notOnBuildPath_message);
 			return false;
 		}
@@ -80,8 +76,7 @@ public class ActionUtil {
 		// if a Script editor doesn't have an input of type Script element
 		// then it is for sure not on the build path
 		if (input == null) {
-			MessageDialog.openInformation(shell,
-					ActionMessages.ActionUtil_notOnBuildPath_title,
+			MessageDialog.openInformation(shell, ActionMessages.ActionUtil_notOnBuildPath_title,
 					ActionMessages.ActionUtil_notOnBuildPath_message);
 			return false;
 		}
@@ -94,8 +89,7 @@ public class ActionUtil {
 
 		if (isOnBuildPath((IModelElement) element))
 			return true;
-		MessageDialog.openInformation(shell,
-				ActionMessages.ActionUtil_notOnBuildPath_title,
+		MessageDialog.openInformation(shell, ActionMessages.ActionUtil_notOnBuildPath_title,
 				ActionMessages.ActionUtil_notOnBuildPath_message);
 		return false;
 	}
@@ -116,15 +110,11 @@ public class ActionUtil {
 		return false;
 	}
 
-	public static boolean areProcessable(Shell shell,
-			IModelElement[] elements) {
+	public static boolean areProcessable(Shell shell, IModelElement[] elements) {
 		for (int i = 0; i < elements.length; i++) {
 			if (!isOnBuildPath(elements[i])) {
-				MessageDialog.openInformation(shell,
-						ActionMessages.ActionUtil_notOnBuildPath_title,
-						Messages.format(
-								ActionMessages.ActionUtil_notOnBuildPath_resource_message,
-								new Object[] { elements[i].getPath() }));
+				MessageDialog.openInformation(shell, ActionMessages.ActionUtil_notOnBuildPath_title, MessageFormat
+						.format(ActionMessages.ActionUtil_notOnBuildPath_resource_message, elements[i].getPath()));
 				return false;
 			}
 		}
@@ -132,27 +122,22 @@ public class ActionUtil {
 	}
 
 	/**
-	 * Check whether <code>editor</code> and <code>element</code> are
-	 * processable and editable. If the editor edits the element, the validation
-	 * is only performed once. If necessary, ask the user whether the file(s)
-	 * should be edited.
+	 * Check whether <code>editor</code> and <code>element</code> are processable
+	 * and editable. If the editor edits the element, the validation is only
+	 * performed once. If necessary, ask the user whether the file(s) should be
+	 * edited.
 	 *
-	 * @param editor
-	 *                    an editor, or <code>null</code> iff the action was not
-	 *                    executed from an editor
-	 * @param shell
-	 *                    a shell to serve as parent for a dialog
-	 * @param element
-	 *                    the element to check, cannot be <code>null</code>
-	 * @return <code>true</code> if the element can be edited,
-	 *         <code>false</code> otherwise
+	 * @param editor  an editor, or <code>null</code> iff the action was not
+	 *                executed from an editor
+	 * @param shell   a shell to serve as parent for a dialog
+	 * @param element the element to check, cannot be <code>null</code>
+	 * @return <code>true</code> if the element can be edited, <code>false</code>
+	 *         otherwise
 	 */
-	public static boolean isEditable(ITextEditor editor, Shell shell,
-			IModelElement element) {
+	public static boolean isEditable(ITextEditor editor, Shell shell, IModelElement element) {
 		if (editor != null) {
 			IModelElement input = SelectionConverter.getInput(editor);
-			if (input != null && input
-					.equals(element.getAncestor(IModelElement.SOURCE_MODULE))) {
+			if (input != null && input.equals(element.getAncestor(IModelElement.SOURCE_MODULE))) {
 				return isEditable(editor);
 			}
 			return isEditable(editor) && isEditable(shell, element);
@@ -186,18 +171,13 @@ public class ActionUtil {
 				if (!store.getBoolean(warnKey))
 					return true;
 
-				MessageDialogWithToggle toggleDialog = MessageDialogWithToggle
-						.openYesNoQuestion(shell,
-								ActionMessages.ActionUtil_warning_derived_title,
-								Messages.format(
-										ActionMessages.ActionUtil_warning_derived_message,
-										BasicElementLabels.getPathLabel(
-												resource.getFullPath(), false)),
-								ActionMessages.ActionUtil_warning_derived_dontShowAgain,
-								false, null, null);
+				MessageDialogWithToggle toggleDialog = MessageDialogWithToggle.openYesNoQuestion(shell,
+						ActionMessages.ActionUtil_warning_derived_title,
+						MessageFormat.format(ActionMessages.ActionUtil_warning_derived_message,
+								BasicElementLabels.getPathLabel(resource.getFullPath(), false)),
+						ActionMessages.ActionUtil_warning_derived_dontShowAgain, false, null, null);
 
-				EditorsUI.getPreferenceStore().setValue(warnKey,
-						!toggleDialog.getToggleState());
+				EditorsUI.getPreferenceStore().setValue(warnKey, !toggleDialog.getToggleState());
 
 				return toggleDialog.getReturnCode() == IDialogConstants.YES_ID;
 			}

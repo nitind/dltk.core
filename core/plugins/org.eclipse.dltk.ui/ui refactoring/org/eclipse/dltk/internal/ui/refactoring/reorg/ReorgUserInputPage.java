@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.refactoring.reorg;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -15,7 +17,6 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgDestinationValidator;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.dltk.ui.ModelElementSorter;
@@ -36,10 +37,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 abstract class ReorgUserInputPage extends UserInputWizardPage {
-	private static final long LABEL_FLAGS = ScriptElementLabels.ALL_DEFAULT
-			| ScriptElementLabels.M_APP_RETURNTYPE
-			| ScriptElementLabels.M_PARAMETER_NAMES
-			| ScriptElementLabels.F_PRE_TYPE_SIGNATURE;
+	private static final long LABEL_FLAGS = ScriptElementLabels.ALL_DEFAULT | ScriptElementLabels.M_APP_RETURNTYPE
+			| ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.F_PRE_TYPE_SIGNATURE;
 	private TreeViewer fViewer;
 
 	public ReorgUserInputPage(String pageName) {
@@ -60,8 +59,7 @@ abstract class ReorgUserInputPage extends UserInputWizardPage {
 
 		fViewer = createViewer(result);
 		fViewer.setSelection(new StructuredSelection(initialSelection), true);
-		fViewer.addSelectionChangedListener(
-				event -> ReorgUserInputPage.this.viewerSelectionChanged(event));
+		fViewer.addSelectionChangedListener(event -> ReorgUserInputPage.this.viewerSelectionChanged(event));
 		Dialog.applyDialogFont(result);
 	}
 
@@ -72,17 +70,13 @@ abstract class ReorgUserInputPage extends UserInputWizardPage {
 		int modelElements = getScriptElements().length;
 
 		if (resources == 0 && modelElements == 1) {
-			text = Messages.format(
-					ReorgMessages.ReorgUserInputPage_choose_destination_single,
-					ScriptElementLabels.getDefault().getElementLabel(
-							getScriptElements()[0], LABEL_FLAGS));
+			text = MessageFormat.format(ReorgMessages.ReorgUserInputPage_choose_destination_single,
+					ScriptElementLabels.getDefault().getElementLabel(getScriptElements()[0], LABEL_FLAGS));
 		} else if (resources == 1 && modelElements == 0) {
-			text = Messages.format(
-					ReorgMessages.ReorgUserInputPage_choose_destination_single,
+			text = MessageFormat.format(ReorgMessages.ReorgUserInputPage_choose_destination_single,
 					getResources()[0].getName());
 		} else {
-			text = Messages.format(
-					ReorgMessages.ReorgUserInputPage_choose_destination_multi,
+			text = MessageFormat.format(ReorgMessages.ReorgUserInputPage_choose_destination_multi,
 					String.valueOf(resources + modelElements));
 		}
 
@@ -102,8 +96,7 @@ abstract class ReorgUserInputPage extends UserInputWizardPage {
 	protected abstract Object getInitiallySelectedElement();
 
 	/** Set and verify destination */
-	protected abstract RefactoringStatus verifyDestination(Object selected)
-			throws ModelException;
+	protected abstract RefactoringStatus verifyDestination(Object selected) throws ModelException;
 
 	protected abstract IResource[] getResources();
 
@@ -111,8 +104,7 @@ abstract class ReorgUserInputPage extends UserInputWizardPage {
 
 	protected abstract IReorgDestinationValidator getDestinationValidator();
 
-	private final void verifyDestination(Object selected,
-			boolean initialVerification) {
+	private final void verifyDestination(Object selected, boolean initialVerification) {
 		try {
 			RefactoringStatus status = verifyDestination(selected);
 			if (initialVerification)
@@ -126,19 +118,15 @@ abstract class ReorgUserInputPage extends UserInputWizardPage {
 	}
 
 	private TreeViewer createViewer(Composite parent) {
-		TreeViewer treeViewer = new TreeViewer(parent,
-				SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		TreeViewer treeViewer = new TreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.widthHint = convertWidthInCharsToPixels(40);
 		gd.heightHint = convertHeightInCharsToPixels(15);
 		treeViewer.getTree().setLayoutData(gd);
-		treeViewer.setLabelProvider(new ModelElementLabelProvider(
-				ModelElementLabelProvider.SHOW_SMALL_ICONS));
-		treeViewer.setContentProvider(
-				new DestinationContentProvider(getDestinationValidator()));
+		treeViewer.setLabelProvider(new ModelElementLabelProvider(ModelElementLabelProvider.SHOW_SMALL_ICONS));
+		treeViewer.setContentProvider(new DestinationContentProvider(getDestinationValidator()));
 		treeViewer.setComparator(new ModelElementSorter());
-		treeViewer.setInput(
-				DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot()));
+		treeViewer.setInput(DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot()));
 		return treeViewer;
 	}
 

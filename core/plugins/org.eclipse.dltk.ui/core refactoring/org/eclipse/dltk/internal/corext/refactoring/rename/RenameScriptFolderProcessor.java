@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.rename;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,7 +49,6 @@ import org.eclipse.dltk.internal.corext.refactoring.tagging.ITextUpdating;
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
 import org.eclipse.dltk.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.dltk.internal.corext.refactoring.util.TextChangeManager;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.corext.util.Resources;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
@@ -288,12 +288,12 @@ public class RenameScriptFolderProcessor extends ScriptRenameProcessor
 			pm.worked(2);
 
 			if (fPackage.isReadOnly()) {
-				String message = Messages.format(RefactoringCoreMessages.RenamePackageRefactoring_Packagered_only,
+				String message = MessageFormat.format(RefactoringCoreMessages.RenamePackageRefactoring_Packagered_only,
 						fPackage.getElementName());
 				result.addFatalError(message);
 			} else if (Resources.isReadOnly(fPackage.getResource())) {
-				String message = Messages.format(RefactoringCoreMessages.RenamePackageRefactoring_resource_read_only,
-						fPackage.getElementName());
+				String message = MessageFormat.format(
+						RefactoringCoreMessages.RenamePackageRefactoring_resource_read_only, fPackage.getElementName());
 				result.addError(message);
 			}
 
@@ -373,7 +373,7 @@ public class RenameScriptFolderProcessor extends ScriptRenameProcessor
 		Set topLevelTypeNames = getTopLevelTypeNames();
 		for (int i = 0; i < roots.length; i++) {
 			if (!isPackageNameOkInRoot(newName, roots[i])) {
-				String message = Messages.format(RefactoringCoreMessages.RenamePackageRefactoring_aleady_exists,
+				String message = MessageFormat.format(RefactoringCoreMessages.RenamePackageRefactoring_aleady_exists,
 						new Object[] { getNewElementName(), roots[i].getElementName() });
 				status.merge(RefactoringStatus.createWarningStatus(message));
 				status.merge(checkTypeNameConflicts(roots[i], newName, topLevelTypeNames));
@@ -422,7 +422,7 @@ public class RenameScriptFolderProcessor extends ScriptRenameProcessor
 			String name = types[i].getElementName();
 			if (topLevelTypeNames.contains(name)) {
 				Object[] keys = { packageName, name };
-				String msg = Messages.format(RefactoringCoreMessages.RenamePackageRefactoring_contains_type, keys);
+				String msg = MessageFormat.format(RefactoringCoreMessages.RenamePackageRefactoring_contains_type, keys);
 				RefactoringStatusContext context = ScriptStatusContext.create(types[i]);
 				result.addError(msg, context);
 			}
@@ -442,11 +442,12 @@ public class RenameScriptFolderProcessor extends ScriptRenameProcessor
 			final int flags = ScriptRefactoringDescriptor.ARCHIVE_IMPORTABLE
 					| ScriptRefactoringDescriptor.ARCHIVE_REFACTORABLE | RefactoringDescriptor.STRUCTURAL_CHANGE
 					| RefactoringDescriptor.MULTI_CHANGE;
-			final String description = Messages.format(
+			final String description = MessageFormat.format(
 					RefactoringCoreMessages.RenamePackageProcessor_descriptor_description_short,
 					fPackage.getElementName());
-			final String header = Messages.format(RefactoringCoreMessages.RenamePackageProcessor_descriptor_description,
-					fPackage.getElementName(), getNewElementName());
+			final String header = MessageFormat.format(
+					RefactoringCoreMessages.RenamePackageProcessor_descriptor_description, fPackage.getElementName(),
+					getNewElementName());
 			final ScriptRefactoringDescriptorComment comment = new ScriptRefactoringDescriptorComment(this, header);
 			if (fRenameSubpackages)
 				comment.addSetting(RefactoringCoreMessages.RenamePackageProcessor_rename_subpackages);
@@ -642,14 +643,14 @@ public class RenameScriptFolderProcessor extends ScriptRenameProcessor
 				fPackage = (IScriptFolder) element;
 			} else
 				return RefactoringStatus.createFatalErrorStatus(
-						Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+						MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
 								ScriptRefactoringDescriptor.ATTRIBUTE_INPUT));
 			final String name = extended.getAttribute(ScriptRefactoringDescriptor.ATTRIBUTE_NAME);
 			if (name != null && !"".equals(name)) //$NON-NLS-1$
 				setNewElementName(name);
 			else
 				return RefactoringStatus.createFatalErrorStatus(
-						Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+						MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
 								ScriptRefactoringDescriptor.ATTRIBUTE_NAME));
 			final String patterns = extended.getAttribute(ATTRIBUTE_PATTERNS);
 			if (patterns != null && !"".equals(patterns)) //$NON-NLS-1$
@@ -660,26 +661,26 @@ public class RenameScriptFolderProcessor extends ScriptRenameProcessor
 			if (references != null) {
 				fUpdateReferences = Boolean.valueOf(references).booleanValue();
 			} else
-				return RefactoringStatus.createFatalErrorStatus(Messages.format(
+				return RefactoringStatus.createFatalErrorStatus(MessageFormat.format(
 						RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, ATTRIBUTE_REFERENCES));
 			final String matches = extended.getAttribute(ATTRIBUTE_TEXTUAL_MATCHES);
 			if (matches != null) {
 				fUpdateTextualMatches = Boolean.valueOf(matches).booleanValue();
 			} else
 				return RefactoringStatus.createFatalErrorStatus(
-						Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+						MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
 								ATTRIBUTE_TEXTUAL_MATCHES));
 			final String qualified = extended.getAttribute(ATTRIBUTE_QUALIFIED);
 			if (qualified != null) {
 				fUpdateQualifiedNames = Boolean.valueOf(qualified).booleanValue();
 			} else
-				return RefactoringStatus.createFatalErrorStatus(Messages.format(
+				return RefactoringStatus.createFatalErrorStatus(MessageFormat.format(
 						RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, ATTRIBUTE_QUALIFIED));
 			final String hierarchical = extended.getAttribute(ATTRIBUTE_HIERARCHICAL);
 			if (hierarchical != null) {
 				fRenameSubpackages = Boolean.valueOf(hierarchical).booleanValue();
 			} else
-				return RefactoringStatus.createFatalErrorStatus(Messages.format(
+				return RefactoringStatus.createFatalErrorStatus(MessageFormat.format(
 						RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, ATTRIBUTE_HIERARCHICAL));
 		} else
 			return RefactoringStatus

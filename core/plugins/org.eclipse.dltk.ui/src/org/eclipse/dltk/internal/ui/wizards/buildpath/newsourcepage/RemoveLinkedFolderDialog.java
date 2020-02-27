@@ -3,15 +3,16 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.wizards.buildpath.newsourcepage;
 
+import java.text.MessageFormat;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.newsourcepage.BuildpathModifierQueries.IRemoveLinkedFolderQuery;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -26,7 +27,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-
 /**
  * Dialog to prompt whether a linked folder should be deleted.
  *
@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Shell;
 class RemoveLinkedFolderDialog extends MessageDialog {
 
 	/** The remove status */
-	private int fRemoveStatus= IRemoveLinkedFolderQuery.REMOVE_BUILD_PATH_AND_FOLDER;
+	private int fRemoveStatus = IRemoveLinkedFolderQuery.REMOVE_BUILD_PATH_AND_FOLDER;
 
 	/** The remove build path and folder button */
 	private Button fRemoveBuildPathAndFolder;
@@ -46,27 +46,33 @@ class RemoveLinkedFolderDialog extends MessageDialog {
 	/**
 	 * Creates a new remove linked folder dialog.
 	 *
-	 * @param shell the parent shell to use
+	 * @param shell  the parent shell to use
 	 * @param folder the linked folder to remove
 	 */
 	RemoveLinkedFolderDialog(final Shell shell, final IFolder folder) {
-		super(shell, NewWizardMessages.BuildpathModifierQueries_confirm_remove_linked_folder_label, null, Messages.format(NewWizardMessages.BuildpathModifierQueries_confirm_remove_linked_folder_message, new Object[] { folder.getFullPath()}), MessageDialog.QUESTION, new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL}, 0); // yes is the default
+		super(shell, NewWizardMessages.BuildpathModifierQueries_confirm_remove_linked_folder_label, null,
+				MessageFormat.format(NewWizardMessages.BuildpathModifierQueries_confirm_remove_linked_folder_message,
+						folder.getFullPath()),
+				MessageDialog.QUESTION, new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0); // yes
+																													// is
+																													// the
+																													// default
 		Assert.isTrue(folder.isLinked());
 	}
 
 	@Override
 	protected Control createCustomArea(final Composite parent) {
 
-		final Composite composite= new Composite(parent, SWT.NONE);
+		final Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
 
-		fRemoveBuildPathAndFolder= new Button(composite, SWT.RADIO);
+		fRemoveBuildPathAndFolder = new Button(composite, SWT.RADIO);
 		fRemoveBuildPathAndFolder.addSelectionListener(selectionListener);
 
 		fRemoveBuildPathAndFolder.setText(NewWizardMessages.BuildpathModifierQueries_delete_linked_folder);
 		fRemoveBuildPathAndFolder.setFont(parent.getFont());
 
-		fRemoveBuildPath= new Button(composite, SWT.RADIO);
+		fRemoveBuildPath = new Button(composite, SWT.RADIO);
 		fRemoveBuildPath.addSelectionListener(selectionListener);
 
 		fRemoveBuildPath.setText(NewWizardMessages.BuildpathModifierQueries_do_not_delete_linked_folder);
@@ -78,13 +84,15 @@ class RemoveLinkedFolderDialog extends MessageDialog {
 		return composite;
 	}
 
-	private SelectionListener selectionListener= new SelectionAdapter() {
+	private SelectionListener selectionListener = new SelectionAdapter() {
 
 		@Override
 		public final void widgetSelected(final SelectionEvent event) {
-			final Button button= (Button) event.widget;
+			final Button button = (Button) event.widget;
 			if (button.getSelection())
-				fRemoveStatus= (button == fRemoveBuildPathAndFolder) ? IRemoveLinkedFolderQuery.REMOVE_BUILD_PATH_AND_FOLDER : IRemoveLinkedFolderQuery.REMOVE_BUILD_PATH;
+				fRemoveStatus = (button == fRemoveBuildPathAndFolder)
+						? IRemoveLinkedFolderQuery.REMOVE_BUILD_PATH_AND_FOLDER
+						: IRemoveLinkedFolderQuery.REMOVE_BUILD_PATH;
 		}
 	};
 

@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -12,11 +12,11 @@
  *******************************************************************************/
 package org.eclipse.dltk.ui.viewsupport;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.DLTKUIMessages;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.IListAdapter;
@@ -61,8 +61,7 @@ import org.eclipse.swt.widgets.Control;
 		private void createHistoryList() {
 			IListAdapter adapter = new IListAdapter() {
 				@Override
-				public void customButtonPressed(ListDialogField field,
-						int index) {
+				public void customButtonPressed(ListDialogField field, int index) {
 					doCustomButtonPressed(index);
 				}
 
@@ -76,12 +75,10 @@ import org.eclipse.swt.widgets.Control;
 					doDoubleClicked();
 				}
 			};
-			String[] buttonLabels = new String[] {
-					DLTKUIMessages.HistoryListAction_remove,
+			String[] buttonLabels = new String[] { DLTKUIMessages.HistoryListAction_remove,
 					DLTKUIMessages.HistoryListAction_remove_all };
 			LabelProvider labelProvider = new TestRunLabelProvider();
-			fHistoryList = new ListDialogField(adapter, buttonLabels,
-					labelProvider);
+			fHistoryList = new ListDialogField(adapter, buttonLabels, labelProvider);
 			fHistoryList.setLabelText(fHistory.getHistoryListDialogMessage());
 
 			List<E> historyEntries = fHistory.getHistoryEntries();
@@ -112,12 +109,11 @@ import org.eclipse.swt.widgets.Control;
 				if (valid)
 					updateStatus(StatusInfo.OK_STATUS);
 				else
-					updateStatus(new StatusInfo(IStatus.ERROR, Messages.format(
-							DLTKUIMessages.HistoryListAction_max_entries_constraint,
-							Integer.toString(MAX_MAX_ENTRIES))));
+					updateStatus(new StatusInfo(IStatus.ERROR,
+							MessageFormat.format(DLTKUIMessages.HistoryListAction_max_entries_constraint,
+									Integer.toString(MAX_MAX_ENTRIES))));
 			});
-			fMaxEntriesField
-					.setText(Integer.toString(fHistory.getMaxEntries()));
+			fMaxEntriesField.setText(Integer.toString(fHistory.getMaxEntries()));
 		}
 
 		@Override
@@ -130,19 +126,14 @@ import org.eclipse.swt.widgets.Control;
 			inner.setLayoutData(new GridData(GridData.FILL_BOTH));
 			inner.setFont(composite.getFont());
 
-			LayoutUtil.doDefaultLayout(inner,
-					new DialogField[] { fHistoryList, new Separator() }, true);
-			LayoutUtil.setHeightHint(fHistoryList.getListControl(null),
-					convertHeightInCharsToPixels(12));
+			LayoutUtil.doDefaultLayout(inner, new DialogField[] { fHistoryList, new Separator() }, true);
+			LayoutUtil.setHeightHint(fHistoryList.getListControl(null), convertHeightInCharsToPixels(12));
 			LayoutUtil.setHorizontalGrabbing(fHistoryList.getListControl(null));
 
 			Composite additionalControls = new Composite(inner, SWT.NONE);
-			additionalControls.setLayoutData(
-					new GridData(SWT.FILL, SWT.FILL, true, false));
-			LayoutUtil.doDefaultLayout(additionalControls,
-					new DialogField[] { fMaxEntriesField }, false);
-			LayoutUtil.setHorizontalGrabbing(
-					fMaxEntriesField.getTextControl(null));
+			additionalControls.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+			LayoutUtil.doDefaultLayout(additionalControls, new DialogField[] { fMaxEntriesField }, false);
+			LayoutUtil.setHorizontalGrabbing(fMaxEntriesField.getTextControl(null));
 
 			applyDialogFont(composite);
 			return composite;
@@ -207,8 +198,7 @@ import org.eclipse.swt.widgets.Control;
 
 		@Override
 		public Image getImage(Object element) {
-			ImageDescriptor imageDescriptor = fHistory
-					.getImageDescriptor((E) element);
+			ImageDescriptor imageDescriptor = fHistory.getImageDescriptor((E) element);
 			return getCachedImage(imageDescriptor);
 		}
 
@@ -216,8 +206,7 @@ import org.eclipse.swt.widgets.Control;
 			Image cached = fImages.get(imageDescriptor);
 			if (cached != null)
 				return cached;
-			Image image = imageDescriptor
-					.createImage(fHistory.getShell().getDisplay());
+			Image image = imageDescriptor.createImage(fHistory.getShell().getDisplay());
 			fImages.put(imageDescriptor, image);
 			return image;
 		}
@@ -243,8 +232,7 @@ import org.eclipse.swt.widgets.Control;
 	public void run() {
 		HistoryListDialog dialog = new HistoryListDialog();
 		if (dialog.open() == Window.OK) {
-			fHistory.setHistoryEntries(dialog.getRemaining(),
-					dialog.getResult());
+			fHistory.setHistoryEntries(dialog.getRemaining(), dialog.getResult());
 			fHistory.setMaxEntries(dialog.getMaxEntries());
 		}
 	}

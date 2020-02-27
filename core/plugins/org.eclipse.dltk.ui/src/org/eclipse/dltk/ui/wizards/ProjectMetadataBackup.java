@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 
@@ -59,8 +59,7 @@ public class ProjectMetadataBackup {
 		public boolean equals(Object obj) {
 			if (obj instanceof BackupKey) {
 				final BackupKey other = (BackupKey) obj;
-				return filename.equals(other.filename)
-						&& location.equals(other.location);
+				return filename.equals(other.filename) && location.equals(other.location);
 			}
 			return false;
 		}
@@ -74,8 +73,7 @@ public class ProjectMetadataBackup {
 	 * @param filenames
 	 * @throws CoreException
 	 */
-	public void backup(URI projectLocation, String[] filenames)
-			throws CoreException {
+	public void backup(URI projectLocation, String[] filenames) throws CoreException {
 		final IFileStore folder = EFS.getStore(projectLocation);
 		if (folder.fetchInfo().exists()) {
 			for (int i = 0; i < filenames.length; ++i) {
@@ -99,8 +97,7 @@ public class ProjectMetadataBackup {
 			}
 		} else {
 			for (int i = 0; i < filenames.length; ++i) {
-				final BackupKey key = new BackupKey(projectLocation,
-						filenames[i]);
+				final BackupKey key = new BackupKey(projectLocation, filenames[i]);
 				if (entries.containsKey(key)) {
 					continue;
 				}
@@ -125,19 +122,14 @@ public class ProjectMetadataBackup {
 						monitor.worked(2);
 						continue;
 					}
-					final IFileStore projectFile = EFS
-							.getStore(entry.getKey().location)
+					final IFileStore projectFile = EFS.getStore(entry.getKey().location)
 							.getChild(entry.getKey().filename);
-					projectFile.delete(EFS.NONE,
-							new SubProgressMonitor(monitor, 1));
-					copyFile(backup, projectFile,
-							new SubProgressMonitor(monitor, 1));
+					projectFile.delete(EFS.NONE, new SubProgressMonitor(monitor, 1));
+					copyFile(backup, projectFile, new SubProgressMonitor(monitor, 1));
 					backup.delete();
 				} catch (IOException e) {
-					IStatus status = new Status(IStatus.ERROR,
-							DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
-							NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_project,
-							e);
+					IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
+							NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_project, e);
 					throw new CoreException(status);
 				}
 			}
@@ -146,32 +138,25 @@ public class ProjectMetadataBackup {
 		}
 	}
 
-	private File createBackup(IFileStore source, String name)
-			throws CoreException {
+	private File createBackup(IFileStore source, String name) throws CoreException {
 		try {
 			File bak = File.createTempFile(name, ".bak"); //$NON-NLS-1$
 			copyFile(source, bak);
 			return bak;
 		} catch (IOException e) {
-			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID,
-					IStatus.ERROR,
-					Messages.format(
-							NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup,
-							name),
-					e);
+			IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.ERROR,
+					MessageFormat.format(NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup, name), e);
 			throw new CoreException(status);
 		}
 	}
 
-	private void copyFile(IFileStore source, File target)
-			throws IOException, CoreException {
+	private void copyFile(IFileStore source, File target) throws IOException, CoreException {
 		InputStream is = source.openInputStream(EFS.NONE, null);
 		FileOutputStream os = new FileOutputStream(target);
 		copyFile(is, os);
 	}
 
-	private void copyFile(File source, IFileStore target,
-			IProgressMonitor monitor) throws IOException, CoreException {
+	private void copyFile(File source, IFileStore target, IProgressMonitor monitor) throws IOException, CoreException {
 		FileInputStream is = new FileInputStream(source);
 		OutputStream os = target.openOutputStream(EFS.NONE, monitor);
 		copyFile(is, os);

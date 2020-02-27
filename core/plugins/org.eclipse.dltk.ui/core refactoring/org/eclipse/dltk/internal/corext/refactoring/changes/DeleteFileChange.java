@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.changes;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Assert;
@@ -16,7 +18,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ui.ide.undo.ResourceDescription;
@@ -38,8 +39,7 @@ public class DeleteFileChange extends AbstractDeleteChange {
 
 	@Override
 	public String getName() {
-		return Messages.format(RefactoringCoreMessages.DeleteFileChange_1,
-				fPath.lastSegment());
+		return MessageFormat.format(RefactoringCoreMessages.DeleteFileChange_1, fPath.lastSegment());
 	}
 
 	@Override
@@ -65,11 +65,9 @@ public class DeleteFileChange extends AbstractDeleteChange {
 		pm.beginTask("", 2); //$NON-NLS-1$
 		saveFileIfNeeded(file, new SubProgressMonitor(pm, 1));
 
-		ResourceDescription resourceDescription = ResourceDescription
-				.fromResource(file);
+		ResourceDescription resourceDescription = ResourceDescription.fromResource(file);
 		file.delete(false, true, new SubProgressMonitor(pm, 1));
-		resourceDescription.recordStateFromHistory(file,
-				new SubProgressMonitor(pm, 1));
+		resourceDescription.recordStateFromHistory(file, new SubProgressMonitor(pm, 1));
 		pm.done();
 
 		return new UndoDeleteResourceChange(resourceDescription);

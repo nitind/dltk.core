@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.search;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,7 +19,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableContext;
@@ -91,7 +91,7 @@ public class SearchUtil {
 			for (int i = 0; i < workingSets.length; i++) {
 				String workingSetLabel = workingSets[i].getLabel();
 				if (firstFound)
-					result = Messages.format(SearchMessages.SearchUtil_workingSetConcatenation, result,
+					result = MessageFormat.format(SearchMessages.SearchUtil_workingSetConcatenation, result,
 							workingSetLabel);
 				else {
 					result = workingSetLabel;

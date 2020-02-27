@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.rename;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,6 @@ import org.eclipse.dltk.internal.corext.refactoring.participants.ResourceProcess
 import org.eclipse.dltk.internal.corext.refactoring.tagging.ICommentProvider;
 import org.eclipse.dltk.internal.corext.refactoring.tagging.INameUpdating;
 import org.eclipse.dltk.internal.corext.refactoring.tagging.IScriptableRefactoring;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.corext.util.Resources;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
@@ -190,9 +190,10 @@ public class RenameResourceProcessor extends RenameProcessor
 			String project = null;
 			if (fResource.getType() != IResource.PROJECT)
 				project = fResource.getProject().getName();
-			final String header = Messages.format(RefactoringCoreMessages.RenameResourceChange_descriptor_description,
+			final String header = MessageFormat.format(
+					RefactoringCoreMessages.RenameResourceChange_descriptor_description,
 					fResource.getFullPath().toString(), getNewElementName());
-			final String description = Messages.format(
+			final String description = MessageFormat.format(
 					RefactoringCoreMessages.RenameResourceChange_descriptor_description_short, fResource.getName());
 			final String comment = new ScriptRefactoringDescriptorComment(this, header).asString();
 			final ScriptRefactoringDescriptor descriptor = new ScriptRefactoringDescriptor(
@@ -221,14 +222,14 @@ public class RenameResourceProcessor extends RenameProcessor
 							ID_RENAME_RESOURCE);
 			} else
 				return RefactoringStatus.createFatalErrorStatus(
-						Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+						MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
 								ScriptRefactoringDescriptor.ATTRIBUTE_INPUT));
 			final String name = extended.getAttribute(ScriptRefactoringDescriptor.ATTRIBUTE_NAME);
 			if (name != null && !"".equals(name)) //$NON-NLS-1$
 				setNewElementName(name);
 			else
 				return RefactoringStatus.createFatalErrorStatus(
-						Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
+						MessageFormat.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist,
 								ScriptRefactoringDescriptor.ATTRIBUTE_NAME));
 		} else
 			return RefactoringStatus

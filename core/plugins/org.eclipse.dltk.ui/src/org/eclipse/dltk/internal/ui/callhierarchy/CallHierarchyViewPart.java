@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.callhierarchy;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,6 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.corext.callhierarchy.CallHierarchy;
 import org.eclipse.dltk.internal.corext.callhierarchy.CallLocation;
 import org.eclipse.dltk.internal.corext.callhierarchy.MethodWrapper;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.actions.CCPActionGroup;
 import org.eclipse.dltk.internal.ui.actions.CompositeActionGroup;
 import org.eclipse.dltk.internal.ui.actions.refactoring.RefactorActionGroup;
@@ -947,7 +947,8 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
 			// the old contents:
 			fCallHierarchyViewer.setInput(null);
 			if (fCurrentCallMode == CallHierarchyViewPart.CALL_MODE_CALLERS) {
-				setContentDescription(Messages.format(CallHierarchyMessages.CallHierarchyViewPart_callsToMethod, args));
+				setContentDescription(
+						MessageFormat.format(CallHierarchyMessages.CallHierarchyViewPart_callsToMethod, args));
 				fCallHierarchyViewer.setComparator(new ViewerComparator()); // bug
 				// 111423:
 				// sort
@@ -957,7 +958,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
 				fCallHierarchyViewer.setMethodWrapper(getCallerRoot());
 			} else {
 				setContentDescription(
-						Messages.format(CallHierarchyMessages.CallHierarchyViewPart_callsFromMethod, args));
+						MessageFormat.format(CallHierarchyMessages.CallHierarchyViewPart_callsFromMethod, args));
 				fCallHierarchyViewer.setComparator(null);
 				fCallHierarchyViewer.setMethodWrapper(getCalleeRoot());
 			}

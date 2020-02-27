@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.refactoring.reorg;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
@@ -27,7 +29,6 @@ import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.dltk.internal.corext.refactoring.Checks;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.INewNameQueries;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.INewNameQuery;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.dialogs.TextFieldNavigationHandler;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.dialogs.IInputValidator;
@@ -75,25 +76,25 @@ public class NewNameQueries implements INewNameQueries {
 		if (DLTKCore.DEBUG) {
 			System.err.println("TODO:add removeScriptLikeExtensions code here..."); //$NON-NLS-1$
 		}
-		String message = Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, cu.getElementName());
+		String message = MessageFormat.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, cu.getElementName());
 		return createStaticQuery(createSourceModuleNameValidator(cu), message, initialSuggestedName, getShell());
 	}
 
 	@Override
 	public INewNameQuery createNewResourceNameQuery(IResource res, String initialSuggestedName) {
-		String message = Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, res.getName());
+		String message = MessageFormat.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, res.getName());
 		return createStaticQuery(createResourceNameValidator(res), message, initialSuggestedName, getShell());
 	}
 
 	@Override
 	public INewNameQuery createNewPackageNameQuery(IScriptFolder pack, String initialSuggestedName) {
-		String message = Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, pack.getElementName());
+		String message = MessageFormat.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, pack.getElementName());
 		return createStaticQuery(createPackageNameValidator(pack), message, initialSuggestedName, getShell());
 	}
 
 	@Override
 	public INewNameQuery createNewProjectFragmentNameQuery(IProjectFragment root, String initialSuggestedName) {
-		String message = Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, root.getElementName());
+		String message = MessageFormat.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, root.getElementName());
 		return createStaticQuery(createProjectFragmentNameValidator(root), message, initialSuggestedName, getShell());
 	}
 

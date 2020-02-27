@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.changes;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +29,6 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.corext.refactoring.AbstractModelElementRenameChange;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.NullChange;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
@@ -87,7 +87,7 @@ public class RenameScriptFolderChange extends AbstractModelElementRenameChange {
 		ISourceModule[] units = pack.getSourceModules();
 		pm.beginTask("", units.length); //$NON-NLS-1$
 		for (int i = 0; i < units.length; i++) {
-			pm.subTask(Messages.format(RefactoringCoreMessages.RenamePackageChange_checking_change,
+			pm.subTask(MessageFormat.format(RefactoringCoreMessages.RenamePackageChange_checking_change,
 					pack.getElementName()));
 			checkIfModifiable(result, units[i], READ_ONLY | DIRTY);
 			pm.worked(1);
@@ -121,7 +121,7 @@ public class RenameScriptFolderChange extends AbstractModelElementRenameChange {
 	public String getName() {
 		String msg = fRenameSubpackages ? RefactoringCoreMessages.RenamePackageChange_name_with_subpackages
 				: RefactoringCoreMessages.RenamePackageChange_name;
-		return Messages.format(msg, getOldName(), getNewName());
+		return MessageFormat.format(msg, getOldName(), getNewName());
 	}
 
 	@Override

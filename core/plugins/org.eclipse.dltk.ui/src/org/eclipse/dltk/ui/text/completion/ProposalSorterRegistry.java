@@ -3,12 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.ui.text.completion;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,7 +24,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -37,8 +37,7 @@ public final class ProposalSorterRegistry {
 
 	public static synchronized ProposalSorterRegistry getDefault() {
 		if (fInstance == null)
-			fInstance = new ProposalSorterRegistry(
-					DLTKUIPlugin.getDefault().getPreferenceStore(),
+			fInstance = new ProposalSorterRegistry(DLTKUIPlugin.getDefault().getPreferenceStore(),
 					PreferenceConstants.CODEASSIST_SORTER);
 		return fInstance;
 	}
@@ -49,8 +48,7 @@ public final class ProposalSorterRegistry {
 	private Map<String, ProposalSorterHandle> fSorters = null;
 	private ProposalSorterHandle fDefaultSorter;
 
-	private ProposalSorterRegistry(final IPreferenceStore preferenceStore,
-			final String key) {
+	private ProposalSorterRegistry(final IPreferenceStore preferenceStore, final String key) {
 		Assert.isTrue(preferenceStore != null);
 		Assert.isTrue(key != null);
 		fPreferenceStore = preferenceStore;
@@ -71,8 +69,7 @@ public final class ProposalSorterRegistry {
 		Map<String, ProposalSorterHandle> sorters = new LinkedHashMap<>();
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		List<IConfigurationElement> elements = new ArrayList<>(
-				Arrays.asList(registry.getConfigurationElementsFor(
-						DLTKUIPlugin.PLUGIN_ID, EXTENSION_POINT)));
+				Arrays.asList(registry.getConfigurationElementsFor(DLTKUIPlugin.PLUGIN_ID, EXTENSION_POINT)));
 
 		for (IConfigurationElement element : elements) {
 
@@ -86,16 +83,13 @@ public final class ProposalSorterRegistry {
 
 			} catch (InvalidRegistryObjectException x) {
 				/*
-				 * Element is not valid any longer as the contributing plug-in
-				 * was unloaded or for some other reason. Do not include the
-				 * extension in the list and inform the user about it.
+				 * Element is not valid any longer as the contributing plug-in was unloaded or
+				 * for some other reason. Do not include the extension in the list and inform
+				 * the user about it.
 				 */
-				Object[] args = { element.toString() };
-				String message = Messages.format(
-						ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message,
-						args);
-				IStatus status = new Status(IStatus.WARNING,
-						DLTKUIPlugin.PLUGIN_ID, IStatus.OK, message, x);
+				String message = MessageFormat.format(
+						ScriptTextMessages.CompletionProposalComputerRegistry_invalid_message, element.toString());
+				IStatus status = new Status(IStatus.WARNING, DLTKUIPlugin.PLUGIN_ID, IStatus.OK, message, x);
 				informUser(status);
 			}
 		}
@@ -107,8 +101,7 @@ public final class ProposalSorterRegistry {
 		DLTKUIPlugin.log(status);
 		String title = ScriptTextMessages.CompletionProposalComputerRegistry_error_dialog_title;
 		String message = status.getMessage();
-		MessageDialog.openError(DLTKUIPlugin.getActiveWorkbenchShell(), title,
-				message);
+		MessageDialog.openError(DLTKUIPlugin.getActiveWorkbenchShell(), title, message);
 	}
 
 	public ProposalSorterHandle[] getSorters() {

@@ -3,13 +3,14 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.dialogs;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,6 @@ import org.eclipse.dltk.core.search.MethodNameMatch;
 import org.eclipse.dltk.core.search.NopTypeNameRequestor;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.core.search.SearchPattern;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.corext.util.OpenMethodHistory;
 import org.eclipse.dltk.internal.ui.DLTKUIMessages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -80,22 +80,19 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 			if (text == null || text.length() == 0) {
 				getShell().setText(fTitle);
 			} else {
-				getShell().setText(Messages.format(
-						DLTKUIMessages.TypeSelectionDialog2_title_format,
-						fTitle, text));
+				getShell()
+						.setText(MessageFormat.format(DLTKUIMessages.TypeSelectionDialog2_title_format, fTitle, text));
 			}
 		}
 	}
 
-	public MethodSelectionDialog2(Shell parent, boolean multi,
-			IRunnableContext context, IDLTKSearchScope scope, int elementKinds,
-			IDLTKUILanguageToolkit toolkit) {
+	public MethodSelectionDialog2(Shell parent, boolean multi, IRunnableContext context, IDLTKSearchScope scope,
+			int elementKinds, IDLTKUILanguageToolkit toolkit) {
 		this(parent, multi, context, scope, elementKinds, null, toolkit);
 	}
 
-	public MethodSelectionDialog2(Shell parent, boolean multi,
-			IRunnableContext context, IDLTKSearchScope scope, int elementKinds,
-			TypeSelectionExtension extension, IDLTKUILanguageToolkit toolkit) {
+	public MethodSelectionDialog2(Shell parent, boolean multi, IRunnableContext context, IDLTKSearchScope scope,
+			int elementKinds, TypeSelectionExtension extension, IDLTKUILanguageToolkit toolkit) {
 		super(parent);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		fMultipleSelection = multi;
@@ -138,9 +135,8 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite area = (Composite) super.createDialogArea(parent);
-		fContent = new MethodSelectionComponent(area, SWT.NONE, getMessage(),
-				fMultipleSelection, fScope, fElementKind, fInitialFilter,
-				new TitleLabel(), this.fToolkit);
+		fContent = new MethodSelectionComponent(area, SWT.NONE, getMessage(), fMultipleSelection, fScope, fElementKind,
+				fInitialFilter, new TitleLabel(), this.fToolkit);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		fContent.setLayoutData(gd);
 		fContent.addSelectionListener(new SelectionListener() {
@@ -166,11 +162,9 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 	protected void handleWidgetSelected(MethodNameMatch[] selection) {
 		IStatus status = null;
 		if (selection.length == 0) {
-			status = new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(),
-					IStatus.ERROR, "", null); //$NON-NLS-1$
+			status = new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), IStatus.ERROR, "", null); //$NON-NLS-1$
 		} else {
-			status = new Status(IStatus.OK, DLTKUIPlugin.getPluginId(),
-					IStatus.OK, "", null); //$NON-NLS-1$
+			status = new Status(IStatus.OK, DLTKUIPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 		}
 		updateStatus(status);
 	}
@@ -180,8 +174,7 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 		try {
 			ensureConsistency();
 		} catch (InvocationTargetException e) {
-			ExceptionHandler.handle(e,
-					DLTKUIMessages.TypeSelectionDialog_error3Title,
+			ExceptionHandler.handle(e, DLTKUIMessages.TypeSelectionDialog_error3Title,
 					DLTKUIMessages.TypeSelectionDialog_error3Message);
 			return CANCEL;
 		} catch (InterruptedException e) {
@@ -191,8 +184,7 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 		if (fInitialFilter == null) {
 			IWorkbenchWindow window = DLTKUIPlugin.getActiveWorkbenchWindow();
 			if (window != null) {
-				ISelection selection = window.getSelectionService()
-						.getSelection();
+				ISelection selection = window.getSelectionService().getSelection();
 				if (selection instanceof ITextSelection) {
 					String text = ((ITextSelection) selection).getText();
 					if (text != null) {
@@ -244,8 +236,7 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 			fScope = fContent.getScope();
 		}
 
-		OpenMethodHistory history = OpenMethodHistory
-				.getInstance(this.fToolkit);
+		OpenMethodHistory history = OpenMethodHistory.getInstance(this.fToolkit);
 		List result = new ArrayList(selected.length);
 		for (int i = 0; i < selected.length; i++) {
 			MethodNameMatch typeInfo = selected[i];
@@ -257,12 +248,9 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 				} else {
 					String title = DLTKUIMessages.TypeSelectionDialog_errorTitle;
 					IProjectFragment root = typeInfo.getProjectFragment();
-					ScriptElementLabels labels = this.fToolkit
-							.getScriptElementLabels();
-					String containerName = labels.getElementLabel(root,
-							ScriptElementLabels.ROOT_QUALIFIED);
-					String message = Messages.format(
-							DLTKUIMessages.TypeSelectionDialog_dialogMessage,
+					ScriptElementLabels labels = this.fToolkit.getScriptElementLabels();
+					String containerName = labels.getElementLabel(root, ScriptElementLabels.ROOT_QUALIFIED);
+					String message = MessageFormat.format(DLTKUIMessages.TypeSelectionDialog_dialogMessage,
 							typeInfo.getFullyQualifiedName(), containerName);
 					MessageDialog.openError(getShell(), title, message);
 					history.remove(typeInfo);
@@ -276,31 +264,24 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 		setResult(result);
 	}
 
-	private void ensureConsistency()
-			throws InvocationTargetException, InterruptedException {
+	private void ensureConsistency() throws InvocationTargetException, InterruptedException {
 		// we only have to ensure history consistency here since the search
 		// engine
 		// takes care of working copies.
 		class ConsistencyRunnable implements IRunnableWithProgress {
 			@Override
-			public void run(IProgressMonitor monitor)
-					throws InvocationTargetException, InterruptedException {
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				if (fgFirstTime) {
 					// Join the initialize after load job.
 					IJobManager manager = Job.getJobManager();
 					manager.join(DLTKUIPlugin.PLUGIN_ID, monitor);
 				}
-				OpenMethodHistory history = OpenMethodHistory
-						.getInstance(fToolkit);
+				OpenMethodHistory history = OpenMethodHistory.getInstance(fToolkit);
 				if (fgFirstTime || history.isEmpty()) {
-					monitor.beginTask(
-							DLTKUIMessages.TypeSelectionDialog_progress_consistency,
-							100);
+					monitor.beginTask(DLTKUIMessages.TypeSelectionDialog_progress_consistency, 100);
 					if (history.needConsistencyCheck()) {
-						refreshSearchIndices(
-								new SubProgressMonitor(monitor, 90));
-						history.checkConsistency(
-								new SubProgressMonitor(monitor, 10));
+						refreshSearchIndices(new SubProgressMonitor(monitor, 90));
+						history.checkConsistency(new SubProgressMonitor(monitor, 10));
 					} else {
 						refreshSearchIndices(monitor);
 					}
@@ -312,14 +293,11 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 			}
 
 			public boolean needsExecution() {
-				OpenMethodHistory history = OpenMethodHistory
-						.getInstance(fToolkit);
-				return fgFirstTime || history.isEmpty()
-						|| history.needConsistencyCheck();
+				OpenMethodHistory history = OpenMethodHistory.getInstance(fToolkit);
+				return fgFirstTime || history.isEmpty() || history.needConsistencyCheck();
 			}
 
-			private void refreshSearchIndices(IProgressMonitor monitor)
-					throws InvocationTargetException {
+			private void refreshSearchIndices(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
 					new SearchEngine().searchAllTypeNames(null, 0, // make sure
 																	// we search
@@ -331,14 +309,9 @@ public class MethodSelectionDialog2 extends SelectionStatusDialog {
 																	// according
 																	// to Kent
 							"_______________".toCharArray(), //$NON-NLS-1$
-							SearchPattern.R_EXACT_MATCH
-									| SearchPattern.R_CASE_SENSITIVE,
-							IDLTKSearchConstants.FIELD,
-							SearchEngine.createWorkspaceScope(
-									fToolkit.getCoreToolkit()),
-							new NopTypeNameRequestor(),
-							IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
-							monitor);
+							SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, IDLTKSearchConstants.FIELD,
+							SearchEngine.createWorkspaceScope(fToolkit.getCoreToolkit()), new NopTypeNameRequestor(),
+							IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, monitor);
 				} catch (ModelException e) {
 					throw new InvocationTargetException(e);
 				}

@@ -1,13 +1,13 @@
 package org.eclipse.dltk.ui.preferences;
 
 import java.net.URI;
+import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.ui.dialogs.StatusInfo;
 import org.eclipse.dltk.utils.PlatformFileUtils;
 
@@ -22,22 +22,18 @@ public final class FieldValidators {
 		public IStatus validate(String text, IEnvironment environment) {
 			StatusInfo status = new StatusInfo();
 			if (environment == null) {
-				status
-						.setError(org.eclipse.dltk.ui.preferences.Messages.FieldValidators_0);
+				status.setError(org.eclipse.dltk.ui.preferences.Messages.FieldValidators_0);
 				return status;
 			}
 
 			if (!(text.trim().length() == 0)) {
-				IFileHandle file = PlatformFileUtils
-						.findAbsoluteOrEclipseRelativeFile(environment, Path
-								.fromPortableString(text));
+				IFileHandle file = PlatformFileUtils.findAbsoluteOrEclipseRelativeFile(environment,
+						Path.fromPortableString(text));
 
 				if (!file.exists()) {
-					status.setError(Messages.format(
-							ValidatorMessages.FilePathNotExists, text));
+					status.setError(MessageFormat.format(ValidatorMessages.FilePathNotExists, text));
 				} else if (file.isDirectory()) {
-					status.setError(Messages.format(
-							ValidatorMessages.FilePathIsInvalid, text));
+					status.setError(MessageFormat.format(ValidatorMessages.FilePathIsInvalid, text));
 				}
 			}
 
@@ -50,17 +46,14 @@ public final class FieldValidators {
 		public IStatus validate(URI location, IEnvironment environment) {
 			StatusInfo status = new StatusInfo();
 			if (environment == null) {
-				status
-						.setError(org.eclipse.dltk.ui.preferences.Messages.FieldValidators_0);
+				status.setError(org.eclipse.dltk.ui.preferences.Messages.FieldValidators_0);
 				return status;
 			}
 			IFileHandle file = environment.getFile(location);
 			if (file == null || !file.exists()) {
-				status.setError(Messages.format(
-						ValidatorMessages.FilePathNotExists, location));
+				status.setError(MessageFormat.format(ValidatorMessages.FilePathNotExists, location));
 			} else if (file.isDirectory()) {
-				status.setError(Messages.format(
-						ValidatorMessages.FilePathIsInvalid, location));
+				status.setError(MessageFormat.format(ValidatorMessages.FilePathIsInvalid, location));
 			}
 			return status;
 		}
@@ -77,15 +70,10 @@ public final class FieldValidators {
 				try {
 					int value = Integer.parseInt(text);
 					if (value < 0) {
-						status
-								.setError(Messages
-										.format(
-												ValidatorMessages.PositiveNumberIsInvalid,
-												text));
+						status.setError(MessageFormat.format(ValidatorMessages.PositiveNumberIsInvalid, text));
 					}
 				} catch (NumberFormatException e) {
-					status.setError(Messages.format(
-							ValidatorMessages.PositiveNumberIsInvalid, text));
+					status.setError(MessageFormat.format(ValidatorMessages.PositiveNumberIsInvalid, text));
 				}
 			}
 
@@ -110,9 +98,7 @@ public final class FieldValidators {
 
 			int value = Integer.parseInt(text);
 			if (value < minValue) {
-				status.setError(Messages.format(
-						ValidatorMessages.MinValueInvalid, String
-								.valueOf(minValue)));
+				status.setError(MessageFormat.format(ValidatorMessages.MinValueInvalid, String.valueOf(minValue)));
 			}
 
 			return status;
@@ -130,12 +116,10 @@ public final class FieldValidators {
 				try {
 					int value = Integer.parseInt(text);
 					if (value < 1000 || value > 65535) {
-						status.setError(Messages.format(
-								ValidatorMessages.PortShouldBeInRange, text));
+						status.setError(MessageFormat.format(ValidatorMessages.PortShouldBeInRange, text));
 					}
 				} catch (NumberFormatException e) {
-					status.setError(Messages.format(
-							ValidatorMessages.PortShouldBeInRange, text));
+					status.setError(MessageFormat.format(ValidatorMessages.PortShouldBeInRange, text));
 				}
 			}
 

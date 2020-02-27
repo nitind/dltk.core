@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
 
@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.callhierarchy;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +28,6 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.corext.callhierarchy.CallHierarchy;
 import org.eclipse.dltk.internal.corext.callhierarchy.CallLocation;
 import org.eclipse.dltk.internal.corext.callhierarchy.MethodWrapper;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.IDLTKStatusConstants;
 import org.eclipse.dltk.internal.ui.actions.OpenActionUtil;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
@@ -171,7 +171,7 @@ public class CallHierarchyUI {
 				name = ((MethodWrapper) element).getName();
 			else
 				name = ""; //$NON-NLS-1$
-			MessageDialog.openError(shell, title, Messages.format(
+			MessageDialog.openError(shell, title, MessageFormat.format(
 					CallHierarchyMessages.CallHierarchyUI_open_in_editor_error_messageArgs, name, x.getMessage()));
 			return false;
 		}

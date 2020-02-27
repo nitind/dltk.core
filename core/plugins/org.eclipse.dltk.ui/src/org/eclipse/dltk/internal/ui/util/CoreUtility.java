@@ -3,11 +3,13 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.util;
+
+import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -25,7 +27,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.DLTKUIMessages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -33,12 +34,12 @@ import org.osgi.framework.Bundle;
 
 public class CoreUtility {
 	/**
-	 * Creates a folder and all parent folders if not existing. Project must
-	 * exist. <code> org.eclipse.ui.dialogs.ContainerGenerator</code> is too
-	 * heavy (creates a runnable)
+	 * Creates a folder and all parent folders if not existing. Project must exist.
+	 * <code> org.eclipse.ui.dialogs.ContainerGenerator</code> is too heavy (creates
+	 * a runnable)
 	 */
-	public static void createFolder(IFolder folder, boolean force,
-			boolean local, IProgressMonitor monitor) throws CoreException {
+	public static void createFolder(IFolder folder, boolean force, boolean local, IProgressMonitor monitor)
+			throws CoreException {
 		if (!folder.exists()) {
 			IContainer parent = folder.getParent();
 			if (parent instanceof IFolder) {
@@ -52,14 +53,12 @@ public class CoreUtility {
 	 * Creates an extension. If the extension plugin has not been loaded a busy
 	 * cursor will be activated during the duration of the load.
 	 *
-	 * @param element
-	 *                           the config element defining the extension
-	 * @param classAttribute
-	 *                           the name of the attribute carrying the class
+	 * @param element        the config element defining the extension
+	 * @param classAttribute the name of the attribute carrying the class
 	 * @return the extension object
 	 */
-	public static Object createExtension(final IConfigurationElement element,
-			final String classAttribute) throws CoreException {
+	public static Object createExtension(final IConfigurationElement element, final String classAttribute)
+			throws CoreException {
 		// If plugin has been loaded create extension.
 		// Otherwise, show busy cursor then create extension.
 		String pluginId = element.getContributor().getName();
@@ -85,8 +84,7 @@ public class CoreUtility {
 	/**
 	 * Set the autobuild to the value of the parameter and return the old one.
 	 *
-	 * @param state
-	 *                  the value to be set for autobuilding.
+	 * @param state the value to be set for autobuilding.
 	 * @return the old value of the autobuild state
 	 */
 	public static boolean enableAutoBuild(boolean state) throws CoreException {
@@ -121,8 +119,7 @@ public class CoreUtility {
 				if (monitor.isCanceled()) {
 					return Status.CANCEL_STATUS;
 				}
-				Job[] buildJobs = Job.getJobManager()
-						.find(ResourcesPlugin.FAMILY_MANUAL_BUILD);
+				Job[] buildJobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_MANUAL_BUILD);
 				for (int i = 0; i < buildJobs.length; i++) {
 					Job curr = buildJobs[i];
 					if (curr != this && curr instanceof BuildJob) {
@@ -136,19 +133,15 @@ public class CoreUtility {
 			}
 			try {
 				if (fProject != null) {
-					monitor.beginTask(Messages.format(
-							DLTKUIMessages.CoreUtility_buildproject_taskname,
-							fProject.getName()), 2);
-					fProject.build(IncrementalProjectBuilder.FULL_BUILD,
-							new SubProgressMonitor(monitor, 1));
-					DLTKUIPlugin.getWorkspace().build(
-							IncrementalProjectBuilder.INCREMENTAL_BUILD,
+					monitor.beginTask(
+							MessageFormat.format(DLTKUIMessages.CoreUtility_buildproject_taskname, fProject.getName()),
+							2);
+					fProject.build(IncrementalProjectBuilder.FULL_BUILD, new SubProgressMonitor(monitor, 1));
+					DLTKUIPlugin.getWorkspace().build(IncrementalProjectBuilder.INCREMENTAL_BUILD,
 							new SubProgressMonitor(monitor, 1));
 				} else {
-					monitor.beginTask(
-							DLTKUIMessages.CoreUtility_buildall_taskname, 2);
-					DLTKUIPlugin.getWorkspace().build(
-							IncrementalProjectBuilder.FULL_BUILD,
+					monitor.beginTask(DLTKUIMessages.CoreUtility_buildall_taskname, 2);
+					DLTKUIPlugin.getWorkspace().build(IncrementalProjectBuilder.FULL_BUILD,
 							new SubProgressMonitor(monitor, 2));
 				}
 			} catch (CoreException e) {
@@ -170,15 +163,12 @@ public class CoreUtility {
 	/**
 	 * Returns a build job
 	 *
-	 * @param project
-	 *                    The project to build or <code>null</code> to build the
-	 *                    workspace.
+	 * @param project The project to build or <code>null</code> to build the
+	 *                workspace.
 	 */
 	public static Job getBuildJob(final IProject project) {
-		Job buildJob = new BuildJob(DLTKUIMessages.CoreUtility_job_title,
-				project);
-		buildJob.setRule(
-				ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+		Job buildJob = new BuildJob(DLTKUIMessages.CoreUtility_job_title, project);
+		buildJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
 		buildJob.setUser(true);
 		return buildJob;
 	}

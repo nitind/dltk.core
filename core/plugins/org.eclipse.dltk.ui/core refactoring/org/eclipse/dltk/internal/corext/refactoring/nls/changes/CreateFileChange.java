@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.text.MessageFormat;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileInfo;
@@ -28,7 +29,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.dltk.core.IModelStatusConstants;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.corext.refactoring.base.DLTKChange;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
@@ -46,8 +46,7 @@ public class CreateFileChange extends DLTKChange {
 		this(path, source, encoding, IResource.NULL_STAMP);
 	}
 
-	public CreateFileChange(IPath path, String source, String encoding,
-			long stampToRestore) {
+	public CreateFileChange(IPath path, String source, String encoding, long stampToRestore) {
 		Assert.isNotNull(path, "path"); //$NON-NLS-1$
 		Assert.isNotNull(source, "source"); //$NON-NLS-1$
 		fPath = path;
@@ -61,8 +60,8 @@ public class CreateFileChange extends DLTKChange {
 	 * private CreateFileChange(IPath path, String source, String encoding, long
 	 * stampToRestore, boolean explicit) { Assert.isNotNull(path, "path");
 	 * //$NON-NLS-1$ Assert.isNotNull(source, "source"); //$NON-NLS-1$
-	 * Assert.isNotNull(encoding, "encoding"); //$NON-NLS-1$ fPath= path;
-	 * fSource= source; fEncoding= encoding; fStampToRestore= stampToRestore;
+	 * Assert.isNotNull(encoding, "encoding"); //$NON-NLS-1$ fPath= path; fSource=
+	 * source; fEncoding= encoding; fStampToRestore= stampToRestore;
 	 * fExplicitEncoding= explicit; }
 	 */
 
@@ -75,8 +74,7 @@ public class CreateFileChange extends DLTKChange {
 	@Override
 	public String getName() {
 		if (fChangeName == null) {
-			return Messages.format(NLSChangesMessages.createFile_Create_file,
-					fPath.toOSString());
+			return MessageFormat.format(NLSChangesMessages.createFile_Create_file, fPath.toOSString());
 		}
 		return fChangeName;
 	}
@@ -113,16 +111,14 @@ public class CreateFileChange extends DLTKChange {
 
 		URI location = file.getLocationURI();
 		if (location == null) {
-			result.addFatalError(Messages.format(
-					NLSChangesMessages.CreateFileChange_error_unknownLocation,
+			result.addFatalError(MessageFormat.format(NLSChangesMessages.CreateFileChange_error_unknownLocation,
 					file.getFullPath().toString()));
 			return result;
 		}
 
 		IFileInfo jFile = EFS.getStore(location).fetchInfo();
 		if (jFile.exists()) {
-			result.addFatalError(Messages.format(
-					NLSChangesMessages.CreateFileChange_error_exists,
+			result.addFatalError(MessageFormat.format(NLSChangesMessages.CreateFileChange_error_exists,
 					file.getFullPath().toString()));
 			return result;
 		}
@@ -139,14 +135,12 @@ public class CreateFileChange extends DLTKChange {
 			IFile file = getOldFile(new SubProgressMonitor(pm, 1));
 			/*
 			 * if (file.exists()) { CompositeChange composite= new
-			 * CompositeChange(getName()); composite.add(new
-			 * DeleteFileChange(file)); composite.add(new
-			 * CreateFileChange(fPath, fSource, fEncoding, fStampToRestore,
-			 * fExplicitEncoding)); pm.worked(1); return composite.perform(new
-			 * SubProgressMonitor(pm, 1)); } else {
+			 * CompositeChange(getName()); composite.add(new DeleteFileChange(file));
+			 * composite.add(new CreateFileChange(fPath, fSource, fEncoding,
+			 * fStampToRestore, fExplicitEncoding)); pm.worked(1); return
+			 * composite.perform(new SubProgressMonitor(pm, 1)); } else {
 			 */
-			try (InputStream is = new ByteArrayInputStream(
-					fSource.getBytes(fEncoding))) {
+			try (InputStream is = new ByteArrayInputStream(fSource.getBytes(fEncoding))) {
 
 				file.create(is, false, new SubProgressMonitor(pm, 1));
 				if (fStampToRestore != IResource.NULL_STAMP) {
@@ -161,8 +155,7 @@ public class CreateFileChange extends DLTKChange {
 			} catch (UnsupportedEncodingException e) {
 				throw new ModelException(e, IModelStatusConstants.IO_EXCEPTION);
 			} catch (IOException ioe) {
-				throw new ModelException(ioe,
-						IModelStatusConstants.IO_EXCEPTION);
+				throw new ModelException(ioe, IModelStatusConstants.IO_EXCEPTION);
 			}
 		} finally {
 			pm.done();
@@ -181,8 +174,7 @@ public class CreateFileChange extends DLTKChange {
 	private void initializeEncoding() {
 		if (fEncoding == null) {
 			fExplicitEncoding = false;
-			IFile file = ResourcesPlugin.getWorkspace().getRoot()
-					.getFile(fPath);
+			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(fPath);
 			if (file != null) {
 				try {
 					if (file.exists()) {

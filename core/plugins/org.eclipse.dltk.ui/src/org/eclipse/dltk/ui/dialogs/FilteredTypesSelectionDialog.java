@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -47,7 +48,6 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.core.search.TypeNameMatch;
 import org.eclipse.dltk.core.search.TypeNameMatchRequestor;
 import org.eclipse.dltk.internal.core.search.DLTKSearchTypeNameMatch;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.corext.util.OpenTypeHistory;
 import org.eclipse.dltk.internal.corext.util.Strings;
 import org.eclipse.dltk.internal.corext.util.TypeFilter;
@@ -229,7 +229,8 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 		if (text == null || text.length() == 0) {
 			getShell().setText(fTitle);
 		} else {
-			getShell().setText(Messages.format(DLTKUIMessages.FilteredTypeSelectionDialog_titleFormat, fTitle, text));
+			getShell().setText(
+					MessageFormat.format(DLTKUIMessages.FilteredTypeSelectionDialog_titleFormat, fTitle, text));
 		}
 	}
 
@@ -361,7 +362,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 					IDLTKUILanguageToolkit uiToolkit = DLTKUILanguageManager.getLanguageToolkit(fToolkit.getNatureId());
 					ScriptElementLabels labels = uiToolkit.getScriptElementLabels();
 					String containerName = labels.getElementLabel(root, ScriptElementLabels.ALL_FULLY_QUALIFIED);
-					String message = Messages.format(DLTKUIMessages.FilteredTypesSelectionDialog_dialogMessage,
+					String message = MessageFormat.format(DLTKUIMessages.FilteredTypesSelectionDialog_dialogMessage,
 							typeInfo.getFullyQualifiedName(), containerName);
 					MessageDialog.openError(getShell(), fTitle, message);
 					getSelectionHistory().remove(typeInfo);
@@ -505,7 +506,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 			IType type = ((TypeNameMatch) item).getType();
 			if (!type.exists())
 				return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), IStatus.ERROR,
-						Messages.format(DLTKUIMessages.FilteredTypesSelectionDialog_error_type_doesnot_exist,
+						MessageFormat.format(DLTKUIMessages.FilteredTypesSelectionDialog_error_type_doesnot_exist,
 								((TypeNameMatch) item).getFullyQualifiedName()),
 						null);
 			Object[] elements = { type };
@@ -774,7 +775,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 		}
 
 		private String getFormattedLabel(String name) {
-			return Messages.format(DLTKUIMessages.FilteredTypesSelectionDialog_library_name_format, name);
+			return MessageFormat.format(DLTKUIMessages.FilteredTypesSelectionDialog_library_name_format, name);
 		}
 
 		public String getText(Object element) {
