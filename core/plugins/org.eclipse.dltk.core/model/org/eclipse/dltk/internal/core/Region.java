@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -28,7 +28,7 @@ public class Region implements IRegion {
 
 	/**
 	 * Creates an empty region.
-	 * 
+	 *
 	 * @see IRegion
 	 */
 	public Region() {
@@ -73,9 +73,8 @@ public class Region implements IRegion {
 	}
 
 	/**
-	 * Returns a collection of all the parents of this element in bottom-up
-	 * order.
-	 * 
+	 * Returns a collection of all the parents of this element in bottom-up order.
+	 *
 	 */
 	private ArrayList getAncestors(IModelElement element) {
 		ArrayList parents = new ArrayList();
@@ -113,9 +112,9 @@ public class Region implements IRegion {
 	}
 
 	/**
-	 * Removes any children of this element that are contained within this
-	 * region as this parent is about to be added to the region.
-	 * 
+	 * Removes any children of this element that are contained within this region as
+	 * this parent is about to be added to the region.
+	 *
 	 * <p>
 	 * Children are all children, not just direct children.
 	 */
@@ -123,8 +122,7 @@ public class Region implements IRegion {
 		if (element instanceof IParent) {
 			ArrayList newRootElements = new ArrayList();
 			for (int i = 0, size = fRootElements.size(); i < size; i++) {
-				IModelElement currentRoot = (IModelElement) fRootElements
-						.get(i);
+				IModelElement currentRoot = (IModelElement) fRootElements.get(i);
 				// walk the current root hierarchy
 				IModelElement parent = currentRoot.getParent();
 				boolean isChild = false;
@@ -148,7 +146,7 @@ public class Region implements IRegion {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		IModelElement[] roots = getElements();
 		buffer.append('[');
 		for (int i = 0; i < roots.length; i++) {

@@ -3,11 +3,12 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.nls.changes;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,15 +27,15 @@ import org.eclipse.dltk.internal.corext.util.IOCloser;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
-
 public class DeleteFileChange extends DLTKChange {
 
 	private IPath fPath;
 	private String fSource;
 
-	public DeleteFileChange(IFile file){
+	public DeleteFileChange(IFile file) {
 		Assert.isNotNull(file, "file"); //$NON-NLS-1$
-		fPath= file.getFullPath().removeFirstSegments(ResourcesPlugin.getWorkspace().getRoot().getFullPath().segmentCount());
+		fPath = file.getFullPath()
+				.removeFirstSegments(ResourcesPlugin.getWorkspace().getRoot().getFullPath().segmentCount());
 	}
 
 	@Override
@@ -46,12 +47,12 @@ public class DeleteFileChange extends DLTKChange {
 	public Change perform(IProgressMonitor pm) throws CoreException {
 		try {
 			pm.beginTask(NLSChangesMessages.deleteFile_deleting_resource, 1);
-			IFile file= ResourcesPlugin.getWorkspace().getRoot().getFile(fPath);
+			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(fPath);
 			Assert.isNotNull(file);
 			Assert.isTrue(file.exists());
 			Assert.isTrue(!file.isReadOnly());
-			fSource= getSource(file);
-			CreateFileChange undo= createUndoChange(file, fPath, file.getModificationStamp(), fSource);
+			fSource = getSource(file);
+			CreateFileChange undo = createUndoChange(file, fPath, file.getModificationStamp(), fSource);
 			file.delete(true, true, pm);
 			return undo;
 		} finally {
@@ -60,31 +61,31 @@ public class DeleteFileChange extends DLTKChange {
 	}
 
 	private String getSource(IFile file) throws CoreException {
-		String encoding= null;
+		String encoding = null;
 		try {
-			encoding= file.getCharset();
+			encoding = file.getCharset();
 		} catch (CoreException ex) {
 			// fall through. Take default encoding.
 		}
 
-		StringBuffer sb= new StringBuffer();
-		BufferedReader br= null;
-		InputStream in= null;
+		StringBuilder sb = new StringBuilder();
+		BufferedReader br = null;
+		InputStream in = null;
 		try {
-			in= file.getContents();
-		    if (encoding != null)
-		        br= new BufferedReader(new InputStreamReader(in, encoding));
-		    else
-		        br= new BufferedReader(new InputStreamReader(in));
-			int read= 0;
-			while ((read= br.read()) != -1)
+			in = file.getContents();
+			if (encoding != null)
+				br = new BufferedReader(new InputStreamReader(in, encoding));
+			else
+				br = new BufferedReader(new InputStreamReader(in));
+			int read = 0;
+			while ((read = br.read()) != -1)
 				sb.append((char) read);
-		} catch (IOException e){
+		} catch (IOException e) {
 			throw new ModelException(e, IModelStatusConstants.IO_EXCEPTION);
 		} finally {
-			try{
+			try {
 				IOCloser.rethrows(br, in);
-			} catch (IOException e){
+			} catch (IOException e) {
 				throw new ModelException(e, IModelStatusConstants.IO_EXCEPTION);
 			}
 		}
@@ -94,9 +95,9 @@ public class DeleteFileChange extends DLTKChange {
 	private static CreateFileChange createUndoChange(IFile file, IPath path, long stampToRestore, String source) {
 		String encoding;
 		try {
-			encoding= file.getCharset(false);
+			encoding = file.getCharset(false);
 		} catch (CoreException e) {
-			encoding= null;
+			encoding = null;
 		}
 		return new CreateFileChange(path, source, encoding, stampToRestore);
 	}
@@ -111,4 +112,3 @@ public class DeleteFileChange extends DLTKChange {
 		return ResourcesPlugin.getWorkspace().getRoot().getFile(fPath);
 	}
 }
-

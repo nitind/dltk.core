@@ -3,10 +3,10 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.compiler.util;
 
@@ -20,7 +20,7 @@ public class GenericXMLWriter extends PrintWriter {
 	/* constants */
 	private static final String XML_VERSION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; //$NON-NLS-1$
 
-	private static void appendEscapedChar(StringBuffer buffer, char c) {
+	private static void appendEscapedChar(StringBuilder buffer, char c) {
 		String replacement = getReplacement(c);
 		if (replacement != null) {
 			buffer.append('&');
@@ -32,7 +32,7 @@ public class GenericXMLWriter extends PrintWriter {
 	}
 
 	private static String getEscaped(String s) {
-		StringBuffer result = new StringBuffer(s.length() + 10);
+		StringBuilder result = new StringBuilder(s.length() + 10);
 		for (int i = 0; i < s.length(); ++i)
 			appendEscapedChar(result, s.charAt(i));
 		return result.toString();
@@ -60,13 +60,11 @@ public class GenericXMLWriter extends PrintWriter {
 	private int tab;
 	private String lineSeparator;
 
-	public GenericXMLWriter(OutputStream stream, String lineSeparator,
-			boolean printXmlVersion) {
+	public GenericXMLWriter(OutputStream stream, String lineSeparator, boolean printXmlVersion) {
 		this(new PrintWriter(stream), lineSeparator, printXmlVersion);
 	}
 
-	public GenericXMLWriter(Writer writer, String lineSeparator,
-			boolean printXmlVersion) {
+	public GenericXMLWriter(Writer writer, String lineSeparator, boolean printXmlVersion) {
 		super(writer);
 		this.tab = 0;
 		this.lineSeparator = lineSeparator;
@@ -78,8 +76,7 @@ public class GenericXMLWriter extends PrintWriter {
 
 	public void endTag(String name, boolean insertTab, boolean insertNewLine) {
 		this.tab--;
-		printTag('/' + name, null/* no parameters */, insertTab, insertNewLine,
-				false/* don't close tag */);
+		printTag('/' + name, null/* no parameters */, insertTab, insertNewLine, false/* don't close tag */);
 	}
 
 	private void printTabulation() {
@@ -90,9 +87,9 @@ public class GenericXMLWriter extends PrintWriter {
 	/**
 	 * @since 2.0
 	 */
-	public void printTag(String name, Map<String, String> parameters,
-			boolean insertTab, boolean insertNewLine, boolean closeTag) {
-		StringBuffer sb = new StringBuffer();
+	public void printTag(String name, Map<String, String> parameters, boolean insertTab, boolean insertNewLine,
+			boolean closeTag) {
+		StringBuilder sb = new StringBuilder();
 		sb.append("<"); //$NON-NLS-1$
 		sb.append(name);
 		if (parameters != null) {
@@ -119,8 +116,7 @@ public class GenericXMLWriter extends PrintWriter {
 
 	}
 
-	public void printString(String string, boolean insertTab,
-			boolean insertNewLine) {
+	public void printString(String string, boolean insertTab, boolean insertNewLine) {
 		if (insertTab) {
 			printTabulation();
 		}
@@ -132,13 +128,10 @@ public class GenericXMLWriter extends PrintWriter {
 
 	public void startTag(String name, boolean insertTab) {
 		printTag(name, null/* no parameters */, insertTab, true/*
-																 * insert new
-																 * line
+																 * insert new line
 																 */, false/*
-																		 * don't
-																		 * close
-																		 * tag
-																		 */);
+																			 * don't close tag
+																			 */);
 		this.tab++;
 	}
 }

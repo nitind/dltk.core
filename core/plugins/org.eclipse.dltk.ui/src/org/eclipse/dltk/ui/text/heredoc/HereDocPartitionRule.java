@@ -7,35 +7,35 @@ import org.eclipse.jface.text.rules.Token;
 /**
  * Abstract implementation of a rule that can be used to detect heredoc
  * partitions.
- * 
+ *
  * <p>
  * A note on tokens returned from this rule...
  * </p>
- * 
+ *
  * Heredoc partitions are unique because they have an identifier/terminator and
  * span multiple lines but may have characters that follow the heredoc
  * identifier but are not considered to be part of the identifier itself, ie:
  * </p>
- * 
+ *
  * <pre>
  *   &lt;&lt;EOF . "hello world";
  *     heredoc body
  *   EOF
  * </pre>
- * 
+ *
  * <p>
  * requiring the terminator to be preserved to allow the partitioner to know
  * when the partition has ended. To achieve this, the identifier/terminator is
  * appended to the partition types returned by this rule so future rule
  * evaluations against existing partitions can terminate correctly.
  * </p>
- * 
+ *
  * <p>
  * Therefore, the success tokens returned from this rule will never be comprised
  * of just the partition type, which is why the <code>HereDocEnabled*</code>
  * classes must be used in conjunction with this rule.
  * </p>
- * 
+ *
  * @see HereDocEnabledPartitioner
  * @see HereDocEnabledPartitionScanner
  * @see HereDocEnabledPresentationReconciler
@@ -48,11 +48,9 @@ public abstract class HereDocPartitionRule {
 
 	/**
 	 * Creates a new heredoc partition rule.
-	 * 
-	 * @param start
-	 *            heredoc start sequence
-	 * @param token
-	 *            success token
+	 *
+	 * @param start heredoc start sequence
+	 * @param token success token
 	 */
 	public HereDocPartitionRule(String start, IToken token) {
 		this.fStart = start;
@@ -62,14 +60,13 @@ public abstract class HereDocPartitionRule {
 
 	/**
 	 * Evalute the rule for a possible heredoc partition.
-	 * 
-	 * @param scanner
-	 *            heredoc character scanner
-	 * 
+	 *
+	 * @param scanner heredoc character scanner
+	 *
 	 * @return heredoc token
 	 */
 	public IToken evaluate(HereDocEnabledPartitionScanner scanner) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		int c;
 		while ((c = scanner.read()) != ICharacterScanner.EOF) {
@@ -91,21 +88,18 @@ public abstract class HereDocPartitionRule {
 
 	/**
 	 * Evaluate the rule when a known heredoc partition has been seen.
-	 * 
-	 * @param scanner
-	 *            heredoc character scanner
-	 * 
-	 * @param partition
-	 *            known heredoc partition containing terminator
-	 * 
+	 *
+	 * @param scanner   heredoc character scanner
+	 *
+	 * @param partition known heredoc partition containing terminator
+	 *
 	 * @return heredoc token
 	 */
-	public IToken evaluate(HereDocEnabledPartitionScanner scanner,
-			String partition) {
+	public IToken evaluate(HereDocEnabledPartitionScanner scanner, String partition) {
 
 		boolean readChar = false;
 
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		String terminator = HereDocUtils.getTerminator(partition);
 
 		int c;
@@ -132,13 +126,12 @@ public abstract class HereDocPartitionRule {
 
 		return createTerminator(terminator);
 	}
-	
+
 	/**
 	 * Create a token representing the heredoc identifier partition
-	 * 
-	 * @param identifier
-	 *            heredoc identifier
-	 * 
+	 *
+	 * @param identifier heredoc identifier
+	 *
 	 * @return token
 	 */
 	protected final IToken createIdentifier(String identifier) {
@@ -147,31 +140,27 @@ public abstract class HereDocPartitionRule {
 
 	/**
 	 * Create a token representing the heredoc terminator partition
-	 * 
-	 * @param terminator
-	 *            heredoc terminator
-	 * 
+	 *
+	 * @param terminator heredoc terminator
+	 *
 	 * @return token
 	 */
-	protected final Token createTerminator(String terminator)
-	{
+	protected final Token createTerminator(String terminator) {
 		return new Token(HereDocUtils.createTerminator(fPartition, terminator));
 	}
 
 	/**
 	 * Extract the heredoc identifier.
-	 * 
+	 *
 	 * <p>
-	 * The input string will not contain whatever start sequence was specified
-	 * in the constructor. If the passed string does not contain a valid heredoc
+	 * The input string will not contain whatever start sequence was specified in
+	 * the constructor. If the passed string does not contain a valid heredoc
 	 * identifier, <code>null</code> may be returned.
 	 * </p>
-	 * 
-	 * @param str
-	 *            string containing potential heredoc identifier
-	 * 
-	 * @return heredoc identifier or <code>null</code> if no valid identifer
-	 *         exists
+	 *
+	 * @param str string containing potential heredoc identifier
+	 *
+	 * @return heredoc identifier or <code>null</code> if no valid identifer exists
 	 */
 	protected abstract String extractIdentifier(String str);
 
@@ -192,16 +181,15 @@ public abstract class HereDocPartitionRule {
 
 	/**
 	 * Parse the heredoc identifier to extract the heredoc terminator.
-	 * 
+	 *
 	 * <p>
 	 * Some dynamic languages allow the heredoc identifier to be quoted and/or
 	 * escaped, however those characters are not considered to be part of the
 	 * terminator and need to be removed from the string.
 	 * </p>
-	 * 
-	 * @param identifier
-	 *            heredoc identifier
-	 * 
+	 *
+	 * @param identifier heredoc identifier
+	 *
 	 * @return heredoc terminator
 	 */
 	protected abstract String parseIdentifier(String identifier);
@@ -217,15 +205,15 @@ public abstract class HereDocPartitionRule {
 
 	private IToken detectIdentifier(ICharacterScanner scanner) {
 		int c;
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		/*
-		 * rather then attempt to detect the heredoc identifier char by char, we
-		 * buffer everything in up until the newline character and then hand-off
-		 * to the sub-class to first extract the identifier so the scanner can
-		 * be unwound for the chars not consumed and then we reparse the
-		 * identifier to extract the heredoc terminator, as the identifier may
-		 * be quoted, etc if the language supports it.
+		 * rather then attempt to detect the heredoc identifier char by char, we buffer
+		 * everything in up until the newline character and then hand-off to the
+		 * sub-class to first extract the identifier so the scanner can be unwound for
+		 * the chars not consumed and then we reparse the identifier to extract the
+		 * heredoc terminator, as the identifier may be quoted, etc if the language
+		 * supports it.
 		 */
 		while ((c = scanner.read()) != ICharacterScanner.EOF) {
 			if (isNewline(scanner, c)) {

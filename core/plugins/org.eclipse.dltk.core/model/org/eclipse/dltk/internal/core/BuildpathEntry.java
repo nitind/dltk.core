@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -78,8 +78,8 @@ public class BuildpathEntry implements IBuildpathEntry {
 	public static final String TAG_DISCOURAGED = "discouraged"; //$NON-NLS-1$
 	public static final String TAG_IGNORE_IF_BETTER = "ignoreifbetter"; //$NON-NLS-1$
 	/**
-	 * Describes the kind of project fragment found on this buildpath entry -
-	 * either K_BINARY or K_SOURCE
+	 * Describes the kind of project fragment found on this buildpath entry - either
+	 * K_BINARY or K_SOURCE
 	 */
 	private int contentKind;
 	/**
@@ -90,28 +90,26 @@ public class BuildpathEntry implements IBuildpathEntry {
 	/**
 	 * The meaning of the path of a buildpath entry depends on its entry kind:
 	 * <ul>
-	 * <li>Source code in the current project (<code>BPE_SOURCE</code>) - The
-	 * path associated with this entry is the absolute path to the root
-	 * folder.</li>
+	 * <li>Source code in the current project (<code>BPE_SOURCE</code>) - The path
+	 * associated with this entry is the absolute path to the root folder.</li>
 	 * <li>A required project (<code>BPE_PROJECT</code>) - the path of the entry
 	 * denotes the path to the corresponding project resource.</li>
-	 * <li>A container entry (<code>BPE_CONTAINER</code>) - the first segment of
-	 * the path is denoting the unique container identifier (for which a
+	 * <li>A container entry (<code>BPE_CONTAINER</code>) - the first segment of the
+	 * path is denoting the unique container identifier (for which a
 	 * <code>BuildpathContainerInitializer</code> could be registered), and the
-	 * remaining segments are used as additional hints for resolving the
-	 * container entry to an actual <code>IBuildpathContainer</code>.</li>
+	 * remaining segments are used as additional hints for resolving the container
+	 * entry to an actual <code>IBuildpathContainer</code>.</li>
 	 */
 	private IPath path;
 	/**
-	 * Patterns allowing to include/exclude portions of the resource tree
-	 * denoted by this entry path.
+	 * Patterns allowing to include/exclude portions of the resource tree denoted by
+	 * this entry path.
 	 */
 	private IPath[] inclusionPatterns;
 	private char[][] fullInclusionPatternChars;
 	private IPath[] exclusionPatterns;
 	private char[][] fullExclusionPatternChars;
-	private final static char[][] UNINIT_PATTERNS = new char[][] {
-			"Non-initialized yet".toCharArray() }; //$NON-NLS-1$
+	private final static char[][] UNINIT_PATTERNS = new char[][] { "Non-initialized yet".toCharArray() }; //$NON-NLS-1$
 	public static final BuildpathEntry[] NO_ENTRIES = new BuildpathEntry[0];
 	private boolean combineAccessRules;
 	private String rootID;
@@ -137,23 +135,22 @@ public class BuildpathEntry implements IBuildpathEntry {
 
 	/**
 	 * Describes the path to the source archive/folder associated with this
-	 * classpath entry, or <code>null</code> if this buildpath entry has no
-	 * source attachment.
+	 * classpath entry, or <code>null</code> if this buildpath entry has no source
+	 * attachment.
 	 * <p>
-	 * Only library and variable buildpath entries may have source attachments.
-	 * For library buildpath entries, the result path (if present) locates a
-	 * source archive. For variable classpath entries, the result path (if
-	 * present) has an analogous form and meaning as the variable path, namely
-	 * the first segment is the name of a classpath variable.
+	 * Only library and variable buildpath entries may have source attachments. For
+	 * library buildpath entries, the result path (if present) locates a source
+	 * archive. For variable classpath entries, the result path (if present) has an
+	 * analogous form and meaning as the variable path, namely the first segment is
+	 * the name of a classpath variable.
 	 */
 	public IPath sourceAttachmentPath;
 
 	/**
 	 * Describes the path within the source archive where package fragments are
-	 * located. An empty path indicates that packages are located at the root of
-	 * the source archive. Returns a non-<code>null</code> value if and only if
-	 * <code>getSourceAttachmentPath</code> returns a non-<code>null</code>
-	 * value.
+	 * located. An empty path indicates that packages are located at the root of the
+	 * source archive. Returns a non-<code>null</code> value if and only if
+	 * <code>getSourceAttachmentPath</code> returns a non-<code>null</code> value.
 	 */
 	public IPath sourceAttachmentRootPath;
 	/*
@@ -169,18 +166,14 @@ public class BuildpathEntry implements IBuildpathEntry {
 	/**
 	 * Creates a build path entry of the specified kind with the given path.
 	 *
-	 * @param externalLib
-	 *            TODO
+	 * @param externalLib TODO
 	 */
-	public BuildpathEntry(int contentKind, int entryKind, IPath path,
-			boolean isExported, IPath[] inclusionPatterns,
-			IPath[] exclusionPatterns,
-			org.eclipse.dltk.core.IAccessRule[] accessRules,
-			boolean combineAccessRules, IBuildpathAttribute[] extraAttributes,
-			boolean externalLib) {
+	public BuildpathEntry(int contentKind, int entryKind, IPath path, boolean isExported, IPath[] inclusionPatterns,
+			IPath[] exclusionPatterns, org.eclipse.dltk.core.IAccessRule[] accessRules, boolean combineAccessRules,
+			IBuildpathAttribute[] extraAttributes, boolean externalLib) {
 		// if this is external entry, path should be full
-		Assert.isLegal(!externalLib || EnvironmentPathUtils.isFull(path) || path
-				.segment(0).startsWith(IBuildpathEntry.BUILDPATH_SPECIAL));
+		Assert.isLegal(!externalLib || EnvironmentPathUtils.isFull(path)
+				|| path.segment(0).startsWith(IBuildpathEntry.BUILDPATH_SPECIAL));
 
 		this.contentKind = contentKind;
 		this.entryKind = entryKind;
@@ -193,8 +186,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		if (accessRules != null && (length = accessRules.length) > 0) {
 			AccessRule[] rules = new AccessRule[length];
 			System.arraycopy(accessRules, 0, rules, 0, length);
-			this.accessRuleSet = new AccessRuleSet(rules,
-					getMessageTemplates());
+			this.accessRuleSet = new AccessRuleSet(rules, getMessageTemplates());
 		}
 		this.combineAccessRules = combineAccessRules;
 		this.extraAttributes = extraAttributes;
@@ -260,22 +252,21 @@ public class BuildpathEntry implements IBuildpathEntry {
 			/*
 			 * can be remote source entry when reconciling
 			 */
-			result[0] = manager.intern(Messages.bind(
-					org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_project,
-					new String[] { "{0}", getPath().segment(0) })); //$NON-NLS-1$
-			result[1] = manager.intern(Messages.bind(
-					org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_constructor_project,
-					new String[] { "{0}", getPath().segment(0) })); //$NON-NLS-1$
-			result[2] = manager.intern(Messages.bind(
-					org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_method_project,
-					new String[] { "{0}", "{1}", getPath().segment(0) })); //$NON-NLS-1$ //$NON-NLS-2$
-			result[3] = manager.intern(Messages.bind(
-					org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_field_project,
-					new String[] { "{0}", "{1}", getPath().segment(0) })); //$NON-NLS-1$ //$NON-NLS-2$
+			result[0] = manager
+					.intern(Messages.bind(org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_project,
+							new String[] { "{0}", getPath().segment(0) })); //$NON-NLS-1$
+			result[1] = manager.intern(
+					Messages.bind(org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_constructor_project,
+							new String[] { "{0}", getPath().segment(0) })); //$NON-NLS-1$
+			result[2] = manager
+					.intern(Messages.bind(org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_method_project,
+							new String[] { "{0}", "{1}", getPath().segment(0) })); //$NON-NLS-1$ //$NON-NLS-2$
+			result[3] = manager
+					.intern(Messages.bind(org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_field_project,
+							new String[] { "{0}", "{1}", getPath().segment(0) })); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			IPath libPath = getPath();
-			Object target = Model.getTarget(
-					ResourcesPlugin.getWorkspace().getRoot(), libPath, false);
+			Object target = Model.getTarget(ResourcesPlugin.getWorkspace().getRoot(), libPath, false);
 			String pathString;
 			if (target instanceof IFileHandle) {
 				pathString = target.toString();
@@ -283,18 +274,18 @@ public class BuildpathEntry implements IBuildpathEntry {
 				pathString = libPath.makeRelative().toString();
 			}
 
-			result[0] = manager.intern(Messages.bind(
-					org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_library,
-					new String[] { "{0}", pathString })); //$NON-NLS-1$
-			result[1] = manager.intern(Messages.bind(
-					org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_constructor_library,
-					new String[] { "{0}", pathString })); //$NON-NLS-1$
-			result[2] = manager.intern(Messages.bind(
-					org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_method_library,
-					new String[] { "{0}", "{1}", pathString })); //$NON-NLS-1$ //$NON-NLS-2$
-			result[3] = manager.intern(Messages.bind(
-					org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_field_library,
-					new String[] { "{0}", "{1}", pathString })); //$NON-NLS-1$ //$NON-NLS-2$
+			result[0] = manager
+					.intern(Messages.bind(org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_library,
+							new String[] { "{0}", pathString })); //$NON-NLS-1$
+			result[1] = manager.intern(
+					Messages.bind(org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_constructor_library,
+							new String[] { "{0}", pathString })); //$NON-NLS-1$
+			result[2] = manager
+					.intern(Messages.bind(org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_method_library,
+							new String[] { "{0}", "{1}", pathString })); //$NON-NLS-1$ //$NON-NLS-2$
+			result[3] = manager
+					.intern(Messages.bind(org.eclipse.dltk.internal.core.util.Messages.restrictedAccess_field_library,
+							new String[] { "{0}", "{1}", pathString })); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return result;
 	}
@@ -323,8 +314,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 	public boolean isOptional() {
 		for (int i = 0, length = this.extraAttributes.length; i < length; i++) {
 			IBuildpathAttribute attribute = this.extraAttributes[i];
-			if (IBuildpathAttribute.OPTIONAL.equals(attribute.getName())
-					&& "true".equals(attribute.getValue())) //$NON-NLS-1$
+			if (IBuildpathAttribute.OPTIONAL.equals(attribute.getName()) && "true".equals(attribute.getValue())) //$NON-NLS-1$
 				return true;
 		}
 		return false;
@@ -341,8 +331,8 @@ public class BuildpathEntry implements IBuildpathEntry {
 	}
 
 	/**
-	 * Answers an ID which is used to distinguish entries during package
-	 * fragment root computations
+	 * Answers an ID which is used to distinguish entries during package fragment
+	 * root computations
 	 */
 	public String rootID() {
 		if (this.rootID == null) {
@@ -379,12 +369,9 @@ public class BuildpathEntry implements IBuildpathEntry {
 	public BuildpathEntry combineWith(BuildpathEntry referringEntry) {
 		if (referringEntry == null)
 			return this;
-		if (referringEntry.isExported()
-				|| referringEntry.getAccessRuleSet() != null) {
-			boolean combine = this.entryKind == BPE_SOURCE
-					|| referringEntry.combineAccessRules();
-			BuildpathEntry newEntry = new BuildpathEntry(getContentKind(),
-					getEntryKind(), getPath(),
+		if (referringEntry.isExported() || referringEntry.getAccessRuleSet() != null) {
+			boolean combine = this.entryKind == BPE_SOURCE || referringEntry.combineAccessRules();
+			BuildpathEntry newEntry = new BuildpathEntry(getContentKind(), getEntryKind(), getPath(),
 					referringEntry.isExported() || this.isExported, // duplicate
 					// container
 					// entry for
@@ -392,10 +379,8 @@ public class BuildpathEntry implements IBuildpathEntry {
 					// it as
 					// exported
 					this.inclusionPatterns, this.exclusionPatterns,
-					combine(referringEntry.getAccessRules(), getAccessRules(),
-							combine),
-					this.combineAccessRules, this.extraAttributes,
-					this.isExternal);
+					combine(referringEntry.getAccessRules(), getAccessRules(), combine), this.combineAccessRules,
+					this.extraAttributes, this.isExternal);
 			newEntry.setSourceAttachmentPath(getSourceAttachmentPath());
 			newEntry.setSourceAttachmentRootPath(getSourceAttachmentRootPath());
 			return newEntry;
@@ -404,8 +389,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		return this;
 	}
 
-	private IAccessRule[] combine(IAccessRule[] referringRules,
-			IAccessRule[] rules, boolean combine) {
+	private IAccessRule[] combine(IAccessRule[] referringRules, IAccessRule[] rules, boolean combine) {
 		if (!combine)
 			return rules;
 		if (rules == null || rules.length == 0)
@@ -416,8 +400,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		int rulesLength = referringRulesLength + accessRulesLength;
 		IAccessRule[] result = new IAccessRule[rulesLength];
 		System.arraycopy(referringRules, 0, result, 0, referringRulesLength);
-		System.arraycopy(rules, 0, result, referringRulesLength,
-				accessRulesLength);
+		System.arraycopy(rules, 0, result, referringRulesLength, accessRulesLength);
 		return result;
 	}
 
@@ -437,23 +420,19 @@ public class BuildpathEntry implements IBuildpathEntry {
 		return result;
 	}
 
-	public static IAccessRule[] getAccessRules(IPath[] accessibleFiles,
-			IPath[] nonAccessibleFiles) {
-		int accessibleFilesLength = accessibleFiles == null ? 0
-				: accessibleFiles.length;
-		int nonAccessibleFilesLength = nonAccessibleFiles == null ? 0
-				: nonAccessibleFiles.length;
+	public static IAccessRule[] getAccessRules(IPath[] accessibleFiles, IPath[] nonAccessibleFiles) {
+		int accessibleFilesLength = accessibleFiles == null ? 0 : accessibleFiles.length;
+		int nonAccessibleFilesLength = nonAccessibleFiles == null ? 0 : nonAccessibleFiles.length;
 		int length = accessibleFilesLength + nonAccessibleFilesLength;
 		if (length == 0)
 			return null;
 		IAccessRule[] accessRules = new IAccessRule[length];
 		for (int i = 0; i < accessibleFilesLength; i++) {
-			accessRules[i] = DLTKCore.newAccessRule(accessibleFiles[i],
-					IAccessRule.K_ACCESSIBLE);
+			accessRules[i] = DLTKCore.newAccessRule(accessibleFiles[i], IAccessRule.K_ACCESSIBLE);
 		}
 		for (int i = 0; i < nonAccessibleFilesLength; i++) {
-			accessRules[accessibleFilesLength + i] = DLTKCore.newAccessRule(
-					nonAccessibleFiles[i], IAccessRule.K_NON_ACCESSIBLE);
+			accessRules[accessibleFilesLength + i] = DLTKCore.newAccessRule(nonAccessibleFiles[i],
+					IAccessRule.K_NON_ACCESSIBLE);
 		}
 		return accessRules;
 	}
@@ -463,7 +442,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append(getPath().toString());
 		buffer.append('[');
 		switch (getEntryKind()) {
@@ -529,8 +508,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 			buffer.append(this.combineAccessRules);
 			buffer.append(']');
 		}
-		if ((length = this.extraAttributes == null ? 0
-				: this.extraAttributes.length) > 0) {
+		if ((length = this.extraAttributes == null ? 0 : this.extraAttributes.length) > 0) {
 			buffer.append("[attributes:"); //$NON-NLS-1$
 			for (int i = 0; i < length; i++) {
 				buffer.append(this.extraAttributes[i]);
@@ -552,8 +530,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		return contentKind;
 	}
 
-	public static IBuildpathEntry elementDecode(Element element,
-			IScriptProject project, Map unknownElements) {
+	public static IBuildpathEntry elementDecode(Element element, IScriptProject project, Map unknownElements) {
 		IPath projectPath = project.getProject().getFullPath();
 		NamedNodeMap attributes = element.getAttributes();
 		NodeList children = element.getChildNodes();
@@ -563,16 +540,12 @@ public class BuildpathEntry implements IBuildpathEntry {
 		// ensure path is absolute
 		IPath path = new Path(pathAttr);
 		int kind = kindFromString(kindAttr);
-		if (kind != IBuildpathEntry.BPE_VARIABLE
-				&& kind != IBuildpathEntry.BPE_CONTAINER
-				&& !path.isAbsolute()) {
+		if (kind != IBuildpathEntry.BPE_VARIABLE && kind != IBuildpathEntry.BPE_CONTAINER && !path.isAbsolute()) {
 			path = projectPath.append(path);
 		}
 		// exported flag (optional)
-		boolean isExported = removeAttribute(TAG_EXPORTED, attributes)
-				.equals("true"); //$NON-NLS-1$
-		boolean isExternal = removeAttribute(TAG_EXTERNAL, attributes)
-				.equals("true"); //$NON-NLS-1$
+		boolean isExported = removeAttribute(TAG_EXPORTED, attributes).equals("true"); //$NON-NLS-1$
+		boolean isExternal = removeAttribute(TAG_EXTERNAL, attributes).equals("true"); //$NON-NLS-1$
 		// inclusion patterns (optional)
 		IPath[] inclusionPatterns = decodePatterns(attributes, TAG_INCLUDING);
 		if (inclusionPatterns == null)
@@ -582,17 +555,13 @@ public class BuildpathEntry implements IBuildpathEntry {
 		if (exclusionPatterns == null)
 			exclusionPatterns = EXCLUDE_NONE;
 		// access rules (optional)
-		NodeList attributeList = getChildAttributes(TAG_ACCESS_RULES, children,
-				foundChildren);
+		NodeList attributeList = getChildAttributes(TAG_ACCESS_RULES, children, foundChildren);
 		IAccessRule[] accessRules = decodeAccessRules(attributeList);
 		// combine access rules (optional)
-		boolean combineAccessRestrictions = !removeAttribute(
-				TAG_COMBINE_ACCESS_RULES, attributes).equals("false"); //$NON-NLS-1$
+		boolean combineAccessRestrictions = !removeAttribute(TAG_COMBINE_ACCESS_RULES, attributes).equals("false"); //$NON-NLS-1$
 		// extra attributes (optional)
-		attributeList = getChildAttributes(TAG_ATTRIBUTES, children,
-				foundChildren);
-		IBuildpathAttribute[] extraAttributes = decodeExtraAttributes(
-				attributeList);
+		attributeList = getChildAttributes(TAG_ATTRIBUTES, children, foundChildren);
+		IBuildpathAttribute[] extraAttributes = decodeExtraAttributes(attributeList);
 		String[] unknownAttributes = null;
 		ArrayList unknownChildren = null;
 		if (unknownElements != null) {
@@ -614,7 +583,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 						continue;
 					if (unknownChildren == null)
 						unknownChildren = new ArrayList();
-					StringBuffer buffer = new StringBuffer();
+					StringBuilder buffer = new StringBuilder();
 					decodeUnknownNode(node, buffer, project);
 					unknownChildren.add(buffer.toString());
 				}
@@ -624,65 +593,53 @@ public class BuildpathEntry implements IBuildpathEntry {
 		IBuildpathEntry entry = null;
 		switch (kind) {
 		case IBuildpathEntry.BPE_PROJECT:
-			entry = new BuildpathEntry(IProjectFragment.K_SOURCE,
-					IBuildpathEntry.BPE_PROJECT, path, isExported,
+			entry = new BuildpathEntry(IProjectFragment.K_SOURCE, IBuildpathEntry.BPE_PROJECT, path, isExported,
 					BuildpathEntry.INCLUDE_ALL, // inclusion patterns
 					BuildpathEntry.EXCLUDE_NONE, // exclusion patterns
-					accessRules, combineAccessRestrictions, extraAttributes,
-					false);
+					accessRules, combineAccessRestrictions, extraAttributes, false);
 			break;
 		case IBuildpathEntry.BPE_LIBRARY:
 			if (isExternal) {
 				IPath fullPath = Path.fromPortableString(pathAttr);
 				if (!EnvironmentPathUtils.isFull(fullPath)) {
-					String environmentId = EnvironmentManager
-							.getEnvironmentId(project.getProject());
+					String environmentId = EnvironmentManager.getEnvironmentId(project.getProject());
 					if (environmentId != null) {
-						path = EnvironmentPathUtils.getFullPath(environmentId,
-								path);
+						path = EnvironmentPathUtils.getFullPath(environmentId, path);
 					}
 				} else {
 					path = fullPath;
 				}
 			}
-			entry = DLTKCore.newLibraryEntry(path, accessRules, extraAttributes,
-					inclusionPatterns, exclusionPatterns, isExported,
-					isExternal);
+			entry = DLTKCore.newLibraryEntry(path, accessRules, extraAttributes, inclusionPatterns, exclusionPatterns,
+					isExported, isExternal);
 
 			break;
 		case IBuildpathEntry.BPE_SOURCE:
 			// entry = DLTKCore.newSourceEntry(path, inclusionPatterns,
 			// exclusionPatterns, extraAttributes);
 			String projSegment = path.segment(0);
-			if (projSegment != null
-					&& projSegment.equals(project.getElementName())) { // this
+			if (projSegment != null && projSegment.equals(project.getElementName())) { // this
 				// project
-				entry = DLTKCore.newSourceEntry(path, inclusionPatterns,
-						exclusionPatterns, extraAttributes);
+				entry = DLTKCore.newSourceEntry(path, inclusionPatterns, exclusionPatterns, extraAttributes);
 			} else {
 				if (path.segmentCount() == 1) {
 					// another project
-					entry = DLTKCore.newProjectEntry(path, accessRules,
-							combineAccessRestrictions, extraAttributes,
+					entry = DLTKCore.newProjectEntry(path, accessRules, combineAccessRestrictions, extraAttributes,
 							isExported);
 				} else {
 					// an invalid source folder
-					entry = DLTKCore.newSourceEntry(path, inclusionPatterns,
-							exclusionPatterns, extraAttributes);
+					entry = DLTKCore.newSourceEntry(path, inclusionPatterns, exclusionPatterns, extraAttributes);
 				}
 			}
 			break;
 		case IBuildpathEntry.BPE_VARIABLE:
-			entry = DLTKCore.newVariableEntry(path, accessRules,
-					extraAttributes, isExported);
+			entry = DLTKCore.newVariableEntry(path, accessRules, extraAttributes, isExported);
 			break;
 		case IBuildpathEntry.BPE_CONTAINER:
-			entry = DLTKCore.newContainerEntry(path, accessRules,
-					extraAttributes, isExported);
+			entry = DLTKCore.newContainerEntry(path, accessRules, extraAttributes, isExported);
 			break;
 		default:
-			throw new AssertionFailedException(
-					Messages.bind(Messages.buildpath_unknownKind, kindAttr));
+			throw new AssertionFailedException(Messages.bind(Messages.buildpath_unknownKind, kindAttr));
 		}
 
 		String sourcePath = removeAttribute(TAG_SOURCEPATH, attributes);
@@ -722,8 +679,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 			}
 		}
 		if (index != length)
-			System.arraycopy(result, 0, result = new IBuildpathAttribute[index],
-					0, index);
+			System.arraycopy(result, 0, result = new IBuildpathAttribute[index], 0, index);
 		return result;
 	}
 
@@ -755,13 +711,11 @@ public class BuildpathEntry implements IBuildpathEntry {
 				boolean ignoreIfBetter = "true".equals( //$NON-NLS-1$
 						elementAccessRule.getAttribute(TAG_IGNORE_IF_BETTER));
 				result[index++] = new BuildpathAccessRule(new Path(pattern),
-						ignoreIfBetter ? kind | IAccessRule.IGNORE_IF_BETTER
-								: kind);
+						ignoreIfBetter ? kind | IAccessRule.IGNORE_IF_BETTER : kind);
 			}
 		}
 		if (index != length)
-			System.arraycopy(result, 0, result = new IAccessRule[index], 0,
-					index);
+			System.arraycopy(result, 0, result = new IAccessRule[index], 0, index);
 		return result;
 	}
 
@@ -771,8 +725,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 	private static IPath[] decodePatterns(NamedNodeMap nodeMap, String tag) {
 		String sequence = removeAttribute(tag, nodeMap);
 		if (!sequence.equals("")) { //$NON-NLS-1$
-			char[][] patterns = CharOperation.splitOn('|',
-					sequence.toCharArray());
+			char[][] patterns = CharOperation.splitOn('|', sequence.toCharArray());
 			int patternCount;
 			if ((patternCount = patterns.length) > 0) {
 				IPath[] paths = new IPath[patternCount];
@@ -785,24 +738,21 @@ public class BuildpathEntry implements IBuildpathEntry {
 					paths[index++] = new Path(new String(pattern));
 				}
 				if (index < patternCount)
-					System.arraycopy(paths, 0, paths = new IPath[index], 0,
-							index);
+					System.arraycopy(paths, 0, paths = new IPath[index], 0, index);
 				return paths;
 			}
 		}
 		return null;
 	}
 
-	private static void decodeUnknownNode(Node node, StringBuffer buffer,
-			IScriptProject project) {
+	private static void decodeUnknownNode(Node node, StringBuilder buffer, IScriptProject project) {
 		ByteArrayOutputStream s = new ByteArrayOutputStream();
 		OutputStreamWriter writer;
 		try {
 			writer = new OutputStreamWriter(s, StandardCharsets.UTF_8); // $NON-NLS-1$
-			XMLWriter xmlWriter = new XMLWriter(writer, project,
-					false/*
-							 * don't print XML version
-							 */);
+			XMLWriter xmlWriter = new XMLWriter(writer, project, false/*
+																		 * don't print XML version
+																		 */);
 			decodeUnknownNode(node, xmlWriter, true/* insert new line */);
 			xmlWriter.flush();
 			xmlWriter.close();
@@ -812,45 +762,38 @@ public class BuildpathEntry implements IBuildpathEntry {
 		}
 	}
 
-	private static void decodeUnknownNode(Node node, XMLWriter xmlWriter,
-			boolean insertNewLine) {
+	private static void decodeUnknownNode(Node node, XMLWriter xmlWriter, boolean insertNewLine) {
 		switch (node.getNodeType()) {
 		case Node.ELEMENT_NODE:
 			NamedNodeMap attributes = node.getAttributes();
 			HashMap parameters = new HashMap();
-			for (int i = 0, length = attributes == null ? 0
-					: attributes.getLength(); i < length; i++) {
+			for (int i = 0, length = attributes == null ? 0 : attributes.getLength(); i < length; i++) {
 				Node attribute = attributes.item(i);
-				parameters.put(attribute.getNodeName(),
-						attribute.getNodeValue());
+				parameters.put(attribute.getNodeName(), attribute.getNodeValue());
 			}
 			NodeList children = node.getChildNodes();
 			int childrenLength = children.getLength();
 			String nodeName = node.getNodeName();
-			xmlWriter.printTag(nodeName, parameters,
-					false/* don't insert tab */, false/*
-														 * don't insert new line
-														 */,
+			xmlWriter.printTag(nodeName, parameters, false/* don't insert tab */, false/*
+																						 * don't insert new line
+																						 */,
 					childrenLength == 0/*
 										 * close tag if no children
 										 */);
 			if (childrenLength > 0) {
 				for (int i = 0; i < childrenLength; i++) {
-					decodeUnknownNode(children.item(i), xmlWriter,
-							false/*
-									 * don't insert new line
-									 */);
+					decodeUnknownNode(children.item(i), xmlWriter, false/*
+																		 * don't insert new line
+																		 */);
 				}
-				xmlWriter.endTag(nodeName, false/* don't insert tab */,
-						insertNewLine);
+				xmlWriter.endTag(nodeName, false/* don't insert tab */, insertNewLine);
 			}
 			break;
 		case Node.TEXT_NODE:
 			String data = ((Text) node).getData();
-			xmlWriter.printString(data, false/* don't insert tab */,
-					false/*
-							 * don't insert new line
-							 */);
+			xmlWriter.printString(data, false/* don't insert tab */, false/*
+																			 * don't insert new line
+																			 */);
 			break;
 		}
 	}
@@ -864,8 +807,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 			this.fullExclusionPatternChars = new char[length][];
 			IPath prefixPath = this.path.removeTrailingSeparator();
 			for (int i = 0; i < length; i++) {
-				this.fullExclusionPatternChars[i] = prefixPath
-						.append(this.exclusionPatterns[i]).toString()
+				this.fullExclusionPatternChars[i] = prefixPath.append(this.exclusionPatterns[i]).toString()
 						.toCharArray();
 			}
 		}
@@ -881,16 +823,14 @@ public class BuildpathEntry implements IBuildpathEntry {
 			this.fullInclusionPatternChars = new char[length][];
 			IPath prefixPath = this.path.removeTrailingSeparator();
 			for (int i = 0; i < length; i++) {
-				this.fullInclusionPatternChars[i] = prefixPath
-						.append(this.inclusionPatterns[i]).toString()
+				this.fullInclusionPatternChars[i] = prefixPath.append(this.inclusionPatterns[i]).toString()
 						.toCharArray();
 			}
 		}
 		return this.fullInclusionPatternChars;
 	}
 
-	public static NodeList getChildAttributes(String childName,
-			NodeList children, boolean[] foundChildren) {
+	public static NodeList getChildAttributes(String childName, NodeList children, boolean[] foundChildren) {
 		for (int i = 0, length = foundChildren.length; i < length; i++) {
 			Node node = children.item(i);
 			if (childName.equals(node.getNodeName())) {
@@ -901,8 +841,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		return null;
 	}
 
-	private static String removeAttribute(String nodeName,
-			NamedNodeMap nodeMap) {
+	private static String removeAttribute(String nodeName, NamedNodeMap nodeMap) {
 		Node node = removeNode(nodeName, nodeMap);
 		if (node == null)
 			return ""; // //$NON-NLS-1$
@@ -940,13 +879,12 @@ public class BuildpathEntry implements IBuildpathEntry {
 	/**
 	 * Returns the XML encoding of the class path.
 	 */
-	public void elementEncode(XMLWriter writer, IPath projectPath,
-			boolean indent, boolean newLine, Map unknownElements) {
+	public void elementEncode(XMLWriter writer, IPath projectPath, boolean indent, boolean newLine,
+			Map unknownElements) {
 		Map<String, String> parameters = new HashMap<>();
 		parameters.put(TAG_KIND, kindToString(this.entryKind));
 		IPath xmlPath = this.path;
-		if (this.entryKind != IBuildpathEntry.BPE_CONTAINER
-				&& this.entryKind != IBuildpathEntry.BPE_CONTAINER) {
+		if (this.entryKind != IBuildpathEntry.BPE_CONTAINER && this.entryKind != IBuildpathEntry.BPE_CONTAINER) {
 			// translate to project relative from absolute (unless a device
 			// path)
 			if (EnvironmentPathUtils.isFull(xmlPath)) {
@@ -971,12 +909,10 @@ public class BuildpathEntry implements IBuildpathEntry {
 			parameters.put(TAG_EXTERNAL, "true");//$NON-NLS-1$
 		}
 		if (this.sourceAttachmentPath != null) {
-			parameters.put(TAG_SOURCEPATH,
-					this.sourceAttachmentPath.toString());
+			parameters.put(TAG_SOURCEPATH, this.sourceAttachmentPath.toString());
 		}
 		if (this.sourceAttachmentRootPath != null) {
-			parameters.put(TAG_ROOTPATH,
-					this.sourceAttachmentRootPath.toString());
+			parameters.put(TAG_ROOTPATH, this.sourceAttachmentRootPath.toString());
 		}
 		encodePatterns(this.inclusionPatterns, TAG_INCLUDING, parameters);
 		encodePatterns(this.exclusionPatterns, TAG_EXCLUDING, parameters);
@@ -987,8 +923,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		UnknownXmlElements unknownXmlElements = unknownElements == null ? null
 				: (UnknownXmlElements) unknownElements.get(this.path);
 		String[] unknownAttributes;
-		if (unknownXmlElements != null
-				&& (unknownAttributes = unknownXmlElements.attributes) != null) {
+		if (unknownXmlElements != null && (unknownAttributes = unknownXmlElements.attributes) != null) {
 			for (int i = 0, length = unknownAttributes.length; i < length; i += 2) {
 				String tagName = unknownAttributes[i];
 				String tagValue = unknownAttributes[i + 1];
@@ -998,17 +933,12 @@ public class BuildpathEntry implements IBuildpathEntry {
 		boolean hasExtraAttributes = this.extraAttributes.length != 0;
 		boolean hasRestrictions = getAccessRuleSet() != null; // access rule
 		// set is null if no access rules
-		ArrayList unknownChildren = unknownXmlElements != null
-				? unknownXmlElements.children
-				: null;
+		ArrayList unknownChildren = unknownXmlElements != null ? unknownXmlElements.children : null;
 		boolean hasUnknownChildren = unknownChildren != null;
-		writer.printTag(TAG_BUILDPATHENTRY, parameters, indent, newLine,
-				!hasExtraAttributes && !hasRestrictions
-						&& !hasUnknownChildren/*
-												 * close tag if no extra
-												 * attributes , no restriction
-												 * and no unknown children
-												 */);
+		writer.printTag(TAG_BUILDPATHENTRY, parameters, indent, newLine, !hasExtraAttributes && !hasRestrictions
+				&& !hasUnknownChildren/*
+										 * close tag if no extra attributes , no restriction and no unknown children
+										 */);
 		if (hasExtraAttributes)
 			encodeExtraAttributes(writer, indent, newLine);
 		if (hasRestrictions)
@@ -1016,15 +946,12 @@ public class BuildpathEntry implements IBuildpathEntry {
 		if (hasUnknownChildren)
 			encodeUnknownChildren(writer, indent, newLine, unknownChildren);
 		if (hasUnknownChildren)
-			writer.endTag(TAG_BUILDPATHENTRY, indent,
-					true/* insert new line */);
+			writer.endTag(TAG_BUILDPATHENTRY, indent, true/* insert new line */);
 		if (hasExtraAttributes || hasRestrictions || hasUnknownChildren)
-			writer.endTag(TAG_BUILDPATHENTRY, indent,
-					true/* insert new line */);
+			writer.endTag(TAG_BUILDPATHENTRY, indent, true/* insert new line */);
 	}
 
-	void encodeExtraAttributes(XMLWriter writer, boolean indent,
-			boolean newLine) {
+	void encodeExtraAttributes(XMLWriter writer, boolean indent, boolean newLine) {
 		writer.startTag(TAG_ATTRIBUTES, indent);
 		for (int i = 0; i < this.extraAttributes.length; i++) {
 			IBuildpathAttribute attribute = this.extraAttributes[i];
@@ -1045,8 +972,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		writer.endTag(TAG_ACCESS_RULES, indent, true/* insert new line */);
 	}
 
-	private void encodeAccessRule(AccessRule accessRule, XMLWriter writer,
-			boolean indent, boolean newLine) {
+	private void encodeAccessRule(AccessRule accessRule, XMLWriter writer, boolean indent, boolean newLine) {
 		HashMap parameters = new HashMap();
 		parameters.put(TAG_PATTERN, new String(accessRule.pattern));
 		switch (accessRule.getProblemId()) {
@@ -1085,8 +1011,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		}
 	}
 
-	private void encodeUnknownChildren(XMLWriter writer, boolean indent,
-			boolean newLine, ArrayList unknownChildren) {
+	private void encodeUnknownChildren(XMLWriter writer, boolean indent, boolean newLine, ArrayList unknownChildren) {
 		for (int i = 0, length = unknownChildren.size(); i < length; i++) {
 			String child = (String) unknownChildren.get(i);
 			writer.printString(child, indent, false/* don't insert new line */);
@@ -1103,27 +1028,24 @@ public class BuildpathEntry implements IBuildpathEntry {
 	 * <li>Buildpath entries cannot coincidate or be nested in each other.
 	 * </ul>
 	 *
-	 * Note that the buildpath entries are not validated automatically. Only
-	 * bound variables or containers are considered in the checking process
-	 * (this allows to perform a consistency check on a buildpath which has
-	 * references to yet non existing projects, folders, ...).
+	 * Note that the buildpath entries are not validated automatically. Only bound
+	 * variables or containers are considered in the checking process (this allows
+	 * to perform a consistency check on a buildpath which has references to yet non
+	 * existing projects, folders, ...).
 	 * <p>
-	 * This validation is intended to anticipate buildpath issues prior to
-	 * assigning it to a project. In particular, it will automatically be
-	 * performed during the buildpath setting operation (if validation fails,
-	 * the buildpath setting will not complete).
+	 * This validation is intended to anticipate buildpath issues prior to assigning
+	 * it to a project. In particular, it will automatically be performed during the
+	 * buildpath setting operation (if validation fails, the buildpath setting will
+	 * not complete).
 	 * <p>
 	 *
-	 * @param scriptProject
-	 *            the given script project
-	 * @param rawBuildpath
-	 *            a given buildpath
-	 * @return a status object with code <code>ModelStatus.VERIFIED_OK</code> if
-	 *         the given buildpath are correct, otherwise a status object
-	 *         indicating what is wrong with the buildpath
+	 * @param scriptProject the given script project
+	 * @param rawBuildpath  a given buildpath
+	 * @return a status object with code <code>ModelStatus.VERIFIED_OK</code> if the
+	 *         given buildpath are correct, otherwise a status object indicating
+	 *         what is wrong with the buildpath
 	 */
-	public static IModelStatus validateBuildpath(IScriptProject scriptProject,
-			IBuildpathEntry[] rawBuildpath) {
+	public static IModelStatus validateBuildpath(IScriptProject scriptProject, IBuildpathEntry[] rawBuildpath) {
 		// TODO implement
 		IProject project = scriptProject.getProject();
 		IPath projectPath = project.getFullPath();
@@ -1136,8 +1058,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		for (int i = 0; i < rawBuildpath.length; ++i) {
 			final IBuildpathEntry entry = rawBuildpath[i];
 			if (entry.getEntryKind() == BPE_CONTAINER
-					&& BuiltinProjectFragment.INTERPRETER_CONTAINER
-							.equals(entry.getPath().segment(0))) {
+					&& BuiltinProjectFragment.INTERPRETER_CONTAINER.equals(entry.getPath().segment(0))) {
 				++interpreterCount;
 				if (interpreterCount > 1) {
 					return new ModelStatus(IModelStatusConstants.NAME_COLLISION,
@@ -1151,43 +1072,35 @@ public class BuildpathEntry implements IBuildpathEntry {
 			if (!paths.add(entryPath)) {
 				String entryPathMsg = projectName.equals(entryPath.segment(0))
 						? entryPath.removeFirstSegments(1).toString()
-						: EnvironmentPathUtils.getLocalPath(entryPath)
-								.makeRelative().toString();
-				return new ModelStatus(IModelStatusConstants.NAME_COLLISION,
-						Messages.bind(Messages.buildpath_duplicateEntryPath,
-								new String[] { entryPathMsg, projectName }));
+						: EnvironmentPathUtils.getLocalPath(entryPath).makeRelative().toString();
+				return new ModelStatus(IModelStatusConstants.NAME_COLLISION, Messages
+						.bind(Messages.buildpath_duplicateEntryPath, new String[] { entryPathMsg, projectName }));
 			}
 		}
 		// retrieve resolved buildpath
 		IBuildpathEntry[] buildpath;
 		try {
-			buildpath = ((ScriptProject) scriptProject).resolveBuildpath(
-					rawBuildpath, false/*
-										 * don't use previous session
-										 */,
+			buildpath = ((ScriptProject) scriptProject).resolveBuildpath(rawBuildpath,
 					false/*
-							 * don't resolve chained libraries
-							 */).resolvedClasspath;
+							 * don't use previous session
+							 */, false/*
+										 * don't resolve chained libraries
+										 */).resolvedClasspath;
 		} catch (ModelException e) {
 			return e.getModelStatus();
 		}
 		int length = buildpath.length;
 		// int sourceEntryCount = 0;
 		boolean disableExclusionPatterns = DLTKCore.DISABLED
-				.equals(scriptProject.getOption(
-						DLTKCore.CORE_ENABLE_BUILDPATH_EXCLUSION_PATTERNS,
-						true));
+				.equals(scriptProject.getOption(DLTKCore.CORE_ENABLE_BUILDPATH_EXCLUSION_PATTERNS, true));
 		for (int i = 0; i < length; i++) {
 			IBuildpathEntry resolvedEntry = buildpath[i];
-			if (disableExclusionPatterns && ((resolvedEntry
-					.getInclusionPatterns() != null
+			if (disableExclusionPatterns && ((resolvedEntry.getInclusionPatterns() != null
 					&& resolvedEntry.getInclusionPatterns().length > 0)
 					|| (resolvedEntry.getExclusionPatterns() != null
-							&& resolvedEntry
-									.getExclusionPatterns().length > 0))) {
-				return new ModelStatus(
-						IModelStatusConstants.DISABLED_BP_EXCLUSION_PATTERNS,
-						scriptProject, resolvedEntry.getPath());
+							&& resolvedEntry.getExclusionPatterns().length > 0))) {
+				return new ModelStatus(IModelStatusConstants.DISABLED_BP_EXCLUSION_PATTERNS, scriptProject,
+						resolvedEntry.getPath());
 			}
 		}
 		// check all entries
@@ -1198,12 +1111,9 @@ public class BuildpathEntry implements IBuildpathEntry {
 			IPath entryPath = entry.getPath();
 			int kind = entry.getEntryKind();
 			// Build some common strings for status message
-			boolean isProjectRelative = projectName
-					.equals(entryPath.segment(0));
-			String entryPathMsg = isProjectRelative
-					? entryPath.removeFirstSegments(1).toString()
-					: EnvironmentPathUtils.getLocalPath(entryPath)
-							.makeRelative().toString();
+			boolean isProjectRelative = projectName.equals(entryPath.segment(0));
+			String entryPathMsg = isProjectRelative ? entryPath.removeFirstSegments(1).toString()
+					: EnvironmentPathUtils.getLocalPath(entryPath).makeRelative().toString();
 			// boolean external = entry.isExternal();
 			// no further check if entry coincidates with project or output
 			// location
@@ -1211,117 +1121,67 @@ public class BuildpathEntry implements IBuildpathEntry {
 				// complain if self-referring project entry
 				if (kind == IBuildpathEntry.BPE_PROJECT) {
 					return new ModelStatus(IModelStatusConstants.INVALID_PATH,
-							Messages.bind(
-									Messages.buildpath_cannotReferToItself,
-									entryPath.makeRelative().toString()));
+							Messages.bind(Messages.buildpath_cannotReferToItself, entryPath.makeRelative().toString()));
 				}
 				// tolerate nesting output in src if src==prj
 				continue;
 			}
 			// allow nesting source entries in each other as long as the outer
 			// entry excludes the inner one
-			IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-					.getLanguageToolkit(scriptProject);
-			if (kind == IBuildpathEntry.BPE_SOURCE
-					|| (kind == IBuildpathEntry.BPE_LIBRARY
-							&& !org.eclipse.dltk.compiler.util.Util
-									.isArchiveFileName(toolkit,
-											entryPath.lastSegment()))) {
+			IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(scriptProject);
+			if (kind == IBuildpathEntry.BPE_SOURCE || (kind == IBuildpathEntry.BPE_LIBRARY
+					&& !org.eclipse.dltk.compiler.util.Util.isArchiveFileName(toolkit, entryPath.lastSegment()))) {
 				for (int j = 0; j < buildpath.length; j++) {
 					IBuildpathEntry otherEntry = buildpath[j];
 					if (otherEntry == null)
 						continue;
 					int otherKind = otherEntry.getEntryKind();
 					IPath otherPath = otherEntry.getPath();
-					if (entry != otherEntry
-							&& (otherKind == IBuildpathEntry.BPE_SOURCE
-									|| (otherKind == IBuildpathEntry.BPE_LIBRARY
-											&& !org.eclipse.dltk.compiler.util.Util
-													.isArchiveFileName(toolkit,
-															otherPath
-																	.lastSegment())))) {
+					if (entry != otherEntry && (otherKind == IBuildpathEntry.BPE_SOURCE
+							|| (otherKind == IBuildpathEntry.BPE_LIBRARY && !org.eclipse.dltk.compiler.util.Util
+									.isArchiveFileName(toolkit, otherPath.lastSegment())))) {
 						char[][] inclusionPatterns, exclusionPatterns;
-						if (otherPath.isPrefixOf(entryPath)
-								&& !otherPath.equals(entryPath)
+						if (otherPath.isPrefixOf(entryPath) && !otherPath.equals(entryPath)
 								&& !Util.isExcluded(entryPath.append("*"), //$NON-NLS-1$
-										inclusionPatterns = ((BuildpathEntry) otherEntry)
-												.fullInclusionPatternChars(),
-										exclusionPatterns = ((BuildpathEntry) otherEntry)
-												.fullExclusionPatternChars(),
+										inclusionPatterns = ((BuildpathEntry) otherEntry).fullInclusionPatternChars(),
+										exclusionPatterns = ((BuildpathEntry) otherEntry).fullExclusionPatternChars(),
 										false)) {
-							String exclusionPattern = entryPath
-									.removeFirstSegments(
-											otherPath.segmentCount())
+							String exclusionPattern = entryPath.removeFirstSegments(otherPath.segmentCount())
 									.segment(0);
-							if (Util.isExcluded(entryPath, inclusionPatterns,
-									exclusionPatterns, false)) {
-								return new ModelStatus(
-										IModelStatusConstants.INVALID_BUILDPATH,
-										Messages.bind(
-												Messages.buildpath_mustEndWithSlash,
-												new String[] { exclusionPattern,
-														EnvironmentPathUtils
-																.getLocalPath(
-																		entryPath)
-																.makeRelative()
-																.toString() }));
+							if (Util.isExcluded(entryPath, inclusionPatterns, exclusionPatterns, false)) {
+								return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH,
+										Messages.bind(Messages.buildpath_mustEndWithSlash,
+												new String[] { exclusionPattern, EnvironmentPathUtils
+														.getLocalPath(entryPath).makeRelative().toString() }));
 							} else {
 								if (otherKind == IBuildpathEntry.BPE_SOURCE) {
 									exclusionPattern += '/';
 									if (!disableExclusionPatterns) {
-										return new ModelStatus(
-												IModelStatusConstants.INVALID_BUILDPATH,
-												Messages.bind(
-														Messages.buildpath_cannotNestEntryInEntry,
-														new String[] {
-																EnvironmentPathUtils
-																		.getLocalPath(
-																				entryPath)
-																		.makeRelative()
-																		.toString(),
-																EnvironmentPathUtils
-																		.getLocalPath(
-																				otherEntry
-																						.getPath())
-																		.makeRelative()
-																		.toString(),
-																exclusionPattern }));
+										return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH,
+												Messages.bind(Messages.buildpath_cannotNestEntryInEntry, new String[] {
+														EnvironmentPathUtils.getLocalPath(entryPath).makeRelative()
+																.toString(),
+														EnvironmentPathUtils.getLocalPath(otherEntry.getPath())
+																.makeRelative().toString(),
+														exclusionPattern }));
 									} else {
-										return new ModelStatus(
-												IModelStatusConstants.INVALID_BUILDPATH,
-												Messages.bind(
-														Messages.buildpath_cannotNestEntryInEntryNoExclusion,
-														new String[] {
-																EnvironmentPathUtils
-																		.getLocalPath(
-																				entryPath)
-																		.makeRelative()
-																		.toString(),
-																EnvironmentPathUtils
-																		.getLocalPath(
-																				otherEntry
-																						.getPath())
-																		.makeRelative()
-																		.toString(),
-																exclusionPattern }));
+										return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH, Messages.bind(
+												Messages.buildpath_cannotNestEntryInEntryNoExclusion,
+												new String[] {
+														EnvironmentPathUtils.getLocalPath(entryPath).makeRelative()
+																.toString(),
+														EnvironmentPathUtils.getLocalPath(otherEntry.getPath())
+																.makeRelative().toString(),
+														exclusionPattern }));
 									}
 								} else {
-									return new ModelStatus(
-											IModelStatusConstants.INVALID_BUILDPATH,
-											Messages.bind(
-													Messages.buildpath_cannotNestEntryInLibrary,
+									return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH,
+											Messages.bind(Messages.buildpath_cannotNestEntryInLibrary,
 													new String[] {
-															EnvironmentPathUtils
-																	.getLocalPath(
-																			entryPath)
-																	.makeRelative()
+															EnvironmentPathUtils.getLocalPath(entryPath).makeRelative()
 																	.toString(),
-															EnvironmentPathUtils
-																	.getLocalPath(
-																			otherEntry
-																					.getPath())
-																	.makeRelative()
-																	.toString() }));
+															EnvironmentPathUtils.getLocalPath(otherEntry.getPath())
+																	.makeRelative().toString() }));
 								}
 							}
 						}
@@ -1333,65 +1193,52 @@ public class BuildpathEntry implements IBuildpathEntry {
 	}
 
 	/**
-	 * Returns a model status describing the problem related to this buildpath
-	 * entry if any, a status object with code <code>IStatus.OK</code> if the
-	 * entry is fine (that is, if the given buildpath entry denotes a valid
-	 * element to be referenced onto a buildpath).
+	 * Returns a model status describing the problem related to this buildpath entry
+	 * if any, a status object with code <code>IStatus.OK</code> if the entry is
+	 * fine (that is, if the given buildpath entry denotes a valid element to be
+	 * referenced onto a buildpath).
 	 *
-	 * @param project
-	 *            the given script project
-	 * @param entry
-	 *            the given buildpath entry
-	 * @param checkSourceAttachment
-	 *            a flag to determine if source attachement should be checked
-	 * @param recurseInContainers
-	 *            flag indicating whether validation should be applied to
-	 *            container entries recursively
-	 * @return a model status describing the problem related to this buildpath
-	 *         entry if any, a status object with code <code>IStatus.OK</code>
-	 *         if the entry is fine
+	 * @param project               the given script project
+	 * @param entry                 the given buildpath entry
+	 * @param checkSourceAttachment a flag to determine if source attachement should
+	 *                              be checked
+	 * @param recurseInContainers   flag indicating whether validation should be
+	 *                              applied to container entries recursively
+	 * @return a model status describing the problem related to this buildpath entry
+	 *         if any, a status object with code <code>IStatus.OK</code> if the
+	 *         entry is fine
 	 */
-	public static IModelStatus validateBuildpathEntry(IScriptProject project,
-			IBuildpathEntry entry, boolean recurseInContainers) {
+	public static IModelStatus validateBuildpathEntry(IScriptProject project, IBuildpathEntry entry,
+			boolean recurseInContainers) {
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		IPath path = entry.getPath();
 		// Build some common strings for status message
 		String projectName = project.getElementName();
 		boolean pathStartsWithProject = projectName.equals(path.segment(0));
-		String entryPathMsg = pathStartsWithProject
-				? path.removeFirstSegments(1).makeRelative().toString()
+		String entryPathMsg = pathStartsWithProject ? path.removeFirstSegments(1).makeRelative().toString()
 				: EnvironmentPathUtils.getLocalPath(path).toString();
 		switch (entry.getEntryKind()) {
 		// container entry check
 		case IBuildpathEntry.BPE_CONTAINER:
 			if (path != null && path.segmentCount() >= 1) {
 				try {
-					IBuildpathContainer container = ModelManager
-							.getModelManager()
-							.getBuildpathContainer(path, project);
+					IBuildpathContainer container = ModelManager.getModelManager().getBuildpathContainer(path, project);
 					// container retrieval is performing validation check on
 					// container entry kinds.
 					if (container == null) {
-						return new ModelStatus(
-								IModelStatusConstants.BP_CONTAINER_PATH_UNBOUND,
-								project, path);
+						return new ModelStatus(IModelStatusConstants.BP_CONTAINER_PATH_UNBOUND, project, path);
 					} else if (container == ModelManager.CONTAINER_INITIALIZATION_IN_PROGRESS) {
 						// Validate extra attributes
-						IBuildpathAttribute[] extraAttributes = entry
-								.getExtraAttributes();
+						IBuildpathAttribute[] extraAttributes = entry.getExtraAttributes();
 						if (extraAttributes != null) {
 							int length = extraAttributes.length;
 							HashSet set = new HashSet(length);
 							for (int i = 0; i < length; i++) {
 								String attName = extraAttributes[i].getName();
 								if (!set.add(attName)) {
-									return new ModelStatus(
-											IModelStatusConstants.NAME_COLLISION,
-											Messages.bind(
-													Messages.buildpath_duplicateEntryExtraAttribute,
-													new String[] { attName,
-															entryPathMsg,
-															projectName }));
+									return new ModelStatus(IModelStatusConstants.NAME_COLLISION,
+											Messages.bind(Messages.buildpath_duplicateEntryExtraAttribute,
+													new String[] { attName, entryPathMsg, projectName }));
 								}
 							}
 						}
@@ -1399,34 +1246,27 @@ public class BuildpathEntry implements IBuildpathEntry {
 						// progress (case of cp initialization batching)
 						return ModelStatus.VERIFIED_OK;
 					} else if (container instanceof IBuildpathContainerExtension2) {
-						final IModelStatus status = ((IBuildpathContainerExtension2) container)
-								.validate();
+						final IModelStatus status = ((IBuildpathContainerExtension2) container).validate();
 						if (status != null && !status.isOK()) {
 							return status;
 						}
 					}
-					IBuildpathEntry[] containerEntries = container
-							.getBuildpathEntries();
+					IBuildpathEntry[] containerEntries = container.getBuildpathEntries();
 					if (containerEntries != null) {
 						for (int i = 0, length = containerEntries.length; i < length; i++) {
 							IBuildpathEntry containerEntry = containerEntries[i];
-							int kind = containerEntry == null ? 0
-									: containerEntry.getEntryKind();
-							if (containerEntry == null
-									|| kind == IBuildpathEntry.BPE_SOURCE
+							int kind = containerEntry == null ? 0 : containerEntry.getEntryKind();
+							if (containerEntry == null || kind == IBuildpathEntry.BPE_SOURCE
 									|| kind == IBuildpathEntry.BPE_CONTAINER) {
 								// String description =
 								// container.getDescription(project);
 								// if (description == null)
 								// description = path.makeRelative()
 								// .toString();
-								return new ModelStatus(
-										IModelStatusConstants.INVALID_BP_CONTAINER_ENTRY,
-										project, path);
+								return new ModelStatus(IModelStatusConstants.INVALID_BP_CONTAINER_ENTRY, project, path);
 							}
 							if (recurseInContainers) {
-								IModelStatus containerEntryStatus = validateBuildpathEntry(
-										project, containerEntry,
+								IModelStatus containerEntryStatus = validateBuildpathEntry(project, containerEntry,
 										recurseInContainers);
 								if (!containerEntryStatus.isOK()) {
 									return containerEntryStatus;
@@ -1438,9 +1278,8 @@ public class BuildpathEntry implements IBuildpathEntry {
 					return new ModelStatus(e);
 				}
 			} else {
-				return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH,
-						Messages.bind(Messages.buildpath_illegalContainerPath,
-								new String[] { entryPathMsg, projectName }));
+				return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH, Messages
+						.bind(Messages.buildpath_illegalContainerPath, new String[] { entryPathMsg, projectName }));
 			}
 			break;
 		// variable entry check
@@ -1451,13 +1290,10 @@ public class BuildpathEntry implements IBuildpathEntry {
 				} catch (AssertionFailedException e) {
 					// Catch the assertion failure and throw java model
 					// exception instead
-					return new ModelStatus(IModelStatusConstants.INVALID_PATH,
-							e.getMessage());
+					return new ModelStatus(IModelStatusConstants.INVALID_PATH, e.getMessage());
 				}
 				if (entry == null) {
-					return new ModelStatus(
-							IModelStatusConstants.BP_VARIABLE_PATH_UNBOUND,
-							project, path);
+					return new ModelStatus(IModelStatusConstants.BP_VARIABLE_PATH_UNBOUND, project, path);
 				}
 
 				// get validation status
@@ -1466,16 +1302,13 @@ public class BuildpathEntry implements IBuildpathEntry {
 				if (!status.isOK())
 					return status;
 			} else {
-				return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH,
-						Messages.bind(Messages.buildpath_illegalVariablePath,
-								new String[] { entryPathMsg, projectName }));
+				return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH, Messages
+						.bind(Messages.buildpath_illegalVariablePath, new String[] { entryPathMsg, projectName }));
 			}
 			break;
 		// library entry check
 		case IBuildpathEntry.BPE_LIBRARY:
-			if (path.segmentCount() >= 1
-					&& path.segment(0)
-							.startsWith(IBuildpathEntry.BUILDPATH_SPECIAL)
+			if (path.segmentCount() >= 1 && path.segment(0).startsWith(IBuildpathEntry.BUILDPATH_SPECIAL)
 					&& !path.isAbsolute()) {
 				break;
 			}
@@ -1494,90 +1327,58 @@ public class BuildpathEntry implements IBuildpathEntry {
 					} else if (target instanceof IFileHandle) {
 						IFileHandle file = (IFileHandle) target;
 						if (!file.exists()) {
-							return new ModelStatus(
-									IModelStatusConstants.INVALID_BUILDPATH,
-									Messages.bind(
-											Messages.buildpath_illegalLibraryArchive,
-											new String[] {
-													EnvironmentPathUtils
-															.getLocalPath(path)
-															.toString(),
-													projectName }));
+							return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH, Messages.bind(
+									Messages.buildpath_illegalLibraryArchive,
+									new String[] { EnvironmentPathUtils.getLocalPath(path).toString(), projectName }));
 						}
 					}
 				} else {
-					IFileHandle file = EnvironmentPathUtils
-							.getFile(entry.getPath());
+					IFileHandle file = EnvironmentPathUtils.getFile(entry.getPath());
 					if (file == null || !file.exists()) {
-						return new ModelStatus(
-								IModelStatusConstants.INVALID_BUILDPATH,
-								Messages.bind(
-										Messages.buildpath_illegalExternalFolder,
-										new String[] { EnvironmentPathUtils
-												.getLocalPath(path).toString(),
-												projectName }));
+						return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH, Messages.bind(
+								Messages.buildpath_illegalExternalFolder,
+								new String[] { EnvironmentPathUtils.getLocalPath(path).toString(), projectName }));
 					}
 				}
 			} else {
-				return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH,
-						Messages.bind(Messages.buildpath_illegalLibraryPath,
-								new String[] { entryPathMsg, projectName }));
+				return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH, Messages
+						.bind(Messages.buildpath_illegalLibraryPath, new String[] { entryPathMsg, projectName }));
 			}
 			break;
 		// project entry check
 		case IBuildpathEntry.BPE_PROJECT:
 			if (path != null && path.isAbsolute() && path.segmentCount() == 1) {
-				IProject prereqProjectRsc = workspaceRoot
-						.getProject(path.segment(0));
-				if (!prereqProjectRsc.exists() || !DLTKLanguageManager
-						.hasScriptNature(prereqProjectRsc)) {
-					return new ModelStatus(
-							IModelStatusConstants.INVALID_BUILDPATH,
-							Messages.bind(Messages.buildpath_unboundProject,
-									new String[] { path.segment(0),
-											projectName }));
+				IProject prereqProjectRsc = workspaceRoot.getProject(path.segment(0));
+				if (!prereqProjectRsc.exists() || !DLTKLanguageManager.hasScriptNature(prereqProjectRsc)) {
+					return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH, Messages
+							.bind(Messages.buildpath_unboundProject, new String[] { path.segment(0), projectName }));
 				}
 				if (!prereqProjectRsc.isOpen()) {
-					return new ModelStatus(
-							IModelStatusConstants.INVALID_BUILDPATH,
-							Messages.bind(Messages.buildpath_closedProject,
-									new String[] { path.segment(0) }));
+					return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH,
+							Messages.bind(Messages.buildpath_closedProject, new String[] { path.segment(0) }));
 				}
 			} else {
-				return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH,
-						Messages.bind(Messages.buildpath_illegalProjectPath,
-								new String[] { path.toString(), projectName }));
+				return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH, Messages
+						.bind(Messages.buildpath_illegalProjectPath, new String[] { path.toString(), projectName }));
 			}
 			break;
 		// project source folder
 		case IBuildpathEntry.BPE_SOURCE:
-			if (((entry.getInclusionPatterns() != null
-					&& entry.getInclusionPatterns().length > 0)
-					|| (entry.getExclusionPatterns() != null
-							&& entry.getExclusionPatterns().length > 0))
-					&& DLTKCore.DISABLED.equals(project.getOption(
-							DLTKCore.CORE_ENABLE_BUILDPATH_EXCLUSION_PATTERNS,
-							true))) {
-				return new ModelStatus(
-						IModelStatusConstants.DISABLED_BP_EXCLUSION_PATTERNS,
-						project, path);
+			if (((entry.getInclusionPatterns() != null && entry.getInclusionPatterns().length > 0)
+					|| (entry.getExclusionPatterns() != null && entry.getExclusionPatterns().length > 0))
+					&& DLTKCore.DISABLED
+							.equals(project.getOption(DLTKCore.CORE_ENABLE_BUILDPATH_EXCLUSION_PATTERNS, true))) {
+				return new ModelStatus(IModelStatusConstants.DISABLED_BP_EXCLUSION_PATTERNS, project, path);
 			}
 			if (path != null && path.isAbsolute() && !path.isEmpty()) {
 				IPath projectPath = project.getProject().getFullPath();
-				if (!projectPath.isPrefixOf(path)
-						|| Model.getTarget(workspaceRoot, path, true) == null) {
-					return new ModelStatus(
-							IModelStatusConstants.INVALID_BUILDPATH,
-							Messages.bind(
-									Messages.buildpath_unboundSourceFolder,
-									new String[] { entryPathMsg,
-											projectName }));
+				if (!projectPath.isPrefixOf(path) || Model.getTarget(workspaceRoot, path, true) == null) {
+					return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH, Messages
+							.bind(Messages.buildpath_unboundSourceFolder, new String[] { entryPathMsg, projectName }));
 				}
 			} else {
-				return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH,
-						Messages.bind(
-								Messages.buildpath_illegalSourceFolderPath,
-								new String[] { entryPathMsg, projectName }));
+				return new ModelStatus(IModelStatusConstants.INVALID_BUILDPATH, Messages
+						.bind(Messages.buildpath_illegalSourceFolderPath, new String[] { entryPathMsg, projectName }));
 			}
 			break;
 		}
@@ -1590,10 +1391,8 @@ public class BuildpathEntry implements IBuildpathEntry {
 				String attName = extraAttributes[i].getName();
 				if (!set.add(attName)) {
 					return new ModelStatus(IModelStatusConstants.NAME_COLLISION,
-							Messages.bind(
-									Messages.buildpath_duplicateEntryExtraAttribute,
-									new String[] { attName, entryPathMsg,
-											projectName }));
+							Messages.bind(Messages.buildpath_duplicateEntryExtraAttribute,
+									new String[] { attName, entryPathMsg, projectName }));
 				}
 			}
 		}
@@ -1608,10 +1407,9 @@ public class BuildpathEntry implements IBuildpathEntry {
 	/**
 	 * Encode some patterns into XML parameter tag
 	 */
-	private static void encodePatterns(IPath[] patterns, String tag,
-			Map parameters) {
+	private static void encodePatterns(IPath[] patterns, String tag, Map parameters) {
 		if (patterns != null && patterns.length > 0) {
-			StringBuffer rule = new StringBuffer(10);
+			StringBuilder rule = new StringBuilder(10);
 			for (int i = 0, max = patterns.length; i < max; i++) {
 				if (i > 0)
 					rule.append('|');
@@ -1640,11 +1438,9 @@ public class BuildpathEntry implements IBuildpathEntry {
 				return false;
 			if (!this.path.equals(otherEntry.getPath()))
 				return false;
-			if (!equalPatterns(this.inclusionPatterns,
-					otherEntry.getInclusionPatterns()))
+			if (!equalPatterns(this.inclusionPatterns, otherEntry.getInclusionPatterns()))
 				return false;
-			if (!equalPatterns(this.exclusionPatterns,
-					otherEntry.getExclusionPatterns()))
+			if (!equalPatterns(this.exclusionPatterns, otherEntry.getExclusionPatterns()))
 				return false;
 
 			AccessRuleSet otherRuleSet = otherEntry.getAccessRuleSet();
@@ -1655,8 +1451,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 				return false;
 			if (this.combineAccessRules != otherEntry.combineAccessRules())
 				return false;
-			if (!equalAttributes(this.extraAttributes,
-					otherEntry.getExtraAttributes()))
+			if (!equalAttributes(this.extraAttributes, otherEntry.getExtraAttributes()))
 				return false;
 			return true;
 		} else {
@@ -1664,8 +1459,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		}
 	}
 
-	private static boolean equalAttributes(
-			IBuildpathAttribute[] firstAttributes,
+	private static boolean equalAttributes(IBuildpathAttribute[] firstAttributes,
 			IBuildpathAttribute[] secondAttributes) {
 		if (firstAttributes != secondAttributes) {
 			if (firstAttributes == null)
@@ -1681,8 +1475,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 		return true;
 	}
 
-	private static boolean equalPatterns(IPath[] firstPatterns,
-			IPath[] secondPatterns) {
+	private static boolean equalPatterns(IPath[] firstPatterns, IPath[] secondPatterns) {
 		if (firstPatterns != secondPatterns) {
 			if (firstPatterns == null)
 				return false;
@@ -1692,8 +1485,7 @@ public class BuildpathEntry implements IBuildpathEntry {
 			for (int i = 0; i < length; i++) {
 				// compare toStrings instead of IPaths
 				// since IPath.equals is specified to ignore trailing separators
-				if (!firstPatterns[i].toString()
-						.equals(secondPatterns[i].toString()))
+				if (!firstPatterns[i].toString().equals(secondPatterns[i].toString()))
 					return false;
 			}
 		}

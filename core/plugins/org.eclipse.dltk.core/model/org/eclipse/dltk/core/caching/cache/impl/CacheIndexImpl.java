@@ -27,12 +27,12 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.impl.CacheIndexImpl#getLastIndex <em>Last Index</em>}</li>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.impl.CacheIndexImpl#getEntries <em>Entries</em>}</li>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.impl.CacheIndexImpl#getEnvironment <em>Environment</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -263,7 +263,7 @@ public class CacheIndexImpl extends MinimalEObjectImpl implements CacheIndex {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (lastIndex: ");
 		result.append(lastIndex);
 		result.append(", environment: ");

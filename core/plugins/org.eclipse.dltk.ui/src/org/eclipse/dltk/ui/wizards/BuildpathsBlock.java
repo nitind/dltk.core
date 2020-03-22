@@ -335,7 +335,7 @@ public class BuildpathsBlock {
 	}
 
 	private String getEncodedSettings() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		int nElements = fBuildPathList.getSize();
 		buf.append('[').append(nElements).append(']');
 		for (int i = 0; i < nElements; i++) {

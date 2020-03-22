@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -24,8 +24,7 @@ public class MixinSourceElementRequestor implements ISourceElementRequestor {
 	private boolean signature = false;
 	private ISourceModule module;
 
-	public MixinSourceElementRequestor(IMixinRequestor requestor,
-			boolean signature, ISourceModule module) {
+	public MixinSourceElementRequestor(IMixinRequestor requestor, boolean signature, ISourceModule module) {
 		this.requestor = requestor;
 		this.signature = signature;
 		this.module = module;
@@ -77,7 +76,7 @@ public class MixinSourceElementRequestor implements ISourceElementRequestor {
 	}
 
 	protected String getKey() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < path.size(); ++i) {
 			buffer.append(path.get(i));
 			if (i != path.size() - 1) {
@@ -98,16 +97,14 @@ public class MixinSourceElementRequestor implements ISourceElementRequestor {
 	 * @since 2.0
 	 */
 	@Override
-	public void acceptMethodReference(String methodName, int argCount,
-			int sourcePosition, int sourceEndPosition) {
+	public void acceptMethodReference(String methodName, int argCount, int sourcePosition, int sourceEndPosition) {
 	}
 
 	/**
 	 * @since 2.0
 	 */
 	@Override
-	public void acceptPackage(int declarationStart, int declarationEnd,
-			String name) {
+	public void acceptPackage(int declarationStart, int declarationEnd, String name) {
 	}
 
 	@Override

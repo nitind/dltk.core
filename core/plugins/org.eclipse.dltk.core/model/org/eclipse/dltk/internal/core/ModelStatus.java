@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -23,24 +23,22 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.dltk.internal.core.util.Messages;
 
-public class ModelStatus extends Status implements IModelStatus,
-		IModelStatusConstants {
+public class ModelStatus extends Status implements IModelStatus, IModelStatusConstants {
 
 	/**
-	 * The elements related to the failure, or <code>null</code> if no elements
-	 * are involved.
+	 * The elements related to the failure, or <code>null</code> if no elements are
+	 * involved.
 	 */
 	protected IModelElement[] elements = ScriptModelUtil.NO_ELEMENTS;
 
 	/**
-	 * The path related to the failure, or <code>null</code> if no path is
-	 * involved.
+	 * The path related to the failure, or <code>null</code> if no path is involved.
 	 */
 	protected IPath path;
 
 	/**
-	 * The <code>String</code> related to the failure, or <code>null</code> if
-	 * no <code>String</code> is involved.
+	 * The <code>String</code> related to the failure, or <code>null</code> if no
+	 * <code>String</code> is involved.
 	 */
 	protected String string;
 
@@ -70,8 +68,7 @@ public class ModelStatus extends Status implements IModelStatus,
 	 * Constructs an script model status with no corresponding elements.
 	 */
 	public ModelStatus(CoreException coreException) {
-		super(ERROR, DLTKCore.PLUGIN_ID, CORE_EXCEPTION,
-				"ModelStatus", coreException); //$NON-NLS-1$
+		super(ERROR, DLTKCore.PLUGIN_ID, CORE_EXCEPTION, "ModelStatus", coreException); //$NON-NLS-1$
 		elements = ModelElement.NO_ELEMENTS;
 	}
 
@@ -117,8 +114,8 @@ public class ModelStatus extends Status implements IModelStatus,
 	}
 
 	/**
-	 * Constructs an script model status with the given corresponding element
-	 * and path
+	 * Constructs an script model status with the given corresponding element and
+	 * path
 	 */
 	public ModelStatus(int code, IModelElement element, IPath path) {
 		this(code, new IModelElement[] { element });
@@ -126,8 +123,8 @@ public class ModelStatus extends Status implements IModelStatus,
 	}
 
 	/**
-	 * Constructs an script model status with the given corresponding element
-	 * and string
+	 * Constructs an script model status with the given corresponding element and
+	 * string
 	 */
 	public ModelStatus(int code, IModelElement element, String string) {
 		this(code, new IModelElement[] { element });
@@ -137,8 +134,7 @@ public class ModelStatus extends Status implements IModelStatus,
 	@Override
 	public boolean isDoesNotExist() {
 		int code = getCode();
-		return code == ELEMENT_DOES_NOT_EXIST
-				|| code == ELEMENT_NOT_ON_BUILDPATH;
+		return code == ELEMENT_DOES_NOT_EXIST || code == ELEMENT_NOT_ON_BUILDPATH;
 	}
 
 	@Override
@@ -147,15 +143,14 @@ public class ModelStatus extends Status implements IModelStatus,
 	}
 
 	/**
-	 * Returns a printable representation of this exception for debugging
-	 * purposes.
+	 * Returns a printable representation of this exception for debugging purposes.
 	 */
 	@Override
 	public String toString() {
 		if (this == VERIFIED_OK) {
 			return "ModelStatus[OK]"; //$NON-NLS-1$
 		}
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append("Model Status ["); //$NON-NLS-1$
 		buffer.append(getMessage());
 		buffer.append("]"); //$NON-NLS-1$
@@ -174,8 +169,7 @@ public class ModelStatus extends Status implements IModelStatus,
 				return Messages.status_coreException;
 
 			case DEVICE_PATH:
-				return Messages.bind(Messages.status_cannotUseDeviceOnPath,
-						getPath().toString());
+				return Messages.bind(Messages.status_cannotUseDeviceOnPath, getPath().toString());
 
 			case ELEMENT_DOES_NOT_EXIST:
 				return Messages.bind(Messages.element_doesNotExist,
@@ -196,14 +190,12 @@ public class ModelStatus extends Status implements IModelStatus,
 						((ModelElement) elements[0]).toStringWithAncestors());
 
 			case INVALID_ELEMENT_TYPES:
-				StringBuffer buff = new StringBuffer(
-						Messages.operation_notSupported);
+				StringBuilder buff = new StringBuilder(Messages.operation_notSupported);
 				for (int i = 0; i < elements.length; i++) {
 					if (i > 0) {
 						buff.append(", "); //$NON-NLS-1$
 					}
-					buff.append(((ModelElement) elements[i])
-							.toStringWithAncestors());
+					buff.append(((ModelElement) elements[i]).toStringWithAncestors());
 				}
 				return buff.toString();
 
@@ -217,11 +209,9 @@ public class ModelStatus extends Status implements IModelStatus,
 				if (string != null) {
 					return string;
 				} else {
-					return Messages
-							.bind(
-									Messages.status_invalidPath,
-									new String[] { getPath() == null ? "null" : getPath().toString() } //$NON-NLS-1$
-							);
+					return Messages.bind(Messages.status_invalidPath,
+							new String[] { getPath() == null ? "null" : getPath().toString() } //$NON-NLS-1$
+					);
 				}
 
 			case INVALID_PROJECT:
@@ -231,17 +221,14 @@ public class ModelStatus extends Status implements IModelStatus,
 				return Messages.bind(Messages.status_invalidResource, string);
 
 			case INVALID_RESOURCE_TYPE:
-				return Messages.bind(Messages.status_invalidResourceType,
-						string);
+				return Messages.bind(Messages.status_invalidResourceType, string);
 
 			case INVALID_SIBLING:
 				if (string != null) {
-					return Messages
-							.bind(Messages.status_invalidSibling, string);
+					return Messages.bind(Messages.status_invalidSibling, string);
 				} else {
 					return Messages.bind(Messages.status_invalidSibling,
-							((ModelElement) elements[0])
-									.toStringWithAncestors());
+							((ModelElement) elements[0]).toStringWithAncestors());
 				}
 
 			case IO_EXCEPTION:
@@ -274,10 +261,7 @@ public class ModelStatus extends Status implements IModelStatus,
 
 			case PATH_OUTSIDE_PROJECT:
 				return Messages.bind(Messages.operation_pathOutsideProject,
-						new String[] {
-								string,
-								((ModelElement) elements[0])
-										.toStringWithAncestors() });
+						new String[] { string, ((ModelElement) elements[0]).toStringWithAncestors() });
 
 			case READ_ONLY:
 				IModelElement element = elements[0];
@@ -286,8 +270,7 @@ public class ModelStatus extends Status implements IModelStatus,
 				return Messages.bind(Messages.status_readOnly, name);
 
 			case RELATIVE_PATH:
-				return Messages.bind(Messages.operation_needAbsolutePath,
-						getPath().toString());
+				return Messages.bind(Messages.operation_needAbsolutePath, getPath().toString());
 
 			case TARGET_EXCEPTION:
 				return Messages.status_targetException;
@@ -296,8 +279,7 @@ public class ModelStatus extends Status implements IModelStatus,
 				return Messages.status_updateConflict;
 
 			case NO_LOCAL_CONTENTS:
-				return Messages.bind(Messages.status_noLocalContents, getPath()
-						.toString());
+				return Messages.bind(Messages.status_noLocalContents, getPath().toString());
 
 			case BP_CONTAINER_PATH_UNBOUND:
 				ScriptProject scriptProject = (ScriptProject) elements[0];
@@ -305,43 +287,36 @@ public class ModelStatus extends Status implements IModelStatus,
 						.getBuildpathContainerInitializer(this.path.segment(0));
 				String description = null;
 				if (initializer != null)
-					description = initializer.getDescription(this.path,
-							scriptProject);
+					description = initializer.getDescription(this.path, scriptProject);
 				if (description == null)
 					description = path.makeRelative().toString();
 				return Messages.bind(Messages.buildpath_unboundContainerPath,
-						new String[] { description,
-								scriptProject.getElementName() });
+						new String[] { description, scriptProject.getElementName() });
 
 			case INVALID_BP_CONTAINER_ENTRY:
 				scriptProject = (ScriptProject) elements[0];
 				IBuildpathContainer container = null;
 				description = null;
 				try {
-					container = DLTKCore.getBuildpathContainer(path,
-							scriptProject);
+					container = DLTKCore.getBuildpathContainer(path, scriptProject);
 				} catch (ModelException e) {
 					// project doesn't exist: ignore
 				}
 				if (container == null) {
-					initializer = DLTKCore
-							.getBuildpathContainerInitializer(path.segment(0));
+					initializer = DLTKCore.getBuildpathContainerInitializer(path.segment(0));
 					if (initializer != null)
-						description = initializer.getDescription(path,
-								scriptProject);
+						description = initializer.getDescription(path, scriptProject);
 				} else {
 					description = container.getDescription();
 				}
 				if (description == null)
 					description = path.makeRelative().toString();
 				return Messages.bind(Messages.buildpath_invalidContainer,
-						new String[] { description,
-								scriptProject.getElementName() });
+						new String[] { description, scriptProject.getElementName() });
 
 			case BUILDPATH_CYCLE:
 				scriptProject = (ScriptProject) elements[0];
-				return Messages.bind(Messages.buildpath_cycle, scriptProject
-						.getElementName());
+				return Messages.bind(Messages.buildpath_cycle, scriptProject.getElementName());
 			case DISABLED_BP_EXCLUSION_PATTERNS:
 				scriptProject = (ScriptProject) elements[0];
 				String projectName = scriptProject.getElementName();
@@ -349,10 +324,8 @@ public class ModelStatus extends Status implements IModelStatus,
 				if (path.segment(0).equals(projectName)) {
 					newPath = path.removeFirstSegments(1);
 				}
-				return Messages.bind(
-						Messages.buildpath_disabledInclusionExclusionPatterns,
-						new String[] { newPath.makeRelative().toString(),
-								projectName });
+				return Messages.bind(Messages.buildpath_disabledInclusionExclusionPatterns,
+						new String[] { newPath.makeRelative().toString(), projectName });
 			}
 
 			if (string != null) {
@@ -371,9 +344,9 @@ public class ModelStatus extends Status implements IModelStatus,
 	}
 
 	/**
-	 * Creates and returns a new <code>IModelStatus</code> that is a a
-	 * multi-status status.
-	 * 
+	 * Creates and returns a new <code>IModelStatus</code> that is a a multi-status
+	 * status.
+	 *
 	 * @see IStatus#isMultiStatus()
 	 */
 	public static IModelStatus newMultiStatus(IModelStatus[] children) {

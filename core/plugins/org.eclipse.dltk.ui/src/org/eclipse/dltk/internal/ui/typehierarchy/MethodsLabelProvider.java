@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -36,39 +36,37 @@ public class MethodsLabelProvider extends AppearanceAwareLabelProvider {
 
 	public MethodsLabelProvider(TypeHierarchyLifeCycle lifeCycle, MethodsViewer methodsViewer, IPreferenceStore store) {
 		super(DEFAULT_TEXTFLAGS, DEFAULT_IMAGEFLAGS, store);
-		fHierarchy= lifeCycle;
-		fShowDefiningType= false;
-		fMethodsViewer= methodsViewer;
-		fResolvedBackground= null;
+		fHierarchy = lifeCycle;
+		fShowDefiningType = false;
+		fMethodsViewer = methodsViewer;
+		fResolvedBackground = null;
 	}
 
-
 	public void setShowDefiningType(boolean showDefiningType) {
-		fShowDefiningType= showDefiningType;
+		fShowDefiningType = showDefiningType;
 	}
 
 	public boolean isShowDefiningType() {
 		return fShowDefiningType;
 	}
 
-
 	private IType getDefiningType(Object element) throws ModelException {
-		int kind= ((IModelElement) element).getElementType();
+		int kind = ((IModelElement) element).getElementType();
 
 		if (kind != IModelElement.METHOD && kind != IModelElement.FIELD) {
 			return null;
 		}
-		IType declaringType= ((IMember) element).getDeclaringType();
+		IType declaringType = ((IMember) element).getDeclaringType();
 		if (kind != IModelElement.METHOD) {
 			return declaringType;
 		}
-		ITypeHierarchy hierarchy= fHierarchy.getHierarchy();
+		ITypeHierarchy hierarchy = fHierarchy.getHierarchy();
 		if (hierarchy == null) {
 			return declaringType;
 		}
-		IMethod method= (IMethod) element;
-		MethodOverrideTester tester= new MethodOverrideTester(declaringType, hierarchy);
-		IMethod res= tester.findDeclaringMethod(method, true);
+		IMethod method = (IMethod) element;
+		MethodOverrideTester tester = new MethodOverrideTester(declaringType, hierarchy);
+		IMethod res = tester.findDeclaringMethod(method, true);
 		if (res == null || method.equals(res)) {
 			return declaringType;
 		}
@@ -77,12 +75,12 @@ public class MethodsLabelProvider extends AppearanceAwareLabelProvider {
 
 	@Override
 	public String getText(Object element) {
-		String text= super.getText(element);
+		String text = super.getText(element);
 		if (fShowDefiningType) {
 			try {
-				IType type= getDefiningType(element);
+				IType type = getDefiningType(element);
 				if (type != null) {
-					StringBuffer buf= new StringBuffer(super.getText(type));
+					StringBuilder buf = new StringBuilder(super.getText(type));
 					buf.append(ScriptElementLabels.CONCAT_STRING);
 					buf.append(text);
 					return buf.toString();
@@ -96,13 +94,13 @@ public class MethodsLabelProvider extends AppearanceAwareLabelProvider {
 	@Override
 	public Color getForeground(Object element) {
 		if (fMethodsViewer.isShowInheritedMethods() && element instanceof IMethod) {
-			IMethod curr= (IMethod) element;
-			IMember declaringType= curr.getDeclaringType();
+			IMethod curr = (IMethod) element;
+			IMember declaringType = curr.getDeclaringType();
 
 			if (declaringType.equals(fMethodsViewer.getInput())) {
 				if (fResolvedBackground == null) {
-					Display display= Display.getCurrent();
-					fResolvedBackground= display.getSystemColor(SWT.COLOR_DARK_BLUE);
+					Display display = Display.getCurrent();
+					fResolvedBackground = display.getSystemColor(SWT.COLOR_DARK_BLUE);
 				}
 				return fResolvedBackground;
 			}

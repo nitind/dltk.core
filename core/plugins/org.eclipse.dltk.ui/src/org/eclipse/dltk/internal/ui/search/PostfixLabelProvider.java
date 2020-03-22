@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -34,18 +34,15 @@ public class PostfixLabelProvider extends SearchLabelProvider {
 
 	@Override
 	public String getText(Object element) {
-		String labelWithCounts = getLabelWithCounts(element,
-				internalGetText(element));
+		String labelWithCounts = getLabelWithCounts(element, internalGetText(element));
 
-		StringBuffer res = new StringBuffer(labelWithCounts);
+		StringBuilder res = new StringBuilder(labelWithCounts);
 
-		ITreeContentProvider provider = (ITreeContentProvider) fPage
-				.getViewer().getContentProvider();
+		ITreeContentProvider provider = (ITreeContentProvider) fPage.getViewer().getContentProvider();
 		Object visibleParent = provider.getParent(element);
 		Object realParent = fContentProvider.getParent(element);
 		Object lastElement = element;
-		while (realParent != null && !(realParent instanceof IScriptModel)
-				&& !realParent.equals(visibleParent)) {
+		while (realParent != null && !(realParent instanceof IScriptModel) && !realParent.equals(visibleParent)) {
 			if (!isSameInformation(realParent, lastElement)) {
 				if (res.length() != 0) {
 					res.append(ScriptElementLabels.CONCAT_STRING);
@@ -61,8 +58,7 @@ public class PostfixLabelProvider extends SearchLabelProvider {
 
 	@Override
 	protected boolean hasChildren(Object element) {
-		ITreeContentProvider contentProvider = (ITreeContentProvider) fPage
-				.getViewer().getContentProvider();
+		ITreeContentProvider contentProvider = (ITreeContentProvider) fPage.getViewer().getContentProvider();
 		return contentProvider.hasChildren(element);
 	}
 

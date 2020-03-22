@@ -75,7 +75,7 @@ public class CachePackageImpl extends EPackageImpl implements CachePackage {
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 * 
+	 *
 	 * <p>This method is used to initialize {@link CachePackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -89,7 +89,8 @@ public class CachePackageImpl extends EPackageImpl implements CachePackage {
 		if (isInited) return (CachePackage)EPackage.Registry.INSTANCE.getEPackage(CachePackage.eNS_URI);
 
 		// Obtain or create and register package
-		CachePackageImpl theCachePackage = (CachePackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof CachePackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new CachePackageImpl());
+		Object registeredCachePackage = EPackage.Registry.INSTANCE.get(eNS_URI);
+		CachePackageImpl theCachePackage = registeredCachePackage instanceof CachePackageImpl ? (CachePackageImpl)registeredCachePackage : new CachePackageImpl();
 
 		isInited = true;
 
@@ -102,7 +103,6 @@ public class CachePackageImpl extends EPackageImpl implements CachePackage {
 		// Mark meta-data to indicate it can't be changed
 		theCachePackage.freeze();
 
-  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(CachePackage.eNS_URI, theCachePackage);
 		return theCachePackage;

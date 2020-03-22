@@ -55,7 +55,7 @@ public class AbstractDataLoader {
 			return str;
 		} else if (b == 4) {
 			int count = in.readInt();
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 			for (int i = 0; i < count; i++) {
 				buffer.append(readString());
 			}

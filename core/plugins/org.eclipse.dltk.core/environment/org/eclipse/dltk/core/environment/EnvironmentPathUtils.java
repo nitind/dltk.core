@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -31,8 +31,7 @@ public class EnvironmentPathUtils {
 
 	public static IPath getFullPath(IEnvironment env, IPath path) {
 		if (isFull(path)) {
-			throw new RuntimeException(
-					NLS.bind(Messages.EnvironmentPathUtils_invalidPath, path));
+			throw new RuntimeException(NLS.bind(Messages.EnvironmentPathUtils_invalidPath, path));
 		}
 		// if( path.segment(0).startsWith("#special#")) {
 		// return path;
@@ -46,8 +45,7 @@ public class EnvironmentPathUtils {
 
 	public static IPath getFullPath(String envId, IPath path) {
 		if (isFull(path)) {
-			throw new RuntimeException(
-					NLS.bind(Messages.EnvironmentPathUtils_invalidPath, path));
+			throw new RuntimeException(NLS.bind(Messages.EnvironmentPathUtils_invalidPath, path));
 		}
 		// if( path.segment(0).startsWith("#special#")) {
 		// return path;
@@ -60,8 +58,7 @@ public class EnvironmentPathUtils {
 	}
 
 	public static IPath getFullPath(File folder) {
-		return getFullPath(LocalEnvironment.getInstance(),
-				new Path(folder.getAbsolutePath()));
+		return getFullPath(LocalEnvironment.getInstance(), new Path(folder.getAbsolutePath()));
 	}
 
 	public static boolean isFull(IPath path) {
@@ -120,19 +117,15 @@ public class EnvironmentPathUtils {
 		return env.getFile(path);
 	}
 
-	public static Map<IEnvironment, String> decodePaths(
-			String concatenatedPaths) {
+	public static Map<IEnvironment, String> decodePaths(String concatenatedPaths) {
 		Map<IEnvironment, String> result = new HashMap<>();
 		if (concatenatedPaths != null) {
-			String[] paths = concatenatedPaths
-					.split(EnvironmentPathUtils.PATH_DELIMITER);
+			String[] paths = concatenatedPaths.split(EnvironmentPathUtils.PATH_DELIMITER);
 			for (int i = 0; i < paths.length; i++) {
 				IPath path = Path.fromPortableString(paths[i]);
-				IEnvironment env = EnvironmentPathUtils
-						.getPathEnvironment(path);
+				IEnvironment env = EnvironmentPathUtils.getPathEnvironment(path);
 				if (env != null) {
-					String localPath = EnvironmentPathUtils
-							.getLocalPathString(path);
+					String localPath = EnvironmentPathUtils.getLocalPathString(path);
 					result.put(env, localPath);
 				}
 			}
@@ -141,13 +134,12 @@ public class EnvironmentPathUtils {
 	}
 
 	public static String encodePaths(Map<IEnvironment, String> env2path) {
-		StringBuffer concatenatedPaths = new StringBuffer();
+		StringBuilder concatenatedPaths = new StringBuilder();
 		for (Map.Entry<IEnvironment, String> entry : env2path.entrySet()) {
 			if (concatenatedPaths.length() != 0) {
 				concatenatedPaths.append(EnvironmentPathUtils.PATH_DELIMITER);
 			}
-			IPath path = EnvironmentPathUtils.getFullPath(entry.getKey(),
-					new Path(entry.getValue()));
+			IPath path = EnvironmentPathUtils.getFullPath(entry.getKey(), new Path(entry.getValue()));
 			concatenatedPaths.append(path.toPortableString());
 		}
 		return concatenatedPaths.toString();
@@ -161,8 +153,7 @@ public class EnvironmentPathUtils {
 	}
 
 	public static IFileHandle getFile(IResource resource) {
-		IEnvironment environment = EnvironmentManager
-				.getEnvironment(resource.getProject());
+		IEnvironment environment = EnvironmentManager.getEnvironment(resource.getProject());
 		if (environment == null) {
 			return null;
 		}
@@ -180,8 +171,7 @@ public class EnvironmentPathUtils {
 	/**
 	 * @since 2.0
 	 */
-	public static IFileHandle getFile(IModelElement element,
-			boolean checkExistance) {
+	public static IFileHandle getFile(IModelElement element, boolean checkExistance) {
 
 		IEnvironment environment = EnvironmentManager.getEnvironment(element);
 		if (environment == null) {
@@ -239,8 +229,7 @@ public class EnvironmentPathUtils {
 		if (device != null) {
 			final int pos = device.indexOf(SEPARATOR);
 			if (pos >= 0) {
-				return LocalEnvironment.ENVIRONMENT_ID
-						.equals(device.substring(0, pos));
+				return LocalEnvironment.ENVIRONMENT_ID.equals(device.substring(0, pos));
 			}
 		}
 		return false;

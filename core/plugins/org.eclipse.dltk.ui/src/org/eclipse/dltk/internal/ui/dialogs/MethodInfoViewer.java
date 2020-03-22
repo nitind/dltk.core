@@ -282,7 +282,7 @@ public class MethodInfoViewer {
 		}
 
 		public String getQualifiedText(MethodNameMatch type) {
-			StringBuffer result = new StringBuffer();
+			StringBuilder result = new StringBuilder();
 			result.append(getTypeContainerName(type, 2));
 			// String containerName= type.getTypeContainerName();
 			// result.append(ScriptElementLabels.CONCAT_STRING);
@@ -295,7 +295,7 @@ public class MethodInfoViewer {
 		}
 
 		public String getFullyQualifiedText(MethodNameMatch type) {
-			StringBuffer result = new StringBuffer();
+			StringBuilder result = new StringBuilder();
 			result.append(getTypeContainerName(type, 2));
 			// IType dltkType = ((DLTKSearchMethodNameMatch) type).getType();
 			// ISourceModule sourceModule = (ISourceModule)
@@ -345,7 +345,7 @@ public class MethodInfoViewer {
 		}
 
 		public String getQualificationText(MethodNameMatch type) {
-			StringBuffer result = new StringBuffer();
+			StringBuilder result = new StringBuilder();
 			String containerName = type.getMethodContainerName();
 			if (containerName.length() > 0) {
 				result.append(containerName);
@@ -805,12 +805,12 @@ public class MethodInfoViewer {
 		private int fMessageLength;
 
 		public String getText(int width) {
-			StringBuffer dashes = new StringBuffer();
+			StringBuilder dashes = new StringBuilder();
 			int chars = (((width - fMessageLength) / fSeparatorWidth) / 2) - 2;
 			for (int i = 0; i < chars; i++) {
 				dashes.append(SEPARATOR);
 			}
-			StringBuffer result = new StringBuffer();
+			StringBuilder result = new StringBuilder();
 			result.append(dashes);
 			result.append(fMessage);
 			result.append(dashes);

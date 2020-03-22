@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -29,18 +29,14 @@ public class TypeReferencePattern extends AndPattern implements IIndexConstants 
 
 	protected static char[][] CATEGORIES = { REF };
 
-	public TypeReferencePattern(char[] qualification, char[] simpleName,
-			int matchRule, IDLTKLanguageToolkit toolkit) {
+	public TypeReferencePattern(char[] qualification, char[] simpleName, int matchRule, IDLTKLanguageToolkit toolkit) {
 		this(matchRule, toolkit);
 
-		this.qualification = isCaseSensitive() ? qualification : CharOperation
-				.toLowerCase(qualification);
-		this.simpleName = (isCaseSensitive() || isCamelCase()) ? simpleName
-				: CharOperation.toLowerCase(simpleName);
+		this.qualification = isCaseSensitive() ? qualification : CharOperation.toLowerCase(qualification);
+		this.simpleName = (isCaseSensitive() || isCamelCase()) ? simpleName : CharOperation.toLowerCase(simpleName);
 
 		if (simpleName == null)
-			this.segments = this.qualification == null ? ONE_STAR_CHAR
-					: CharOperation.splitOn('.', this.qualification);
+			this.segments = this.qualification == null ? ONE_STAR_CHAR : CharOperation.splitOn('.', this.qualification);
 		else
 			this.segments = null;
 
@@ -48,18 +44,17 @@ public class TypeReferencePattern extends AndPattern implements IIndexConstants 
 			if (this.qualification == null)
 				this.segmentsSize = 0;
 			else
-				this.segmentsSize = CharOperation.occurencesOf('.',
-						this.qualification) + 1;
+				this.segmentsSize = CharOperation.occurencesOf('.', this.qualification) + 1;
 		else
 			this.segmentsSize = this.segments.length;
 	}
 
 	/*
-	 * Instantiate a type reference pattern with additional information for
-	 * generic search
+	 * Instantiate a type reference pattern with additional information for generic
+	 * search
 	 */
-	public TypeReferencePattern(char[] qualification, char[] simpleName,
-			IType type, int matchRule, IDLTKLanguageToolkit toolkit) {
+	public TypeReferencePattern(char[] qualification, char[] simpleName, IType type, int matchRule,
+			IDLTKLanguageToolkit toolkit) {
 		this(qualification, simpleName, matchRule, toolkit);
 	}
 
@@ -74,8 +69,7 @@ public class TypeReferencePattern extends AndPattern implements IIndexConstants 
 
 	@Override
 	public SearchPattern getBlankPattern() {
-		return new TypeReferencePattern(R_EXACT_MATCH | R_CASE_SENSITIVE,
-				getToolkit());
+		return new TypeReferencePattern(R_EXACT_MATCH | R_CASE_SENSITIVE, getToolkit());
 	}
 
 	@Override
@@ -114,15 +108,15 @@ public class TypeReferencePattern extends AndPattern implements IIndexConstants 
 	@Override
 	public void resetQuery() {
 		/*
-		 * walk the segments from end to start as it will find less potential
-		 * references using 'lang' than 'java'
+		 * walk the segments from end to start as it will find less potential references
+		 * using 'lang' than 'java'
 		 */
 		if (this.segments != null)
 			this.currentSegment = this.segments.length - 1;
 	}
 
 	@Override
-	protected StringBuffer print(StringBuffer output) {
+	protected StringBuilder print(StringBuilder output) {
 		output.append("TypeReferencePattern: qualification<"); //$NON-NLS-1$
 		if (qualification != null)
 			output.append(qualification);

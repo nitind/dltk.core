@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -122,8 +122,7 @@ public class DocumentAdapter implements IBuffer, IDocumentListener {
 		}
 
 		@Override
-		public void removeBufferChangedListener(
-				IBufferChangedListener listener) {
+		public void removeBufferChangedListener(IBufferChangedListener listener) {
 		}
 
 		@Override
@@ -135,8 +134,7 @@ public class DocumentAdapter implements IBuffer, IDocumentListener {
 		}
 
 		@Override
-		public void save(IProgressMonitor progress, boolean force)
-				throws ModelException {
+		public void save(IProgressMonitor progress, boolean force) throws ModelException {
 		}
 
 		@Override
@@ -253,12 +251,9 @@ public class DocumentAdapter implements IBuffer, IDocumentListener {
 	/**
 	 * Constructs a new document adapter.
 	 *
-	 * @param owner
-	 *            the owner of this buffer
-	 * @param fileStore
-	 *            the file store of the file that backs the buffer
-	 * @param path
-	 *            the path of the file that backs the buffer
+	 * @param owner     the owner of this buffer
+	 * @param fileStore the file store of the file that backs the buffer
+	 * @param path      the path of the file that backs the buffer
 	 * @since 4.0
 	 */
 	public DocumentAdapter(IOpenable owner, IFileStore fileStore, IPath path) {
@@ -277,19 +272,15 @@ public class DocumentAdapter implements IBuffer, IDocumentListener {
 		try {
 			if (fFileStore != null) {
 				manager.connectFileStore(fFileStore, new NullProgressMonitor());
-				fTextFileBuffer = manager
-						.getFileStoreTextFileBuffer(fFileStore);
+				fTextFileBuffer = manager.getFileStoreTextFileBuffer(fFileStore);
 			} else {
-				manager.connect(fPath, fLocationKind,
-						new NullProgressMonitor());
-				fTextFileBuffer = manager.getTextFileBuffer(fPath,
-						fLocationKind);
+				manager.connect(fPath, fLocationKind, new NullProgressMonitor());
+				fTextFileBuffer = manager.getTextFileBuffer(fPath, fLocationKind);
 			}
 			fDocument = fTextFileBuffer.getDocument();
 		} catch (CoreException x) {
 			fStatus = x.getStatus();
-			fDocument = manager.createEmptyDocument(fPath,
-					LocationKind.NORMALIZE);
+			fDocument = manager.createEmptyDocument(fPath, LocationKind.NORMALIZE);
 			if (fDocument instanceof ISynchronizable)
 				((ISynchronizable) fDocument).setLockObject(new Object());
 		}
@@ -359,15 +350,12 @@ public class DocumentAdapter implements IBuffer, IDocumentListener {
 		d.removePrenotifiedDocumentListener(this);
 
 		if (fTextFileBuffer != null) {
-			ITextFileBufferManager manager = FileBuffers
-					.getTextFileBufferManager();
+			ITextFileBufferManager manager = FileBuffers.getTextFileBufferManager();
 			try {
 				if (fFileStore != null)
-					manager.disconnectFileStore(fFileStore,
-							new NullProgressMonitor());
+					manager.disconnectFileStore(fFileStore, new NullProgressMonitor());
 				else
-					manager.disconnect(fPath, fLocationKind,
-							new NullProgressMonitor());
+					manager.disconnect(fPath, fLocationKind, new NullProgressMonitor());
 			} catch (CoreException x) {
 				// ignore
 			}
@@ -435,8 +423,7 @@ public class DocumentAdapter implements IBuffer, IDocumentListener {
 	@Override
 	public boolean isReadOnly() {
 		IResource resource = getUnderlyingResource();
-		return resource == null ? true
-				: resource.getResourceAttributes().isReadOnly();
+		return resource == null ? true : resource.getResourceAttributes().isReadOnly();
 	}
 
 	@Override
@@ -453,8 +440,7 @@ public class DocumentAdapter implements IBuffer, IDocumentListener {
 	}
 
 	@Override
-	public void save(IProgressMonitor progress, boolean force)
-			throws ModelException {
+	public void save(IProgressMonitor progress, boolean force) throws ModelException {
 		try {
 			if (fTextFileBuffer != null)
 				fTextFileBuffer.commit(progress, force);
@@ -523,15 +509,14 @@ public class DocumentAdapter implements IBuffer, IDocumentListener {
 			try {
 				String curr = tracker.getLineDelimiter(i);
 				if (curr != null && !fLegalLineDelimiters.contains(curr)) {
-					StringBuffer buf = new StringBuffer(
+					StringBuilder buf = new StringBuilder(
 							"WARNING: DocumentAdapter added new line delimiter to code: "); //$NON-NLS-1$
 					for (int k = 0; k < curr.length(); k++) {
 						if (k > 0)
 							buf.append(' ');
 						buf.append((int) curr.charAt(k));
 					}
-					IStatus status = new Status(IStatus.WARNING,
-							DLTKUIPlugin.PLUGIN_ID, IStatus.OK, buf.toString(),
+					IStatus status = new Status(IStatus.WARNING, DLTKUIPlugin.PLUGIN_ID, IStatus.OK, buf.toString(),
 							new Throwable());
 					DLTKUIPlugin.log(status);
 				}
@@ -548,14 +533,12 @@ public class DocumentAdapter implements IBuffer, IDocumentListener {
 
 	@Override
 	public void documentChanged(DocumentEvent event) {
-		fireBufferChanged(new BufferChangedEvent(this, event.getOffset(),
-				event.getLength(), event.getText()));
+		fireBufferChanged(new BufferChangedEvent(this, event.getOffset(), event.getLength(), event.getText()));
 	}
 
 	private void fireBufferChanged(BufferChangedEvent event) {
 		if (fBufferListeners != null && fBufferListeners.size() > 0) {
-			Iterator<IBufferChangedListener> e = new ArrayList<>(
-					fBufferListeners).iterator();
+			Iterator<IBufferChangedListener> e = new ArrayList<>(fBufferListeners).iterator();
 			while (e.hasNext())
 				e.next().bufferChanged(event);
 		}
@@ -564,8 +547,7 @@ public class DocumentAdapter implements IBuffer, IDocumentListener {
 	/**
 	 * Run the given runnable in the UI thread.
 	 *
-	 * @param runnable
-	 *            the runnable
+	 * @param runnable the runnable
 	 * @since 3.3
 	 */
 	private static final void run(Runnable runnable) {

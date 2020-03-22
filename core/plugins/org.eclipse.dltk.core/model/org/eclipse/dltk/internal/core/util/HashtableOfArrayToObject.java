@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -13,7 +13,7 @@ package org.eclipse.dltk.internal.core.util;
  * Hashtable of {Object[] --> Object }
  */
 public final class HashtableOfArrayToObject implements Cloneable {
-	
+
 	// to avoid using Enumerations, walk the individual tables skipping nulls
 	public Object[][] keyTable;
 	public Object[] valueTable;
@@ -102,14 +102,14 @@ public final class HashtableOfArrayToObject implements Cloneable {
 	private int hashCode(Object[] element) {
 		return hashCode(element, element.length);
 	}
-	
+
 	private int hashCode(Object[] element, int length) {
 		int hash = 0;
-		for (int i = length-1; i >= 0; i--)
+		for (int i = length - 1; i >= 0; i--)
 			hash = Util.combineHashCodes(hash, element[i].hashCode());
 		return hash & 0x7FFFFFFF;
 	}
-	
+
 	public Object put(Object[] key, Object value) {
 
 		int length = this.keyTable.length;
@@ -156,7 +156,8 @@ public final class HashtableOfArrayToObject implements Cloneable {
 
 	private void rehash() {
 
-		HashtableOfArrayToObject newHashtable = new HashtableOfArrayToObject(elementSize * 2);		// double the number of expected elements
+		HashtableOfArrayToObject newHashtable = new HashtableOfArrayToObject(elementSize * 2); // double the number of
+																								// expected elements
 		Object[] currentKey;
 		for (int i = this.keyTable.length; --i >= 0;)
 			if ((currentKey = this.keyTable[i]) != null)
@@ -173,19 +174,19 @@ public final class HashtableOfArrayToObject implements Cloneable {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		Object[] element;
 		for (int i = 0, length = this.keyTable.length; i < length; i++)
 			if ((element = this.keyTable[i]) != null) {
 				buffer.append('{');
 				for (int j = 0, length2 = element.length; j < length2; j++) {
 					buffer.append(element[j]);
-					if (j != length2-1) 
+					if (j != length2 - 1)
 						buffer.append(", "); //$NON-NLS-1$
 				}
-				buffer.append("} -> ");  //$NON-NLS-1$
+				buffer.append("} -> "); //$NON-NLS-1$
 				buffer.append(this.valueTable[i]);
-				if (i != length-1)
+				if (i != length - 1)
 					buffer.append('\n');
 			}
 		return buffer.toString();

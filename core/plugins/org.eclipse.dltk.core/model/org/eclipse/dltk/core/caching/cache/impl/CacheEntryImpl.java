@@ -27,13 +27,13 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.impl.CacheEntryImpl#getPath <em>Path</em>}</li>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.impl.CacheEntryImpl#getTimestamp <em>Timestamp</em>}</li>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.impl.CacheEntryImpl#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.impl.CacheEntryImpl#getLastAccessTime <em>Last Access Time</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -315,7 +315,7 @@ public class CacheEntryImpl extends MinimalEObjectImpl implements CacheEntry {
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (path: ");
 		result.append(path);
 		result.append(", timestamp: ");

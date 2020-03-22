@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -23,8 +23,7 @@ public class DefaultProblem extends CategorizedProblem {
 			return 0;
 		int result = 1;
 		for (int index = 0; index < array.length; index++) {
-			result = prime * result
-					+ (array[index] == null ? 0 : array[index].hashCode());
+			result = prime * result + (array[index] == null ? 0 : array[index].hashCode());
 		}
 		return result;
 	}
@@ -49,10 +48,8 @@ public class DefaultProblem extends CategorizedProblem {
 
 	public static final Object[] EMPTY_VALUES = {};
 
-	public DefaultProblem(String originatingFileName, String message,
-			IProblemIdentifier id, String[] stringArguments,
-			ProblemSeverity severity, int startPosition, int endPosition,
-			int line, int column) {
+	public DefaultProblem(String originatingFileName, String message, IProblemIdentifier id, String[] stringArguments,
+			ProblemSeverity severity, int startPosition, int endPosition, int line, int column) {
 		this.fileName = originatingFileName;
 		this.message = message;
 		this.id = id;
@@ -65,26 +62,22 @@ public class DefaultProblem extends CategorizedProblem {
 	}
 
 	@Deprecated
-	public DefaultProblem(String originatingFileName, String message, int id,
-			String[] stringArguments, ProblemSeverity severity,
-			int startPosition, int endPosition, int line) {
-		this(originatingFileName, message, DefaultProblemIdentifier.decode(id),
-				stringArguments, severity, startPosition, endPosition, line, 0);
+	public DefaultProblem(String originatingFileName, String message, int id, String[] stringArguments,
+			ProblemSeverity severity, int startPosition, int endPosition, int line) {
+		this(originatingFileName, message, DefaultProblemIdentifier.decode(id), stringArguments, severity,
+				startPosition, endPosition, line, 0);
 	}
 
 	@Deprecated
-	public DefaultProblem(String message, int id, String[] stringArguments,
-			ProblemSeverity severity, int startPosition, int endPosition,
-			int line) {
-		this(NONAME, message, DefaultProblemIdentifier.decode(id),
-				stringArguments, severity, startPosition, endPosition, line, 0);
+	public DefaultProblem(String message, int id, String[] stringArguments, ProblemSeverity severity, int startPosition,
+			int endPosition, int line) {
+		this(NONAME, message, DefaultProblemIdentifier.decode(id), stringArguments, severity, startPosition,
+				endPosition, line, 0);
 	}
 
-	public DefaultProblem(String message, IProblemIdentifier id,
-			String[] stringArguments, ProblemSeverity severity,
+	public DefaultProblem(String message, IProblemIdentifier id, String[] stringArguments, ProblemSeverity severity,
 			int startPosition, int endPosition, int line) {
-		this(NONAME, message, id, stringArguments, severity, startPosition,
-				endPosition, line, 0);
+		this(NONAME, message, id, stringArguments, severity, startPosition, endPosition, line, 0);
 	}
 
 	private static final String NONAME = ""; //$NON-NLS-1$
@@ -101,12 +94,11 @@ public class DefaultProblem extends CategorizedProblem {
 		// this code assumes that the font used in the console is fixed size
 
 		// sanity .....
-		if ((this.startPosition > this.endPosition)
-				|| ((this.startPosition < 0) && (this.endPosition < 0))
+		if ((this.startPosition > this.endPosition) || ((this.startPosition < 0) && (this.endPosition < 0))
 				|| unitSource.length == 0)
 			return Messages.problem_noSourceInformation;
 
-		StringBuffer errorBuffer = new StringBuffer();
+		StringBuilder errorBuffer = new StringBuilder();
 		if (DLTKCore.DEBUG) {
 			System.err.println("TODO: Add correct code here. DefaultProblem"); //$NON-NLS-1$
 		}
@@ -128,8 +120,7 @@ public class DefaultProblem extends CategorizedProblem {
 
 		// expand to line limits
 		int length = unitSource.length, begin, end;
-		for (begin = this.startPosition >= length ? length - 1
-				: this.startPosition; begin > 0; begin--) {
+		for (begin = this.startPosition >= length ? length - 1 : this.startPosition; begin > 0; begin--) {
 			if ((c = unitSource[begin - 1]) == '\n' || c == '\r')
 				break;
 		}
@@ -152,8 +143,7 @@ public class DefaultProblem extends CategorizedProblem {
 		for (int i = begin; i < this.startPosition; i++) {
 			errorBuffer.append((unitSource[i] == TAB) ? TAB : SPACE);
 		}
-		for (int i = this.startPosition; i <= (this.endPosition >= length ? length - 1
-				: this.endPosition); i++) {
+		for (int i = this.startPosition; i <= (this.endPosition >= length ? length - 1 : this.endPosition); i++) {
 			errorBuffer.append(MARK);
 		}
 		return errorBuffer.toString();
@@ -161,7 +151,7 @@ public class DefaultProblem extends CategorizedProblem {
 
 	/**
 	 * Answer back the original arguments recorded into the problem.
-	 * 
+	 *
 	 * @return java.lang.String[]
 	 */
 	@Override
@@ -176,15 +166,14 @@ public class DefaultProblem extends CategorizedProblem {
 	public int getCategoryID() {
 		// return ProblemReporter.getProblemCategory(this.severity, this.id);
 		if (DLTKCore.DEBUG) {
-			System.err
-					.println("TODO: DefaultProblem getCategoryID always return 0. Fix it."); //$NON-NLS-1$
+			System.err.println("TODO: DefaultProblem getCategoryID always return 0. Fix it."); //$NON-NLS-1$
 		}
 		return 0;
 	}
 
 	/**
 	 * Answer the type of problem.
-	 * 
+	 *
 	 * @see org.eclipse.dltk.core.compiler.IProblem#getID()
 	 * @return int
 	 */
@@ -194,9 +183,9 @@ public class DefaultProblem extends CategorizedProblem {
 	}
 
 	/**
-	 * Answers a readable name for the category which this problem belongs to,
-	 * or null if none could be found. FOR TESTING PURPOSE
-	 * 
+	 * Answers a readable name for the category which this problem belongs to, or
+	 * null if none could be found. FOR TESTING PURPOSE
+	 *
 	 * @return java.lang.String
 	 */
 	public String getInternalCategoryMessage() {
@@ -214,7 +203,7 @@ public class DefaultProblem extends CategorizedProblem {
 		case CAT_MEMBER:
 			return "member"; //$NON-NLS-1$
 		case CAT_INTERNAL:
-			return "internal"; //$NON-NLS-1$		
+			return "internal"; //$NON-NLS-1$
 		case CAT_CODE_STYLE:
 			return "code style"; //$NON-NLS-1$
 		case CAT_POTENTIAL_PROGRAMMING_PROBLEM:
@@ -237,7 +226,7 @@ public class DefaultProblem extends CategorizedProblem {
 
 	/**
 	 * Returns the marker type associated to this problem.
-	 * 
+	 *
 	 * @see org.eclipse.dltk.core.compiler.CategorizedProblem#getMarkerType()
 	 */
 	@Override
@@ -256,7 +245,7 @@ public class DefaultProblem extends CategorizedProblem {
 	/**
 	 * Answer a localized, human-readable message string which describes the
 	 * problem.
-	 * 
+	 *
 	 * @return java.lang.String
 	 */
 	@Override
@@ -270,7 +259,7 @@ public class DefaultProblem extends CategorizedProblem {
 
 	/**
 	 * Answer the file name in which the problem was found.
-	 * 
+	 *
 	 * @return String
 	 */
 	@Override
@@ -280,7 +269,7 @@ public class DefaultProblem extends CategorizedProblem {
 
 	/**
 	 * Answer the end position of the problem (inclusive), or -1 if unknown.
-	 * 
+	 *
 	 * @return int
 	 */
 	@Override
@@ -290,7 +279,7 @@ public class DefaultProblem extends CategorizedProblem {
 
 	/**
 	 * Answer the line number in source where the problem begins.
-	 * 
+	 *
 	 * @return int
 	 */
 	@Override
@@ -300,7 +289,7 @@ public class DefaultProblem extends CategorizedProblem {
 
 	/**
 	 * Answer the start position of the problem (inclusive), or -1 if unknown.
-	 * 
+	 *
 	 * @return int
 	 */
 	@Override
@@ -320,7 +309,7 @@ public class DefaultProblem extends CategorizedProblem {
 
 	/*
 	 * Helper method: checks the severity to see if the Error bit is set.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	@Override
@@ -330,7 +319,7 @@ public class DefaultProblem extends CategorizedProblem {
 
 	/*
 	 * Helper method: checks the severity to see if the Error bit is not set.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	@Override
@@ -344,11 +333,10 @@ public class DefaultProblem extends CategorizedProblem {
 
 	/**
 	 * Set the end position of the problem (inclusive), or -1 if unknown.
-	 * 
+	 *
 	 * Used for shifting problem positions.
-	 * 
-	 * @param sourceEnd
-	 *            the new value of the sourceEnd of the receiver
+	 *
+	 * @param sourceEnd the new value of the sourceEnd of the receiver
 	 */
 	@Override
 	public void setSourceEnd(int sourceEnd) {
@@ -357,9 +345,8 @@ public class DefaultProblem extends CategorizedProblem {
 
 	/**
 	 * Set the line number in source where the problem begins.
-	 * 
-	 * @param lineNumber
-	 *            the new value of the line number of the receiver
+	 *
+	 * @param lineNumber the new value of the line number of the receiver
 	 */
 	@Override
 	public void setSourceLineNumber(int lineNumber) {
@@ -369,11 +356,10 @@ public class DefaultProblem extends CategorizedProblem {
 
 	/**
 	 * Set the start position of the problem (inclusive), or -1 if unknown.
-	 * 
+	 *
 	 * Used for shifting problem positions.
-	 * 
-	 * @param sourceStart
-	 *            the new value of the source start position of the receiver
+	 *
+	 * @param sourceStart the new value of the source start position of the receiver
 	 */
 	@Override
 	public void setSourceStart(int sourceStart) {
@@ -382,7 +368,7 @@ public class DefaultProblem extends CategorizedProblem {
 
 	@Override
 	public String toString() {
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("Pb"); //$NON-NLS-1$
 		if (this.id != null) {
 			sb.append('#');
@@ -416,8 +402,7 @@ public class DefaultProblem extends CategorizedProblem {
 		result = prime * result + DefaultProblem.hashCode(arguments);
 		result = prime * result + column;
 		result = prime * result + endPosition;
-		result = prime * result
-				+ ((fileName == null) ? 0 : fileName.hashCode());
+		result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
 		result = prime * result + (id == null ? 0 : id.hashCode());
 		result = prime * result + line;
 		result = prime * result + ((message == null) ? 0 : message.hashCode());

@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -64,8 +64,7 @@ public abstract class Declaration extends Statement implements Modifiers {
 	}
 
 	protected ISourceRange getNameSourceRange() {
-		return new SourceRange(this.getNameStart(), this.getNameEnd()
-				- this.getNameStart() + 1);
+		return new SourceRange(this.getNameStart(), this.getNameEnd() - this.getNameStart() + 1);
 	}
 
 	public String getName() {
@@ -77,8 +76,7 @@ public abstract class Declaration extends Statement implements Modifiers {
 	}
 
 	public final PositionInformation getPositionInformation() {
-		return new PositionInformation(this.getNameStart(), this.getNameEnd(),
-				this.sourceStart(), this.sourceEnd());
+		return new PositionInformation(this.getNameStart(), this.getNameEnd(), this.sourceStart(), this.sourceEnd());
 	}
 
 	public final void setModifier(int mods) {
@@ -136,7 +134,7 @@ public abstract class Declaration extends Statement implements Modifiers {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		if (this.isStatic()) {
 			if (sb.length() != 0) {
 				sb.append(' ');
@@ -182,8 +180,7 @@ public abstract class Declaration extends Statement implements Modifiers {
 	}
 
 	/**
-	 * @param comments
-	 *            the comments to set
+	 * @param comments the comments to set
 	 */
 	public void setComments(String comments) {
 		this.comments = comments;

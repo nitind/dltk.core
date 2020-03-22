@@ -322,7 +322,7 @@ public class ModelManager implements ISaveParticipant {
 
 		@Override
 		public String toString() {
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 			buffer.append("Info for "); //$NON-NLS-1$
 			buffer.append(this.project.getFullPath());
 			buffer.append("\nRaw buildpath:\n"); //$NON-NLS-1$
@@ -411,7 +411,7 @@ public class ModelManager implements ISaveParticipant {
 
 		@Override
 		public String toString() {
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 			buffer.append("Info for "); //$NON-NLS-1$
 			buffer.append(((ModelElement) this.workingCopy).toStringWithAncestors());
 			buffer.append("\nUse count = "); //$NON-NLS-1$
@@ -1907,7 +1907,7 @@ public class ModelManager implements ISaveParticipant {
 
 	private void verbose_container_value_after_initialization(IScriptProject project, IPath containerPath,
 			IBuildpathContainer container) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append("CPContainer INIT - after resolution\n"); //$NON-NLS-1$
 		buffer.append("	project: " + project.getElementName() + '\n'); //$NON-NLS-1$
 		buffer.append("	container path: " + containerPath + '\n'); //$NON-NLS-1$
@@ -1954,7 +1954,7 @@ public class ModelManager implements ISaveParticipant {
 			IBuildpathContainer previousContainer = (IBuildpathContainer) previousContainerValues.get(containerPath);
 			if (previousContainer != null) {
 				if (ModelManager.BP_RESOLVE_VERBOSE) {
-					StringBuffer buffer = new StringBuffer();
+					StringBuilder buffer = new StringBuilder();
 					buffer.append(
 							"CPContainer INIT - reentering access to project container during its initialization, will see previous value\n"); //$NON-NLS-1$
 					buffer.append("	project: " + project.getElementName() + '\n'); //$NON-NLS-1$
@@ -2040,7 +2040,7 @@ public class ModelManager implements ISaveParticipant {
 		Util.verbose("CPContainer GET - missbehaving container (returning null classpath entry)\n" //$NON-NLS-1$
 				+ "	project: " + project.getElementName() + '\n' + "	container path: " + containerPath + '\n'
 				+ "	classpath entries: {\n" + Util.toString(classpathEntries, o -> {
-					StringBuffer buffer = new StringBuffer("		"); //$NON-NLS-1$
+					StringBuilder buffer = new StringBuilder("		"); //$NON-NLS-1$
 					if (o == null) {
 						buffer.append("<null>"); //$NON-NLS-1$
 						return buffer.toString();
@@ -2102,7 +2102,7 @@ public class ModelManager implements ISaveParticipant {
 							+ Util.toString(projects, o -> ((IScriptProject) o).getElementName())
 							+ "}\n	values on previous session: {\n" + //$NON-NLS-1$
 							Util.toString(respectiveContainers, o -> {
-								StringBuffer buffer = new StringBuffer("		"); //$NON-NLS-1$
+								StringBuilder buffer = new StringBuilder("		"); //$NON-NLS-1$
 								if (o == null) {
 									buffer.append("<null>"); //$NON-NLS-1$
 									return buffer.toString();
@@ -2118,7 +2118,7 @@ public class ModelManager implements ISaveParticipant {
 								return buffer.toString();
 							}) + "}\n	new values: {\n" + //$NON-NLS-1$
 							Util.toString(respectiveContainers, o -> {
-								StringBuffer buffer = new StringBuffer("		"); //$NON-NLS-1$
+								StringBuilder buffer = new StringBuilder("		"); //$NON-NLS-1$
 								if (o == null) {
 									buffer.append("<null>"); //$NON-NLS-1$
 									return buffer.toString();

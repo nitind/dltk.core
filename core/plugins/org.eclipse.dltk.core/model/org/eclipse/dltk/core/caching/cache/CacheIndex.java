@@ -17,12 +17,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.CacheIndex#getLastIndex <em>Last Index</em>}</li>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.CacheIndex#getEntries <em>Entries</em>}</li>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.CacheIndex#getEnvironment <em>Environment</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.dltk.core.caching.cache.CachePackage#getCacheIndex()
  * @model

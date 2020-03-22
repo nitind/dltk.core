@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -35,16 +35,14 @@ public class MethodPattern extends DLTKSearchPattern implements IIndexConstants 
 	boolean methodParameters = false;
 	char[][] methodArguments;
 	protected static char[][] REF_CATEGORIES = { METHOD_REF };
-	protected static char[][] REF_AND_DECL_CATEGORIES = { METHOD_REF,
-			METHOD_DECL };
+	protected static char[][] REF_AND_DECL_CATEGORIES = { METHOD_REF, METHOD_DECL };
 	protected static char[][] DECL_CATEGORIES = { METHOD_DECL };
 
 	/**
 	 * Method entries are encoded as selector '/' Arity: e.g. 'foo/0'
 	 */
 	public static char[] createIndexKey(char[] selector, int argCount) {
-		char[] countChars = argCount < 10 ? COUNTS[argCount]
-				: (SEPARATOR + String.valueOf(argCount)).toCharArray();
+		char[] countChars = argCount < 10 ? COUNTS[argCount] : (SEPARATOR + String.valueOf(argCount)).toCharArray();
 		return CharOperation.concat(selector, countChars);
 	}
 
@@ -52,15 +50,13 @@ public class MethodPattern extends DLTKSearchPattern implements IIndexConstants 
 		super(METHOD_PATTERN, matchRule, toolkit);
 	}
 
-	public MethodPattern(boolean findDeclarations, boolean findReferences,
-			char[] selector, char[] declaringQualification,
-			char[] declaringSimpleName, IType declaringType, int matchRule,
+	public MethodPattern(boolean findDeclarations, boolean findReferences, char[] selector,
+			char[] declaringQualification, char[] declaringSimpleName, IType declaringType, int matchRule,
 			IDLTKLanguageToolkit toolkit) {
 		this(matchRule, toolkit);
 		this.findDeclarations = findDeclarations;
 		this.findReferences = findReferences;
-		this.selector = (isCaseSensitive() || isCamelCase()) ? selector
-				: CharOperation.toLowerCase(selector);
+		this.selector = (isCaseSensitive() || isCamelCase()) ? selector : CharOperation.toLowerCase(selector);
 		this.declaringSimpleName = isCaseSensitive() ? declaringSimpleName
 				: CharOperation.toLowerCase(declaringSimpleName);
 		this.declaringQualificationName = isCaseSensitive() ? declaringQualification
@@ -84,14 +80,11 @@ public class MethodPattern extends DLTKSearchPattern implements IIndexConstants 
 	/*
 	 * Instanciate a method pattern with signatures for generics search
 	 */
-	public MethodPattern(boolean findDeclarations, boolean findReferences,
-			char[] selector, char[] declaringQualification,
-			char[] declaringSimpleName, IMethod method, int matchRule,
+	public MethodPattern(boolean findDeclarations, boolean findReferences, char[] selector,
+			char[] declaringQualification, char[] declaringSimpleName, IMethod method, int matchRule,
 			IDLTKLanguageToolkit toolkit) {
-		this(findDeclarations, findReferences, selector,
-				declaringQualification, declaringSimpleName,
-				method == null ? null : method.getDeclaringType(), matchRule,
-				toolkit);
+		this(findDeclarations, findReferences, selector, declaringQualification, declaringSimpleName,
+				method == null ? null : method.getDeclaringType(), matchRule, toolkit);
 		// Get unique key for parameterized constructors
 		// String genericDeclaringTypeSignature = null;
 		// String genericSignature = null;
@@ -113,12 +106,10 @@ public class MethodPattern extends DLTKSearchPattern implements IIndexConstants 
 	/*
 	 * Instanciate a method pattern with signatures for generics search
 	 */
-	public MethodPattern(boolean findDeclarations, boolean findReferences,
-			char[] selector, char[] declaringQualification,
-			char[] declaringSimpleName, String declaringSignature,
-			char[][] arguments, int matchRule, IDLTKLanguageToolkit toolkit) {
-		this(findDeclarations, findReferences, selector,
-				declaringQualification, declaringSimpleName, (IMethod) null,
+	public MethodPattern(boolean findDeclarations, boolean findReferences, char[] selector,
+			char[] declaringQualification, char[] declaringSimpleName, String declaringSignature, char[][] arguments,
+			int matchRule, IDLTKLanguageToolkit toolkit) {
+		this(findDeclarations, findReferences, selector, declaringQualification, declaringSimpleName, (IMethod) null,
 				matchRule, toolkit);
 		// Store type signature and arguments for declaring type
 
@@ -154,8 +145,7 @@ public class MethodPattern extends DLTKSearchPattern implements IIndexConstants 
 	@Override
 	public char[][] getIndexCategories() {
 		if (this.findReferences)
-			return this.findDeclarations ? REF_AND_DECL_CATEGORIES
-					: REF_CATEGORIES;
+			return this.findDeclarations ? REF_AND_DECL_CATEGORIES : REF_CATEGORIES;
 		if (this.findDeclarations)
 			return DECL_CATEGORIES;
 		return CharOperation.NO_CHAR_CHAR;
@@ -201,10 +191,8 @@ public class MethodPattern extends DLTKSearchPattern implements IIndexConstants 
 			break;
 		case R_PATTERN_MATCH:
 			if (this.parameterCount >= 0)
-				key = createIndexKey(this.selector == null ? ONE_STAR
-						: this.selector, this.parameterCount);
-			else if (this.selector != null
-					&& this.selector[this.selector.length - 1] != '*')
+				key = createIndexKey(this.selector == null ? ONE_STAR : this.selector, this.parameterCount);
+			else if (this.selector != null && this.selector[this.selector.length - 1] != '*')
 				key = CharOperation.concat(this.selector, ONE_STAR, SEPARATOR);
 			// else do a pattern query with just the selector
 			break;
@@ -221,7 +209,7 @@ public class MethodPattern extends DLTKSearchPattern implements IIndexConstants 
 	}
 
 	@Override
-	protected StringBuffer print(StringBuffer output) {
+	protected StringBuilder print(StringBuilder output) {
 		if (this.findDeclarations) {
 			output.append(this.findReferences ? "MethodCombinedPattern: " //$NON-NLS-1$
 					: "MethodDeclarationPattern: "); //$NON-NLS-1$

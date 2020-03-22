@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -27,11 +27,9 @@ public class SetContainerOperation extends ChangeBuildpathOperation {
 	final IScriptProject[] affectedProjects;
 	final IBuildpathContainer[] respectiveContainers;
 
-	public SetContainerOperation(IPath containerPath,
-			IScriptProject[] affectedProjects,
+	public SetContainerOperation(IPath containerPath, IScriptProject[] affectedProjects,
 			IBuildpathContainer[] respectiveContainers) {
-		super(
-				new IModelElement[] { ModelManager.getModelManager().getModel() },
+		super(new IModelElement[] { ModelManager.getModelManager().getModel() },
 				!ResourcesPlugin.getWorkspace().isTreeLocked());
 		this.containerPath = containerPath;
 		this.affectedProjects = affectedProjects;
@@ -50,14 +48,13 @@ public class SetContainerOperation extends ChangeBuildpathOperation {
 			}
 
 			final ModelManager manager = ModelManager.getModelManager();
-			if (manager.containerPutIfInitializingWithSameEntries(
-					containerPath, affectedProjects, respectiveContainers))
+			if (manager.containerPutIfInitializingWithSameEntries(containerPath, affectedProjects,
+					respectiveContainers))
 				return;
 
 			final int projectLength = affectedProjects.length;
 			final IScriptProject[] modifiedProjects;
-			System.arraycopy(affectedProjects, 0,
-					modifiedProjects = new IScriptProject[projectLength], 0,
+			System.arraycopy(affectedProjects, 0, modifiedProjects = new IScriptProject[projectLength], 0,
 					projectLength);
 
 			// filter out unmodified project containers
@@ -77,8 +74,7 @@ public class SetContainerOperation extends ChangeBuildpathOperation {
 				// loop
 				boolean found = false;
 				if (ScriptProject.hasScriptNature(affectedProject.getProject())) {
-					IBuildpathEntry[] rawClasspath = affectedProject
-							.getRawBuildpath();
+					IBuildpathEntry[] rawClasspath = affectedProject.getRawBuildpath();
 					for (int j = 0, cpLength = rawClasspath.length; j < cpLength; j++) {
 						IBuildpathEntry entry = rawClasspath[j];
 						if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER
@@ -93,39 +89,25 @@ public class SetContainerOperation extends ChangeBuildpathOperation {
 												// does
 					// not reference the container path,
 					// or isnt't yet script project
-					manager.containerPut(affectedProject, containerPath,
-							newContainer);
+					manager.containerPut(affectedProject, containerPath, newContainer);
 					continue;
 				}
-				IBuildpathContainer oldContainer = manager.containerGet(
-						affectedProject, containerPath);
+				IBuildpathContainer oldContainer = manager.containerGet(affectedProject, containerPath);
 				if (oldContainer == ModelManager.CONTAINER_INITIALIZATION_IN_PROGRESS) {
 					oldContainer = null;
 				}
-				if ((oldContainer != null && oldContainer
-						.equals(respectiveContainers[i]))
+				if ((oldContainer != null && oldContainer.equals(respectiveContainers[i]))
 						|| (oldContainer == this.respectiveContainers[i]) /*
-																		 * handle
-																		 * case
-																		 * where
-																		 * old
-																		 * and
-																		 * new
-																		 * containers
-																		 * are
-																		 * null
-																		 * (see
-																		 * bug
-																		 * 149043
-																		 */
+																			 * handle case where old and new containers
+																			 * are null (see bug 149043
+																			 */
 				) {
 					modifiedProjects[i] = null; // filter out this project -
 					// container did not change
 					continue;
 				}
 				remaining++;
-				manager.containerPut(affectedProject, containerPath,
-						newContainer);
+				manager.containerPut(affectedProject, containerPath, newContainer);
 			}
 
 			if (remaining == 0)
@@ -147,8 +129,7 @@ public class SetContainerOperation extends ChangeBuildpathOperation {
 					}
 
 					// force resolved buildpath to be recomputed
-					BuildpathChange buildpathChange = affectedProject
-							.getPerProjectInfo().resetResolvedBuildpath();
+					BuildpathChange buildpathChange = affectedProject.getPerProjectInfo().resetResolvedBuildpath();
 
 					// if needed, generate delta, update project ref, create
 					// markers, ...
@@ -157,13 +138,11 @@ public class SetContainerOperation extends ChangeBuildpathOperation {
 					if (this.canChangeResources) {
 						// touch project to force a build if needed
 						try {
-							affectedProject.getProject().touch(
-									this.progressMonitor);
+							affectedProject.getProject().touch(this.progressMonitor);
 						} catch (CoreException e) {
 							// see
 							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=148970
-							if (!ExternalScriptProject.EXTERNAL_PROJECT_NAME
-									.equals(affectedProject.getElementName()))
+							if (!ExternalScriptProject.EXTERNAL_PROJECT_NAME.equals(affectedProject.getElementName()))
 								throw e;
 						}
 					}
@@ -176,9 +155,8 @@ public class SetContainerOperation extends ChangeBuildpathOperation {
 			} finally {
 				for (int i = 0; i < projectLength; i++) {
 					if (respectiveContainers[i] == null) {
-						manager.containerPut(affectedProjects[i],
-								containerPath, null); // reset init in progress
-														// marker
+						manager.containerPut(affectedProjects[i], containerPath, null); // reset init in progress
+																						// marker
 					}
 				}
 			}
@@ -197,9 +175,7 @@ public class SetContainerOperation extends ChangeBuildpathOperation {
 	private void verboseUpdateProject(ScriptProject affectedProject) {
 		Util.verbose("BPContainer SET  - updating affected project due to setting container\n" + //$NON-NLS-1$
 				"	project: " //$NON-NLS-1$
-				+ affectedProject.getElementName()
-				+ '\n'
-				+ "	container path: " + containerPath); //$NON-NLS-1$
+				+ affectedProject.getElementName() + '\n' + "	container path: " + containerPath); //$NON-NLS-1$
 	}
 
 	private void verboseSetContainer_Trace() {
@@ -210,35 +186,26 @@ public class SetContainerOperation extends ChangeBuildpathOperation {
 		Util.verbose("BPContainer SET  - setting container\n" + //$NON-NLS-1$
 				"	container path: " //$NON-NLS-1$
 				+ containerPath + '\n' + "	projects: {" //$NON-NLS-1$
-				+ Util.toString(affectedProjects, new Util.Displayable() {
-					@Override
-					public String displayString(Object o) {
-						return ((IScriptProject) o).getElementName();
-					}
-				}) + "}\n	values: {\n" + //$NON-NLS-1$
-				Util.toString(respectiveContainers, new Util.Displayable() {
-					@Override
-					public String displayString(Object o) {
-						StringBuffer buffer = new StringBuffer("		"); //$NON-NLS-1$
-						if (o == null) {
-							buffer.append("<null>"); //$NON-NLS-1$
-							return buffer.toString();
-						}
-						IBuildpathContainer container = (IBuildpathContainer) o;
-						buffer.append(container.getDescription());
-						buffer.append(" {\n"); //$NON-NLS-1$
-						IBuildpathEntry[] entries = container
-								.getBuildpathEntries();
-						if (entries != null) {
-							for (int i = 0; i < entries.length; i++) {
-								buffer.append(" 			"); //$NON-NLS-1$
-								buffer.append(entries[i]);
-								buffer.append('\n');
-							}
-						}
-						buffer.append(" 		}"); //$NON-NLS-1$
+				+ Util.toString(affectedProjects, o -> ((IScriptProject) o).getElementName()) + "}\n	values: {\n" + //$NON-NLS-1$
+				Util.toString(respectiveContainers, o -> {
+					StringBuilder buffer = new StringBuilder("		"); //$NON-NLS-1$
+					if (o == null) {
+						buffer.append("<null>"); //$NON-NLS-1$
 						return buffer.toString();
 					}
+					IBuildpathContainer container = (IBuildpathContainer) o;
+					buffer.append(container.getDescription());
+					buffer.append(" {\n"); //$NON-NLS-1$
+					IBuildpathEntry[] entries = container.getBuildpathEntries();
+					if (entries != null) {
+						for (int i = 0; i < entries.length; i++) {
+							buffer.append(" 			"); //$NON-NLS-1$
+							buffer.append(entries[i]);
+							buffer.append('\n');
+						}
+					}
+					buffer.append(" 		}"); //$NON-NLS-1$
+					return buffer.toString();
 				}) + "\n	}\n	invocation stack trace:"); //$NON-NLS-1$
 	}
 

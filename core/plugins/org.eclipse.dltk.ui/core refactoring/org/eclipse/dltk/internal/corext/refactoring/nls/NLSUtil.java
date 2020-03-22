@@ -3,10 +3,10 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.internal.corext.refactoring.nls;
 
@@ -19,28 +19,26 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.text.edits.TextEdit;
 
-
-
 public class NLSUtil {
 
-	//no instances
+	// no instances
 	private NLSUtil() {
 	}
+
 	/**
-	 * Returns null if an error occurred.
-	 * closes the stream 
+	 * Returns null if an error occurred. closes the stream
 	 */
 	public static String readString(InputStream is) {
 		if (is == null)
 			return null;
-		BufferedReader reader= null;
+		BufferedReader reader = null;
 		try {
-			StringBuffer buffer= new StringBuffer();
-			char[] part= new char[2048];
-			int read= 0;
-			reader= new BufferedReader(new InputStreamReader(is, "8859_1")); //$NON-NLS-1$
+			StringBuilder buffer = new StringBuilder();
+			char[] part = new char[2048];
+			int read = 0;
+			reader = new BufferedReader(new InputStreamReader(is, "8859_1")); //$NON-NLS-1$
 
-			while ((read= reader.read(part)) != -1)
+			while ((read = reader.read(part)) != -1)
 				buffer.append(part, 0, read);
 
 			return buffer.toString();
@@ -56,23 +54,26 @@ public class NLSUtil {
 		}
 		return null;
 	}
+
 	/**
-	 * Creates and returns an NLS tag edit for a string that is at the specified position in 
-	 * a compilation unit. Returns <code>null</code> if the string is already NLSed 
-	 * or the edit could not be created for some other reason.
-	 * @throws CoreException 
+	 * Creates and returns an NLS tag edit for a string that is at the specified
+	 * position in a compilation unit. Returns <code>null</code> if the string is
+	 * already NLSed or the edit could not be created for some other reason.
+	 * 
+	 * @throws CoreException
 	 */
 	public static TextEdit createNLSEdit(ISourceModule cu, int position) throws CoreException {
 		return null;
 	}
-	
+
 	/**
-	 * Creates and returns NLS tag edits for strings that are at the specified positions in 
-	 * a compilation unit. Returns <code>null</code> if all the strings are already NLSed 
-	 * or the edits could not be created for some other reason.
-	 * @throws CoreException 
+	 * Creates and returns NLS tag edits for strings that are at the specified
+	 * positions in a compilation unit. Returns <code>null</code> if all the strings
+	 * are already NLSed or the edits could not be created for some other reason.
+	 * 
+	 * @throws CoreException
 	 */
-	public static TextEdit[] createNLSEdits(ISourceModule cu, int[] positions) throws CoreException {		
+	public static TextEdit[] createNLSEdits(ISourceModule cu, int[] positions) throws CoreException {
 		return null;
 	}
 }

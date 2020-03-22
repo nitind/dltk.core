@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -27,8 +27,7 @@ import org.eclipse.dltk.utils.CorePrinter;
 /**
  * @see IImportContainer
  */
-public class ImportContainer extends SourceRefElement implements
-		IImportContainer {
+public class ImportContainer extends SourceRefElement implements IImportContainer {
 	private final String containerName;
 
 	protected ImportContainer(AbstractSourceModule parent, String containerName) {
@@ -66,8 +65,8 @@ public class ImportContainer extends SourceRefElement implements
 	}
 
 	@Override
-	public IModelElement getHandleFromMemento(String token,
-			MementoTokenizer memento, WorkingCopyOwner workingCopyOwner) {
+	public IModelElement getHandleFromMemento(String token, MementoTokenizer memento,
+			WorkingCopyOwner workingCopyOwner) {
 		switch (token.charAt(0)) {
 		case JEM_COUNT:
 			return getHandleUpdatingCountFromMemento(memento, workingCopyOwner);
@@ -81,10 +80,8 @@ public class ImportContainer extends SourceRefElement implements
 				if (version.length() == 0) {
 					version = null;
 				}
-				ModelElement importDecl = (ModelElement) getImport(importName,
-						version, alias, type, flags);
-				return importDecl.getHandleFromMemento(memento,
-						workingCopyOwner);
+				ModelElement importDecl = (ModelElement) getImport(importName, version, alias, type, flags);
+				return importDecl.getHandleFromMemento(memento, workingCopyOwner);
 			} else {
 				return this;
 			}
@@ -113,10 +110,8 @@ public class ImportContainer extends SourceRefElement implements
 	 * @since 5.2
 	 */
 	@Override
-	public IImportDeclaration getImport(String importName, String version,
-			String alias, int type, int flags) {
-		return new ImportDeclaration(this, importName, version, alias, type,
-				flags);
+	public IImportDeclaration getImport(String importName, String version, String alias, int type, int flags) {
+		return new ImportDeclaration(this, importName, version, alias, type, flags);
 	}
 
 	@Override
@@ -143,13 +138,10 @@ public class ImportContainer extends SourceRefElement implements
 	public ISourceRange getSourceRange() throws ModelException {
 		IModelElement[] imports = getChildren();
 		if (imports.length != 0) {
-			ISourceRange firstRange = ((ISourceReference) imports[0])
-					.getSourceRange();
-			ISourceRange lastRange = ((ISourceReference) imports[imports.length - 1])
-					.getSourceRange();
+			ISourceRange firstRange = ((ISourceReference) imports[0]).getSourceRange();
+			ISourceRange lastRange = ((ISourceReference) imports[imports.length - 1]).getSourceRange();
 			return new SourceRange(firstRange.getOffset(),
-					lastRange.getOffset() + lastRange.getLength()
-							- firstRange.getOffset());
+					lastRange.getOffset() + lastRange.getLength() - firstRange.getOffset());
 		} else {
 			return null;
 		}
@@ -159,7 +151,7 @@ public class ImportContainer extends SourceRefElement implements
 	 * @private Debugging purposes
 	 */
 	@Override
-	protected void toString(int tab, StringBuffer buffer) {
+	protected void toString(int tab, StringBuilder buffer) {
 		Object info = ModelManager.getModelManager().peekAtInfo(this);
 		if (info == null || !(info instanceof ModelElementInfo))
 			return;
@@ -175,8 +167,7 @@ public class ImportContainer extends SourceRefElement implements
 	 * Debugging purposes
 	 */
 	@Override
-	protected void toStringInfo(int tab, StringBuffer buffer, Object info,
-			boolean showResolvedInfo) {
+	protected void toStringInfo(int tab, StringBuilder buffer, Object info, boolean showResolvedInfo) {
 		buffer.append(tabString(tab));
 		buffer.append("<import container>"); //$NON-NLS-1$
 		if (info == null) {

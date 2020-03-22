@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -26,8 +26,7 @@ abstract class DLTKMatchFilter extends MatchFilter {
 	private static final String SETTINGS_LAST_USED_FILTERS = "filters_last_used"; //$NON-NLS-1$
 
 	public static DLTKMatchFilter[] getLastUsedFilters() {
-		String string = DLTKUIPlugin.getDefault().getDialogSettings().get(
-				SETTINGS_LAST_USED_FILTERS);
+		String string = DLTKUIPlugin.getDefault().getDialogSettings().get(SETTINGS_LAST_USED_FILTERS);
 		if (string != null && string.length() > 0) {
 			return decodeFiltersString(string);
 		}
@@ -36,8 +35,7 @@ abstract class DLTKMatchFilter extends MatchFilter {
 
 	public static void setLastUsedFilters(DLTKMatchFilter[] filters) {
 		String encoded = encodeFilters(filters);
-		DLTKUIPlugin.getDefault().getDialogSettings().put(
-				SETTINGS_LAST_USED_FILTERS, encoded);
+		DLTKUIPlugin.getDefault().getDialogSettings().put(SETTINGS_LAST_USED_FILTERS, encoded);
 	}
 
 	public static DLTKMatchFilter[] getDefaultFilters() {
@@ -45,7 +43,7 @@ abstract class DLTKMatchFilter extends MatchFilter {
 	}
 
 	private static String encodeFilters(DLTKMatchFilter[] enabledFilters) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append(enabledFilters.length);
 		for (int i = 0; i < enabledFilters.length; i++) {
 			buf.append(';');
@@ -55,8 +53,7 @@ abstract class DLTKMatchFilter extends MatchFilter {
 	}
 
 	private static DLTKMatchFilter[] decodeFiltersString(String encodedString) {
-		StringTokenizer tokenizer = new StringTokenizer(encodedString, String
-				.valueOf(';'));
+		StringTokenizer tokenizer = new StringTokenizer(encodedString, String.valueOf(';'));
 		int count = Integer.valueOf(tokenizer.nextToken()).intValue();
 		DLTKMatchFilter[] res = new DLTKMatchFilter[count];
 		for (int i = 0; i < count; i++) {
@@ -87,12 +84,11 @@ abstract class DLTKMatchFilter extends MatchFilter {
 	// private static final MatchFilter ERASURE_FILTER= new
 	// ErasureMatchFilter();
 
-	private static final DLTKMatchFilter[] ALL_FILTERS = new DLTKMatchFilter[] {
-			POTENTIAL_FILTER,
+	private static final DLTKMatchFilter[] ALL_FILTERS = new DLTKMatchFilter[] { POTENTIAL_FILTER,
 			// IMPORT_FILTER,
 			SCRIPTDOC_FILTER, READ_FILTER, WRITE_FILTER
-	// INEXACT_FILTER,
-	// ERASURE_FILTER
+			// INEXACT_FILTER,
+			// ERASURE_FILTER
 	};
 
 	public static DLTKMatchFilter[] allFilters() {

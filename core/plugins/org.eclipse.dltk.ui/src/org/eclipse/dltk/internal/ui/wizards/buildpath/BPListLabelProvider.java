@@ -94,7 +94,7 @@ public class BPListLabelProvider extends LabelProvider {
 			IPath[] patterns = (IPath[]) attrib.getValue();
 			if (patterns != null && patterns.length > 0) {
 				int patternsCount = 0;
-				StringBuffer buf = new StringBuffer();
+				StringBuilder buf = new StringBuilder();
 				for (int i = 0; i < patterns.length; i++) {
 					String pattern = patterns[i].toString();
 					if (pattern.length() > 0) {
@@ -119,7 +119,7 @@ public class BPListLabelProvider extends LabelProvider {
 			IPath[] patterns = (IPath[]) attrib.getValue();
 			if (patterns != null && patterns.length > 0) {
 				int patternsCount = 0;
-				StringBuffer buf = new StringBuffer();
+				StringBuilder buf = new StringBuilder();
 				for (int i = 0; i < patterns.length; i++) {
 					String pattern = patterns[i].toString();
 					if (pattern.length() > 0) {
@@ -198,7 +198,7 @@ public class BPListLabelProvider extends LabelProvider {
 		case IBuildpathEntry.BPE_LIBRARY: {
 			IResource resource = cpentry.getResource();
 			if (resource instanceof IContainer) {
-				StringBuffer buf = new StringBuffer(path.makeRelative().toString());
+				StringBuilder buf = new StringBuilder(path.makeRelative().toString());
 				IPath linkTarget = cpentry.getLinkTarget();
 				if (linkTarget != null) {
 					buf.append(ScriptElementLabels.CONCAT_STRING);
@@ -242,7 +242,7 @@ public class BPListLabelProvider extends LabelProvider {
 			}
 			return path.toString();
 		case IBuildpathEntry.BPE_SOURCE: {
-			StringBuffer buf = new StringBuffer(path.makeRelative().toString());
+			StringBuilder buf = new StringBuilder(path.makeRelative().toString());
 			IPath linkTarget = cpentry.getLinkTarget();
 			if (linkTarget != null) {
 				buf.append(ScriptElementLabels.CONCAT_STRING);

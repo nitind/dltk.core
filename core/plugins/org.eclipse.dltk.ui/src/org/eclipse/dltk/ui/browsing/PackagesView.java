@@ -88,7 +88,7 @@ public class PackagesView extends ScriptBrowsingPart {
 
 		private String formatLogicalPackageMessage(LogicalPackage logicalPackage) {
 			IScriptFolder[] fragments = logicalPackage.getScriptFolders();
-			StringBuffer buf = new StringBuffer(logicalPackage.getElementName());
+			StringBuilder buf = new StringBuilder(logicalPackage.getElementName());
 			buf.append(ScriptElementLabels.CONCAT_STRING);
 			String message = ""; //$NON-NLS-1$
 			boolean firstTime = true;

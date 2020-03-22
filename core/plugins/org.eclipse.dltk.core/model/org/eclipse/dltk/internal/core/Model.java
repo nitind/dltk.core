@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -40,16 +40,15 @@ import org.eclipse.dltk.utils.CorePrinter;
 
 public class Model extends Openable implements IScriptModel {
 	/**
-	 * A set of java.io.Files used as a cache of external files that are known
-	 * to be existing. Note this cache is kept for the whole session.
+	 * A set of java.io.Files used as a cache of external files that are known to be
+	 * existing. Note this cache is kept for the whole session.
 	 */
 	public static HashSet<IFileHandle> existingExternalFiles = new HashSet<>();
 
 	/**
 	 * A set of external files ({@link #existingExternalFiles}) which have been
-	 * confirmed as file (ie. which returns true to
-	 * {@link java.io.File#isFile()}. Note this cache is kept for the whole
-	 * session.
+	 * confirmed as file (ie. which returns true to {@link java.io.File#isFile()}.
+	 * Note this cache is kept for the whole session.
 	 */
 	public static HashSet<IFileHandle> existingExternalConfirmedFiles = new HashSet<>();
 
@@ -58,14 +57,12 @@ public class Model extends Openable implements IScriptModel {
 	}
 
 	@Override
-	protected boolean buildStructure(OpenableElementInfo info,
-			IProgressMonitor pm, Map newElements,
+	protected boolean buildStructure(OpenableElementInfo info, IProgressMonitor pm, Map newElements,
 			IResource underlyingResource) /*
 											 * throws ModelException
 											 */ {
 		// determine my children
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-				.getProjects();
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		int length = projects.length;
 		IModelElement[] children = new IModelElement[length];
 		int index = 0;
@@ -76,8 +73,7 @@ public class Model extends Openable implements IScriptModel {
 			}
 		}
 		if (index < length)
-			System.arraycopy(children, 0, children = new IModelElement[index],
-					0, index);
+			System.arraycopy(children, 0, children = new IModelElement[index], 0, index);
 		info.setChildren(children);
 
 		newElements.put(this, info);
@@ -86,11 +82,10 @@ public class Model extends Openable implements IScriptModel {
 
 	/**
 	 * Helper method - returns the targeted item (IResource if internal or
-	 * IFileHandle if external), or null if unbound Internal items must be
-	 * referred to using container relative paths.
+	 * IFileHandle if external), or null if unbound Internal items must be referred
+	 * to using container relative paths.
 	 */
-	public static Object getTarget(IContainer container, IPath path,
-			boolean checkResourceExistence) {
+	public static Object getTarget(IContainer container, IPath path, boolean checkResourceExistence) {
 		if (path == null)
 			return null;
 		// lookup - inside the container
@@ -133,12 +128,11 @@ public class Model extends Openable implements IScriptModel {
 	}
 
 	/**
-	 * Returns the active script project associated with the specified resource,
-	 * or <code>null</code> if no script project yet exists for the resource.
+	 * Returns the active script project associated with the specified resource, or
+	 * <code>null</code> if no script project yet exists for the resource.
 	 *
-	 * @exception IllegalArgumentException
-	 *                if the given resource is not one of an IProject, IFolder,
-	 *                or IFile.
+	 * @exception IllegalArgumentException if the given resource is not one of an
+	 *                                     IProject, IFolder, or IFile.
 	 */
 	public IScriptProject getScriptProject(IResource resource) {
 		switch (resource.getType()) {
@@ -149,8 +143,7 @@ public class Model extends Openable implements IScriptModel {
 		case IResource.PROJECT:
 			return new ScriptProject((IProject) resource, this);
 		default:
-			throw new IllegalArgumentException(
-					Messages.Model_invalidResourceForTheProject);
+			throw new IllegalArgumentException(Messages.Model_invalidResourceForTheProject);
 		}
 	}
 
@@ -159,8 +152,7 @@ public class Model extends Openable implements IScriptModel {
 	 */
 	@Override
 	public IScriptProject getScriptProject(String projectName) {
-		return new ScriptProject(ResourcesPlugin.getWorkspace().getRoot()
-				.getProject(projectName), this);
+		return new ScriptProject(ResourcesPlugin.getWorkspace().getRoot().getProject(projectName), this);
 	}
 
 	/**
@@ -173,14 +165,12 @@ public class Model extends Openable implements IScriptModel {
 	}
 
 	@Override
-	public IScriptProject[] getScriptProjects(String nature)
-			throws ModelException {
+	public IScriptProject[] getScriptProjects(String nature) throws ModelException {
 		final List<IModelElement> list = getChildrenOfType(SCRIPT_PROJECT);
 		final List<IScriptProject> result = new ArrayList<>();
 		for (int i = 0; i < list.size(); i++) {
 			IScriptProject project = (IScriptProject) list.get(i);
-			IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-					.getLanguageToolkit(project);
+			IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(project);
 			if (toolkit.getNatureId().equals(nature)) {
 				result.add(project);
 			}
@@ -190,16 +180,15 @@ public class Model extends Openable implements IScriptModel {
 	}
 
 	@Override
-	public void copy(IModelElement[] elements, IModelElement[] containers,
-			IModelElement[] siblings, String[] renamings, boolean force,
-			IProgressMonitor monitor) throws ModelException {
+	public void copy(IModelElement[] elements, IModelElement[] containers, IModelElement[] siblings, String[] renamings,
+			boolean force, IProgressMonitor monitor) throws ModelException {
 		if (elements != null && elements.length > 0 && elements[0] != null
 				&& elements[0].getElementType() < IModelElement.TYPE) {
-			runOperation(new CopyResourceElementsOperation(elements, containers,
-					force), elements, siblings, renamings, monitor);
+			runOperation(new CopyResourceElementsOperation(elements, containers, force), elements, siblings, renamings,
+					monitor);
 		} else {
-			runOperation(new CopyElementsOperation(elements, containers, force),
-					elements, siblings, renamings, monitor);
+			runOperation(new CopyElementsOperation(elements, containers, force), elements, siblings, renamings,
+					monitor);
 		}
 	}
 
@@ -241,9 +230,8 @@ public class Model extends Openable implements IScriptModel {
 	/**
 	 * Configures and runs the <code>MultiOperation</code>.
 	 */
-	protected void runOperation(MultiOperation op, IModelElement[] elements,
-			IModelElement[] siblings, String[] renamings,
-			IProgressMonitor monitor) throws ModelException {
+	protected void runOperation(MultiOperation op, IModelElement[] elements, IModelElement[] siblings,
+			String[] renamings, IProgressMonitor monitor) throws ModelException {
 		op.setRenamings(renamings);
 		if (siblings != null) {
 			for (int i = 0; i < elements.length; i++) {
@@ -257,8 +245,7 @@ public class Model extends Openable implements IScriptModel {
 	 * @private Debugging purposes
 	 */
 	@Override
-	protected void toStringInfo(int tab, StringBuffer buffer, Object info,
-			boolean showResolvedInfo) {
+	protected void toStringInfo(int tab, StringBuilder buffer, Object info, boolean showResolvedInfo) {
 		buffer.append(this.tabString(tab));
 		buffer.append("Model"); //$NON-NLS-1$
 		if (info == null) {
@@ -287,12 +274,10 @@ public class Model extends Openable implements IScriptModel {
 	}
 
 	@Override
-	public void delete(IModelElement[] elements, boolean force,
-			IProgressMonitor monitor) throws ModelException {
+	public void delete(IModelElement[] elements, boolean force, IProgressMonitor monitor) throws ModelException {
 		if (elements != null && elements.length > 0 && elements[0] != null
 				&& elements[0].getElementType() < IModelElement.TYPE) {
-			new DeleteResourceElementsOperation(elements, force)
-					.runOperation(monitor);
+			new DeleteResourceElementsOperation(elements, force).runOperation(monitor);
 		} else {
 			// new DeleteElementsOperation(elements,
 			// force).runOperation(monitor);
@@ -320,8 +305,8 @@ public class Model extends Openable implements IScriptModel {
 	}
 
 	/**
-	 * Helper method - returns whether an object is afile (ie. which returns
-	 * true to {@link java.io.File#isFile()}.
+	 * Helper method - returns whether an object is afile (ie. which returns true to
+	 * {@link java.io.File#isFile()}.
 	 */
 	public static boolean isFile(Object target) {
 		return getFile(target) != null;
@@ -354,8 +339,7 @@ public class Model extends Openable implements IScriptModel {
 	}
 
 	@Override
-	public IModelElement getHandleFromMemento(String token,
-			MementoTokenizer memento, WorkingCopyOwner owner) {
+	public IModelElement getHandleFromMemento(String token, MementoTokenizer memento, WorkingCopyOwner owner) {
 		switch (token.charAt(0)) {
 		case JEM_SCRIPTPROJECT:
 			if (!memento.hasMoreTokens())
@@ -364,8 +348,7 @@ public class Model extends Openable implements IScriptModel {
 			ModelElement project = (ModelElement) getScriptProject(projectName);
 			return project.getHandleFromMemento(memento, owner);
 		case JEM_USER_ELEMENT:
-			return MementoModelElementUtil.getHandleFromMemento(memento, this,
-					owner);
+			return MementoModelElementUtil.getHandleFromMemento(memento, this, owner);
 		}
 		return null;
 	}
@@ -387,13 +370,12 @@ public class Model extends Openable implements IScriptModel {
 	}
 
 	@Override
-	public void move(IModelElement[] elements, IModelElement[] containers,
-			IModelElement[] siblings, String[] renamings, boolean force,
-			IProgressMonitor monitor) throws ModelException {
+	public void move(IModelElement[] elements, IModelElement[] containers, IModelElement[] siblings, String[] renamings,
+			boolean force, IProgressMonitor monitor) throws ModelException {
 		if (elements != null && elements.length > 0 && elements[0] != null
 				&& elements[0].getElementType() < IModelElement.TYPE) {
-			runOperation(new MoveResourceElementsOperation(elements, containers,
-					force), elements, siblings, renamings, monitor);
+			runOperation(new MoveResourceElementsOperation(elements, containers, force), elements, siblings, renamings,
+					monitor);
 		} else {
 			if (DLTKCore.DEBUG) {
 				System.err.println("TODO:Add move elements operation"); //$NON-NLS-1$
@@ -409,22 +391,19 @@ public class Model extends Openable implements IScriptModel {
 	}
 
 	@Override
-	public void getHandleMemento(StringBuffer buff) {
+	public void getHandleMemento(StringBuilder buff) {
 		buff.append(getElementName());
 	}
 
 	@Override
-	public void rename(IModelElement[] elements, IModelElement[] destinations,
-			String[] renamings, boolean force, IProgressMonitor monitor)
-			throws ModelException {
+	public void rename(IModelElement[] elements, IModelElement[] destinations, String[] renamings, boolean force,
+			IProgressMonitor monitor) throws ModelException {
 		MultiOperation op;
 		if (elements != null && elements.length > 0 && elements[0] != null
 				&& elements[0].getElementType() < IModelElement.TYPE) {
-			op = new RenameResourceElementsOperation(elements, destinations,
-					renamings, force);
+			op = new RenameResourceElementsOperation(elements, destinations, renamings, force);
 		} else {
-			op = new RenameElementsOperation(elements, destinations, renamings,
-					force);
+			op = new RenameElementsOperation(elements, destinations, renamings, force);
 		}
 
 		op.runOperation(monitor);

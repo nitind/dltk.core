@@ -3,10 +3,10 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.internal.core.search.matching;
 
@@ -36,32 +36,25 @@ public abstract class InternalSearchPattern {
 
 	public int kind;
 
-	public void acceptMatch(String relativePath, String containerPath,
-			char separator, SearchPattern pattern,
-			IndexQueryRequestor requestor, SearchParticipant participant,
-			IDLTKSearchScope scope) {
+	public void acceptMatch(String relativePath, String containerPath, char separator, SearchPattern pattern,
+			IndexQueryRequestor requestor, SearchParticipant participant, IDLTKSearchScope scope) {
 
 		if (scope instanceof DLTKSearchScope) {
 			DLTKSearchScope javaSearchScope = (DLTKSearchScope) scope;
 			// Get document path access restriction from script search scope
 			// Note that requestor has to verify if needed whether the document
 			// violates the access restriction or not
-			AccessRuleSet access = javaSearchScope.getAccessRuleSet(
-					relativePath, containerPath);
+			AccessRuleSet access = javaSearchScope.getAccessRuleSet(relativePath, containerPath);
 			if (access != DLTKSearchScope.NOT_ENCLOSED) { // scope encloses
 				// the document path
-				String documentPath = documentPath(containerPath, separator,
-						relativePath);
-				if (!requestor.acceptIndexMatch(documentPath, pattern,
-						participant, access))
+				String documentPath = documentPath(containerPath, separator, relativePath);
+				if (!requestor.acceptIndexMatch(documentPath, pattern, participant, access))
 					throw new OperationCanceledException();
 			}
 		} else {
-			String documentPath = documentPath(containerPath, separator,
-					relativePath);
+			String documentPath = documentPath(containerPath, separator, relativePath);
 			if (scope.encloses(documentPath))
-				if (!requestor.acceptIndexMatch(documentPath, pattern,
-						participant, null))
+				if (!requestor.acceptIndexMatch(documentPath, pattern, participant, null))
 					throw new OperationCanceledException();
 
 		}
@@ -71,10 +64,8 @@ public abstract class InternalSearchPattern {
 		return (SearchPattern) this;
 	}
 
-	public String documentPath(String containerPath, char separator,
-			String relativePath) {
-		StringBuffer buffer = new StringBuffer(containerPath.length() + 1
-				+ relativePath.length());
+	public String documentPath(String containerPath, char separator, String relativePath) {
+		StringBuilder buffer = new StringBuilder(containerPath.length() + 1 + relativePath.length());
 		buffer.append(containerPath);
 		buffer.append(separator);
 		buffer.append(relativePath);
@@ -82,12 +73,11 @@ public abstract class InternalSearchPattern {
 	}
 
 	/**
-	 * Query a given index for matching entries. Assumes the sender has opened
-	 * the index and will close when finished.
+	 * Query a given index for matching entries. Assumes the sender has opened the
+	 * index and will close when finished.
 	 */
-	public void findIndexMatches(Index index, IndexQueryRequestor requestor,
-			SearchParticipant participant, IDLTKSearchScope scope,
-			IProgressMonitor monitor) throws IOException {
+	public void findIndexMatches(Index index, IndexQueryRequestor requestor, SearchParticipant participant,
+			IDLTKSearchScope scope, IProgressMonitor monitor) throws IOException {
 		if (participant.isSkipped(index)) {
 			return;
 		}
@@ -96,8 +86,7 @@ public abstract class InternalSearchPattern {
 		try {
 			index.startQuery();
 			SearchPattern pattern = currentPattern();
-			EntryResult[] entries = ((InternalSearchPattern) pattern)
-					.queryIn(index);
+			EntryResult[] entries = ((InternalSearchPattern) pattern).queryIn(index);
 			if (entries == null)
 				return;
 
@@ -114,8 +103,7 @@ public abstract class InternalSearchPattern {
 					// TODO (kent) some clients may not need the document names
 					String[] names = entry.getDocumentNames(index);
 					for (int j = 0, n = names.length; j < n; j++)
-						acceptMatch(names[j], containerPath, separator,
-								decodedResult, requestor, participant, scope);
+						acceptMatch(names[j], containerPath, separator, decodedResult, requestor, participant, scope);
 				}
 			}
 		} finally {
@@ -129,7 +117,6 @@ public abstract class InternalSearchPattern {
 
 	public EntryResult[] queryIn(Index index) throws IOException {
 		SearchPattern pattern = (SearchPattern) this;
-		return index.query(pattern.getIndexCategories(), pattern.getIndexKey(),
-				pattern.getMatchRule());
+		return index.query(pattern.getIndexCategories(), pattern.getIndexKey(), pattern.getMatchRule());
 	}
 }

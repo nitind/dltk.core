@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
 
@@ -23,7 +23,7 @@ import org.eclipse.dltk.internal.core.ModelManager.PerProjectInfo;
 
 /**
  * This operation sets an <code>IScriptProject</code>'s buildpath.
- * 
+ *
  * @see IScriptProject
  */
 public class SetBuildpathOperation extends ChangeBuildpathOperation {
@@ -35,8 +35,7 @@ public class SetBuildpathOperation extends ChangeBuildpathOperation {
 	/**
 	 * When executed, this operation sets the buildpath of the given project.
 	 */
-	public SetBuildpathOperation(ScriptProject project,
-			IBuildpathEntry[] newRawPath, boolean canChangeResource) {
+	public SetBuildpathOperation(ScriptProject project, IBuildpathEntry[] newRawPath, boolean canChangeResource) {
 		super(new IModelElement[] { project }, canChangeResource);
 		this.newRawPath = newRawPath;
 		this.project = project;
@@ -51,19 +50,16 @@ public class SetBuildpathOperation extends ChangeBuildpathOperation {
 		try {
 			// set raw classpath and null out resolved info
 			PerProjectInfo perProjectInfo = this.project.getPerProjectInfo();
-			BuildpathChange buildpathChange = perProjectInfo.setRawBuildpath(
-					this.newRawPath, ModelStatus.VERIFIED_OK/* format is ok */);
+			BuildpathChange buildpathChange = perProjectInfo.setRawBuildpath(this.newRawPath,
+					ModelStatus.VERIFIED_OK/* format is ok */);
 
 			// if needed, generate delta, update project ref, create markers,
 			buildpathChanged(buildpathChange /*
-											 * , true refresh if external linked
-											 * folder already exists
-											 */);
+												 * , true refresh if external linked folder already exists
+												 */);
 
 			// write .classpath file
-			if (this.canChangeResources
-					&& perProjectInfo.writeAndCacheBuildpath(this.project,
-							this.newRawPath))
+			if (this.canChangeResources && perProjectInfo.writeAndCacheBuildpath(this.project, this.newRawPath))
 				setAttribute(HAS_MODIFIED_RESOURCE_ATTR, TRUE);
 		} finally {
 			done();
@@ -73,8 +69,7 @@ public class SetBuildpathOperation extends ChangeBuildpathOperation {
 	@Override
 	protected ISchedulingRule getSchedulingRule() {
 		if (this.canChangeResources) {
-			IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace()
-					.getRuleFactory();
+			IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
 			return new MultiRule(new ISchedulingRule[] {
 					// use project modification rule as this is needed
 					// to create the .classpath file if it doesn't exist
@@ -82,15 +77,14 @@ public class SetBuildpathOperation extends ChangeBuildpathOperation {
 					ruleFactory.modifyRule(this.project.getProject()),
 					// and external project modification rule in case
 					// the external folders are modified
-					ruleFactory.modifyRule(ModelManager.getExternalManager()
-							.getExternalFoldersProject()) });
+					ruleFactory.modifyRule(ModelManager.getExternalManager().getExternalFoldersProject()) });
 		}
 		return super.getSchedulingRule();
 	}
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(20);
+		StringBuilder buffer = new StringBuilder(20);
 		buffer.append("SetBuildpathOperation\n"); //$NON-NLS-1$
 		buffer.append(" - buildpath : "); //$NON-NLS-1$
 		buffer.append("{"); //$NON-NLS-1$

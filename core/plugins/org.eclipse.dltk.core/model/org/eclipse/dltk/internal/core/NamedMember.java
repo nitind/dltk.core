@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -22,8 +22,8 @@ import org.eclipse.dltk.core.ModelException;
 
 public abstract class NamedMember extends Member {
 	/*
-	 * This element's name, or an empty <code>String</code> if this element does
-	 * not have a name.
+	 * This element's name, or an empty <code>String</code> if this element does not
+	 * have a name.
 	 */
 	protected String name;
 
@@ -41,20 +41,16 @@ public abstract class NamedMember extends Member {
 		return null;
 	}
 
-	public String getFullyQualifiedName(String enclosingTypeSeparator,
-			boolean showParameters) throws ModelException {
+	public String getFullyQualifiedName(String enclosingTypeSeparator, boolean showParameters) throws ModelException {
 		INamespace namespace = getNamespace();
 		if (namespace != null && !namespace.isRoot()) {
-			return namespace.getQualifiedName(enclosingTypeSeparator)
-					+ enclosingTypeSeparator
-					+ getTypeQualifiedName(enclosingTypeSeparator,
-							showParameters);
+			return namespace.getQualifiedName(enclosingTypeSeparator) + enclosingTypeSeparator
+					+ getTypeQualifiedName(enclosingTypeSeparator, showParameters);
 		}
 		return getTypeQualifiedName(enclosingTypeSeparator, showParameters);
 	}
 
-	public String getTypeQualifiedName(String typeSeparator,
-			boolean showParameters) throws ModelException {
+	public String getTypeQualifiedName(String typeSeparator, boolean showParameters) throws ModelException {
 		NamedMember declaringType;
 		String thisName = this.name;
 		if (thisName.startsWith(typeSeparator))
@@ -63,11 +59,10 @@ public abstract class NamedMember extends Member {
 		case IModelElement.SOURCE_MODULE:
 			// thisName = /*typeSeparator + */thisName;
 			if (showParameters) {
-				StringBuffer buffer = new StringBuffer(thisName);
+				StringBuilder buffer = new StringBuilder(thisName);
 				// appendTypeParameters(buffer);
 				if (DLTKCore.DEBUG) {
-					System.err
-							.println("TODO: NamedMember: add type parameters"); //$NON-NLS-1$
+					System.err.println("TODO: NamedMember: add type parameters"); //$NON-NLS-1$
 				}
 				return buffer.toString();
 			}
@@ -77,21 +72,18 @@ public abstract class NamedMember extends Member {
 			break;
 		case IModelElement.FIELD:
 		case IModelElement.METHOD:
-			declaringType = (NamedMember) ((IMember) this.parent)
-					.getDeclaringType();
+			declaringType = (NamedMember) ((IMember) this.parent).getDeclaringType();
 			break;
 		default:
 			return null;
 		}
 		String declTName = ""; //$NON-NLS-1$
 		if (declaringType != null) {
-			declTName = declaringType.getTypeQualifiedName(typeSeparator,
-					showParameters);
+			declTName = declaringType.getTypeQualifiedName(typeSeparator, showParameters);
 		}
-		StringBuffer buffer = new StringBuffer(declTName);
+		StringBuilder buffer = new StringBuilder(declTName);
 		buffer.append(typeSeparator);
-		String simpleName = this.name.length() == 0 ? Integer
-				.toString(this.occurrenceCount) : this.name;
+		String simpleName = this.name.length() == 0 ? Integer.toString(this.occurrenceCount) : this.name;
 		buffer.append(simpleName);
 		if (showParameters) {
 			// appendTypeParameters(buffer);
@@ -102,9 +94,8 @@ public abstract class NamedMember extends Member {
 		return buffer.toString();
 	}
 
-	protected String getKey(IField field, boolean forceOpen)
-			throws ModelException {
-		StringBuffer key = new StringBuffer();
+	protected String getKey(IField field, boolean forceOpen) throws ModelException {
+		StringBuilder key = new StringBuilder();
 
 		// declaring class
 		String declaringKey = getKey((IType) field.getParent(), forceOpen);
@@ -117,9 +108,8 @@ public abstract class NamedMember extends Member {
 		return key.toString();
 	}
 
-	protected String getKey(IMethod method, boolean forceOpen)
-			throws ModelException {
-		StringBuffer key = new StringBuffer();
+	protected String getKey(IMethod method, boolean forceOpen) throws ModelException {
+		StringBuilder key = new StringBuilder();
 
 		// declaring class
 		String declaringKey = getKey((IType) method.getParent(), forceOpen);
@@ -145,17 +135,15 @@ public abstract class NamedMember extends Member {
 		return key.toString();
 	}
 
-	protected String getKey(IType type, boolean forceOpen)
-			throws ModelException {
-		StringBuffer key = new StringBuffer();
+	protected String getKey(IType type, boolean forceOpen) throws ModelException {
+		StringBuilder key = new StringBuilder();
 		key.append('L');
 		String packageName = type.getScriptFolder().getElementName();
 		key.append(packageName.replace('.', '/'));
 		if (packageName.length() > 0)
 			key.append('/');
 		String typeQualifiedName = type.getTypeQualifiedName("$"); //$NON-NLS-1$
-		ISourceModule cu = (ISourceModule) type
-				.getAncestor(IModelElement.SOURCE_MODULE);
+		ISourceModule cu = (ISourceModule) type.getAncestor(IModelElement.SOURCE_MODULE);
 		if (cu != null) {
 			String cuName = cu.getElementName();
 			String mainTypeName = cuName.substring(0, cuName.lastIndexOf('.'));

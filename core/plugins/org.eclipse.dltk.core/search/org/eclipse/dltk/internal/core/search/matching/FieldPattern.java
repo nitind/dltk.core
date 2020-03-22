@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -29,34 +29,27 @@ public class FieldPattern extends VariablePattern implements IIndexConstants {
 		return fieldName.toCharArray();
 	}
 
-	public FieldPattern(boolean findDeclarations, boolean readAccess,
-			boolean writeAccess, char[] name, char[] declaringQualification,
-			char[] declaringSimpleName, char[] typeQualification,
-			char[] typeSimpleName, int matchRule, IDLTKLanguageToolkit toolkit) {
-		super(FIELD_PATTERN, findDeclarations, readAccess, writeAccess, name,
-				matchRule, toolkit);
+	public FieldPattern(boolean findDeclarations, boolean readAccess, boolean writeAccess, char[] name,
+			char[] declaringQualification, char[] declaringSimpleName, char[] typeQualification, char[] typeSimpleName,
+			int matchRule, IDLTKLanguageToolkit toolkit) {
+		super(FIELD_PATTERN, findDeclarations, readAccess, writeAccess, name, matchRule, toolkit);
 		this.declaringQualification = isCaseSensitive() ? declaringQualification
 				: CharOperation.toLowerCase(declaringQualification);
 		this.declaringSimpleName = isCaseSensitive() ? declaringSimpleName
 				: CharOperation.toLowerCase(declaringSimpleName);
-		this.typeQualification = isCaseSensitive() ? typeQualification
-				: CharOperation.toLowerCase(typeQualification);
+		this.typeQualification = isCaseSensitive() ? typeQualification : CharOperation.toLowerCase(typeQualification);
 		this.typeSimpleName = (isCaseSensitive() || isCamelCase()) ? typeSimpleName
 				: CharOperation.toLowerCase(typeSimpleName);
 	}
 
 	/*
-	 * Instanciate a field pattern with additional information for generics
-	 * search
+	 * Instanciate a field pattern with additional information for generics search
 	 */
-	public FieldPattern(boolean findDeclarations, boolean readAccess,
-			boolean writeAccess, char[] name, char[] declaringQualification,
-			char[] declaringSimpleName, char[] typeQualification,
-			char[] typeSimpleName, String typeSignature, int matchRule,
-			IDLTKLanguageToolkit toolkit) {
-		this(findDeclarations, readAccess, writeAccess, name,
-				declaringQualification, declaringSimpleName, typeQualification,
-				typeSimpleName, matchRule, toolkit);
+	public FieldPattern(boolean findDeclarations, boolean readAccess, boolean writeAccess, char[] name,
+			char[] declaringQualification, char[] declaringSimpleName, char[] typeQualification, char[] typeSimpleName,
+			String typeSignature, int matchRule, IDLTKLanguageToolkit toolkit) {
+		this(findDeclarations, readAccess, writeAccess, name, declaringQualification, declaringSimpleName,
+				typeQualification, typeSimpleName, matchRule, toolkit);
 	}
 
 	@Override
@@ -66,8 +59,8 @@ public class FieldPattern extends VariablePattern implements IIndexConstants {
 
 	@Override
 	public SearchPattern getBlankPattern() {
-		return new FieldPattern(false, false, false, null, null, null, null,
-				null, R_EXACT_MATCH | R_CASE_SENSITIVE, getToolkit());
+		return new FieldPattern(false, false, false, null, null, null, null, null, R_EXACT_MATCH | R_CASE_SENSITIVE,
+				getToolkit());
 	}
 
 	@Override
@@ -78,8 +71,7 @@ public class FieldPattern extends VariablePattern implements IIndexConstants {
 	@Override
 	public char[][] getIndexCategories() {
 		if (this.findReferences)
-			return this.findDeclarations || this.writeAccess ? REF_AND_DECL_CATEGORIES
-					: REF_CATEGORIES;
+			return this.findDeclarations || this.writeAccess ? REF_AND_DECL_CATEGORIES : REF_CATEGORIES;
 		if (this.findDeclarations)
 			return DECL_CATEGORIES;
 		return CharOperation.NO_CHAR_CHAR;
@@ -92,8 +84,7 @@ public class FieldPattern extends VariablePattern implements IIndexConstants {
 
 	@Override
 	protected boolean mustResolve() {
-		if (this.declaringSimpleName != null
-				|| this.declaringQualification != null)
+		if (this.declaringSimpleName != null || this.declaringQualification != null)
 			return true;
 		if (this.typeSimpleName != null || this.typeQualification != null)
 			return true;
@@ -101,7 +92,7 @@ public class FieldPattern extends VariablePattern implements IIndexConstants {
 	}
 
 	@Override
-	protected StringBuffer print(StringBuffer output) {
+	protected StringBuilder print(StringBuilder output) {
 		if (this.findDeclarations) {
 			output.append(this.findReferences ? "FieldCombinedPattern: " //$NON-NLS-1$
 					: "FieldDeclarationPattern: "); //$NON-NLS-1$

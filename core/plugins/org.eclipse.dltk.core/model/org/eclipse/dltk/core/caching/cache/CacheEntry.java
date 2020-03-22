@@ -17,13 +17,13 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.CacheEntry#getPath <em>Path</em>}</li>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.CacheEntry#getTimestamp <em>Timestamp</em>}</li>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.CacheEntry#getAttributes <em>Attributes</em>}</li>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.CacheEntry#getLastAccessTime <em>Last Access Time</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.eclipse.dltk.core.caching.cache.CachePackage#getCacheEntry()
  * @model

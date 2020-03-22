@@ -924,7 +924,7 @@ public class BuildpathModifier {
 	}
 
 	protected static String escapeSpecialChars(String value) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int i = 0; i < value.length(); i++) {
 			char c = value.charAt(i);
 

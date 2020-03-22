@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -31,25 +31,19 @@ import org.eclipse.dltk.internal.core.SourceRefElement;
 import org.eclipse.dltk.internal.core.util.MementoTokenizer;
 import org.eclipse.dltk.internal.core.util.Util;
 
-public class UnresolvedElement extends SourceRefElement implements
-		ILocalVariable {
+public class UnresolvedElement extends SourceRefElement implements ILocalVariable {
 
 	private final String name;
 	private final int start, end;
 
 	/**
-	 * @param parent
-	 *            the parent of the element
-	 * @param name
-	 *            the name of the element
-	 * @param start
-	 *            the position of the element name start
-	 * @param end
-	 *            the position of the element name end (including - the position
-	 *            of the last character)
+	 * @param parent the parent of the element
+	 * @param name   the name of the element
+	 * @param start  the position of the element name start
+	 * @param end    the position of the element name end (including - the position
+	 *               of the last character)
 	 */
-	public UnresolvedElement(IModelElement parent, String name, int start,
-			int end) {
+	public UnresolvedElement(IModelElement parent, String name, int start, int end) {
 		super((ModelElement) parent);
 		this.name = name;
 		this.start = start;
@@ -72,8 +66,7 @@ public class UnresolvedElement extends SourceRefElement implements
 		if (!(o instanceof UnresolvedElement))
 			return false;
 		final UnresolvedElement other = (UnresolvedElement) o;
-		return this.start == other.start && this.end == other.end
-				&& super.equals(o);
+		return this.start == other.start && this.end == other.end && super.equals(o);
 	}
 
 	@Override
@@ -82,14 +75,12 @@ public class UnresolvedElement extends SourceRefElement implements
 	}
 
 	@Override
-	protected void generateInfos(Object info, HashMap newElements,
-			IProgressMonitor pm) {
+	protected void generateInfos(Object info, HashMap newElements, IProgressMonitor pm) {
 		// an unresolved element has no info
 	}
 
 	@Override
-	public IModelElement getHandleFromMemento(String token,
-			MementoTokenizer memento, WorkingCopyOwner owner) {
+	public IModelElement getHandleFromMemento(String token, MementoTokenizer memento, WorkingCopyOwner owner) {
 		switch (token.charAt(0)) {
 		case JEM_COUNT:
 			return getHandleUpdatingCountFromMemento(memento, owner);
@@ -97,8 +88,13 @@ public class UnresolvedElement extends SourceRefElement implements
 		return this;
 	}
 
-	@Override
+	@Deprecated
 	public void getHandleMemento(StringBuffer buff) {
+		//
+	}
+
+	@Override
+	public void getHandleMemento(StringBuilder buff) {
 		((ModelElement) getParent()).getHandleMemento(buff);
 		buff.append(getHandleMementoDelimiter());
 		buff.append(this.name);
@@ -181,8 +177,7 @@ public class UnresolvedElement extends SourceRefElement implements
 	}
 
 	@Override
-	protected void toStringInfo(int tab, StringBuffer buffer, Object info,
-			boolean showResolvedInfo) {
+	protected void toStringInfo(int tab, StringBuilder buffer, Object info, boolean showResolvedInfo) {
 		buffer.append(tabString(tab));
 		toStringName(buffer);
 	}

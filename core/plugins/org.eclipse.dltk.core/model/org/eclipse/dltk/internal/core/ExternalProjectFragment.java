@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -39,12 +39,11 @@ import org.eclipse.dltk.internal.core.util.Util;
 
 /**
  * Project fragment to external source folder.
- * 
+ *
  * @author haiodo
- * 
+ *
  */
-public class ExternalProjectFragment extends ProjectFragment implements
-		IProjectFragmentTimestamp {
+public class ExternalProjectFragment extends ProjectFragment implements IProjectFragmentTimestamp {
 	public final static ArrayList EMPTY_LIST = new ArrayList();
 	/**
 	 * The path to the zip file (a workspace relative path if the archive is
@@ -54,8 +53,8 @@ public class ExternalProjectFragment extends ProjectFragment implements
 	protected final boolean fReadOnly;
 	protected final boolean fOnlyScriptResources;
 
-	protected ExternalProjectFragment(IPath path, ScriptProject project,
-			boolean isReadOnly, boolean onlyScriptResources) {
+	protected ExternalProjectFragment(IPath path, ScriptProject project, boolean isReadOnly,
+			boolean onlyScriptResources) {
 		super(null, project);
 		this.fPath = path;
 		this.fReadOnly = isReadOnly;
@@ -66,17 +65,14 @@ public class ExternalProjectFragment extends ProjectFragment implements
 	 * Compute the package fragment children of this package fragment root.
 	 */
 	@Override
-	protected boolean computeChildren(OpenableElementInfo info, Map newElements)
-			throws ModelException {
+	protected boolean computeChildren(OpenableElementInfo info, Map newElements) throws ModelException {
 		ArrayList vChildren = new ArrayList(5);
 		ArrayList vForeign = new ArrayList(5);
 		char[][] inclusionPatterns = this.fullInclusionPatternChars();
 		char[][] exclusionPatterns = this.fullExclusionPatternChars();
 		Set realPaths = new HashSet();
-		this.computeFolderChildren(this.fPath, !Util.isExcluded(this.fPath,
-				inclusionPatterns, exclusionPatterns, true), vChildren,
-				vForeign, newElements, inclusionPatterns, exclusionPatterns,
-				realPaths);
+		this.computeFolderChildren(this.fPath, !Util.isExcluded(this.fPath, inclusionPatterns, exclusionPatterns, true),
+				vChildren, vForeign, newElements, inclusionPatterns, exclusionPatterns, realPaths);
 		IModelElement[] children = new IModelElement[vChildren.size()];
 		vChildren.toArray(children);
 		info.setChildren(children);
@@ -86,32 +82,26 @@ public class ExternalProjectFragment extends ProjectFragment implements
 	/**
 	 * Starting at this folder, create folders and add them to the collection of
 	 * children.
-	 * 
+	 *
 	 * @param newElements
-	 * 
-	 * @exception ModelException
-	 *                The resource associated with this project fragment does
-	 *                not exist
+	 *
+	 * @exception ModelException The resource associated with this project fragment
+	 *                           does not exist
 	 */
-	protected void computeFolderChildren(IPath path, boolean isIncluded,
-			ArrayList vChildren, ArrayList vForeign, Map newElements,
-			char[][] inclusionPatterns, char[][] exclusionPatterns,
-			Set realPaths) throws ModelException {
-		IEnvironment environment = EnvironmentPathUtils
-				.getPathEnvironment(path);
+	protected void computeFolderChildren(IPath path, boolean isIncluded, ArrayList vChildren, ArrayList vForeign,
+			Map newElements, char[][] inclusionPatterns, char[][] exclusionPatterns, Set realPaths)
+			throws ModelException {
+		IEnvironment environment = EnvironmentPathUtils.getPathEnvironment(path);
 		if (environment != null) {
-			IFileHandle file = environment.getFile(EnvironmentPathUtils
-					.getLocalPath(path));
+			IFileHandle file = environment.getFile(EnvironmentPathUtils.getLocalPath(path));
 			String canonicalPath = file.getCanonicalPath();
 			if (!realPaths.add(canonicalPath)) {
 				return;
 			}
 		}
-		IPath lpath = path.setDevice(null).removeFirstSegments(
-				this.fPath.segmentCount());
+		IPath lpath = path.setDevice(null).removeFirstSegments(this.fPath.segmentCount());
 
-		ExternalScriptFolder fldr = (ExternalScriptFolder) this
-				.getScriptFolder(lpath);
+		ExternalScriptFolder fldr = (ExternalScriptFolder) this.getScriptFolder(lpath);
 		boolean valid = Util.isValidSourcePackageName(this, path);
 		if ((lpath.segmentCount() == 0 || valid) && isIncluded) {
 			vChildren.add(fldr);
@@ -133,10 +123,9 @@ public class ExternalProjectFragment extends ProjectFragment implements
 					IFileHandle memberFile = members[i];
 					IPath memberPath = memberFile.getFullPath();
 					if (memberFile.isDirectory()) {
-						boolean isMemberIncluded = !Util.isExcluded(memberPath,
-								inclusionPatterns, exclusionPatterns, true);
-						computeFolderChildren(memberPath, isMemberIncluded,
-								vChildren, vForeign, newElements,
+						boolean isMemberIncluded = !Util.isExcluded(memberPath, inclusionPatterns, exclusionPatterns,
+								true);
+						computeFolderChildren(memberPath, isMemberIncluded, vChildren, vForeign, newElements,
 								inclusionPatterns, exclusionPatterns, realPaths);
 					} else {
 						if (Util.isValidSourceModule(this, memberPath)) {
@@ -154,8 +143,7 @@ public class ExternalProjectFragment extends ProjectFragment implements
 			fldr.computeForeignResources(fragInfo, nonScriptElements);
 			newElements.put(fldr, fragInfo);
 		} catch (IllegalArgumentException e) {
-			throw new ModelException(e,
-					IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
+			throw new ModelException(e, IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
 			/*
 			 * could be thrown by ElementTree when path is not found
 			 */
@@ -165,7 +153,7 @@ public class ExternalProjectFragment extends ProjectFragment implements
 	}
 
 	@Override
-	public void getHandleMemento(StringBuffer buff) {
+	public void getHandleMemento(StringBuilder buff) {
 		((ModelElement) getParent()).getHandleMemento(buff);
 		buff.append(getHandleMementoDelimiter());
 		escapeMementoName(buff, getElementName());
@@ -179,8 +167,7 @@ public class ExternalProjectFragment extends ProjectFragment implements
 			for (int i = 0; i < children.length; ++i) {
 				IModelElement child = children[i];
 				if (child.getElementType() == SCRIPT_FOLDER
-						&& ((IScriptFolder) child).getElementName().equals(
-								portablePath)) {
+						&& ((IScriptFolder) child).getElementName().equals(portablePath)) {
 					return ((IScriptFolder) child);
 				}
 			}
@@ -242,8 +229,7 @@ public class ExternalProjectFragment extends ProjectFragment implements
 	 */
 	@Override
 	protected boolean resourceExists() {
-		if (fPath.toString().startsWith(
-				IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
+		if (fPath.toString().startsWith(IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
 			return true;
 		}
 		IFileHandle file = EnvironmentPathUtils.getFile(fPath);
@@ -251,7 +237,7 @@ public class ExternalProjectFragment extends ProjectFragment implements
 	}
 
 	@Override
-	protected void toStringAncestors(StringBuffer buffer) {
+	protected void toStringAncestors(StringBuilder buffer) {
 	}
 
 	@Override
@@ -267,11 +253,9 @@ public class ExternalProjectFragment extends ProjectFragment implements
 		if (o instanceof ExternalProjectFragment) {
 			ExternalProjectFragment other = (ExternalProjectFragment) o;
 			if (this.fPath.equals(other.fPath)) {
-				IEnvironment environment = EnvironmentManager
-						.getEnvironment(this);
+				IEnvironment environment = EnvironmentManager.getEnvironment(this);
 				if (environment != null) {
-					IEnvironment environmento = EnvironmentManager
-							.getEnvironment(other);
+					IEnvironment environmento = EnvironmentManager.getEnvironment(other);
 					if (!environment.equals(environmento)) {
 						return false;
 					}
@@ -290,15 +274,13 @@ public class ExternalProjectFragment extends ProjectFragment implements
 		}
 		String pathString = EnvironmentPathUtils.getLocalPathString(fPath);
 		if (env != null && pathString != null) {
-			return pathString.replace(env.getSeparatorChar(),
-					JEM_SKIP_DELIMETER);
+			return pathString.replace(env.getSeparatorChar(), JEM_SKIP_DELIMETER);
 		}
 		return fPath.lastSegment();
 	}
 
 	@Override
-	public IModelElement getHandleFromMemento(String token,
-			MementoTokenizer memento, WorkingCopyOwner owner) {
+	public IModelElement getHandleFromMemento(String token, MementoTokenizer memento, WorkingCopyOwner owner) {
 		switch (token.charAt(0)) {
 		case JEM_SCRIPTFOLDER:
 			String pkgName;
@@ -334,10 +316,8 @@ public class ExternalProjectFragment extends ProjectFragment implements
 	public IBuildpathEntry getBuildpathEntry() throws ModelException {
 		IBuildpathEntry rawEntry = super.getRawBuildpathEntry();
 		// try to guest map from internal element.
-		if (rawEntry != null
-				&& rawEntry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
-			IBuildpathContainer container = DLTKCore.getBuildpathContainer(
-					rawEntry.getPath(), this.getScriptProject());
+		if (rawEntry != null && rawEntry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+			IBuildpathContainer container = DLTKCore.getBuildpathContainer(rawEntry.getPath(), this.getScriptProject());
 			IBuildpathEntry entrys[] = container.getBuildpathEntries();
 			for (int i = 0; i < entrys.length; ++i) {
 				if (entrys[i].getPath().equals(this.getPath())) {

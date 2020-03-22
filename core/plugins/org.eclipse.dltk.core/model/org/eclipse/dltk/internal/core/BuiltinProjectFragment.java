@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -54,14 +54,12 @@ public class BuiltinProjectFragment extends ProjectFragment {
 		builtinProvider = getBuiltinProvider(project);
 	}
 
-	public static IBuiltinModuleProvider getBuiltinProvider(
-			IScriptProject project) {
+	public static IBuiltinModuleProvider getBuiltinProvider(IScriptProject project) {
 		try {
 			IBuildpathEntry[] entries = project.getRawBuildpath();
 			IPath containerPath = null;
 			for (int i = 0; i < entries.length; i++) {
-				if (entries[i]
-						.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+				if (entries[i].getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 					IPath path = entries[i].getPath();
 					if (path.segment(0).equals(INTERPRETER_CONTAINER)) {
 						containerPath = entries[i].getPath();
@@ -72,13 +70,10 @@ public class BuiltinProjectFragment extends ProjectFragment {
 			if (containerPath == null) {
 				return null;
 			}
-			IBuildpathContainer buildpathContainer = ModelManager
-					.getModelManager()
-					.getBuildpathContainer(containerPath, project);
-			if (buildpathContainer != null
-					&& buildpathContainer instanceof IBuildpathContainerExtension) {
-				return ((IBuildpathContainerExtension) buildpathContainer)
-						.getBuiltinProvider();
+			IBuildpathContainer buildpathContainer = ModelManager.getModelManager().getBuildpathContainer(containerPath,
+					project);
+			if (buildpathContainer != null && buildpathContainer instanceof IBuildpathContainerExtension) {
+				return ((IBuildpathContainerExtension) buildpathContainer).getBuiltinProvider();
 			}
 		} catch (CoreException ex) {
 			if (DLTKCore.DEBUG) {
@@ -97,14 +92,11 @@ public class BuiltinProjectFragment extends ProjectFragment {
 	 * Compute the package fragment children of this package fragment root.
 	 */
 	@Override
-	protected boolean computeChildren(OpenableElementInfo info, Map newElements)
-			throws ModelException {
+	protected boolean computeChildren(OpenableElementInfo info, Map newElements) throws ModelException {
 		ArrayList<IModelElement> vChildren = new ArrayList<>(5);
 		char[][] inclusionPatterns = fullInclusionPatternChars();
 		char[][] exclusionPatterns = fullExclusionPatternChars();
-		computeFolderChildren(this.fPath,
-				!Util.isExcluded(this.fPath, inclusionPatterns,
-						exclusionPatterns, true),
+		computeFolderChildren(this.fPath, !Util.isExcluded(this.fPath, inclusionPatterns, exclusionPatterns, true),
 				vChildren, newElements, inclusionPatterns, exclusionPatterns);
 		IModelElement[] children = new IModelElement[vChildren.size()];
 		vChildren.toArray(children);
@@ -118,29 +110,23 @@ public class BuiltinProjectFragment extends ProjectFragment {
 	 *
 	 * @param newElements
 	 *
-	 * @exception ModelException
-	 *                The resource associated with this project fragment does
-	 *                not exist
+	 * @exception ModelException The resource associated with this project fragment
+	 *                           does not exist
 	 */
-	protected void computeFolderChildren(IPath path, boolean isIncluded,
-			ArrayList<IModelElement> vChildren, Map newElements,
-			char[][] inclusionPatterns, char[][] exclusionPatterns)
-			throws ModelException {
-		BuiltinScriptFolder fldr = (BuiltinScriptFolder) getScriptFolder(
-				Path.EMPTY);
+	protected void computeFolderChildren(IPath path, boolean isIncluded, ArrayList<IModelElement> vChildren,
+			Map newElements, char[][] inclusionPatterns, char[][] exclusionPatterns) throws ModelException {
+		BuiltinScriptFolder fldr = (BuiltinScriptFolder) getScriptFolder(Path.EMPTY);
 		vChildren.add(fldr);
 		if (this.builtinProvider == null) {
 			return;
 		}
 		try {
 			BuiltinScriptFolderInfo fragInfo = new BuiltinScriptFolderInfo();
-			fldr.computeChildren(fragInfo,
-					this.builtinProvider.getBuiltinModules());
+			fldr.computeChildren(fragInfo, this.builtinProvider.getBuiltinModules());
 			fldr.computeForeignResources(fragInfo);
 			newElements.put(fldr, fragInfo);
 		} catch (IllegalArgumentException e) {
-			throw new ModelException(e,
-					IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
+			throw new ModelException(e, IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
 			/*
 			 * could be thrown by ElementTree when path is not found
 			 */
@@ -155,8 +141,7 @@ public class BuiltinProjectFragment extends ProjectFragment {
 			for (int i = 0; i < children.length; ++i) {
 				IModelElement child = children[i];
 				if (child.getElementType() == SCRIPT_FOLDER
-						&& ((IScriptFolder) child).getElementName()
-								.equals(portablePath)) {
+						&& ((IScriptFolder) child).getElementName().equals(portablePath)) {
 					return ((IScriptFolder) child);
 				}
 			}
@@ -231,7 +216,7 @@ public class BuiltinProjectFragment extends ProjectFragment {
 	}
 
 	@Override
-	protected void toStringAncestors(StringBuffer buffer) {
+	protected void toStringAncestors(StringBuilder buffer) {
 		if (isExternal())
 			return;
 		super.toStringAncestors(buffer);
@@ -255,20 +240,18 @@ public class BuiltinProjectFragment extends ProjectFragment {
 
 	@Override
 	public String getElementName() {
-		return fPath.toOSString().replace(File.separatorChar,
-				JEM_SKIP_DELIMETER);
+		return fPath.toOSString().replace(File.separatorChar, JEM_SKIP_DELIMETER);
 	}
 
 	@Override
-	public void getHandleMemento(StringBuffer buff) {
+	public void getHandleMemento(StringBuilder buff) {
 		((ModelElement) getParent()).getHandleMemento(buff);
 		buff.append(getHandleMementoDelimiter());
 		escapeMementoName(buff, getElementName());
 	}
 
 	@Override
-	public IModelElement getHandleFromMemento(String token,
-			MementoTokenizer memento, WorkingCopyOwner owner) {
+	public IModelElement getHandleFromMemento(String token, MementoTokenizer memento, WorkingCopyOwner owner) {
 		switch (token.charAt(0)) {
 		case JEM_SCRIPTFOLDER:
 			String pkgName;
@@ -306,14 +289,12 @@ public class BuiltinProjectFragment extends ProjectFragment {
 		ScriptProject project = (ScriptProject) this.getScriptProject();
 		project.getResolvedBuildpath(); // force the reverse rawEntry cache to
 		// be populated
-		Map<IPath, IBuildpathEntry> rootPathToRawEntries = project
-				.getPerProjectInfo().rootPathToRawEntries;
+		Map<IPath, IBuildpathEntry> rootPathToRawEntries = project.getPerProjectInfo().rootPathToRawEntries;
 		if (rootPathToRawEntries != null) {
 			rawEntry = rootPathToRawEntries.get(this.getPath());
 		}
 		if (rawEntry == null) {
-			throw new ModelException(new ModelStatus(
-					IModelStatusConstants.ELEMENT_NOT_ON_BUILDPATH, this));
+			throw new ModelException(new ModelStatus(IModelStatusConstants.ELEMENT_NOT_ON_BUILDPATH, this));
 		}
 		return rawEntry;
 	}
@@ -323,14 +304,11 @@ public class BuiltinProjectFragment extends ProjectFragment {
 		ScriptProject project = (ScriptProject) this.getScriptProject();
 		IBuildpathEntry rawEntry = getRawBuildpathEntry();
 		// try to guest map from internal element.
-		if (rawEntry != null
-				&& rawEntry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
-			IBuildpathContainer container = DLTKCore
-					.getBuildpathContainer(rawEntry.getPath(), project);
+		if (rawEntry != null && rawEntry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+			IBuildpathContainer container = DLTKCore.getBuildpathContainer(rawEntry.getPath(), project);
 			IBuildpathEntry entrys[] = container.getBuildpathEntries();
 			for (int i = 0; i < entrys.length; ++i) {
-				if (entrys[i].getPath()
-						.equals(new Path(this.getPath().segment(0)))) {
+				if (entrys[i].getPath().equals(new Path(this.getPath().segment(0)))) {
 					return entrys[i];
 				}
 			}
@@ -339,8 +317,7 @@ public class BuiltinProjectFragment extends ProjectFragment {
 	}
 
 	/*
-	 * Validate whether this project fragment is on the buildpath of its
-	 * project.
+	 * Validate whether this project fragment is on the buildpath of its project.
 	 */
 	@Override
 	protected IStatus validateOnBuildpath() {

@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -77,8 +77,8 @@ public class BasicSearchEngine {
 	 */
 
 	/*
-	 * A list of working copies that take precedence over their original
-	 * compilation units.
+	 * A list of working copies that take precedence over their original compilation
+	 * units.
 	 */
 	private ISourceModule[] workingCopies;
 
@@ -126,17 +126,15 @@ public class BasicSearchEngine {
 	/**
 	 * @see SearchEngine#createHierarchyScope(IType) for detailed comment.
 	 */
-	public static IDLTKSearchScope createHierarchyScope(IType type)
-			throws ModelException {
+	public static IDLTKSearchScope createHierarchyScope(IType type) throws ModelException {
 		return createHierarchyScope(type, DefaultWorkingCopyOwner.PRIMARY);
 	}
 
 	/**
-	 * @see SearchEngine#createHierarchyScope(IType,WorkingCopyOwner) for
-	 *      detailed comment.
+	 * @see SearchEngine#createHierarchyScope(IType,WorkingCopyOwner) for detailed
+	 *      comment.
 	 */
-	public static IDLTKSearchScope createHierarchyScope(IType type,
-			WorkingCopyOwner owner) throws ModelException {
+	public static IDLTKSearchScope createHierarchyScope(IType type, WorkingCopyOwner owner) throws ModelException {
 		IDLTKLanguageToolkit toolkit;
 		toolkit = DLTKLanguageManager.getLanguageToolkit(type);
 		return new HierarchyScope(toolkit, type, owner);
@@ -145,8 +143,7 @@ public class BasicSearchEngine {
 	/**
 	 * @see SearchEngine#createSuperHierarchyScope(IType) for detailed comment.
 	 */
-	public static IDLTKSearchScope createSuperHierarchyScope(IType type)
-			throws ModelException {
+	public static IDLTKSearchScope createSuperHierarchyScope(IType type) throws ModelException {
 		return createSuperHierarchyScope(type, DefaultWorkingCopyOwner.PRIMARY);
 	}
 
@@ -154,19 +151,16 @@ public class BasicSearchEngine {
 	 * @see SearchEngine#createSuperHierarchyScope(IType,WorkingCopyOwner) for
 	 *      detailed comment.
 	 */
-	public static IDLTKSearchScope createSuperHierarchyScope(IType type,
-			WorkingCopyOwner owner) throws ModelException {
+	public static IDLTKSearchScope createSuperHierarchyScope(IType type, WorkingCopyOwner owner) throws ModelException {
 		IDLTKLanguageToolkit toolkit;
 		toolkit = DLTKLanguageManager.getLanguageToolkit(type);
 		return new SuperHierarchyScope(toolkit, type, owner);
 	}
 
 	/**
-	 * @see SearchEngine#createSearchScope(IModelElement[]) for detailed
-	 *      comment.
+	 * @see SearchEngine#createSearchScope(IModelElement[]) for detailed comment.
 	 */
-	public static IDLTKSearchScope createSearchScope(IModelElement[] elements,
-			IDLTKLanguageToolkit toolkit) {
+	public static IDLTKSearchScope createSearchScope(IModelElement[] elements, IDLTKLanguageToolkit toolkit) {
 		return createSearchScope(elements, true, toolkit);
 	}
 
@@ -176,13 +170,12 @@ public class BasicSearchEngine {
 	}
 
 	/**
-	 * @see SearchEngine#createSearchScope(IModelElement[], boolean) for
-	 *      detailed comment.
+	 * @see SearchEngine#createSearchScope(IModelElement[], boolean) for detailed
+	 *      comment.
 	 */
-	public static IDLTKSearchScope createSearchScope(IModelElement[] elements,
-			boolean includeReferencedProjects, IDLTKLanguageToolkit toolkit) {
-		int includeMask = IDLTKSearchScope.SOURCES
-				| IDLTKSearchScope.APPLICATION_LIBRARIES
+	public static IDLTKSearchScope createSearchScope(IModelElement[] elements, boolean includeReferencedProjects,
+			IDLTKLanguageToolkit toolkit) {
+		int includeMask = IDLTKSearchScope.SOURCES | IDLTKSearchScope.APPLICATION_LIBRARIES
 				| IDLTKSearchScope.SYSTEM_LIBRARIES;
 		if (includeReferencedProjects) {
 			includeMask |= IDLTKSearchScope.REFERENCED_PROJECTS;
@@ -194,8 +187,8 @@ public class BasicSearchEngine {
 	 * @see SearchEngine#createSearchScope(IModelElement[], int) for detailed
 	 *      comment.
 	 */
-	public static IDLTKSearchScope createSearchScope(IModelElement[] elements,
-			int includeMask, IDLTKLanguageToolkit toolkit) {
+	public static IDLTKSearchScope createSearchScope(IModelElement[] elements, int includeMask,
+			IDLTKLanguageToolkit toolkit) {
 
 		DLTKSearchScope scope = new DLTKSearchScope(toolkit);
 
@@ -207,8 +200,7 @@ public class BasicSearchEngine {
 				if (element != null) {
 					try {
 						if (element instanceof ScriptProject) {
-							scope.add((ScriptProject) element, includeMask,
-									visitedProjects);
+							scope.add((ScriptProject) element, includeMask, visitedProjects);
 						} else {
 							scope.add(element);
 						}
@@ -231,25 +223,21 @@ public class BasicSearchEngine {
 	/**
 	 * @see SearchEngine#createWorkspaceScope() for detailed comment.
 	 */
-	public static IDLTKSearchScope createWorkspaceScope(
-			IDLTKLanguageToolkit toolkit) {
+	public static IDLTKSearchScope createWorkspaceScope(IDLTKLanguageToolkit toolkit) {
 		return ModelManager.getModelManager().getWorkspaceScope(toolkit);
 	}
 
 	/**
-	 * Searches for matches to a given query. Search queries can be created
-	 * using helper methods (from a String pattern or a Script element) and
-	 * encapsulate the description of what is being searched (for example,
-	 * search method declarations in a case sensitive way).
+	 * Searches for matches to a given query. Search queries can be created using
+	 * helper methods (from a String pattern or a Script element) and encapsulate
+	 * the description of what is being searched (for example, search method
+	 * declarations in a case sensitive way).
 	 *
-	 * @param scope
-	 *            the search result has to be limited to the given scope
-	 * @param requestor
-	 *            a callback object to which each match is reported
+	 * @param scope     the search result has to be limited to the given scope
+	 * @param requestor a callback object to which each match is reported
 	 */
-	void findMatches(SearchPattern pattern, SearchParticipant[] participants,
-			IDLTKSearchScope scope, SearchRequestor requestor,
-			IProgressMonitor monitor) throws CoreException {
+	void findMatches(SearchPattern pattern, SearchParticipant[] participants, IDLTKSearchScope scope,
+			SearchRequestor requestor, IProgressMonitor monitor) throws CoreException {
 		if (monitor != null && monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
@@ -268,8 +256,7 @@ public class BasicSearchEngine {
 		if (monitor != null)
 			monitor.beginTask(Messages.engine_searching, 100 * length);
 
-		IndexManager indexManager = ModelManager.getModelManager()
-				.getIndexManager();
+		IndexManager indexManager = ModelManager.getModelManager().getIndexManager();
 		try {
 			requestor.beginReporting();
 			for (int i = 0; i < participants.length; i++) {
@@ -280,32 +267,24 @@ public class BasicSearchEngine {
 
 				try {
 					if (monitor != null)
-						monitor.subTask(
-								NLS.bind(Messages.engine_searching_indexing,
-										participant.getDescription()));
+						monitor.subTask(NLS.bind(Messages.engine_searching_indexing, participant.getDescription()));
 					participant.beginSearching();
 					requestor.enterParticipant(participant);
-					final String[] indexMatchPaths = collectMatchingPaths(
-							indexManager, pattern, participant, scope,
-							monitor == null ? null
-									: new SubProgressMonitor(monitor, 50));
+					final String[] indexMatchPaths = collectMatchingPaths(indexManager, pattern, participant, scope,
+							monitor == null ? null : new SubProgressMonitor(monitor, 50));
 
 					// locate index matches if any (note that all search matches
 					// could have been issued during index querying)
 					if (monitor != null)
-						monitor.subTask(
-								NLS.bind(Messages.engine_searching_matching,
-										participant.getDescription()));
+						monitor.subTask(NLS.bind(Messages.engine_searching_matching, participant.getDescription()));
 					if (indexMatchPaths != null) {
 						int indexMatchLength = indexMatchPaths.length;
 						SearchDocument[] indexMatches = new SearchDocument[indexMatchLength];
 						for (int j = 0; j < indexMatchLength; j++) {
-							indexMatches[j] = participant
-									.getDocument(indexMatchPaths[j], null);
+							indexMatches[j] = participant.getDocument(indexMatchPaths[j], null);
 						}
-						SearchDocument[] matches = ModuleFactory
-								.addWorkingCopies(pattern, indexMatches,
-										getWorkingCopies(), participant);
+						SearchDocument[] matches = ModuleFactory.addWorkingCopies(pattern, indexMatches,
+								getWorkingCopies(), participant);
 						final Set<IPath> paths = new HashSet<>();
 						List<SearchDocument> filteredMatches = new ArrayList<>();
 						for (int q = 0; q < matches.length; ++q) {
@@ -314,11 +293,9 @@ public class BasicSearchEngine {
 								filteredMatches.add(matches[q]);
 							}
 						}
-						SearchDocument[] fmatches = filteredMatches.toArray(
-								new SearchDocument[filteredMatches.size()]);
-						participant.locateMatches(fmatches, pattern, scope,
-								requestor, monitor == null ? null
-										: new SubProgressMonitor(monitor, 50));
+						SearchDocument[] fmatches = filteredMatches.toArray(new SearchDocument[filteredMatches.size()]);
+						participant.locateMatches(fmatches, pattern, scope, requestor,
+								monitor == null ? null : new SubProgressMonitor(monitor, 50));
 					}
 				} catch (Exception e) {
 					DLTKCore.error("Error in findMatches()", e); //$NON-NLS-1$
@@ -337,21 +314,17 @@ public class BasicSearchEngine {
 		}
 	}
 
-	private String[] collectMatchingPaths(IndexManager indexManager,
-			SearchPattern pattern, SearchParticipant participant,
-			IDLTKSearchScope scope, IProgressMonitor monitor) {
+	private String[] collectMatchingPaths(IndexManager indexManager, SearchPattern pattern,
+			SearchParticipant participant, IDLTKSearchScope scope, IProgressMonitor monitor) {
 		final PathCollector pathCollector = new PathCollector();
-		indexManager.performConcurrentJob(
-				new PatternSearchJob(pattern, participant, scope,
-						pathCollector),
+		indexManager.performConcurrentJob(new PatternSearchJob(pattern, participant, scope, pathCollector),
 				IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, monitor);
 		if (monitor != null && monitor.isCanceled())
 			throw new OperationCanceledException();
 		return pathCollector.getPaths();
 	}
 
-	List findMatchesSourceOnly(SearchPattern pattern,
-			SearchParticipant[] participants, IDLTKSearchScope scope,
+	List findMatchesSourceOnly(SearchPattern pattern, SearchParticipant[] participants, IDLTKSearchScope scope,
 			IProgressMonitor monitor) throws CoreException {
 		if (monitor != null && monitor.isCanceled()) {
 			throw new OperationCanceledException();
@@ -372,8 +345,7 @@ public class BasicSearchEngine {
 			return null;
 		}
 
-		IndexManager indexManager = ModelManager.getModelManager()
-				.getIndexManager();
+		IndexManager indexManager = ModelManager.getModelManager().getIndexManager();
 		try {
 			List documents = new ArrayList();
 			for (int i = 0; i < participants.length; i++) {
@@ -382,20 +354,16 @@ public class BasicSearchEngine {
 					throw new OperationCanceledException();
 				}
 
-				SubProgressMonitor subMonitor = monitor == null ? null
-						: new SubProgressMonitor(monitor, 1000);
+				SubProgressMonitor subMonitor = monitor == null ? null : new SubProgressMonitor(monitor, 1000);
 				if (subMonitor != null) {
 					subMonitor.beginTask("", 1000); //$NON-NLS-1$
 				}
 				try {
 					if (subMonitor != null) {
-						subMonitor.subTask(
-								NLS.bind(Messages.engine_searching_indexing,
-										participant.getDescription()));
+						subMonitor.subTask(NLS.bind(Messages.engine_searching_indexing, participant.getDescription()));
 					}
 					participant.beginSearching();
-					final String[] indexMatchPaths = collectMatchingPaths(
-							indexManager, pattern, participant, scope,
+					final String[] indexMatchPaths = collectMatchingPaths(indexManager, pattern, participant, scope,
 							subMonitor);
 
 					if (indexMatchPaths != null) {
@@ -404,20 +372,16 @@ public class BasicSearchEngine {
 						// could have been issued during index querying)
 						if (subMonitor != null) {
 							subMonitor.subTask(
-									NLS.bind(Messages.engine_searching_matching,
-											participant.getDescription()));
+									NLS.bind(Messages.engine_searching_matching, participant.getDescription()));
 						}
 						int indexMatchLength = indexMatchPaths.length;
 						SearchDocument[] indexMatches = new SearchDocument[indexMatchLength];
 						for (int j = 0; j < indexMatchLength; j++) {
-							indexMatches[j] = participant
-									.getDocument(indexMatchPaths[j], null);
+							indexMatches[j] = participant.getDocument(indexMatchPaths[j], null);
 						}
-						SearchDocument[] matches = ModuleFactory
-								.addWorkingCopies(pattern, indexMatches,
-										getWorkingCopies(), participant);
-						ISourceModule[] modules = participant
-								.locateModules(matches, scope, subMonitor);
+						SearchDocument[] matches = ModuleFactory.addWorkingCopies(pattern, indexMatches,
+								getWorkingCopies(), participant);
+						ISourceModule[] modules = participant.locateModules(matches, scope, subMonitor);
 						for (int k = 0; k < modules.length; ++k) {
 							if (!documents.contains(modules[k])) {
 								documents.add(modules[k]);
@@ -459,7 +423,7 @@ public class BasicSearchEngine {
 		if (matchRule == 0) {
 			return "R_EXACT_MATCH"; //$NON-NLS-1$
 		}
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 1; i <= 8; i++) {
 			int bit = matchRule & (1 << (i - 1));
 			if (bit != 0 && buffer.length() > 0) {
@@ -532,15 +496,14 @@ public class BasicSearchEngine {
 	// }
 
 	/*
-	 * Returns the list of working copies used by this search engine. Returns
-	 * null if none.
+	 * Returns the list of working copies used by this search engine. Returns null
+	 * if none.
 	 */
 	private ISourceModule[] getWorkingCopies() {
 		ISourceModule[] copies;
 		if (this.workingCopies != null) {
 			if (this.workingCopyOwner == null) {
-				copies = ModelManager.getModelManager().getWorkingCopies(
-						DefaultWorkingCopyOwner.PRIMARY,
+				copies = ModelManager.getModelManager().getWorkingCopies(DefaultWorkingCopyOwner.PRIMARY,
 						false/*
 								 * don't add primary WCs a second time
 								 */);
@@ -565,11 +528,9 @@ public class BasicSearchEngine {
 				copies = this.workingCopies;
 			}
 		} else if (this.workingCopyOwner != null) {
-			copies = ModelManager.getModelManager().getWorkingCopies(
-					this.workingCopyOwner, true/* add primary WCs */);
+			copies = ModelManager.getModelManager().getWorkingCopies(this.workingCopyOwner, true/* add primary WCs */);
 		} else {
-			copies = ModelManager.getModelManager().getWorkingCopies(
-					DefaultWorkingCopyOwner.PRIMARY,
+			copies = ModelManager.getModelManager().getWorkingCopies(DefaultWorkingCopyOwner.PRIMARY,
 					false/*
 							 * don't add primary WCs a second time
 							 */);
@@ -585,8 +546,7 @@ public class BasicSearchEngine {
 		for (int i = 0; i < length; i++) {
 			SourceModule copy = (SourceModule) copies[i];
 			try {
-				if (!copy.isPrimary() || copy.hasUnsavedChanges()
-						|| copy.hasResourceChanged()) {
+				if (!copy.isPrimary() || copy.hasUnsavedChanges() || copy.hasResourceChanged()) {
 					if (result == null) {
 						result = new ISourceModule[length];
 					}
@@ -597,15 +557,14 @@ public class BasicSearchEngine {
 			}
 		}
 		if (index != length && result != null) {
-			System.arraycopy(result, 0, result = new ISourceModule[index], 0,
-					index);
+			System.arraycopy(result, 0, result = new ISourceModule[index], 0, index);
 		}
 		return result;
 	}
 
 	/*
-	 * Returns the list of working copies used to do the search on the given
-	 * Script element.
+	 * Returns the list of working copies used to do the search on the given Script
+	 * element.
 	 */
 	private ISourceModule[] getWorkingCopies(IModelElement element) {
 		if (element instanceof IMember) {
@@ -614,8 +573,7 @@ public class BasicSearchEngine {
 				ISourceModule[] copies = getWorkingCopies();
 				int length = copies == null ? 0 : copies.length;
 				if (length > 0) {
-					ISourceModule[] newWorkingCopies = new ISourceModule[length
-							+ 1];
+					ISourceModule[] newWorkingCopies = new ISourceModule[length + 1];
 					System.arraycopy(copies, 0, newWorkingCopies, 0, length);
 					newWorkingCopies[length] = cu;
 					return newWorkingCopies;
@@ -636,43 +594,35 @@ public class BasicSearchEngine {
 		return true;
 	}
 
-	boolean match(char patternTypeSuffix, char[] patternPkg,
-			char[] patternTypeName, int matchRule, int typeKind, char[] pkg,
-			char[] typeName) {
+	boolean match(char patternTypeSuffix, char[] patternPkg, char[] patternTypeName, int matchRule, int typeKind,
+			char[] pkg, char[] typeName) {
 
-		boolean isCaseSensitive = (matchRule
-				& SearchPattern.R_CASE_SENSITIVE) != 0;
+		boolean isCaseSensitive = (matchRule & SearchPattern.R_CASE_SENSITIVE) != 0;
 		// if (patternPkg != null && !CharOperation.equals(patternPkg, pkg,
 		// isCaseSensitive))
 		// return false;
 
 		if (patternTypeName != null) {
-			boolean isCamelCase = (matchRule
-					& SearchPattern.R_CAMELCASE_MATCH) != 0;
+			boolean isCamelCase = (matchRule & SearchPattern.R_CAMELCASE_MATCH) != 0;
 			int matchMode = matchRule & DLTKSearchPattern.MATCH_MODE_MASK;
 			if (!isCaseSensitive && !isCamelCase) {
 				patternTypeName = CharOperation.toLowerCase(patternTypeName);
 			}
-			boolean matchFirstChar = !isCaseSensitive
-					|| patternTypeName[0] == typeName[0];
-			if (isCamelCase && matchFirstChar && CharOperation
-					.camelCaseMatch(patternTypeName, typeName)) {
+			boolean matchFirstChar = !isCaseSensitive || patternTypeName[0] == typeName[0];
+			if (isCamelCase && matchFirstChar && CharOperation.camelCaseMatch(patternTypeName, typeName)) {
 				return true;
 			}
 			switch (matchMode) {
 			case SearchPattern.R_EXACT_MATCH:
 				if (!isCamelCase) {
-					return matchFirstChar && CharOperation
-							.equals(patternTypeName, typeName, isCaseSensitive);
+					return matchFirstChar && CharOperation.equals(patternTypeName, typeName, isCaseSensitive);
 				}
 				// fall through next case to match as prefix if camel case
 				// failed
 			case SearchPattern.R_PREFIX_MATCH:
-				return matchFirstChar && CharOperation.prefixEquals(
-						patternTypeName, typeName, isCaseSensitive);
+				return matchFirstChar && CharOperation.prefixEquals(patternTypeName, typeName, isCaseSensitive);
 			case SearchPattern.R_PATTERN_MATCH:
-				return CharOperation.match(patternTypeName, typeName,
-						isCaseSensitive);
+				return CharOperation.match(patternTypeName, typeName, isCaseSensitive);
 			case SearchPattern.R_REGEXP_MATCH:
 				// TODO (frederic) implement regular expression match
 				break;
@@ -684,17 +634,16 @@ public class BasicSearchEngine {
 
 	/**
 	 * Searches for matches of a given search pattern. Search patterns can be
-	 * created using helper methods (from a String pattern or a Script element)
-	 * and encapsulate the description of what is being searched (for example,
-	 * search method declarations in a case sensitive way).
+	 * created using helper methods (from a String pattern or a Script element) and
+	 * encapsulate the description of what is being searched (for example, search
+	 * method declarations in a case sensitive way).
 	 *
 	 * @see SearchEngine#search(SearchPattern, SearchParticipant[],
 	 *      IJavaSearchScope, SearchRequestor, IProgressMonitor) for detailed
 	 *      comment
 	 */
-	public void search(SearchPattern pattern, SearchParticipant[] participants,
-			IDLTKSearchScope scope, SearchRequestor requestor,
-			IProgressMonitor monitor) throws CoreException {
+	public void search(SearchPattern pattern, SearchParticipant[] participants, IDLTKSearchScope scope,
+			SearchRequestor requestor, IProgressMonitor monitor) throws CoreException {
 		if (VERBOSE) {
 			Util.verbose(
 					"BasicSearchEngine.search(SearchPattern, SearchParticipant[], IJavaSearchScope, SearchRequestor, IProgressMonitor)"); //$NON-NLS-1$
@@ -704,16 +653,15 @@ public class BasicSearchEngine {
 
 	/**
 	 * Searches for matches of a given search pattern. Search patterns can be
-	 * created using helper methods (from a String pattern or a Script element)
-	 * and encapsulate the description of what is being searched (for example,
-	 * search method declarations in a case sensitive way).
+	 * created using helper methods (from a String pattern or a Script element) and
+	 * encapsulate the description of what is being searched (for example, search
+	 * method declarations in a case sensitive way).
 	 *
 	 * @see SearchEngine#search(SearchPattern, SearchParticipant[],
 	 *      IJavaSearchScope, SearchRequestor, IProgressMonitor) for detailed
 	 *      comment
 	 */
-	public List searchSourceOnly(SearchPattern pattern,
-			SearchParticipant[] participants, IDLTKSearchScope scope,
+	public List searchSourceOnly(SearchPattern pattern, SearchParticipant[] participants, IDLTKSearchScope scope,
 			IProgressMonitor monitor) throws CoreException {
 		if (VERBOSE) {
 			Util.verbose(
@@ -728,16 +676,15 @@ public class BasicSearchEngine {
 	 * modes).
 	 */
 	public void searchAllSecondaryTypeNames(IProjectFragment[] sourceFolders,
-			final IRestrictedAccessTypeRequestor nameRequestor,
-			boolean waitForIndexes, IProgressMonitor progressMonitor)
-			throws ModelException {
+			final IRestrictedAccessTypeRequestor nameRequestor, boolean waitForIndexes,
+			IProgressMonitor progressMonitor) throws ModelException {
 		//
 		// if (VERBOSE) {
 		// Util.verbose(
 		// "BasicSearchEngine.searchAllSecondaryTypeNames(IProjectFragment[],
 		// IRestrictedAccessTypeRequestor, boolean, IProgressMonitor)");
 		// //$NON-NLS-1$
-		// StringBuffer buffer = new StringBuffer(" - source folders: ");
+		// StringBuilder buffer = new StringBuilder(" - source folders: ");
 		// //$NON-NLS-1$
 		// int length = sourceFolders.length;
 		// for (int i=0; i<length; i++) {
@@ -859,18 +806,16 @@ public class BasicSearchEngine {
 
 	/**
 	 * Searches for all top-level types and member types in the given scope. The
-	 * search can be selecting specific types (given a package or a type name
-	 * prefix and match modes).
+	 * search can be selecting specific types (given a package or a type name prefix
+	 * and match modes).
 	 *
 	 * @see SearchEngine#searchAllTypeNames(char[], char[], int, int,
-	 *      IJavaSearchScope, TypeNameRequestor, int, IProgressMonitor) for
-	 *      detailed comment
+	 *      IJavaSearchScope, TypeNameRequestor, int, IProgressMonitor) for detailed
+	 *      comment
 	 */
-	public void searchAllTypeNames(final char[] packageName,
-			final int packageMatchRule, char[] typeName,
+	public void searchAllTypeNames(final char[] packageName, final int packageMatchRule, char[] typeName,
 			final int typeMatchRule, int searchFor, IDLTKSearchScope scope,
-			final IRestrictedAccessTypeRequestor nameRequestor,
-			int waitingPolicy, IProgressMonitor progressMonitor)
+			final IRestrictedAccessTypeRequestor nameRequestor, int waitingPolicy, IProgressMonitor progressMonitor)
 			throws ModelException {
 
 		if (VERBOSE) {
@@ -878,12 +823,10 @@ public class BasicSearchEngine {
 					"BasicSearchEngine.searchAllTypeNames(char[], char[], int, int, IJavaSearchScope, IRestrictedAccessTypeRequestor, int, IProgressMonitor)"); //$NON-NLS-1$
 			Util.verbose("	- package name: " //$NON-NLS-1$
 					+ (packageName == null ? "null" : new String(packageName))); //$NON-NLS-1$
-			Util.verbose(
-					"	- match rule: " + getMatchRuleString(packageMatchRule)); //$NON-NLS-1$
+			Util.verbose("	- match rule: " + getMatchRuleString(packageMatchRule)); //$NON-NLS-1$
 			Util.verbose("	- type name: " //$NON-NLS-1$
 					+ (typeName == null ? "null" : new String(typeName))); //$NON-NLS-1$
-			Util.verbose(
-					"	- match rule: " + getMatchRuleString(typeMatchRule)); //$NON-NLS-1$
+			Util.verbose("	- match rule: " + getMatchRuleString(typeMatchRule)); //$NON-NLS-1$
 			Util.verbose("	- search for: " + searchFor); //$NON-NLS-1$
 			Util.verbose("	- scope: " + scope); //$NON-NLS-1$
 		}
@@ -893,16 +836,14 @@ public class BasicSearchEngine {
 			if (typeName != null && typeName.length == 0) {
 				// TODO (frederic) Throw a JME instead?
 				if (VERBOSE) {
-					Util.verbose(
-							"	=> return no result due to invalid empty values for package and type names!"); //$NON-NLS-1$
+					Util.verbose("	=> return no result due to invalid empty values for package and type names!"); //$NON-NLS-1$
 				}
 				return;
 			}
 		}
 
 		// Create pattern
-		IndexManager indexManager = ModelManager.getModelManager()
-				.getIndexManager();
+		IndexManager indexManager = ModelManager.getModelManager().getIndexManager();
 		final char typeSuffix;
 		switch (searchFor) {
 		case IDLTKSearchConstants.TYPE:
@@ -919,11 +860,10 @@ public class BasicSearchEngine {
 		final boolean simple = packageName == null || packageName.length == 0;
 		// packageMatchRule == SearchPattern.R_EXACT_MATCH
 		final TypeDeclarationPattern pattern = simple
-				? new TypeDeclarationPattern(packageName, null, null, typeName,
-						typeSuffix, typeMatchRule, scope.getLanguageToolkit())
-				: new QualifiedTypeDeclarationPattern(packageName,
-						packageMatchRule, typeName, typeSuffix, typeMatchRule,
-						scope.getLanguageToolkit());
+				? new TypeDeclarationPattern(packageName, null, null, typeName, typeSuffix, typeMatchRule,
+						scope.getLanguageToolkit())
+				: new QualifiedTypeDeclarationPattern(packageName, packageMatchRule, typeName, typeSuffix,
+						typeMatchRule, scope.getLanguageToolkit());
 
 		// Get working copy path(s). Store in a single string in case of only
 		// one to optimize comparison in requestor
@@ -946,9 +886,8 @@ public class BasicSearchEngine {
 		// Index requestor
 		IndexQueryRequestor searchRequestor = new IndexQueryRequestor() {
 			@Override
-			public boolean acceptIndexMatch(String documentPath,
-					SearchPattern indexRecord, SearchParticipant participant,
-					AccessRuleSet access) {
+			public boolean acceptIndexMatch(String documentPath, SearchPattern indexRecord,
+					SearchParticipant participant, AccessRuleSet access) {
 				// IPath fullPath = new Path(documentPath);
 				// if( documentPathFilter.contains(fullPath)) {
 				// return true;
@@ -980,23 +919,18 @@ public class BasicSearchEngine {
 				AccessRestriction accessRestriction = null;
 				if (access != null) {
 					// Compute document relative path
-					int pkgLength = (record.pkg == null
-							|| record.pkg.length == 0) ? 0
-									: record.pkg.length + 1;
-					int nameLength = record.simpleName == null ? 0
-							: record.simpleName.length;
+					int pkgLength = (record.pkg == null || record.pkg.length == 0) ? 0 : record.pkg.length + 1;
+					int nameLength = record.simpleName == null ? 0 : record.simpleName.length;
 					char[] path = new char[pkgLength + nameLength];
 					int pos = 0;
 					if (pkgLength > 0) {
-						System.arraycopy(record.pkg, 0, path, pos,
-								pkgLength - 1);
+						System.arraycopy(record.pkg, 0, path, pos, pkgLength - 1);
 						CharOperation.replace(path, '.', '/');
 						path[pkgLength - 1] = '/';
 						pos += pkgLength;
 					}
 					if (nameLength > 0) {
-						System.arraycopy(record.simpleName, 0, path, pos,
-								nameLength);
+						System.arraycopy(record.simpleName, 0, path, pos, nameLength);
 						pos += nameLength;
 					}
 					// Update access restriction if path is not empty
@@ -1005,8 +939,7 @@ public class BasicSearchEngine {
 					}
 				}
 				if (match(record.typeSuffix, record.modifiers)) {
-					nameRequestor.acceptType(record.modifiers, record.pkg,
-							record.simpleName, record.enclosingTypeNames,
+					nameRequestor.acceptType(record.modifiers, record.pkg, record.simpleName, record.enclosingTypeNames,
 							record.superTypes, documentPath, accessRestriction);
 				}
 				return true;
@@ -1018,13 +951,11 @@ public class BasicSearchEngine {
 				progressMonitor.beginTask(Messages.engine_searching, 100);
 			}
 			// add type names from indexes
-			indexManager.performConcurrentJob(
-					new PatternSearchJob(pattern, getDefaultSearchParticipant(), // Script
-																					// search
-																					// only
-							scope, searchRequestor),
-					waitingPolicy, progressMonitor == null ? null
-							: new SubProgressMonitor(progressMonitor, 100));
+			indexManager.performConcurrentJob(new PatternSearchJob(pattern, getDefaultSearchParticipant(), // Script
+																											// search
+																											// only
+					scope, searchRequestor), waitingPolicy,
+					progressMonitor == null ? null : new SubProgressMonitor(progressMonitor, 100));
 
 			// add type names from working copies
 			if (copies != null) {
@@ -1046,26 +977,19 @@ public class BasicSearchEngine {
 						IModelElement parent = type.getParent();
 						final char[][] enclosingTypeNames;
 						if (parent instanceof IType) {
-							char[] parentQualifiedName = ((IType) parent)
-									.getTypeQualifiedName().toCharArray();
-							enclosingTypeNames = CharOperation.splitOn('.',
-									parentQualifiedName);
+							char[] parentQualifiedName = ((IType) parent).getTypeQualifiedName().toCharArray();
+							enclosingTypeNames = CharOperation.splitOn('.', parentQualifiedName);
 						} else {
 							enclosingTypeNames = CharOperation.NO_CHAR_CHAR;
 						}
 						char[] simpleName = type.getElementName().toCharArray();
-						char[] packageDeclaration = SearchPattern
-								.createPackagePattern(type.getNamespace());
+						char[] packageDeclaration = SearchPattern.createPackagePattern(type.getNamespace());
 						int kind = 0;
-						if (match(typeSuffix, packageName, typeName,
-								typeMatchRule, kind, packageDeclaration,
+						if (match(typeSuffix, packageName, typeName, typeMatchRule, kind, packageDeclaration,
 								simpleName)) {
-							nameRequestor.acceptType(type.getFlags(),
-									packageDeclaration, simpleName,
+							nameRequestor.acceptType(type.getFlags(), packageDeclaration, simpleName,
 									enclosingTypeNames,
-									CharOperation.stringArrayToCharCharArray(
-											type.getSuperClasses()),
-									path, null);
+									CharOperation.stringArrayToCharCharArray(type.getSuperClasses()), path, null);
 						}
 					}
 					// }
@@ -1079,27 +1003,21 @@ public class BasicSearchEngine {
 	}
 
 	/**
-	 * Searches for all top-level types and member types in the given scope
-	 * using a case sensitive exact match with the given qualified names and
-	 * type names.
+	 * Searches for all top-level types and member types in the given scope using a
+	 * case sensitive exact match with the given qualified names and type names.
 	 *
-	 * @see SearchEngine#searchAllTypeNames(char[][], char[][],
-	 *      IJavaSearchScope, TypeNameRequestor, int, IProgressMonitor) for
-	 *      detailed comment
+	 * @see SearchEngine#searchAllTypeNames(char[][], char[][], IJavaSearchScope,
+	 *      TypeNameRequestor, int, IProgressMonitor) for detailed comment
 	 */
-	public void searchAllTypeNames(final char[][] qualifications,
-			final char[][] typeNames, final int matchRule, int searchFor,
-			IDLTKSearchScope scope,
-			final IRestrictedAccessTypeRequestor nameRequestor,
-			int waitingPolicy, IProgressMonitor progressMonitor)
-			throws ModelException {
+	public void searchAllTypeNames(final char[][] qualifications, final char[][] typeNames, final int matchRule,
+			int searchFor, IDLTKSearchScope scope, final IRestrictedAccessTypeRequestor nameRequestor,
+			int waitingPolicy, IProgressMonitor progressMonitor) throws ModelException {
 
 		if (VERBOSE) {
 			Util.verbose(
 					"BasicSearchEngine.searchAllTypeNames(char[][], char[][], int, int, IJavaSearchScope, IRestrictedAccessTypeRequestor, int, IProgressMonitor)"); //$NON-NLS-1$
 			Util.verbose("	- package name: " + (qualifications == null ? "null" //$NON-NLS-1$ //$NON-NLS-2$
-					: new String(
-							CharOperation.concatWith(qualifications, ','))));
+					: new String(CharOperation.concatWith(qualifications, ','))));
 			Util.verbose("	- type name: " + (typeNames == null ? "null" //$NON-NLS-1$ //$NON-NLS-2$
 					: new String(CharOperation.concatWith(typeNames, ','))));
 			Util.verbose("	- match rule: " + matchRule); //$NON-NLS-1$
@@ -1414,8 +1332,7 @@ public class BasicSearchEngine {
 		IDLTKLanguageToolkit toolkit = null;
 		toolkit = DLTKLanguageManager.getLanguageToolkit(element);
 		if (toolkit != null) {
-			DLTKSearchParticipant par = DLTKLanguageManager
-					.createSearchParticipant(toolkit.getNatureId());
+			DLTKSearchParticipant par = DLTKLanguageManager.createSearchParticipant(toolkit.getNatureId());
 			if (par != null) {
 				return par;
 			}
@@ -1423,14 +1340,12 @@ public class BasicSearchEngine {
 		return new DLTKSearchParticipant();
 	}
 
-	public void searchDeclarations(IModelElement enclosingElement,
-			SearchRequestor requestor, SearchPattern pattern,
+	public void searchDeclarations(IModelElement enclosingElement, SearchRequestor requestor, SearchPattern pattern,
 			IProgressMonitor monitor) throws ModelException {
 		if (VERBOSE) {
 			Util.verbose("	- script element: " + enclosingElement); //$NON-NLS-1$
 		}
-		IDLTKSearchScope scope = createSearchScope(
-				new IModelElement[] { enclosingElement },
+		IDLTKSearchScope scope = createSearchScope(new IModelElement[] { enclosingElement },
 				DLTKLanguageManager.getLanguageToolkit(enclosingElement));
 		IResource resource = enclosingElement.getResource();
 		if (enclosingElement instanceof IMember) {
@@ -1438,9 +1353,7 @@ public class BasicSearchEngine {
 			ISourceModule cu = member.getSourceModule();
 			if (cu != null) {
 				resource = cu.getResource();
-			} else if (((IProjectFragment) member
-					.getAncestor(IModelElement.PROJECT_FRAGMENT))
-							.isExternal()) {
+			} else if (((IProjectFragment) member.getAncestor(IModelElement.PROJECT_FRAGMENT)).isExternal()) {
 				// binary member resource cannot be used as this
 				// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=148215
 				resource = null;
@@ -1454,34 +1367,26 @@ public class BasicSearchEngine {
 						Util.verbose("Searching for " + pattern + " in " //$NON-NLS-1$//$NON-NLS-2$
 								+ resource.getFullPath());
 					}
-					SearchParticipant participant = getSearchParticipant(
-							enclosingElement);
+					SearchParticipant participant = getSearchParticipant(enclosingElement);
 					boolean external = false;
 					IProjectFragment fragment = (IProjectFragment) enclosingElement
 							.getAncestor(IModelElement.PROJECT_FRAGMENT);
 					if (fragment != null) {
 						external = fragment.isExternal();
 					}
-					char[] contents = Util
-							.getResourceContentsAsCharArray((IFile) resource);
-					SearchDocument[] documents = ModuleFactory.addWorkingCopies(
-							pattern,
-							new SearchDocument[] { new DLTKSearchDocument(
-									enclosingElement.getPath().toString(),
-									contents, participant, external,
-									enclosingElement.getScriptProject()
-											.getProject()) },
-							getWorkingCopies(enclosingElement), participant);
-					participant.locateMatches(documents, pattern, scope,
-							requestor, monitor);
+					char[] contents = Util.getResourceContentsAsCharArray((IFile) resource);
+					SearchDocument[] documents = ModuleFactory
+							.addWorkingCopies(pattern,
+									new SearchDocument[] { new DLTKSearchDocument(enclosingElement.getPath().toString(),
+											contents, participant, external,
+											enclosingElement.getScriptProject().getProject()) },
+									getWorkingCopies(enclosingElement), participant);
+					participant.locateMatches(documents, pattern, scope, requestor, monitor);
 				} finally {
 					requestor.endReporting();
 				}
 			} else {
-				search(pattern,
-						new SearchParticipant[] {
-								getDefaultSearchParticipant() },
-						scope, requestor, monitor);
+				search(pattern, new SearchParticipant[] { getDefaultSearchParticipant() }, scope, requestor, monitor);
 			}
 		} catch (CoreException e) {
 			if (e instanceof ModelException) {
@@ -1492,15 +1397,14 @@ public class BasicSearchEngine {
 	}
 
 	/**
-	 * Searches for all declarations of the fields accessed in the given
-	 * element. The element can be a compilation unit, a source type, or a
-	 * source method. Reports the field declarations using the given requestor.
+	 * Searches for all declarations of the fields accessed in the given element.
+	 * The element can be a compilation unit, a source type, or a source method.
+	 * Reports the field declarations using the given requestor.
 	 *
 	 * @see SearchEngine#searchDeclarationsOfAccessedFields(IModelElement,
 	 *      SearchRequestor, IProgressMonitor) for detailed comment
 	 */
-	public void searchDeclarationsOfAccessedFields(
-			IModelElement enclosingElement, SearchRequestor requestor,
+	public void searchDeclarationsOfAccessedFields(IModelElement enclosingElement, SearchRequestor requestor,
 			IProgressMonitor monitor) throws ModelException {
 		// if (VERBOSE) {
 		// Util.verbose(
@@ -1513,15 +1417,14 @@ public class BasicSearchEngine {
 	}
 
 	/**
-	 * Searches for all declarations of the types referenced in the given
-	 * element. The element can be a compilation unit, a source type, or a
-	 * source method. Reports the type declarations using the given requestor.
+	 * Searches for all declarations of the types referenced in the given element.
+	 * The element can be a compilation unit, a source type, or a source method.
+	 * Reports the type declarations using the given requestor.
 	 *
 	 * @see SearchEngine#searchDeclarationsOfReferencedTypes(IModelElement,
 	 *      SearchRequestor, IProgressMonitor) for detailed comment
 	 */
-	public void searchDeclarationsOfReferencedTypes(
-			IModelElement enclosingElement, SearchRequestor requestor,
+	public void searchDeclarationsOfReferencedTypes(IModelElement enclosingElement, SearchRequestor requestor,
 			IProgressMonitor monitor) throws ModelException {
 		// if (VERBOSE) {
 		// Util.verbose(
@@ -1534,16 +1437,15 @@ public class BasicSearchEngine {
 	}
 
 	/**
-	 * Searches for all declarations of the methods invoked in the given
-	 * element. The element can be a compilation unit, a source type, or a
-	 * source method. Reports the method declarations using the given requestor.
+	 * Searches for all declarations of the methods invoked in the given element.
+	 * The element can be a compilation unit, a source type, or a source method.
+	 * Reports the method declarations using the given requestor.
 	 *
 	 * @see SearchEngine#searchDeclarationsOfSentMessages(IModelElement,
 	 *      SearchRequestor, IProgressMonitor) for detailed comment
 	 */
-	public void searchDeclarationsOfSentMessages(IModelElement enclosingElement,
-			SearchRequestor requestor, IProgressMonitor monitor)
-			throws ModelException {
+	public void searchDeclarationsOfSentMessages(IModelElement enclosingElement, SearchRequestor requestor,
+			IProgressMonitor monitor) throws ModelException {
 		// if (VERBOSE) {
 		// Util.verbose(
 		// "BasicSearchEngine.searchDeclarationsOfSentMessages(IModelElement,
@@ -1557,26 +1459,23 @@ public class BasicSearchEngine {
 	/**
 	 * @see SearchEngine#createTypeNameMatch(IType, int) for detailed comment.
 	 */
-	public static MethodNameMatch createMethodNameMatch(IMethod method,
-			int modifiers) {
+	public static MethodNameMatch createMethodNameMatch(IMethod method, int modifiers) {
 		return new DLTKSearchMethodNameMatch(method, modifiers);
 	}
 
 	/**
 	 * Searches for all top-level types and member types in the given scope. The
-	 * search can be selecting specific types (given a package or a type name
-	 * prefix and match modes).
+	 * search can be selecting specific types (given a package or a type name prefix
+	 * and match modes).
 	 *
 	 * @throws ModelException
 	 *
 	 * @see SearchEngine#searchAllTypeNames(char[], char[], int, int,
-	 *      IJavaSearchScope, TypeNameRequestor, int, IProgressMonitor) for
-	 *      detailed comment
+	 *      IJavaSearchScope, TypeNameRequestor, int, IProgressMonitor) for detailed
+	 *      comment
 	 */
-	public void searchAllMethodNames(char[] methodName, int methodMatchRule,
-			int searchFor, IDLTKSearchScope scope,
-			final IRestrictedAccessMethodRequestor nameRequestor,
-			int waitingPolicy, IProgressMonitor progressMonitor)
+	public void searchAllMethodNames(char[] methodName, int methodMatchRule, int searchFor, IDLTKSearchScope scope,
+			final IRestrictedAccessMethodRequestor nameRequestor, int waitingPolicy, IProgressMonitor progressMonitor)
 			throws ModelException {
 
 		if (VERBOSE) {
@@ -1584,8 +1483,7 @@ public class BasicSearchEngine {
 					"BasicSearchEngine.searchAllTypeNames(char[], char[], int, int, IJavaSearchScope, IRestrictedAccessTypeRequestor, int, IProgressMonitor)"); //$NON-NLS-1$
 			Util.verbose("	- method name: " //$NON-NLS-1$
 					+ (methodName == null ? "null" : new String(methodName))); //$NON-NLS-1$
-			Util.verbose(
-					"	- match rule: " + getMatchRuleString(methodMatchRule)); //$NON-NLS-1$
+			Util.verbose("	- match rule: " + getMatchRuleString(methodMatchRule)); //$NON-NLS-1$
 			Util.verbose("	- search for: " + searchFor); //$NON-NLS-1$
 			Util.verbose("	- scope: " + scope); //$NON-NLS-1$
 		}
@@ -1594,17 +1492,15 @@ public class BasicSearchEngine {
 		if (methodName != null && methodName.length == 0) {
 			// TODO (frederic) Throw a JME instead?
 			if (VERBOSE) {
-				Util.verbose(
-						"	=> return no result due to invalid empty values for package and type names!"); //$NON-NLS-1$
+				Util.verbose("	=> return no result due to invalid empty values for package and type names!"); //$NON-NLS-1$
 			}
 			return;
 		}
 
 		// Create pattern
-		IndexManager indexManager = ModelManager.getModelManager()
-				.getIndexManager();
-		final MethodDeclarationPattern pattern = new MethodDeclarationPattern(
-				methodName, methodMatchRule, scope.getLanguageToolkit());
+		IndexManager indexManager = ModelManager.getModelManager().getIndexManager();
+		final MethodDeclarationPattern pattern = new MethodDeclarationPattern(methodName, methodMatchRule,
+				scope.getLanguageToolkit());
 
 		// Get working copy path(s). Store in a single string in case of only
 		// one to optimize comparison in requestor
@@ -1627,9 +1523,8 @@ public class BasicSearchEngine {
 		// Index requestor
 		IndexQueryRequestor searchRequestor = new IndexQueryRequestor() {
 			@Override
-			public boolean acceptIndexMatch(String documentPath,
-					SearchPattern indexRecord, SearchParticipant participant,
-					AccessRuleSet access) {
+			public boolean acceptIndexMatch(String documentPath, SearchPattern indexRecord,
+					SearchParticipant participant, AccessRuleSet access) {
 				// IPath fullPath = new Path(documentPath);
 				// if( documentPathFilter.contains(fullPath)) {
 				// return true;
@@ -1652,8 +1547,7 @@ public class BasicSearchEngine {
 					break;
 				}
 
-				nameRequestor.acceptMethod(record.modifiers, record.pkg,
-						record.simpleName, record.enclosingTypeNames,
+				nameRequestor.acceptMethod(record.modifiers, record.pkg, record.simpleName, record.enclosingTypeNames,
 						record.parameterNames, documentPath);
 				return true;
 			}
@@ -1664,13 +1558,11 @@ public class BasicSearchEngine {
 				progressMonitor.beginTask(Messages.engine_searching, 100);
 			}
 			// add type names from indexes
-			indexManager.performConcurrentJob(
-					new PatternSearchJob(pattern, getDefaultSearchParticipant(), // Script
-																					// search
-																					// only
-							scope, searchRequestor),
-					waitingPolicy, progressMonitor == null ? null
-							: new SubProgressMonitor(progressMonitor, 100));
+			indexManager.performConcurrentJob(new PatternSearchJob(pattern, getDefaultSearchParticipant(), // Script
+																											// search
+																											// only
+					scope, searchRequestor), waitingPolicy,
+					progressMonitor == null ? null : new SubProgressMonitor(progressMonitor, 100));
 
 			// add type names from working copies
 			if (copies != null) {
@@ -1692,10 +1584,8 @@ public class BasicSearchEngine {
 						IModelElement parent = type.getParent();
 						char[][] enclosingTypeNames;
 						if (parent instanceof IType) {
-							char[] parentQualifiedName = ((IType) parent)
-									.getTypeQualifiedName().toCharArray();
-							enclosingTypeNames = CharOperation.splitOn('.',
-									parentQualifiedName);
+							char[] parentQualifiedName = ((IType) parent).getTypeQualifiedName().toCharArray();
+							enclosingTypeNames = CharOperation.splitOn('.', parentQualifiedName);
 						} else {
 							enclosingTypeNames = CharOperation.NO_CHAR_CHAR;
 						}

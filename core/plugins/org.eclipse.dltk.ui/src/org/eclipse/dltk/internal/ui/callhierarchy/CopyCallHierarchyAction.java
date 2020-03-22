@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
 
@@ -30,12 +30,11 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.TreeItem;
 
-
 class CopyCallHierarchyAction extends Action {
-    private static final char INDENTATION= '\t';
+	private static final char INDENTATION = '\t';
 
-    private CallHierarchyViewPart fView;
-    private CallHierarchyViewer fViewer;
+	private CallHierarchyViewPart fView;
+	private CallHierarchyViewer fViewer;
 
 	private final Clipboard fClipboard;
 
@@ -45,74 +44,75 @@ class CopyCallHierarchyAction extends Action {
 		if (DLTKCore.DEBUG) {
 			System.err.println("Add help support here..."); //$NON-NLS-1$
 		}
-		fView= view;
-		fClipboard= clipboard;
-        fViewer= viewer;
+		fView = view;
+		fClipboard = clipboard;
+		fViewer = viewer;
 	}
 
-    public boolean canActionBeAdded() {
-        Object element = SelectionUtil.getSingleElement(getSelection());
-        return element != null;
-    }
+	public boolean canActionBeAdded() {
+		Object element = SelectionUtil.getSingleElement(getSelection());
+		return element != null;
+	}
 
-    private ISelection getSelection() {
-        ISelectionProvider provider = fView.getSite().getSelectionProvider();
+	private ISelection getSelection() {
+		ISelectionProvider provider = fView.getSite().getSelectionProvider();
 
-        if (provider != null) {
-            return provider.getSelection();
-        }
+		if (provider != null) {
+			return provider.getSelection();
+		}
 
-        return null;
-    }
+		return null;
+	}
 
 	@Override
 	public void run() {
-        StringBuffer buf= new StringBuffer();
-        addCalls(fViewer.getTree().getSelection()[0], 0, buf);
+		StringBuilder buf = new StringBuilder();
+		addCalls(fViewer.getTree().getSelection()[0], 0, buf);
 
 		TextTransfer plainTextTransfer = TextTransfer.getInstance();
-		try{
-			fClipboard.setContents(
-				new String[]{ convertLineTerminators(buf.toString()) },
-				new Transfer[]{ plainTextTransfer });
-		}  catch (SWTError e){
+		try {
+			fClipboard.setContents(new String[] { convertLineTerminators(buf.toString()) },
+					new Transfer[] { plainTextTransfer });
+		} catch (SWTError e) {
 			if (e.code != DND.ERROR_CANNOT_SET_CLIPBOARD)
 				throw e;
-			if (MessageDialog.openQuestion(fView.getViewSite().getShell(), CallHierarchyMessages.CopyCallHierarchyAction_problem, CallHierarchyMessages.CopyCallHierarchyAction_clipboard_busy))
+			if (MessageDialog.openQuestion(fView.getViewSite().getShell(),
+					CallHierarchyMessages.CopyCallHierarchyAction_problem,
+					CallHierarchyMessages.CopyCallHierarchyAction_clipboard_busy))
 				run();
 		}
 	}
 
 	/**
-     * Adds the specified TreeItem's text to the StringBuffer
-     *
-     * @param item
-     * @param buf
-     */
-    private void addCalls(TreeItem item, int indent, StringBuffer buf) {
-        for (int i= 0; i < indent; i++) {
-            buf.append(INDENTATION);
-        }
+	 * Adds the specified TreeItem's text to the StringBuilder
+	 *
+	 * @param item
+	 * @param buf
+	 */
+	private void addCalls(TreeItem item, int indent, StringBuilder buf) {
+		for (int i = 0; i < indent; i++) {
+			buf.append(INDENTATION);
+		}
 
-        buf.append(item.getText());
-        buf.append('\n');
+		buf.append(item.getText());
+		buf.append('\n');
 
-        if (item.getExpanded()) {
-            TreeItem[] items= item.getItems();
-            for (int i= 0; i < items.length; i++) {
-                addCalls(items[i], indent + 1, buf);
-            }
-        }
-    }
+		if (item.getExpanded()) {
+			TreeItem[] items = item.getItems();
+			for (int i = 0; i < items.length; i++) {
+				addCalls(items[i], indent + 1, buf);
+			}
+		}
+	}
 
-    private String convertLineTerminators(String in) {
-		StringWriter stringWriter= new StringWriter();
-		PrintWriter printWriter= new PrintWriter(stringWriter);
-		StringReader stringReader= new StringReader(in);
-		BufferedReader bufferedReader= new BufferedReader(stringReader);
+	private String convertLineTerminators(String in) {
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter printWriter = new PrintWriter(stringWriter);
+		StringReader stringReader = new StringReader(in);
+		BufferedReader bufferedReader = new BufferedReader(stringReader);
 		String line;
 		try {
-			while ((line= bufferedReader.readLine()) != null) {
+			while ((line = bufferedReader.readLine()) != null) {
 				printWriter.println(line);
 			}
 		} catch (IOException e) {

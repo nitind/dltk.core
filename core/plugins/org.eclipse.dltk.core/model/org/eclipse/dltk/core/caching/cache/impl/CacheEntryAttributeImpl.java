@@ -19,11 +19,11 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.impl.CacheEntryAttributeImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.dltk.core.caching.cache.impl.CacheEntryAttributeImpl#getLocation <em>Location</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -206,7 +206,7 @@ public class CacheEntryAttributeImpl extends MinimalEObjectImpl implements Cache
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (name: ");
 		result.append(name);
 		result.append(", location: ");

@@ -112,7 +112,7 @@ public class FileTemplateContextType extends TemplateContextType {
 
 		@Override
 		protected String resolve(TemplateContext context) {
-			StringBuffer expr = new StringBuffer("${"); //$NON-NLS-1$
+			StringBuilder expr = new StringBuilder("${"); //$NON-NLS-1$
 			expr.append(fVariableName);
 			for (int i = 0; i < fArguments.length; i++) {
 				expr.append(':').append(fArguments[i]);

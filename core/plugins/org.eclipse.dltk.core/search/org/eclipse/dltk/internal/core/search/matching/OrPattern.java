@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -36,19 +36,14 @@ public class OrPattern extends SearchPattern implements IIndexConstants {
 	int matchCompatibility;
 
 	public OrPattern(SearchPattern leftPattern, SearchPattern rightPattern) {
-		super(
-				Math.max(leftPattern.getMatchRule(), rightPattern
-						.getMatchRule()), leftPattern.getToolkit());
+		super(Math.max(leftPattern.getMatchRule(), rightPattern.getMatchRule()), leftPattern.getToolkit());
 		((InternalSearchPattern) this).kind = OR_PATTERN;
 
 		Assert.isNotNull(leftPattern.getToolkit());
-		Assert.isTrue(leftPattern.getToolkit()
-				.equals(rightPattern.getToolkit()));
+		Assert.isTrue(leftPattern.getToolkit().equals(rightPattern.getToolkit()));
 
-		SearchPattern[] leftPatterns = leftPattern instanceof OrPattern ? ((OrPattern) leftPattern).patterns
-				: null;
-		SearchPattern[] rightPatterns = rightPattern instanceof OrPattern ? ((OrPattern) rightPattern).patterns
-				: null;
+		SearchPattern[] leftPatterns = leftPattern instanceof OrPattern ? ((OrPattern) leftPattern).patterns : null;
+		SearchPattern[] rightPatterns = rightPattern instanceof OrPattern ? ((OrPattern) rightPattern).patterns : null;
 		int leftSize = leftPatterns == null ? 1 : leftPatterns.length;
 		int rightSize = rightPatterns == null ? 1 : rightPatterns.length;
 		this.patterns = new SearchPattern[leftSize + rightSize];
@@ -60,8 +55,7 @@ public class OrPattern extends SearchPattern implements IIndexConstants {
 		if (rightPatterns == null)
 			this.patterns[leftSize] = rightPattern;
 		else
-			System.arraycopy(rightPatterns, 0, this.patterns, leftSize,
-					rightSize);
+			System.arraycopy(rightPatterns, 0, this.patterns, leftSize, rightSize);
 
 		// Store erasure match
 		matchCompatibility = 0;
@@ -71,16 +65,15 @@ public class OrPattern extends SearchPattern implements IIndexConstants {
 	}
 
 	@Override
-	public void findIndexMatches(Index index, IndexQueryRequestor requestor,
-			SearchParticipant participant, IDLTKSearchScope scope,
-			IProgressMonitor progressMonitor) throws IOException {
+	public void findIndexMatches(Index index, IndexQueryRequestor requestor, SearchParticipant participant,
+			IDLTKSearchScope scope, IProgressMonitor progressMonitor) throws IOException {
 		// per construction, OR pattern can only be used with a PathCollector
 		// (which already gather results using a set)
 		try {
 			index.startQuery();
 			for (int i = 0, length = this.patterns.length; i < length; i++)
-				((InternalSearchPattern) this.patterns[i]).findIndexMatches(
-						index, requestor, participant, scope, progressMonitor);
+				((InternalSearchPattern) this.patterns[i]).findIndexMatches(index, requestor, participant, scope,
+						progressMonitor);
 		} finally {
 			index.stopQuery();
 		}
@@ -98,21 +91,19 @@ public class OrPattern extends SearchPattern implements IIndexConstants {
 	@Override
 	public boolean isPolymorphicSearch() {
 		for (int i = 0, length = this.patterns.length; i < length; i++)
-			if (((InternalSearchPattern) this.patterns[i])
-					.isPolymorphicSearch())
+			if (((InternalSearchPattern) this.patterns[i]).isPolymorphicSearch())
 				return true;
 		return false;
 	}
 
 	/**
 	 * Returns whether the pattern has signatures or not.
-	 * 
+	 *
 	 * @return true if one at least of the stored pattern has signatures.
 	 */
 	public final boolean hasSignatures() {
 		boolean isErasureMatch = isErasureMatch();
-		for (int i = 0, length = this.patterns.length; i < length
-				&& !isErasureMatch; i++) {
+		for (int i = 0, length = this.patterns.length; i < length && !isErasureMatch; i++) {
 			if (((DLTKSearchPattern) this.patterns[i]).hasSignatures())
 				return true;
 		}
@@ -125,7 +116,7 @@ public class OrPattern extends SearchPattern implements IIndexConstants {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append(this.patterns[0].toString());
 		for (int i = 1, length = this.patterns.length; i < length; i++) {
 			buffer.append("\n| "); //$NON-NLS-1$

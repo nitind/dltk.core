@@ -3,10 +3,10 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -91,8 +91,7 @@ public class ModelCache {
 		// processing)
 		this.rootCache = new ElementCache((int) (DEFAULT_ROOT_SIZE * ratio));
 		this.pkgCache = new ElementCache((int) (DEFAULT_PKG_SIZE * ratio));
-		this.openableCache = new ElementCache(
-				(int) (DEFAULT_OPENABLE_SIZE * ratio));
+		this.openableCache = new ElementCache((int) (DEFAULT_OPENABLE_SIZE * ratio));
 		this.childrenCache = new HashMap((int) (DEFAULT_CHILDREN_SIZE * ratio));
 	}
 
@@ -148,18 +147,15 @@ public class ModelCache {
 			break;
 		case IModelElement.SCRIPT_PROJECT:
 			this.projectCache.put(element, info);
-			this.rootCache.ensureSpaceLimit(((ModelElementInfo) info).size(),
-					element);
+			this.rootCache.ensureSpaceLimit(((ModelElementInfo) info).size(), element);
 			break;
 		case IModelElement.PROJECT_FRAGMENT:
 			this.rootCache.put(element, info);
-			this.pkgCache.ensureSpaceLimit(((ModelElementInfo) info).size(),
-					element);
+			this.pkgCache.ensureSpaceLimit(((ModelElementInfo) info).size(), element);
 			break;
 		case IModelElement.SCRIPT_FOLDER:
 			this.pkgCache.put(element, info);
-			this.openableCache.ensureSpaceLimit(((ModelElementInfo) info)
-					.size(), element);
+			this.openableCache.ensureSpaceLimit(((ModelElementInfo) info).size(), element);
 			break;
 		case IModelElement.SOURCE_MODULE:
 		case IModelElement.BINARY_MODULE:
@@ -201,7 +197,7 @@ public class ModelCache {
 
 	public String toStringFillingRation(String prefix) {
 		final NumberFormat nf = NumberFormat.getInstance();
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append(prefix);
 		buffer.append("Project cache: "); //$NON-NLS-1$
 		buffer.append(this.projectCache.size());

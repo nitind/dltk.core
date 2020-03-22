@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -26,19 +26,18 @@ public abstract class TextUtils {
 	}
 
 	/**
-	 * (Copied from <code>Pattern</code> class, JRE 5.) Returns a literal
-	 * pattern <code>String</code> for the specified <code>String</code>.
+	 * (Copied from <code>Pattern</code> class, JRE 5.) Returns a literal pattern
+	 * <code>String</code> for the specified <code>String</code>.
 	 *
 	 * <p>
 	 * This method produces a <code>String</code> that can be used to create a
-	 * <code>Pattern</code> that would match the string <code>s</code> as if it
-	 * were a literal pattern.
+	 * <code>Pattern</code> that would match the string <code>s</code> as if it were
+	 * a literal pattern.
 	 * </p>
 	 * Metacharacters or escape sequences in the input sequence will be given no
 	 * special meaning.
 	 *
-	 * @param s
-	 *            The string to be literalized
+	 * @param s The string to be literalized
 	 * @return A literal string replacement
 	 */
 	public static String Pattern_quote(String s) {
@@ -46,7 +45,7 @@ public abstract class TextUtils {
 		if (slashEIndex == -1)
 			return "\\Q" + s + "\\E"; //$NON-NLS-1$ //$NON-NLS-2$
 
-		StringBuffer sb = new StringBuffer(s.length() * 2);
+		StringBuilder sb = new StringBuilder(s.length() * 2);
 		sb.append("\\Q"); //$NON-NLS-1$
 		slashEIndex = 0;
 		int current = 0;
@@ -61,8 +60,8 @@ public abstract class TextUtils {
 	}
 
 	/**
-	 * Split this string around line boundaries (handles any line boundaries -
-	 * "\n", "\r", "\r\n" so it is not equivalent to String#split("\n"))
+	 * Split this string around line boundaries (handles any line boundaries - "\n",
+	 * "\r", "\r\n" so it is not equivalent to String#split("\n"))
 	 *
 	 * @param content
 	 * @return
@@ -76,12 +75,11 @@ public abstract class TextUtils {
 	}
 
 	/**
-	 * Split this string around line boundaries (handles any line boundaries -
-	 * "\n", "\r", "\r\n" so it is not equivalent to String#split("\n"))
+	 * Split this string around line boundaries (handles any line boundaries - "\n",
+	 * "\r", "\r\n" so it is not equivalent to String#split("\n"))
 	 *
 	 * @param content
-	 * @param limit
-	 *            the maximal number of lines to return
+	 * @param limit   the maximal number of lines to return
 	 * @return
 	 */
 	public static String[] splitLines(CharSequence content, int limit) {
@@ -93,8 +91,8 @@ public abstract class TextUtils {
 	}
 
 	/**
-	 * Counts the number of lines in the specified string. Lines are counter by
-	 * the separators ("\n", "\r", "\r\n")
+	 * Counts the number of lines in the specified string. Lines are counter by the
+	 * separators ("\n", "\r", "\r\n")
 	 *
 	 * @param content
 	 * @return
@@ -108,8 +106,7 @@ public abstract class TextUtils {
 	 * @param lines
 	 * @return
 	 */
-	public static CharSequence selectHeadLines(CharSequence content,
-			int lines) {
+	public static CharSequence selectHeadLines(CharSequence content, int lines) {
 		return new LineSplitter(content).selectHeadLines(lines);
 	}
 
@@ -181,8 +178,7 @@ public abstract class TextUtils {
 				if (charAt1 == '\r') {
 					final int endLine = contentPos;
 					++contentPos;
-					if (contentPos < contentEnd
-							&& content.charAt(contentPos) == '\n') {
+					if (contentPos < contentEnd && content.charAt(contentPos) == '\n') {
 						++contentPos;
 						lastLineDelimiter = DELIMITER_WINDOWS;
 					} else {
@@ -205,8 +201,7 @@ public abstract class TextUtils {
 	}
 
 	public static ISourceLineTracker createLineTracker(char[] content) {
-		final LineTrackerBuilder builder = new LineTrackerBuilder(
-				new CharArraySequence(content));
+		final LineTrackerBuilder builder = new LineTrackerBuilder(new CharArraySequence(content));
 		return builder.buildLineTracker();
 	}
 
@@ -231,8 +226,7 @@ public abstract class TextUtils {
 				lineOffsets.add(begin);
 				delimiters.add(lastLineDelimiter);
 			}
-			return new DefaultSourceLineTracker(contentEnd,
-					lineOffsets.toArray(),
+			return new DefaultSourceLineTracker(contentEnd, lineOffsets.toArray(),
 					delimiters.toArray(new String[delimiters.size()]));
 		}
 
@@ -244,8 +238,7 @@ public abstract class TextUtils {
 		private final int[] lineOffsets;
 		private final String[] delimiters;
 
-		public DefaultSourceLineTracker(int contentLength, int[] lineOffsets,
-				String[] delimiters) {
+		public DefaultSourceLineTracker(int contentLength, int[] lineOffsets, String[] delimiters) {
 			this.contentLength = contentLength;
 			this.lineOffsets = lineOffsets;
 			this.delimiters = delimiters;
@@ -360,7 +353,7 @@ public abstract class TextUtils {
 		if (current == -1)
 			return text;
 
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		while (current > -1) {
 			buffer.append(text.substring(previous, current));
 			buffer.append(s);
@@ -386,15 +379,13 @@ public abstract class TextUtils {
 	 * </p>
 	 *
 	 * <p>
-	 * No delimiter is added before or after the list. A <code>null</code>
-	 * separator is the same as an empty String ("").
+	 * No delimiter is added before or after the list. A <code>null</code> separator
+	 * is the same as an empty String ("").
 	 * </p>
 	 *
-	 * @param collection
-	 *            the <code>Collection</code> of values to join together, may be
-	 *            null
-	 * @param separator
-	 *            the separator character to use, null treated as ""
+	 * @param collection the <code>Collection</code> of values to join together, may
+	 *                   be null
+	 * @param separator  the separator character to use, null treated as ""
 	 * @return the joined String, <code>null</code> if null collection input
 	 */
 	public static String join(Collection<?> collection, String separator) {
@@ -411,7 +402,7 @@ public abstract class TextUtils {
 			return first != null ? first.toString() : ""; //$NON-NLS-1$
 		}
 		// two or more elements
-		final StringBuffer buf = new StringBuffer(256);
+		final StringBuilder buf = new StringBuilder(256);
 		if (first != null) {
 			buf.append(first);
 		}
@@ -434,15 +425,13 @@ public abstract class TextUtils {
 	 * </p>
 	 *
 	 * <p>
-	 * No delimiter is added before or after the list. A <code>null</code>
-	 * separator is the same as an empty String ("").
+	 * No delimiter is added before or after the list. A <code>null</code> separator
+	 * is the same as an empty String ("").
 	 * </p>
 	 *
-	 * @param collection
-	 *            the <code>Collection</code> of values to join together, may be
-	 *            null
-	 * @param separator
-	 *            the separator character to use, null treated as ""
+	 * @param collection the <code>Collection</code> of values to join together, may
+	 *                   be null
+	 * @param separator  the separator character to use, null treated as ""
 	 * @return the joined String, <code>null</code> if null collection input
 	 */
 	public static String join(Collection<?> collection, char separator) {
@@ -459,7 +448,7 @@ public abstract class TextUtils {
 			return first != null ? first.toString() : ""; //$NON-NLS-1$
 		}
 		// two or more elements
-		final StringBuffer buf = new StringBuffer(256);
+		final StringBuilder buf = new StringBuilder(256);
 		if (first != null) {
 			buf.append(first);
 		}
@@ -479,7 +468,7 @@ public abstract class TextUtils {
 	 * @return
 	 */
 	public static String join(String[] lines, char separator) {
-		final StringBuffer sb = new StringBuffer(256);
+		final StringBuilder sb = new StringBuilder(256);
 		for (int i = 0; i < lines.length; ++i) {
 			if (i != 0) {
 				sb.append(separator);
@@ -496,7 +485,7 @@ public abstract class TextUtils {
 	 * @since 2.0
 	 */
 	public static String join(String[] lines, String separator) {
-		final StringBuffer sb = new StringBuffer(256);
+		final StringBuilder sb = new StringBuilder(256);
 		for (int i = 0; i < lines.length; ++i) {
 			if (i != 0) {
 				sb.append(separator);
@@ -585,25 +574,21 @@ public abstract class TextUtils {
 	}
 
 	/**
-	 * Creates a new <code>ISourceRange</code> object whose offset and length
-	 * are a subset of the original and do not include any leading or trailing
-	 * whitespace.
+	 * Creates a new <code>ISourceRange</code> object whose offset and length are a
+	 * subset of the original and do not include any leading or trailing whitespace.
 	 *
 	 * <p>
 	 * This method is most useful when calculating the start and end offsets
-	 * required to create an <code>IProblem</code>,
-	 * <code>IValidatorProblem</code>, etc
+	 * required to create an <code>IProblem</code>, <code>IValidatorProblem</code>,
+	 * etc
 	 * </p>
 	 *
-	 * @param source
-	 *            source contents
-	 * @param range
-	 *            position in the document whitespace should be stripped from
+	 * @param source source contents
+	 * @param range  position in the document whitespace should be stripped from
 	 *
 	 * @return source range minus leading/trailing whitespace
 	 */
-	public static ISourceRange trimWhitespace(String source,
-			ISourceRange range) {
+	public static ISourceRange trimWhitespace(String source, ISourceRange range) {
 		int sOffset = range.getOffset();
 		int eOffset = sOffset + range.getLength();
 

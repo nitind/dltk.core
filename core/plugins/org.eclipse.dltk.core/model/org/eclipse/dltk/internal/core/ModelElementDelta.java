@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -16,8 +16,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IModelElementDelta;
 
-public class ModelElementDelta extends SimpleDelta
-		implements IModelElementDelta {
+public class ModelElementDelta extends SimpleDelta implements IModelElementDelta {
 
 	/**
 	 * Empty array of IModelElementDelta
@@ -32,8 +31,7 @@ public class ModelElementDelta extends SimpleDelta
 	protected IModelElement changedElement;
 
 	/**
-	 * Collection of resource deltas that correspond to nonscriptresources
-	 * deltas.
+	 * Collection of resource deltas that correspond to nonscriptresources deltas.
 	 */
 	protected IResourceDelta[] resourceDeltas = null;
 
@@ -67,9 +65,9 @@ public class ModelElementDelta extends SimpleDelta
 	}
 
 	/**
-	 * Creates the nested deltas resulting from an add operation. Convenience
-	 * method for creating add deltas. The constructor should be used to create
-	 * the root delta and then an add operation should call this method.
+	 * Creates the nested deltas resulting from an add operation. Convenience method
+	 * for creating add deltas. The constructor should be used to create the root
+	 * delta and then an add operation should call this method.
 	 */
 	public void added(IModelElement element) {
 		added(element, 0);
@@ -84,9 +82,8 @@ public class ModelElementDelta extends SimpleDelta
 
 	/**
 	 * Creates the nested deltas resulting from an delete operation. Convenience
-	 * method for creating removed deltas. The constructor should be used to
-	 * create the root delta and then the delete operation should call this
-	 * method.
+	 * method for creating removed deltas. The constructor should be used to create
+	 * the root delta and then the delete operation should call this method.
 	 */
 	public void removed(IModelElement element) {
 		removed(element, 0);
@@ -145,8 +142,8 @@ public class ModelElementDelta extends SimpleDelta
 	}
 
 	/**
-	 * Adds the child delta to the collection of affected children. If the child
-	 * is already in the collection, walk down the hierarchy.
+	 * Adds the child delta to the collection of affected children. If the child is
+	 * already in the collection, walk down the hierarchy.
 	 */
 	protected void addAffectedChild(ModelElementDelta child) {
 		switch (this.kind) {
@@ -164,13 +161,11 @@ public class ModelElementDelta extends SimpleDelta
 
 		// if a child delta is added to a compilation unit delta or below,
 		// it's a fine grained delta
-		if (this.changedElement
-				.getElementType() >= IModelElement.SOURCE_MODULE) {
+		if (this.changedElement.getElementType() >= IModelElement.SOURCE_MODULE) {
 			this.fineGrained();
 		}
 
-		if (this.affectedChildren == null
-				|| this.affectedChildren.length == 0) {
+		if (this.affectedChildren == null || this.affectedChildren.length == 0) {
 			this.affectedChildren = new IModelElementDelta[] { child };
 			return;
 		}
@@ -178,11 +173,16 @@ public class ModelElementDelta extends SimpleDelta
 		int existingChildIndex = -1;
 		if (this.affectedChildren != null) {
 			for (int i = 0; i < this.affectedChildren.length; i++) {
-				if (this.equalsAndSameParent(
-						this.affectedChildren[i].getElement(),
-						child.getElement())) { // handle case of two archives
-												// that can be equals but not in
-												// the same project
+				if (this.equalsAndSameParent(this.affectedChildren[i].getElement(), child.getElement())) { // handle
+																											// case of
+																											// two
+																											// archives
+																											// that can
+																											// be equals
+																											// but not
+																											// in
+																											// the same
+																											// project
 					existingChild = (ModelElementDelta) this.affectedChildren[i];
 					existingChildIndex = i;
 					break;
@@ -190,8 +190,7 @@ public class ModelElementDelta extends SimpleDelta
 			}
 		}
 		if (existingChild == null) { // new affected child
-			this.affectedChildren = growAndAddToArray(this.affectedChildren,
-					child);
+			this.affectedChildren = growAndAddToArray(this.affectedChildren, child);
 		} else {
 			switch (existingChild.getKind()) {
 			case ADDED:
@@ -200,8 +199,7 @@ public class ModelElementDelta extends SimpleDelta
 				case CHANGED: // child was added then changed -> it is added
 					return;
 				case REMOVED: // child was added then removed -> noop
-					this.affectedChildren = this.removeAndShrinkArray(
-							this.affectedChildren, existingChildIndex);
+					this.affectedChildren = this.removeAndShrinkArray(this.affectedChildren, existingChildIndex);
 					return;
 				}
 				break;
@@ -230,10 +228,8 @@ public class ModelElementDelta extends SimpleDelta
 					}
 
 					// update flags
-					boolean childHadContentFlag = (child.changeFlags
-							& F_CONTENT) != 0;
-					boolean existingChildHadChildrenFlag = (existingChild.changeFlags
-							& F_CHILDREN) != 0;
+					boolean childHadContentFlag = (child.changeFlags & F_CONTENT) != 0;
+					boolean existingChildHadChildrenFlag = (existingChild.changeFlags & F_CHILDREN) != 0;
 					existingChild.changeFlags |= child.changeFlags;
 
 					// remove F_CONTENT flag if existing child had F_CHILDREN
@@ -276,9 +272,8 @@ public class ModelElementDelta extends SimpleDelta
 
 	/**
 	 * Creates the nested deltas resulting from a change operation. Convenience
-	 * method for creating change deltas. The constructor should be used to
-	 * create the root delta and then a change operation should call this
-	 * method.
+	 * method for creating change deltas. The constructor should be used to create
+	 * the root delta and then a change operation should call this method.
 	 */
 	public ModelElementDelta changed(IModelElement element, int changeFlag) {
 		ModelElementDelta changedDelta = new ModelElementDelta(element);
@@ -288,11 +283,10 @@ public class ModelElementDelta extends SimpleDelta
 	}
 
 	/**
-	 * Creates the delta tree for the given element and delta, and then inserts
-	 * the tree as an affected child of this node.
+	 * Creates the delta tree for the given element and delta, and then inserts the
+	 * tree as an affected child of this node.
 	 */
-	protected void insertDeltaTree(IModelElement element,
-			ModelElementDelta delta) {
+	protected void insertDeltaTree(IModelElement element, ModelElementDelta delta) {
 		ModelElementDelta childDelta = createDeltaTree(element, delta);
 		if (!this.equalsAndSameParent(element, getElement())) { // handle case
 																// of two
@@ -306,12 +300,10 @@ public class ModelElementDelta extends SimpleDelta
 	}
 
 	/**
-	 * Creates the nested delta deltas based on the affected element its delta,
-	 * and the root of this delta tree. Returns the root of the created delta
-	 * tree.
+	 * Creates the nested delta deltas based on the affected element its delta, and
+	 * the root of this delta tree. Returns the root of the created delta tree.
 	 */
-	protected ModelElementDelta createDeltaTree(IModelElement element,
-			ModelElementDelta delta) {
+	protected ModelElementDelta createDeltaTree(IModelElement element, ModelElementDelta delta) {
 		ModelElementDelta childDelta = delta;
 		ArrayList<IModelElement> ancestors = getAncestors(element);
 		if (ancestors == null) {
@@ -339,8 +331,7 @@ public class ModelElementDelta extends SimpleDelta
 		} else {
 			for (int i = 0, size = ancestors.size(); i < size; i++) {
 				IModelElement ancestor = ancestors.get(i);
-				ModelElementDelta ancestorDelta = new ModelElementDelta(
-						ancestor);
+				ModelElementDelta ancestorDelta = new ModelElementDelta(ancestor);
 				ancestorDelta.addAffectedChild(childDelta);
 				childDelta = ancestorDelta;
 			}
@@ -349,13 +340,11 @@ public class ModelElementDelta extends SimpleDelta
 	}
 
 	/**
-	 * Returns whether the two script elements are equals and have the same
-	 * parent.
+	 * Returns whether the two script elements are equals and have the same parent.
 	 */
 	protected boolean equalsAndSameParent(IModelElement e1, IModelElement e2) {
 		IModelElement parent1;
-		return e1.equals(e2) && ((parent1 = e1.getParent()) != null)
-				&& parent1.equals(e2.getParent());
+		return e1.equals(e2) && ((parent1 = e1.getParent()) != null) && parent1.equals(e2.getParent());
 	}
 
 	@Override
@@ -370,9 +359,8 @@ public class ModelElementDelta extends SimpleDelta
 
 	/**
 	 * Returns a collection of all the parents of this element up to (but not
-	 * including) the root of this tree in bottom-up order. If the given element
-	 * is not a descendant of the root of this tree, <code>null</code> is
-	 * returned.
+	 * including) the root of this tree in bottom-up order. If the given element is
+	 * not a descendant of the root of this tree, <code>null</code> is returned.
 	 */
 	private ArrayList<IModelElement> getAncestors(IModelElement element) {
 		IModelElement parent = element.getParent();
@@ -392,11 +380,10 @@ public class ModelElementDelta extends SimpleDelta
 	}
 
 	/**
-	 * Adds the new element to a new array that contains all of the elements of
-	 * the old array. Returns the new array.
+	 * Adds the new element to a new array that contains all of the elements of the
+	 * old array. Returns the new array.
 	 */
-	protected IModelElementDelta[] growAndAddToArray(IModelElementDelta[] array,
-			IModelElementDelta addition) {
+	protected IModelElementDelta[] growAndAddToArray(IModelElementDelta[] array, IModelElementDelta addition) {
 		IModelElementDelta[] old = array;
 		array = new IModelElementDelta[old.length + 1];
 		System.arraycopy(old, 0, array, 0, old.length);
@@ -405,11 +392,9 @@ public class ModelElementDelta extends SimpleDelta
 	}
 
 	/**
-	 * Removes the element from the array. Returns the a new array which has
-	 * shrunk.
+	 * Removes the element from the array. Returns the a new array which has shrunk.
 	 */
-	protected IModelElementDelta[] removeAndShrinkArray(
-			IModelElementDelta[] old, int index) {
+	protected IModelElementDelta[] removeAndShrinkArray(IModelElementDelta[] old, int index) {
 		IModelElementDelta[] array = new IModelElementDelta[old.length - 1];
 		if (index > 0)
 			System.arraycopy(old, 0, array, 0, index);
@@ -434,9 +419,8 @@ public class ModelElementDelta extends SimpleDelta
 		if (resourceDeltas == null)
 			return null;
 		if (resourceDeltas.length != resourceDeltasCounter) {
-			System.arraycopy(resourceDeltas, 0,
-					resourceDeltas = new IResourceDelta[resourceDeltasCounter],
-					0, resourceDeltasCounter);
+			System.arraycopy(resourceDeltas, 0, resourceDeltas = new IResourceDelta[resourceDeltasCounter], 0,
+					resourceDeltasCounter);
 		}
 		return resourceDeltas;
 	}
@@ -448,19 +432,23 @@ public class ModelElementDelta extends SimpleDelta
 		int index = -1;
 		if (this.affectedChildren != null) {
 			for (int i = 0; i < this.affectedChildren.length; i++) {
-				if (this.equalsAndSameParent(
-						this.affectedChildren[i].getElement(),
-						child.getElement())) { // handle case of two archives
-												// that can be equals but not in
-												// the same project
+				if (this.equalsAndSameParent(this.affectedChildren[i].getElement(), child.getElement())) { // handle
+																											// case of
+																											// two
+																											// archives
+																											// that can
+																											// be equals
+																											// but not
+																											// in
+																											// the same
+																											// project
 					index = i;
 					break;
 				}
 			}
 		}
 		if (index >= 0) {
-			this.affectedChildren = removeAndShrinkArray(this.affectedChildren,
-					index);
+			this.affectedChildren = removeAndShrinkArray(this.affectedChildren, index);
 		}
 	}
 
@@ -473,14 +461,11 @@ public class ModelElementDelta extends SimpleDelta
 
 	/**
 	 * Creates the nested deltas resulting from an move operation. Convenience
-	 * method for creating the "move from" delta. The constructor should be used
-	 * to create the root delta and then the move operation should call this
-	 * method.
+	 * method for creating the "move from" delta. The constructor should be used to
+	 * create the root delta and then the move operation should call this method.
 	 */
-	public void movedFrom(IModelElement movedFromElement,
-			IModelElement movedToElement) {
-		ModelElementDelta removedDelta = new ModelElementDelta(
-				movedFromElement);
+	public void movedFrom(IModelElement movedFromElement, IModelElement movedToElement) {
+		ModelElementDelta removedDelta = new ModelElementDelta(movedFromElement);
 		removedDelta.kind = REMOVED;
 		removedDelta.changeFlags |= F_MOVED_TO;
 		removedDelta.movedToHandle = movedToElement;
@@ -489,12 +474,10 @@ public class ModelElementDelta extends SimpleDelta
 
 	/**
 	 * Creates the nested deltas resulting from an move operation. Convenience
-	 * method for creating the "move to" delta. The constructor should be used
-	 * to create the root delta and then the move operation should call this
-	 * method.
+	 * method for creating the "move to" delta. The constructor should be used to
+	 * create the root delta and then the move operation should call this method.
 	 */
-	public void movedTo(IModelElement movedToElement,
-			IModelElement movedFromElement) {
+	public void movedTo(IModelElement movedToElement, IModelElement movedFromElement) {
 		ModelElementDelta addedDelta = new ModelElementDelta(movedToElement);
 		addedDelta.kind = ADDED;
 		addedDelta.changeFlags |= F_MOVED_FROM;
@@ -507,8 +490,8 @@ public class ModelElementDelta extends SimpleDelta
 	}
 
 	/**
-	 * Adds the child delta to the collection of affected children. If the child
-	 * is already in the collection, walk down the hierarchy.
+	 * Adds the child delta to the collection of affected children. If the child is
+	 * already in the collection, walk down the hierarchy.
 	 */
 	protected void addResourceDelta(IResourceDelta child) {
 		switch (this.kind) {
@@ -530,17 +513,15 @@ public class ModelElementDelta extends SimpleDelta
 		}
 		if (resourceDeltas.length == resourceDeltasCounter) {
 			// need a resize
-			System.arraycopy(resourceDeltas, 0,
-					(resourceDeltas = new IResourceDelta[resourceDeltasCounter
-							* 2]),
-					0, resourceDeltasCounter);
+			System.arraycopy(resourceDeltas, 0, (resourceDeltas = new IResourceDelta[resourceDeltasCounter * 2]), 0,
+					resourceDeltasCounter);
 		}
 		resourceDeltas[resourceDeltasCounter++] = child;
 	}
 
 	/**
-	 * Returns the <code>ModelElementDelta</code> for the given element in the
-	 * delta tree, or null, if no delta for the given element is found.
+	 * Returns the <code>ModelElementDelta</code> for the given element in the delta
+	 * tree, or null, if no delta for the given element is found.
 	 */
 	protected ModelElementDelta find(IModelElement e) {
 		if (this.equalsAndSameParent(this.changedElement, e)) { // handle case
@@ -553,8 +534,7 @@ public class ModelElementDelta extends SimpleDelta
 			return this;
 		} else {
 			for (int i = 0; i < this.affectedChildren.length; i++) {
-				ModelElementDelta delta = ((ModelElementDelta) this.affectedChildren[i])
-						.find(e);
+				ModelElementDelta delta = ((ModelElementDelta) this.affectedChildren[i]).find(e);
 				if (delta != null) {
 					return delta;
 				}
@@ -589,16 +569,14 @@ public class ModelElementDelta extends SimpleDelta
 		if (length == 0) {
 			return new IModelElementDelta[] {};
 		}
-		ArrayList<IModelElementDelta> children = new ArrayList<>(
-				length);
+		ArrayList<IModelElementDelta> children = new ArrayList<>(length);
 		for (int i = 0; i < length; i++) {
 			if (affectedChildren[i].getKind() == type) {
 				children.add(affectedChildren[i]);
 			}
 		}
 
-		IModelElementDelta[] childrenOfType = new IModelElementDelta[children
-				.size()];
+		IModelElementDelta[] childrenOfType = new IModelElementDelta[children.size()];
 		children.toArray(childrenOfType);
 
 		return childrenOfType;
@@ -615,13 +593,13 @@ public class ModelElementDelta extends SimpleDelta
 	}
 
 	/**
-	 * Returns a string representation of this delta's structure suitable for
-	 * debug purposes.
+	 * Returns a string representation of this delta's structure suitable for debug
+	 * purposes.
 	 *
 	 * @see #toString()
 	 */
 	public String toDebugString(int depth) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < depth; i++) {
 			buffer.append('\t');
 		}
@@ -631,8 +609,7 @@ public class ModelElementDelta extends SimpleDelta
 		if (children != null) {
 			for (int i = 0; i < children.length; ++i) {
 				buffer.append("\n"); //$NON-NLS-1$
-				buffer.append(((ModelElementDelta) children[i])
-						.toDebugString(depth + 1));
+				buffer.append(((ModelElementDelta) children[i]).toDebugString(depth + 1));
 			}
 		}
 		for (int i = 0; i < resourceDeltasCounter; i++) {
@@ -663,7 +640,7 @@ public class ModelElementDelta extends SimpleDelta
 	}
 
 	@Override
-	protected boolean toDebugString(StringBuffer buffer, int flags) {
+	protected boolean toDebugString(StringBuilder buffer, int flags) {
 		boolean prev = super.toDebugString(buffer, flags);
 
 		if ((flags & IModelElementDelta.F_CHILDREN) != 0) {
@@ -762,8 +739,8 @@ public class ModelElementDelta extends SimpleDelta
 	}
 
 	/**
-	 * Returns a string representation of this delta's structure suitable for
-	 * debug purposes.
+	 * Returns a string representation of this delta's structure suitable for debug
+	 * purposes.
 	 */
 	@Override
 	public String toString() {

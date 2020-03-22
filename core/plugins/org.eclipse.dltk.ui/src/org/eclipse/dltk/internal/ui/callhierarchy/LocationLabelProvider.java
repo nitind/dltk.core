@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -15,8 +15,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-class LocationLabelProvider extends LabelProvider
-		implements ITableLabelProvider {
+class LocationLabelProvider extends LabelProvider implements ITableLabelProvider {
 	private static final int COLUMN_ICON = 0;
 	private static final int COLUMN_LINE = 1;
 	private static final int COLUMN_INFO = 2;
@@ -35,9 +34,8 @@ class LocationLabelProvider extends LabelProvider
 		return getColumnImage(element, COLUMN_ICON);
 	}
 
-	private String removeWhitespaceOutsideStringLiterals(
-			CallLocation callLocation) {
-		StringBuffer buf = new StringBuffer();
+	private String removeWhitespaceOutsideStringLiterals(CallLocation callLocation) {
+		StringBuilder buf = new StringBuilder();
 		boolean withinString = false;
 
 		String s = callLocation.getCallText();
@@ -51,8 +49,7 @@ class LocationLabelProvider extends LabelProvider
 			if (withinString) {
 				buf.append(ch);
 			} else if (Character.isWhitespace(ch)) {
-				if ((buf.length() == 0) || !Character
-						.isWhitespace(buf.charAt(buf.length() - 1))) {
+				if ((buf.length() == 0) || !Character.isWhitespace(buf.charAt(buf.length() - 1))) {
 					if (ch != ' ') {
 						ch = ' ';
 					}
@@ -70,8 +67,7 @@ class LocationLabelProvider extends LabelProvider
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (columnIndex == COLUMN_ICON) {
-			return DLTKPluginImages
-					.get(DLTKPluginImages.IMG_OBJS_SEARCH_OCCURRENCE);
+			return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_SEARCH_OCCURRENCE);
 		}
 		return null;
 	}

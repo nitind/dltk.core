@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -42,7 +42,7 @@ public abstract class SingleCharReader extends Reader {
 	 * Gets the content as a String
 	 */
 	public String getString() throws IOException {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		int ch;
 		while ((ch = read()) != -1) {
 			buf.append((char) ch);

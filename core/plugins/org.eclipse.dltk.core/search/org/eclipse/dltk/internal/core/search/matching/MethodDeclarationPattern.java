@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -18,8 +18,7 @@ import org.eclipse.dltk.core.search.index.EntryResult;
 import org.eclipse.dltk.core.search.index.Index;
 import org.eclipse.dltk.core.search.indexing.IIndexConstants;
 
-public class MethodDeclarationPattern extends DLTKSearchPattern implements
-		IIndexConstants {
+public class MethodDeclarationPattern extends DLTKSearchPattern implements IIndexConstants {
 	public char[] simpleName;
 	public char[] pkg;
 	public char[][] enclosingTypeNames;
@@ -39,8 +38,7 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 	 * packageName / enclosingTypeName / modifiers or for secondary types key =
 	 * typeName / packageName / enclosingTypeName / modifiers / 'S'
 	 */
-	public static char[] createIndexKey(int modifiers, String methodName,
-			String[] parameterNames, String[] namespace,
+	public static char[] createIndexKey(int modifiers, String methodName, String[] parameterNames, String[] namespace,
 			String[] enclosingTypeNames) {
 
 		int typeNameLength = methodName == null ? 0 : methodName.length();
@@ -56,8 +54,7 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 
 		int packageLength = indexKeyLength(namespace);
 		int enclosingNamesLength = indexKeyLength(enclosingTypeNames);
-		int resultLength = typeNameLength + parameterNamesLength
-				+ packageLength + enclosingNamesLength + 6;
+		int resultLength = typeNameLength + parameterNamesLength + packageLength + enclosingNamesLength + 6;
 
 		char[] result = new char[resultLength];
 		int pos = 0;
@@ -86,15 +83,13 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 		return result;
 	}
 
-	public MethodDeclarationPattern(char[] simpleName, int matchRule,
-			IDLTKLanguageToolkit toolkit) {
+	public MethodDeclarationPattern(char[] simpleName, int matchRule, IDLTKLanguageToolkit toolkit) {
 		this(matchRule, toolkit);
-		this.simpleName = (isCaseSensitive() || isCamelCase()) ? simpleName
-				: CharOperation.toLowerCase(simpleName);
+		this.simpleName = (isCaseSensitive() || isCamelCase()) ? simpleName : CharOperation.toLowerCase(simpleName);
 	}
 
-	public MethodDeclarationPattern(char[][] enclosingTypeNames,
-			char[] simpleName, int matchRule, IDLTKLanguageToolkit toolkit) {
+	public MethodDeclarationPattern(char[][] enclosingTypeNames, char[] simpleName, int matchRule,
+			IDLTKLanguageToolkit toolkit) {
 		this(simpleName, matchRule, toolkit);
 		this.enclosingTypeNames = enclosingTypeNames;
 	}
@@ -124,8 +119,7 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 			if (start == slash) {
 				this.parameterNames = CharOperation.NO_CHAR_CHAR;
 			} else {
-				this.parameterNames = CharOperation.splitOn(',', key, start,
-						slash);
+				this.parameterNames = CharOperation.splitOn(',', key, start, slash);
 			}
 		}
 		start = ++slash;
@@ -134,8 +128,7 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 			this.pkg = CharOperation.NO_CHAR;
 		} else {
 			slash = CharOperation.indexOf(SEPARATOR, key, start);
-			this.pkg = internedPackageNames.add(CharOperation.subarray(key,
-					start, slash));
+			this.pkg = internedPackageNames.add(CharOperation.subarray(key, start, slash));
 		}
 		// Continue key read by the end to decode modifiers
 		int last = key.length - 1;
@@ -157,8 +150,7 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 			if (last == (start + 1) && key[start] == ZERO_CHAR) {
 				this.enclosingTypeNames = ONE_ZERO_CHAR;
 			} else {
-				this.enclosingTypeNames = CharOperation.splitOn('$', key,
-						start, last);
+				this.enclosingTypeNames = CharOperation.splitOn('$', key, start, last);
 			}
 		}
 	}
@@ -169,8 +161,7 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 
 	@Override
 	public SearchPattern getBlankPattern() {
-		return new MethodDeclarationPattern(R_EXACT_MATCH | R_CASE_SENSITIVE,
-				getToolkit());
+		return new MethodDeclarationPattern(R_EXACT_MATCH | R_CASE_SENSITIVE, getToolkit());
 	}
 
 	@Override
@@ -185,10 +176,8 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 			return false;
 
 		if (enclosingTypeNames != null) {
-			if (pattern.enclosingTypeNames == null
-					|| pattern.enclosingTypeNames.length == 0
-					|| !matchesName(
-							enclosingTypeNames[enclosingTypeNames.length - 1],
+			if (pattern.enclosingTypeNames == null || pattern.enclosingTypeNames.length == 0
+					|| !matchesName(enclosingTypeNames[enclosingTypeNames.length - 1],
 							pattern.enclosingTypeNames[pattern.enclosingTypeNames.length - 1])) {
 				return false;
 			}
@@ -213,8 +202,7 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 			break;
 		case R_PATTERN_MATCH:
 			if (this.simpleName[this.simpleName.length - 1] != '*') {
-				key = CharOperation
-						.concat(this.simpleName, ONE_STAR, SEPARATOR);
+				key = CharOperation.concat(this.simpleName, ONE_STAR, SEPARATOR);
 			}
 			break;
 		case R_REGEXP_MATCH:
@@ -226,7 +214,7 @@ public class MethodDeclarationPattern extends DLTKSearchPattern implements
 	}
 
 	@Override
-	protected StringBuffer print(StringBuffer output) {
+	protected StringBuilder print(StringBuilder output) {
 		output.append("MethodDeclarationPattern: "); //$NON-NLS-1$
 		output.append("name<"); //$NON-NLS-1$
 		if (simpleName != null)

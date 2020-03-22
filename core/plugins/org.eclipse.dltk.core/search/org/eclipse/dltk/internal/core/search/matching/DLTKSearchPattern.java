@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -34,8 +34,7 @@ public class DLTKSearchPattern extends SearchPattern {
 		return result;
 	}
 
-	protected static int encodeName(String name, int nameLength, char[] result,
-			int pos) {
+	protected static int encodeName(String name, int nameLength, char[] result, int pos) {
 		if (nameLength > 0) {
 			name.getChars(0, nameLength, result, pos);
 			pos += nameLength;
@@ -43,8 +42,7 @@ public class DLTKSearchPattern extends SearchPattern {
 		return pos;
 	}
 
-	protected static int encodeNames(String[] names, int namesLength,
-			char[] result, int pos) {
+	protected static int encodeNames(String[] names, int namesLength, char[] result, int pos) {
 		if (names != null && namesLength > 0) {
 			for (int i = 0, length = names.length; i < length;) {
 				String name = names[i];
@@ -89,14 +87,12 @@ public class DLTKSearchPattern extends SearchPattern {
 	/**
 	 * Mask used on match rule for match mode.
 	 */
-	public static final int MATCH_MODE_MASK = R_EXACT_MATCH | R_PREFIX_MATCH
-			| R_PATTERN_MATCH | R_REGEXP_MATCH;
+	public static final int MATCH_MODE_MASK = R_EXACT_MATCH | R_PREFIX_MATCH | R_PATTERN_MATCH | R_REGEXP_MATCH;
 
 	/**
 	 * Mask used on match rule for generic relevance.
 	 */
-	public static final int MATCH_COMPATIBILITY_MASK = R_ERASURE_MATCH
-			| R_EQUIVALENT_MATCH | R_FULL_MATCH;
+	public static final int MATCH_COMPATIBILITY_MASK = R_ERASURE_MATCH | R_EQUIVALENT_MATCH | R_FULL_MATCH;
 
 	private char[][][] typeArguments;
 	private int flags = 0;
@@ -154,8 +150,7 @@ public class DLTKSearchPattern extends SearchPattern {
 		}
 	}
 
-	protected DLTKSearchPattern(int patternKind, int matchRule,
-			IDLTKLanguageToolkit toolkit) {
+	protected DLTKSearchPattern(int patternKind, int matchRule, IDLTKLanguageToolkit toolkit) {
 		super(matchRule, toolkit);
 		((InternalSearchPattern) this).kind = patternKind;
 		// Use getMatchRule() instead of matchRule as super constructor may
@@ -194,15 +189,14 @@ public class DLTKSearchPattern extends SearchPattern {
 	}
 
 	/*
-	 * Extract method arguments using unique key for parameterized methods and
-	 * type parameters for non-generic ones.
+	 * Extract method arguments using unique key for parameterized methods and type
+	 * parameters for non-generic ones.
 	 */
 	char[][] extractMethodArguments(IMethod method) {
 		if (method == null)
 			return null;
 		if (DLTKCore.DEBUG) {
-			System.err
-					.println("TODO: Search: Add correct code here if needed."); //$NON-NLS-1$
+			System.err.println("TODO: Search: Add correct code here if needed."); //$NON-NLS-1$
 		}
 		String[] argumentsSignatures = null;
 		try {
@@ -219,8 +213,7 @@ public class DLTKSearchPattern extends SearchPattern {
 				char[][] methodArguments = new char[length][];
 				for (int i = 0; i < length; i++) {
 					methodArguments[i] = argumentsSignatures[i].toCharArray();
-					CharOperation.replace(methodArguments[i], new char[] { '$',
-							'/' }, '.');
+					CharOperation.replace(methodArguments[i], new char[] { '$', '/' }, '.');
 				}
 				return methodArguments;
 			}
@@ -230,11 +223,11 @@ public class DLTKSearchPattern extends SearchPattern {
 
 	/**
 	 * Returns whether the pattern has signatures or not. If pattern
-	 * {@link #typeArguments} field, this field shows that it was built on a
-	 * generic source type.
-	 * 
-	 * @return true if {@link #typeSignatures} field is not null and has a
-	 *         length greater than 0.
+	 * {@link #typeArguments} field, this field shows that it was built on a generic
+	 * source type.
+	 *
+	 * @return true if {@link #typeSignatures} field is not null and has a length
+	 *         greater than 0.
 	 */
 	public final boolean hasSignatures() {
 		return false;
@@ -242,7 +235,7 @@ public class DLTKSearchPattern extends SearchPattern {
 
 	/**
 	 * Returns whether the pattern includes type arguments information or not.
-	 * 
+	 *
 	 * @return default is false
 	 */
 	public final boolean hasTypeArguments() {
@@ -251,15 +244,15 @@ public class DLTKSearchPattern extends SearchPattern {
 
 	/**
 	 * Returns whether the pattern includes type parameters information or not.
-	 * 
-	 * @return true if {@link #typeArguments} contains type parameters instead
-	 *         type arguments signatures.
+	 *
+	 * @return true if {@link #typeArguments} contains type parameters instead type
+	 *         arguments signatures.
 	 */
 	public final boolean hasTypeParameters() {
 		return !hasSignatures() && hasTypeArguments();
 	}
 
-	protected StringBuffer print(StringBuffer output) {
+	protected StringBuilder print(StringBuilder output) {
 		output.append(", "); //$NON-NLS-1$
 
 		if (this.isCamelCase) {
@@ -298,12 +291,13 @@ public class DLTKSearchPattern extends SearchPattern {
 	 */
 	// void storeTypeSignaturesAndArguments(IType type) {
 	// if (DLTKCore.DEBUG) {
-	// System.err.println("TODO: Add DLTKSearchPatter implementation of storeTypeSignatureAndArguments.");
+	// System.err.println("TODO: Add DLTKSearchPatter implementation of
+	// storeTypeSignatureAndArguments.");
 	// }
 	// //setTypeArguments(Util.getAllTypeArguments(this.typeSignatures));
 	// }
 	@Override
 	public final String toString() {
-		return print(new StringBuffer(30)).toString();
+		return print(new StringBuilder(30)).toString();
 	}
 }

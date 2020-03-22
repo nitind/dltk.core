@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -16,8 +16,8 @@ package org.eclipse.dltk.core.search.indexing;
 public class ReadWriteMonitor {
 
 	/**
-	 * <0 : writing (cannot go beyond -1, i.e one concurrent writer) =0 : idle
-	 * >0 : reading (number of concurrent readers)
+	 * <0 : writing (cannot go beyond -1, i.e one concurrent writer) =0 : idle >0 :
+	 * reading (number of concurrent readers)
 	 */
 	private int status = 0;
 
@@ -36,8 +36,8 @@ public class ReadWriteMonitor {
 	}
 
 	/**
-	 * Only one writer at a time is allowed to perform Blocking only when
-	 * already writing or reading.
+	 * Only one writer at a time is allowed to perform Blocking only when already
+	 * writing or reading.
 	 */
 	public synchronized void enterWrite() {
 		while (status != 0) {
@@ -60,8 +60,8 @@ public class ReadWriteMonitor {
 	}
 
 	/**
-	 * When writing is over, all readers and possible writers are granted
-	 * permission to restart concurrently
+	 * When writing is over, all readers and possible writers are granted permission
+	 * to restart concurrently
 	 */
 	public synchronized void exitWrite() {
 
@@ -70,10 +70,10 @@ public class ReadWriteMonitor {
 	}
 
 	/**
-	 * Atomic exitRead/enterWrite: Allows to keep monitor in between exit read
-	 * and next enter write. Use when writing changes is optional, otherwise
-	 * call the individual methods. Returns false if multiple readers are
-	 * accessing the index.
+	 * Atomic exitRead/enterWrite: Allows to keep monitor in between exit read and
+	 * next enter write. Use when writing changes is optional, otherwise call the
+	 * individual methods. Returns false if multiple readers are accessing the
+	 * index.
 	 */
 	public synchronized boolean exitReadEnterWrite() {
 		if (status != 1)
@@ -84,10 +84,10 @@ public class ReadWriteMonitor {
 	}
 
 	/**
-	 * Atomic exitWrite/enterRead: Allows to keep monitor in between exit write
-	 * and next enter read. When writing is over, all readers are granted
-	 * permissing to restart concurrently. This is the same as:
-	 * 
+	 * Atomic exitWrite/enterRead: Allows to keep monitor in between exit write and
+	 * next enter read. When writing is over, all readers are granted permissing to
+	 * restart concurrently. This is the same as:
+	 *
 	 * <pre>
 	 * synchronized (monitor) {
 	 * 	monitor.exitWrite();
@@ -102,7 +102,7 @@ public class ReadWriteMonitor {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		if (status == 0) {
 			buffer.append("Monitor idle "); //$NON-NLS-1$
 		} else if (status < 0) {

@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -41,14 +41,13 @@ import org.eclipse.dltk.utils.CorePrinter;
 
 public class ProjectFragment extends Openable implements IProjectFragment {
 	/**
-	 * The resource associated with this root. (an IResource or a java.io.File
-	 * (for externals))
+	 * The resource associated with this root. (an IResource or a java.io.File (for
+	 * externals))
 	 */
 	protected Object resource;
 
 	/**
-	 * Constructs a project fragment which is the root of the directory
-	 * hierarchy.
+	 * Constructs a project fragment which is the root of the directory hierarchy.
 	 */
 	protected ProjectFragment(IResource resource, ScriptProject project) {
 		super(project);
@@ -109,8 +108,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		if (this.resource != null && other.resource == null) {
 			return false;
 		}
-		if (this.resource != null && other.resource != null
-				&& !this.resource.equals(other.resource)) {
+		if (this.resource != null && other.resource != null && !this.resource.equals(other.resource)) {
 			return false;
 		}
 
@@ -123,9 +121,8 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	}
 
 	@Override
-	protected boolean buildStructure(OpenableElementInfo info,
-			IProgressMonitor pm, Map newElements, IResource underlyingResource)
-			throws ModelException {
+	protected boolean buildStructure(OpenableElementInfo info, IProgressMonitor pm, Map newElements,
+			IResource underlyingResource) throws ModelException {
 		// check whether this project fragment can be opened
 		IStatus status = this.validateOnBuildpath();
 		if (!status.isOK()) {
@@ -139,8 +136,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	}
 
 	/*
-	 * Validate whether this project fragment is on the buildpath of its
-	 * project.
+	 * Validate whether this project fragment is on the buildpath of its project.
 	 */
 	protected IStatus validateOnBuildpath() {
 		IPath path = this.getPath();
@@ -164,19 +160,16 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 			// could not read buildpath, then assume it is outside
 			return e.getModelStatus();
 		}
-		return new ModelStatus(IModelStatusConstants.ELEMENT_NOT_ON_BUILDPATH,
-				this);
+		return new ModelStatus(IModelStatusConstants.ELEMENT_NOT_ON_BUILDPATH, this);
 	}
 
 	/**
 	 * Compute the project fragment children of this project fragment.
 	 *
-	 * @exception ModelException
-	 *                The resource associated with this project fragment does
-	 *                not exist
+	 * @exception ModelException The resource associated with this project fragment
+	 *                           does not exist
 	 */
-	protected boolean computeChildren(OpenableElementInfo info, Map newElements)
-			throws ModelException {
+	protected boolean computeChildren(OpenableElementInfo info, Map newElements) throws ModelException {
 		// Note the children are not opened (so not added to newElements) for a
 		// regular package fragment root
 		// However they are opened for a ZIP project fragment.
@@ -185,35 +178,29 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 			// that the project folder
 			// is actually the package fragment root)
 			IResource underlyingResource = this.getResource();
-			if (underlyingResource.getType() == IResource.FOLDER
-					|| underlyingResource.getType() == IResource.PROJECT) {
+			if (underlyingResource.getType() == IResource.FOLDER || underlyingResource.getType() == IResource.PROJECT) {
 				ArrayList<IModelElement> vChildren = new ArrayList<>(5);
 				IContainer rootFolder = (IContainer) underlyingResource;
 				char[][] inclusionPatterns = this.fullInclusionPatternChars();
 				char[][] exclusionPatterns = this.fullExclusionPatternChars();
 				this.computeFolderChildren(rootFolder,
-						!Util.isExcluded(rootFolder, inclusionPatterns,
-								exclusionPatterns),
-						Path.EMPTY, vChildren, inclusionPatterns,
-						exclusionPatterns);
+						!Util.isExcluded(rootFolder, inclusionPatterns, exclusionPatterns), Path.EMPTY, vChildren,
+						inclusionPatterns, exclusionPatterns);
 				// IModelElement[] children = new
 				// IModelElement[vChildren.size()];
 				// vChildren.toArray(children);
 				List<IModelElement> childrenSet = vChildren;
 				// Call for extra model providers
-				IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-						.getLanguageToolkit(this);
+				IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(this);
 				if (toolkit != null) {
-					IModelProvider[] providers = ModelProviderManager
-							.getProviders(toolkit.getNatureId());
+					IModelProvider[] providers = ModelProviderManager.getProviders(toolkit.getNatureId());
 					if (providers != null) {
 						for (int i = 0; i < providers.length; i++) {
 							providers[i].provideModelChanges(this, childrenSet);
 						}
 					}
 				}
-				info.setChildren(childrenSet
-						.toArray(new IModelElement[childrenSet.size()]));
+				info.setChildren(childrenSet.toArray(new IModelElement[childrenSet.size()]));
 			}
 		} catch (ModelException e) {
 			// problem resolving children; structure remains unknown
@@ -227,21 +214,18 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	 * Starting at this folder, create folders and add them to the collection of
 	 * children.
 	 *
-	 * @exception ModelException
-	 *                The resource associated with this project fragment does
-	 *                not exist
+	 * @exception ModelException The resource associated with this project fragment
+	 *                           does not exist
 	 */
-	protected void computeFolderChildren(IContainer folder, boolean isIncluded,
-			IPath path, ArrayList<IModelElement> vChildren,
-			char[][] inclusionPatterns, char[][] exclusionPatterns)
+	protected void computeFolderChildren(IContainer folder, boolean isIncluded, IPath path,
+			ArrayList<IModelElement> vChildren, char[][] inclusionPatterns, char[][] exclusionPatterns)
 			throws ModelException {
 		if (isIncluded) {
 			IScriptFolder pkg = this.getScriptFolder(path);
 			vChildren.add(pkg);
 		}
 		try {
-			ScriptProject scriptProject = (ScriptProject) this
-					.getScriptProject();
+			ScriptProject scriptProject = (ScriptProject) this.getScriptProject();
 			ModelManager manager = ModelManager.getModelManager();
 			IResource[] members = folder.members();
 			boolean hasIncluded = isIncluded;
@@ -252,12 +236,9 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 				case IResource.FOLDER:
 					if (Util.isValidFolderNameForPackage(folder, memberName)) {
 						if (scriptProject.contains(member)) {
-							IPath newPath = path
-									.append(manager.intern(memberName));
-							boolean isMemberIncluded = !Util.isExcluded(member,
-									inclusionPatterns, exclusionPatterns);
-							this.computeFolderChildren((IFolder) member,
-									isMemberIncluded, newPath, vChildren,
+							IPath newPath = path.append(manager.intern(memberName));
+							boolean isMemberIncluded = !Util.isExcluded(member, inclusionPatterns, exclusionPatterns);
+							this.computeFolderChildren((IFolder) member, isMemberIncluded, newPath, vChildren,
 									inclusionPatterns, exclusionPatterns);
 						}
 					}
@@ -267,8 +248,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 					// case we still want to include the immediate parent
 					// package (lazily)
 					if (!hasIncluded && Util.isValidSourceModule(this, member)
-							&& !Util.isExcluded(member, inclusionPatterns,
-									exclusionPatterns)) {
+							&& !Util.isExcluded(member, inclusionPatterns, exclusionPatterns)) {
 						hasIncluded = true;
 						IScriptFolder pkg = this.getScriptFolder(path);
 						vChildren.add(pkg);
@@ -278,8 +258,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 			}
 		} catch (IllegalArgumentException e) {
 			/* could be thrown by ElementTree when path is not found */
-			throw new ModelException(e,
-					IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
+			throw new ModelException(e, IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
 		} catch (CoreException e) {
 			throw new ModelException(e);
 		}
@@ -289,16 +268,13 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	public IScriptFolder getScriptFolder(IPath path) {
 		// We need to check for element providers and if provider are declared
 		// we need to build structure to return correct handle here.
-		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-				.getLanguageToolkit(this);
+		IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(this);
 		if (toolkit != null) {
-			IModelProvider[] providers = ModelProviderManager
-					.getProviders(toolkit.getNatureId());
+			IModelProvider[] providers = ModelProviderManager.getProviders(toolkit.getNatureId());
 			if (providers != null) {
 				boolean provides = false;
 				for (int i = 0; i < providers.length; i++) {
-					if (providers[i].isModelChangesProvidedFor(this,
-							path.segment(0))) {
+					if (providers[i].isModelChangesProvidedFor(this, path.segment(0))) {
 						provides = true;
 						break;
 					}
@@ -317,8 +293,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 							}
 						}
 					} catch (ModelException e) {
-						DLTKCore.error(
-								"Could not obtain model element childrens.", e);
+						DLTKCore.error("Could not obtain model element childrens.", e);
 					}
 				}
 			}
@@ -361,8 +336,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	 * @private Debugging purposes
 	 */
 	@Override
-	protected void toStringInfo(int tab, StringBuffer buffer, Object info,
-			boolean showResolvedInfo) {
+	protected void toStringInfo(int tab, StringBuilder buffer, Object info, boolean showResolvedInfo) {
 		buffer.append(this.tabString(tab));
 		IPath path = EnvironmentPathUtils.getLocalPath(this.getPath());
 		if (this.getScriptProject().getElementName().equals(path.segment(0))) {
@@ -385,8 +359,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 
 	@Override
 	public void printNode(CorePrinter output) {
-		output.formatPrint(
-				"ScriptProject fragment:" + this.getPath().toOSString()); //$NON-NLS-1$
+		output.formatPrint("ScriptProject fragment:" + this.getPath().toOSString()); //$NON-NLS-1$
 		output.indent();
 		try {
 			IModelElement modelElements[] = this.getChildren();
@@ -413,14 +386,13 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 
 	@Override
 	public Object[] getForeignResources() throws ModelException {
-		return ((ProjectFragmentInfo) this.getElementInfo())
-				.getForeignResources(this.getScriptProject(),
-						this.getResource(), this);
+		return ((ProjectFragmentInfo) this.getElementInfo()).getForeignResources(this.getScriptProject(),
+				this.getResource(), this);
 	}
 
 	/*
-	 * Returns the exclusion patterns from the buildpath entry associated with
-	 * this root.
+	 * Returns the exclusion patterns from the buildpath entry associated with this
+	 * root.
 	 */
 	public char[][] fullExclusionPatternChars() {
 		try {
@@ -439,8 +411,8 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	}
 
 	/*
-	 * Returns the inclusion patterns from the buildpath entry associated with
-	 * this root.
+	 * Returns the inclusion patterns from the buildpath entry associated with this
+	 * root.
 	 */
 
 	public char[][] fullInclusionPatternChars() {
@@ -468,14 +440,12 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 		ScriptProject project = (ScriptProject) this.getScriptProject();
 		project.getResolvedBuildpath(); // force the reverse rawEntry cache to
 		// be populated
-		Map<IPath, IBuildpathEntry> rootPathToRawEntries = project
-				.getPerProjectInfo().rootPathToRawEntries;
+		Map<IPath, IBuildpathEntry> rootPathToRawEntries = project.getPerProjectInfo().rootPathToRawEntries;
 		if (rootPathToRawEntries != null) {
 			rawEntry = rootPathToRawEntries.get(this.getPath());
 		}
 		if (rawEntry == null) {
-			throw new ModelException(new ModelStatus(
-					IModelStatusConstants.ELEMENT_NOT_ON_BUILDPATH, this));
+			throw new ModelException(new ModelStatus(IModelStatusConstants.ELEMENT_NOT_ON_BUILDPATH, this));
 		}
 		return rawEntry;
 	}
@@ -485,7 +455,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	}
 
 	@Override
-	public void getHandleMemento(StringBuffer buff) {
+	public void getHandleMemento(StringBuilder buff) {
 		((ModelElement) getParent()).getHandleMemento(buff);
 		buff.append(getHandleMementoDelimiter());
 		final IPath path = ((IResource) resource).getProjectRelativePath();
@@ -493,8 +463,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	}
 
 	@Override
-	public IModelElement getHandleFromMemento(String token,
-			MementoTokenizer memento, WorkingCopyOwner owner) {
+	public IModelElement getHandleFromMemento(String token, MementoTokenizer memento, WorkingCopyOwner owner) {
 		switch (token.charAt(0)) {
 		case JEM_SCRIPTFOLDER:
 			String pkgName;
@@ -518,8 +487,7 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 				return pkg.getHandleFromMemento(token, memento, owner);
 			}
 		case JEM_USER_ELEMENT:
-			return MementoModelElementUtil.getHandleFromMemento(memento, this,
-					owner);
+			return MementoModelElementUtil.getHandleFromMemento(memento, this, owner);
 		}
 		return null;
 	}
@@ -533,37 +501,33 @@ public class ProjectFragment extends Openable implements IProjectFragment {
 	 * @see IProjectFragment
 	 */
 	@Override
-	public IScriptFolder createScriptFolder(String pkgName, boolean force,
-			IProgressMonitor monitor) throws ModelException {
-		CreateScriptFolderOperation op = new CreateScriptFolderOperation(this,
-				pkgName, force);
+	public IScriptFolder createScriptFolder(String pkgName, boolean force, IProgressMonitor monitor)
+			throws ModelException {
+		CreateScriptFolderOperation op = new CreateScriptFolderOperation(this, pkgName, force);
 		op.runOperation(monitor);
 		return this.getScriptFolder(op.pkgName);
 	}
 
 	@Override
-	public void delete(int updateResourceFlags, int updateModelFlags,
-			IProgressMonitor monitor) throws ModelException {
-		DeleteProjectFragmentOperation op = new DeleteProjectFragmentOperation(
-				this, updateResourceFlags, updateModelFlags);
+	public void delete(int updateResourceFlags, int updateModelFlags, IProgressMonitor monitor) throws ModelException {
+		DeleteProjectFragmentOperation op = new DeleteProjectFragmentOperation(this, updateResourceFlags,
+				updateModelFlags);
 		op.runOperation(monitor);
 	}
 
 	@Override
-	public void copy(IPath destination, int updateResourceFlags,
-			int updateModelFlags, IBuildpathEntry sibling,
+	public void copy(IPath destination, int updateResourceFlags, int updateModelFlags, IBuildpathEntry sibling,
 			IProgressMonitor monitor) throws ModelException {
-		CopyProjectFragmentOperation op = new CopyProjectFragmentOperation(this,
-				destination, updateResourceFlags, updateModelFlags, sibling);
+		CopyProjectFragmentOperation op = new CopyProjectFragmentOperation(this, destination, updateResourceFlags,
+				updateModelFlags, sibling);
 		op.runOperation(monitor);
 	}
 
 	@Override
-	public void move(IPath destination, int updateResourceFlags,
-			int updateModelFlags, IBuildpathEntry sibling,
+	public void move(IPath destination, int updateResourceFlags, int updateModelFlags, IBuildpathEntry sibling,
 			IProgressMonitor monitor) throws ModelException {
-		MoveProjectFragmentOperation op = new MoveProjectFragmentOperation(this,
-				destination, updateResourceFlags, updateModelFlags, sibling);
+		MoveProjectFragmentOperation op = new MoveProjectFragmentOperation(this, destination, updateResourceFlags,
+				updateModelFlags, sibling);
 		op.runOperation(monitor);
 	}
 

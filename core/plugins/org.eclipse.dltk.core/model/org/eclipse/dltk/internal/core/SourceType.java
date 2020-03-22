@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -59,8 +59,7 @@ public class SourceType extends NamedMember implements IType {
 
 	@Override
 	public String[] getSuperClasses() throws ModelException {
-		SourceTypeElementInfo info = (SourceTypeElementInfo) this
-				.getElementInfo();
+		SourceTypeElementInfo info = (SourceTypeElementInfo) this.getElementInfo();
 		if (info == null) {
 			return CharOperation.NO_STRINGS;
 		}
@@ -127,8 +126,8 @@ public class SourceType extends NamedMember implements IType {
 	}
 
 	@Override
-	public IModelElement getHandleFromMemento(String token,
-			MementoTokenizer memento, WorkingCopyOwner workingCopyOwner) {
+	public IModelElement getHandleFromMemento(String token, MementoTokenizer memento,
+			WorkingCopyOwner workingCopyOwner) {
 		switch (token.charAt(0)) {
 		case JEM_COUNT:
 			return getHandleUpdatingCountFromMemento(memento, workingCopyOwner);
@@ -165,14 +164,13 @@ public class SourceType extends NamedMember implements IType {
 					}
 
 					String param = memento.nextToken();
-					StringBuffer buffer = new StringBuffer();
+					StringBuilder buffer = new StringBuilder();
 
 					// backward compatible with 3.0 mementos
 					/*
-					 * while (param.length() == 1 && Signature.C_ARRAY ==
-					 * param.charAt(0)) { buffer.append(Signature.C_ARRAY); if
-					 * (!memento.hasMoreTokens()) return this; param =
-					 * memento.nextToken(); }
+					 * while (param.length() == 1 && Signature.C_ARRAY == param.charAt(0)) {
+					 * buffer.append(Signature.C_ARRAY); if (!memento.hasMoreTokens()) return this;
+					 * param = memento.nextToken(); }
 					 */
 
 					params.add(buffer.toString() + param);
@@ -188,8 +186,7 @@ public class SourceType extends NamedMember implements IType {
 			case JEM_TYPE:
 			case JEM_TYPE_PARAMETER:
 			case JEM_LOCALVARIABLE:
-				return method.getHandleFromMemento(token, memento,
-						workingCopyOwner);
+				return method.getHandleFromMemento(token, memento, workingCopyOwner);
 			default:
 				return method;
 			}
@@ -199,8 +196,7 @@ public class SourceType extends NamedMember implements IType {
 				typeName = memento.nextToken();
 				char firstChar = typeName.charAt(0);
 				if (firstChar == JEM_FIELD /* || firstChar == JEM_INITIALIZER */
-						|| firstChar == JEM_METHOD || firstChar == JEM_TYPE
-						|| firstChar == JEM_COUNT) {
+						|| firstChar == JEM_METHOD || firstChar == JEM_TYPE || firstChar == JEM_COUNT) {
 					token = typeName;
 					typeName = ""; //$NON-NLS-1$
 				} else {
@@ -214,8 +210,7 @@ public class SourceType extends NamedMember implements IType {
 			if (token == null) {
 				return type.getHandleFromMemento(memento, workingCopyOwner);
 			} else {
-				return type.getHandleFromMemento(token, memento,
-						workingCopyOwner);
+				return type.getHandleFromMemento(token, memento, workingCopyOwner);
 			}
 			// case JEM_TYPE_PARAMETER:
 			// if (!memento.hasMoreTokens()) return this;
@@ -238,10 +233,9 @@ public class SourceType extends NamedMember implements IType {
 	@Override
 	public String getFullyQualifiedName(String enclosingTypeSeparator) {
 		try {
-			return getFullyQualifiedName(enclosingTypeSeparator,
-					false/*
-							 * don't show parameters
-							 */);
+			return getFullyQualifiedName(enclosingTypeSeparator, false/*
+																		 * don't show parameters
+																		 */);
 		} catch (ModelException e) {
 			// exception thrown only when showing parameters
 			return null;
@@ -254,20 +248,17 @@ public class SourceType extends NamedMember implements IType {
 	}
 
 	@Override
-	public void codeComplete(char[] snippet, int insertion, int position,
-			char[][] localVariableTypeNames, char[][] localVariableNames,
-			int[] localVariableModifiers, boolean isStatic,
-			CompletionRequestor requestor) throws ModelException {
+	public void codeComplete(char[] snippet, int insertion, int position, char[][] localVariableTypeNames,
+			char[][] localVariableNames, int[] localVariableModifiers, boolean isStatic, CompletionRequestor requestor)
+			throws ModelException {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void codeComplete(char[] snippet, int insertion, int position,
-			char[][] localVariableTypeNames, char[][] localVariableNames,
-			int[] localVariableModifiers, boolean isStatic,
-			CompletionRequestor requestor, WorkingCopyOwner owner)
-			throws ModelException {
+	public void codeComplete(char[] snippet, int insertion, int position, char[][] localVariableTypeNames,
+			char[][] localVariableNames, int[] localVariableModifiers, boolean isStatic, CompletionRequestor requestor,
+			WorkingCopyOwner owner) throws ModelException {
 		// TODO Auto-generated method stub
 
 	}
@@ -300,10 +291,9 @@ public class SourceType extends NamedMember implements IType {
 	@Override
 	public String getTypeQualifiedName(String enclosingTypeSeparator) {
 		try {
-			return getTypeQualifiedName(enclosingTypeSeparator,
-					false/*
-							 * don't show parameters
-							 */);
+			return getTypeQualifiedName(enclosingTypeSeparator, false/*
+																		 * don't show parameters
+																		 */);
 		} catch (ModelException e) {
 			// exception thrown only when showing parameters
 			return null;
@@ -331,27 +321,22 @@ public class SourceType extends NamedMember implements IType {
 	 * @see IType
 	 */
 	@Override
-	public ITypeHierarchy loadTypeHierachy(InputStream input,
-			IProgressMonitor monitor) throws ModelException {
-		return loadTypeHierachy(input, DefaultWorkingCopyOwner.PRIMARY,
-				monitor);
+	public ITypeHierarchy loadTypeHierachy(InputStream input, IProgressMonitor monitor) throws ModelException {
+		return loadTypeHierachy(input, DefaultWorkingCopyOwner.PRIMARY, monitor);
 	}
 
 	/**
-	 * NOTE: This method is not part of the API has it is not clear clients
-	 * would easily use it: they would need to first make sure all working
-	 * copies for the given owner exist before calling it. This is especially
-	 * har at startup time. In case clients want this API, here is how it should
-	 * be specified:
+	 * NOTE: This method is not part of the API has it is not clear clients would
+	 * easily use it: they would need to first make sure all working copies for the
+	 * given owner exist before calling it. This is especially har at startup time.
+	 * In case clients want this API, here is how it should be specified:
 	 * <p>
 	 * Loads a previously saved ITypeHierarchy from an input stream. A type
 	 * hierarchy can be stored using ITypeHierachy#store(OutputStream). A
-	 * compilation unit of a loaded type has the given owner if such a working
-	 * copy exists, otherwise the type's compilation unit is a primary
-	 * compilation unit.
+	 * compilation unit of a loaded type has the given owner if such a working copy
+	 * exists, otherwise the type's compilation unit is a primary compilation unit.
 	 *
-	 * Only hierarchies originally created by the following methods can be
-	 * loaded:
+	 * Only hierarchies originally created by the following methods can be loaded:
 	 * <ul>
 	 * <li>IType#newSupertypeHierarchy(IProgressMonitor)</li>
 	 * <li>IType#newSupertypeHierarchy(WorkingCopyOwner, IProgressMonitor)</li>
@@ -361,21 +346,17 @@ public class SourceType extends NamedMember implements IType {
 	 * <li>IType#newTypeHierarchy(IProgressMonitor)</li>
 	 * <li>IType#newTypeHierarchy(WorkingCopyOwner, IProgressMonitor)</li> </u>
 	 *
-	 * @param input
-	 *            stream where hierarchy will be read
-	 * @param monitor
-	 *            the given progress monitor
+	 * @param input   stream where hierarchy will be read
+	 * @param monitor the given progress monitor
 	 * @return the stored hierarchy
-	 * @exception JavaModelException
-	 *                if the hierarchy could not be restored, reasons include: -
-	 *                type is not the focus of the hierarchy or - unable to read
-	 *                the input stream (wrong format, IOException during
-	 *                reading, ...)
+	 * @exception JavaModelException if the hierarchy could not be restored, reasons
+	 *                               include: - type is not the focus of the
+	 *                               hierarchy or - unable to read the input stream
+	 *                               (wrong format, IOException during reading, ...)
 	 * @see ITypeHierarchy#store(java.io.OutputStream, IProgressMonitor)
 	 * @since 3.0
 	 */
-	public ITypeHierarchy loadTypeHierachy(InputStream input,
-			WorkingCopyOwner owner, IProgressMonitor monitor)
+	public ITypeHierarchy loadTypeHierachy(InputStream input, WorkingCopyOwner owner, IProgressMonitor monitor)
 			throws ModelException {
 		// TODO monitor should be passed to TypeHierarchy.load(...)
 		return TypeHierarchy.load(this, input, owner);
@@ -385,24 +366,21 @@ public class SourceType extends NamedMember implements IType {
 	 * @see IType
 	 */
 	@Override
-	public ITypeHierarchy newSupertypeHierarchy(IProgressMonitor monitor)
-			throws ModelException {
-		return this.newSupertypeHierarchy(DefaultWorkingCopyOwner.PRIMARY,
-				monitor);
+	public ITypeHierarchy newSupertypeHierarchy(IProgressMonitor monitor) throws ModelException {
+		return this.newSupertypeHierarchy(DefaultWorkingCopyOwner.PRIMARY, monitor);
 	}
 
 	/*
 	 * @see IType#newSupertypeHierarchy(ICompilationUnit[], IProgressMonitor)
 	 */
 	@Override
-	public ITypeHierarchy newSupertypeHierarchy(ISourceModule[] workingCopies,
-			IProgressMonitor monitor) throws ModelException {
+	public ITypeHierarchy newSupertypeHierarchy(ISourceModule[] workingCopies, IProgressMonitor monitor)
+			throws ModelException {
 
 		CreateTypeHierarchyOperation op;
 		IScriptProject scriptProject = getScriptProject();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-		op = new CreateTypeHierarchyOperation(this, workingCopies, scope,
-				false);
+		op = new CreateTypeHierarchyOperation(this, workingCopies, scope, false);
 		op.runOperation(monitor);
 		return op.getResult();
 	}
@@ -411,21 +389,20 @@ public class SourceType extends NamedMember implements IType {
 	 * @see IType#newSupertypeHierarchy(WorkingCopyOwner, IProgressMonitor)
 	 */
 	@Override
-	public ITypeHierarchy newSupertypeHierarchy(WorkingCopyOwner owner,
-			IProgressMonitor monitor) throws ModelException {
-		final ITypeHierarchy hierarchy = TypeHierarchyBuilders
-				.getTypeHierarchy(this, ITypeHierarchy.Mode.SUPERTYPE, monitor);
+	public ITypeHierarchy newSupertypeHierarchy(WorkingCopyOwner owner, IProgressMonitor monitor)
+			throws ModelException {
+		final ITypeHierarchy hierarchy = TypeHierarchyBuilders.getTypeHierarchy(this, ITypeHierarchy.Mode.SUPERTYPE,
+				monitor);
 		if (hierarchy != null) {
 			return hierarchy;
 		}
 
-		ISourceModule[] workingCopies = ModelManager.getModelManager()
-				.getWorkingCopies(owner, true/* add primary working copies */);
+		ISourceModule[] workingCopies = ModelManager.getModelManager().getWorkingCopies(owner,
+				true/* add primary working copies */);
 		CreateTypeHierarchyOperation op;
 		IScriptProject scriptProject = getScriptProject();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-		op = new CreateTypeHierarchyOperation(this, workingCopies, scope,
-				false);
+		op = new CreateTypeHierarchyOperation(this, workingCopies, scope, false);
 		op.runOperation(monitor);
 		return op.getResult();
 	}
@@ -434,25 +411,21 @@ public class SourceType extends NamedMember implements IType {
 	 * @see IType
 	 */
 	@Override
-	public ITypeHierarchy newTypeHierarchy(IScriptProject project,
-			IProgressMonitor monitor) throws ModelException {
-		return newTypeHierarchy(project, DefaultWorkingCopyOwner.PRIMARY,
-				monitor);
+	public ITypeHierarchy newTypeHierarchy(IScriptProject project, IProgressMonitor monitor) throws ModelException {
+		return newTypeHierarchy(project, DefaultWorkingCopyOwner.PRIMARY, monitor);
 	}
 
 	/**
-	 * @see IType#newTypeHierarchy(IJavaProject, WorkingCopyOwner,
-	 *      IProgressMonitor)
+	 * @see IType#newTypeHierarchy(IJavaProject, WorkingCopyOwner, IProgressMonitor)
 	 */
 	@Override
-	public ITypeHierarchy newTypeHierarchy(IScriptProject project,
-			WorkingCopyOwner owner, IProgressMonitor monitor)
+	public ITypeHierarchy newTypeHierarchy(IScriptProject project, WorkingCopyOwner owner, IProgressMonitor monitor)
 			throws ModelException {
 		if (project == null) {
 			throw new IllegalArgumentException(Messages.hierarchy_nullProject);
 		}
-		ISourceModule[] workingCopies = ModelManager.getModelManager()
-				.getWorkingCopies(owner, true/* add primary working copies */);
+		ISourceModule[] workingCopies = ModelManager.getModelManager().getWorkingCopies(owner,
+				true/* add primary working copies */);
 		ISourceModule[] projectWCs = null;
 		if (workingCopies != null) {
 			int length = workingCopies.length;
@@ -465,12 +438,10 @@ public class SourceType extends NamedMember implements IType {
 				}
 			}
 			if (index != length) {
-				System.arraycopy(projectWCs, 0,
-						projectWCs = new ISourceModule[index], 0, index);
+				System.arraycopy(projectWCs, 0, projectWCs = new ISourceModule[index], 0, index);
 			}
 		}
-		CreateTypeHierarchyOperation op = new CreateTypeHierarchyOperation(this,
-				projectWCs, project, true);
+		CreateTypeHierarchyOperation op = new CreateTypeHierarchyOperation(this, projectWCs, project, true);
 		op.runOperation(monitor);
 		return op.getResult();
 	}
@@ -481,8 +452,7 @@ public class SourceType extends NamedMember implements IType {
 		IProject project = scriptProject.getProject();
 		IProject[] referencingProjects = project.getReferencingProjects();
 
-		List<IScriptProject> scriptProjects = new ArrayList<>(
-				referencingProjects.length + 1);
+		List<IScriptProject> scriptProjects = new ArrayList<>(referencingProjects.length + 1);
 		scriptProjects.add(scriptProject);
 
 		for (int i = 0; i < referencingProjects.length; ++i) {
@@ -491,26 +461,22 @@ public class SourceType extends NamedMember implements IType {
 				scriptProjects.add(DLTKCore.create(p));
 			}
 		}
-		return SearchEngine.createSearchScope(
-				scriptProjects
-						.toArray(new IModelElement[scriptProjects.size()]),
-				false, DLTKLanguageManager.getLanguageToolkit(this));
+		return SearchEngine.createSearchScope(scriptProjects.toArray(new IModelElement[scriptProjects.size()]), false,
+				DLTKLanguageManager.getLanguageToolkit(this));
 	}
 
 	/**
 	 * @see IType
 	 */
 	@Override
-	public ITypeHierarchy newTypeHierarchy(IProgressMonitor monitor)
-			throws ModelException {
-		final ITypeHierarchy hierarchy = TypeHierarchyBuilders
-				.getTypeHierarchy(this, ITypeHierarchy.Mode.HIERARCHY, monitor);
+	public ITypeHierarchy newTypeHierarchy(IProgressMonitor monitor) throws ModelException {
+		final ITypeHierarchy hierarchy = TypeHierarchyBuilders.getTypeHierarchy(this, ITypeHierarchy.Mode.HIERARCHY,
+				monitor);
 		if (hierarchy != null) {
 			return hierarchy;
 		}
 		CreateTypeHierarchyOperation op;
-		op = new CreateTypeHierarchyOperation(this, null,
-				createReferencingProjectsScope(), true);
+		op = new CreateTypeHierarchyOperation(this, null, createReferencingProjectsScope(), true);
 		op.runOperation(monitor);
 		return op.getResult();
 	}
@@ -519,12 +485,11 @@ public class SourceType extends NamedMember implements IType {
 	 * @see IType#newTypeHierarchy(ICompilationUnit[], IProgressMonitor)
 	 */
 	@Override
-	public ITypeHierarchy newTypeHierarchy(ISourceModule[] workingCopies,
-			IProgressMonitor monitor) throws ModelException {
+	public ITypeHierarchy newTypeHierarchy(ISourceModule[] workingCopies, IProgressMonitor monitor)
+			throws ModelException {
 
 		CreateTypeHierarchyOperation op;
-		op = new CreateTypeHierarchyOperation(this, workingCopies,
-				createReferencingProjectsScope(), true);
+		op = new CreateTypeHierarchyOperation(this, workingCopies, createReferencingProjectsScope(), true);
 		op.runOperation(monitor);
 		return op.getResult();
 	}
@@ -533,14 +498,12 @@ public class SourceType extends NamedMember implements IType {
 	 * @see IType#newTypeHierarchy(WorkingCopyOwner, IProgressMonitor)
 	 */
 	@Override
-	public ITypeHierarchy newTypeHierarchy(WorkingCopyOwner owner,
-			IProgressMonitor monitor) throws ModelException {
+	public ITypeHierarchy newTypeHierarchy(WorkingCopyOwner owner, IProgressMonitor monitor) throws ModelException {
 
-		ISourceModule[] workingCopies = ModelManager.getModelManager()
-				.getWorkingCopies(owner, true/* add primary working copies */);
+		ISourceModule[] workingCopies = ModelManager.getModelManager().getWorkingCopies(owner,
+				true/* add primary working copies */);
 		CreateTypeHierarchyOperation op;
-		op = new CreateTypeHierarchyOperation(this, workingCopies,
-				createReferencingProjectsScope(), true);
+		op = new CreateTypeHierarchyOperation(this, workingCopies, createReferencingProjectsScope(), true);
 		op.runOperation(monitor);
 		return op.getResult();
 	}

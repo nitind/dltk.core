@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -19,8 +19,7 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 
-public abstract class LazyScriptCompletionProposal
-		extends AbstractScriptCompletionProposal {
+public abstract class LazyScriptCompletionProposal extends AbstractScriptCompletionProposal {
 
 	protected static final String LPAREN = "("; //$NON-NLS-1$
 	protected static final String RPAREN = ")"; //$NON-NLS-1$
@@ -50,8 +49,7 @@ public abstract class LazyScriptCompletionProposal
 	protected final ScriptContentAssistInvocationContext fInvocationContext;
 	private boolean fDisplayStyledStringComputed;
 
-	public LazyScriptCompletionProposal(CompletionProposal proposal,
-			ScriptContentAssistInvocationContext context) {
+	public LazyScriptCompletionProposal(CompletionProposal proposal, ScriptContentAssistInvocationContext context) {
 		Assert.isNotNull(proposal);
 		Assert.isNotNull(context);
 		// FIXME it should not be null but it is
@@ -77,9 +75,8 @@ public abstract class LazyScriptCompletionProposal
 	/**
 	 * Sets the trigger characters.
 	 *
-	 * @param triggerCharacters
-	 *                              The set of characters which can trigger the
-	 *                              application of this completion proposal
+	 * @param triggerCharacters The set of characters which can trigger the
+	 *                          application of this completion proposal
 	 */
 	@Override
 	public final void setTriggerCharacters(char[] triggerCharacters) {
@@ -90,9 +87,8 @@ public abstract class LazyScriptCompletionProposal
 	/**
 	 * Sets the proposal info.
 	 *
-	 * @param proposalInfo
-	 *                         The additional information associated with this
-	 *                         proposal or <code>null</code>
+	 * @param proposalInfo The additional information associated with this proposal
+	 *                     or <code>null</code>
 	 */
 	@Override
 	public final void setProposalInfo(ICompletionProposalInfo proposalInfo) {
@@ -101,8 +97,7 @@ public abstract class LazyScriptCompletionProposal
 	}
 
 	/**
-	 * Returns the additional proposal info, or <code>null</code> if none
-	 * exists.
+	 * Returns the additional proposal info, or <code>null</code> if none exists.
 	 *
 	 * @return the additional proposal info, or <code>null</code> if none exists
 	 */
@@ -120,12 +115,10 @@ public abstract class LazyScriptCompletionProposal
 	}
 
 	/**
-	 * Sets the cursor position relative to the insertion offset. By default
-	 * this is the length of the completion string (Cursor positioned after the
-	 * completion)
+	 * Sets the cursor position relative to the insertion offset. By default this is
+	 * the length of the completion string (Cursor positioned after the completion)
 	 *
-	 * @param cursorPosition
-	 *                           The cursorPosition to set
+	 * @param cursorPosition The cursorPosition to set
 	 */
 	@Override
 	public final void setCursorPosition(int cursorPosition) {
@@ -147,8 +140,7 @@ public abstract class LazyScriptCompletionProposal
 
 	@Override
 	protected boolean isInDoc() {
-		final CompletionContext coreContext = fInvocationContext
-				.getCoreContext();
+		final CompletionContext coreContext = fInvocationContext.getCoreContext();
 		// FIXME it should not be null but it is
 		return coreContext != null && coreContext.isInDoc();
 	}
@@ -168,13 +160,11 @@ public abstract class LazyScriptCompletionProposal
 	/**
 	 * Sets the context information.
 	 *
-	 * @param contextInformation
-	 *                               The context information associated with
-	 *                               this proposal
+	 * @param contextInformation The context information associated with this
+	 *                           proposal
 	 */
 	@Override
-	public final void setContextInformation(
-			IContextInformation contextInformation) {
+	public final void setContextInformation(IContextInformation contextInformation) {
 		fContextInformationComputed = true;
 		super.setContextInformation(contextInformation);
 	}
@@ -218,11 +208,9 @@ public abstract class LazyScriptCompletionProposal
 	 * @since 5.2
 	 */
 	protected StyledString computeStyledDisplayString() {
-		CompletionProposalLabelProvider labelProvider = fInvocationContext
-				.getLabelProvider();
+		CompletionProposalLabelProvider labelProvider = fInvocationContext.getLabelProvider();
 		if (labelProvider instanceof ICompletionProposalLabelProviderExtension) {
-			return ((ICompletionProposalLabelProviderExtension) labelProvider)
-					.createStyledLabel(fProposal);
+			return ((ICompletionProposalLabelProviderExtension) labelProvider).createStyledLabel(fProposal);
 		}
 		return new StyledString(labelProvider.createLabel(fProposal));
 	}
@@ -256,8 +244,7 @@ public abstract class LazyScriptCompletionProposal
 	/**
 	 * Sets the replacement offset.
 	 *
-	 * @param replacementOffset
-	 *                              The replacement offset to set
+	 * @param replacementOffset The replacement offset to set
 	 */
 	@Override
 	public final void setReplacementOffset(int replacementOffset) {
@@ -266,8 +253,7 @@ public abstract class LazyScriptCompletionProposal
 	}
 
 	@Override
-	public int getPrefixCompletionStart(IDocument document,
-			int completionOffset) {
+	public int getPrefixCompletionStart(IDocument document, int completionOffset) {
 		return getReplacementOffset();
 	}
 
@@ -279,16 +265,14 @@ public abstract class LazyScriptCompletionProposal
 	@Override
 	public final int getReplacementLength() {
 		if (!fReplacementLengthComputed)
-			setReplacementLength(
-					fProposal.getReplaceEnd() - fProposal.getReplaceStart());
+			setReplacementLength(fProposal.getReplaceEnd() - fProposal.getReplaceStart());
 		return super.getReplacementLength();
 	}
 
 	/**
 	 * Sets the replacement length.
 	 *
-	 * @param replacementLength
-	 *                              The replacementLength to set
+	 * @param replacementLength The replacementLength to set
 	 */
 	@Override
 	public final void setReplacementLength(int replacementLength) {
@@ -315,8 +299,7 @@ public abstract class LazyScriptCompletionProposal
 	/**
 	 * Sets the replacement string.
 	 *
-	 * @param replacementString
-	 *                              The replacement string to set
+	 * @param replacementString The replacement string to set
 	 */
 	@Override
 	public final void setReplacementString(String replacementString) {
@@ -332,15 +315,14 @@ public abstract class LazyScriptCompletionProposal
 	}
 
 	protected Image computeImage() {
-		return DLTKUIPlugin.getImageDescriptorRegistry().get(fInvocationContext
-				.getLabelProvider().createImageDescriptor(fProposal));
+		return DLTKUIPlugin.getImageDescriptorRegistry()
+				.get(fInvocationContext.getLabelProvider().createImageDescriptor(fProposal));
 	}
 
 	/**
 	 * Sets the image.
 	 *
-	 * @param image
-	 *                  The image to set
+	 * @param image The image to set
 	 */
 	@Override
 	public final void setImage(Image image) {
@@ -355,7 +337,7 @@ public abstract class LazyScriptCompletionProposal
 
 		if (fProposal.getKind() == CompletionProposal.METHOD_NAME_REFERENCE) {
 			// static imports - includes package & type name
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			buf.append('.');
 			buf.append(getDisplayString());
 			return isPrefix(prefix, buf.toString());
@@ -379,8 +361,7 @@ public abstract class LazyScriptCompletionProposal
 	/**
 	 * Sets the proposal's relevance.
 	 *
-	 * @param relevance
-	 *                      The relevance to set
+	 * @param relevance The relevance to set
 	 */
 	@Override
 	public final void setRelevance(int relevance) {

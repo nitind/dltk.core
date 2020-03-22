@@ -51,7 +51,7 @@ public final class ScriptRefactoringDescriptorComment {
 	public static String createCompositeSetting(final String caption, final String[] settings) {
 		Assert.isNotNull(caption);
 		Assert.isNotNull(settings);
-		final StringBuffer buffer = new StringBuffer(128);
+		final StringBuilder buffer = new StringBuilder(128);
 		buffer.append(caption);
 		for (int index = 0; index < settings.length; index++) {
 			if (settings[index] != null && !"".equals(settings[index])) { //$NON-NLS-1$
@@ -117,7 +117,7 @@ public final class ScriptRefactoringDescriptorComment {
 	 * @return this comment in string representation
 	 */
 	public String asString() {
-		final StringBuffer buffer = new StringBuffer(256);
+		final StringBuilder buffer = new StringBuilder(256);
 		buffer.append(fHeader);
 		for (final Iterator iterator = fSettings.iterator(); iterator.hasNext();) {
 			final String setting = (String) iterator.next();
@@ -180,7 +180,7 @@ public final class ScriptRefactoringDescriptorComment {
 							ScriptElementLabels.getDefault().getTextLabel(elements[0],
 									ScriptElementLabels.ALL_FULLY_QUALIFIED)));
 				else if (elements.length > 1) {
-					final StringBuffer buffer = new StringBuffer(128);
+					final StringBuilder buffer = new StringBuilder(128);
 					buffer.append(RefactoringCoreMessages.ScriptRefactoringDescriptor_original_elements);
 					for (int index = 0; index < elements.length; index++) {
 						if (elements[index] != null) {

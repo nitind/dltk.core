@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -50,8 +50,8 @@ import org.eclipse.dltk.internal.codeassist.InternalCompletionProposal;
  */
 public class CompletionProposal implements Cloneable {
 	/**
-	 * Completion is a reference to a field. This kind of completion might occur
-	 * in a context like <code>"this.ref^ = 0;"</code> and complete it to
+	 * Completion is a reference to a field. This kind of completion might occur in
+	 * a context like <code>"this.ref^ = 0;"</code> and complete it to
 	 * <code>"this.refcount = 0;"</code>.
 	 *
 	 */
@@ -67,8 +67,8 @@ public class CompletionProposal implements Cloneable {
 	public static final int KEYWORD = 2;
 
 	/**
-	 * Completion is a reference to a label. This kind of completion might occur
-	 * in a context like <code>"break lo^;"</code> and complete it to
+	 * Completion is a reference to a label. This kind of completion might occur in
+	 * a context like <code>"break lo^;"</code> and complete it to
 	 * <code>"break loop;"</code>.
 	 *
 	 * @see #getKind()
@@ -76,8 +76,8 @@ public class CompletionProposal implements Cloneable {
 	public static final int LABEL_REF = 3;
 
 	/**
-	 * Completion is a reference to a local variable. This kind of completion
-	 * might occur in a context like <code>"ke^ = 4;"</code> and complete it to
+	 * Completion is a reference to a local variable. This kind of completion might
+	 * occur in a context like <code>"ke^ = 4;"</code> and complete it to
 	 * <code>"keys = 4;"</code>.
 	 *
 	 * @see #getKind()
@@ -85,28 +85,28 @@ public class CompletionProposal implements Cloneable {
 	public static final int LOCAL_VARIABLE_REF = 4;
 
 	/**
-	 * Completion is a reference to a method. This kind of completion might
-	 * occur in a context like <code>"System.out.pr^();"</code> and complete it
-	 * to <code>""System.out.println();"</code>.
+	 * Completion is a reference to a method. This kind of completion might occur in
+	 * a context like <code>"System.out.pr^();"</code> and complete it to
+	 * <code>""System.out.println();"</code>.
 	 *
 	 * @see #getKind()
 	 */
 	public static final int METHOD_REF = 5;
 
 	/**
-	 * Completion is a declaration of a method. This kind of completion might
-	 * occur in a context like <code>"new List() {si^};"</code> and complete it
-	 * to <code>"new List() {public int size() {} };"</code>.
+	 * Completion is a declaration of a method. This kind of completion might occur
+	 * in a context like <code>"new List() {si^};"</code> and complete it to
+	 * <code>"new List() {public int size() {} };"</code>.
 	 *
 	 * @see #getKind()
 	 */
 	public static final int METHOD_DECLARATION = 6;
 
 	/**
-	 * Completion is a reference to a type. Any kind of type is allowed,
-	 * including primitive types, reference types, array types, parameterized
-	 * types, and type variables. This kind of completion might occur in a
-	 * context like <code>"public static Str^ key;"</code> and complete it to
+	 * Completion is a reference to a type. Any kind of type is allowed, including
+	 * primitive types, reference types, array types, parameterized types, and type
+	 * variables. This kind of completion might occur in a context like
+	 * <code>"public static Str^ key;"</code> and complete it to
 	 * <code>"public static String key;"</code>.
 	 *
 	 * @see #getKind()
@@ -114,8 +114,7 @@ public class CompletionProposal implements Cloneable {
 	public static final int TYPE_REF = 7;
 
 	/**
-	 * Completion is a declaration of a variable (locals, parameters, fields,
-	 * etc.).
+	 * Completion is a declaration of a variable (locals, parameters, fields, etc.).
 	 *
 	 * @see #getKind()
 	 */
@@ -123,8 +122,8 @@ public class CompletionProposal implements Cloneable {
 
 	/**
 	 * Completion is a declaration of a new potential method. This kind of
-	 * completion might occur in a context like <code>"new List() {si^};"</code>
-	 * and complete it to <code>"new List() {public int si() {} };"</code>.
+	 * completion might occur in a context like <code>"new List() {si^};"</code> and
+	 * complete it to <code>"new List() {public int si() {} };"</code>.
 	 *
 	 * @see #getKind()
 	 *
@@ -157,12 +156,12 @@ public class CompletionProposal implements Cloneable {
 
 	/**
 	 * The key of the attribute for
-	 * {@link CompletionProposal#setAttribute(String, Object)}, which can be
-	 * used to specify the number of required parameters, treating all the
-	 * remaining parameters as optional. By default all parameters are treated
-	 * as required. This attribute allows completion framework to do it's best
-	 * to represent the optional parameters with minimal efforts from the IDE
-	 * developer. The value should be of the {@link Integer} type.
+	 * {@link CompletionProposal#setAttribute(String, Object)}, which can be used to
+	 * specify the number of required parameters, treating all the remaining
+	 * parameters as optional. By default all parameters are treated as required.
+	 * This attribute allows completion framework to do it's best to represent the
+	 * optional parameters with minimal efforts from the IDE developer. The value
+	 * should be of the {@link Integer} type.
 	 *
 	 * @since 5.0
 	 */
@@ -182,14 +181,14 @@ public class CompletionProposal implements Cloneable {
 	private int completionLocation;
 
 	/**
-	 * Start position (inclusive) of source range in original buffer containing
-	 * the relevant token defaults to empty subrange at [0,0).
+	 * Start position (inclusive) of source range in original buffer containing the
+	 * relevant token defaults to empty subrange at [0,0).
 	 */
 	private int tokenStart = 0;
 
 	/**
-	 * End position (exclusive) of source range in original buffer containing
-	 * the relevant token; defaults to empty subrange at [0,0).
+	 * End position (exclusive) of source range in original buffer containing the
+	 * relevant token; defaults to empty subrange at [0,0).
 	 */
 	private int tokenEnd = 0;
 
@@ -199,20 +198,19 @@ public class CompletionProposal implements Cloneable {
 	private String completion = Util.EMPTY_STRING;
 
 	/**
-	 * Start position (inclusive) of source range in original buffer to be
-	 * replaced by completion string; defaults to empty subrange at [0,0).
+	 * Start position (inclusive) of source range in original buffer to be replaced
+	 * by completion string; defaults to empty subrange at [0,0).
 	 */
 	private int replaceStart = 0;
 
 	/**
-	 * End position (exclusive) of source range in original buffer to be
-	 * replaced by completion string; defaults to empty subrange at [0,0).
+	 * End position (exclusive) of source range in original buffer to be replaced by
+	 * completion string; defaults to empty subrange at [0,0).
 	 */
 	private int replaceEnd = 0;
 
 	/**
-	 * Relevance rating; positive; higher means better; defaults to minimum
-	 * rating.
+	 * Relevance rating; positive; higher means better; defaults to minimum rating.
 	 */
 	private int relevance = 1;
 
@@ -229,14 +227,14 @@ public class CompletionProposal implements Cloneable {
 	private String name = null;
 
 	/**
-	 * Unique of the method, field type, member type, relevant in the context,
-	 * or <code>null</code> if none. Defaults to null.
+	 * Unique of the method, field type, member type, relevant in the context, or
+	 * <code>null</code> if none. Defaults to null.
 	 */
 	private String key = null;
 
 	/**
-	 * Modifier flags relevant in the context, or <code>Flags.AccDefault</code>
-	 * if none. Defaults to <code>Flags.AccDefault</code>.
+	 * Modifier flags relevant in the context, or <code>Flags.AccDefault</code> if
+	 * none. Defaults to <code>Flags.AccDefault</code>.
 	 */
 	private int flags = 0;
 
@@ -259,14 +257,11 @@ public class CompletionProposal implements Cloneable {
 	 * default values unless otherwise noted.
 	 * <p>
 	 * Note that the constructors for this class are internal to the model
-	 * implementation. Clients cannot directly create CompletionProposal
-	 * objects.
+	 * implementation. Clients cannot directly create CompletionProposal objects.
 	 * </p>
 	 *
-	 * @param kind
-	 *            one of the kind constants declared on this class
-	 * @param completionOffset
-	 *            original offset of code completion request
+	 * @param kind             one of the kind constants declared on this class
+	 * @param completionOffset original offset of code completion request
 	 * @return a new completion proposal
 	 */
 	public static CompletionProposal create(int kind, int completionOffset) {
@@ -278,18 +273,14 @@ public class CompletionProposal implements Cloneable {
 	 * default values unless otherwise noted.
 	 * <p>
 	 * Note that the constructors for this class are internal to the model
-	 * implementation. Clients cannot directly create CompletionProposal
-	 * objects.
+	 * implementation. Clients cannot directly create CompletionProposal objects.
 	 * </p>
 	 *
-	 * @param kind
-	 *            one of the kind constants declared on this class
-	 * @param completionLocation
-	 *            original offset of code completion request
+	 * @param kind               one of the kind constants declared on this class
+	 * @param completionLocation original offset of code completion request
 	 */
 	protected CompletionProposal(int kind, int completionLocation) {
-		if ((kind < CompletionProposal.FIRST_KIND)
-				|| (kind > CompletionProposal.LAST_KIND)) {
+		if ((kind < CompletionProposal.FIRST_KIND) || (kind > CompletionProposal.LAST_KIND)) {
 			throw new IllegalArgumentException();
 		}
 
@@ -313,10 +304,10 @@ public class CompletionProposal implements Cloneable {
 	/**
 	 * Returns the kind of completion being proposed.
 	 * <p>
-	 * The set of different kinds of completion proposals is expected to change
-	 * over time. It is strongly recommended that clients do <b>not</b> assume
-	 * that the kind is one of the ones they know about, and code defensively
-	 * for the possibility of unexpected future growth.
+	 * The set of different kinds of completion proposals is expected to change over
+	 * time. It is strongly recommended that clients do <b>not</b> assume that the
+	 * kind is one of the ones they know about, and code defensively for the
+	 * possibility of unexpected future growth.
 	 * </p>
 	 *
 	 * @return the kind; one of the kind constants declared on this class, or
@@ -327,8 +318,8 @@ public class CompletionProposal implements Cloneable {
 	}
 
 	/**
-	 * Returns the character index in the source file buffer where source
-	 * completion was requested (the <code>offset</code> parameter to
+	 * Returns the character index in the source file buffer where source completion
+	 * was requested (the <code>offset</code> parameter to
 	 * <code>ICodeAssist.codeComplete</code>).
 	 *
 	 * @return character index in source file buffer
@@ -339,13 +330,12 @@ public class CompletionProposal implements Cloneable {
 	}
 
 	/**
-	 * Returns the character index of the start of the subrange in the source
-	 * file buffer containing the relevant token being completed. This token is
-	 * either the identifier or language keyword under, or immediately
-	 * preceding, the original request offset. If the original request offset is
-	 * not within or immediately after an identifier or keyword, then the
-	 * position returned is original request offset and the token range is
-	 * empty.
+	 * Returns the character index of the start of the subrange in the source file
+	 * buffer containing the relevant token being completed. This token is either
+	 * the identifier or language keyword under, or immediately preceding, the
+	 * original request offset. If the original request offset is not within or
+	 * immediately after an identifier or keyword, then the position returned is
+	 * original request offset and the token range is empty.
 	 *
 	 * @return character index of token start position (inclusive)
 	 */
@@ -355,9 +345,8 @@ public class CompletionProposal implements Cloneable {
 
 	/**
 	 * Returns the character index of the end (exclusive) of the subrange in the
-	 * source file buffer containing the relevant token. When there is no
-	 * relevant token, the range is empty (
-	 * <code>getEndToken() == getStartToken()</code>).
+	 * source file buffer containing the relevant token. When there is no relevant
+	 * token, the range is empty ( <code>getEndToken() == getStartToken()</code>).
 	 *
 	 * @return character index of token end position (exclusive)
 	 */
@@ -368,18 +357,16 @@ public class CompletionProposal implements Cloneable {
 	/**
 	 * Sets the character indices of the subrange in the source file buffer
 	 * containing the relevant token being completed. This token is either the
-	 * identifier or language keyword under, or immediately preceding, the
-	 * original request offset. If the original request offset is not within or
-	 * immediately after an identifier or keyword, then the source range begins
-	 * at original request offset and is empty.
+	 * identifier or language keyword under, or immediately preceding, the original
+	 * request offset. If the original request offset is not within or immediately
+	 * after an identifier or keyword, then the source range begins at original
+	 * request offset and is empty.
 	 * <p>
 	 * If not set, defaults to empty subrange at [0,0).
 	 * </p>
 	 *
-	 * @param startIndex
-	 *            character index of token start position (inclusive)
-	 * @param endIndex
-	 *            character index of token end position (exclusive)
+	 * @param startIndex character index of token start position (inclusive)
+	 * @param endIndex   character index of token end position (exclusive)
 	 */
 	public void setTokenRange(int startIndex, int endIndex) {
 		if (startIndex < 0 || endIndex < startIndex) {
@@ -391,10 +378,10 @@ public class CompletionProposal implements Cloneable {
 	}
 
 	/**
-	 * Returns the proposed sequence of characters to insert into the source
-	 * file buffer, replacing the characters at the specified source range. The
-	 * string can be arbitrary; for example, it might include not only the name
-	 * of a method but a set of parentheses.
+	 * Returns the proposed sequence of characters to insert into the source file
+	 * buffer, replacing the characters at the specified source range. The string
+	 * can be arbitrary; for example, it might include not only the name of a method
+	 * but a set of parentheses.
 	 * <p>
 	 * The client must not modify the array returned.
 	 * </p>
@@ -409,25 +396,21 @@ public class CompletionProposal implements Cloneable {
 
 				if (this.parameterNames != null) {
 					int length = this.parameterNames.length;
-					StringBuffer completionBuffer = new StringBuffer(
-							this.completion.length());
+					StringBuilder completionBuffer = new StringBuilder(this.completion.length());
 
 					int start = 0;
 					int end = this.completion.indexOf('%');
 
-					completionBuffer.append(this.completion, start,
-							end - start);
+					completionBuffer.append(this.completion, start, end - start);
 
 					for (int i = 0; i < length; i++) {
 						completionBuffer.append(this.parameterNames[i]);
 						start = end + 1;
 						end = this.completion.indexOf('%', start);
 						if (end > -1) {
-							completionBuffer.append(this.completion, start,
-									end - start);
+							completionBuffer.append(this.completion, start, end - start);
 						} else {
-							completionBuffer.append(this.completion, start,
-									this.completion.length() - start);
+							completionBuffer.append(this.completion, start, this.completion.length() - start);
 						}
 					}
 					this.completion = completionBuffer.toString();
@@ -440,25 +423,21 @@ public class CompletionProposal implements Cloneable {
 
 				if (this.parameterNames != null) {
 					int length = this.parameterNames.length;
-					StringBuffer completionBuffer = new StringBuffer(
-							this.completion.length());
+					StringBuilder completionBuffer = new StringBuilder(this.completion.length());
 
 					int start = 0;
 					int end = this.completion.indexOf('%');
 
-					completionBuffer.append(this.completion, start,
-							end - start);
+					completionBuffer.append(this.completion, start, end - start);
 
 					for (int i = 0; i < length; i++) {
 						completionBuffer.append(this.parameterNames[i]);
 						start = end + 1;
 						end = this.completion.indexOf('%', start);
 						if (end > -1) {
-							completionBuffer.append(this.completion, start,
-									end - start);
+							completionBuffer.append(this.completion, start, end - start);
 						} else {
-							completionBuffer.append(this.completion, start,
-									this.completion.length() - start);
+							completionBuffer.append(this.completion, start, this.completion.length() - start);
 						}
 					}
 					this.completion = completionBuffer.toString();
@@ -470,9 +449,9 @@ public class CompletionProposal implements Cloneable {
 
 	/**
 	 * Sets the proposed sequence of characters to insert into the source file
-	 * buffer, replacing the characters at the specified source range. The
-	 * string can be arbitrary; for example, it might include not only the name
-	 * of a method but a set of parentheses.
+	 * buffer, replacing the characters at the specified source range. The string
+	 * can be arbitrary; for example, it might include not only the name of a method
+	 * but a set of parentheses.
 	 * <p>
 	 * If not set, defaults to an empty character array.
 	 * </p>
@@ -481,25 +460,24 @@ public class CompletionProposal implements Cloneable {
 	 * properties; this method is not intended to be used by other clients.
 	 * </p>
 	 *
-	 * @param completion
-	 *            the completion string
+	 * @param completion the completion string
 	 */
 	public void setCompletion(String completion) {
 		this.completion = completion;
 	}
 
 	/**
-	 * Returns the character index of the start of the subrange in the source
-	 * file buffer to be replaced by the completion string. If the subrange is
-	 * empty (<code>getReplaceEnd() == getReplaceStart()</code>), the completion
-	 * string is to be inserted at this index.
+	 * Returns the character index of the start of the subrange in the source file
+	 * buffer to be replaced by the completion string. If the subrange is empty
+	 * (<code>getReplaceEnd() == getReplaceStart()</code>), the completion string is
+	 * to be inserted at this index.
 	 * <p>
-	 * Note that while the token subrange is precisely specified, the
-	 * replacement range is loosely constrained and may not bear any direct
-	 * relation to the original request offset. For example, it would be
-	 * possible for a type completion to propose inserting an import declaration
-	 * at the top of the compilation unit; or the completion might include
-	 * trailing parentheses and punctuation for a method completion.
+	 * Note that while the token subrange is precisely specified, the replacement
+	 * range is loosely constrained and may not bear any direct relation to the
+	 * original request offset. For example, it would be possible for a type
+	 * completion to propose inserting an import declaration at the top of the
+	 * compilation unit; or the completion might include trailing parentheses and
+	 * punctuation for a method completion.
 	 * </p>
 	 *
 	 * @return replacement start position (inclusive)
@@ -511,8 +489,8 @@ public class CompletionProposal implements Cloneable {
 	/**
 	 * Returns the character index of the end of the subrange in the source file
 	 * buffer to be replaced by the completion string. If the subrange is empty
-	 * (<code>getReplaceEnd() == getReplaceStart()</code>), the completion
-	 * string is to be inserted at this index.
+	 * (<code>getReplaceEnd() == getReplaceStart()</code>), the completion string is
+	 * to be inserted at this index.
 	 *
 	 * @return replacement end position (exclusive)
 	 */
@@ -521,10 +499,10 @@ public class CompletionProposal implements Cloneable {
 	}
 
 	/**
-	 * Sets the character indices of the subrange in the source file buffer to
-	 * be replaced by the completion string. If the subrange is empty (
-	 * <code>startIndex == endIndex</code>), the completion string is to be
-	 * inserted at this index.
+	 * Sets the character indices of the subrange in the source file buffer to be
+	 * replaced by the completion string. If the subrange is empty (
+	 * <code>startIndex == endIndex</code>), the completion string is to be inserted
+	 * at this index.
 	 * <p>
 	 * If not set, defaults to empty subrange at [0,0).
 	 * </p>
@@ -533,10 +511,8 @@ public class CompletionProposal implements Cloneable {
 	 * properties; this method is not intended to be used by other clients.
 	 * </p>
 	 *
-	 * @param startIndex
-	 *            character index of replacement start position (inclusive)
-	 * @param endIndex
-	 *            character index of replacement end position (exclusive)
+	 * @param startIndex character index of replacement start position (inclusive)
+	 * @param endIndex   character index of replacement end position (exclusive)
 	 */
 	public void setReplaceRange(int startIndex, int endIndex) {
 		if (startIndex < 0 || endIndex < startIndex) {
@@ -550,8 +526,8 @@ public class CompletionProposal implements Cloneable {
 	/**
 	 * Returns the relative relevance rating of this proposal.
 	 *
-	 * @return relevance rating of this proposal; ratings are positive; higher
-	 *         means better
+	 * @return relevance rating of this proposal; ratings are positive; higher means
+	 *         better
 	 */
 	public int getRelevance() {
 		return this.relevance;
@@ -567,9 +543,8 @@ public class CompletionProposal implements Cloneable {
 	 * properties; this method is not intended to be used by other clients.
 	 * </p>
 	 *
-	 * @param rating
-	 *            relevance rating of this proposal; ratings are positive;
-	 *            higher means better
+	 * @param rating relevance rating of this proposal; ratings are positive; higher
+	 *               means better
 	 */
 	public void setRelevance(int rating) {
 		if (rating <= 0) {
@@ -585,8 +560,8 @@ public class CompletionProposal implements Cloneable {
 	 * <p>
 	 * This field is available for the following kinds of completion proposals:
 	 * <ul>
-	 * <li><code>ANONYMOUS_CLASS_DECLARATION</code> - key of the type that is
-	 * being subclassed or implemented</li>
+	 * <li><code>ANONYMOUS_CLASS_DECLARATION</code> - key of the type that is being
+	 * subclassed or implemented</li>
 	 * <li><code>METHOD_DECLARATION</code> - key of the type that declares the
 	 * method that is being implemented or overridden</li>
 	 * </ul>
@@ -602,8 +577,8 @@ public class CompletionProposal implements Cloneable {
 	}
 
 	/**
-	 * Sets the type or package key of the relevant declaration in the context,
-	 * or <code>null</code> if none.
+	 * Sets the type or package key of the relevant declaration in the context, or
+	 * <code>null</code> if none.
 	 * <p>
 	 * If not set, defaults to none.
 	 * </p>
@@ -612,8 +587,7 @@ public class CompletionProposal implements Cloneable {
 	 * properties; this method is not intended to be used by other clients.
 	 * </p>
 	 *
-	 * @param key
-	 *            the type or package key, or <code>null</code> if none
+	 * @param key the type or package key, or <code>null</code> if none
 	 *
 	 */
 	public void setDeclarationKey(String key) {
@@ -621,8 +595,8 @@ public class CompletionProposal implements Cloneable {
 	}
 
 	/**
-	 * Returns the simple name of the method, field, member, or variable
-	 * relevant in the context, or <code>null</code> if none.
+	 * Returns the simple name of the method, field, member, or variable relevant in
+	 * the context, or <code>null</code> if none.
 	 * <p>
 	 * This field is available for the following kinds of completion proposals:
 	 * <ul>
@@ -631,13 +605,12 @@ public class CompletionProposal implements Cloneable {
 	 * <li><code>KEYWORD</code> - the keyword</li>
 	 * <li><code>LABEL_REF</code> - the name of the label</li>
 	 * <li><code>LOCAL_VARIABLE_REF</code> - the name of the local variable</li>
-	 * <li><code>METHOD_REF</code> - the name of the method (the type simple
+	 * <li><code>METHOD_REF</code> - the name of the method (the type simple name
+	 * for constructor)</li>
+	 * <li><code>METHOD_DECLARATION</code> - the name of the method (the type simple
 	 * name for constructor)</li>
-	 * <li><code>METHOD_DECLARATION</code> - the name of the method (the type
-	 * simple name for constructor)</li>
 	 * <li><code>VARIABLE_DECLARATION</code> - the name of the variable</li>
-	 * <li><code>POTENTIAL_METHOD_DECLARATION</code> - the name of the
-	 * method</li>
+	 * <li><code>POTENTIAL_METHOD_DECLARATION</code> - the name of the method</li>
 	 * </ul>
 	 * For kinds of completion proposals, this method returns <code>null</code>.
 	 * Clients must not modify the array returned.
@@ -651,9 +624,8 @@ public class CompletionProposal implements Cloneable {
 	}
 
 	/**
-	 * Sets the simple name of the method (type simple name for constructor),
-	 * field, member, or variable relevant in the context, or <code>null</code>
-	 * if none.
+	 * Sets the simple name of the method (type simple name for constructor), field,
+	 * member, or variable relevant in the context, or <code>null</code> if none.
 	 * <p>
 	 * If not set, defaults to none.
 	 * </p>
@@ -662,9 +634,8 @@ public class CompletionProposal implements Cloneable {
 	 * properties; this method is not intended to be used by other clients.
 	 * </p>
 	 *
-	 * @param name
-	 *            the keyword, field, method, local variable, or member name, or
-	 *            <code>null</code> if none
+	 * @param name the keyword, field, method, local variable, or member name, or
+	 *             <code>null</code> if none
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -675,11 +646,11 @@ public class CompletionProposal implements Cloneable {
 	 * <p>
 	 * This field is available for the following kinds of completion proposals:
 	 * <ul>
-	 * <li><code>ANONYMOUS_CLASS_DECLARATION</code> - method key of the
-	 * constructor that is being invoked, or <code>null</code> if the declaring
-	 * type is an interface</li>
-	 * <li><code>METHOD_DECLARATION</code> - method key of the method that is
-	 * being implemented or overridden</li>
+	 * <li><code>ANONYMOUS_CLASS_DECLARATION</code> - method key of the constructor
+	 * that is being invoked, or <code>null</code> if the declaring type is an
+	 * interface</li>
+	 * <li><code>METHOD_DECLARATION</code> - method key of the method that is being
+	 * implemented or overridden</li>
 	 * </ul>
 	 * For kinds of completion proposals, this method returns <code>null</code>.
 	 * Clients must not modify the array returned.
@@ -693,8 +664,8 @@ public class CompletionProposal implements Cloneable {
 	}
 
 	/**
-	 * Sets the key of the method, field type, member type, relevant in the
-	 * context, or <code>null</code> if none.
+	 * Sets the key of the method, field type, member type, relevant in the context,
+	 * or <code>null</code> if none.
 	 * <p>
 	 * If not set, defaults to none.
 	 * </p>
@@ -703,8 +674,7 @@ public class CompletionProposal implements Cloneable {
 	 * properties; this method is not intended to be used by other clients.
 	 * </p>
 	 *
-	 * @param key
-	 *            the key, or <code>null</code> if none
+	 * @param key the key, or <code>null</code> if none
 	 *
 	 */
 	public void setKey(String key) {
@@ -717,30 +687,30 @@ public class CompletionProposal implements Cloneable {
 	 * <p>
 	 * This field is available for the following kinds of completion proposals:
 	 * <ul>
-	 * <li><code>ANNOTATION_ATTRIBUT_REF</code> - modifier flags of the
-	 * attribute that is referenced;
+	 * <li><code>ANNOTATION_ATTRIBUT_REF</code> - modifier flags of the attribute
+	 * that is referenced;
 	 * <li><code>ANONYMOUS_CLASS_DECLARATION</code> - modifier flags of the
 	 * constructor that is referenced</li>
-	 * <li><code>FIELD_REF</code> - modifier flags of the field that is
-	 * referenced; <code>Flags.AccEnum</code> can be used to recognize
-	 * references to enum constants</li>
+	 * <li><code>FIELD_REF</code> - modifier flags of the field that is referenced;
+	 * <code>Flags.AccEnum</code> can be used to recognize references to enum
+	 * constants</li>
 	 * <li><code>KEYWORD</code> - modifier flag corrresponding to the modifier
 	 * keyword</li>
-	 * <li><code>LOCAL_VARIABLE_REF</code> - modifier flags of the local
-	 * variable that is referenced</li>
+	 * <li><code>LOCAL_VARIABLE_REF</code> - modifier flags of the local variable
+	 * that is referenced</li>
 	 * <li><code>METHOD_REF</code> - modifier flags of the method that is
 	 * referenced; <code>Flags.AccAnnotation</code> can be used to recognize
 	 * references to annotation type members</li>
-	 * <li><code>METHOD_DECLARATION</code> - modifier flags for the method that
-	 * is being implemented or overridden</li>
-	 * <li><code>TYPE_REF</code> - modifier flags of the type that is
-	 * referenced; <code>Flags.AccInterface</code> can be used to recognize
-	 * references to interfaces, <code>Flags.AccEnum</code> enum types, and
+	 * <li><code>METHOD_DECLARATION</code> - modifier flags for the method that is
+	 * being implemented or overridden</li>
+	 * <li><code>TYPE_REF</code> - modifier flags of the type that is referenced;
+	 * <code>Flags.AccInterface</code> can be used to recognize references to
+	 * interfaces, <code>Flags.AccEnum</code> enum types, and
 	 * <code>Flags.AccAnnotation</code> annotation types</li>
-	 * <li><code>VARIABLE_DECLARATION</code> - modifier flags for the variable
-	 * being declared</li>
-	 * <li><code>POTENTIAL_METHOD_DECLARATION</code> - modifier flags for the
-	 * method that is being created</li>
+	 * <li><code>VARIABLE_DECLARATION</code> - modifier flags for the variable being
+	 * declared</li>
+	 * <li><code>POTENTIAL_METHOD_DECLARATION</code> - modifier flags for the method
+	 * that is being created</li>
 	 * </ul>
 	 * For other kinds of completion proposals, this method returns
 	 * <code>Flags.AccDefault</code>.
@@ -763,8 +733,7 @@ public class CompletionProposal implements Cloneable {
 	 * properties; this method is not intended to be used by other clients.
 	 * </p>
 	 *
-	 * @param flags
-	 *            the modifier flags, or <code>Flags.AccDefault</code> if none
+	 * @param flags the modifier flags, or <code>Flags.AccDefault</code> if none
 	 */
 	public void setFlags(int flags) {
 		this.flags = flags;
@@ -772,35 +741,34 @@ public class CompletionProposal implements Cloneable {
 
 	/**
 	 * Finds the method parameter names. This information is relevant to method
-	 * reference (and method declaration proposals). Returns <code>null</code>
-	 * if not available or not relevant.
+	 * reference (and method declaration proposals). Returns <code>null</code> if
+	 * not available or not relevant.
 	 * <p>
 	 * The client must not modify the array returned.
 	 * </p>
 	 * <p>
-	 * <b>Note that this is an expensive thing to compute, which may require
-	 * parsing source files, etc. Use sparingly.</b>
+	 * <b>Note that this is an expensive thing to compute, which may require parsing
+	 * source files, etc. Use sparingly.</b>
 	 * </p>
 	 *
-	 * @param monitor
-	 *            the progress monitor, or <code>null</code> if none
-	 * @return the parameter names, or <code>null</code> if none or not
-	 *         available or not relevant
+	 * @param monitor the progress monitor, or <code>null</code> if none
+	 * @return the parameter names, or <code>null</code> if none or not available or
+	 *         not relevant
 	 */
 	public String[] findParameterNames(IProgressMonitor monitor) {
 		return this.parameterNames;
 	}
 
 	/**
-	 * Returns the method parameter names. This information is relevant to
-	 * method reference (and method declaration proposals). Returns
-	 * <code>null</code> if not available or not relevant.
+	 * Returns the method parameter names. This information is relevant to method
+	 * reference (and method declaration proposals). Returns <code>null</code> if
+	 * not available or not relevant.
 	 * <p>
 	 * The client must not modify the array returned.
 	 * </p>
 	 *
-	 * @return the parameter names, or <code>null</code> if none or not
-	 *         available or not relevant
+	 * @return the parameter names, or <code>null</code> if none or not available or
+	 *         not relevant
 	 */
 	public String[] getParameterNames() {
 		return this.parameterNames;
@@ -814,8 +782,7 @@ public class CompletionProposal implements Cloneable {
 	 * properties; this method is not intended to be used by other clients.
 	 * </p>
 	 *
-	 * @param parameterNames
-	 *            the parameter names, or <code>null</code> if none
+	 * @param parameterNames the parameter names, or <code>null</code> if none
 	 */
 	public void setParameterNames(String[] parameterNames) {
 		this.parameterNames = parameterNames;
@@ -823,7 +790,7 @@ public class CompletionProposal implements Cloneable {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append('[');
 		switch (this.completionKind) {
 		case CompletionProposal.FIELD_REF:
@@ -898,8 +865,7 @@ public class CompletionProposal implements Cloneable {
 		this.modelElement = modelElement;
 	}
 
-	private static final String FOREIGN = CompletionProposal.class.getName()
-			+ ".FOREIGN";
+	private static final String FOREIGN = CompletionProposal.class.getName() + ".FOREIGN";
 
 	public void setForeign(Object f) {
 		setAttribute(FOREIGN, f);
@@ -993,8 +959,7 @@ public class CompletionProposal implements Cloneable {
 	 * <li><code>METHOD_DECLARATION</code> - return <code>true</code> if the
 	 * declared method is a constructor</li>
 	 * </ul>
-	 * For kinds of completion proposals, this method returns <code>false</code>
-	 * .
+	 * For kinds of completion proposals, this method returns <code>false</code> .
 	 * </p>
 	 *
 	 * @return <code>true</code> if the proposal is a constructor.

@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -29,42 +29,34 @@ import org.eclipse.dltk.internal.core.search.DLTKSearchScope;
 import org.eclipse.dltk.internal.core.search.IndexQueryRequestor;
 import org.eclipse.dltk.internal.core.util.Util;
 
-public class LocalVariablePattern extends VariablePattern implements
-		IIndexConstants {
+public class LocalVariablePattern extends VariablePattern implements IIndexConstants {
 
 	private final ILocalVariable localVariable;
 
-	public LocalVariablePattern(ILocalVariable localVariable, int limitTo,
-			int matchRule, IDLTKLanguageToolkit toolkit) {
-		this(localVariable, isDeclarations(limitTo), isReferences(limitTo),
-				matchRule, toolkit);
+	public LocalVariablePattern(ILocalVariable localVariable, int limitTo, int matchRule,
+			IDLTKLanguageToolkit toolkit) {
+		this(localVariable, isDeclarations(limitTo), isReferences(limitTo), matchRule, toolkit);
 	}
 
 	private static boolean isReferences(int limitTo) {
-		return limitTo == IDLTKSearchConstants.REFERENCES
-				|| limitTo == IDLTKSearchConstants.ALL_OCCURRENCES;
+		return limitTo == IDLTKSearchConstants.REFERENCES || limitTo == IDLTKSearchConstants.ALL_OCCURRENCES;
 	}
 
 	private static boolean isDeclarations(int limitTo) {
-		return limitTo == IDLTKSearchConstants.DECLARATIONS
-				|| limitTo == IDLTKSearchConstants.ALL_OCCURRENCES;
+		return limitTo == IDLTKSearchConstants.DECLARATIONS || limitTo == IDLTKSearchConstants.ALL_OCCURRENCES;
 	}
 
-	private LocalVariablePattern(ILocalVariable localVariable,
-			boolean declarations, boolean references, int matchRule,
+	private LocalVariablePattern(ILocalVariable localVariable, boolean declarations, boolean references, int matchRule,
 			IDLTKLanguageToolkit toolkit) {
-		super(LOCAL_VAR_PATTERN, declarations, references, references,
-				localVariable.getElementName().toCharArray(), matchRule,
-				toolkit);
+		super(LOCAL_VAR_PATTERN, declarations, references, references, localVariable.getElementName().toCharArray(),
+				matchRule, toolkit);
 		this.localVariable = localVariable;
 	}
 
 	@Override
-	public void findIndexMatches(Index index, IndexQueryRequestor requestor,
-			SearchParticipant participant, IDLTKSearchScope scope,
-			IProgressMonitor progressMonitor) {
-		IProjectFragment root = (IProjectFragment) this.localVariable
-				.getAncestor(IModelElement.PROJECT_FRAGMENT);
+	public void findIndexMatches(Index index, IndexQueryRequestor requestor, SearchParticipant participant,
+			IDLTKSearchScope scope, IProgressMonitor progressMonitor) {
+		IProjectFragment root = (IProjectFragment) this.localVariable.getAncestor(IModelElement.PROJECT_FRAGMENT);
 		String documentPath;
 		String relativePath;
 		if (root.isArchive()) {
@@ -81,8 +73,7 @@ public class LocalVariablePattern extends VariablePattern implements
 		} else {
 			IPath path = this.localVariable.getPath();
 			documentPath = path.toString();
-			relativePath = Util
-					.relativePath(path, 1/* remove project segment */);
+			relativePath = Util.relativePath(path, 1/* remove project segment */);
 		}
 
 		if (scope instanceof DLTKSearchScope) {
@@ -90,23 +81,20 @@ public class LocalVariablePattern extends VariablePattern implements
 			// Get document path access restriction from java search scope
 			// Note that requestor has to verify if needed whether the document
 			// violates the access restriction or not
-			AccessRuleSet access = javaSearchScope.getAccessRuleSet(
-					relativePath, index.containerPath);
+			AccessRuleSet access = javaSearchScope.getAccessRuleSet(relativePath, index.containerPath);
 			if (access != DLTKSearchScope.NOT_ENCLOSED) { // scope encloses the
 															// path
-				if (!requestor.acceptIndexMatch(documentPath, this,
-						participant, access))
+				if (!requestor.acceptIndexMatch(documentPath, this, participant, access))
 					throw new OperationCanceledException();
 			}
 		} else if (scope.encloses(documentPath)) {
-			if (!requestor.acceptIndexMatch(documentPath, this, participant,
-					null))
+			if (!requestor.acceptIndexMatch(documentPath, this, participant, null))
 				throw new OperationCanceledException();
 		}
 	}
 
 	@Override
-	protected StringBuffer print(StringBuffer output) {
+	protected StringBuilder print(StringBuilder output) {
 		if (this.findDeclarations) {
 			output.append(this.findReferences ? "LocalVarCombinedPattern: " //$NON-NLS-1$
 					: "LocalVarDeclarationPattern: "); //$NON-NLS-1$
@@ -114,8 +102,7 @@ public class LocalVariablePattern extends VariablePattern implements
 			output.append("LocalVarReferencePattern: "); //$NON-NLS-1$
 		}
 		if (localVariable instanceof LocalVariable) {
-			output.append(((LocalVariable) localVariable)
-					.toStringWithAncestors());
+			output.append(((LocalVariable) localVariable).toStringWithAncestors());
 		} else {
 			output.append(localVariable.getElementName());
 		}

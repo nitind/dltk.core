@@ -22,20 +22,15 @@ public class HighlightedPosition extends Position {
 	private Object fLock;
 
 	/**
-	 * Initialize the styled positions with the given offset, length and
-	 * foreground color.
-	 * 
-	 * @param offset
-	 *            The position offset
-	 * @param length
-	 *            The position length
-	 * @param highlighting
-	 *            The position's highlighting
-	 * @param lock
-	 *            The lock object
+	 * Initialize the styled positions with the given offset, length and foreground
+	 * color.
+	 *
+	 * @param offset       The position offset
+	 * @param length       The position length
+	 * @param highlighting The position's highlighting
+	 * @param lock         The lock object
 	 */
-	public HighlightedPosition(int offset, int length,
-			HighlightingStyle highlighting, Object lock) {
+	public HighlightedPosition(int offset, int length, HighlightingStyle highlighting, Object lock) {
 		super(offset, length);
 		fStyle = highlighting;
 		fLock = lock;
@@ -52,8 +47,8 @@ public class HighlightedPosition extends Position {
 		TextAttribute textAttribute = fStyle.getTextAttribute();
 		int style = textAttribute.getStyle();
 		int fontStyle = style & (SWT.ITALIC | SWT.BOLD | SWT.NORMAL);
-		StyleRange styleRange = new StyleRange(getOffset(), len, textAttribute
-				.getForeground(), textAttribute.getBackground(), fontStyle);
+		StyleRange styleRange = new StyleRange(getOffset(), len, textAttribute.getForeground(),
+				textAttribute.getBackground(), fontStyle);
 		styleRange.strikeout = (style & TextAttribute.STRIKETHROUGH) != 0;
 		styleRange.underline = (style & TextAttribute.UNDERLINE) != 0;
 
@@ -62,38 +57,31 @@ public class HighlightedPosition extends Position {
 
 	/**
 	 * Uses reference equality for the highlighting.
-	 * 
-	 * @param off
-	 *            The offset
-	 * @param len
-	 *            The length
-	 * @param highlighting
-	 *            The highlighting
-	 * @return <code>true</code> iff the given offset, length and highlighting
-	 *         are equal to the internal ones.
+	 *
+	 * @param off          The offset
+	 * @param len          The length
+	 * @param highlighting The highlighting
+	 * @return <code>true</code> iff the given offset, length and highlighting are
+	 *         equal to the internal ones.
 	 */
 	public boolean isEqual(int off, int len, HighlightingStyle highlighting) {
 		synchronized (fLock) {
-			return !isDeleted() && getOffset() == off && getLength() == len
-					&& fStyle == highlighting;
+			return !isDeleted() && getOffset() == off && getLength() == len && fStyle == highlighting;
 		}
 	}
 
 	/**
-	 * Is this position contained in the given range (inclusive)? Synchronizes
-	 * on position updater.
-	 * 
-	 * @param off
-	 *            The range offset
-	 * @param len
-	 *            The range length
-	 * @return <code>true</code> iff this position is not delete and contained
-	 *         in the given range.
+	 * Is this position contained in the given range (inclusive)? Synchronizes on
+	 * position updater.
+	 *
+	 * @param off The range offset
+	 * @param len The range length
+	 * @return <code>true</code> iff this position is not delete and contained in
+	 *         the given range.
 	 */
 	public boolean isContained(int off, int len) {
 		synchronized (fLock) {
-			return !isDeleted() && off <= getOffset()
-					&& off + len >= getOffset() + getLength();
+			return !isDeleted() && off <= getOffset() && off + len >= getOffset() + getLength();
 		}
 	}
 
@@ -163,7 +151,7 @@ public class HighlightedPosition extends Position {
 
 	@Override
 	public String toString() {
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("HLPos["); //$NON-NLS-1$
 		sb.append(offset);
 		sb.append("+"); //$NON-NLS-1$

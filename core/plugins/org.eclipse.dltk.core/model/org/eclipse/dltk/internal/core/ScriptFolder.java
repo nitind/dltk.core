@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -162,8 +162,8 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 	@Override
 	public boolean exists() {
 		/*
-		 * super.exist() only checks for the parent and the resource existence
-		 * so also ensure that the package is not excluded (see
+		 * super.exist() only checks for the parent and the resource existence so also
+		 * ensure that the package is not excluded (see
 		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=138577)
 		 */
 		return super.exists() && !Util.isExcluded(this);
@@ -174,9 +174,8 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 	}
 
 	@Override
-	protected boolean buildStructure(OpenableElementInfo info,
-			IProgressMonitor pm, Map newElements, IResource underlyingResource)
-			throws ModelException {
+	protected boolean buildStructure(OpenableElementInfo info, IProgressMonitor pm, Map newElements,
+			IResource underlyingResource) throws ModelException {
 		// check whether this folder can be opened
 		if (!underlyingResource.isAccessible())
 			throw newNotPresentException();
@@ -193,11 +192,9 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 			IResource[] members = ((IContainer) underlyingResource).members();
 			for (int i = 0, max = members.length; i < max; i++) {
 				IResource child = members[i];
-				if (child.getType() != IResource.FOLDER
-						&& !Util.isExcluded(child, root)) {
+				if (child.getType() != IResource.FOLDER && !Util.isExcluded(child, root)) {
 					IModelElement childElement;
-					if (kind == IProjectFragment.K_SOURCE
-							&& Util.isValidSourceModule(this, child)) {
+					if (kind == IProjectFragment.K_SOURCE && Util.isValidSourceModule(this, child)) {
 						childElement = getSourceModule(child.getName());
 						vChildren.add(childElement);
 					}
@@ -209,8 +206,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 
 		if (kind == IProjectFragment.K_SOURCE) {
 			// add primary source modules
-			ISourceModule[] primarySourceModules = getSourceModules(
-					DefaultWorkingCopyOwner.PRIMARY);
+			ISourceModule[] primarySourceModules = getSourceModules(DefaultWorkingCopyOwner.PRIMARY);
 			for (int i = 0, length = primarySourceModules.length; i < length; i++) {
 				ISourceModule primary = primarySourceModules[i];
 				vChildren.add(primary);
@@ -219,28 +215,24 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 
 		// IModelElement[] children = new IModelElement[vChildren.size()];
 		// vChildren.toArray(children);
-		List<IModelElement> childrenSet = new ArrayList<>(
-				vChildren);
+		List<IModelElement> childrenSet = new ArrayList<>(vChildren);
 		// Call for extra model providers
-		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-				.getLanguageToolkit(this);
+		IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(this);
 		if (toolkit != null) {
-			IModelProvider[] providers = ModelProviderManager
-					.getProviders(toolkit.getNatureId());
+			IModelProvider[] providers = ModelProviderManager.getProviders(toolkit.getNatureId());
 			if (providers != null) {
 				for (int i = 0; i < providers.length; i++) {
 					providers[i].provideModelChanges(this, childrenSet);
 				}
 			}
 		}
-		info.setChildren(
-				childrenSet.toArray(new IModelElement[childrenSet.size()]));
+		info.setChildren(childrenSet.toArray(new IModelElement[childrenSet.size()]));
 		return true;
 	}
 
 	public ISourceModule[] getSourceModules(WorkingCopyOwner owner) {
-		ISourceModule[] workingCopies = ModelManager.getModelManager()
-				.getWorkingCopies(owner, false/* don't add primary */);
+		ISourceModule[] workingCopies = ModelManager.getModelManager().getWorkingCopies(owner,
+				false/* don't add primary */);
 		if (workingCopies == null)
 			return ModelManager.NO_WORKING_COPY;
 		int length = workingCopies.length;
@@ -259,8 +251,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 			}
 		}
 		if (index != length) {
-			System.arraycopy(result, 0, result = new ISourceModule[index], 0,
-					index);
+			System.arraycopy(result, 0, result = new ISourceModule[index], 0, index);
 		}
 		return result;
 	}
@@ -269,11 +260,9 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 	public ISourceModule getSourceModule(String name) {
 		// We need to check for element providers and if provider are declared
 		// we need to build structure to return correct handle here.
-		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-				.getLanguageToolkit(this);
+		IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(this);
 		if (toolkit != null) {
-			IModelProvider[] providers = ModelProviderManager
-					.getProviders(toolkit.getNatureId());
+			IModelProvider[] providers = ModelProviderManager.getProviders(toolkit.getNatureId());
 			if (providers != null) {
 				boolean provides = false;
 				for (int i = 0; i < providers.length; i++) {
@@ -296,8 +285,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 							}
 						}
 					} catch (ModelException e) {
-						DLTKCore.error(
-								"Could not obtain model element childrens.", e);
+						DLTKCore.error("Could not obtain model element childrens.", e);
 					}
 				}
 			}
@@ -309,10 +297,9 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 	 * @see IScriptFolder
 	 */
 	@Override
-	public ISourceModule createSourceModule(String cuName, String contents,
-			boolean force, IProgressMonitor monitor) throws ModelException {
-		CreateSourceModuleOperation op = new CreateSourceModuleOperation(this,
-				cuName, contents, force);
+	public ISourceModule createSourceModule(String cuName, String contents, boolean force, IProgressMonitor monitor)
+			throws ModelException {
+		CreateSourceModuleOperation op = new CreateSourceModuleOperation(this, cuName, contents, force);
 		op.runOperation(monitor);
 		return new SourceModule(this, cuName, DefaultWorkingCopyOwner.PRIMARY);
 	}
@@ -326,7 +313,7 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 	 * Debugging purposes
 	 */
 	@Override
-	protected void toStringName(StringBuffer buffer) {
+	protected void toStringName(StringBuilder buffer) {
 		String elementName = getElementName();
 		if (elementName.length() == 0) {
 			buffer.append("<default>"); //$NON-NLS-1$
@@ -376,15 +363,13 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		if (this.isRootFolder()) {
 			return ModelElementInfo.NO_NON_SCRIPT_RESOURCES;
 		} else {
-			return ((ScriptFolderInfo) getElementInfo())
-					.getForeignResources(getResource(), getProjectFragment());
+			return ((ScriptFolderInfo) getElementInfo()).getForeignResources(getResource(), getProjectFragment());
 		}
 	}
 
 	@Override
 	public boolean hasSubfolders() throws ModelException {
-		IModelElement[] packages = ((IProjectFragment) getParent())
-				.getChildren();
+		IModelElement[] packages = ((IProjectFragment) getParent()).getChildren();
 		int namesLength = this.path.segmentCount();
 		nextPackage: for (int i = 0, length = packages.length; i < length; i++) {
 			IPath otherNames = null;
@@ -402,19 +387,16 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 	}
 
 	@Override
-	public IModelElement getHandleFromMemento(String token,
-			MementoTokenizer memento, WorkingCopyOwner owner) {
+	public IModelElement getHandleFromMemento(String token, MementoTokenizer memento, WorkingCopyOwner owner) {
 		switch (token.charAt(0)) {
 		case JEM_SOURCEMODULE:
 			if (!memento.hasMoreTokens())
 				return this;
 			String classFileName = memento.nextToken();
-			ModelElement classFile = (ModelElement) getSourceModule(
-					classFileName);
+			ModelElement classFile = (ModelElement) getSourceModule(classFileName);
 			return classFile.getHandleFromMemento(memento, owner);
 		case JEM_USER_ELEMENT:
-			return MementoModelElementUtil.getHandleFromMemento(memento, this,
-					owner);
+			return MementoModelElementUtil.getHandleFromMemento(memento, this, owner);
 		}
 		return null;
 	}
@@ -439,12 +421,10 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 	}
 
 	@Override
-	public void copy(IModelElement container, IModelElement sibling,
-			String rename, boolean replace, IProgressMonitor monitor)
-			throws ModelException {
+	public void copy(IModelElement container, IModelElement sibling, String rename, boolean replace,
+			IProgressMonitor monitor) throws ModelException {
 		if (container == null) {
-			throw new IllegalArgumentException(
-					Messages.operation_nullContainer);
+			throw new IllegalArgumentException(Messages.operation_nullContainer);
 		}
 		IModelElement[] elements = new IModelElement[] { this };
 		IModelElement[] containers = new IModelElement[] { container };
@@ -456,24 +436,20 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		if (rename != null) {
 			renamings = new String[] { rename };
 		}
-		getModel().copy(elements, containers, siblings, renamings, replace,
-				monitor);
+		getModel().copy(elements, containers, siblings, renamings, replace, monitor);
 	}
 
 	@Override
-	public void delete(boolean force, IProgressMonitor monitor)
-			throws ModelException {
+	public void delete(boolean force, IProgressMonitor monitor) throws ModelException {
 		IModelElement[] elements = new IModelElement[] { this };
 		getModel().delete(elements, force, monitor);
 	}
 
 	@Override
-	public void move(IModelElement container, IModelElement sibling,
-			String rename, boolean replace, IProgressMonitor monitor)
-			throws ModelException {
+	public void move(IModelElement container, IModelElement sibling, String rename, boolean replace,
+			IProgressMonitor monitor) throws ModelException {
 		if (container == null) {
-			throw new IllegalArgumentException(
-					Messages.operation_nullContainer);
+			throw new IllegalArgumentException(Messages.operation_nullContainer);
 		}
 		IModelElement[] elements = new IModelElement[] { this };
 		IModelElement[] containers = new IModelElement[] { container };
@@ -485,13 +461,11 @@ public class ScriptFolder extends Openable implements IScriptFolder {
 		if (rename != null) {
 			renamings = new String[] { rename };
 		}
-		getModel().move(elements, containers, siblings, renamings, replace,
-				monitor);
+		getModel().move(elements, containers, siblings, renamings, replace, monitor);
 	}
 
 	@Override
-	public void rename(String newName, boolean force, IProgressMonitor monitor)
-			throws ModelException {
+	public void rename(String newName, boolean force, IProgressMonitor monitor) throws ModelException {
 		if (newName == null) {
 			throw new IllegalArgumentException(Messages.element_nullName);
 		}

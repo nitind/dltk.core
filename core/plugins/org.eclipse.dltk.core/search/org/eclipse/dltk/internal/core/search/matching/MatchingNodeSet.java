@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -26,8 +26,8 @@ import org.eclipse.dltk.internal.core.util.Util;
  */
 public class MatchingNodeSet {
 	/**
-	 * Map of matching ast nodes that don't need to be resolved to their
-	 * accuracy level. Each node is removed as it is reported.
+	 * Map of matching ast nodes that don't need to be resolved to their accuracy
+	 * level. Each node is removed as it is reported.
 	 */
 	public SimpleLookupTable matchingNodes = new SimpleLookupTable(3); // node
 	// ->
@@ -39,8 +39,8 @@ public class MatchingNodeSet {
 	static final Integer POTENTIAL_MATCH = Integer.valueOf(SearchMatch.A_INACCURATE);
 	static final Integer ERASURE_MATCH = Integer.valueOf(SearchPattern.R_ERASURE_MATCH);
 	/**
-	 * Set of possible matching ast nodes. They need to be resolved to determine
-	 * if they really match the search pattern.
+	 * Set of possible matching ast nodes. They need to be resolved to determine if
+	 * they really match the search pattern.
 	 */
 	public SimpleSet possibleMatchingNodesSet = new SimpleSet(7);
 	private HashtableOfLong possibleMatchingNodesKeys = new HashtableOfLong(7);
@@ -100,31 +100,27 @@ public class MatchingNodeSet {
 		Object[] nodes = this.possibleMatchingNodesSet.values;
 		for (int i = 0, l = nodes.length; i < l; i++) {
 			ASTNode node = (ASTNode) nodes[i];
-			if (node != null && start <= node.sourceStart()
-					&& node.sourceEnd() <= end)
+			if (node != null && start <= node.sourceStart() && node.sourceEnd() <= end)
 				return true;
 		}
 		nodes = this.matchingNodes.keyTable;
 		for (int i = 0, l = nodes.length; i < l; i++) {
 			ASTNode node = (ASTNode) nodes[i];
-			if (node != null && start <= node.sourceStart()
-					&& node.sourceEnd() <= end)
+			if (node != null && start <= node.sourceStart() && node.sourceEnd() <= end)
 				return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Returns the matching nodes that are in the given range in the source
-	 * order.
+	 * Returns the matching nodes that are in the given range in the source order.
 	 */
 	public ASTNode[] matchingNodes(int start, int end) {
 		ArrayList nodes = null;
 		Object[] keyTable = this.matchingNodes.keyTable;
 		for (int i = 0, l = keyTable.length; i < l; i++) {
 			ASTNode node = (ASTNode) keyTable[i];
-			if (node != null && start <= node.sourceStart()
-					&& node.sourceEnd() <= end) {
+			if (node != null && start <= node.sourceStart() && node.sourceEnd() <= end) {
 				if (nodes == null)
 					nodes = new ArrayList();
 				nodes.add(node);
@@ -135,8 +131,7 @@ public class MatchingNodeSet {
 		ASTNode[] result = new ASTNode[nodes.size()];
 		nodes.toArray(result);
 		// sort nodes by source starts
-		Util.Comparer comparer = (o1, o2) -> ((ASTNode) o1).sourceStart()
-				- ((ASTNode) o2).sourceStart();
+		Util.Comparer comparer = (o1, o2) -> ((ASTNode) o1).sourceStart() - ((ASTNode) o2).sourceStart();
 		Util.sort(result, comparer);
 		return result;
 	}
@@ -166,7 +161,7 @@ public class MatchingNodeSet {
 	@Override
 	public String toString() {
 		// TODO (jerome) should show both tables
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		result.append("Exact matches:"); //$NON-NLS-1$
 		Object[] keyTable = this.matchingNodes.keyTable;
 		Object[] valueTable = this.matchingNodes.valueTable;

@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -38,24 +38,18 @@ public class LocalVariable extends SourceRefElement implements ILocalVariable {
 	private String type;
 
 	/**
-	 * @param parent
-	 *            the parent of the variable
-	 * @param name
-	 *            the name of the variable
-	 * @param declarationSourceStart
-	 *            the position of the statement start
-	 * @param declarationSourceEnd
-	 *            the position of the statement end (including - the position of
-	 *            the last character)
-	 * @param nameStart
-	 *            the position of the variable name start
-	 * @param nameEnd
-	 *            the position of the variable name end (including - the
-	 *            position of the last character)
+	 * @param parent                 the parent of the variable
+	 * @param name                   the name of the variable
+	 * @param declarationSourceStart the position of the statement start
+	 * @param declarationSourceEnd   the position of the statement end (including -
+	 *                               the position of the last character)
+	 * @param nameStart              the position of the variable name start
+	 * @param nameEnd                the position of the variable name end
+	 *                               (including - the position of the last
+	 *                               character)
 	 * @param type
 	 */
-	public LocalVariable(IModelElement parent, String name,
-			int declarationSourceStart, int declarationSourceEnd,
+	public LocalVariable(IModelElement parent, String name, int declarationSourceStart, int declarationSourceEnd,
 			int nameStart, int nameEnd, String type) {
 		super((ModelElement) parent);
 		this.name = name;
@@ -83,8 +77,7 @@ public class LocalVariable extends SourceRefElement implements ILocalVariable {
 			return false;
 		LocalVariable other = (LocalVariable) o;
 		return this.declarationSourceStart == other.declarationSourceStart
-				&& this.declarationSourceEnd == other.declarationSourceEnd
-				&& this.nameStart == other.nameStart
+				&& this.declarationSourceEnd == other.declarationSourceEnd && this.nameStart == other.nameStart
 				&& this.nameEnd == other.nameEnd && super.equals(o);
 	}
 
@@ -94,14 +87,12 @@ public class LocalVariable extends SourceRefElement implements ILocalVariable {
 	}
 
 	@Override
-	protected void generateInfos(Object info, HashMap newElements,
-			IProgressMonitor pm) {
+	protected void generateInfos(Object info, HashMap newElements, IProgressMonitor pm) {
 		// a local variable has no info
 	}
 
 	@Override
-	public IModelElement getHandleFromMemento(String token,
-			MementoTokenizer memento, WorkingCopyOwner owner) {
+	public IModelElement getHandleFromMemento(String token, MementoTokenizer memento, WorkingCopyOwner owner) {
 		switch (token.charAt(0)) {
 		case JEM_COUNT:
 			return getHandleUpdatingCountFromMemento(memento, owner);
@@ -109,8 +100,13 @@ public class LocalVariable extends SourceRefElement implements ILocalVariable {
 		return this;
 	}
 
-	@Override
+	@Deprecated
 	public void getHandleMemento(StringBuffer buff) {
+
+	}
+
+	@Override
+	public void getHandleMemento(StringBuilder buff) {
 		((ModelElement) getParent()).getHandleMemento(buff);
 		buff.append(getHandleMementoDelimiter());
 		buff.append(this.name);
@@ -152,8 +148,7 @@ public class LocalVariable extends SourceRefElement implements ILocalVariable {
 
 	@Override
 	public ISourceRange getNameRange() {
-		return new SourceRange(this.nameStart, this.nameEnd - this.nameStart
-				+ 1);
+		return new SourceRange(this.nameStart, this.nameEnd - this.nameStart + 1);
 	}
 
 	@Override
@@ -211,8 +206,7 @@ public class LocalVariable extends SourceRefElement implements ILocalVariable {
 	}
 
 	@Override
-	protected void toStringInfo(int tab, StringBuffer buffer, Object info,
-			boolean showResolvedInfo) {
+	protected void toStringInfo(int tab, StringBuilder buffer, Object info, boolean showResolvedInfo) {
 		buffer.append(tabString(tab));
 		if (info != NO_INFO && getType() != null) {
 			buffer.append(getType());

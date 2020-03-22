@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -39,7 +39,7 @@ public class Argument extends Declaration {
 			this.setEnd(init.sourceEnd());
 		}
 	}
-	
+
 	public Argument(SimpleReference name, int start, int end, ASTNode init, int mods) {
 		super(start, 0);
 
@@ -67,7 +67,7 @@ public class Argument extends Declaration {
 
 	/**
 	 * Please don't use this function. Helper method for initializing Argument
-	 * 
+	 *
 	 */
 	public final void set(SimpleReference mn, ASTNode initialization) {
 		this.initialization = initialization;
@@ -97,7 +97,7 @@ public class Argument extends Declaration {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		sb.append(getName());
 		if (initialization != null) {

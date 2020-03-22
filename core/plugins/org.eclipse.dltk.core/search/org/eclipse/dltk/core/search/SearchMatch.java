@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -13,10 +13,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.internal.core.ModelElement;
 
-
 /**
  * A search match represents the result of a search query.
- * 
+ *
  * Search matches may be accurate (<code>A_ACCURATE</code>) or they might be
  * merely potential matches (<code>A_INACCURATE</code>). The latter occurs when
  * a compile-time problem prevents the search engine from completely resolving
@@ -24,24 +23,26 @@ import org.eclipse.dltk.internal.core.ModelElement;
  * <p>
  * This class is intended to be instantiated and subclassed by clients.
  * </p>
- * 
- * @see SearchEngine#search(SearchPattern, SearchParticipant[], IJavaSearchScope, SearchRequestor, org.eclipse.core.runtime.IProgressMonitor)
-	 *
+ *
+ * @see SearchEngine#search(SearchPattern, SearchParticipant[],
+ *      IJavaSearchScope, SearchRequestor,
+ *      org.eclipse.core.runtime.IProgressMonitor)
+ *
  */
 public class SearchMatch {
-	
+
 	/**
 	 * The search result corresponds an exact match of the search pattern.
-	 * 
+	 *
 	 * @see #getAccuracy()
 	 */
 	public static final int A_ACCURATE = 0;
 
 	/**
-	 * The search result is potentially a match for the search pattern,
-	 * but the search engine is unable to fully check it (for example, because
-	 * there are errors in the code or the buildpath are not correctly set).
-	 * 
+	 * The search result is potentially a match for the search pattern, but the
+	 * search engine is unable to fully check it (for example, because there are
+	 * errors in the code or the buildpath are not correctly set).
+	 *
 	 * @see #getAccuracy()
 	 */
 	public static final int A_INACCURATE = 1;
@@ -51,16 +52,14 @@ public class SearchMatch {
 	private int offset;
 
 	private int accuracy;
-	private SearchParticipant participant;	
+	private SearchParticipant participant;
 	private IResource resource;
 
 	private boolean insideDocComment = false;
-	
+
 	// store the rule used while reporting the match
-	private int rule = SearchPattern.R_FULL_MATCH |
-								SearchPattern.R_EQUIVALENT_MATCH |
-								SearchPattern.R_ERASURE_MATCH;
-	
+	private int rule = SearchPattern.R_FULL_MATCH | SearchPattern.R_EQUIVALENT_MATCH | SearchPattern.R_ERASURE_MATCH;
+
 	// store other necessary information
 	private boolean raw = false;
 	private boolean implicit = false;
@@ -70,21 +69,16 @@ public class SearchMatch {
 	 * <p>
 	 * Note that <code>isInsideDocComment()</code> defaults to false.
 	 * </p>
-	 * 
-	 * @param element the element that encloses or corresponds to the match,
-	 * or <code>null</code> if none
-	 * @param accuracy one of {@link #A_ACCURATE} or {@link #A_INACCURATE}
-	 * @param offset the offset the match starts at, or -1 if unknown
-	 * @param length the length of the match, or -1 if unknown
+	 *
+	 * @param element     the element that encloses or corresponds to the match, or
+	 *                    <code>null</code> if none
+	 * @param accuracy    one of {@link #A_ACCURATE} or {@link #A_INACCURATE}
+	 * @param offset      the offset the match starts at, or -1 if unknown
+	 * @param length      the length of the match, or -1 if unknown
 	 * @param participant the search participant that created the match
-	 * @param resource the resource of the element, or <code>null</code> if none
+	 * @param resource    the resource of the element, or <code>null</code> if none
 	 */
-	public SearchMatch(
-			IModelElement element,
-			int accuracy,
-			int offset,  
-			int length,
-			SearchParticipant participant, 
+	public SearchMatch(IModelElement element, int accuracy, int offset, int length, SearchParticipant participant,
 			IResource resource) {
 		this.element = element;
 		this.offset = offset;
@@ -99,7 +93,7 @@ public class SearchMatch {
 
 	/**
 	 * Returns the accuracy of this search match.
-	 * 
+	 *
 	 * @return one of {@link #A_ACCURATE} or {@link #A_INACCURATE}
 	 */
 	public final int getAccuracy() {
@@ -107,10 +101,10 @@ public class SearchMatch {
 	}
 
 	/**
-	 * Returns the element of this search match.
-	 * In case of a reference match, this is the inner-most enclosing element of the reference.
-	 * In case of a declaration match, this is the declaration.
-	 * 
+	 * Returns the element of this search match. In case of a reference match, this
+	 * is the inner-most enclosing element of the reference. In case of a
+	 * declaration match, this is the declaration.
+	 *
 	 * @return the element of the search match, or <code>null</code> if none
 	 */
 	public final Object getElement() {
@@ -119,34 +113,34 @@ public class SearchMatch {
 
 	/**
 	 * Returns the length of this search match.
-	 * 
+	 *
 	 * @return the length of this search match, or -1 if unknown
 	 */
 	public final int getLength() {
 		return this.length;
 	}
-	
+
 	/**
 	 * Returns the offset of this search match.
-	 * 
+	 *
 	 * @return the offset of this search match, or -1 if unknown
 	 */
 	public final int getOffset() {
 		return this.offset;
 	}
-	
+
 	/**
 	 * Returns the search participant which issued this search match.
-	 * 
+	 *
 	 * @return the participant which issued this search match
 	 */
 	public final SearchParticipant getParticipant() {
 		return this.participant;
 	}
-	
+
 	/**
 	 * Returns the resource containing this search match.
-	 * 
+	 *
 	 * @return the resource of the match, or <code>null</code> if none
 	 */
 	public final IResource getResource() {
@@ -155,9 +149,10 @@ public class SearchMatch {
 
 	/**
 	 * Returns the rule used while creating the match.
-	 * 
-	 * @return one of {@link SearchPattern#R_FULL_MATCH}, {@link SearchPattern#R_EQUIVALENT_MATCH}
-	 * 	or {@link SearchPattern#R_ERASURE_MATCH}
+	 *
+	 * @return one of {@link SearchPattern#R_FULL_MATCH},
+	 *         {@link SearchPattern#R_EQUIVALENT_MATCH} or
+	 *         {@link SearchPattern#R_ERASURE_MATCH}
 	 *
 	 */
 	public final int getRule() {
@@ -167,9 +162,9 @@ public class SearchMatch {
 	/**
 	 * Returns whether match element is compatible with searched pattern or not.
 	 * Note that equivalent matches are also erasure ones.
-	 * 
-	 * @return <code>true</code> if match element is compatible 
-	 * 				<code>false</code> otherwise
+	 *
+	 * @return <code>true</code> if match element is compatible <code>false</code>
+	 *         otherwise
 	 *
 	 */
 	public final boolean isEquivalent() {
@@ -177,12 +172,12 @@ public class SearchMatch {
 	}
 
 	/**
-	 * Returns whether match element only has same erasure than searched pattern or not.
-	 * Note that this is always true for both generic and non-generic element as soon
-	 * as the accuracy is accurate.
-	 * 
+	 * Returns whether match element only has same erasure than searched pattern or
+	 * not. Note that this is always true for both generic and non-generic element
+	 * as soon as the accuracy is accurate.
+	 *
 	 * @return <code>true</code> if match element has same erasure
-	 * 				<code>false</code> otherwise
+	 *         <code>false</code> otherwise
 	 *
 	 */
 	public final boolean isErasure() {
@@ -190,11 +185,10 @@ public class SearchMatch {
 	}
 
 	/**
-	 * Returns whether element matches exactly searched pattern or not.
-	 * Note that exact matches are also erasure and equivalent ones.
-	 * 
-	 * @return <code>true</code> if match is exact
-	 * 				<code>false</code> otherwise
+	 * Returns whether element matches exactly searched pattern or not. Note that
+	 * exact matches are also erasure and equivalent ones.
+	 *
+	 * @return <code>true</code> if match is exact <code>false</code> otherwise
 	 *
 	 */
 	public final boolean isExact() {
@@ -203,12 +197,12 @@ public class SearchMatch {
 
 	/**
 	 * Returns whether the associated element is implicit or not.
-	 * 
-	 * Note that this piece of information is currently only implemented
-	 * for implicit member pair value in annotation.
-	 * 
-	 * @return <code>true</code> if this match is associated to an implicit
-	 * element and <code>false</code> otherwise
+	 *
+	 * Note that this piece of information is currently only implemented for
+	 * implicit member pair value in annotation.
+	 *
+	 * @return <code>true</code> if this match is associated to an implicit element
+	 *         and <code>false</code> otherwise
 	 *
 	 */
 	public final boolean isImplicit() {
@@ -217,9 +211,9 @@ public class SearchMatch {
 
 	/**
 	 * Returns whether the associated element is a raw type/method or not.
-	 * 
-	 * @return <code>true</code> if this match is associated to a raw
-	 * type or method and <code>false</code> otherwise
+	 *
+	 * @return <code>true</code> if this match is associated to a raw type or method
+	 *         and <code>false</code> otherwise
 	 *
 	 */
 	public final boolean isRaw() {
@@ -227,11 +221,11 @@ public class SearchMatch {
 	}
 
 	/**
-	 * Returns whether this search match is inside a doc comment of a script 
-	 * source file.
-	 * 
-	 * @return <code>true</code> if this search match is inside a doc
-	 * comment, and <code>false</code> otherwise
+	 * Returns whether this search match is inside a doc comment of a script source
+	 * file.
+	 *
+	 * @return <code>true</code> if this search match is inside a doc comment, and
+	 *         <code>false</code> otherwise
 	 */
 	public final boolean isInsideDocComment() {
 		// default is outside a doc comment
@@ -240,41 +234,41 @@ public class SearchMatch {
 
 	/**
 	 * Sets the accuracy of this match.
-	 * 
+	 *
 	 * @param accuracy one of {@link #A_ACCURATE} or {@link #A_INACCURATE}
 	 */
-	public final void setAccuracy (int accuracy) {
+	public final void setAccuracy(int accuracy) {
 		this.accuracy = accuracy;
 	}
 
 	/**
 	 * Sets the element of this search match.
-	 * 
-	 * @param element the element that encloses or corresponds to the match,
-	 * or <code>null</code> if none
+	 *
+	 * @param element the element that encloses or corresponds to the match, or
+	 *                <code>null</code> if none
 	 */
-	public final void setElement (Object element) {
+	public final void setElement(Object element) {
 		this.element = element;
 	}
 
 	/**
-	 * Sets whether this search match is inside a doc comment of a script 
-	 * source file.
-	 * 
+	 * Sets whether this search match is inside a doc comment of a script source
+	 * file.
+	 *
 	 * @param insideDoc <code>true</code> if this search match is inside a doc
-	 * comment, and <code>false</code> otherwise
+	 *                  comment, and <code>false</code> otherwise
 	 */
-	public final void setInsideDocComment (boolean insideDoc) {
+	public final void setInsideDocComment(boolean insideDoc) {
 		this.insideDocComment = insideDoc;
 	}
 
 	/**
-	 * Sets whether the associated element is implicit or not.
-	 * Typically, this is the case when match is on an implicit constructor
-	 * or an implicit member pair value in annotation.
-	 * 
+	 * Sets whether the associated element is implicit or not. Typically, this is
+	 * the case when match is on an implicit constructor or an implicit member pair
+	 * value in annotation.
+	 *
 	 * @param implicit <code>true</code> if this match is associated to an implicit
-	 * element and <code>false</code> otherwise
+	 *                 element and <code>false</code> otherwise
 	 *
 	 */
 	public final void setImplicit(boolean implicit) {
@@ -283,16 +277,16 @@ public class SearchMatch {
 
 	/**
 	 * Sets the length of this search match.
-	 * 
+	 *
 	 * @param length the length of the match, or -1 if unknown
 	 */
 	public final void setLength(int length) {
 		this.length = length;
 	}
-	
+
 	/**
 	 * Sets the offset of this search match.
-	 * 
+	 *
 	 * @param offset the offset the match starts at, or -1 if unknown
 	 */
 	public final void setOffset(int offset) {
@@ -301,27 +295,28 @@ public class SearchMatch {
 
 	/**
 	 * Sets the participant of this match.
-	 * 
+	 *
 	 * @param participant the search participant that created this match
 	 */
-	public final void setParticipant (SearchParticipant participant) {
+	public final void setParticipant(SearchParticipant participant) {
 		this.participant = participant;
 	}
 
 	/**
 	 * Sets the resource of this match.
-	 * 
+	 *
 	 * @param resource the resource of the match, or <code>null</code> if none
 	 */
-	public final void setResource (IResource resource) {
+	public final void setResource(IResource resource) {
 		this.resource = resource;
 	}
 
 	/**
 	 * Set the rule used while reporting the match.
-	 * 
-	 * @param rule one of {@link SearchPattern#R_FULL_MATCH}, {@link SearchPattern#R_EQUIVALENT_MATCH}
-	 * 	or {@link SearchPattern#R_ERASURE_MATCH}
+	 *
+	 * @param rule one of {@link SearchPattern#R_FULL_MATCH},
+	 *             {@link SearchPattern#R_EQUIVALENT_MATCH} or
+	 *             {@link SearchPattern#R_ERASURE_MATCH}
 	 *
 	 */
 	public final void setRule(int rule) {
@@ -330,9 +325,9 @@ public class SearchMatch {
 
 	/**
 	 * Set whether the associated element is a raw type/method or not.
-	 * 
-	 * @param raw <code>true</code> if this search match is associated to a raw
-	 * type or method and <code>false</code> otherwise
+	 *
+	 * @param raw <code>true</code> if this search match is associated to a raw type
+	 *            or method and <code>false</code> otherwise
 	 *
 	 */
 	public final void setRaw(boolean raw) {
@@ -341,7 +336,7 @@ public class SearchMatch {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append(getClass().getSimpleName());
 		buffer.append("\n  accuracy="); //$NON-NLS-1$
 		buffer.append(this.accuracy == A_ACCURATE ? "ACCURATE" : "INACCURATE"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -361,7 +356,7 @@ public class SearchMatch {
 		buffer.append(this.length);
 		if (this.element != null) {
 			buffer.append("\n  element="); //$NON-NLS-1$
-			buffer.append(((ModelElement)getElement()).toStringWithAncestors());
+			buffer.append(((ModelElement) getElement()).toStringWithAncestors());
 		}
 		buffer.append("\n"); //$NON-NLS-1$
 		return buffer.toString();

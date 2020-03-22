@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -44,13 +44,10 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 	private boolean fIsFlatLayout;
 	private ScriptExplorerProblemsDecorator fProblemDecorator;
 
-	public ScriptExplorerLabelProvider(ScriptExplorerContentProvider cp,
-			IPreferenceStore store) {
+	public ScriptExplorerLabelProvider(ScriptExplorerContentProvider cp, IPreferenceStore store) {
 		super(DEFAULT_TEXTFLAGS | ScriptElementLabels.P_COMPRESSED
-				| ScriptElementLabels.REFERENCED_ARCHIVE_POST_QUALIFIED
-				| ScriptElementLabels.ALL_CATEGORY,
-				DEFAULT_IMAGEFLAGS | ScriptElementImageProvider.SMALL_ICONS,
-				store);
+				| ScriptElementLabels.REFERENCED_ARCHIVE_POST_QUALIFIED | ScriptElementLabels.ALL_CATEGORY,
+				DEFAULT_IMAGEFLAGS | ScriptElementImageProvider.SMALL_ICONS, store);
 
 		fProblemDecorator = new ScriptExplorerProblemsDecorator();
 		addLabelDecorator(fProblemDecorator);
@@ -62,8 +59,7 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 	private String getSpecificText(Object element) {
 		if (!fIsFlatLayout && element instanceof IScriptFolder) {
 			IScriptFolder fragment = (IScriptFolder) element;
-			Object parent = fContentProvider
-					.getHierarchicalPackageParent(fragment);
+			Object parent = fContentProvider.getHierarchicalPackageParent(fragment);
 			if (parent instanceof IScriptFolder) {
 				return getNameDelta((IScriptFolder) parent, fragment);
 			} else if (parent instanceof IFolder) { // bug 152735
@@ -90,8 +86,7 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 		if (text != null) {
 			String decorated = decorateText(text, element);
 			if (decorated != null) {
-				return StyledCellLabelProvider.styleDecoratedString(decorated,
-						StyledString.DECORATIONS_STYLER,
+				return StyledCellLabelProvider.styleDecoratedString(decorated, StyledString.DECORATIONS_STYLER,
 						new StyledString(text));
 			}
 		}
@@ -99,8 +94,7 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 	}
 
 	private String getNameDelta(IScriptFolder parent, IScriptFolder fragment) {
-		String prefix = parent.getElementName()
-				+ IScriptFolder.PACKAGE_DELIMITER;
+		String prefix = parent.getElementName() + IScriptFolder.PACKAGE_DELIMITER;
 		String fullName = fragment.getElementName();
 		if (fullName.startsWith(prefix)) {
 			return fullName.substring(prefix.length());
@@ -112,9 +106,8 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 		IPath prefix = parent.getFullPath();
 		IPath fullPath = fragment.getPath();
 		if (prefix.isPrefixOf(fullPath)) {
-			StringBuffer buf = new StringBuffer();
-			for (int i = prefix.segmentCount(); i < fullPath
-					.segmentCount(); i++) {
+			StringBuilder buf = new StringBuilder();
+			for (int i = prefix.segmentCount(); i < fullPath.segmentCount(); i++) {
 				if (buf.length() > 0)
 					buf.append(IScriptFolder.PACKAGE_DELIMITER);
 				buf.append(fullPath.segment(i));
@@ -127,8 +120,7 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof IWorkingSet) {
-			ImageDescriptor image = ((IWorkingSet) element)
-					.getImageDescriptor();
+			ImageDescriptor image = ((IWorkingSet) element).getImageDescriptor();
 			if (fWorkingSetImages == null) {
 				fWorkingSetImages = new HashMap<>();
 			}
@@ -151,8 +143,7 @@ public class ScriptExplorerLabelProvider extends AppearanceAwareLabelProvider {
 	@Override
 	public void dispose() {
 		if (fWorkingSetImages != null) {
-			for (Iterator<Image> iter = fWorkingSetImages.values()
-					.iterator(); iter.hasNext();) {
+			for (Iterator<Image> iter = fWorkingSetImages.values().iterator(); iter.hasNext();) {
 				iter.next().dispose();
 			}
 		}

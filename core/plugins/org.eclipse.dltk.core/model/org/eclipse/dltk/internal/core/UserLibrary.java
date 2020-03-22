@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -61,8 +61,7 @@ public class UserLibrary {
 		this(entries, isSystemLibrary, null);
 	}
 
-	public UserLibrary(IBuildpathEntry[] entries, boolean isSystemLibrary,
-			Map<String, String> attributes) {
+	public UserLibrary(IBuildpathEntry[] entries, boolean isSystemLibrary, Map<String, String> attributes) {
 		Assert.isNotNull(entries);
 		this.entries = entries;
 		this.isSystemLibrary = isSystemLibrary;
@@ -92,8 +91,7 @@ public class UserLibrary {
 	public boolean equals(Object obj) {
 		if (obj != null && obj.getClass() == getClass()) {
 			UserLibrary other = (UserLibrary) obj;
-			if (this.entries.length == other.entries.length
-					&& this.isSystemLibrary == other.isSystemLibrary
+			if (this.entries.length == other.entries.length && this.isSystemLibrary == other.isSystemLibrary
 					&& attributes.size() == other.attributes.size()) {
 				if (!Arrays.equals(this.entries, other.entries)) {
 					return false;
@@ -119,23 +117,19 @@ public class UserLibrary {
 		return hashCode;
 	}
 
-	public static String serialize(IBuildpathEntry[] entries,
-			boolean isSystemLibrary) throws IOException {
+	public static String serialize(IBuildpathEntry[] entries, boolean isSystemLibrary) throws IOException {
 		return serialize(entries, isSystemLibrary, null);
 	}
 
-	public static String serialize(IBuildpathEntry[] entries,
-			boolean isSystemLibrary, Map<String, String> attributes)
+	public static String serialize(IBuildpathEntry[] entries, boolean isSystemLibrary, Map<String, String> attributes)
 			throws IOException {
 		ByteArrayOutputStream s = new ByteArrayOutputStream();
-		OutputStreamWriter writer = new OutputStreamWriter(s,
-				StandardCharsets.UTF_8); // $NON-NLS-1$
-		XMLWriter xmlWriter = new XMLWriter(writer,
-				null/*
-					 * use the workspace line delimiter
-					 */, true/*
-								 * print XML version
-								 */);
+		OutputStreamWriter writer = new OutputStreamWriter(s, StandardCharsets.UTF_8); // $NON-NLS-1$
+		XMLWriter xmlWriter = new XMLWriter(writer, null/*
+														 * use the workspace line delimiter
+														 */, true/*
+																	 * print XML version
+																	 */);
 
 		HashMap<String, String> library = new HashMap<>();
 		library.put(TAG_VERSION, String.valueOf(CURRENT_VERSION));
@@ -153,8 +147,7 @@ public class UserLibrary {
 			HashMap<String, String> archive = new HashMap<>();
 			archive.put(TAG_PATH, cpEntry.getPath().toString());
 
-			boolean hasExtraAttributes = cpEntry.extraAttributes != null
-					&& cpEntry.extraAttributes.length != 0;
+			boolean hasExtraAttributes = cpEntry.extraAttributes != null && cpEntry.extraAttributes.length != 0;
 			boolean hasRestrictions = cpEntry.getAccessRuleSet() != null; // access
 			// rule
 			// set
@@ -164,8 +157,7 @@ public class UserLibrary {
 			// no
 			// access
 			// rules
-			xmlWriter.printTag(TAG_ARCHIVE, archive, true, true,
-					!(hasExtraAttributes || hasRestrictions));
+			xmlWriter.printTag(TAG_ARCHIVE, archive, true, true, !(hasExtraAttributes || hasRestrictions));
 
 			// write extra attributes if necessary
 			if (hasExtraAttributes) {
@@ -179,29 +171,24 @@ public class UserLibrary {
 
 			// write archive end tag if necessary
 			if (hasExtraAttributes || hasRestrictions) {
-				xmlWriter.endTag(TAG_ARCHIVE, true/* insert tab */,
-						true/*
-							 * insert new line
-							 */);
+				xmlWriter.endTag(TAG_ARCHIVE, true/* insert tab */, true/*
+																		 * insert new line
+																		 */);
 			}
 		}
-		xmlWriter.endTag(TAG_USERLIBRARY, true/* insert tab */,
-				true/*
-					 * insert new line
-					 */);
+		xmlWriter.endTag(TAG_USERLIBRARY, true/* insert tab */, true/*
+																	 * insert new line
+																	 */);
 		writer.flush();
 		writer.close();
 		return s.toString("UTF8");//$NON-NLS-1$
 	}
 
-	public static UserLibrary createFromString(Reader reader)
-			throws IOException {
+	public static UserLibrary createFromString(Reader reader) throws IOException {
 		Element cpElement;
 		try {
-			DocumentBuilder parser = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
-			cpElement = parser.parse(new InputSource(reader))
-					.getDocumentElement();
+			DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			cpElement = parser.parse(new InputSource(reader)).getDocumentElement();
 		} catch (SAXException e) {
 			throw new IOException(Messages.file_badFormat);
 		} catch (ParserConfigurationException e) {
@@ -216,16 +203,13 @@ public class UserLibrary {
 		// String version= cpElement.getAttribute(TAG_VERSION);
 		// in case we update the format: add code to read older versions
 
-		boolean isSystem = Boolean
-				.valueOf(cpElement.getAttribute(TAG_SYSTEMLIBRARY))
-				.booleanValue();
+		boolean isSystem = Boolean.valueOf(cpElement.getAttribute(TAG_SYSTEMLIBRARY)).booleanValue();
 
 		Map<String, String> attributes = new HashMap<>();
 		for (int i = 0; i < cpElement.getAttributes().getLength(); i++) {
 			Node node = cpElement.getAttributes().item(i);
 			if (node.getNodeName().startsWith(ATTRIBUTE_PREFIX)) {
-				String name = node.getNodeName()
-						.substring(ATTRIBUTE_PREFIX.length());
+				String name = node.getNodeName().substring(ATTRIBUTE_PREFIX.length());
 				attributes.put(name, node.getNodeValue());
 			}
 		}
@@ -243,26 +227,20 @@ public class UserLibrary {
 					String path = element.getAttribute(TAG_PATH);
 					NodeList children = element.getElementsByTagName("*"); //$NON-NLS-1$
 					boolean[] foundChildren = new boolean[children.getLength()];
-					NodeList attributeList = BuildpathEntry.getChildAttributes(
-							BuildpathEntry.TAG_ATTRIBUTES, children,
+					NodeList attributeList = BuildpathEntry.getChildAttributes(BuildpathEntry.TAG_ATTRIBUTES, children,
 							foundChildren);
-					IBuildpathAttribute[] extraAttributes = BuildpathEntry
-							.decodeExtraAttributes(attributeList);
-					attributeList = BuildpathEntry.getChildAttributes(
-							BuildpathEntry.TAG_ACCESS_RULES, children,
+					IBuildpathAttribute[] extraAttributes = BuildpathEntry.decodeExtraAttributes(attributeList);
+					attributeList = BuildpathEntry.getChildAttributes(BuildpathEntry.TAG_ACCESS_RULES, children,
 							foundChildren);
-					IAccessRule[] accessRules = BuildpathEntry
-							.decodeAccessRules(attributeList);
-					IBuildpathEntry entry = DLTKCore.newLibraryEntry(
-							Path.fromPortableString(path), accessRules,
+					IAccessRule[] accessRules = BuildpathEntry.decodeAccessRules(attributeList);
+					IBuildpathEntry entry = DLTKCore.newLibraryEntry(Path.fromPortableString(path), accessRules,
 							extraAttributes, false, true);
 					res.add(entry);
 				}
 			}
 		}
 
-		IBuildpathEntry[] entries = res
-				.toArray(new IBuildpathEntry[res.size()]);
+		IBuildpathEntry[] entries = res.toArray(new IBuildpathEntry[res.size()]);
 
 		return new UserLibrary(entries, isSystem, attributes);
 	}
@@ -271,7 +249,7 @@ public class UserLibrary {
 	public String toString() {
 		if (this.entries == null)
 			return "null"; //$NON-NLS-1$
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		int length = this.entries.length;
 		for (int i = 0; i < length; i++) {
 			buffer.append(this.entries[i].toString() + '\n');

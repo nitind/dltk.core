@@ -302,7 +302,7 @@ public class TypeInfoViewer {
 		}
 
 		public String getQualifiedText(TypeNameMatch type) {
-			StringBuffer result = new StringBuffer();
+			StringBuilder result = new StringBuilder();
 			result.append(getTypeContainerName(type, 2));
 			// String containerName= type.getTypeContainerName();
 			// result.append(ScriptElementLabels.CONCAT_STRING);
@@ -315,7 +315,7 @@ public class TypeInfoViewer {
 		}
 
 		public String getFullyQualifiedText(TypeNameMatch type) {
-			StringBuffer result = new StringBuffer();
+			StringBuilder result = new StringBuilder();
 			result.append(getTypeContainerName(type, 2));
 			// IType dltkType = ((DLTKSearchTypeNameMatch) type).getType();
 			// ISourceModule sourceModule = (ISourceModule)
@@ -363,7 +363,7 @@ public class TypeInfoViewer {
 		}
 
 		public String getQualificationText(TypeNameMatch type) {
-			StringBuffer result = new StringBuffer();
+			StringBuilder result = new StringBuilder();
 			String containerName = type.getTypeContainerName();
 			if (containerName.length() > 0) {
 				result.append(containerName);
@@ -848,12 +848,12 @@ public class TypeInfoViewer {
 		private int fMessageLength;
 
 		public String getText(int width) {
-			StringBuffer dashes = new StringBuffer();
+			StringBuilder dashes = new StringBuilder();
 			int chars = (((width - fMessageLength) / fSeparatorWidth) / 2) - 2;
 			for (int i = 0; i < chars; i++) {
 				dashes.append(SEPARATOR);
 			}
-			StringBuffer result = new StringBuffer();
+			StringBuilder result = new StringBuilder();
 			result.append(dashes);
 			result.append(fMessage);
 			result.append(dashes);

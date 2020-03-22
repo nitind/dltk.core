@@ -31,7 +31,7 @@ public class CacheFactoryImpl extends EFactoryImpl implements CacheFactory {
 	 */
 	public static CacheFactory init() {
 		try {
-			CacheFactory theCacheFactory = (CacheFactory)EPackage.Registry.INSTANCE.getEFactory("http://eclipse.org/dltk/cache_model"); 
+			CacheFactory theCacheFactory = (CacheFactory)EPackage.Registry.INSTANCE.getEFactory(CachePackage.eNS_URI);
 			if (theCacheFactory != null) {
 				return theCacheFactory;
 			}

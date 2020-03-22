@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -54,8 +54,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 	private SelectionDispatchAction fPasteAction;// may be null
 	private boolean fAutoRepeatOnFailure = false;
 
-	public CopyToClipboardAction(IWorkbenchSite site, Clipboard clipboard,
-			SelectionDispatchAction pasteAction) {
+	public CopyToClipboardAction(IWorkbenchSite site, Clipboard clipboard, SelectionDispatchAction pasteAction) {
 		super(site);
 		setText(ReorgMessages.CopyToClipboardAction_0);
 		setDescription(ReorgMessages.CopyToClipboardAction_1);
@@ -63,12 +62,9 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 		fClipboard = clipboard;
 		fPasteAction = pasteAction;
 		ISharedImages workbenchImages = getWorkbenchSharedImages();
-		setDisabledImageDescriptor(workbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
-		setImageDescriptor(workbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
-		setHoverImageDescriptor(workbenchImages
-				.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		setDisabledImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
+		setImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		setHoverImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 		update(getSelection());
 
 		if (DLTKCore.DEBUG) {
@@ -92,8 +88,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 		try {
 			List elements = selection.toList();
 			IResource[] resources = ReorgUtils.getResources(elements);
-			IModelElement[] modelElements = ReorgUtils
-					.getModelElements(elements);
+			IModelElement[] modelElements = ReorgUtils.getModelElements(elements);
 			if (elements.size() != resources.length + modelElements.length)
 				setEnabled(false);
 			else
@@ -112,22 +107,17 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 		try {
 			List elements = selection.toList();
 			IResource[] resources = ReorgUtils.getResources(elements);
-			IModelElement[] modelElements = ReorgUtils
-					.getModelElements(elements);
-			if (elements.size() == resources.length + modelElements.length
-					&& canEnable(resources, modelElements))
+			IModelElement[] modelElements = ReorgUtils.getModelElements(elements);
+			if (elements.size() == resources.length + modelElements.length && canEnable(resources, modelElements))
 				doRun(resources, modelElements);
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, getShell(),
-					ReorgMessages.CopyToClipboardAction_2,
+			ExceptionHandler.handle(e, getShell(), ReorgMessages.CopyToClipboardAction_2,
 					ReorgMessages.CopyToClipboardAction_3);
 		}
 	}
 
-	private void doRun(IResource[] resources, IModelElement[] modelElements)
-			throws CoreException {
-		new ClipboardCopier(resources, modelElements, fClipboard, getShell(),
-				fAutoRepeatOnFailure).copyToClipboard();
+	private void doRun(IResource[] resources, IModelElement[] modelElements) throws CoreException {
+		new ClipboardCopier(resources, modelElements, fClipboard, getShell(), fAutoRepeatOnFailure).copyToClipboard();
 
 		// update the enablement of the paste action
 		// workaround since the clipboard does not support callbacks
@@ -135,10 +125,8 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 			fPasteAction.update(fPasteAction.getSelection());
 	}
 
-	private boolean canEnable(IResource[] resources,
-			IModelElement[] modelElements) throws ModelException {
-		return new CopyToClipboardEnablementPolicy(resources, modelElements)
-				.canEnable();
+	private boolean canEnable(IResource[] resources, IModelElement[] modelElements) throws ModelException {
+		return new CopyToClipboardEnablementPolicy(resources, modelElements).canEnable();
 	}
 
 	// ----------------------------------------------------------------------------------------//
@@ -151,8 +139,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 		private final Shell fShell;
 		private final ILabelProvider fLabelProvider;
 
-		private ClipboardCopier(IResource[] resources,
-				IModelElement[] modelElements, Clipboard clipboard, Shell shell,
+		private ClipboardCopier(IResource[] resources, IModelElement[] modelElements, Clipboard clipboard, Shell shell,
 				boolean autoRepeatOnFailure) {
 			Assert.isNotNull(resources);
 			Assert.isNotNull(modelElements);
@@ -168,47 +155,37 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 
 		public void copyToClipboard() throws CoreException {
 			// Set<String> fileNames
-			Set<String> fileNames = new HashSet<>(
-					fResources.length + fScriptElements.length);
-			StringBuffer namesBuf = new StringBuffer();
+			Set<String> fileNames = new HashSet<>(fResources.length + fScriptElements.length);
+			StringBuilder namesBuf = new StringBuilder();
 			processResources(fileNames, namesBuf);
 			processScriptElements(fileNames, namesBuf);
 
-			List typesList = ReorgUtils.getElementsOfType(fScriptElements,
-					IModelElement.TYPE);
-			IType types[] = (IType[]) typesList
-					.toArray(new IType[typesList.size()]);
+			List typesList = ReorgUtils.getElementsOfType(fScriptElements, IModelElement.TYPE);
+			IType types[] = (IType[]) typesList.toArray(new IType[typesList.size()]);
 			ISourceModule[] cusOfMainTypes = ReorgUtils.getSourceModules(types);
-			IResource[] resourcesOfMainTypes = ReorgUtils
-					.getResources(cusOfMainTypes);
+			IResource[] resourcesOfMainTypes = ReorgUtils.getResources(cusOfMainTypes);
 			addFileNames(fileNames, resourcesOfMainTypes);
 
-			IResource[] cuResources = ReorgUtils
-					.getResources(getSourceModules(fScriptElements));
+			IResource[] cuResources = ReorgUtils.getResources(getSourceModules(fScriptElements));
 			addFileNames(fileNames, cuResources);
 
 			IResource[] resourcesForClipboard = ReorgUtils.union(fResources,
 					ReorgUtils.union(cuResources, resourcesOfMainTypes));
-			IModelElement[] modelElementsForClipboard = ReorgUtils
-					.union(fScriptElements, cusOfMainTypes);
+			IModelElement[] modelElementsForClipboard = ReorgUtils.union(fScriptElements, cusOfMainTypes);
 
 			// TypedSource[] typedSources=
 			// TypedSource.createTypedSources(modelElementsForClipboard);
-			String[] fileNameArray = fileNames
-					.toArray(new String[fileNames.size()]);
-			copyToClipboard(resourcesForClipboard, fileNameArray,
-					namesBuf.toString(),
+			String[] fileNameArray = fileNames.toArray(new String[fileNames.size()]);
+			copyToClipboard(resourcesForClipboard, fileNameArray, namesBuf.toString(),
 					modelElementsForClipboard/* , typedSources */, 0);
 		}
 
-		private static IModelElement[] getSourceModules(
-				IModelElement[] modelElements) {
-			List cus = ReorgUtils.getElementsOfType(modelElements,
-					IModelElement.SOURCE_MODULE);
+		private static IModelElement[] getSourceModules(IModelElement[] modelElements) {
+			List cus = ReorgUtils.getElementsOfType(modelElements, IModelElement.SOURCE_MODULE);
 			return (ISourceModule[]) cus.toArray(new ISourceModule[cus.size()]);
 		}
 
-		private void processResources(Set fileNames, StringBuffer namesBuf) {
+		private void processResources(Set fileNames, StringBuilder namesBuf) {
 			for (int i = 0; i < fResources.length; i++) {
 				IResource resource = fResources[i];
 				addFileName(fileNames, resource);
@@ -219,8 +196,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 			}
 		}
 
-		private void processScriptElements(Set fileNames,
-				StringBuffer namesBuf) {
+		private void processScriptElements(Set fileNames, StringBuilder namesBuf) {
 			for (int i = 0; i < fScriptElements.length; i++) {
 				IModelElement element = fScriptElements[i];
 				switch (element.getElementType()) {
@@ -257,21 +233,16 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 			}
 		}
 
-		private void copyToClipboard(IResource[] resources, String[] fileNames,
-				String names, IModelElement[] modelElements,
-				/*
-				 * TypedSource[] typedSources,
-				 */int repeat) {
+		private void copyToClipboard(IResource[] resources, String[] fileNames, String names,
+				IModelElement[] modelElements, /*
+												 * TypedSource[] typedSources,
+												 */int repeat) {
 			final int repeat_max_count = 10;
 			try {
-				fClipboard.setContents(
-						createDataArray(resources, modelElements, fileNames,
-								names/* , typedSources */),
-						createDataTypeArray(resources, modelElements,
-								fileNames/* , typedSources */));
+				fClipboard.setContents(createDataArray(resources, modelElements, fileNames, names/* , typedSources */),
+						createDataTypeArray(resources, modelElements, fileNames/* , typedSources */));
 			} catch (SWTError e) {
-				if (e.code != DND.ERROR_CANNOT_SET_CLIPBOARD
-						|| repeat >= repeat_max_count)
+				if (e.code != DND.ERROR_CANNOT_SET_CLIPBOARD || repeat >= repeat_max_count)
 					throw e;
 				if (fAutoRepeatOnFailure) {
 					try {
@@ -280,16 +251,13 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 						// do nothing.
 					}
 				}
-				if (fAutoRepeatOnFailure || MessageDialog.openQuestion(fShell,
-						ReorgMessages.CopyToClipboardAction_4,
+				if (fAutoRepeatOnFailure || MessageDialog.openQuestion(fShell, ReorgMessages.CopyToClipboardAction_4,
 						ReorgMessages.CopyToClipboardAction_5))
-					copyToClipboard(resources, fileNames, names,
-							modelElements/* , typedSources */, repeat + 1);
+					copyToClipboard(resources, fileNames, names, modelElements/* , typedSources */, repeat + 1);
 			}
 		}
 
-		private static Transfer[] createDataTypeArray(IResource[] resources,
-				IModelElement[] modelElements,
+		private static Transfer[] createDataTypeArray(IResource[] resources, IModelElement[] modelElements,
 				String[] fileNames/*
 									 * , TypedSource[] typedSources
 									 */) {
@@ -306,11 +274,10 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 			return result.toArray(new Transfer[result.size()]);
 		}
 
-		private static Object[] createDataArray(IResource[] resources,
-				IModelElement[] modelElements, String[] fileNames,
-				String names/*
-							 * , TypedSource [ ] typedSources
-							 */) {
+		private static Object[] createDataArray(IResource[] resources, IModelElement[] modelElements,
+				String[] fileNames, String names/*
+												 * , TypedSource [ ] typedSources
+												 */) {
 			List result = new ArrayList(4);
 			if (resources.length != 0)
 				result.add(resources);
@@ -326,10 +293,8 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 
 		private static ILabelProvider createLabelProvider() {
 			return new ModelElementLabelProvider(
-					ModelElementLabelProvider.SHOW_VARIABLE
-							+ ModelElementLabelProvider.SHOW_PARAMETERS
-							+ ModelElementLabelProvider.SHOW_TYPE
-							+ ModelElementLabelProvider.SHOW_RETURN_TYPE);
+					ModelElementLabelProvider.SHOW_VARIABLE + ModelElementLabelProvider.SHOW_PARAMETERS
+							+ ModelElementLabelProvider.SHOW_TYPE + ModelElementLabelProvider.SHOW_RETURN_TYPE);
 		}
 
 		private String getName(IResource resource) {
@@ -341,13 +306,11 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 		}
 	}
 
-	private static class CopyToClipboardEnablementPolicy
-			implements IReorgEnablementPolicy {
+	private static class CopyToClipboardEnablementPolicy implements IReorgEnablementPolicy {
 		private final IResource[] fResources;
 		private final IModelElement[] fScriptElements;
 
-		public CopyToClipboardEnablementPolicy(IResource[] resources,
-				IModelElement[] modelElements) {
+		public CopyToClipboardEnablementPolicy(IResource[] resources, IModelElement[] modelElements) {
 			Assert.isNotNull(resources);
 			Assert.isNotNull(modelElements);
 			fResources = resources;
@@ -362,8 +325,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 				return false;
 			if (!canCopyAllToClipboard())
 				return false;
-			if (!new ParentChecker(fResources, fScriptElements)
-					.haveCommonParent())
+			if (!new ParentChecker(fResources, fScriptElements).haveCommonParent())
 				return false;
 			return true;
 		}
@@ -380,8 +342,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 			return true;
 		}
 
-		private static boolean canCopyToClipboard(IModelElement element)
-				throws ModelException {
+		private static boolean canCopyToClipboard(IModelElement element) throws ModelException {
 			if (element == null || !element.exists())
 				return false;
 
@@ -403,8 +364,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 		}
 
 		private static boolean canCopyToClipboard(IResource resource) {
-			return resource != null && resource.exists()
-					&& !resource.isPhantom()
+			return resource != null && resource.exists() && !resource.isPhantom()
 					&& resource.getType() != IResource.ROOT;
 		}
 

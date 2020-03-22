@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -37,31 +37,26 @@ public class FileTemplateContext extends TemplateContext {
 
 	private final String fLineDelimiter;
 
-	public FileTemplateContext(TemplateContextType contextType,
-			String lineDelimiter) {
+	public FileTemplateContext(TemplateContextType contextType, String lineDelimiter) {
 		super(contextType);
 		fLineDelimiter = lineDelimiter;
 	}
 
 	@Override
-	public TemplateBuffer evaluate(Template template)
-			throws BadLocationException, TemplateException {
+	public TemplateBuffer evaluate(Template template) throws BadLocationException, TemplateException {
 		// test that all variables are defined
 		Iterator iterator = getContextType().resolvers();
 		while (iterator.hasNext()) {
-			TemplateVariableResolver var = (TemplateVariableResolver) iterator
-					.next();
+			TemplateVariableResolver var = (TemplateVariableResolver) iterator.next();
 			if (var.getClass() == FileTemplateContextType.FileTemplateVariableResolver.class) {
-				Assert.isNotNull(getVariable(var.getType()),
-						"Variable " + var.getType() + " not defined"); //$NON-NLS-1$ //$NON-NLS-2$
+				Assert.isNotNull(getVariable(var.getType()), "Variable " + var.getType() + " not defined"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
 		if (!canEvaluate(template))
 			return null;
 
-		String pattern = changeLineDelimiter(template.getPattern(),
-				fLineDelimiter);
+		String pattern = changeLineDelimiter(template.getPattern(), fLineDelimiter);
 
 		TemplateTranslator translator = new TemplateTranslator();
 		TemplateBuffer buffer = translator.translate(pattern);
@@ -78,15 +73,13 @@ public class FileTemplateContext extends TemplateContext {
 				return code;
 			}
 
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			for (int i = 0; i < nLines; i++) {
 				if (i != 0) {
 					buf.append(lineDelim);
 				}
 				IRegion region = tracker.getLineInformation(i);
-				String line = code.substring(region.getOffset(), region
-						.getOffset()
-						+ region.getLength());
+				String line = code.substring(region.getOffset(), region.getOffset() + region.getLength());
 				buf.append(line);
 			}
 			return buf.toString();
@@ -103,15 +96,11 @@ public class FileTemplateContext extends TemplateContext {
 
 	public void setResourceVariables(IFile file) {
 		setVariable(FileTemplateContextType.FILENAME, file.getName());
-		setVariable(FileTemplateContextType.FILEBASE, new Path(file.getName())
-				.removeFileExtension().lastSegment());
+		setVariable(FileTemplateContextType.FILEBASE, new Path(file.getName()).removeFileExtension().lastSegment());
 		IPath location = file.getLocation();
-		setVariable(FileTemplateContextType.FILELOCATION,
-				location != null ? location.toOSString() : Util.EMPTY_STRING);
-		setVariable(FileTemplateContextType.FILEPATH, file.getFullPath()
-				.toString());
-		setVariable(FileTemplateContextType.PROJECTNAME, file.getProject()
-				.getName());
+		setVariable(FileTemplateContextType.FILELOCATION, location != null ? location.toOSString() : Util.EMPTY_STRING);
+		setVariable(FileTemplateContextType.FILEPATH, file.getFullPath().toString());
+		setVariable(FileTemplateContextType.PROJECTNAME, file.getProject().getName());
 	}
 
 }

@@ -93,12 +93,12 @@ public class ModifyingResourceTests extends AbstractModelTests {
 	 * of the tree.
 	 */
 	protected String expandAll(IModelElement element) throws CoreException {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		this.expandAll(element, 0, buffer);
 		return buffer.toString();
 	}
 
-	private void expandAll(IModelElement element, int tab, StringBuffer buffer) throws CoreException {
+	private void expandAll(IModelElement element, int tab, StringBuilder buffer) throws CoreException {
 		IModelElement[] children = null;
 		// force opening of element by getting its children
 		if (element instanceof IParent) {

@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -15,7 +15,7 @@ import org.eclipse.dltk.core.search.indexing.IIndexConstants;
 
 public class MixinPattern extends DLTKSearchPattern implements IIndexConstants {
 	protected char[] mixinKey;
-	
+
 	public static char[] createIndexKey(char[] fieldName) {
 		return fieldName;
 	}
@@ -42,7 +42,7 @@ public class MixinPattern extends DLTKSearchPattern implements IIndexConstants {
 
 	@Override
 	public char[][] getIndexCategories() {
-		return new char[][] {MIXIN};
+		return new char[][] { MIXIN };
 	}
 
 	@Override
@@ -51,8 +51,8 @@ public class MixinPattern extends DLTKSearchPattern implements IIndexConstants {
 	}
 
 	@Override
-	protected StringBuffer print(StringBuffer output) {
-		
+	protected StringBuilder print(StringBuilder output) {
+
 		if (mixinKey == null) {
 			output.append("*"); //$NON-NLS-1$
 		} else {

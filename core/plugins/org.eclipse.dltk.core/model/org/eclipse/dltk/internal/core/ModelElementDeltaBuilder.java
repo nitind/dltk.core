@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -26,7 +26,7 @@ import org.eclipse.dltk.core.ModelException;
  * A script element delta biulder creates a script element delta on a script
  * element between the version of the script element at the time the comparator
  * was created and the current version of the script element.
- * 
+ *
  * It performs this operation by locally caching the contents of the script
  * element when it is created. When the method createDeltas() is called, it
  * creates a delta over the cached contents and the new contents.
@@ -86,14 +86,13 @@ public class ModelElementDeltaBuilder {
 	}
 
 	/**
-	 * Creates a script element comparator on a script element looking as deep
-	 * as necessary.
+	 * Creates a script element comparator on a script element looking as deep as
+	 * necessary.
 	 */
 	public ModelElementDeltaBuilder(IModelElement modelElement) {
 		this.modelElement = modelElement;
 		this.initialize();
-		this.recordElementInfo(modelElement, (Model) this.modelElement
-				.getModel(), 0);
+		this.recordElementInfo(modelElement, (Model) this.modelElement.getModel(), 0);
 	}
 
 	/**
@@ -104,8 +103,7 @@ public class ModelElementDeltaBuilder {
 		this.modelElement = modelElement;
 		this.maxDepth = maxDepth;
 		this.initialize();
-		this.recordElementInfo(modelElement, (Model) this.modelElement
-				.getModel(), 0);
+		this.recordElementInfo(modelElement, (Model) this.modelElement.getModel(), 0);
 	}
 
 	/**
@@ -126,8 +124,8 @@ public class ModelElementDeltaBuilder {
 	}
 
 	/**
-	 * Builds the script element deltas between the old content of the
-	 * compilation unit and its new content.
+	 * Builds the script element deltas between the old content of the compilation
+	 * unit and its new content.
 	 */
 	public void buildDeltas() {
 		this.delta = new ModelElementDelta(modelElement);
@@ -183,8 +181,7 @@ public class ModelElementDeltaBuilder {
 
 		ModelElementInfo newInfo = null;
 		try {
-			newInfo = (ModelElementInfo) ((ModelElement) newElement)
-					.getElementInfo();
+			newInfo = (ModelElementInfo) ((ModelElement) newElement).getElementInfo();
 		} catch (ModelException npe) {
 			if (DLTKCore.DEBUG) {
 				npe.printStackTrace();
@@ -210,8 +207,7 @@ public class ModelElementDeltaBuilder {
 	 * Looks for changed positioning of elements.
 	 */
 	private void findChangesInPositioning(IModelElement element, int depth) {
-		if (depth >= this.maxDepth || this.added.contains(element)
-				|| this.removed.contains(element))
+		if (depth >= this.maxDepth || this.added.contains(element) || this.removed.contains(element))
 			return;
 
 		if (!isPositionedCorrectly(element)) {
@@ -221,8 +217,7 @@ public class ModelElementDeltaBuilder {
 		if (element instanceof IParent) {
 			ModelElementInfo info = null;
 			try {
-				info = (ModelElementInfo) ((ModelElement) element)
-						.getElementInfo();
+				info = (ModelElementInfo) ((ModelElement) element).getElementInfo();
 			} catch (ModelException npe) {
 				if (DLTKCore.DEBUG) {
 					npe.printStackTrace();
@@ -243,45 +238,32 @@ public class ModelElementDeltaBuilder {
 	/**
 	 * The elements are equivalent, but might have content changes.
 	 */
-	private void findContentChange(ModelElementInfo oldInfo,
-			ModelElementInfo newInfo, IModelElement newElement) {
-		if (oldInfo instanceof MemberElementInfo
-				&& newInfo instanceof MemberElementInfo) {
-			if (((MemberElementInfo) oldInfo).getModifiers() != ((MemberElementInfo) newInfo)
-					.getModifiers()) {
+	private void findContentChange(ModelElementInfo oldInfo, ModelElementInfo newInfo, IModelElement newElement) {
+		if (oldInfo instanceof MemberElementInfo && newInfo instanceof MemberElementInfo) {
+			if (((MemberElementInfo) oldInfo).getModifiers() != ((MemberElementInfo) newInfo).getModifiers()) {
 				this.delta.changed(newElement, IModelElementDelta.F_MODIFIERS);
 			}
-			if (oldInfo instanceof SourceMethodElementInfo
-					&& newInfo instanceof SourceMethodElementInfo) {
+			if (oldInfo instanceof SourceMethodElementInfo && newInfo instanceof SourceMethodElementInfo) {
 				SourceMethodElementInfo oldSourceMethodInfo = (SourceMethodElementInfo) oldInfo;
 				SourceMethodElementInfo newSourceMethodInfo = (SourceMethodElementInfo) newInfo;
-				if (!Arrays.equals(oldSourceMethodInfo.getArguments(),
-						newSourceMethodInfo.getArguments())
-						|| !CharOperation.equals(oldSourceMethodInfo
-								.getReturnTypeName(), newSourceMethodInfo
-								.getReturnTypeName())) {
-					this.delta
-							.changed(newElement, IModelElementDelta.F_CONTENT);
+				if (!Arrays.equals(oldSourceMethodInfo.getArguments(), newSourceMethodInfo.getArguments())
+						|| !CharOperation.equals(oldSourceMethodInfo.getReturnTypeName(),
+								newSourceMethodInfo.getReturnTypeName())) {
+					this.delta.changed(newElement, IModelElementDelta.F_CONTENT);
 				}
-			} else if (oldInfo instanceof SourceFieldElementInfo
-					&& newInfo instanceof SourceFieldElementInfo) {
+			} else if (oldInfo instanceof SourceFieldElementInfo && newInfo instanceof SourceFieldElementInfo) {
 				SourceFieldElementInfo oldFieldInfo = (SourceFieldElementInfo) oldInfo;
 				SourceFieldElementInfo newFieldInfo = (SourceFieldElementInfo) newInfo;
-				if (!CharOperation.equals(oldFieldInfo.getType(), newFieldInfo
-						.getType())) {
-					this.delta
-							.changed(newElement, IModelElementDelta.F_CONTENT);
+				if (!CharOperation.equals(oldFieldInfo.getType(), newFieldInfo.getType())) {
+					this.delta.changed(newElement, IModelElementDelta.F_CONTENT);
 				}
 			}
 		}
-		if (oldInfo instanceof SourceTypeElementInfo
-				&& newInfo instanceof SourceTypeElementInfo) {
+		if (oldInfo instanceof SourceTypeElementInfo && newInfo instanceof SourceTypeElementInfo) {
 			SourceTypeElementInfo oldSourceTypeInfo = (SourceTypeElementInfo) oldInfo;
 			SourceTypeElementInfo newSourceTypeInfo = (SourceTypeElementInfo) newInfo;
-			if (!CharOperation.equals(oldSourceTypeInfo.getSuperclassNames(),
-					newSourceTypeInfo.getSuperclassNames())) {
-				this.delta
-						.changed(newElement, IModelElementDelta.F_SUPER_TYPES);
+			if (!CharOperation.equals(oldSourceTypeInfo.getSuperclassNames(), newSourceTypeInfo.getSuperclassNames())) {
+				this.delta.changed(newElement, IModelElementDelta.F_SUPER_TYPES);
 			}
 		}
 	}
@@ -322,13 +304,12 @@ public class ModelElementDeltaBuilder {
 	}
 
 	/**
-	 * Inserts position information for the elements into the new or old
-	 * positions table
+	 * Inserts position information for the elements into the new or old positions
+	 * table
 	 */
 	private void insertPositions(IModelElement[] elements, boolean isNew) {
 		int length = elements.length;
-		IModelElement previous = null, current = null, next = (length > 0) ? elements[0]
-				: null;
+		IModelElement previous = null, current = null, next = (length > 0) ? elements[0] : null;
 		for (int i = 0; i < length; i++) {
 			previous = current;
 			current = next;
@@ -375,15 +356,13 @@ public class ModelElementDeltaBuilder {
 	}
 
 	/**
-	 * Records this elements info, and attempts to record the info for the
-	 * children.
+	 * Records this elements info, and attempts to record the info for the children.
 	 */
 	private void recordElementInfo(IModelElement element, Model model, int depth) {
 		if (depth >= this.maxDepth) {
 			return;
 		}
-		ModelElementInfo info = (ModelElementInfo) ModelManager
-				.getModelManager().getInfo(element);
+		ModelElementInfo info = (ModelElementInfo) ModelManager.getModelManager().getInfo(element);
 		if (info == null) // no longer in the model.
 			return;
 		this.putElementInfo(element, info);
@@ -405,8 +384,7 @@ public class ModelElementDeltaBuilder {
 		if (depth < this.maxDepth && newElement instanceof IParent) {
 			ModelElementInfo info = null;
 			try {
-				info = (ModelElementInfo) ((ModelElement) newElement)
-						.getElementInfo();
+				info = (ModelElementInfo) ((ModelElement) newElement).getElementInfo();
 			} catch (ModelException npe) {
 				if (DLTKCore.DEBUG) {
 					npe.printStackTrace();
@@ -448,7 +426,7 @@ public class ModelElementDeltaBuilder {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append("Built delta:\n"); //$NON-NLS-1$
 		buffer.append(this.delta.toString());
 		return buffer.toString();
@@ -461,8 +439,7 @@ public class ModelElementDeltaBuilder {
 		if (elementDelta.getKind() == IModelElementDelta.REMOVED) {
 			IModelElementDelta[] children = elementDelta.getAffectedChildren();
 			for (int i = 0, length = children.length; i < length; i++) {
-				elementDelta
-						.removeAffectedChild((ModelElementDelta) children[i]);
+				elementDelta.removeAffectedChild((ModelElementDelta) children[i]);
 			}
 		} else {
 			IModelElementDelta[] children = elementDelta.getAffectedChildren();

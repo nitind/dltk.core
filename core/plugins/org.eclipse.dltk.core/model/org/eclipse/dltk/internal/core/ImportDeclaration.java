@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -21,11 +21,10 @@ import org.eclipse.dltk.utils.CorePrinter;
 /**
  * Handle for an import declaration. Info object is a
  * ImportDeclarationElementInfo.
- * 
+ *
  * @see IImportDeclaration
  */
-public class ImportDeclaration extends SourceRefElement implements
-		IImportDeclaration {
+public class ImportDeclaration extends SourceRefElement implements IImportDeclaration {
 
 	private final String name;
 	private final String alias;
@@ -34,19 +33,18 @@ public class ImportDeclaration extends SourceRefElement implements
 	private final String version;
 
 	/**
-	 * Constructs an ImportDeclaration in the given import container with the
-	 * given name.
+	 * Constructs an ImportDeclaration in the given import container with the given
+	 * name.
 	 */
-	protected ImportDeclaration(ImportContainer parent, String name,
-			String version) {
+	protected ImportDeclaration(ImportContainer parent, String name, String version) {
 		this(parent, name, version, null, 0, 0);
 	}
 
 	/**
 	 * @since 5.2
 	 */
-	protected ImportDeclaration(ImportContainer parent, String name,
-			String version, String alias, int type, int flags) {
+	protected ImportDeclaration(ImportContainer parent, String name, String version, String alias, int type,
+			int flags) {
 		super(parent);
 		this.name = name;
 		this.version = version;
@@ -90,11 +88,11 @@ public class ImportDeclaration extends SourceRefElement implements
 	}
 
 	/**
-	 * @see JavaElement#getHandleMemento(StringBuffer) For import declarations,
-	 *      the handle delimiter is associated to the import container already
+	 * @see JavaElement#getHandleMemento(StringBuilder) For import declarations, the
+	 *      handle delimiter is associated to the import container already
 	 */
 	@Override
-	public void getHandleMemento(StringBuffer buff) {
+	public void getHandleMemento(StringBuilder buff) {
 		((ModelElement) getParent()).getHandleMemento(buff);
 		escapeMementoName(buff, getElementName());
 		buff.append(JEM_COUNT);
@@ -127,12 +125,10 @@ public class ImportDeclaration extends SourceRefElement implements
 	 */
 	@Override
 	public IModelElement getPrimaryElement(boolean checkOwner) {
-		AbstractSourceModule cu = (AbstractSourceModule) this.parent
-				.getParent();
+		AbstractSourceModule cu = (AbstractSourceModule) this.parent.getParent();
 		if (checkOwner && cu.isPrimary())
 			return this;
-		return new ImportDeclaration(new ImportContainer(cu,
-				((ImportContainer) this.parent).getContainerName()), name,
+		return new ImportDeclaration(new ImportContainer(cu, ((ImportContainer) this.parent).getContainerName()), name,
 				version, alias, type, flags);
 	}
 
@@ -140,8 +136,7 @@ public class ImportDeclaration extends SourceRefElement implements
 	 * @private Debugging purposes
 	 */
 	@Override
-	protected void toStringInfo(int tab, StringBuffer buffer, Object info,
-			boolean showResolvedInfo) {
+	protected void toStringInfo(int tab, StringBuilder buffer, Object info, boolean showResolvedInfo) {
 		buffer.append(tabString(tab));
 		buffer.append("import "); //$NON-NLS-1$
 		toStringName(buffer);

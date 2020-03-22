@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -18,8 +18,7 @@ import org.eclipse.dltk.core.search.index.EntryResult;
 import org.eclipse.dltk.core.search.index.Index;
 import org.eclipse.dltk.core.search.indexing.IIndexConstants;
 
-public class TypeDeclarationPattern extends DLTKSearchPattern implements
-		IIndexConstants {
+public class TypeDeclarationPattern extends DLTKSearchPattern implements IIndexConstants {
 	public char[] simpleName;
 	public char[] pkg;
 	public char[][] enclosingTypeNames;
@@ -35,13 +34,12 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 	protected static char[][] CATEGORIES = { TYPE_DECL };
 
 	/*
-	 * Create index key for type declaration pattern: key = typeName /
-	 * packageName / enclosingTypeName / modifiers or for secondary types key =
-	 * typeName / packageName / enclosingTypeName / modifiers / 'S'
+	 * Create index key for type declaration pattern: key = typeName / packageName /
+	 * enclosingTypeName / modifiers or for secondary types key = typeName /
+	 * packageName / enclosingTypeName / modifiers / 'S'
 	 */
-	public static char[] createIndexKey(int modifiers, String typeName,
-			String[] packageName, String[] enclosingTypeNames,
-			char[][] superTypes) {
+	public static char[] createIndexKey(int modifiers, String typeName, String[] packageName,
+			String[] enclosingTypeNames, char[][] superTypes) {
 		// , char typeSuffix) {
 		int typeNameLength = typeName == null ? 0 : typeName.length();
 		int packageLength = indexKeyLength(packageName);
@@ -54,8 +52,7 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 					superTypesLength++; // for the '.' separator
 			}
 		}
-		int resultLength = typeNameLength + packageLength
-				+ enclosingNamesLength + superTypesLength + 6;
+		int resultLength = typeNameLength + packageLength + enclosingNamesLength + superTypesLength + 6;
 
 		char[] result = new char[resultLength];
 		int pos = 0;
@@ -84,19 +81,16 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 		return result;
 	}
 
-	public TypeDeclarationPattern(char[] pkg, char[][] enclosingTypeNames,
-			char[][] superTypes, char[] simpleName, char typeSuffix,
-			int matchRule, IDLTKLanguageToolkit toolkit) {
+	public TypeDeclarationPattern(char[] pkg, char[][] enclosingTypeNames, char[][] superTypes, char[] simpleName,
+			char typeSuffix, int matchRule, IDLTKLanguageToolkit toolkit) {
 		this(matchRule, toolkit);
 		this.pkg = isCaseSensitive() ? pkg : CharOperation.toLowerCase(pkg);
 		if (isCaseSensitive() || enclosingTypeNames == null) {
 			this.enclosingTypeNames = enclosingTypeNames;
 		} else {
-			this.enclosingTypeNames = CharOperation
-					.toLowerCase(enclosingTypeNames);
+			this.enclosingTypeNames = CharOperation.toLowerCase(enclosingTypeNames);
 		}
-		this.simpleName = (isCaseSensitive() || isCamelCase()) ? simpleName
-				: CharOperation.toLowerCase(simpleName);
+		this.simpleName = (isCaseSensitive() || isCamelCase()) ? simpleName : CharOperation.toLowerCase(simpleName);
 		this.typeSuffix = typeSuffix;
 		this.superTypes = superTypes;
 	}
@@ -106,11 +100,10 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 	}
 
 	/*
-	 * Type entries are encoded as: simpleTypeName / packageName /
-	 * enclosingTypeName / modifiers e.g. Object/java.lang//0 e.g.
-	 * Cloneable/java.lang//512 e.g. LazyValue/javax.swing/UIDefaults/0 or for
-	 * secondary types as: simpleTypeName / packageName / enclosingTypeName /
-	 * modifiers / S
+	 * Type entries are encoded as: simpleTypeName / packageName / enclosingTypeName
+	 * / modifiers e.g. Object/java.lang//0 e.g. Cloneable/java.lang//512 e.g.
+	 * LazyValue/javax.swing/UIDefaults/0 or for secondary types as: simpleTypeName
+	 * / packageName / enclosingTypeName / modifiers / S
 	 */
 	@Override
 	public void decodeIndexKey(char[] key) {
@@ -121,8 +114,7 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 			this.pkg = CharOperation.NO_CHAR;
 		} else {
 			slash = CharOperation.indexOf(SEPARATOR, key, start);
-			this.pkg = internedPackageNames.add(CharOperation.subarray(key,
-					start, slash));
+			this.pkg = internedPackageNames.add(CharOperation.subarray(key, start, slash));
 		}
 
 		// Continue key read by the end to decode modifiers
@@ -149,8 +141,7 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 			} else if (slash == start + 1 && key[start] == ZERO_CHAR) {
 				enclosingTypeNames = ONE_ZERO_CHAR;
 			} else {
-				this.enclosingTypeNames = CharOperation.splitOn('$', key,
-						start, slash);
+				this.enclosingTypeNames = CharOperation.splitOn('$', key, start, slash);
 			}
 		}
 
@@ -173,8 +164,7 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 
 	@Override
 	public SearchPattern getBlankPattern() {
-		return new TypeDeclarationPattern(R_EXACT_MATCH | R_CASE_SENSITIVE,
-				getToolkit());
+		return new TypeDeclarationPattern(R_EXACT_MATCH | R_CASE_SENSITIVE, getToolkit());
 	}
 
 	@Override
@@ -202,22 +192,18 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 		if (!matchesName(this.simpleName, pattern.simpleName))
 			return false;
 		// check package - exact match only
-		if (this.pkg != null
-				&& !CharOperation.equals(this.pkg, pattern.pkg,
-						isCaseSensitive()))
+		if (this.pkg != null && !CharOperation.equals(this.pkg, pattern.pkg, isCaseSensitive()))
 			return false;
 		// check enclosingTypeNames - exact match only
 		if (this.enclosingTypeNames != null) {
 			if (this.enclosingTypeNames.length == 0)
 				return pattern.enclosingTypeNames.length == 0;
-			if (this.enclosingTypeNames.length == 1
-					&& pattern.enclosingTypeNames.length == 1)
-				return CharOperation.equals(this.enclosingTypeNames[0],
-						pattern.enclosingTypeNames[0], isCaseSensitive());
+			if (this.enclosingTypeNames.length == 1 && pattern.enclosingTypeNames.length == 1)
+				return CharOperation.equals(this.enclosingTypeNames[0], pattern.enclosingTypeNames[0],
+						isCaseSensitive());
 			if (pattern.enclosingTypeNames == ONE_ZERO_CHAR)
 				return true; // is a local or anonymous type
-			return CharOperation.equals(this.enclosingTypeNames,
-					pattern.enclosingTypeNames, isCaseSensitive());
+			return CharOperation.equals(this.enclosingTypeNames, pattern.enclosingTypeNames, isCaseSensitive());
 		}
 		return true;
 	}
@@ -236,9 +222,8 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 			matchRule &= ~R_EXACT_MATCH;
 			if (this.simpleName != null) {
 				matchRule |= R_PREFIX_MATCH;
-				key = this.pkg == null ? CharOperation.append(this.simpleName,
-						SEPARATOR) : CharOperation.concat(this.simpleName,
-						SEPARATOR, this.pkg, SEPARATOR, CharOperation.NO_CHAR);
+				key = this.pkg == null ? CharOperation.append(this.simpleName, SEPARATOR)
+						: CharOperation.concat(this.simpleName, SEPARATOR, this.pkg, SEPARATOR, CharOperation.NO_CHAR);
 				break; // do a prefix query with the simpleName and
 				// possibly the pkg
 			}
@@ -253,17 +238,14 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 						break;
 					}
 				} else if (this.simpleName[this.simpleName.length - 1] != '*') {
-					key = CharOperation.concat(this.simpleName, ONE_STAR,
-							SEPARATOR);
+					key = CharOperation.concat(this.simpleName, ONE_STAR, SEPARATOR);
 				}
 				break; // do a pattern query with the current encoded key
 			}
 			// must decode to check enclosingTypeNames due to the encoding
 			// of local types
-			key = CharOperation
-					.concat(this.simpleName == null ? ONE_STAR
-							: this.simpleName, SEPARATOR, this.pkg, SEPARATOR,
-							ONE_STAR);
+			key = CharOperation.concat(this.simpleName == null ? ONE_STAR : this.simpleName, SEPARATOR, this.pkg,
+					SEPARATOR, ONE_STAR);
 			break;
 		case R_REGEXP_MATCH:
 			// TODO (frederic) implement regular expression match
@@ -278,7 +260,7 @@ public class TypeDeclarationPattern extends DLTKSearchPattern implements
 	}
 
 	@Override
-	protected StringBuffer print(StringBuffer output) {
+	protected StringBuilder print(StringBuilder output) {
 		switch (this.typeSuffix) {
 		case TYPE_SUFFIX:
 			output.append("TypeDeclarationPattern: pkg<"); //$NON-NLS-1$

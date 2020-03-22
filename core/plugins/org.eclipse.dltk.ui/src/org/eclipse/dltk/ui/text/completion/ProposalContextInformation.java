@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -17,8 +17,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * Implementation of the <code>IContextInformation</code> interface.
  */
-public class ProposalContextInformation implements IContextInformation,
-		IContextInformationExtension {
+public class ProposalContextInformation implements IContextInformation, IContextInformationExtension {
 
 	private final String fContextDisplayString;
 	private final String fInformationDisplayString;
@@ -48,7 +47,7 @@ public class ProposalContextInformation implements IContextInformation,
 	}
 
 	private String createParametersList(CompletionProposal proposal) {
-		StringBuffer bf = new StringBuffer();
+		StringBuilder bf = new StringBuilder();
 		String[] pNames = proposal.getParameterNames();
 		if (pNames != null) {
 			for (int a = 0; a < pNames.length; a++) {
@@ -64,12 +63,11 @@ public class ProposalContextInformation implements IContextInformation,
 	public boolean equals(Object object) {
 		if (object instanceof IContextInformation) {
 			IContextInformation contextInformation = (IContextInformation) object;
-			boolean equals = getInformationDisplayString().equalsIgnoreCase(
-					contextInformation.getInformationDisplayString());
+			boolean equals = getInformationDisplayString()
+					.equalsIgnoreCase(contextInformation.getInformationDisplayString());
 			if (getContextDisplayString() != null)
 				equals = equals
-						&& getContextDisplayString().equalsIgnoreCase(
-								contextInformation.getContextDisplayString());
+						&& getContextDisplayString().equalsIgnoreCase(contextInformation.getContextDisplayString());
 			return equals;
 		}
 		return false;
@@ -98,8 +96,7 @@ public class ProposalContextInformation implements IContextInformation,
 	/**
 	 * Sets the context information position.
 	 *
-	 * @param position
-	 *            the new position, or -1 for unknown.
+	 * @param position the new position, or -1 for unknown.
 	 */
 	public void setContextInformationPosition(int position) {
 		fPosition = position;

@@ -111,7 +111,7 @@ public class ScriptOutlineInformationControl extends AbstractInformationControl 
 				try {
 					IType type = getDefiningType(element);
 					if (type != null) {
-						StringBuffer buf = new StringBuffer(super.getText(type));
+						StringBuilder buf = new StringBuilder(super.getText(type));
 						buf.append(ScriptElementLabels.CONCAT_STRING);
 						buf.append(text);
 						return buf.toString();

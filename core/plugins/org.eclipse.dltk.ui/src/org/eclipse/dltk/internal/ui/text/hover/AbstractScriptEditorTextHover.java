@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -49,8 +49,7 @@ import org.osgi.framework.Bundle;
 /**
  * Abstract class for providing hover information for Script elements.
  */
-public abstract class AbstractScriptEditorTextHover
-		implements IScriptEditorTextHover, ITextHoverExtension {
+public abstract class AbstractScriptEditorTextHover implements IScriptEditorTextHover, ITextHoverExtension {
 
 	/**
 	 * The style sheet (css).
@@ -84,8 +83,7 @@ public abstract class AbstractScriptEditorTextHover
 		if (fEditor != null) {
 			IEditorInput input = fEditor.getEditorInput();
 
-			IWorkingCopyManager manager = DLTKUIPlugin.getDefault()
-					.getWorkingCopyManager();
+			IWorkingCopyManager manager = DLTKUIPlugin.getDefault().getWorkingCopyManager();
 			return manager.getWorkingCopy(input, false);
 		}
 
@@ -104,8 +102,7 @@ public abstract class AbstractScriptEditorTextHover
 		IModelElement inputModelElement = getEditorInputModelElement();
 		if (inputModelElement == null)
 			return null;
-		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-				.getLanguageToolkit(inputModelElement);
+		IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(inputModelElement);
 		if (toolkit == null) {
 			return null;
 		}
@@ -119,13 +116,11 @@ public abstract class AbstractScriptEditorTextHover
 			try {
 				String content = null;
 				try {
-					content = textViewer.getDocument().get(
-							hoverRegion.getOffset(), hoverRegion.getLength());
+					content = textViewer.getDocument().get(hoverRegion.getOffset(), hoverRegion.getLength());
 				} catch (BadLocationException e) {
 				}
 
-				final ICodeSelection result = resolve.codeSelectAll(
-						hoverRegion.getOffset(), hoverRegion.getLength());
+				final ICodeSelection result = resolve.codeSelectAll(hoverRegion.getOffset(), hoverRegion.getLength());
 
 				if (result == null) {
 					if (content != null) {
@@ -147,16 +142,14 @@ public abstract class AbstractScriptEditorTextHover
 	}
 
 	@Deprecated
-	protected String getHoverInfo(String nature,
-			IModelElement[] modelElements) {
+	protected String getHoverInfo(String nature, IModelElement[] modelElements) {
 		return null;
 	}
 
 	/**
 	 * Provides hover information for the given elements.
 	 *
-	 * @param elements
-	 *            the Script elements for which to provide hover information
+	 * @param elements the Script elements for which to provide hover information
 	 * @return the hover information string
 	 *
 	 */
@@ -167,15 +160,13 @@ public abstract class AbstractScriptEditorTextHover
 				modelElements.add((IModelElement) element);
 			}
 		}
-		return getHoverInfo(nature,
-				modelElements.toArray(new IModelElement[modelElements.size()]));
+		return getHoverInfo(nature, modelElements.toArray(new IModelElement[modelElements.size()]));
 	}
 
 	/**
 	 * Provides hover information for the given elements.
 	 *
-	 * @param selection
-	 *            the Script elements for which to provide hover information
+	 * @param selection the Script elements for which to provide hover information
 	 * @return the hover information string
 	 */
 	protected String getHoverInfo(String nature, ICodeSelection selection) {
@@ -185,8 +176,7 @@ public abstract class AbstractScriptEditorTextHover
 	/**
 	 * Provides hover information for the keyword.
 	 *
-	 * @param content
-	 *            text of the keyword
+	 * @param content text of the keyword
 	 * @return the hover information string
 	 *
 	 */
@@ -196,8 +186,7 @@ public abstract class AbstractScriptEditorTextHover
 
 	@Override
 	public IInformationControlCreator getHoverControlCreator() {
-		return parent -> new DefaultInformationControl(parent,
-				EditorsUI.getTooltipAffordanceString());
+		return parent -> new DefaultInformationControl(parent, EditorsUI.getTooltipAffordanceString());
 	}
 
 	/**
@@ -212,9 +201,8 @@ public abstract class AbstractScriptEditorTextHover
 			if (url != null) {
 				try {
 					url = FileLocator.toFileURL(url);
-					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(url.openStream()));
-					StringBuffer buffer = new StringBuffer(200);
+					BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+					StringBuilder buffer = new StringBuilder(200);
 					String line = reader.readLine();
 					while (line != null) {
 						buffer.append(line);
@@ -229,8 +217,8 @@ public abstract class AbstractScriptEditorTextHover
 		}
 		String css = fgCSSStyles;
 		if (css != null) {
-			FontData fontData = JFaceResources.getFontRegistry().getFontData(
-					PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT)[0];
+			FontData fontData = JFaceResources.getFontRegistry()
+					.getFontData(PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT)[0];
 			css = HTMLPrinter.convertTopLevelFont(css, fontData);
 		}
 		return css;

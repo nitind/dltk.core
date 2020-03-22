@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -123,7 +123,7 @@ public class ScriptConsoleHistory {
 
 	public String saveState() {
 		int size = Math.min(lines.size(), 50);
-		StringBuffer sb = new StringBuffer(size * 10);
+		StringBuilder sb = new StringBuilder(size * 10);
 		for (int i = 0; i < size; i++) {
 			sb.append(lines.get(i));
 			sb.append("\n"); //$NON-NLS-1$

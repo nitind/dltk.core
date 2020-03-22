@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -26,8 +26,7 @@ public final class CompoundNameVector {
 
 	public void add(char[][] newElement) {
 		if (size == maxSize) // knows that size starts <= maxSize
-			System.arraycopy(elements, 0,
-					(elements = new char[maxSize *= 2][][]), 0, size);
+			System.arraycopy(elements, 0, (elements = new char[maxSize *= 2][][]), 0, size);
 		elements[size++] = newElement;
 	}
 
@@ -35,8 +34,7 @@ public final class CompoundNameVector {
 		if (size + newElements.length >= maxSize) {
 			maxSize = size + newElements.length; // assume no more elements
 													// will be added
-			System.arraycopy(elements, 0, (elements = new char[maxSize][][]),
-					0, size);
+			System.arraycopy(elements, 0, (elements = new char[maxSize][][]), 0, size);
 		}
 		System.arraycopy(newElements, 0, elements, size, newElements.length);
 		size += newElements.length;
@@ -73,7 +71,7 @@ public final class CompoundNameVector {
 
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < size; i++) {
 			buffer.append(CharOperation.toString(elements[i])).append("\n"); //$NON-NLS-1$
 		}

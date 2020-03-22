@@ -3,10 +3,10 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.ui.text.completion;
 
@@ -26,30 +26,28 @@ import org.eclipse.jface.text.IDocument;
  * If passed compilation unit is not null, the replacement string will be seen
  * as a qualified type name.
  */
-public abstract class LazyScriptTypeCompletionProposal extends
-		LazyScriptCompletionProposal {
+public abstract class LazyScriptTypeCompletionProposal extends LazyScriptCompletionProposal {
 
 	protected final ISourceModule fSourceModule;
 
 //	private String fQualifiedName;
 	private String fSimpleName;
 
-	public LazyScriptTypeCompletionProposal(CompletionProposal proposal,
-			ScriptContentAssistInvocationContext context) {
+	public LazyScriptTypeCompletionProposal(CompletionProposal proposal, ScriptContentAssistInvocationContext context) {
 		super(proposal, context);
 		fSourceModule = context.getSourceModule();
 //		fQualifiedName = null;
 	}
 
 	public final String getQualifiedTypeName() {
-//		if (fQualifiedName == null) 
+//		if (fQualifiedName == null)
 //			fQualifiedName = String.valueOf(Signature.toCharArray(Signature
 //					.getTypeErasure(fProposal.getSignature())));
 //		return fQualifiedName;
 		return null;
 	}
 
-	protected final String getSimpleTypeName() {			
+	protected final String getSimpleTypeName() {
 		return fSimpleName;
 	}
 
@@ -58,12 +56,10 @@ public abstract class LazyScriptTypeCompletionProposal extends
 		String replacement = super.computeReplacementString();
 
 		/*
-		 * Always use the simple name for non-formal scriptdoc references to
-		 * types.
+		 * Always use the simple name for non-formal scriptdoc references to types.
 		 */
 		// TODO fix
-		if (fProposal.getKind() == CompletionProposal.TYPE_REF
-				&& fInvocationContext.getCoreContext() != null
+		if (fProposal.getKind() == CompletionProposal.TYPE_REF && fInvocationContext.getCoreContext() != null
 				&& fInvocationContext.getCoreContext().isInDoc())
 			return getSimpleTypeName();
 
@@ -73,19 +69,17 @@ public abstract class LazyScriptTypeCompletionProposal extends
 			return qualifiedTypeName;
 
 		/*
-		 * If the user types in the qualification, don't force import rewriting
-		 * on him - insert the qualified name.
+		 * If the user types in the qualification, don't force import rewriting on him -
+		 * insert the qualified name.
 		 */
 		IDocument document = fInvocationContext.getDocument();
 		if (document != null) {
-			String prefix = getPrefix(document, getReplacementOffset()
-					+ getReplacementLength());
+			String prefix = getPrefix(document, getReplacementOffset() + getReplacementLength());
 			int dotIndex = prefix.lastIndexOf('.');
 			// match up to the last dot in order to make higher level matching
 			// still work (camel case...)
 			if (dotIndex != -1
-					&& qualifiedTypeName.toLowerCase().startsWith(
-							prefix.substring(0, dotIndex + 1).toLowerCase()))
+					&& qualifiedTypeName.toLowerCase().startsWith(prefix.substring(0, dotIndex + 1).toLowerCase()))
 				return qualifiedTypeName;
 		}
 
@@ -105,8 +99,7 @@ public abstract class LazyScriptTypeCompletionProposal extends
 
 	@Override
 	public void apply(IDocument document, char trigger, int offset) {
-		boolean insertClosingParenthesis = trigger == '('
-				&& autocloseBrackets();
+		boolean insertClosingParenthesis = trigger == '(' && autocloseBrackets();
 		if (insertClosingParenthesis) {
 			updateReplacementWithParentheses();
 			trigger = '\0';
@@ -126,7 +119,7 @@ public abstract class LazyScriptTypeCompletionProposal extends
 	}
 
 	private void updateReplacementWithParentheses() {
-		StringBuffer replacement = new StringBuffer(getReplacementString());
+		StringBuilder replacement = new StringBuilder(getReplacementString());
 		// FormatterPrefs prefs= getFormatterPrefs();
 
 		// if (prefs.beforeOpeningParen)
@@ -148,27 +141,25 @@ public abstract class LazyScriptTypeCompletionProposal extends
 
 	/**
 	 * Remembers the selection in the content assist history.
-	 * 
-	 * @throws ModelException
-	 *             if anything goes wrong
-	 * 
+	 *
+	 * @throws ModelException if anything goes wrong
+	 *
 	 */
 	protected final void rememberSelection() throws ModelException {
 		IType lhs = fInvocationContext.getExpectedType();
 		IType rhs = (IType) getModelElement();
 		if (lhs != null && rhs != null)
-			DLTKUIPlugin.getDefault().getContentAssistHistory().remember(lhs,
-					rhs);
+			DLTKUIPlugin.getDefault().getContentAssistHistory().remember(lhs, rhs);
 
 		QualifiedTypeNameHistory.remember(getQualifiedTypeName());
 	}
 
 	/**
-	 * Returns <code>true</code> if imports may be added. The return value
-	 * depends on the context and preferences only and does not take into
-	 * account the contents of the compilation unit or the kind of proposal.
-	 * Even if <code>true</code> is returned, there may be cases where no
-	 * imports are added for the proposal. For example:
+	 * Returns <code>true</code> if imports may be added. The return value depends
+	 * on the context and preferences only and does not take into account the
+	 * contents of the compilation unit or the kind of proposal. Even if
+	 * <code>true</code> is returned, there may be cases where no imports are added
+	 * for the proposal. For example:
 	 * <ul>
 	 * <li>when completing within the import section</li>
 	 * <li>when completing informal javadoc references (e.g. within
@@ -184,17 +175,15 @@ public abstract class LazyScriptTypeCompletionProposal extends
 	 * <p>
 	 * Subclasses may extend.
 	 * </p>
-	 * 
-	 * @return <code>true</code> if imports may be added, <code>false</code>
-	 *         if not
+	 *
+	 * @return <code>true</code> if imports may be added, <code>false</code> if not
 	 */
 	protected boolean allowAddingImports() {
 		if (isInDoc()) {
 			// TODO fix
 			// if (!fContext.isInJavadocFormalReference())
 			// return false;
-			if (fProposal.getKind() == CompletionProposal.TYPE_REF
-					&& fInvocationContext.getCoreContext() != null
+			if (fProposal.getKind() == CompletionProposal.TYPE_REF && fInvocationContext.getCoreContext() != null
 					&& fInvocationContext.getCoreContext().isInDoc())
 				return false;
 
@@ -202,10 +191,8 @@ public abstract class LazyScriptTypeCompletionProposal extends
 				return false;
 		}
 
-		IPreferenceStore preferenceStore = DLTKUIPlugin.getDefault()
-				.getPreferenceStore();
-		return preferenceStore
-				.getBoolean(PreferenceConstants.CODEASSIST_ADDIMPORT);
+		IPreferenceStore preferenceStore = DLTKUIPlugin.getDefault().getPreferenceStore();
+		return preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_ADDIMPORT);
 	}
 
 	private boolean isDocProcessingEnabled() {
@@ -227,13 +214,11 @@ public abstract class LazyScriptTypeCompletionProposal extends
 
 	@Override
 	protected boolean isValidPrefix(String prefix) {
-		return isPrefix(prefix, getSimpleTypeName())
-				|| isPrefix(prefix, getQualifiedTypeName());
+		return isPrefix(prefix, getSimpleTypeName()) || isPrefix(prefix, getQualifiedTypeName());
 	}
 
 	@Override
-	public CharSequence getPrefixCompletionText(IDocument document,
-			int completionOffset) {
+	public CharSequence getPrefixCompletionText(IDocument document, int completionOffset) {
 		String prefix = getPrefix(document, completionOffset);
 
 		String completion;
@@ -271,22 +256,20 @@ public abstract class LazyScriptTypeCompletionProposal extends
 	@Override
 	protected int computeRelevance() {
 		/*
-		 * There are two histories: the RHS history remembers types used for the
-		 * current expected type (left hand side), while the type history
-		 * remembers recently used types in general).
-		 * 
-		 * The presence of an RHS ranking is a much more precise sign for
-		 * relevance as it proves the subtype relationship between the proposed
-		 * type and the expected type.
-		 * 
-		 * The "recently used" factor (of either the RHS or general history) is
-		 * less important, it should not override other relevance factors such
-		 * as if the type is already imported etc.
+		 * There are two histories: the RHS history remembers types used for the current
+		 * expected type (left hand side), while the type history remembers recently
+		 * used types in general).
+		 *
+		 * The presence of an RHS ranking is a much more precise sign for relevance as
+		 * it proves the subtype relationship between the proposed type and the expected
+		 * type.
+		 *
+		 * The "recently used" factor (of either the RHS or general history) is less
+		 * important, it should not override other relevance factors such as if the type
+		 * is already imported etc.
 		 */
-		float rhsHistoryRank = fInvocationContext
-				.getHistoryRelevance(getQualifiedTypeName());
-		float typeHistoryRank = QualifiedTypeNameHistory.getDefault()
-				.getNormalizedPosition(getQualifiedTypeName());
+		float rhsHistoryRank = fInvocationContext.getHistoryRelevance(getQualifiedTypeName());
+		float typeHistoryRank = QualifiedTypeNameHistory.getDefault().getNormalizedPosition(getQualifiedTypeName());
 
 		int recencyBoost = Math.round((rhsHistoryRank + typeHistoryRank) * 5);
 		int rhsBoost = rhsHistoryRank > 0.0f ? 50 : 0;

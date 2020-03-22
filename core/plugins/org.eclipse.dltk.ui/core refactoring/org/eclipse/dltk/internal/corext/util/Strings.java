@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
 
@@ -33,8 +33,7 @@ public class Strings {
 		if (textLength < prefixLength)
 			return false;
 		for (int i = prefixLength - 1; i >= 0; i--) {
-			if (Character.toLowerCase(prefix.charAt(i)) != Character
-					.toLowerCase(text.charAt(i)))
+			if (Character.toLowerCase(prefix.charAt(i)) != Character.toLowerCase(text.charAt(i)))
 				return false;
 		}
 		return true;
@@ -57,8 +56,7 @@ public class Strings {
 			for (int i = 0; i < size; i++) {
 				IRegion region = tracker.getLineInformation(i);
 				int offset = region.getOffset();
-				result[i] = input.substring(offset,
-						offset + region.getLength());
+				result[i] = input.substring(offset, offset + region.getLength());
 			}
 			return result;
 		} catch (BadLocationException e) {
@@ -67,7 +65,7 @@ public class Strings {
 	}
 
 	public static String concatenate(String[] lines, String delimiter) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < lines.length; i++) {
 			if (i > 0)
 				buffer.append(delimiter);
@@ -86,22 +84,17 @@ public class Strings {
 	}
 
 	/**
-	 * Sets the given <code>styler</code> to use for
-	 * <code>matchingRegions</code> (obtained from
-	 * {@link org.eclipse.jdt.core.search.SearchPattern#getMatchingRegions}) in
-	 * the <code>styledString</code> starting from the given <code>index</code>.
+	 * Sets the given <code>styler</code> to use for <code>matchingRegions</code>
+	 * (obtained from
+	 * {@link org.eclipse.jdt.core.search.SearchPattern#getMatchingRegions}) in the
+	 * <code>styledString</code> starting from the given <code>index</code>.
 	 *
-	 * @param styledString
-	 *            the styled string to mark
-	 * @param index
-	 *            the index from which to start marking
-	 * @param matchingRegions
-	 *            the regions to mark
-	 * @param styler
-	 *            the styler to use for marking
+	 * @param styledString    the styled string to mark
+	 * @param index           the index from which to start marking
+	 * @param matchingRegions the regions to mark
+	 * @param styler          the styler to use for marking
 	 */
-	public static void markMatchingRegions(StyledString styledString, int index,
-			int[] matchingRegions, Styler styler) {
+	public static void markMatchingRegions(StyledString styledString, int index, int[] matchingRegions, Styler styler) {
 		if (matchingRegions != null) {
 			int offset = -1;
 			int length = 0;
@@ -110,12 +103,11 @@ public class Strings {
 					offset = index + matchingRegions[i];
 
 				// Concatenate adjacent regions
-				if (i + 2 < matchingRegions.length && matchingRegions[i]
-						+ matchingRegions[i + 1] == matchingRegions[i + 2]) {
+				if (i + 2 < matchingRegions.length
+						&& matchingRegions[i] + matchingRegions[i + 1] == matchingRegions[i + 2]) {
 					length = length + matchingRegions[i + 1];
 				} else {
-					styledString.setStyle(offset,
-							length + matchingRegions[i + 1], styler);
+					styledString.setStyle(offset, length + matchingRegions[i + 1], styler);
 					offset = -1;
 					length = 0;
 				}

@@ -31,7 +31,7 @@ public abstract class TaskTagUtils {
 	}
 
 	public static String encodeTaskTags(List<TodoTask> elements) {
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < elements.size(); ++i) {
 			final TodoTask task = elements.get(i);
 			if (i > 0) {
@@ -59,12 +59,10 @@ public abstract class TaskTagUtils {
 	}
 
 	@Deprecated
-	public static void initializeDefaultValues(Preferences store,
-			List<TodoTask> taskTags) {
+	public static void initializeDefaultValues(Preferences store, List<TodoTask> taskTags) {
 		store.setDefault(ITodoTaskPreferences.ENABLED, true);
 		store.setDefault(ITodoTaskPreferences.CASE_SENSITIVE, true);
-		store.setDefault(ITodoTaskPreferences.TAGS,
-				encodeTaskTags(taskTags != null ? taskTags : getDefaultTags()));
+		store.setDefault(ITodoTaskPreferences.TAGS, encodeTaskTags(taskTags != null ? taskTags : getDefaultTags()));
 	}
 
 	public static void initializeDefaultValues(IEclipsePreferences prefs) {
@@ -74,8 +72,7 @@ public abstract class TaskTagUtils {
 	}
 
 	public static boolean isValidName(String newText) {
-		return newText.indexOf(TAG_SEPARATOR.charAt(0)) < 0
-				&& newText.indexOf(PRIORITY_SEPARATOR.charAt(0)) < 0;
+		return newText.indexOf(TAG_SEPARATOR.charAt(0)) < 0 && newText.indexOf(PRIORITY_SEPARATOR.charAt(0)) < 0;
 	}
 
 	private static String[] getTokens(String text, String separator) {

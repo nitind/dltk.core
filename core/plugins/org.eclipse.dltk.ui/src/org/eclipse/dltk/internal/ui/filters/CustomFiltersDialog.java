@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -61,20 +61,13 @@ public class CustomFiltersDialog extends SelectionDialog {
 	/**
 	 * Creates a dialog to customize script element filters.
 	 *
-	 * @param shell
-	 *                             the parent shell
-	 * @param viewId
-	 *                             the id of the view
-	 * @param enablePatterns
-	 *                             <code>true</code> if pattern filters are
-	 *                             enabled
-	 * @param patterns
-	 *                             the filter patterns
-	 * @param enabledFilterIds
-	 *                             the Ids of the enabled filters
+	 * @param shell            the parent shell
+	 * @param viewId           the id of the view
+	 * @param enablePatterns   <code>true</code> if pattern filters are enabled
+	 * @param patterns         the filter patterns
+	 * @param enabledFilterIds the Ids of the enabled filters
 	 */
-	public CustomFiltersDialog(Shell shell, String viewId,
-			boolean enablePatterns, String[] patterns,
+	public CustomFiltersDialog(Shell shell, String viewId, boolean enablePatterns, String[] patterns,
 			String[] enabledFilterIds) {
 
 		super(shell);
@@ -113,14 +106,10 @@ public class CustomFiltersDialog extends SelectionDialog {
 		// create a composite with standard margins and spacing
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
-		layout.marginHeight = convertVerticalDLUsToPixels(
-				IDialogConstants.VERTICAL_MARGIN);
-		layout.marginWidth = convertHorizontalDLUsToPixels(
-				IDialogConstants.HORIZONTAL_MARGIN);
-		layout.verticalSpacing = convertVerticalDLUsToPixels(
-				IDialogConstants.VERTICAL_SPACING);
-		layout.horizontalSpacing = convertHorizontalDLUsToPixels(
-				IDialogConstants.HORIZONTAL_SPACING);
+		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+		layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		composite.setFont(parent.getFont());
@@ -129,13 +118,11 @@ public class CustomFiltersDialog extends SelectionDialog {
 		// Checkbox
 		fEnableUserDefinedPatterns = new Button(group, SWT.CHECK);
 		fEnableUserDefinedPatterns.setFocus();
-		fEnableUserDefinedPatterns.setText(
-				FilterMessages.CustomFiltersDialog_enableUserDefinedPattern);
+		fEnableUserDefinedPatterns.setText(FilterMessages.CustomFiltersDialog_enableUserDefinedPattern);
 
 		// Pattern field
 		fUserDefinedPatterns = new Text(group, SWT.SINGLE | SWT.BORDER);
-		GridData data = new GridData(
-				GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
 		data.widthHint = convertWidthInCharsToPixels(59);
 		fUserDefinedPatterns.setLayoutData(data);
 		String patterns = convertToString(fPatterns, SEPARATOR);
@@ -193,8 +180,8 @@ public class CustomFiltersDialog extends SelectionDialog {
 		// Description
 		info = new Label(parent, SWT.LEFT);
 		info.setText(FilterMessages.CustomFiltersDialog_description_label);
-		final Text description = new Text(parent, SWT.LEFT | SWT.WRAP
-				| SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.V_SCROLL);
+		final Text description = new Text(parent,
+				SWT.LEFT | SWT.WRAP | SWT.MULTI | SWT.READ_ONLY | SWT.BORDER | SWT.V_SCROLL);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.heightHint = convertHeightInCharsToPixels(3);
 		description.setLayoutData(data);
@@ -202,8 +189,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 			IStructuredSelection selection = event.getStructuredSelection();
 			Object selectedElement = selection.getFirstElement();
 			if (selectedElement instanceof FilterDescriptor)
-				description.setText(
-						((FilterDescriptor) selectedElement).getDescription());
+				description.setText(((FilterDescriptor) selectedElement).getDescription());
 		});
 		fCheckBoxList.addCheckStateListener(event -> {
 			Object element = event.getElement();
@@ -223,15 +209,13 @@ public class CustomFiltersDialog extends SelectionDialog {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		buttonComposite.setLayout(layout);
-		GridData data = new GridData(
-				GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL);
 		data.grabExcessHorizontalSpace = true;
 		composite.setData(data);
 
 		// Select All button
 		String label = FilterMessages.CustomFiltersDialog_SelectAllButton_label;
-		Button selectButton = createButton(buttonComposite,
-				IDialogConstants.SELECT_ALL_ID, label, false);
+		Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID, label, false);
 		SWTUtil.setButtonDimensionHint(selectButton);
 		SelectionListener listener = new SelectionAdapter() {
 			@Override
@@ -246,8 +230,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 		// De-select All button
 		label = FilterMessages.CustomFiltersDialog_DeselectAllButton_label;
-		Button deselectButton = createButton(buttonComposite,
-				IDialogConstants.DESELECT_ALL_ID, label, false);
+		Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID, label, false);
 		SWTUtil.setButtonDimensionHint(deselectButton);
 		listener = new SelectionAdapter() {
 			@Override
@@ -304,8 +287,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		super.setResult(newResult);
 		if (fUserDefinedPatterns.getText().length() > 0) {
 			fEnablePatterns = fEnableUserDefinedPatterns.getSelection();
-			fPatterns = convertFromString(fUserDefinedPatterns.getText(),
-					SEPARATOR);
+			fPatterns = convertFromString(fUserDefinedPatterns.getText(), SEPARATOR);
 		} else {
 			fEnablePatterns = false;
 			fPatterns = new String[0];
@@ -357,10 +339,8 @@ public class CustomFiltersDialog extends SelectionDialog {
 		return result.toArray(new FilterDescriptor[result.size()]);
 	}
 
-	public static String[] convertFromString(String patterns,
-			String separator) {
-		StringTokenizer tokenizer = new StringTokenizer(patterns, separator,
-				true);
+	public static String[] convertFromString(String patterns, String separator) {
+		StringTokenizer tokenizer = new StringTokenizer(patterns, separator, true);
 		int tokenCount = tokenizer.countTokens();
 		List<String> result = new ArrayList<>(tokenCount);
 		boolean escape = false;
@@ -397,7 +377,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 	public static String convertToString(String[] patterns, String separator) {
 		int length = patterns.length;
-		StringBuffer strBuf = new StringBuffer();
+		StringBuilder strBuf = new StringBuilder();
 		if (length > 0)
 			strBuf.append(escapeSeparator(patterns[0], separator));
 		else
@@ -413,7 +393,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 	private static String escapeSeparator(String pattern, String separator) {
 		int length = pattern.length();
-		StringBuffer buf = new StringBuffer(length);
+		StringBuilder buf = new StringBuilder(length);
 		for (int i = 0; i < length; i++) {
 			char ch = pattern.charAt(i);
 			if (separator.equals(String.valueOf(ch)))

@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -79,26 +79,24 @@ public class BPListElement {
 
 	private List fExtraAttributes = new ArrayList();
 
-	public BPListElement(IScriptProject project, int entryKind, IPath path,
-			IResource res, boolean external) {
+	public BPListElement(IScriptProject project, int entryKind, IPath path, IResource res, boolean external) {
 
 		this(null, project, entryKind, path, res, external);
 	}
 
-	public BPListElement(Object parent, IScriptProject project, int entryKind,
-			IPath path, IResource res, boolean external) {
+	public BPListElement(Object parent, IScriptProject project, int entryKind, IPath path, IResource res,
+			boolean external) {
 
 		this(parent, project, entryKind, path, res, null, external);
 	}
 
-	public BPListElement(IScriptProject project, int entryKind,
-			boolean external) {
+	public BPListElement(IScriptProject project, int entryKind, boolean external) {
 
 		this(null, project, entryKind, null, null, external);
 	}
 
-	public BPListElement(Object parent, IScriptProject project, int entryKind,
-			IPath path, IResource res, IPath linkTarget, boolean external) {
+	public BPListElement(Object parent, IScriptProject project, int entryKind, IPath path, IResource res,
+			IPath linkTarget, boolean external) {
 
 		fProject = project;
 
@@ -121,8 +119,7 @@ public class BPListElement {
 			createAttributeElement(INCLUSION, new Path[0], true);
 			createAttributeElement(EXCLUSION, new Path[0], true);
 			if (DLTKCore.DEBUG) {
-				System.err.println(
-						"TODO: Add adding containers for languages here"); //$NON-NLS-1$
+				System.err.println("TODO: Add adding containers for languages here"); //$NON-NLS-1$
 				// createAttributeElement(NATIVE_LIB_PATH, null, false);
 			}
 			break;
@@ -135,27 +132,23 @@ public class BPListElement {
 			// rendered
 
 			if (DLTKCore.DEBUG) {
-				System.err.println(
-						"TODO: Add adding containers for languages here"); //$NON-NLS-1$
+				System.err.println("TODO: Add adding containers for languages here"); //$NON-NLS-1$
 				// createAttributeElement(NATIVE_LIB_PATH, null, false);
 			}
 			break;
 		case IBuildpathEntry.BPE_CONTAINER:
 			createAttributeElement(ACCESSRULES, new IAccessRule[0], true);
 			try {
-				IBuildpathContainer container = DLTKCore
-						.getBuildpathContainer(fPath, fProject);
+				IBuildpathContainer container = DLTKCore.getBuildpathContainer(fPath, fProject);
 				if (container != null) {
 					IBuildpathEntry[] entries = container.getBuildpathEntries();
 					for (int i = 0; i < entries.length; i++) {
 						IBuildpathEntry entry = entries[i];
 						if (entry != null) {
-							BPListElement curr = createFromExisting(this, entry,
-									fProject);
+							BPListElement curr = createFromExisting(this, entry, fProject);
 							fChildren.add(curr);
 						} else {
-							DLTKUIPlugin.logErrorMessage(
-									"Null entry in container '" + fPath + "'"); //$NON-NLS-1$//$NON-NLS-2$
+							DLTKUIPlugin.logErrorMessage("Null entry in container '" + fPath + "'"); //$NON-NLS-1$//$NON-NLS-2$
 						}
 					}
 				}
@@ -163,8 +156,7 @@ public class BPListElement {
 			}
 			// createAttributeElement( NATIVE_LIB_PATH, null, false );
 			if (DLTKCore.DEBUG) {
-				System.err.println(
-						"TODO: Add adding containers for languages here"); //$NON-NLS-1$
+				System.err.println("TODO: Add adding containers for languages here"); //$NON-NLS-1$
 				// createAttributeElement(NATIVE_LIB_PATH, null, false);
 			}
 			break;
@@ -206,33 +198,23 @@ public class BPListElement {
 		case IBuildpathEntry.BPE_SOURCE:
 			IPath[] inclusionPattern = (IPath[]) getAttribute(INCLUSION);
 			IPath[] exclusionPattern = (IPath[]) getAttribute(EXCLUSION);
-			return DLTKCore.newSourceEntry(fPath, inclusionPattern,
-					exclusionPattern, extraAttributes);
+			return DLTKCore.newSourceEntry(fPath, inclusionPattern, exclusionPattern, extraAttributes);
 		case IBuildpathEntry.BPE_LIBRARY: {
-			IAccessRule[] accesRules = (IAccessRule[]) getAttribute(
-					ACCESSRULES);
-			if (fPath.toString()
-					.startsWith(IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
-				return DLTKCore.newBuiltinEntry(fPath, accesRules,
-						extraAttributes, new IPath[0],
+			IAccessRule[] accesRules = (IAccessRule[]) getAttribute(ACCESSRULES);
+			if (fPath.toString().startsWith(IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
+				return DLTKCore.newBuiltinEntry(fPath, accesRules, extraAttributes, new IPath[0],
 						BuildpathEntry.INCLUDE_ALL, isExported(), fExternal);
 			}
-			return DLTKCore.newLibraryEntry(fPath, accesRules, extraAttributes,
-					isExported(), fExternal);
+			return DLTKCore.newLibraryEntry(fPath, accesRules, extraAttributes, isExported(), fExternal);
 		}
 		case IBuildpathEntry.BPE_PROJECT: {
-			IAccessRule[] accesRules = (IAccessRule[]) getAttribute(
-					ACCESSRULES);
-			boolean combineAccessRules = ((Boolean) getAttribute(
-					COMBINE_ACCESSRULES)).booleanValue();
-			return DLTKCore.newProjectEntry(fPath, accesRules,
-					combineAccessRules, extraAttributes, isExported());
+			IAccessRule[] accesRules = (IAccessRule[]) getAttribute(ACCESSRULES);
+			boolean combineAccessRules = ((Boolean) getAttribute(COMBINE_ACCESSRULES)).booleanValue();
+			return DLTKCore.newProjectEntry(fPath, accesRules, combineAccessRules, extraAttributes, isExported());
 		}
 		case IBuildpathEntry.BPE_CONTAINER: {
-			IAccessRule[] accesRules = (IAccessRule[]) getAttribute(
-					ACCESSRULES);
-			return DLTKCore.newContainerEntry(fPath, accesRules,
-					extraAttributes, isExported());
+			IAccessRule[] accesRules = (IAccessRule[]) getAttribute(ACCESSRULES);
+			return DLTKCore.newContainerEntry(fPath, accesRules, extraAttributes, isExported());
 		}
 		default:
 			return null;
@@ -276,8 +258,8 @@ public class BPListElement {
 	}
 
 	/**
-	 * Entries without resource are either non existing or a variable entry
-	 * External archives do not have a resource
+	 * Entries without resource are either non existing or a variable entry External
+	 * archives do not have a resource
 	 */
 	public IResource getResource() {
 
@@ -295,13 +277,11 @@ public class BPListElement {
 			return null;
 		}
 		if (key.equals(EXCLUSION) || key.equals(INCLUSION)) {
-			Assert.isTrue(
-					value != null || fEntryKind != IBuildpathEntry.BPE_SOURCE);
+			Assert.isTrue(value != null || fEntryKind != IBuildpathEntry.BPE_SOURCE);
 		}
 
 		if (key.equals(ACCESSRULES)) {
-			Assert.isTrue(
-					value != null || fEntryKind == IBuildpathEntry.BPE_SOURCE);
+			Assert.isTrue(value != null || fEntryKind == IBuildpathEntry.BPE_SOURCE);
 		}
 		if (key.equals(COMBINE_ACCESSRULES)) {
 			Assert.isTrue(value instanceof Boolean);
@@ -340,13 +320,9 @@ public class BPListElement {
 
 		IPath[] exclusionFilters = (IPath[]) getAttribute(key);
 		if (!ScriptModelUtil.isExcludedPath(path, exclusionFilters)) {
-			IPath pathToExclude = path
-					.removeFirstSegments(getPath().segmentCount())
-					.addTrailingSeparator();
-			IPath[] newExclusionFilters = new IPath[exclusionFilters.length
-					+ 1];
-			System.arraycopy(exclusionFilters, 0, newExclusionFilters, 0,
-					exclusionFilters.length);
+			IPath pathToExclude = path.removeFirstSegments(getPath().segmentCount()).addTrailingSeparator();
+			IPath[] newExclusionFilters = new IPath[exclusionFilters.length + 1];
+			System.arraycopy(exclusionFilters, 0, newExclusionFilters, 0, exclusionFilters.length);
 			newExclusionFilters[exclusionFilters.length] = pathToExclude;
 			setAttribute(key, newExclusionFilters);
 			return true;
@@ -357,8 +333,7 @@ public class BPListElement {
 	private boolean removeFilter(IPath path, String key) {
 
 		IPath[] exclusionFilters = (IPath[]) getAttribute(key);
-		IPath pathToExclude = path.removeFirstSegments(getPath().segmentCount())
-				.addTrailingSeparator();
+		IPath pathToExclude = path.removeFirstSegments(getPath().segmentCount()).addTrailingSeparator();
 		if (ScriptModelUtil.isExcludedPath(pathToExclude, exclusionFilters)) {
 
 			List<IPath> l = new ArrayList<>(Arrays.asList(exclusionFilters));
@@ -393,8 +368,7 @@ public class BPListElement {
 		return null;
 	}
 
-	private void createAttributeElement(String key, Object value,
-			boolean builtIn) {
+	private void createAttributeElement(String key, Object value, boolean builtIn) {
 
 		fChildren.add(new BPListElementAttribute(this, key, value, builtIn));
 	}
@@ -430,8 +404,7 @@ public class BPListElement {
 
 		if (fParentContainer instanceof BPListElement) {
 			if (DLTKCore.DEBUG) {
-				System.err
-						.println("TODO:Add navive library containers support"); //$NON-NLS-1$
+				System.err.println("TODO:Add navive library containers support"); //$NON-NLS-1$
 			}
 			// IPath InterpreterEnvironmentContainerPath = new Path(
 			// ScriptRuntime.InterpreterEnvironment_CONTAINER );
@@ -466,10 +439,8 @@ public class BPListElement {
 	private boolean canUpdateContainer() {
 
 		if (fEntryKind == IBuildpathEntry.BPE_CONTAINER && fProject != null) {
-			BuildpathContainerInitializer initializer = DLTKCore
-					.getBuildpathContainerInitializer(fPath.segment(0));
-			return (initializer != null && initializer
-					.canUpdateBuildpathContainer(fPath, fProject));
+			BuildpathContainerInitializer initializer = DLTKCore.getBuildpathContainerInitializer(fPath.segment(0));
+			return (initializer != null && initializer.canUpdateBuildpathContainer(fPath, fProject));
 		}
 		return false;
 	}
@@ -563,14 +534,12 @@ public class BPListElement {
 		return fProject;
 	}
 
-	public static BPListElement createFromExisting(IBuildpathEntry curr,
-			IScriptProject project) {
+	public static BPListElement createFromExisting(IBuildpathEntry curr, IScriptProject project) {
 
 		return createFromExisting(null, curr, project);
 	}
 
-	public static BPListElement createFromExisting(Object parent,
-			IBuildpathEntry curr, IScriptProject project) {
+	public static BPListElement createFromExisting(Object parent, IBuildpathEntry curr, IScriptProject project) {
 
 		IPath path = curr.getPath();
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -584,8 +553,7 @@ public class BPListElement {
 		switch (curr.getEntryKind()) {
 		case IBuildpathEntry.BPE_CONTAINER:
 			try {
-				isMissing = project != null && (DLTKCore
-						.getBuildpathContainer(path, project) == null);
+				isMissing = project != null && (DLTKCore.getBuildpathContainer(path, project) == null);
 			} catch (ModelException e) {
 				isMissing = true;
 			}
@@ -595,21 +563,16 @@ public class BPListElement {
 			isExternel = curr.isExternal();
 			if (res == null) {
 				if (!ArchiveFileFilter.isArchivePath(path)) {
-					if (root.getWorkspace()
-							.validatePath(path.toString(), IResource.FOLDER)
-							.isOK()
+					if (root.getWorkspace().validatePath(path.toString(), IResource.FOLDER).isOK()
 							&& root.getProject(path.segment(0)).exists()) {
 						res = root.getFolder(path);
 					}
 				}
-				if (path.toString().startsWith(
-						IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
+				if (path.toString().startsWith(IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY_STR)) {
 					isMissing = false;
 				} else {
-					IEnvironment environment = EnvironmentManager
-							.getEnvironment(project);
-					IFileHandle handle = EnvironmentPathUtils
-							.getFile(environment, path);
+					IEnvironment environment = EnvironmentManager.getEnvironment(project);
+					IFileHandle handle = EnvironmentPathUtils.getFile(environment, path);
 					if (handle == null || !handle.exists()) {
 						isMissing = true;
 					}
@@ -622,9 +585,7 @@ public class BPListElement {
 			path = path.removeTrailingSeparator();
 			res = root.findMember(path);
 			if (res == null) {
-				if (root.getWorkspace()
-						.validatePath(path.toString(), IResource.FOLDER)
-						.isOK()) {
+				if (root.getWorkspace().validatePath(path.toString(), IResource.FOLDER).isOK()) {
 					res = root.getFolder(path);
 				}
 				isMissing = true;
@@ -637,8 +598,7 @@ public class BPListElement {
 			isMissing = (res == null);
 			break;
 		}
-		BPListElement elem = new BPListElement(parent, project,
-				curr.getEntryKind(), path, res, linkTarget, isExternel);
+		BPListElement elem = new BPListElement(parent, project, curr.getEntryKind(), path, res, linkTarget, isExternel);
 		elem.setExported(curr.isExported());
 		elem.setAttribute(EXCLUSION, curr.getExclusionPatterns());
 		elem.setAttribute(INCLUSION, curr.getInclusionPatterns());
@@ -650,8 +610,7 @@ public class BPListElement {
 		IBuildpathAttribute[] extraAttributes = curr.getExtraAttributes();
 		for (int i = 0; i < extraAttributes.length; i++) {
 			IBuildpathAttribute attrib = extraAttributes[i];
-			if (elem.setAttribute(attrib.getName(),
-					attrib.getValue()) == null) {
+			if (elem.setAttribute(attrib.getName(), attrib.getValue()) == null) {
 				// Store this in extraAttributesList
 				elem.fExtraAttributes.add(attrib);
 			}
@@ -663,7 +622,7 @@ public class BPListElement {
 		return elem;
 	}
 
-	public static StringBuffer appendEncodePath(IPath path, StringBuffer buf) {
+	public static StringBuilder appendEncodePath(IPath path, StringBuilder buf) {
 
 		if (path != null) {
 			String str = path.toString();
@@ -674,8 +633,7 @@ public class BPListElement {
 		return buf;
 	}
 
-	public static StringBuffer appendEncodedString(String str,
-			StringBuffer buf) {
+	public static StringBuilder appendEncodedString(String str, StringBuilder buf) {
 
 		if (str != null) {
 			buf.append('[').append(str.length()).append(']').append(str);
@@ -685,8 +643,7 @@ public class BPListElement {
 		return buf;
 	}
 
-	public static StringBuffer appendEncodedFilter(IPath[] filters,
-			StringBuffer buf) {
+	public static StringBuilder appendEncodedFilter(IPath[] filters, StringBuilder buf) {
 
 		if (filters != null) {
 			buf.append('[').append(filters.length).append(']');
@@ -699,8 +656,7 @@ public class BPListElement {
 		return buf;
 	}
 
-	public static StringBuffer appendEncodedAccessRules(IAccessRule[] rules,
-			StringBuffer buf) {
+	public static StringBuilder appendEncodedAccessRules(IAccessRule[] rules, StringBuilder buf) {
 
 		if (rules != null) {
 			buf.append('[').append(rules.length).append(']');
@@ -714,7 +670,7 @@ public class BPListElement {
 		return buf;
 	}
 
-	public StringBuffer appendEncodedSettings(StringBuffer buf) {
+	public StringBuilder appendEncodedSettings(StringBuilder buf) {
 
 		buf.append(fEntryKind).append(';');
 		if (getLinkTarget() == null) {
@@ -731,15 +687,11 @@ public class BPListElement {
 				if (elem.isBuiltIn()) {
 					String key = elem.getKey();
 					if (EXCLUSION.equals(key) || INCLUSION.equals(key)) {
-						appendEncodedFilter((IPath[]) elem.getValue(), buf)
-								.append(';');
+						appendEncodedFilter((IPath[]) elem.getValue(), buf).append(';');
 					} else if (ACCESSRULES.equals(key)) {
-						appendEncodedAccessRules(
-								(IAccessRule[]) elem.getValue(), buf)
-										.append(';');
+						appendEncodedAccessRules((IAccessRule[]) elem.getValue(), buf).append(';');
 					} else if (COMBINE_ACCESSRULES.equals(key)) {
-						buf.append(((Boolean) elem.getValue()).booleanValue())
-								.append(';');
+						buf.append(((Boolean) elem.getValue()).booleanValue()).append(';');
 					}
 				} else {
 					appendEncodedString((String) elem.getValue(), buf);
@@ -747,8 +699,7 @@ public class BPListElement {
 			}
 		}
 		// Add fExtraAttributeChanges
-		for (Iterator iterator = this.fExtraAttributes.iterator(); iterator
-				.hasNext();) {
+		for (Iterator iterator = this.fExtraAttributes.iterator(); iterator.hasNext();) {
 			IBuildpathAttribute attr = (IBuildpathAttribute) iterator.next();
 			appendEncodedString("attr:" + attr.getName() + ":val" //$NON-NLS-1$ //$NON-NLS-2$
 					+ attr.getValue() + ";", buf); //$NON-NLS-1$
@@ -773,20 +724,17 @@ public class BPListElement {
 		fLinkTarget = linkTarget;
 	}
 
-	public static void insert(BPListElement element,
-			List<BPListElement> cpList) {
+	public static void insert(BPListElement element, List<BPListElement> cpList) {
 
 		int length = cpList.size();
 		BPListElement[] elements = cpList.toArray(new BPListElement[length]);
 		int i = 0;
-		while (i < length
-				&& elements[i].getEntryKind() != element.getEntryKind()) {
+		while (i < length && elements[i].getEntryKind() != element.getEntryKind()) {
 			i++;
 		}
 		if (i < length) {
 			i++;
-			while (i < length
-					&& elements[i].getEntryKind() == element.getEntryKind()) {
+			while (i < length && elements[i].getEntryKind() == element.getEntryKind()) {
 				i++;
 			}
 			cpList.add(i, element);
@@ -806,10 +754,9 @@ public class BPListElement {
 		}
 	}
 
-	public static IBuildpathEntry[] convertToBuildpathEntries(
-			List/*
-				 * <CPListElement >
-				 */ cpList) {
+	public static IBuildpathEntry[] convertToBuildpathEntries(List/*
+																	 * <CPListElement >
+																	 */ cpList) {
 
 		IBuildpathEntry[] result = new IBuildpathEntry[cpList.size()];
 		int i = 0;
@@ -821,20 +768,17 @@ public class BPListElement {
 		return result;
 	}
 
-	public static BPListElement[] createFromExisting(IScriptProject project)
-			throws ModelException {
+	public static BPListElement[] createFromExisting(IScriptProject project) throws ModelException {
 
 		IBuildpathEntry[] rawBuildpath = project.getRawBuildpath();
 		BPListElement[] result = new BPListElement[rawBuildpath.length];
 		for (int i = 0; i < rawBuildpath.length; i++) {
-			result[i] = BPListElement.createFromExisting(rawBuildpath[i],
-					project);
+			result[i] = BPListElement.createFromExisting(rawBuildpath[i], project);
 		}
 		return result;
 	}
 
-	public static boolean isProjectSourceFolder(BPListElement[] existing,
-			IScriptProject project) {
+	public static boolean isProjectSourceFolder(BPListElement[] existing, IScriptProject project) {
 
 		IPath projPath = project.getProject().getFullPath();
 		for (int i = 0; i < existing.length; i++) {
@@ -859,10 +803,8 @@ public class BPListElement {
 	}
 
 	public boolean isExternalFolder() {
-		return this.fExternal && this.fEntryKind == IBuildpathEntry.BPE_LIBRARY
-				&& !Util.isArchiveFileName(DLTKLanguageManager
-						.getLanguageToolkit(getScriptProject()),
-						this.fPath.toOSString());
+		return this.fExternal && this.fEntryKind == IBuildpathEntry.BPE_LIBRARY && !Util
+				.isArchiveFileName(DLTKLanguageManager.getLanguageToolkit(getScriptProject()), this.fPath.toOSString());
 	}
 
 }

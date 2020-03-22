@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -25,20 +25,18 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.dltk.internal.core.util.MementoTokenizer;
 
-public abstract class SourceRefElement extends ModelElement implements
-		ISourceReference {
+public abstract class SourceRefElement extends ModelElement implements ISourceReference {
 
 	/*
-	 * A count to uniquely identify this element in the case that a duplicate
-	 * named element exists. For example, if there are two fields in a
-	 * compilation unit with the same name, the occurrence count is used to
-	 * distinguish them. The occurrence count starts at 1 (thus the first
-	 * occurrence is occurrence 1, not occurrence 0).
+	 * A count to uniquely identify this element in the case that a duplicate named
+	 * element exists. For example, if there are two fields in a compilation unit
+	 * with the same name, the occurrence count is used to distinguish them. The
+	 * occurrence count starts at 1 (thus the first occurrence is occurrence 1, not
+	 * occurrence 0).
 	 */
 	public int occurrenceCount = 1;
 
-	protected SourceRefElement(ModelElement parent)
-			throws IllegalArgumentException {
+	protected SourceRefElement(ModelElement parent) throws IllegalArgumentException {
 		super(parent);
 	}
 
@@ -49,23 +47,20 @@ public abstract class SourceRefElement extends ModelElement implements
 	}
 
 	@Override
-	protected void generateInfos(Object info, HashMap newElements,
-			IProgressMonitor pm) throws ModelException {
+	protected void generateInfos(Object info, HashMap newElements, IProgressMonitor pm) throws ModelException {
 		Openable openableParent = (Openable) getOpenableParent();
 		if (openableParent == null)
 			return;
 
-		ModelElementInfo openableParentInfo = (ModelElementInfo) ModelManager
-				.getModelManager().getInfo(openableParent);
+		ModelElementInfo openableParentInfo = (ModelElementInfo) ModelManager.getModelManager().getInfo(openableParent);
 		if (openableParentInfo == null) {
-			openableParent.generateInfos(openableParent.createElementInfo(),
-					newElements, pm);
+			openableParent.generateInfos(openableParent.createElementInfo(), newElements, pm);
 		}
 	}
 
 	/**
-	 * Return the first instance of IOpenable in the hierarchy of this type
-	 * (going up the hierarchy from this type);
+	 * Return the first instance of IOpenable in the hierarchy of this type (going
+	 * up the hierarchy from this type);
 	 */
 	@Override
 	public IOpenable getOpenableParent() {
@@ -128,12 +123,11 @@ public abstract class SourceRefElement extends ModelElement implements
 	public boolean equals(Object o) {
 		if (!(o instanceof SourceRefElement))
 			return false;
-		return this.occurrenceCount == ((SourceRefElement) o).occurrenceCount
-				&& super.equals(o);
+		return this.occurrenceCount == ((SourceRefElement) o).occurrenceCount && super.equals(o);
 	}
 
 	@Override
-	protected void toStringName(StringBuffer buffer) {
+	protected void toStringName(StringBuilder buffer) {
 		super.toStringName(buffer);
 		if (this.occurrenceCount > 1) {
 			buffer.append("#"); //$NON-NLS-1$
@@ -144,7 +138,7 @@ public abstract class SourceRefElement extends ModelElement implements
 	/**
 	 * Elements within compilation units and class files have no corresponding
 	 * resource.
-	 * 
+	 *
 	 * @see IModelElement
 	 */
 	@Override
@@ -154,8 +148,7 @@ public abstract class SourceRefElement extends ModelElement implements
 		return null;
 	}
 
-	public IModelElement getHandleUpdatingCountFromMemento(
-			MementoTokenizer memento, WorkingCopyOwner owner) {
+	public IModelElement getHandleUpdatingCountFromMemento(MementoTokenizer memento, WorkingCopyOwner owner) {
 		if (!memento.hasMoreTokens())
 			return this;
 		this.occurrenceCount = Integer.parseInt(memento.nextToken());
@@ -166,8 +159,8 @@ public abstract class SourceRefElement extends ModelElement implements
 	}
 
 	@Override
-	public IModelElement getHandleFromMemento(String token,
-			MementoTokenizer memento, WorkingCopyOwner workingCopyOwner) {
+	public IModelElement getHandleFromMemento(String token, MementoTokenizer memento,
+			WorkingCopyOwner workingCopyOwner) {
 		switch (token.charAt(0)) {
 		case JEM_COUNT:
 			return getHandleUpdatingCountFromMemento(memento, workingCopyOwner);
@@ -176,7 +169,7 @@ public abstract class SourceRefElement extends ModelElement implements
 	}
 
 	@Override
-	public void getHandleMemento(StringBuffer buff) {
+	public void getHandleMemento(StringBuilder buff) {
 		super.getHandleMemento(buff);
 		if (this.occurrenceCount > 1) {
 			buff.append(JEM_COUNT);

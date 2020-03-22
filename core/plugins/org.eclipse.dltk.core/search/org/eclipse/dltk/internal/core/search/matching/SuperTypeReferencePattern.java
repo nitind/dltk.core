@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -43,10 +43,8 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 
 	protected static char[][] CATEGORIES = { IIndexConstants.SUPER_REF };
 
-	public static char[] createIndexKey(int modifiers, String namespace[],
-			String typeName, String[] enclosingTypeNames,
-			char[][] typeParameterSignatures, char classOrInterface,
-			char[] superTypeName, char superClassOrInterface) {
+	public static char[] createIndexKey(int modifiers, String namespace[], String typeName, String[] enclosingTypeNames,
+			char[][] typeParameterSignatures, char classOrInterface, char[] superTypeName, char superClassOrInterface) {
 
 		if (superTypeName == null)
 			superTypeName = "(base object)".toCharArray(); //$NON-NLS-1$
@@ -61,38 +59,31 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 		// if the supertype name contains a $, then split it into: source name
 		// and append the $ prefix to the qualification
 		// e.g. p.A$B ---> p.A$ + B
-		char[] superTypeSourceName = CharOperation.lastSegment(superSimpleName,
-				'$');
+		char[] superTypeSourceName = CharOperation.lastSegment(superSimpleName, '$');
 		if (superTypeSourceName != superSimpleName) {
-			int start = superQualification == null ? 0
-					: superQualification.length + 1;
-			int prefixLength = superSimpleName.length
-					- superTypeSourceName.length;
+			int start = superQualification == null ? 0 : superQualification.length + 1;
+			int prefixLength = superSimpleName.length - superTypeSourceName.length;
 			char[] mangledQualification = new char[start + prefixLength];
 			if (superQualification != null) {
-				System.arraycopy(superQualification, 0, mangledQualification,
-						0, start - 1);
+				System.arraycopy(superQualification, 0, mangledQualification, 0, start - 1);
 				mangledQualification[start - 1] = '.';
 			}
-			System.arraycopy(superSimpleName, 0, mangledQualification, start,
-					prefixLength);
+			System.arraycopy(superSimpleName, 0, mangledQualification, start, prefixLength);
 			superQualification = mangledQualification;
 			superSimpleName = superTypeSourceName;
 		}
 
 		String simpleName = CharOperation.lastSegment(typeName, '.');
-		char[] enclosingTypeName = CharOperation.concatWith(enclosingTypeNames,
-				'$');
+		char[] enclosingTypeName = CharOperation.concatWith(enclosingTypeNames, '$');
 		if (superQualification != null
-				&& CharOperation.equals(superQualification,
-						CharOperation.concatWith(namespace, '$')))
+				&& CharOperation.equals(superQualification, CharOperation.concatWith(namespace, '$')))
 			namespace = IIndexConstants.ONE_ZERO_CHAR_STRINGS; // save some
 		// space
 
 		char[] typeParameters = CharOperation.NO_CHAR;
 		int typeParametersLength = 0;
 		if (typeParameterSignatures != null) {
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 			for (int i = 0, length = typeParameterSignatures.length; i < length; i++) {
 				char[] typeParameter = typeParameterSignatures[i];
 				buffer.append(typeParameter);
@@ -110,14 +101,12 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 		// / typeParameters / packageName / superClassOrInterface
 		// classOrInterface modifiers
 		int superLength = superSimpleName == null ? 0 : superSimpleName.length;
-		int superQLength = superQualification == null ? 0
-				: superQualification.length;
+		int superQLength = superQualification == null ? 0 : superQualification.length;
 		int simpleLength = simpleName == null ? 0 : simpleName.length();
-		int enclosingLength = enclosingTypeName == null ? 0
-				: enclosingTypeName.length;
+		int enclosingLength = enclosingTypeName == null ? 0 : enclosingTypeName.length;
 		int packageLength = indexKeyLength(namespace);
-		char[] result = new char[superLength + superQLength + simpleLength
-				+ enclosingLength + typeParametersLength + packageLength + 9];
+		char[] result = new char[superLength + superQLength + simpleLength + enclosingLength + typeParametersLength
+				+ packageLength + 9];
 		int pos = 0;
 		if (superLength > 0) {
 			System.arraycopy(superSimpleName, 0, result, pos, superLength);
@@ -140,8 +129,7 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 		}
 		result[pos++] = IIndexConstants.SEPARATOR;
 		if (typeParametersLength > 0) {
-			System.arraycopy(typeParameters, 0, result, pos,
-					typeParametersLength);
+			System.arraycopy(typeParameters, 0, result, pos, typeParametersLength);
 			pos += typeParametersLength;
 		}
 		result[pos++] = IIndexConstants.SEPARATOR;
@@ -155,8 +143,7 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 		return result;
 	}
 
-	public SuperTypeReferencePattern(char[] superQualification,
-			char[] superSimpleName, int superRefKind, int matchRule,
+	public SuperTypeReferencePattern(char[] superQualification, char[] superSimpleName, int superRefKind, int matchRule,
 			IDLTKLanguageToolkit toolkit) {
 
 		this(matchRule, toolkit);
@@ -170,12 +157,10 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 		this.superRefKind = superRefKind;
 	}
 
-	public SuperTypeReferencePattern(char[] superQualification,
-			char[] superSimpleName, int superRefKind, char typeSuffix,
-			int matchRule, IDLTKLanguageToolkit toolkit) {
+	public SuperTypeReferencePattern(char[] superQualification, char[] superSimpleName, int superRefKind,
+			char typeSuffix, int matchRule, IDLTKLanguageToolkit toolkit) {
 
-		this(superQualification, superSimpleName, superRefKind, matchRule,
-				toolkit);
+		this(superQualification, superSimpleName, superRefKind, matchRule, toolkit);
 		this.typeSuffix = typeSuffix;
 		// ((InternalSearchPattern) this).mustResolve = superQualification !=
 		// null
@@ -188,8 +173,7 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 
 	/*
 	 * superSimpleName / superQualification / simpleName / enclosingTypeName /
-	 * typeParameters / pkgName / superClassOrInterface classOrInterface
-	 * modifiers
+	 * typeParameters / pkgName / superClassOrInterface classOrInterface modifiers
 	 */
 	@Override
 	public void decodeIndexKey(char[] key) {
@@ -199,19 +183,16 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 		// some values may not have been know when indexed so decode as null
 		int start = slash + 1;
 		slash = CharOperation.indexOf(IIndexConstants.SEPARATOR, key, start);
-		this.superQualification = slash == start ? null : CharOperation
-				.subarray(key, start, slash);
+		this.superQualification = slash == start ? null : CharOperation.subarray(key, start, slash);
 
-		slash = CharOperation.indexOf(IIndexConstants.SEPARATOR, key,
-				start = slash + 1);
+		slash = CharOperation.indexOf(IIndexConstants.SEPARATOR, key, start = slash + 1);
 		this.simpleName = CharOperation.subarray(key, start, slash);
 
 		start = ++slash;
 		if (key[start] == IIndexConstants.SEPARATOR) {
 			this.enclosingTypeName = null;
 		} else {
-			slash = CharOperation
-					.indexOf(IIndexConstants.SEPARATOR, key, start);
+			slash = CharOperation.indexOf(IIndexConstants.SEPARATOR, key, start);
 			if (slash == (start + 1) && key[start] == IIndexConstants.ZERO_CHAR) {
 				this.enclosingTypeName = IIndexConstants.ONE_ZERO;
 			} else {
@@ -224,18 +205,15 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 		if (key[start] == IIndexConstants.SEPARATOR) {
 			this.typeParameterSignatures = null;
 		} else {
-			slash = CharOperation
-					.indexOf(IIndexConstants.SEPARATOR, key, start);
-			this.typeParameterSignatures = CharOperation.splitOn(',', key,
-					start, slash);
+			slash = CharOperation.indexOf(IIndexConstants.SEPARATOR, key, start);
+			this.typeParameterSignatures = CharOperation.splitOn(',', key, start, slash);
 		}
 
 		start = ++slash;
 		if (key[start] == IIndexConstants.SEPARATOR) {
 			this.pkgName = null;
 		} else {
-			slash = CharOperation
-					.indexOf(IIndexConstants.SEPARATOR, key, start);
+			slash = CharOperation.indexOf(IIndexConstants.SEPARATOR, key, start);
 			if (slash == (start + 1) && key[start] == IIndexConstants.ZERO_CHAR) {
 				this.pkgName = this.superQualification;
 			} else {
@@ -251,8 +229,7 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 
 	@Override
 	public SearchPattern getBlankPattern() {
-		return new SuperTypeReferencePattern(R_EXACT_MATCH | R_CASE_SENSITIVE,
-				getToolkit());
+		return new SuperTypeReferencePattern(R_EXACT_MATCH | R_CASE_SENSITIVE, getToolkit());
 	}
 
 	@Override
@@ -265,9 +242,7 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 		SuperTypeReferencePattern pattern = (SuperTypeReferencePattern) decodedPattern;
 		if (this.superRefKind == ONLY_SUPER_CLASSES
 				&& pattern.enclosingTypeName != IIndexConstants.ONE_ZERO/*
-																		 * not
-																		 * an
-																		 * anonymous
+																		 * not an anonymous
 																		 */)
 			// consider enumerations as classes, reject interfaces and
 			// annotations
@@ -275,8 +250,7 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 				return false;
 
 		if (pattern.superQualification != null)
-			if (!matchesName(this.superQualification,
-					pattern.superQualification))
+			if (!matchesName(this.superQualification, pattern.superQualification))
 				return false;
 
 		return matchesName(this.superSimpleName, pattern.superSimpleName);
@@ -297,8 +271,7 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 			matchRule &= ~R_EXACT_MATCH;
 			matchRule |= R_PREFIX_MATCH;
 			if (this.superSimpleName != null)
-				key = CharOperation.append(this.superSimpleName,
-						IIndexConstants.SEPARATOR);
+				key = CharOperation.append(this.superSimpleName, IIndexConstants.SEPARATOR);
 			break;
 		case R_PREFIX_MATCH:
 			// do a prefix query with the superSimpleName
@@ -320,7 +293,7 @@ public class SuperTypeReferencePattern extends DLTKSearchPattern {
 	}
 
 	@Override
-	protected StringBuffer print(StringBuffer output) {
+	protected StringBuilder print(StringBuilder output) {
 		switch (this.superRefKind) {
 		case ALL_SUPER_TYPES:
 			output.append("SuperTypeReferencePattern: <"); //$NON-NLS-1$

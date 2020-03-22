@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -23,7 +23,7 @@ public class AmbiguousType implements IEvaluatedType {
 
 	@Override
 	public String getTypeName() {
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		result.append("Ambigous <"); //$NON-NLS-1$
 		for (int i = 0; i < possibleTypes.length; i++) {
 			IEvaluatedType type = possibleTypes[i];

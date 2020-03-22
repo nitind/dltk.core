@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -16,13 +16,11 @@ import org.eclipse.dltk.core.search.index.EntryResult;
 import org.eclipse.dltk.core.search.index.Index;
 import org.eclipse.dltk.core.search.indexing.IIndexConstants;
 
-public class PackageDeclarationPattern extends DLTKSearchPattern implements
-		IIndexConstants {
+public class PackageDeclarationPattern extends DLTKSearchPattern implements IIndexConstants {
 
 	protected char[] pkgName;
 
-	public PackageDeclarationPattern(char[] pkgName, int matchRule,
-			IDLTKLanguageToolkit toolkit) {
+	public PackageDeclarationPattern(char[] pkgName, int matchRule, IDLTKLanguageToolkit toolkit) {
 		super(PKG_DECL_PATTERN, matchRule, toolkit);
 		this.pkgName = pkgName;
 	}
@@ -34,7 +32,7 @@ public class PackageDeclarationPattern extends DLTKSearchPattern implements
 	}
 
 	@Override
-	protected StringBuffer print(StringBuffer output) {
+	protected StringBuilder print(StringBuilder output) {
 		output.append("PackageDeclarationPattern: <"); //$NON-NLS-1$
 		if (this.pkgName != null)
 			output.append(this.pkgName);

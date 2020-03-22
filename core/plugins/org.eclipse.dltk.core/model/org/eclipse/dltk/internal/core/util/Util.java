@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -66,16 +66,15 @@ public class Util {
 
 	public interface Comparer {
 		/**
-		 * Returns 0 if a and b are equal, >0 if a is greater than b, or <0 if a
-		 * is less than b.
+		 * Returns 0 if a and b are equal, >0 if a is greater than b, or <0 if a is less
+		 * than b.
 		 */
 		int compare(Object a, Object b);
 	}
 
 	private static final char NEW_FORMAT_MARK = '+';
 	private static final char ARGUMENTS_DELIMITER = '#';
-	private static final String ARGUMENTS_DELIMITER_STR = String
-			.valueOf(ARGUMENTS_DELIMITER);
+	private static final String ARGUMENTS_DELIMITER_STR = String.valueOf(ARGUMENTS_DELIMITER);
 	private static final String EMPTY_ARGUMENT = "   "; //$NON-NLS-1$
 
 	/**
@@ -95,7 +94,7 @@ public class Util {
 	public static String toString(Object[] objects, Displayable renderer) {
 		if (objects == null)
 			return ""; //$NON-NLS-1$
-		StringBuffer buffer = new StringBuffer(10);
+		StringBuilder buffer = new StringBuilder(10);
 		for (int i = 0; i < objects.length; i++) {
 			if (i > 0)
 				buffer.append(", "); //$NON-NLS-1$
@@ -112,13 +111,11 @@ public class Util {
 			return;
 		}
 		Throwable nestedException;
-		if (e instanceof ModelException
-				&& (nestedException = ((ModelException) e)
-						.getException()) != null) {
+		if (e instanceof ModelException && (nestedException = ((ModelException) e).getException()) != null) {
 			e = nestedException;
 		}
-		IStatus status = new Status(IStatus.ERROR, DLTKCore.PLUGIN_ID,
-				IStatus.ERROR, message != null ? message : e.toString(), e);
+		IStatus status = new Status(IStatus.ERROR, DLTKCore.PLUGIN_ID, IStatus.ERROR,
+				message != null ? message : e.toString(), e);
 		DLTKCore.getDefault().getLog().log(status);
 	}
 
@@ -132,8 +129,7 @@ public class Util {
 	/**
 	 * Sort the strings in the given collection.
 	 */
-	private static void quickSort(String[] sortedCollection, int left,
-			int right) {
+	private static void quickSort(String[] sortedCollection, int left, int right) {
 		int original_left = left;
 		int original_right = right;
 		String mid = sortedCollection[(left + right) / 2];
@@ -161,9 +157,9 @@ public class Util {
 	}
 
 	/**
-	 * Compares two arrays using equals() on the elements. Neither can be null.
-	 * Only the first len elements are compared. Return false if either array is
-	 * shorter than len.
+	 * Compares two arrays using equals() on the elements. Neither can be null. Only
+	 * the first len elements are compared. Return false if either array is shorter
+	 * than len.
 	 */
 	public static boolean equalArrays(Object[] a, Object[] b, int len) {
 		if (a == b)
@@ -183,10 +179,10 @@ public class Util {
 	}
 
 	/**
-	 * Compares two arrays using equals() on the elements. Either or both arrays
-	 * may be null. Returns true if both are null. Returns false if only one is
-	 * null. If both are arrays, returns true iff they have the same length and
-	 * all elements compare true with equals.
+	 * Compares two arrays using equals() on the elements. Either or both arrays may
+	 * be null. Returns true if both are null. Returns false if only one is null. If
+	 * both are arrays, returns true iff they have the same length and all elements
+	 * compare true with equals.
 	 */
 	public static boolean equalArraysOrNull(Object[] a, Object[] b) {
 		if (a == b)
@@ -224,7 +220,7 @@ public class Util {
 		if (isNewProblemArgumentsFormat(arguments)) {
 			return encodeProblemArguments(arguments);
 		}
-		StringBuffer args = new StringBuffer(10);
+		StringBuilder args = new StringBuilder(10);
 		args.append(arguments.length);
 		args.append(':');
 		for (int j = 0; j < arguments.length; j++) {
@@ -244,7 +240,7 @@ public class Util {
 	 * @return
 	 */
 	private static String encodeProblemArguments(String[] arguments) {
-		StringBuffer args = new StringBuffer();
+		StringBuilder args = new StringBuilder();
 		args.append(NEW_FORMAT_MARK);
 		args.append(arguments.length);
 		for (int j = 0; j < arguments.length; j++) {
@@ -256,8 +252,7 @@ public class Util {
 		return args.toString();
 	}
 
-	public static String[] getProblemArgumentsFromMarker(
-			String argumentsString) {
+	public static String[] getProblemArgumentsFromMarker(String argumentsString) {
 		if (argumentsString == null || argumentsString.length() == 0)
 			return null;
 		if (argumentsString.charAt(0) == NEW_FORMAT_MARK) {
@@ -279,8 +274,7 @@ public class Util {
 		String[] args = new String[length];
 		int count = 0;
 
-		StringTokenizer tokenizer = new StringTokenizer(argumentsString,
-				ARGUMENTS_DELIMITER_STR);
+		StringTokenizer tokenizer = new StringTokenizer(argumentsString, ARGUMENTS_DELIMITER_STR);
 		while (tokenizer.hasMoreTokens()) {
 			String argument = tokenizer.nextToken();
 			if (argument.equals(EMPTY_ARGUMENT))
@@ -345,8 +339,7 @@ public class Util {
 	/**
 	 * Returns the given file's contents as a byte array.
 	 */
-	public static byte[] getResourceContentsAsByteArray(IFile file)
-			throws ModelException {
+	public static byte[] getResourceContentsAsByteArray(IFile file) throws ModelException {
 		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		InputStream stream = null;
 		try {
@@ -355,8 +348,7 @@ public class Util {
 			throw new ModelException(e);
 		}
 		try {
-			byte[] size = org.eclipse.dltk.compiler.util.Util
-					.getInputStreamAsByteArray(stream, -1);
+			byte[] size = org.eclipse.dltk.compiler.util.Util.getInputStreamAsByteArray(stream, -1);
 			p.done("#", RuntimePerformanceMonitor.IOREAD, size.length);
 			return size;
 		} catch (IOException e) {
@@ -370,8 +362,7 @@ public class Util {
 		}
 	}
 
-	public static byte[] getResourceContentsAsByteArray(File file)
-			throws ModelException {
+	public static byte[] getResourceContentsAsByteArray(File file) throws ModelException {
 		InputStream stream = null;
 		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		try {
@@ -382,8 +373,7 @@ public class Util {
 			// throw new ModelException("getResourceContentAsByteArray");
 		}
 		try {
-			byte[] data = org.eclipse.dltk.compiler.util.Util
-					.getInputStreamAsByteArray(stream, -1);
+			byte[] data = org.eclipse.dltk.compiler.util.Util.getInputStreamAsByteArray(stream, -1);
 			p.done("#", RuntimePerformanceMonitor.IOREAD, data.length);
 			return data;
 		} catch (IOException e) {
@@ -400,8 +390,8 @@ public class Util {
 	/**
 	 * Returns the line separator found in the given text. If it is null, or not
 	 * found return the line delimitor for the given project. If the project is
-	 * null, returns the line separator for the workspace. If still null, return
-	 * the system line separator.
+	 * null, returns the line separator for the workspace. If still null, return the
+	 * system line separator.
 	 */
 	public static String getLineSeparator(String text, IScriptProject project) {
 		String lineSeparator = null;
@@ -414,19 +404,16 @@ public class Util {
 		// line delimiter in project preference
 		IScopeContext[] scopeContext;
 		if (project != null) {
-			scopeContext = new IScopeContext[] {
-					new ProjectScope(project.getProject()) };
-			lineSeparator = Platform.getPreferencesService().getString(
-					Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
-					scopeContext);
+			scopeContext = new IScopeContext[] { new ProjectScope(project.getProject()) };
+			lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
+					Platform.PREF_LINE_SEPARATOR, null, scopeContext);
 			if (lineSeparator != null)
 				return lineSeparator;
 		}
 		// line delimiter in workspace preference
 		scopeContext = new IScopeContext[] { InstanceScope.INSTANCE };
-		lineSeparator = Platform.getPreferencesService().getString(
-				Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
-				scopeContext);
+		lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR,
+				null, scopeContext);
 		if (lineSeparator != null)
 			return lineSeparator;
 		// system line delimiter
@@ -436,8 +423,8 @@ public class Util {
 	/**
 	 * Finds the first line separator used by the given text.
 	 *
-	 * @return </code>"\n"</code> or </code>"\r"</code> or </code>"\r\n"</code>,
-	 *         or <code>null</code> if none found
+	 * @return </code>"\n"</code> or </code>"\r"</code> or </code>"\r\n"</code>, or
+	 *         <code>null</code> if none found
 	 */
 	public static String findLineSeparator(char[] text) {
 		// find the first line separator
@@ -463,15 +450,13 @@ public class Util {
 		verbose(log, System.out);
 	}
 
-	public static synchronized void verbose(String log,
-			PrintStream printStream) {
+	public static synchronized void verbose(String log, PrintStream printStream) {
 		int start = 0;
 		do {
 			int end = log.indexOf('\n', start);
 			printStream.print(Thread.currentThread());
 			printStream.print(" "); //$NON-NLS-1$
-			printStream.print(
-					log.substring(start, end == -1 ? log.length() : end + 1));
+			printStream.print(log.substring(start, end == -1 ? log.length() : end + 1));
 			start = end + 1;
 		} while (start != 0);
 		printStream.println();
@@ -480,8 +465,7 @@ public class Util {
 	/**
 	 * Returns the given file's contents as a character array.
 	 */
-	public static char[] getResourceContentsAsCharArray(IFile file)
-			throws ModelException {
+	public static char[] getResourceContentsAsCharArray(IFile file) throws ModelException {
 		// Get encoding from file
 		String encoding = null;
 		try {
@@ -492,20 +476,17 @@ public class Util {
 		return getResourceContentsAsCharArray(file, encoding);
 	}
 
-	public static char[] getResourceContentsAsCharArray(IFileHandle file)
-			throws ModelException {
+	public static char[] getResourceContentsAsCharArray(IFileHandle file) throws ModelException {
 		// Get resource contents
 		InputStream stream = null;
 		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		try {
 			stream = new BufferedInputStream(file.openInputStream(null));
 		} catch (Exception e) {
-			throw new ModelException(e,
-					IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
+			throw new ModelException(e, IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
 		}
 		try {
-			char[] data = org.eclipse.dltk.compiler.util.Util
-					.getInputStreamAsCharArray(stream, -1, null);
+			char[] data = org.eclipse.dltk.compiler.util.Util.getInputStreamAsCharArray(stream, -1, null);
 			p.done("#", RuntimePerformanceMonitor.IOREAD, data.length);
 			return data;
 		} catch (IOException e) {
@@ -523,8 +504,7 @@ public class Util {
 		return e.getCause() instanceof FileNotFoundException;
 	}
 
-	public static char[] getResourceContentsAsCharArray(IFile file,
-			String encoding) throws ModelException {
+	public static char[] getResourceContentsAsCharArray(IFile file, String encoding) throws ModelException {
 		// Get resource contents
 		PerformanceNode p = RuntimePerformanceMonitor.begin();
 		InputStream stream = null;
@@ -537,20 +517,15 @@ public class Util {
 					// Some times for RSE we can get here if connection is not
 					// established yet, or if connection are lost.
 					if (isFatalException(e) || --tryCount == 0) {
-						throw new ModelException(e,
-								IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
+						throw new ModelException(e, IModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
 					}
-					IStatus status = new Status(IStatus.WARNING,
-							DLTKCore.PLUGIN_ID,
-							NLS.bind(Messages.Util_errorReceivingFile,
-									file.getFullPath(),
-									String.valueOf(tryCount)),
+					IStatus status = new Status(IStatus.WARNING, DLTKCore.PLUGIN_ID,
+							NLS.bind(Messages.Util_errorReceivingFile, file.getFullPath(), String.valueOf(tryCount)),
 							e);
 					DLTKCore.getDefault().getLog().log(status);
 				}
 			}
-			char[] data = org.eclipse.dltk.compiler.util.Util
-					.getInputStreamAsCharArray(stream, -1, encoding);
+			char[] data = org.eclipse.dltk.compiler.util.Util.getInputStreamAsCharArray(stream, -1, encoding);
 			IEnvironment env = EnvironmentManager.getEnvironment(file);
 			p.done("#", RuntimePerformanceMonitor.IOREAD, data.length, env);
 			return data;
@@ -568,9 +543,9 @@ public class Util {
 	}
 
 	/**
-	 * Returns the toString() of the given full path minus the first given
-	 * number of segments. The returned string is always a relative path (it has
-	 * no leading slash)
+	 * Returns the toString() of the given full path minus the first given number of
+	 * segments. The returned string is always a relative path (it has no leading
+	 * slash)
 	 */
 	public static String relativePath(IPath fullPath, int skipSegmentCount) {
 		boolean hasTrailingSeparator = fullPath.hasTrailingSeparator();
@@ -609,9 +584,8 @@ public class Util {
 	}
 
 	/*
-	 * Returns whether the given model element is exluded from its root's
-	 * buildpath. It doesn't check whether the root itself is on the buildpath
-	 * or not
+	 * Returns whether the given model element is exluded from its root's buildpath.
+	 * It doesn't check whether the root itself is on the buildpath or not
 	 */
 	public static final boolean isExcluded(IModelElement element) {
 		int elementType = element.getElementType();
@@ -621,13 +595,11 @@ public class Util {
 		case IModelElement.PROJECT_FRAGMENT:
 			return false;
 		case IModelElement.SCRIPT_FOLDER:
-			IProjectFragment root = (IProjectFragment) element
-					.getAncestor(IModelElement.PROJECT_FRAGMENT);
+			IProjectFragment root = (IProjectFragment) element.getAncestor(IModelElement.PROJECT_FRAGMENT);
 			IResource resource = element.getResource();
 			return resource != null && isExcluded(resource, root);
 		case IModelElement.SOURCE_MODULE:
-			root = (IProjectFragment) element
-					.getAncestor(IModelElement.PROJECT_FRAGMENT);
+			root = (IProjectFragment) element.getAncestor(IModelElement.PROJECT_FRAGMENT);
 			resource = element.getResource();
 			if (resource != null && isExcluded(resource, root))
 				return true;
@@ -640,16 +612,14 @@ public class Util {
 
 	/*
 	 * Returns whether the given resource path matches one of the
-	 * inclusion/exclusion patterns. NOTE: should not be asked directly using
-	 * pkg root pathes
+	 * inclusion/exclusion patterns. NOTE: should not be asked directly using pkg
+	 * root pathes
 	 */
-	public final static boolean isExcluded(IPath resourcePath,
-			char[][] inclusionPatterns, char[][] exclusionPatterns,
+	public final static boolean isExcluded(IPath resourcePath, char[][] inclusionPatterns, char[][] exclusionPatterns,
 			boolean isFolderPath) {
 		if (inclusionPatterns == null && exclusionPatterns == null)
 			return false;
-		return org.eclipse.dltk.compiler.util.Util.isExcluded(
-				resourcePath.toString().toCharArray(), inclusionPatterns,
+		return org.eclipse.dltk.compiler.util.Util.isExcluded(resourcePath.toString().toCharArray(), inclusionPatterns,
 				exclusionPatterns, isFolderPath);
 	}
 
@@ -659,82 +629,64 @@ public class Util {
 	 *
 	 * @see IBuildpathEntry#getExclusionPatterns
 	 */
-	public final static boolean isExcluded(IResource resource,
-			char[][] inclusionPatterns, char[][] exclusionPatterns) {
+	public final static boolean isExcluded(IResource resource, char[][] inclusionPatterns, char[][] exclusionPatterns) {
 		IPath path = resource.getFullPath();
 		// ensure that folders are only excluded if all of their children are
 		// excluded
 		int resourceType = resource.getType();
 		return isExcluded(path, inclusionPatterns, exclusionPatterns,
-				resourceType == IResource.FOLDER
-						|| resourceType == IResource.PROJECT);
+				resourceType == IResource.FOLDER || resourceType == IResource.PROJECT);
 	}
 
-	public final static boolean isExcluded(IResource resource,
-			IProjectFragment fragment) {
+	public final static boolean isExcluded(IResource resource, IProjectFragment fragment) {
 		IPath path = resource.getFullPath();
 		// ensure that folders are only excluded if all of their children are
 		// excluded
 		int resourceType = resource.getType();
-		return isExcluded(path, fragment, resourceType == IResource.FOLDER
-				|| resourceType == IResource.PROJECT);
+		return isExcluded(path, fragment, resourceType == IResource.FOLDER || resourceType == IResource.PROJECT);
 	}
 
-	public static boolean isValidSourceModule(IModelElement parent,
-			IResource resource) {
-		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-				.getLanguageToolkit(parent);
+	public static boolean isValidSourceModule(IModelElement parent, IResource resource) {
+		IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(parent);
 		if (toolkit != null) {
-			return DLTKContentTypeManager.isValidResourceForContentType(toolkit,
-					resource);
+			return DLTKContentTypeManager.isValidResourceForContentType(toolkit, resource);
 		} else {
 			toolkit = DLTKLanguageManager.findToolkitForResource(resource);
 			if (toolkit != null) {
-				return DLTKContentTypeManager
-						.isValidResourceForContentType(toolkit, resource);
+				return DLTKContentTypeManager.isValidResourceForContentType(toolkit, resource);
 			}
 			return false;
 		}
 	}
 
-	public static boolean isValidSourceModule(IModelElement parent,
-			IPath path) {
-		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-				.getLanguageToolkit(parent);
+	public static boolean isValidSourceModule(IModelElement parent, IPath path) {
+		IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(parent);
 		if (toolkit != null) {
-			return DLTKContentTypeManager.isValidFileNameForContentType(toolkit,
-					path);
+			return DLTKContentTypeManager.isValidFileNameForContentType(toolkit, path);
 		} else {
 			toolkit = DLTKLanguageManager.findToolkit(path);
 			if (toolkit != null) {
-				return DLTKContentTypeManager
-						.isValidFileNameForContentType(toolkit, path);
+				return DLTKContentTypeManager.isValidFileNameForContentType(toolkit, path);
 			}
 			return false;
 		}
 	}
 
-	public static boolean isValidSourcePackageName(IModelElement parent,
-			IPath path) {
-		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-				.getLanguageToolkit(parent);
+	public static boolean isValidSourcePackageName(IModelElement parent, IPath path) {
+		IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(parent);
 		if (toolkit != null) {
 			if (EnvironmentPathUtils.isFull(path)) {
 				path = EnvironmentPathUtils.getLocalPath(path);
 			}
-			return toolkit.validateSourcePackage(path,
-					EnvironmentManager.getEnvironment(parent));
+			return toolkit.validateSourcePackage(path, EnvironmentManager.getEnvironment(parent));
 		}
 		return false;
 	}
 
-	public static boolean isValidSourceModuleName(IModelElement parent,
-			String name) {
-		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-				.getLanguageToolkit(parent);
+	public static boolean isValidSourceModuleName(IModelElement parent, String name) {
+		IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(parent);
 		if (toolkit != null) {
-			return DLTKContentTypeManager.isValidFileNameForContentType(toolkit,
-					name);
+			return DLTKContentTypeManager.isValidFileNameForContentType(toolkit, name);
 		} else {
 			return false;
 		}
@@ -748,22 +700,19 @@ public class Util {
 	 */
 	@Deprecated
 	public static boolean isValidSourceModule(IResource res) {
-		IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-				.findToolkitForResource(res);
+		IDLTKLanguageToolkit toolkit = DLTKLanguageManager.findToolkitForResource(res);
 		if (toolkit != null) {
-			return DLTKContentTypeManager.isValidResourceForContentType(toolkit,
-					res);
+			return DLTKContentTypeManager.isValidResourceForContentType(toolkit, res);
 		}
 		return false;
 	}
 
 	/*
-	 * Converts the given URI to a local file. Use the existing file if the uri
-	 * is on the local file system. Otherwise fetch it. Returns null if unable
-	 * to fetch it.
+	 * Converts the given URI to a local file. Use the existing file if the uri is
+	 * on the local file system. Otherwise fetch it. Returns null if unable to fetch
+	 * it.
 	 */
-	public static File toLocalFile(URI uri, IProgressMonitor monitor)
-			throws CoreException {
+	public static File toLocalFile(URI uri, IProgressMonitor monitor) throws CoreException {
 		IFileStore fileStore = EFS.getStore(uri);
 		File localFile = fileStore.toLocalFile(EFS.NONE, monitor);
 		if (localFile == null)
@@ -802,8 +751,7 @@ public class Util {
 	/**
 	 * Sort the comparable objects in the given collection.
 	 */
-	private static void quickSort(Comparable[] sortedCollection, int left,
-			int right) {
+	private static void quickSort(Comparable[] sortedCollection, int left, int right) {
 		int original_left = left;
 		int original_right = right;
 		Comparable mid = sortedCollection[(left + right) / 2];
@@ -860,8 +808,7 @@ public class Util {
 	/**
 	 * Sort the objects in the given collection using the given comparer.
 	 */
-	private static void quickSort(Object[] sortedCollection, int left,
-			int right, Comparer comparer) {
+	private static void quickSort(Object[] sortedCollection, int left, int right, Comparer comparer) {
 		int original_left = left;
 		int original_right = right;
 		Object mid = sortedCollection[(left + right) / 2];
@@ -924,8 +871,8 @@ public class Util {
 	}
 
 	/**
-	 * Sorts an array of Comparable objects, returning a new array with the
-	 * sorted items. The original array is left untouched.
+	 * Sorts an array of Comparable objects, returning a new array with the sorted
+	 * items. The original array is left untouched.
 	 */
 	public static Comparable[] sortCopy(Comparable[] objects) {
 		int len = objects.length;
@@ -936,24 +883,21 @@ public class Util {
 	}
 
 	/**
-	 * Sorts an array of elements based on their toStringWithAncestors(),
-	 * returning a new array with the sorted items. The original array is left
-	 * untouched.
+	 * Sorts an array of elements based on their toStringWithAncestors(), returning
+	 * a new array with the sorted items. The original array is left untouched.
 	 */
 	public static IModelElement[] sortCopy(IModelElement[] elements) {
 		int len = elements.length;
 		IModelElement[] copy = new IModelElement[len];
 		System.arraycopy(elements, 0, copy, 0, len);
-		sort(copy,
-				(a, b) -> ((org.eclipse.dltk.internal.core.ModelElement) a)
-						.toStringWithAncestors()
-						.compareTo(((ModelElement) b).toStringWithAncestors()));
+		sort(copy, (a, b) -> ((org.eclipse.dltk.internal.core.ModelElement) a).toStringWithAncestors()
+				.compareTo(((ModelElement) b).toStringWithAncestors()));
 		return copy;
 	}
 
 	/**
-	 * Sorts an array of Strings, returning a new array with the sorted items.
-	 * The original array is left untouched.
+	 * Sorts an array of Strings, returning a new array with the sorted items. The
+	 * original array is left untouched.
 	 */
 	public static Object[] sortCopy(Object[] objects, Comparer comparer) {
 		int len = objects.length;
@@ -964,8 +908,8 @@ public class Util {
 	}
 
 	/**
-	 * Sorts an array of Strings, returning a new array with the sorted items.
-	 * The original array is left untouched.
+	 * Sorts an array of Strings, returning a new array with the sorted items. The
+	 * original array is left untouched.
 	 */
 	public static String[] sortCopy(String[] objects) {
 		int len = objects.length;
@@ -977,9 +921,9 @@ public class Util {
 
 	/**
 	 * Compares two byte arrays. Returns <0 if a byte in a is less than the
-	 * corresponding byte in b, or if a is shorter, or if a is null. Returns >0
-	 * if a byte in a is greater than the corresponding byte in b, or if a is
-	 * longer, or if b is null. Returns 0 if they are equal or both null.
+	 * corresponding byte in b, or if a is shorter, or if a is null. Returns >0 if a
+	 * byte in a is greater than the corresponding byte in b, or if a is longer, or
+	 * if b is null. Returns 0 if they are equal or both null.
 	 */
 	public static int compare(byte[] a, byte[] b) {
 		if (a == b)
@@ -1005,10 +949,10 @@ public class Util {
 	 * Compares two strings lexicographically. The comparison is based on the
 	 * Unicode value of each character in the strings.
 	 *
-	 * @return the value <code>0</code> if the str1 is equal to str2; a value
-	 *         less than <code>0</code> if str1 is lexicographically less than
-	 *         str2; and a value greater than <code>0</code> if str1 is
-	 *         lexicographically greater than str2.
+	 * @return the value <code>0</code> if the str1 is equal to str2; a value less
+	 *         than <code>0</code> if str1 is lexicographically less than str2; and
+	 *         a value greater than <code>0</code> if str1 is lexicographically
+	 *         greater than str2.
 	 */
 	public static int compare(char[] str1, char[] str2) {
 		int len1 = str1.length;
@@ -1026,8 +970,8 @@ public class Util {
 	}
 
 	/**
-	 * Returns true if the given folder name is valid for a package, false if it
-	 * is not.
+	 * Returns true if the given folder name is valid for a package, false if it is
+	 * not.
 	 */
 	public static boolean isValidFolderNameForPackage(String folderName) {
 		// TODO check if folder is valid for a package
@@ -1039,11 +983,9 @@ public class Util {
 	 * @param folderName
 	 * @return
 	 */
-	public static boolean isValidFolderNameForPackage(IContainer container,
-			String folderName) {
+	public static boolean isValidFolderNameForPackage(IContainer container, String folderName) {
 		if (container.getType() == IResource.PROJECT
-				&& IScriptProjectFilenames.SETTINGS_FOLDER_NAME
-						.equals(folderName)) {
+				&& IScriptProjectFilenames.SETTINGS_FOLDER_NAME.equals(folderName)) {
 			return false;
 		}
 		return isValidFolderNameForPackage(folderName);
@@ -1051,8 +993,7 @@ public class Util {
 
 	/**
 	 * Return a new array which is the split of the given string using the given
-	 * divider. The given end is exclusive and the given start is inclusive.
-	 * <br>
+	 * divider. The given end is exclusive and the given start is inclusive. <br>
 	 * <br>
 	 * For example:
 	 * <ol>
@@ -1069,22 +1010,16 @@ public class Util {
 	 * </li>
 	 * </ol>
 	 *
-	 * @param divider
-	 *            the given divider
-	 * @param string
-	 *            the given string
-	 * @param start
-	 *            the given starting index
-	 * @param end
-	 *            the given ending index
-	 * @return a new array which is the split of the given string using the
-	 *         given divider
-	 * @throws ArrayIndexOutOfBoundsException
-	 *             if start is lower than 0 or end is greater than the array
-	 *             length
+	 * @param divider the given divider
+	 * @param string  the given string
+	 * @param start   the given starting index
+	 * @param end     the given ending index
+	 * @return a new array which is the split of the given string using the given
+	 *         divider
+	 * @throws ArrayIndexOutOfBoundsException if start is lower than 0 or end is
+	 *                                        greater than the array length
 	 */
-	public static final String[] splitOn(char divider, String string, int start,
-			int end) {
+	public static final String[] splitOn(char divider, String string, int start, int end) {
 		int length = string == null ? 0 : string.length();
 		if (length == 0 || start > end)
 			return CharOperation.NO_STRINGS;
@@ -1105,8 +1040,8 @@ public class Util {
 	}
 
 	/**
-	 * Returns the concatenation of the given array parts using the given
-	 * separator between each part. <br>
+	 * Returns the concatenation of the given array parts using the given separator
+	 * between each part. <br>
 	 * <br>
 	 * For example:<br>
 	 * <ol>
@@ -1130,15 +1065,13 @@ public class Util {
 	 * </li>
 	 * </ol>
 	 *
-	 * @param array
-	 *            the given array
-	 * @param separator
-	 *            the given separator
-	 * @return the concatenation of the given array parts using the given
-	 *         separator between each part
+	 * @param array     the given array
+	 * @param separator the given separator
+	 * @return the concatenation of the given array parts using the given separator
+	 *         between each part
 	 */
 	public static final String concatWith(String[] array, char separator) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0, length = array.length; i < length; i++) {
 			buffer.append(array[i]);
 			if (i < length - 1)
@@ -1148,8 +1081,8 @@ public class Util {
 	}
 
 	/**
-	 * Returns the concatenation of the given array parts using the given
-	 * separator between each part and appending the given name at the end. <br>
+	 * Returns the concatenation of the given array parts using the given separator
+	 * between each part and appending the given name at the end. <br>
 	 * <br>
 	 * For example:<br>
 	 * <ol>
@@ -1185,23 +1118,18 @@ public class Util {
 	 * </li>
 	 * </ol>
 	 *
-	 * @param array
-	 *            the given array
-	 * @param name
-	 *            the given name
-	 * @param separator
-	 *            the given separator
-	 * @return the concatenation of the given array parts using the given
-	 *         separator between each part and appending the given name at the
-	 *         end
+	 * @param array     the given array
+	 * @param name      the given name
+	 * @param separator the given separator
+	 * @return the concatenation of the given array parts using the given separator
+	 *         between each part and appending the given name at the end
 	 */
-	public static final String concatWith(String[] array, String name,
-			char separator) {
+	public static final String concatWith(String[] array, String name, char separator) {
 		if (array == null || array.length == 0)
 			return name;
 		if (name == null || name.length() == 0)
 			return concatWith(array, separator);
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0, length = array.length; i < length; i++) {
 			buffer.append(array[i]);
 			buffer.append(separator);
@@ -1212,9 +1140,9 @@ public class Util {
 
 	/**
 	 * Returns a new array adding the second array at the end of first array. It
-	 * answers null if the first and second are null. If the first array is null
-	 * or if it is empty, then a new array is created with second. If the second
-	 * array is null, then the first array is returned. <br>
+	 * answers null if the first and second are null. If the first array is null or
+	 * if it is empty, then a new array is created with second. If the second array
+	 * is null, then the first array is returned. <br>
 	 * <br>
 	 * For example:
 	 * <ol>
@@ -1246,10 +1174,8 @@ public class Util {
 	 * </li>
 	 * </ol>
 	 *
-	 * @param first
-	 *            the first array to concatenate
-	 * @param second
-	 *            the array to add at the end of the first array
+	 * @param first  the first array to concatenate
+	 * @param second the array to add at the end of the first array
 	 * @return a new array adding the second array at the end of first array, or
 	 *         null if the two arrays are null.
 	 */
@@ -1269,16 +1195,16 @@ public class Util {
 	}
 
 	/**
-	 * Returns whether the local file system supports accessing and modifying
-	 * the given attribute.
+	 * Returns whether the local file system supports accessing and modifying the
+	 * given attribute.
 	 */
 	protected static boolean isAttributeSupported(int attribute) {
 		return (EFS.getLocalFileSystem().attributes() & attribute) != 0;
 	}
 
 	/**
-	 * Returns whether the local file system supports accessing and modifying
-	 * the read only flag.
+	 * Returns whether the local file system supports accessing and modifying the
+	 * read only flag.
 	 */
 	public static boolean isReadOnlySupported() {
 		return isAttributeSupported(EFS.ATTRIBUTE_READ_ONLY);
@@ -1286,8 +1212,7 @@ public class Util {
 
 	public static boolean isReadOnly(IResource resource) {
 		if (isReadOnlySupported()) {
-			ResourceAttributes resourceAttributes = resource
-					.getResourceAttributes();
+			ResourceAttributes resourceAttributes = resource.getResourceAttributes();
 			if (resourceAttributes == null)
 				return false; // not supported on this platform for this
 								// resource
@@ -1298,8 +1223,7 @@ public class Util {
 
 	public static void setReadOnly(IResource resource, boolean readOnly) {
 		if (isReadOnlySupported()) {
-			ResourceAttributes resourceAttributes = resource
-					.getResourceAttributes();
+			ResourceAttributes resourceAttributes = resource.getResourceAttributes();
 			if (resourceAttributes == null)
 				return; // not supported on this platform for this resource
 			resourceAttributes.setReadOnly(readOnly);
@@ -1311,8 +1235,7 @@ public class Util {
 		}
 	}
 
-	public static boolean equalsIgnoreExtension(String elementName,
-			String cuName) {
+	public static boolean equalsIgnoreExtension(String elementName, String cuName) {
 		// TODO: Add more complex check here.
 		if (DLTKCore.DEBUG) {
 			System.out.println("//TODO: Add more complex check here."); //$NON-NLS-1$
@@ -1324,13 +1247,11 @@ public class Util {
 	}
 
 	/*
-	 * Returns whether the given compound name starts with the given prefix.
-	 * Returns true if the n first elements of the prefix are equals and the
-	 * last element of the prefix is a prefix of the corresponding element in
-	 * the compound name.
+	 * Returns whether the given compound name starts with the given prefix. Returns
+	 * true if the n first elements of the prefix are equals and the last element of
+	 * the prefix is a prefix of the corresponding element in the compound name.
 	 */
-	public static boolean startsWithIgnoreCase(String[] compoundName,
-			String[] prefix) {
+	public static boolean startsWithIgnoreCase(String[] compoundName, String[] prefix) {
 		int prefixLength = prefix.length;
 		int nameLength = compoundName.length;
 		if (prefixLength > nameLength)
@@ -1339,33 +1260,29 @@ public class Util {
 			if (!compoundName[i].equalsIgnoreCase(prefix[i]))
 				return false;
 		}
-		return compoundName[prefixLength - 1].toLowerCase()
-				.startsWith(prefix[prefixLength - 1].toLowerCase());
+		return compoundName[prefixLength - 1].toLowerCase().startsWith(prefix[prefixLength - 1].toLowerCase());
 	}
 
 	/**
-	 * Reads in a string from the specified data input stream. The string has
-	 * been encoded using a modified UTF-8 format.
+	 * Reads in a string from the specified data input stream. The string has been
+	 * encoded using a modified UTF-8 format.
 	 * <p>
-	 * The first two bytes are read as if by <code>readUnsignedShort</code>.
-	 * This value gives the number of following bytes that are in the encoded
-	 * string, not the length of the resulting string. The following bytes are
-	 * then interpreted as bytes encoding characters in the UTF-8 format and are
-	 * converted into characters.
+	 * The first two bytes are read as if by <code>readUnsignedShort</code>. This
+	 * value gives the number of following bytes that are in the encoded string, not
+	 * the length of the resulting string. The following bytes are then interpreted
+	 * as bytes encoding characters in the UTF-8 format and are converted into
+	 * characters.
 	 * <p>
 	 * This method blocks until all the bytes are read, the end of the stream is
 	 * detected, or an exception is thrown.
 	 *
-	 * @param in
-	 *            a data input stream.
+	 * @param in a data input stream.
 	 * @return a Unicode string.
-	 * @exception EOFException
-	 *                if the input stream reaches the end before all the bytes.
-	 * @exception IOException
-	 *                if an I/O error occurs.
-	 * @exception UTFDataFormatException
-	 *                if the bytes do not represent a valid UTF-8 encoding of a
-	 *                Unicode string.
+	 * @exception EOFException           if the input stream reaches the end before
+	 *                                   all the bytes.
+	 * @exception IOException            if an I/O error occurs.
+	 * @exception UTFDataFormatException if the bytes do not represent a valid UTF-8
+	 *                                   encoding of a Unicode string.
 	 * @see java.io.DataInputStream#readUnsignedShort()
 	 */
 	public final static char[] readUTF(DataInput in) throws IOException {
@@ -1409,8 +1326,7 @@ public class Util {
 				char3 = in.readUnsignedByte();
 				if (((char2 & 0xC0) != 0x80) || ((char3 & 0xC0) != 0x80))
 					throw new UTFDataFormatException();
-				str[strlen++] = (char) (((c & 0x0F) << 12)
-						| ((char2 & 0x3F) << 6) | ((char3 & 0x3F) << 0));
+				str[strlen++] = (char) (((c & 0x0F) << 12) | ((char2 & 0x3F) << 6) | ((char3 & 0x3F) << 0));
 				break;
 			default:
 				// 10xx xxxx, 1111 xxxx
@@ -1433,15 +1349,12 @@ public class Util {
 	 * string. Following the length, each character of the string is output, in
 	 * sequence, using the UTF-8 encoding for the character.
 	 *
-	 * @param str
-	 *            a string to be written.
+	 * @param str a string to be written.
 	 * @return the number of bytes written to the stream.
-	 * @exception IOException
-	 *                if an I/O error occurs.
+	 * @exception IOException if an I/O error occurs.
 	 *
 	 */
-	public static int writeUTF(OutputStream out, char[] str)
-			throws IOException {
+	public static int writeUTF(OutputStream out, char[] str) throws IOException {
 		int strlen = str.length;
 		int utflen = 0;
 		for (int i = 0; i < strlen; i++) {
@@ -1484,13 +1397,10 @@ public class Util {
 	 * returns the index of the last character. Stop characters are: ";", ":",
 	 * "&lt;", "&gt;", "/", ".".
 	 *
-	 * @param string
-	 *            the signature string
-	 * @param start
-	 *            the 0-based character index of the first character
+	 * @param string the signature string
+	 * @param start  the 0-based character index of the first character
 	 * @return the 0-based character index of the last character
-	 * @exception IllegalArgumentException
-	 *                if this is not an identifier
+	 * @exception IllegalArgumentException if this is not an identifier
 	 */
 	public static int scanIdentifier(char[] string, int start) {
 		// need a minimum 1 char
@@ -1500,8 +1410,7 @@ public class Util {
 		int p = start;
 		while (true) {
 			char c = string[p];
-			if (c == '<' || c == '>' || c == ':' || c == ';' || c == '.'
-					|| c == '/') {
+			if (c == '<' || c == '>' || c == ':' || c == ';' || c == '.' || c == '/') {
 				return p - 1;
 			}
 			p++;
@@ -1511,8 +1420,7 @@ public class Util {
 		}
 	}
 
-	public static boolean isExcluded(IPath path, IProjectFragment root,
-			boolean isFolderPath) {
+	public static boolean isExcluded(IPath path, IProjectFragment root, boolean isFolderPath) {
 		char[][] inclusion = null;
 		char[][] exclusion = null;
 		if (root instanceof ProjectFragment) {

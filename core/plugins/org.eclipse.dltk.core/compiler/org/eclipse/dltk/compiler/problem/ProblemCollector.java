@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -23,8 +23,7 @@ import org.eclipse.dltk.compiler.task.ITaskReporter;
 import org.eclipse.dltk.core.IScriptModelMarker;
 import org.eclipse.dltk.internal.core.util.Util;
 
-public class ProblemCollector extends AbstractProblemReporter
-		implements ITaskReporter {
+public class ProblemCollector extends AbstractProblemReporter implements ITaskReporter {
 
 	protected final List<IProblem> problems = new ArrayList<>();
 
@@ -41,10 +40,8 @@ public class ProblemCollector extends AbstractProblemReporter
 	}
 
 	@Override
-	public void reportTask(String message, int lineNumber, int priority,
-			int charStart, int charEnd) {
-		reportProblem(new TaskInfo(message, lineNumber, priority, charStart,
-				charEnd));
+	public void reportTask(String message, int lineNumber, int priority, int charStart, int charEnd) {
+		reportProblem(new TaskInfo(message, lineNumber, priority, charStart, charEnd));
 	}
 
 	/**
@@ -57,8 +54,7 @@ public class ProblemCollector extends AbstractProblemReporter
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getAdapter(Class<T> adapter) {
-		if (ITaskReporter.class.equals(adapter)
-				|| IProblemReporter.class.equals(adapter)) {
+		if (ITaskReporter.class.equals(adapter) || IProblemReporter.class.equals(adapter)) {
 			return (T) this;
 		}
 		return super.getAdapter(adapter);
@@ -97,8 +93,7 @@ public class ProblemCollector extends AbstractProblemReporter
 		 * @param charEnd
 		 * @param charStart
 		 */
-		public TaskInfo(String message, int lineNumber, int priority,
-				int charStart, int charEnd) {
+		public TaskInfo(String message, int lineNumber, int priority, int charStart, int charEnd) {
 			this.message = message;
 			this.lineNumber = lineNumber;
 			this.priority = priority;
@@ -192,7 +187,7 @@ public class ProblemCollector extends AbstractProblemReporter
 
 		@Override
 		public String toString() {
-			final StringBuffer sb = new StringBuffer();
+			final StringBuilder sb = new StringBuilder();
 			sb.append("Task"); //$NON-NLS-1$
 			sb.append(' ');
 			sb.append(lineNumber);
@@ -242,10 +237,8 @@ public class ProblemCollector extends AbstractProblemReporter
 	 * @throws CoreException
 	 * @since 3.0
 	 */
-	public void createMarkers(IResource resource,
-			IProblemFactory problemFactory) throws CoreException {
-		createMarkers(resource, problemFactory,
-				IProblemSeverityTranslator.IDENTITY);
+	public void createMarkers(IResource resource, IProblemFactory problemFactory) throws CoreException {
+		createMarkers(resource, problemFactory, IProblemSeverityTranslator.IDENTITY);
 	}
 
 	/**
@@ -255,9 +248,8 @@ public class ProblemCollector extends AbstractProblemReporter
 	 * @throws CoreException
 	 * @since 4.0
 	 */
-	public void createMarkers(IResource resource,
-			IProblemFactory problemFactory,
-			IProblemSeverityTranslator translator) throws CoreException {
+	public void createMarkers(IResource resource, IProblemFactory problemFactory, IProblemSeverityTranslator translator)
+			throws CoreException {
 		for (final IProblem problem : problems) {
 			ProblemSeverity severity = problem.getSeverity();
 			if (!problem.isTask()) {
@@ -268,8 +260,7 @@ public class ProblemCollector extends AbstractProblemReporter
 			}
 			final IMarker m = problemFactory.createMarker(resource, problem);
 			if (problem.getSourceLineNumber() >= 0) {
-				m.setAttribute(IMarker.LINE_NUMBER,
-						problem.getSourceLineNumber() + 1);
+				m.setAttribute(IMarker.LINE_NUMBER, problem.getSourceLineNumber() + 1);
 			}
 			m.setAttribute(IMarker.MESSAGE, problem.getMessage());
 			if (problem.getSourceStart() >= 0) {
@@ -283,18 +274,15 @@ public class ProblemCollector extends AbstractProblemReporter
 			} else {
 				m.setAttribute(IMarker.USER_EDITABLE, Boolean.FALSE);
 				if (problem instanceof TaskInfo) {
-					m.setAttribute(IMarker.PRIORITY,
-							((TaskInfo) problem).getPriority());
+					m.setAttribute(IMarker.PRIORITY, ((TaskInfo) problem).getPriority());
 				}
 			}
 			if (problem.getID() != null) {
-				m.setAttribute(IScriptModelMarker.ID,
-						DefaultProblemIdentifier.encode(problem.getID()));
+				m.setAttribute(IScriptModelMarker.ID, DefaultProblemIdentifier.encode(problem.getID()));
 			}
 			final String[] arguments = problem.getArguments();
 			if (arguments != null && arguments.length != 0) {
-				m.setAttribute(IScriptModelMarker.ARGUMENTS,
-						Util.getProblemArgumentsForMarker(arguments));
+				m.setAttribute(IScriptModelMarker.ARGUMENTS, Util.getProblemArgumentsForMarker(arguments));
 			}
 		}
 	}

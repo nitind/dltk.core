@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -14,31 +14,25 @@ import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.core.search.indexing.IIndexConstants;
 
-public class QualifiedTypeDeclarationPattern extends TypeDeclarationPattern
-		implements IIndexConstants {
+public class QualifiedTypeDeclarationPattern extends TypeDeclarationPattern implements IIndexConstants {
 	public char[] qualification;
 	private PackageDeclarationPattern packagePattern;
 
 	// PackageDeclarationPattern packagePattern;
 	// public int packageIndex = -1;
 
-	public QualifiedTypeDeclarationPattern(char[] qualification,
-			char[] simpleName, char typeSuffix, int matchRule,
+	public QualifiedTypeDeclarationPattern(char[] qualification, char[] simpleName, char typeSuffix, int matchRule,
 			IDLTKLanguageToolkit toolkit) {
 		this(matchRule, toolkit);
-		this.qualification = isCaseSensitive() ? qualification : CharOperation
-				.toLowerCase(qualification);
-		this.simpleName = (isCaseSensitive() || isCamelCase()) ? simpleName
-				: CharOperation.toLowerCase(simpleName);
+		this.qualification = isCaseSensitive() ? qualification : CharOperation.toLowerCase(qualification);
+		this.simpleName = (isCaseSensitive() || isCamelCase()) ? simpleName : CharOperation.toLowerCase(simpleName);
 		this.typeSuffix = typeSuffix;
 	}
 
-	public QualifiedTypeDeclarationPattern(char[] qualification,
-			int qualificationMatchRule, char[] simpleName, char typeSuffix,
-			int matchRule, IDLTKLanguageToolkit toolkit) {
+	public QualifiedTypeDeclarationPattern(char[] qualification, int qualificationMatchRule, char[] simpleName,
+			char typeSuffix, int matchRule, IDLTKLanguageToolkit toolkit) {
 		this(qualification, simpleName, typeSuffix, matchRule, toolkit);
-		this.packagePattern = new PackageDeclarationPattern(qualification,
-				qualificationMatchRule, toolkit);
+		this.packagePattern = new PackageDeclarationPattern(qualification, qualificationMatchRule, toolkit);
 	}
 
 	QualifiedTypeDeclarationPattern(int matchRule, IDLTKLanguageToolkit toolkit) {
@@ -48,14 +42,12 @@ public class QualifiedTypeDeclarationPattern extends TypeDeclarationPattern
 	@Override
 	public void decodeIndexKey(char[] key) {
 		super.decodeIndexKey(key);
-		this.qualification = CharOperation.concatWith(pkg, enclosingTypeNames,
-				TYPE_SEPARATOR);
+		this.qualification = CharOperation.concatWith(pkg, enclosingTypeNames, TYPE_SEPARATOR);
 	}
 
 	@Override
 	public SearchPattern getBlankPattern() {
-		return new QualifiedTypeDeclarationPattern(R_EXACT_MATCH
-				| R_CASE_SENSITIVE, getToolkit());
+		return new QualifiedTypeDeclarationPattern(R_EXACT_MATCH | R_CASE_SENSITIVE, getToolkit());
 	}
 
 	@Override
@@ -80,11 +72,9 @@ public class QualifiedTypeDeclarationPattern extends TypeDeclarationPattern
 		if (matchesName) {
 			if (this.qualification != null) {
 				if (this.packagePattern != null) {
-					return this.packagePattern.matchesName(this.qualification,
-							pattern.qualification);
+					return this.packagePattern.matchesName(this.qualification, pattern.qualification);
 				}
-				return pattern.matchesName(this.qualification,
-						pattern.qualification);
+				return pattern.matchesName(this.qualification, pattern.qualification);
 			}
 			return true;
 		}
@@ -92,7 +82,7 @@ public class QualifiedTypeDeclarationPattern extends TypeDeclarationPattern
 	}
 
 	@Override
-	protected StringBuffer print(StringBuffer output) {
+	protected StringBuilder print(StringBuilder output) {
 		switch (this.typeSuffix) {
 		case TYPE_SUFFIX:
 			output.append("ClassDeclarationPattern: qualification<"); //$NON-NLS-1$
