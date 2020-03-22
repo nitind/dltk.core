@@ -20,6 +20,7 @@
 				<configuration>
 					<testSuite>${project.artifactId}</testSuite>
 					<testClass>org.eclipse.dltk.formatter.tests.AllTests</testClass>
+					<argLine>${tycho.testArgLine}</argLine>
 				</configuration>
 			</plugin>
 		</plugins>

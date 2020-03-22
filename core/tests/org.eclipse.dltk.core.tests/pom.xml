@@ -35,7 +35,7 @@
 					<testSuite>${project.artifactId}</testSuite>
 					<testClass>org.eclipse.dltk.core.tests.AllTests</testClass>
 					<!-- Fixes deletion of folders with Unicode names -->
-					<argLine>-Dsun.jnu.encoding=UTF-8</argLine>
+					<argLine>-Dsun.jnu.encoding=UTF-8 ${tycho.testArgLine}</argLine>
 					<dependencies>
 						<dependency>
 							<type>p2-installable-unit</type>

@@ -20,6 +20,7 @@
 				<configuration>
 					<testSuite>${project.artifactId}</testSuite>
 					<testClass>org.eclipse.dltk.validators.core.tests.AllTests</testClass>
+					<argLine>${tycho.testArgLine}</argLine>
 					<dependencies>
 						<dependency>
 							<type>p2-installable-unit</type>
