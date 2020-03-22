@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -27,7 +27,7 @@ public class InitializeJob extends UIJob {
 
 		public WorkerJob() {
 			super(DLTKUIMessages.InitializeJob_Initializing);
-			setPriority(BUILD);
+			// setPriority(BUILD);
 		}
 
 		@Override
@@ -35,8 +35,7 @@ public class InitializeJob extends UIJob {
 			try {
 				ScriptBuilderUtil.rebuildAfterUpgrade(monitor);
 			} catch (CoreException e) {
-				DLTKUIPlugin.logErrorMessage(
-						DLTKUIMessages.InitializeJob_ErrorInitializing, e);
+				DLTKUIPlugin.logErrorMessage(DLTKUIMessages.InitializeJob_ErrorInitializing, e);
 				return e.getStatus();
 			}
 			return Status.OK_STATUS;
@@ -56,6 +55,7 @@ public class InitializeJob extends UIJob {
 	@Override
 	public IStatus runInUIThread(IProgressMonitor monitor) {
 		final WorkerJob job = new WorkerJob();
+		job.setPriority(Job.SHORT);
 		job.schedule();
 		return Status.OK_STATUS;
 	}

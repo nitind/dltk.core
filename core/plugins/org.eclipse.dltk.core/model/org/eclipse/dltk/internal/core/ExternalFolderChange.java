@@ -3,15 +3,15 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -24,8 +24,7 @@ public class ExternalFolderChange {
 	private ScriptProject project;
 	private IBuildpathEntry[] oldResolvedBuildpath;
 
-	public ExternalFolderChange(ScriptProject project,
-			IBuildpathEntry[] oldResolvedBuildpath) {
+	public ExternalFolderChange(ScriptProject project, IBuildpathEntry[] oldResolvedBuildpath) {
 		this.project = project;
 		this.oldResolvedBuildpath = oldResolvedBuildpath;
 	}
@@ -33,23 +32,18 @@ public class ExternalFolderChange {
 	/*
 	 * Update external folders
 	 */
-	public void updateExternalFoldersIfNecessary(boolean refreshIfExistAlready,
-			IProgressMonitor monitor) throws ModelException {
-		HashSet<IPath> oldFolders = ExternalFoldersManager
-				.getExternalFolders(this.oldResolvedBuildpath);
-		IBuildpathEntry[] newResolvedBuildpath = this.project
-				.getResolvedBuildpath();
-		HashSet<IPath> newFolders = ExternalFoldersManager
-				.getExternalFolders(newResolvedBuildpath);
+	public void updateExternalFoldersIfNecessary(boolean refreshIfExistAlready, IProgressMonitor monitor)
+			throws ModelException {
+		Set<IPath> oldFolders = ExternalFoldersManager.getExternalFolders(this.oldResolvedBuildpath);
+		IBuildpathEntry[] newResolvedBuildpath = this.project.getResolvedBuildpath();
+		Set<IPath> newFolders = ExternalFoldersManager.getExternalFolders(newResolvedBuildpath);
 		if (newFolders == null)
 			return;
-		ExternalFoldersManager foldersManager = ModelManager
-				.getExternalManager();
+		ExternalFoldersManager foldersManager = ModelManager.getExternalManager();
 		for (IPath folderPath : newFolders) {
 			if (oldFolders == null || !oldFolders.remove(folderPath)) {
 				try {
-					foldersManager.createLinkFolder(folderPath,
-							refreshIfExistAlready, monitor);
+					foldersManager.createLinkFolder(folderPath, refreshIfExistAlready, monitor);
 				} catch (CoreException e) {
 					ModelException.propagate(e);
 				}

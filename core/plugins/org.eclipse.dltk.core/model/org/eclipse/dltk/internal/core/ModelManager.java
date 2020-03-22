@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -490,7 +490,7 @@ public class ModelManager implements ISaveParticipant {
 	Map workspaceScope = null;
 	public static final String DELTA_LISTENER_PERF = DLTKCore.PLUGIN_ID + "/perf/deltalistener"; //$NON-NLS-1$
 
-	private ExternalFoldersManager externalFoldersManager = new ExternalFoldersManager();
+	private ExternalFoldersManager externalFoldersManager = ExternalFoldersManager.getExternalFoldersManager();
 	private DLTKCoreCache coreCache = null;
 
 	final boolean resolveReferencedLibrariesForContainers = false;
