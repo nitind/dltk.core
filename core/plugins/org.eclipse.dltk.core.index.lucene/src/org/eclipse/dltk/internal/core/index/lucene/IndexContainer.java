@@ -195,12 +195,15 @@ class IndexContainer {
 					dataType.getDirectory(), String.valueOf(elementType));
 			writer = getWriter(writerPath);
 			fIndexWriters.get(dataType).put(elementType, writer);
+			fIndexSearchers.get(dataType).put(elementType, null);
 		}
 		return writer;
 	}
 
 	public synchronized SearcherManager getIndexSearcher(IndexType dataType,
 			int elementType) {
+
+		getIndexWriter(dataType, elementType);
 		SearcherManager searcher = fIndexSearchers.get(dataType)
 				.get(elementType);
 		try {
@@ -210,6 +213,7 @@ class IndexContainer {
 						new SearcherFactory());
 				fIndexSearchers.get(dataType).put(elementType, searcher);
 			}
+
 			// Try to achieve the up-to-date index state
 			searcher.maybeRefresh();
 		} catch (IOException e) {
