@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.index.ConcurrentMergeScheduler;
+import org.apache.lucene.index.IndexNotFoundException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
@@ -221,6 +222,8 @@ class IndexContainer {
 				fIndexSearchers.get(dataType).put(elementType, searcher);
 			}
 
+		} catch (IndexNotFoundException e) {
+			return null;
 		} catch (IOException e) {
 			Logger.logException(e);
 		}

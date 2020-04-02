@@ -314,6 +314,9 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 							searchForRefs ? IndexType.REFERENCES
 									: IndexType.DECLARATIONS,
 							elementType);
+			if (searcherManager == null) {
+				continue;
+			}
 			try {
 				indexSearcher = searcherManager.acquire();
 				ResultsCollector collector = new ResultsCollector(container,
