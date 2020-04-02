@@ -26,6 +26,7 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
+import org.apache.lucene.store.AlreadyClosedException;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.SleepingLockWrapper;
@@ -183,16 +184,16 @@ class IndexContainer {
 		return fTimestampsSearcher;
 	}
 
+	private Path getPath(IndexType dataType, int elementType) {
+		return Paths.get(fIndexRoot, fContainerId, dataType.getDirectory(),
+				String.valueOf(elementType));
+	}
+
 	public synchronized IndexWriter getIndexWriter(IndexType dataType,
 			int elementType) {
 		IndexWriter writer = fIndexWriters.get(dataType).get(elementType);
-		if (writer != null && !writer.isOpen()) {
-			writer = null;
-		}
 		if (writer == null) {
-
-			Path writerPath = Paths.get(fIndexRoot, fContainerId,
-					dataType.getDirectory(), String.valueOf(elementType));
+			Path writerPath = getPath(dataType, elementType);
 			writer = getWriter(writerPath);
 			fIndexWriters.get(dataType).put(elementType, writer);
 			fIndexSearchers.get(dataType).put(elementType, null);
@@ -203,19 +204,23 @@ class IndexContainer {
 	public synchronized SearcherManager getIndexSearcher(IndexType dataType,
 			int elementType) {
 
-		getIndexWriter(dataType, elementType);
 		SearcherManager searcher = fIndexSearchers.get(dataType)
 				.get(elementType);
 		try {
+			if (searcher != null) {
+				try {
+					searcher.maybeRefresh();
+				} catch (AlreadyClosedException closed) {
+					searcher = null;
+				}
+			}
 			if (searcher == null) {
 				searcher = new SearcherManager(
-						getIndexWriter(dataType, elementType), true, false,
+						FSDirectory.open(getPath(dataType, elementType)),
 						new SearcherFactory());
 				fIndexSearchers.get(dataType).put(elementType, searcher);
 			}
 
-			// Try to achieve the up-to-date index state
-			searcher.maybeRefresh();
 		} catch (IOException e) {
 			Logger.logException(e);
 		}
