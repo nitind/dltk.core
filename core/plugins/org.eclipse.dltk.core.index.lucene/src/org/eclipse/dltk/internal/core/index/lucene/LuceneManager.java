@@ -101,7 +101,8 @@ public enum LuceneManager {
 			try {
 				for (IndexContainer indexContainer : dirtyContainers) {
 					if (!monitor.isCanceled()) {
-						// Commit index data without merging deletions (better performance)
+						// Commit index data without merging deletions (better
+						// performance)
 						indexContainer.commit(subMonitor.newChild(1), false);
 					}
 				}
@@ -171,13 +172,16 @@ public enum LuceneManager {
 		}
 
 		@Override
-		public void doneSaving(ISaveContext context) {}
+		public void doneSaving(ISaveContext context) {
+		}
 
 		@Override
-		public void prepareToSave(ISaveContext context) throws CoreException {}
+		public void prepareToSave(ISaveContext context) throws CoreException {
+		}
 
 		@Override
-		public void rollback(ISaveContext context) {}
+		public void rollback(ISaveContext context) {
+		}
 
 	}
 
@@ -185,7 +189,11 @@ public enum LuceneManager {
 
 		@Override
 		public void aboutToBeIdle() {
-			fCommitter.commit();
+			// run directly without special job
+			synchronized (this) {
+				fCommitter.run(new NullProgressMonitor());
+			}
+
 		}
 
 		@Override

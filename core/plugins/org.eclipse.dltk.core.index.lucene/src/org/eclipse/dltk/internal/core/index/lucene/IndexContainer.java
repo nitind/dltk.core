@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.index.ConcurrentMergeScheduler;
@@ -297,16 +298,34 @@ class IndexContainer {
 	synchronized void commit(IProgressMonitor monitor, boolean mergeDeletes) {
 		int ticks = 1;
 		for (Map<?, ?> dataWriters : fIndexWriters.values()) {
-			ticks += dataWriters.size();
+			ticks += dataWriters.size() * 2;
 		}
 		SubMonitor subMonitor = SubMonitor.convert(monitor, ticks);
 		try {
-			for (Map<Integer, IndexWriter> dataWriters : fIndexWriters
-					.values()) {
-				for (IndexWriter writer : dataWriters.values()) {
+			for (Entry<IndexType, Map<Integer, IndexWriter>> entry : fIndexWriters
+					.entrySet()) {
+				Map<Integer, IndexWriter> dataWriters = entry.getValue();
+				Map<Integer, SearcherManager> dataSearchers = fIndexSearchers
+						.get(entry.getKey());
+				for (Entry<Integer, IndexWriter> writerEntry : dataWriters
+						.entrySet()) {
+					IndexWriter writer = writerEntry.getValue();
 					if (writer != null && !subMonitor.isCanceled()) {
 						writer.forceMergeDeletes(mergeDeletes);
 						writer.commit();
+						subMonitor.worked(1);
+						if (dataSearchers != null) {
+							SearcherManager m = dataSearchers
+									.get(writerEntry.getKey());
+							if (m != null) {
+								try {
+									m.maybeRefreshBlocking();
+								} catch (IOException e) {
+									dataSearchers.put(writerEntry.getKey(),
+											null);
+								}
+							}
+						}
 						subMonitor.worked(1);
 					}
 				}
