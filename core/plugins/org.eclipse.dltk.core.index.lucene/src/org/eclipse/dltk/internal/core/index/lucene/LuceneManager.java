@@ -167,7 +167,7 @@ public enum LuceneManager {
 			fCommitter.close();
 			// Commit all indexes data, merge deletions
 			for (IndexContainer indexContainer : fIndexContainers.values()) {
-				indexContainer.commit(new NullProgressMonitor(), true);
+				indexContainer.commit(new NullProgressMonitor(), false);
 			}
 		}
 
