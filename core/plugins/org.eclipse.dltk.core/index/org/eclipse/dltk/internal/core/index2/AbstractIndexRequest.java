@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -31,17 +31,16 @@ import org.eclipse.dltk.internal.core.util.Util;
 
 /**
  * Abstract request for performing operation on index.
- * 
+ *
  * @author michael
- * 
+ *
  */
 public abstract class AbstractIndexRequest extends AbstractJob {
 
 	ProjectIndexer2 projectIndexer;
 	ProgressJob progressJob;
 
-	public AbstractIndexRequest(ProjectIndexer2 indexer,
-			ProgressJob progressJob) {
+	public AbstractIndexRequest(ProjectIndexer2 indexer, ProgressJob progressJob) {
 		this.projectIndexer = indexer;
 		this.progressJob = progressJob;
 	}
@@ -53,17 +52,12 @@ public abstract class AbstractIndexRequest extends AbstractJob {
 			if (resource != null) {
 				path = resource.getFullPath().toString();
 			} else {
-				IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-						.getLanguageToolkit(sourceModule);
-				if (toolkit instanceof IDLTKLanguageToolkitExtension
-						&& ((IDLTKLanguageToolkitExtension) toolkit)
-								.isArchiveFileName(sourceModule.getPath()
-										.toString())) {
-					path = ((ExternalSourceModule) sourceModule).getFullPath()
-							.toString();
+				IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(sourceModule);
+				if (toolkit instanceof IDLTKLanguageToolkitExtension && ((IDLTKLanguageToolkitExtension) toolkit)
+						.isArchiveFileName(sourceModule.getPath().toString())) {
+					path = ((ExternalSourceModule) sourceModule).getFullPath().toString();
 				} else {
-					path = EnvironmentPathUtils.getFile(sourceModule)
-							.getCanonicalPath();
+					path = EnvironmentPathUtils.getFile(sourceModule).getCanonicalPath();
 				}
 
 			}
@@ -75,8 +69,7 @@ public abstract class AbstractIndexRequest extends AbstractJob {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((projectIndexer == null) ? 0 : projectIndexer.hashCode());
+		result = prime * result + ((projectIndexer == null) ? 0 : projectIndexer.hashCode());
 		return result;
 	}
 
@@ -98,23 +91,18 @@ public abstract class AbstractIndexRequest extends AbstractJob {
 	}
 
 	/**
-	 * Analyzes source modules changes, and fills collections with source
-	 * modules that need to be removed/re-indexed.
-	 * 
-	 * @param containerPath
-	 *            Container path
-	 * @param sourceModules
-	 *            Existing source modules under container path
-	 * @param toRemove
-	 *            Result collection of source modules that need to be removed
-	 *            from index
-	 * @param toReindex
-	 *            Result collection of source modules that need to be re-indexed
-	 * @param toolkit
-	 *            Language toolkit
+	 * Analyzes source modules changes, and fills collections with source modules
+	 * that need to be removed/re-indexed.
+	 *
+	 * @param containerPath Container path
+	 * @param sourceModules Existing source modules under container path
+	 * @param toRemove      Result collection of source modules that need to be
+	 *                      removed from index
+	 * @param toReindex     Result collection of source modules that need to be
+	 *                      re-indexed
+	 * @param toolkit       Language toolkit
 	 */
-	public void analyzeSourceModuleChanges(IPath containerPath,
-			Collection<ISourceModule> sourceModules,
+	public void analyzeSourceModuleChanges(IPath containerPath, Collection<ISourceModule> sourceModules,
 			Collection<String> toRemove, Collection<ISourceModule> toReindex) {
 
 		IIndexer indexer = IndexerManager.getIndexer();
@@ -131,10 +119,8 @@ public abstract class AbstractIndexRequest extends AbstractJob {
 		toRemove.addAll(documentNames.keySet());
 
 		for (ISourceModule sourceModule : sourceModules) {
-			String relativePath = Util.relativePath(sourceModule.getPath(),
-					containerPath.segmentCount());
-			IFileHandle handle = EnvironmentPathUtils.getFile(sourceModule,
-					false);
+			String relativePath = Util.relativePath(sourceModule.getPath(), containerPath.segmentCount());
+			IFileHandle handle = EnvironmentPathUtils.getFile(sourceModule, false);
 
 			if (toRemove.remove(relativePath)) {
 				if (documentNames.get(relativePath) < handle.lastModified()) {

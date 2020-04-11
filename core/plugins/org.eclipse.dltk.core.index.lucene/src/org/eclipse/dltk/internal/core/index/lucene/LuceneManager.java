@@ -28,10 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.SearcherManager;
-import org.eclipse.core.resources.ISaveContext;
-import org.eclipse.core.resources.ISaveParticipant;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -153,34 +149,6 @@ public enum LuceneManager {
 			fCommitter.close();
 			// Shutdown manager
 			LuceneManager.INSTANCE.shutdown();
-		}
-
-	}
-
-	private final class SaveParticipant implements ISaveParticipant {
-
-		@Override
-		public void saving(ISaveContext context) throws CoreException {
-			if (context.getKind() != ISaveContext.FULL_SAVE)
-				return;
-			// Close background committer
-			fCommitter.close();
-			// Commit all indexes data, merge deletions
-			for (IndexContainer indexContainer : fIndexContainers.values()) {
-				indexContainer.commit(new NullProgressMonitor(), false);
-			}
-		}
-
-		@Override
-		public void doneSaving(ISaveContext context) {
-		}
-
-		@Override
-		public void prepareToSave(ISaveContext context) throws CoreException {
-		}
-
-		@Override
-		public void rollback(ISaveContext context) {
 		}
 
 	}
@@ -362,12 +330,6 @@ public enum LuceneManager {
 				.addIndexerThreadListener(new IndexerThreadListener());
 		ModelManager.getModelManager().getIndexManager()
 				.addShutdownListener(new ShutdownListener());
-		try {
-			ResourcesPlugin.getWorkspace().addSaveParticipant(LucenePlugin.ID,
-					new SaveParticipant());
-		} catch (CoreException e) {
-			Logger.logException(e);
-		}
 	}
 
 	private synchronized void shutdown() {

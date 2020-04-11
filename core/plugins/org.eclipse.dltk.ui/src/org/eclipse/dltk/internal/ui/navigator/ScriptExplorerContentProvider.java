@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -37,6 +37,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.ScriptModelUtil;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.dltk.internal.ui.scriptview.LibraryContainer;
@@ -67,9 +68,8 @@ import org.eclipse.ui.progress.UIJob;
  *
  * @see org.eclipse.jdt.ui.StandardJavaElementContentProvider
  */
-public class ScriptExplorerContentProvider
-		extends StandardModelElementContentProvider implements
-		ITreeContentProvider, IElementChangedListener, IPropertyChangeListener {
+public class ScriptExplorerContentProvider extends StandardModelElementContentProvider
+		implements ITreeContentProvider, IElementChangedListener, IPropertyChangeListener {
 
 	protected static final int ORIGINAL = 0;
 	protected static final int PARENT = 1 << 0;
@@ -89,9 +89,8 @@ public class ScriptExplorerContentProvider
 	/**
 	 * Creates a new content provider for Java elements.
 	 *
-	 * @param provideMembers
-	 *                           if set, members of compilation units and class
-	 *                           files are shown
+	 * @param provideMembers if set, members of compilation units and class files
+	 *                       are shown
 	 */
 	public ScriptExplorerContentProvider(final boolean provideMembers) {
 		super(provideMembers);
@@ -99,13 +98,11 @@ public class ScriptExplorerContentProvider
 		fIsFlatLayout = false;
 		fFoldPackages = arePackagesFoldedInHierarchicalLayout();
 		fPendingUpdates = null;
-		DLTKUIPlugin.getDefault().getPreferenceStore()
-				.addPropertyChangeListener(this);
+		DLTKUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 	}
 
 	private boolean arePackagesFoldedInHierarchicalLayout() {
-		return getPreferenceStore().getBoolean(
-				PreferenceConstants.APPEARANCE_FOLD_PACKAGES_IN_PACKAGE_EXPLORER);
+		return getPreferenceStore().getBoolean(PreferenceConstants.APPEARANCE_FOLD_PACKAGES_IN_PACKAGE_EXPLORER);
 	}
 
 	protected IPreferenceStore getPreferenceStore() {
@@ -116,9 +113,18 @@ public class ScriptExplorerContentProvider
 		return fInput;
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on IElementChangedListener.
-	 */
+	protected static IModelElement convert(IResource resource) {
+		IScriptProject project = DLTKCore.create(resource.getProject());
+		if (project == null) {
+			return null;
+		}
+		IModelElement scriptElement = ModelManager.create(resource, project);
+		if (scriptElement == null || !scriptElement.exists()) {
+			return null;
+		}
+		return scriptElement;
+	}
+
 	@Override
 	public void elementChanged(final ElementChangedEvent event) {
 		final ArrayList<Runnable> runnables = new ArrayList<>();
@@ -139,21 +145,17 @@ public class ScriptExplorerContentProvider
 		}
 	}
 
-	protected final void executeRunnables(
-			final Collection<Runnable> runnables) {
+	protected final void executeRunnables(final Collection<Runnable> runnables) {
 
 		// now post all collected runnables
 		Control ctrl = fViewer.getControl();
 		if (ctrl != null && !ctrl.isDisposed()) {
 			final boolean hasPendingUpdates;
 			synchronized (this) {
-				hasPendingUpdates = fPendingUpdates != null
-						&& !fPendingUpdates.isEmpty();
+				hasPendingUpdates = fPendingUpdates != null && !fPendingUpdates.isEmpty();
 			}
 			// Are we in the UIThread? If so spin it until we are done
-			if (!hasPendingUpdates
-					&& ctrl.getDisplay().getThread() == Thread.currentThread()
-					&& !fViewer.isBusy()) {
+			if (!hasPendingUpdates && ctrl.getDisplay().getThread() == Thread.currentThread() && !fViewer.isBusy()) {
 				runUpdates(runnables);
 			} else {
 				synchronized (this) {
@@ -189,8 +191,8 @@ public class ScriptExplorerContentProvider
 	}
 
 	/**
-	 * Run all of the runnables that are the widget updates. Must be called in
-	 * the display thread.
+	 * Run all of the runnables that are the widget updates. Must be called in the
+	 * display thread.
 	 */
 	public void runPendingUpdates() {
 		Collection<Runnable> pendingUpdates;
@@ -217,8 +219,7 @@ public class ScriptExplorerContentProvider
 		if (fInput == null) {
 			return false;
 		}
-		if (fInput instanceof IModelElement
-				&& ((IModelElement) fInput).exists()) {
+		if (fInput instanceof IModelElement && ((IModelElement) fInput).exists()) {
 			return false;
 		}
 		if (fInput instanceof IResource && ((IResource) fInput).exists()) {
@@ -231,8 +232,7 @@ public class ScriptExplorerContentProvider
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=156239
 			return false;
 		}
-		postRefresh(fInput, ScriptExplorerContentProvider.ORIGINAL, fInput,
-				runnables);
+		postRefresh(fInput, ScriptExplorerContentProvider.ORIGINAL, fInput, runnables);
 		return true;
 	}
 
@@ -240,13 +240,11 @@ public class ScriptExplorerContentProvider
 	public void dispose() {
 		super.dispose();
 		DLTKCore.removeElementChangedListener(this);
-		DLTKUIPlugin.getDefault().getPreferenceStore()
-				.removePropertyChangeListener(this);
+		DLTKUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
 	}
 
 	@Override
-	protected Object[] getProjectFragmentContent(final IProjectFragment root)
-			throws ModelException {
+	protected Object[] getProjectFragmentContent(final IProjectFragment root) throws ModelException {
 		if (fIsFlatLayout) {
 			return super.getProjectFragmentContent(root);
 		}
@@ -264,8 +262,7 @@ public class ScriptExplorerContentProvider
 	}
 
 	@Override
-	protected Object[] getScriptFolderContent(final IScriptFolder fragment)
-			throws ModelException {
+	protected Object[] getScriptFolderContent(final IScriptFolder fragment) throws ModelException {
 		if (fIsFlatLayout) {
 			return super.getScriptFolderContent(fragment);
 		}
@@ -273,8 +270,7 @@ public class ScriptExplorerContentProvider
 		// hierarchical package mode
 		ArrayList<Object> result = new ArrayList<>();
 
-		getHierarchicalPackageChildren((IProjectFragment) fragment.getParent(),
-				fragment, result);
+		getHierarchicalPackageChildren((IProjectFragment) fragment.getParent(), fragment, result);
 		Object[] nonPackages = super.getScriptFolderContent(fragment);
 		if (result.isEmpty()) {
 			return nonPackages;
@@ -286,8 +282,7 @@ public class ScriptExplorerContentProvider
 	}
 
 	@Override
-	protected Object[] getFolderContent(final IFolder folder)
-			throws CoreException {
+	protected Object[] getFolderContent(final IFolder folder) throws CoreException {
 		if (fIsFlatLayout) {
 			return super.getFolderContent(folder);
 		}
@@ -311,36 +306,30 @@ public class ScriptExplorerContentProvider
 		try {
 			if (parentElement instanceof IScriptModel) {
 				return getExtendedChildren(parentElement,
-						StandardModelElementContentProvider.concatenate(
-								getScriptProjects((IScriptModel) parentElement),
-								getNonJavaProjects(
-										(IScriptModel) parentElement)));
+						StandardModelElementContentProvider.concatenate(getScriptProjects((IScriptModel) parentElement),
+								getNonJavaProjects((IScriptModel) parentElement)));
 			}
 
 			if (parentElement instanceof ProjectFragmentContainer) {
 				return getExtendedChildren(parentElement,
-						getContainerProjectFragments(
-								(ProjectFragmentContainer) parentElement));
+						getContainerProjectFragments((ProjectFragmentContainer) parentElement));
 			}
 
 			if (parentElement instanceof IProject) {
 				if (!((IProject) parentElement).isAccessible()) {
 					return StandardModelElementContentProvider.NO_CHILDREN;
 				}
-				return getExtendedChildren(parentElement,
-						((IProject) parentElement).members());
+				return getExtendedChildren(parentElement, ((IProject) parentElement).members());
 			}
 
 			return super.getChildren(parentElement);
 		} catch (CoreException e) {
-			return getExtendedChildren(parentElement,
-					StandardModelElementContentProvider.NO_CHILDREN);
+			return getExtendedChildren(parentElement, StandardModelElementContentProvider.NO_CHILDREN);
 		}
 	}
 
 	@Override
-	protected Object[] getProjectFragments(final IScriptProject project)
-			throws ModelException {
+	protected Object[] getProjectFragments(final IScriptProject project) throws ModelException {
 		if (!project.getProject().isOpen()) {
 			return StandardModelElementContentProvider.NO_CHILDREN;
 		}
@@ -366,11 +355,7 @@ public class ScriptExplorerContentProvider
 				// all ClassPathContainers are added later
 			} else if (fShowLibrariesNode
 					&& (entryKind == IBuildpathEntry.BPE_LIBRARY /*
-																	 * ||
-																	 * entryKind
-																	 * ==
-																	 * IBuildpathEntry
-																	 * .BPE_VARIABLE
+																	 * || entryKind == IBuildpathEntry .BPE_VARIABLE
 																	 */)) {
 				addZIPContainer = true;
 			} else {
@@ -396,8 +381,7 @@ public class ScriptExplorerContentProvider
 		IBuildpathEntry[] rawBuidspath = project.getRawBuildpath();
 		for (int i = 0; i < rawBuidspath.length; i++) {
 			IBuildpathEntry classpathEntry = rawBuidspath[i];
-			if (classpathEntry
-					.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+			if (classpathEntry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 				result.add(new BuildPathContainer(project, classpathEntry));
 			}
 		}
@@ -408,13 +392,11 @@ public class ScriptExplorerContentProvider
 		return result.toArray();
 	}
 
-	private Object[] getContainerProjectFragments(
-			final ProjectFragmentContainer container) {
+	private Object[] getContainerProjectFragments(final ProjectFragmentContainer container) {
 		return container.getChildren();
 	}
 
-	private Object[] getNonJavaProjects(final IScriptModel model)
-			throws ModelException {
+	private Object[] getNonJavaProjects(final IScriptModel model) throws ModelException {
 		return model.getForeignResources();
 	}
 
@@ -433,15 +415,10 @@ public class ScriptExplorerContentProvider
 				if (entry != null) {
 					int entryKind = entry.getEntryKind();
 					if (entryKind == IBuildpathEntry.BPE_CONTAINER) {
-						return new BuildPathContainer(root.getScriptProject(),
-								entry);
+						return new BuildPathContainer(root.getScriptProject(), entry);
 					} else if (fShowLibrariesNode
 							&& (entryKind == IBuildpathEntry.BPE_LIBRARY /*
-																			 * ||
-																			 * entryKind
-																			 * ==
-																			 * IBuildpathEntry
-																			 * .
+																			 * || entryKind == IBuildpathEntry .
 																			 * BPE_VARIABLE
 																			 */)) {
 						return new LibraryContainer(root.getScriptProject());
@@ -457,8 +434,7 @@ public class ScriptExplorerContentProvider
 	}
 
 	@Override
-	public void inputChanged(final Viewer viewer, final Object oldInput,
-			final Object newInput) {
+	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		super.inputChanged(viewer, oldInput, newInput);
 		fViewer = (TreeViewer) viewer;
 		if (oldInput == null && newInput != null) {
@@ -473,18 +449,14 @@ public class ScriptExplorerContentProvider
 	/**
 	 * Returns the hierarchical packages inside a given fragment or root.
 	 *
-	 * @param parent
-	 *                     The parent package fragment root
-	 * @param fragment
-	 *                     The package to get the children for or 'null' to get
-	 *                     the children of the root.
-	 * @param result
-	 *                     Collection where the resulting elements are added
+	 * @param parent   The parent package fragment root
+	 * @param fragment The package to get the children for or 'null' to get the
+	 *                 children of the root.
+	 * @param result   Collection where the resulting elements are added
 	 * @throws JavaModelException
 	 */
-	private void getHierarchicalPackageChildren(final IProjectFragment parent,
-			final IScriptFolder fragment, final Collection<Object> result)
-			throws ModelException {
+	private void getHierarchicalPackageChildren(final IProjectFragment parent, final IScriptFolder fragment,
+			final Collection<Object> result) throws ModelException {
 		IModelElement[] children = parent.getChildren();
 
 		if (fragment == null || fragment.isRootFolder()) {
@@ -502,30 +474,23 @@ public class ScriptExplorerContentProvider
 				}
 				newElements.add(children[i]);
 			}
-			children = newElements
-					.toArray(new IModelElement[newElements.size()]);
+			children = newElements.toArray(new IModelElement[newElements.size()]);
 		}
 
-		String prefix = fragment != null
-				? fragment.getElementName()
-						+ IScriptFolder.PACKAGE_DELIMETER_STR
-				: ""; //$NON-NLS-1$
+		String prefix = fragment != null ? fragment.getElementName() + IScriptFolder.PACKAGE_DELIMETER_STR : ""; //$NON-NLS-1$
 		int prefixLen = prefix.length();
 		for (int i = 0; i < children.length; i++) {
 			if (children[i] instanceof IScriptFolder) {
 				IScriptFolder curr = (IScriptFolder) children[i];
 				String name = curr.getElementName();
 				if (name.startsWith(prefix) && name.length() > prefixLen
-						&& name.indexOf(IScriptFolder.PACKAGE_DELIMITER,
-								prefixLen) == -1) {
+						&& name.indexOf(IScriptFolder.PACKAGE_DELIMITER, prefixLen) == -1) {
 					if (fFoldPackages) {
-						curr = ScriptExplorerContentProvider.getFolded(children,
-								curr);
+						curr = ScriptExplorerContentProvider.getFolded(children, curr);
 					}
 					result.add(curr);
 				} /*
-					 * else if (fragment == null && curr.isRootFolder()) {
-					 * result.add(curr); }
+					 * else if (fragment == null && curr.isRootFolder()) { result.add(curr); }
 					 */
 			} else {
 				result.add(children[i]);
@@ -536,28 +501,23 @@ public class ScriptExplorerContentProvider
 	/**
 	 * Returns the hierarchical packages inside a given folder.
 	 *
-	 * @param folder
-	 *                   The parent folder
-	 * @param result
-	 *                   Collection where the resulting elements are added
-	 * @throws CoreException
-	 *                           thrown when elements could not be accessed
+	 * @param folder The parent folder
+	 * @param result Collection where the resulting elements are added
+	 * @throws CoreException thrown when elements could not be accessed
 	 */
-	private void getHierarchicalPackagesInFolder(final IFolder folder,
-			final Collection<Object> result) throws CoreException {
+	private void getHierarchicalPackagesInFolder(final IFolder folder, final Collection<Object> result)
+			throws CoreException {
 		IResource[] resources = folder.members();
 		for (int i = 0; i < resources.length; i++) {
 			IResource resource = resources[i];
 			if (resource instanceof IFolder) {
 				IFolder curr = (IFolder) resource;
-				IModelElement element = DLTKCore.create(curr);
+				IModelElement element = convert(curr);
 				if (element instanceof IScriptFolder) {
 					if (fFoldPackages) {
 						IScriptFolder fragment = (IScriptFolder) element;
-						IProjectFragment root = (IProjectFragment) fragment
-								.getParent();
-						element = ScriptExplorerContentProvider
-								.getFolded(root.getChildren(), fragment);
+						IProjectFragment root = (IProjectFragment) fragment.getParent();
+						element = ScriptExplorerContentProvider.getFolded(root.getChildren(), fragment);
 					}
 					result.add(element);
 				}
@@ -574,11 +534,8 @@ public class ScriptExplorerContentProvider
 			IScriptFolder element = parent.getScriptFolder(realParentName);
 			if (element != null && element.exists()) {
 				try {
-					if (fFoldPackages
-							&& ScriptExplorerContentProvider.isEmpty(element)
-							&& ScriptExplorerContentProvider
-									.findSinglePackageChild(element,
-											parent.getChildren()) != null) {
+					if (fFoldPackages && ScriptExplorerContentProvider.isEmpty(element) && ScriptExplorerContentProvider
+							.findSinglePackageChild(element, parent.getChildren()) != null) {
 						return getHierarchicalPackageParent(element);
 					}
 				} catch (ModelException e) {
@@ -598,11 +555,9 @@ public class ScriptExplorerContentProvider
 		return parent;
 	}
 
-	private static IScriptFolder getFolded(final IModelElement[] children,
-			IScriptFolder pack) throws ModelException {
+	private static IScriptFolder getFolded(final IModelElement[] children, IScriptFolder pack) throws ModelException {
 		while (ScriptExplorerContentProvider.isEmpty(pack)) {
-			IScriptFolder collapsed = ScriptExplorerContentProvider
-					.findSinglePackageChild(pack, children);
+			IScriptFolder collapsed = ScriptExplorerContentProvider.findSinglePackageChild(pack, children);
 			if (collapsed == null) {
 				return pack;
 			}
@@ -611,24 +566,19 @@ public class ScriptExplorerContentProvider
 		return pack;
 	}
 
-	private static boolean isEmpty(final IScriptFolder fragment)
-			throws ModelException {
-		return !fragment.containsScriptResources()
-				&& fragment.getForeignResources().length == 0;
+	private static boolean isEmpty(final IScriptFolder fragment) throws ModelException {
+		return !fragment.containsScriptResources() && fragment.getForeignResources().length == 0;
 	}
 
-	private static IScriptFolder findSinglePackageChild(
-			final IScriptFolder fragment, final IModelElement[] children) {
-		String prefix = fragment.getElementName()
-				+ IScriptFolder.PACKAGE_DELIMITER;
+	private static IScriptFolder findSinglePackageChild(final IScriptFolder fragment, final IModelElement[] children) {
+		String prefix = fragment.getElementName() + IScriptFolder.PACKAGE_DELIMITER;
 		int prefixLen = prefix.length();
 		IScriptFolder found = null;
 		for (int i = 0; i < children.length; i++) {
 			IModelElement element = children[i];
 			String name = element.getElementName();
 			if (name.startsWith(prefix) && name.length() > prefixLen
-					&& name.indexOf(IScriptFolder.PACKAGE_DELIMITER,
-							prefixLen) == -1) {
+					&& name.indexOf(IScriptFolder.PACKAGE_DELIMITER, prefixLen) == -1) {
 				if (found == null) {
 					found = (IScriptFolder) element;
 				} else {
@@ -642,30 +592,25 @@ public class ScriptExplorerContentProvider
 	// ------ delta processing ------
 
 	/**
-	 * Processes a delta recursively. When more than two children are affected
-	 * the tree is fully refreshed starting at this node.
+	 * Processes a delta recursively. When more than two children are affected the
+	 * tree is fully refreshed starting at this node.
 	 *
-	 * @param delta
-	 *                      the delta to process
-	 * @param runnables
-	 *                      the resulting view changes as runnables (type
-	 *                      {@link Runnable} )
+	 * @param delta     the delta to process
+	 * @param runnables the resulting view changes as runnables (type
+	 *                  {@link Runnable} )
 	 * @return true is returned if the conclusion is to refresh a parent of an
 	 *         element. In that case no siblings need to be processed
-	 * @throws JavaModelException
-	 *                                thrown when the access to an element
-	 *                                failed
+	 * @throws JavaModelException thrown when the access to an element failed
 	 */
-	private boolean processDelta(final IModelElementDelta delta,
-			final Collection<Runnable> runnables) throws ModelException {
+	private boolean processDelta(final IModelElementDelta delta, final Collection<Runnable> runnables)
+			throws ModelException {
 
 		int kind = delta.getKind();
 		int flags = delta.getFlags();
 		IModelElement element = delta.getElement();
 		int elementType = element.getElementType();
 
-		if (elementType != IModelElement.SCRIPT_MODEL
-				&& elementType != IModelElement.SCRIPT_PROJECT) {
+		if (elementType != IModelElement.SCRIPT_MODEL && elementType != IModelElement.SCRIPT_PROJECT) {
 			IScriptProject proj = element.getScriptProject();
 			if (proj == null || !proj.getProject().isOpen()) {
 				// TODO: Not needed if parent already did the 'open' check!
@@ -674,38 +619,32 @@ public class ScriptExplorerContentProvider
 		}
 
 		if (elementType == IModelElement.SCRIPT_FOLDER) {
-			if ((flags & (IModelElementDelta.F_CONTENT
-					| IModelElementDelta.F_CHILDREN)) == IModelElementDelta.F_CONTENT) {
+			if ((flags
+					& (IModelElementDelta.F_CONTENT | IModelElementDelta.F_CHILDREN)) == IModelElementDelta.F_CONTENT) {
 				if (!fIsFlatLayout) {
-					Object parent = getHierarchicalPackageParent(
-							(IScriptFolder) element);
+					Object parent = getHierarchicalPackageParent((IScriptFolder) element);
 					if (!(parent instanceof IProjectFragment)) {
-						postRefresh(internalGetParent(parent), GRANT_PARENT,
-								element, runnables);
+						postRefresh(internalGetParent(parent), GRANT_PARENT, element, runnables);
 						return true;
 					}
 				}
 				// content change, without children info (for example resource
 				// added/removed to class folder package)
-				postRefresh(internalGetParent(element), PARENT, element,
-						runnables);
+				postRefresh(internalGetParent(element), PARENT, element, runnables);
 				return true;
 			}
 
 			if (!fIsFlatLayout) {
 				if (kind == IModelElementDelta.REMOVED) {
-					final Object parent = getHierarchicalPackageParent(
-							(IScriptFolder) element);
+					final Object parent = getHierarchicalPackageParent((IScriptFolder) element);
 					if (parent instanceof IProjectFragment) {
 						postRemove(element, runnables);
 						return false;
 					}
-					postRefresh(internalGetParent(parent), GRANT_PARENT,
-							element, runnables);
+					postRefresh(internalGetParent(parent), GRANT_PARENT, element, runnables);
 					return true;
 				} else if (kind == IModelElementDelta.ADDED) {
-					final Object parent = getHierarchicalPackageParent(
-							(IScriptFolder) element);
+					final Object parent = getHierarchicalPackageParent((IScriptFolder) element);
 					if (parent instanceof IProjectFragment) {
 						if (fFoldPackages) {
 							postRefresh(parent, PARENT, element, runnables);
@@ -714,8 +653,7 @@ public class ScriptExplorerContentProvider
 						postAdd(parent, element, runnables);
 						return false;
 					}
-					postRefresh(internalGetParent(parent), GRANT_PARENT,
-							element, runnables);
+					postRefresh(internalGetParent(parent), GRANT_PARENT, element, runnables);
 					return true;
 				}
 				handleAffectedChildren(delta, element, runnables);
@@ -729,13 +667,11 @@ public class ScriptExplorerContentProvider
 				return false;
 			}
 
-			if (!getProvideMembers() && cu.isWorkingCopy()
-					&& kind == IModelElementDelta.CHANGED) {
+			if (!getProvideMembers() && cu.isWorkingCopy() && kind == IModelElementDelta.CHANGED) {
 				return false;
 			}
 
-			if (kind == IModelElementDelta.CHANGED
-					&& !isStructuralCUChange(flags)) {
+			if (kind == IModelElementDelta.CHANGED && !isStructuralCUChange(flags)) {
 				return false; // test moved ahead
 			}
 
@@ -748,8 +684,7 @@ public class ScriptExplorerContentProvider
 
 		if (elementType == IModelElement.SCRIPT_PROJECT) {
 			// handle open and closing of a project
-			if ((flags & (IModelElementDelta.F_CLOSED
-					| IModelElementDelta.F_OPENED)) != 0) {
+			if ((flags & (IModelElementDelta.F_CLOSED | IModelElementDelta.F_OPENED)) != 0) {
 				postRefresh(element, ORIGINAL, element, runnables);
 				return false;
 			}
@@ -779,8 +714,7 @@ public class ScriptExplorerContentProvider
 				return true;
 
 			} else if (element instanceof IProjectFragment
-					&& ((IProjectFragment) element)
-							.getKind() != IProjectFragment.K_SOURCE) {
+					&& ((IProjectFragment) element).getKind() != IProjectFragment.K_SOURCE) {
 				// libs and class folders can show up twice (in library
 				// container and as resource at original location)
 				IResource resource = element.getResource();
@@ -796,8 +730,7 @@ public class ScriptExplorerContentProvider
 			// a package becomes empty we remove it from the viewer.
 			if (isScriptFolderEmpty(element.getParent())) {
 				if (fViewer.testFindItem(parent) != null) {
-					postRefresh(internalGetParent(parent), GRANT_PARENT,
-							element, runnables);
+					postRefresh(internalGetParent(parent), GRANT_PARENT, element, runnables);
 				}
 				return true;
 			}
@@ -817,8 +750,7 @@ public class ScriptExplorerContentProvider
 				} else {
 					// refresh from grandparent if parent isn't visible yet
 					if (fViewer.testFindItem(parent) == null) {
-						postRefresh(grandparent, GRANT_PARENT, element,
-								runnables);
+						postRefresh(grandparent, GRANT_PARENT, element, runnables);
 					} else {
 						postRefresh(parent, PARENT, element, runnables);
 					}
@@ -828,8 +760,7 @@ public class ScriptExplorerContentProvider
 			postAdd(parent, element, runnables);
 		}
 
-		if (elementType == IModelElement.SOURCE_MODULE
-				|| elementType == IModelElement.BINARY_MODULE) {
+		if (elementType == IModelElement.SOURCE_MODULE || elementType == IModelElement.BINARY_MODULE) {
 			if (kind == IModelElementDelta.CHANGED) {
 				// isStructuralCUChange already performed above
 				postRefresh(element, ORIGINAL, element, runnables);
@@ -843,12 +774,11 @@ public class ScriptExplorerContentProvider
 				postRefresh(element, ORIGINAL, element, runnables);
 				return false;
 			}
-			if ((flags & (IModelElementDelta.F_CONTENT
-					| IModelElementDelta.F_CHILDREN)) == IModelElementDelta.F_CONTENT) {
+			if ((flags
+					& (IModelElementDelta.F_CONTENT | IModelElementDelta.F_CHILDREN)) == IModelElementDelta.F_CONTENT) {
 				// content change, without children info (for example resource
 				// added/removed to class folder package)
-				postRefresh(internalGetParent(element), PARENT, element,
-						runnables);
+				postRefresh(internalGetParent(element), PARENT, element, runnables);
 				return true;
 			}
 			// the source attachment of a JAR has changed
@@ -859,8 +789,7 @@ public class ScriptExplorerContentProvider
 			if (isBuildPathChange(delta)) {
 				// throw the towel and do a full refresh of the affected java
 				// project.
-				postRefresh(element.getScriptProject(), PROJECT, element,
-						runnables);
+				postRefresh(element.getScriptProject(), PROJECT, element, runnables);
 				return true;
 			}
 		}
@@ -871,22 +800,19 @@ public class ScriptExplorerContentProvider
 
 	private static boolean isStructuralCUChange(final int flags) {
 		// No refresh on working copy creation (F_PRIMARY_WORKING_COPY)
-		return (flags & IModelElementDelta.F_CHILDREN) != 0
-				|| (flags & (IModelElementDelta.F_CONTENT
-						| IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
+		return (flags & IModelElementDelta.F_CHILDREN) != 0 || (flags
+				& (IModelElementDelta.F_CONTENT | IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
 	}
 
-	/* package */void handleAffectedChildren(final IModelElementDelta delta,
-			final IModelElement element, final Collection<Runnable> runnables)
-			throws ModelException {
+	/* package */void handleAffectedChildren(final IModelElementDelta delta, final IModelElement element,
+			final Collection<Runnable> runnables) throws ModelException {
 		int count = 0;
 
 		IResourceDelta[] resourceDeltas = delta.getResourceDeltas();
 		if (resourceDeltas != null) {
 			for (int i = 0; i < resourceDeltas.length; i++) {
 				int kind = resourceDeltas[i].getKind();
-				if (kind == IResourceDelta.ADDED
-						|| kind == IResourceDelta.REMOVED) {
+				if (kind == IResourceDelta.ADDED || kind == IResourceDelta.REMOVED) {
 					count++;
 				}
 			}
@@ -894,8 +820,7 @@ public class ScriptExplorerContentProvider
 		IModelElementDelta[] affectedChildren = delta.getAffectedChildren();
 		for (int i = 0; i < affectedChildren.length; i++) {
 			int kind = affectedChildren[i].getKind();
-			if (kind == IModelElementDelta.ADDED
-					|| kind == IModelElementDelta.REMOVED) {
+			if (kind == IModelElementDelta.ADDED || kind == IModelElementDelta.REMOVED) {
 				count++;
 			}
 		}
@@ -905,31 +830,25 @@ public class ScriptExplorerContentProvider
 			if (element instanceof IScriptFolder) {
 				// a package fragment might become non empty refresh from the
 				// parent
-				IModelElement parent = (IModelElement) internalGetParent(
-						element);
+				IModelElement parent = (IModelElement) internalGetParent(element);
 				// 1GE8SI6: ITPJUI:WIN98 - Rename is not shown in Packages View
 				// avoid posting a refresh to an invisible parent
 				if (element.equals(fInput)) {
-					postRefresh(element, ScriptExplorerContentProvider.ORIGINAL,
-							element, runnables);
+					postRefresh(element, ScriptExplorerContentProvider.ORIGINAL, element, runnables);
 				} else {
-					postRefresh(parent, ScriptExplorerContentProvider.PARENT,
-							element, runnables);
+					postRefresh(parent, ScriptExplorerContentProvider.PARENT, element, runnables);
 				}
 			} else if (element instanceof IProjectFragment) {
 				Object toRefresh = internalGetParent(element);
-				postRefresh(toRefresh, ScriptExplorerContentProvider.ORIGINAL,
-						toRefresh, runnables);
+				postRefresh(toRefresh, ScriptExplorerContentProvider.ORIGINAL, toRefresh, runnables);
 			} else {
-				postRefresh(element, ScriptExplorerContentProvider.ORIGINAL,
-						element, runnables);
+				postRefresh(element, ScriptExplorerContentProvider.ORIGINAL, element, runnables);
 			}
 			return;
 		}
 		if (resourceDeltas != null) {
 			for (int i = 0; i < resourceDeltas.length; i++) {
-				if (processResourceDelta(resourceDeltas[i], element,
-						runnables)) {
+				if (processResourceDelta(resourceDeltas[i], element, runnables)) {
 					return; // early return, element got refreshed
 				}
 			}
@@ -941,8 +860,7 @@ public class ScriptExplorerContentProvider
 		}
 	}
 
-	protected void processAffectedChildren(
-			final IModelElementDelta[] affectedChildren,
+	protected void processAffectedChildren(final IModelElementDelta[] affectedChildren,
 			final Collection<Runnable> runnables) throws ModelException {
 		for (int i = 0; i < affectedChildren.length; i++) {
 			processDelta(affectedChildren[i], runnables);
@@ -960,32 +878,25 @@ public class ScriptExplorerContentProvider
 	/**
 	 * Updates the package icon
 	 *
-	 * @param element
-	 *                      the element to update
-	 * @param runnables
-	 *                      the resulting view changes as runnables (type
-	 *                      {@link Runnable} )
+	 * @param element   the element to update
+	 * @param runnables the resulting view changes as runnables (type
+	 *                  {@link Runnable} )
 	 */
-	private void postUpdateIcon(final IModelElement element,
-			final Collection<Runnable> runnables) {
-		runnables.add(() -> fViewer.update(element,
-				new String[] { IBasicPropertyConstants.P_IMAGE }));
+	private void postUpdateIcon(final IModelElement element, final Collection<Runnable> runnables) {
+		runnables.add(() -> fViewer.update(element, new String[] { IBasicPropertyConstants.P_IMAGE }));
 	}
 
 	/**
 	 * Process a resource delta.
 	 *
-	 * @param delta
-	 *                      the delta to process
-	 * @param parent
-	 *                      the parent
-	 * @param runnables
-	 *                      the resulting view changes as runnables (type
-	 *                      {@link Runnable} )
+	 * @param delta     the delta to process
+	 * @param parent    the parent
+	 * @param runnables the resulting view changes as runnables (type
+	 *                  {@link Runnable} )
 	 * @return true if the parent got refreshed
 	 */
-	private boolean processResourceDelta(final IResourceDelta delta,
-			final Object parent, final Collection<Runnable> runnables) {
+	private boolean processResourceDelta(final IResourceDelta delta, final Object parent,
+			final Collection<Runnable> runnables) {
 		int status = delta.getKind();
 		int flags = delta.getFlags();
 
@@ -1001,9 +912,7 @@ public class ScriptExplorerContentProvider
 			if (parent instanceof IScriptFolder) {
 				// refresh one level above to deal with empty package filtering
 				// properly
-				postRefresh(internalGetParent(parent),
-						ScriptExplorerContentProvider.PARENT, parent,
-						runnables);
+				postRefresh(internalGetParent(parent), ScriptExplorerContentProvider.PARENT, parent, runnables);
 				return true;
 			}
 			postRemove(resource, runnables);
@@ -1013,9 +922,7 @@ public class ScriptExplorerContentProvider
 			if (parent instanceof IScriptFolder) {
 				// refresh one level above to deal with empty package filtering
 				// properly
-				postRefresh(internalGetParent(parent),
-						ScriptExplorerContentProvider.PARENT, parent,
-						runnables);
+				postRefresh(internalGetParent(parent), ScriptExplorerContentProvider.PARENT, parent, runnables);
 				return true;
 			}
 			postAdd(parent, resource, runnables);
@@ -1023,8 +930,7 @@ public class ScriptExplorerContentProvider
 		}
 		if ((status & IResourceDelta.CHANGED) != 0) {
 			if ((flags & IResourceDelta.TYPE) != 0) {
-				postRefresh(parent, ScriptExplorerContentProvider.PARENT,
-						resource, runnables);
+				postRefresh(parent, ScriptExplorerContentProvider.PARENT, resource, runnables);
 				return true;
 			}
 		}
@@ -1038,8 +944,7 @@ public class ScriptExplorerContentProvider
 		int count = 0;
 		for (int i = 0; i < resourceDeltas.length; i++) {
 			int kind = resourceDeltas[i].getKind();
-			if (kind == IResourceDelta.ADDED
-					|| kind == IResourceDelta.REMOVED) {
+			if (kind == IResourceDelta.ADDED || kind == IResourceDelta.REMOVED) {
 				count++;
 				if (count > 1) {
 					postRefresh(parent, PARENT, resource, runnables);
@@ -1064,8 +969,7 @@ public class ScriptExplorerContentProvider
 		fShowLibrariesNode = state;
 	}
 
-	protected void postRefresh(Object root, final int relation,
-			final Object affectedElement,
+	protected void postRefresh(Object root, final int relation, final Object affectedElement,
 			final Collection<Runnable> runnables) {
 		// JFace doesn't refresh when object isn't part of the viewer
 		// Therefore move the refresh start down to the viewer's input
@@ -1081,17 +985,14 @@ public class ScriptExplorerContentProvider
 	/**
 	 * Can be implemented by subclasses to add additional elements to refresh
 	 *
-	 * @param toRefresh
-	 *                            the elements to refresh
-	 * @param relation
-	 *                            the relation to the affected element
-	 *                            ({@link #GRANT_PARENT}, {@link #PARENT},
-	 *                            {@link #ORIGINAL}, {@link #PROJECT})
-	 * @param affectedElement
-	 *                            the affected element
+	 * @param toRefresh       the elements to refresh
+	 * @param relation        the relation to the affected element
+	 *                        ({@link #GRANT_PARENT}, {@link #PARENT},
+	 *                        {@link #ORIGINAL}, {@link #PROJECT})
+	 * @param affectedElement the affected element
 	 */
-	protected void augmentElementToRefresh(final List<Object> toRefresh,
-			final int relation, final Object affectedElement) {
+	protected void augmentElementToRefresh(final List<Object> toRefresh, final int relation,
+			final Object affectedElement) {
 	}
 
 	private boolean isParent(final Object root, final Object child) {
@@ -1105,8 +1006,8 @@ public class ScriptExplorerContentProvider
 		return isParent(root, parent);
 	}
 
-	protected void postRefresh(final List<?> toRefresh,
-			final boolean updateLabels, final Collection<Runnable> runnables) {
+	protected void postRefresh(final List<?> toRefresh, final boolean updateLabels,
+			final Collection<Runnable> runnables) {
 		runnables.add(() -> {
 			for (Object item : toRefresh) {
 				fViewer.refresh(item, updateLabels);
@@ -1114,16 +1015,14 @@ public class ScriptExplorerContentProvider
 		});
 	}
 
-	protected void postAdd(final Object parent, final Object element,
-			final Collection<Runnable> runnables) {
+	protected void postAdd(final Object parent, final Object element, final Collection<Runnable> runnables) {
 		runnables.add(() -> {
 			Widget[] items = fViewer.testFindItems(element);
 			for (int i = 0; i < items.length; i++) {
 				Widget item = items[i];
 				if (item instanceof TreeItem && !item.isDisposed()) {
 					TreeItem parentItem = ((TreeItem) item).getParentItem();
-					if (parentItem != null && !parentItem.isDisposed()
-							&& parent.equals(parentItem.getData())) {
+					if (parentItem != null && !parentItem.isDisposed() && parent.equals(parentItem.getData())) {
 						return; // no add, element already added (most
 						// likely by a refresh)
 					}
@@ -1133,13 +1032,11 @@ public class ScriptExplorerContentProvider
 		});
 	}
 
-	protected void postRemove(final Object element,
-			final Collection<Runnable> runnables) {
+	protected void postRemove(final Object element, final Collection<Runnable> runnables) {
 		runnables.add(() -> fViewer.remove(element));
 	}
 
-	protected void postProjectStateChanged(final Object root,
-			final Collection<Runnable> runnables) {
+	protected void postProjectStateChanged(final Object root, final Collection<Runnable> runnables) {
 		runnables.add(() -> {
 			fViewer.refresh(root, true);
 			// trigger a synthetic selection change so that action refresh
