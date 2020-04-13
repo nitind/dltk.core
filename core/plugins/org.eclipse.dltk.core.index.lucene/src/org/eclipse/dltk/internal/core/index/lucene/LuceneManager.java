@@ -99,7 +99,7 @@ public enum LuceneManager {
 					if (!monitor.isCanceled()) {
 						// Commit index data without merging deletions (better
 						// performance)
-						indexContainer.commit(subMonitor.newChild(1), false);
+						indexContainer.commit(subMonitor.newChild(1));
 					}
 				}
 				monitor.done();

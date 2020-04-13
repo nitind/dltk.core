@@ -292,7 +292,7 @@ class IndexContainer {
 		return false;
 	}
 
-	synchronized void commit(IProgressMonitor monitor, boolean mergeDeletes) {
+	synchronized void commit(IProgressMonitor monitor) {
 		int ticks = 1;
 		for (Map<?, ?> dataWriters : fIndexWriters.values()) {
 			ticks += dataWriters.size() * 2;
@@ -308,7 +308,6 @@ class IndexContainer {
 						.entrySet()) {
 					IndexWriter writer = writerEntry.getValue();
 					if (writer != null && !subMonitor.isCanceled()) {
-						writer.forceMergeDeletes(mergeDeletes);
 						writer.commit();
 						subMonitor.worked(1);
 						if (dataSearchers != null) {
@@ -328,7 +327,6 @@ class IndexContainer {
 				}
 			}
 			if (fTimestampsWriter != null && !subMonitor.isCanceled()) {
-				fTimestampsWriter.forceMergeDeletes(mergeDeletes);
 				fTimestampsWriter.commit();
 				subMonitor.worked(1);
 			}
