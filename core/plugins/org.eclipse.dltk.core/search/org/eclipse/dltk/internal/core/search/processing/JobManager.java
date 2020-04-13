@@ -436,7 +436,7 @@ public abstract class JobManager implements Runnable {
 						// just woke up, delay before processing any new jobs,
 						// allow some time for the active thread to finish
 						synchronized (delaySignal) {
-							delaySignal.wait(500);
+							delaySignal.wait(50);
 						}
 						continue;
 					}
