@@ -75,7 +75,7 @@ public enum LuceneManager {
 
 	private final class Committer extends Job {
 
-		private final static int DELAY = 5000;
+		private final static int DELAY = 50;
 		private boolean fClosed = false;
 
 		public Committer() {
@@ -158,10 +158,7 @@ public enum LuceneManager {
 		@Override
 		public void aboutToBeIdle() {
 			// run directly without special job
-			synchronized (this) {
-				fCommitter.run(new NullProgressMonitor());
-			}
-
+			fCommitter.run(new NullProgressMonitor());
 		}
 
 		@Override

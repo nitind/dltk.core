@@ -52,7 +52,85 @@ import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
  * 
  * @author Bartlomiej Laczkowski
  */
-public final class DocumentFactory {
+public enum DocumentFactory {
+	INSTANCE;
+
+	private String EMPTY = new String();
+
+	private Document timestamp = new Document();
+	private StringField timestampPath;
+	private NumericDocValuesField timestampValue;
+
+	private Document reference = new Document();
+	private StringField referenceFPath;
+	private StringField referenceFQualifier;
+	private StringField referenceFElementNameLC;
+	private NumericDocValuesField referenceNDVOffset;
+	private NumericDocValuesField referenceNDVLength;
+	private BinaryDocValuesField referenceBPath;
+	private BinaryDocValuesField referenceBElementName;
+	private BinaryDocValuesField referenceBQualifier;
+	private BinaryDocValuesField referenceBMetadata;
+
+	private Document declaration = new Document();
+
+	private StringField declarationFPath;
+	private StringField declarationFQualifier;
+	private StringField declarationFParent;
+	private StringField declarationFElementNameLC;
+	private StringField declarationFElementNameCC;
+	private NumericDocValuesField declarationNDVOffset;
+	private NumericDocValuesField declarationNDVLength;
+	private NumericDocValuesField declarationNDVNameOffset;
+	private NumericDocValuesField declarationNDVNameLength;
+	private NumericDocValuesField declarationNDVFlags;
+
+	private BinaryDocValuesField declarationBPath;
+	private BinaryDocValuesField declarationBElementName;
+	private BinaryDocValuesField declarationBQualifier;
+	private BinaryDocValuesField declarationBMetadata;
+	private BinaryDocValuesField declarationBParent;
+	private BinaryDocValuesField declarationBDoc;
+
+	private DocumentFactory() {
+		timestampPath = addStringEntry(timestamp, F_PATH, true);
+		timestampValue = addLongEntry(timestamp, NDV_TIMESTAMP);
+
+		referenceFPath = addStringEntry(reference, F_PATH, false);
+		referenceFQualifier = addStringEntry(reference, F_QUALIFIER, false);
+		referenceFElementNameLC = addStringEntry(reference, F_ELEMENT_NAME_LC,
+				false);
+
+		// Add numeric doc values
+		referenceNDVOffset = addLongEntry(reference, NDV_OFFSET);
+		referenceNDVLength = addLongEntry(reference, NDV_LENGTH);
+		// Add text as binary doc values
+		referenceBPath = addBinaryEntry(reference, BDV_PATH);
+		referenceBElementName = addBinaryEntry(reference, BDV_ELEMENT_NAME);
+		referenceBQualifier = addBinaryEntry(reference, BDV_QUALIFIER);
+		referenceBMetadata = addBinaryEntry(reference, BDV_METADATA);
+
+		declarationFPath = addStringEntry(declaration, F_PATH, false);
+		declarationFParent = addStringEntry(declaration, F_PARENT, false);
+		declarationFQualifier = addStringEntry(declaration, F_QUALIFIER, false);
+		declarationFElementNameLC = addStringEntry(declaration,
+				F_ELEMENT_NAME_LC, false);
+		declarationFElementNameCC = addStringEntry(declaration, F_CC_NAME,
+				false);
+		// Add numeric doc values
+		declarationNDVOffset = addLongEntry(declaration, NDV_OFFSET);
+		declarationNDVLength = addLongEntry(declaration, NDV_LENGTH);
+		declarationNDVNameOffset = addLongEntry(declaration, NDV_NAME_OFFSET);
+		declarationNDVNameLength = addLongEntry(declaration, NDV_NAME_LENGTH);
+		declarationNDVFlags = addLongEntry(declaration, NDV_FLAGS);
+		// Add text as binary doc values
+		declarationBPath = addBinaryEntry(declaration, BDV_PATH);
+		declarationBElementName = addBinaryEntry(declaration, BDV_ELEMENT_NAME);
+		declarationBParent = addBinaryEntry(declaration, BDV_PARENT);
+		declarationBQualifier = addBinaryEntry(declaration, BDV_QUALIFIER);
+		declarationBMetadata = addBinaryEntry(declaration, BDV_METADATA);
+		declarationBDoc = addBinaryEntry(declaration, BDV_DOC);
+	}
 
 	/**
 	 * Creates and returns a document for provided reference info.
@@ -61,22 +139,26 @@ public final class DocumentFactory {
 	 * @param info
 	 * @return a document for provided reference info
 	 */
-	public static Document createForReference(String source,
-			ReferenceInfo info) {
-		Document doc = new Document();
+	public Document createForReference(String source, ReferenceInfo info) {
 		// Fields for search (no store, doc values will be used instead)
-		addStringEntry(doc, F_PATH, source, false);
-		addStringEntry(doc, F_QUALIFIER, info.qualifier, false);
-		addStringLCEntry(doc, F_ELEMENT_NAME_LC, info.elementName, false);
+		referenceFPath.setStringValue(source);
+		referenceFQualifier.setStringValue(
+				info.qualifier != null ? info.qualifier : EMPTY);
+		referenceFElementNameLC.setStringValue(info.elementName.toLowerCase());
 		// Add numeric doc values
-		addLongEntry(doc, NDV_OFFSET, info.offset);
-		addLongEntry(doc, NDV_LENGTH, info.length);
+		referenceNDVOffset.setLongValue(info.offset);
+		referenceNDVLength.setLongValue(info.length);
+
 		// Add text as binary doc values
-		addBinaryEntry(doc, BDV_PATH, source);
-		addBinaryEntry(doc, BDV_ELEMENT_NAME, info.elementName);
-		addBinaryEntry(doc, BDV_QUALIFIER, info.qualifier);
-		addBinaryEntry(doc, BDV_METADATA, info.metadata);
-		return doc;
+		referenceBPath.setBytesValue(source.getBytes());
+		referenceBElementName.setBytesValue(info.elementName.getBytes());
+		referenceBQualifier
+				.setBytesValue(info.qualifier == null ? BytesRef.EMPTY_BYTES
+						: info.qualifier.getBytes());
+		referenceBMetadata
+				.setBytesValue(info.metadata == null ? BytesRef.EMPTY_BYTES
+						: info.metadata.getBytes());
+		return reference;
 	}
 
 	/**
@@ -86,29 +168,41 @@ public final class DocumentFactory {
 	 * @param info
 	 * @return a document for provided declaration info
 	 */
-	public static Document createForDeclaration(String source,
-			DeclarationInfo info) {
-		Document doc = new Document();
+	public Document createForDeclaration(String source, DeclarationInfo info) {
 		// Fields for search (no store, doc values will be used instead)
-		addStringEntry(doc, F_PATH, source, false);
-		addStringEntry(doc, F_PARENT, info.parent, false);
-		addStringEntry(doc, F_QUALIFIER, info.qualifier, false);
-		addStringLCEntry(doc, F_ELEMENT_NAME_LC, info.elementName, false);
-		addCCNameEntry(doc, info.elementName);
+		declarationFPath.setStringValue(source);
+		declarationFParent
+				.setStringValue(info.parent != null ? info.parent : EMPTY);
+		declarationFQualifier.setStringValue(
+				info.qualifier != null ? info.qualifier : EMPTY);
+		declarationFElementNameLC
+				.setStringValue(info.elementName.toLowerCase());
+		declarationFElementNameCC.setStringValue(ccValue(info.elementName));
 		// Add numeric doc values
-		addLongEntry(doc, NDV_OFFSET, info.offset);
-		addLongEntry(doc, NDV_LENGTH, info.length);
-		addLongEntry(doc, NDV_NAME_OFFSET, info.nameOffset);
-		addLongEntry(doc, NDV_NAME_LENGTH, info.nameLength);
-		addLongEntry(doc, NDV_FLAGS, info.flags);
+
+		declarationNDVOffset.setLongValue(info.offset);
+		declarationNDVLength.setLongValue(info.length);
+		declarationNDVNameOffset.setLongValue(info.nameOffset);
+		declarationNDVNameLength.setLongValue(info.nameLength);
+		declarationNDVFlags.setLongValue(info.flags);
+
 		// Add text as binary doc values
-		addBinaryEntry(doc, BDV_PATH, source);
-		addBinaryEntry(doc, BDV_ELEMENT_NAME, info.elementName);
-		addBinaryEntry(doc, BDV_PARENT, info.parent);
-		addBinaryEntry(doc, BDV_QUALIFIER, info.qualifier);
-		addBinaryEntry(doc, BDV_METADATA, info.metadata);
-		addBinaryEntry(doc, BDV_DOC, info.doc);
-		return doc;
+		declarationBPath.setBytesValue(source.getBytes());
+		declarationBElementName.setBytesValue(
+				info.elementName != null ? info.elementName.getBytes()
+						: BytesRef.EMPTY_BYTES);
+		declarationBParent
+				.setBytesValue(info.parent != null ? info.parent.getBytes()
+						: BytesRef.EMPTY_BYTES);
+		declarationBQualifier.setBytesValue(
+				info.qualifier != null ? info.qualifier.getBytes()
+						: BytesRef.EMPTY_BYTES);
+		declarationBMetadata
+				.setBytesValue(info.metadata != null ? info.metadata.getBytes()
+						: BytesRef.EMPTY_BYTES);
+		declarationBDoc.setBytesValue(
+				info.doc != null ? info.doc.getBytes() : BytesRef.EMPTY_BYTES);
+		return declaration;
 	}
 
 	/**
@@ -118,37 +212,32 @@ public final class DocumentFactory {
 	 * @param timestamp
 	 * @return a document for source file time stamp
 	 */
-	public static Document createForTimestamp(String source, long timestamp) {
-		Document doc = new Document();
-		addStringEntry(doc, F_PATH, source, true);
-		addLongEntry(doc, NDV_TIMESTAMP, timestamp);
-		return doc;
+	public Document createForTimestamp(String source, long timestamp) {
+		timestampValue.setLongValue(timestamp);
+		timestampPath.setStringValue(source);
+
+		return this.timestamp;
 	}
 
-	private static void addLongEntry(Document doc, String category,
-			long value) {
-		doc.add(new NumericDocValuesField(category, value));
+	private NumericDocValuesField addLongEntry(Document doc, String category) {
+		NumericDocValuesField f = new NumericDocValuesField(category, 0L);
+		doc.add(f);
+
+		return f;
 	}
 
-	private static void addStringEntry(Document doc, String category,
-			String value, boolean store) {
-		if (value == null) {
-			return;
-		}
-		doc.add(new StringField(category, value,
-				store ? Field.Store.YES : Field.Store.NO));
+	private StringField addStringEntry(Document doc, String category,
+			boolean store) {
+		StringField f = new StringField(category, EMPTY,
+				store ? Field.Store.YES : Field.Store.NO);
+		doc.add(f);
+		return f;
 	}
 
-	private static void addStringLCEntry(Document doc, String category,
-			String value, boolean store) {
-		addStringEntry(doc, category, value.toLowerCase(), store);
-	}
-
-	private static void addCCNameEntry(Document doc, String name) {
-		String camelCaseName = null;
+	private String ccValue(String value) {
 		StringBuilder camelCaseNameBuf = new StringBuilder();
-		for (int i = 0; i < name.length(); ++i) {
-			char ch = name.charAt(i);
+		for (int i = 0; i < value.length(); ++i) {
+			char ch = value.charAt(i);
 			if (Character.isUpperCase(ch)) {
 				camelCaseNameBuf.append(ch);
 			} else if (i == 0) {
@@ -156,18 +245,15 @@ public final class DocumentFactory {
 				break;
 			}
 		}
-		camelCaseName = camelCaseNameBuf.length() > 0
-				? camelCaseNameBuf.toString()
-				: null;
-		addStringEntry(doc, F_CC_NAME, camelCaseName, false);
+		return camelCaseNameBuf.toString();
 	}
 
-	private static void addBinaryEntry(Document doc, String category,
-			String value) {
-		if (value == null) {
-			return;
-		}
-		doc.add(new BinaryDocValuesField(category, new BytesRef(value)));
+	private BinaryDocValuesField addBinaryEntry(Document doc, String category) {
+		BinaryDocValuesField f = new BinaryDocValuesField(category,
+				new BytesRef());
+		doc.add(f);
+
+		return f;
 	}
 
 }

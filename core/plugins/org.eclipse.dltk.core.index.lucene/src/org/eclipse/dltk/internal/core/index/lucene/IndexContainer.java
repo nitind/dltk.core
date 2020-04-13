@@ -31,7 +31,6 @@ import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.AlreadyClosedException;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.SleepingLockWrapper;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -86,7 +85,6 @@ class IndexContainer {
 	}
 
 	private static final String TIMESTAMPS_DIR = "timestamps"; //$NON-NLS-1$
-	private static final long WRITE_LOCK_TIMEOUT = 3000;
 
 	private final String fIndexRoot;
 	private final String fContainerId;
@@ -134,13 +132,13 @@ class IndexContainer {
 		Directory indexDir = FSDirectory.open(path);
 		purgeLocks(path);
 		IndexWriterConfig config = new IndexWriterConfig(new SimpleAnalyzer());
+		config.setUseCompoundFile(false);
 		ConcurrentMergeScheduler mergeScheduler = new ConcurrentMergeScheduler();
 		mergeScheduler.setDefaultMaxMergesAndThreads(true);
 		config.setMergeScheduler(mergeScheduler);
 		config.setOpenMode(OpenMode.CREATE_OR_APPEND);
 		config.setCommitOnClose(false);
-		return new IndexWriter(
-				new SleepingLockWrapper(indexDir, WRITE_LOCK_TIMEOUT), config);
+		return new IndexWriter(indexDir, config);
 	}
 
 	private IndexWriter getWriter(Path path) {
@@ -163,7 +161,7 @@ class IndexContainer {
 		return fContainerId;
 	}
 
-	public synchronized IndexWriter getTimestampsWriter() {
+	public IndexWriter getTimestampsWriter() {
 		if (fTimestampsWriter == null) {
 			Path writerPath = Paths.get(fIndexRoot, fContainerId,
 					TIMESTAMPS_DIR);
@@ -191,8 +189,7 @@ class IndexContainer {
 				String.valueOf(elementType));
 	}
 
-	public synchronized IndexWriter getIndexWriter(IndexType dataType,
-			int elementType) {
+	public IndexWriter getIndexWriter(IndexType dataType, int elementType) {
 		IndexWriter writer = fIndexWriters.get(dataType).get(elementType);
 		if (writer == null) {
 			Path writerPath = getPath(dataType, elementType);
@@ -231,7 +228,7 @@ class IndexContainer {
 		return searcher;
 	}
 
-	public synchronized void delete(String sourceModule) {
+	public void delete(String sourceModule) {
 		Term term = new Term(IndexFields.F_PATH, sourceModule);
 		try {
 			// Cleanup related time stamp
@@ -248,7 +245,7 @@ class IndexContainer {
 		}
 	}
 
-	public synchronized void delete(boolean wait) {
+	public void delete(boolean wait) {
 		// Delete container entry entirely
 		(new IndexCleaner()).clean(!wait);
 	}
@@ -281,7 +278,7 @@ class IndexContainer {
 		}
 	}
 
-	synchronized boolean hasChanges() {
+	boolean hasChanges() {
 		for (Map<Integer, IndexWriter> dataWriters : fIndexWriters.values()) {
 			for (IndexWriter writer : dataWriters.values()) {
 				if (writer != null && writer.hasUncommittedChanges()) {

@@ -128,7 +128,7 @@ public class LuceneIndexer extends AbstractIndexer {
 				IndexType.DECLARATIONS, info.elementType);
 		try {
 			writer.addDocument(
-					DocumentFactory.createForDeclaration(fFile, info));
+					DocumentFactory.INSTANCE.createForDeclaration(fFile, info));
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
@@ -139,7 +139,8 @@ public class LuceneIndexer extends AbstractIndexer {
 		IndexWriter writer = LuceneManager.INSTANCE.findIndexWriter(fContainer,
 				IndexType.REFERENCES, info.elementType);
 		try {
-			writer.addDocument(DocumentFactory.createForReference(fFile, info));
+			writer.addDocument(
+					DocumentFactory.INSTANCE.createForReference(fFile, info));
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
@@ -161,8 +162,8 @@ public class LuceneIndexer extends AbstractIndexer {
 		IndexWriter indexWriter = LuceneManager.INSTANCE
 				.findTimestampsWriter(fContainer);
 		try {
-			indexWriter.addDocument(
-					DocumentFactory.createForTimestamp(fFile, lastModified));
+			indexWriter.addDocument(DocumentFactory.INSTANCE
+					.createForTimestamp(fFile, lastModified));
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
