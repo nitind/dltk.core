@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -35,13 +35,11 @@ public class ProgressJob extends Job {
 		running = true;
 		try {
 			this.monitor = monitor;
-			monitor.beginTask(Messages.manager_indexingTask,
-					IProgressMonitor.UNKNOWN);
+			monitor.beginTask(Messages.manager_indexingTask, IProgressMonitor.UNKNOWN);
 
-			while (!monitor.isCanceled()
-					&& (jobManager.awaitingJobsCount()) > 0) {
+			while (!monitor.isCanceled() && (jobManager.awaitingJobsCount()) > 0) {
 				try {
-					Thread.sleep(50);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					// ignore
 				}
