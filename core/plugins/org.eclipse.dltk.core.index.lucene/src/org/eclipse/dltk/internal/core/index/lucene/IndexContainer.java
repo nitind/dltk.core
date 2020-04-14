@@ -285,9 +285,6 @@ class IndexContainer {
 					return true;
 				}
 			}
-			if (fTimestampsWriter != null) {
-				return fTimestampsWriter.hasUncommittedChanges();
-			}
 		}
 		return false;
 	}
@@ -295,33 +292,18 @@ class IndexContainer {
 	void commit(IProgressMonitor monitor) {
 		int ticks = 1;
 		for (Map<?, ?> dataWriters : fIndexWriters.values()) {
-			ticks += dataWriters.size() * 2;
+			ticks += dataWriters.size();
 		}
 		SubMonitor subMonitor = SubMonitor.convert(monitor, ticks);
 		try {
 			for (Entry<IndexType, Map<Integer, IndexWriter>> entry : fIndexWriters
 					.entrySet()) {
 				Map<Integer, IndexWriter> dataWriters = entry.getValue();
-				Map<Integer, SearcherManager> dataSearchers = fIndexSearchers
-						.get(entry.getKey());
 				for (Entry<Integer, IndexWriter> writerEntry : dataWriters
 						.entrySet()) {
 					IndexWriter writer = writerEntry.getValue();
 					if (writer != null && !subMonitor.isCanceled()) {
 						writer.commit();
-						subMonitor.worked(1);
-						if (dataSearchers != null) {
-							SearcherManager m = dataSearchers
-									.get(writerEntry.getKey());
-							if (m != null) {
-								try {
-									m.maybeRefreshBlocking();
-								} catch (IOException e) {
-									dataSearchers.put(writerEntry.getKey(),
-											null);
-								}
-							}
-						}
 						subMonitor.worked(1);
 					}
 				}
