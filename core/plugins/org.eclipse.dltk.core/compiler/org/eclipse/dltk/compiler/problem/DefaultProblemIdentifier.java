@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -34,12 +34,10 @@ public enum DefaultProblemIdentifier implements IProblemIdentifier {
 		return DLTKCore.PLUGIN_ID;
 	}
 
-	private static class Manager
-			extends NatureExtensionManager<IProblemIdentifierFactory> {
+	private static class Manager extends NatureExtensionManager<IProblemIdentifierFactory> {
 
 		public Manager() {
-			super(InternalDLTKLanguageManager.PROBLEM_FACTORY_EXTPOINT,
-					IProblemIdentifierFactory.class);
+			super(InternalDLTKLanguageManager.PROBLEM_FACTORY_EXTPOINT, IProblemIdentifierFactory.class);
 		}
 
 		@Override
@@ -54,9 +52,13 @@ public enum DefaultProblemIdentifier implements IProblemIdentifier {
 
 	}
 
-	private static synchronized Manager getManager() {
+	private static Manager getManager() {
 		if (manager == null) {
-			manager = new Manager();
+			synchronized (DefaultProblemIdentifier.class) {
+				if (manager == null) {
+					manager = new Manager();
+				}
+			}
 		}
 		return manager;
 	}
@@ -72,14 +74,12 @@ public enum DefaultProblemIdentifier implements IProblemIdentifier {
 		if (id != null && id.length() != 0) {
 			final int pos = id.indexOf(SEPARATOR);
 			if (pos >= 0) {
-				IProblemIdentifierFactory[] factories = getManager()
-						.getInstances(id.substring(0, pos));
+				IProblemIdentifierFactory[] factories = getManager().getInstances(id.substring(0, pos));
 				if (factories != null) {
 					final String localName = id.substring(pos + 1);
 					for (IProblemIdentifierFactory factory : factories) {
 						try {
-							final IProblemIdentifier value = factory
-									.valueOf(localName);
+							final IProblemIdentifier value = factory.valueOf(localName);
 							if (value != null) {
 								return value;
 							}
@@ -90,10 +90,8 @@ public enum DefaultProblemIdentifier implements IProblemIdentifier {
 				}
 			}
 			synchronized (reportedProblemIds) {
-				if (reportedProblemIds.size() < 100
-						&& reportedProblemIds.add(id)) {
-					DLTKCore.warn(
-							"Error decoding problem idenfier \"" + id + "\"");
+				if (reportedProblemIds.size() < 100 && reportedProblemIds.add(id)) {
+					DLTKCore.warn("Error decoding problem idenfier \"" + id + "\"");
 				}
 			}
 			try {
@@ -108,8 +106,7 @@ public enum DefaultProblemIdentifier implements IProblemIdentifier {
 	}
 
 	public static IProblemIdentifier[] values(String namespace) {
-		final IProblemIdentifierFactory[] factories = getManager()
-				.getInstances(namespace);
+		final IProblemIdentifierFactory[] factories = getManager().getInstances(namespace);
 		final List<IProblemIdentifier> result = new ArrayList<>();
 		if (factories != null) {
 			for (IProblemIdentifierFactory factory : factories) {
@@ -133,8 +130,7 @@ public enum DefaultProblemIdentifier implements IProblemIdentifier {
 		if (identifier == null) {
 			return Util.EMPTY_STRING;
 		} else if (identifier instanceof Enum<?>) {
-			return identifier.getClass().getName() + SEPARATOR
-					+ identifier.name();
+			return identifier.getClass().getName() + SEPARATOR + identifier.name();
 		} else {
 			return identifier.name();
 		}

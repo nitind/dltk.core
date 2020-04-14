@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -24,28 +24,29 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.builder.IScriptBuilder;
 import org.eclipse.dltk.utils.NatureExtensionManager;
 
-public class ScriptBuilderManager
-		extends NatureExtensionManager<IScriptBuilder> {
+public class ScriptBuilderManager extends NatureExtensionManager<IScriptBuilder> {
 
 	private ScriptBuilderManager() {
 		super(LANGUAGE_EXTPOINT, IScriptBuilder.class, "#"); //$NON-NLS-1$
 	}
 
-	private final static String LANGUAGE_EXTPOINT = DLTKCore.PLUGIN_ID
-			+ ".builder"; //$NON-NLS-1$
+	private final static String LANGUAGE_EXTPOINT = DLTKCore.PLUGIN_ID + ".builder"; //$NON-NLS-1$
 
 	private static ScriptBuilderManager manager = null;
 
-	private synchronized static ScriptBuilderManager getManager() {
+	private static ScriptBuilderManager getManager() {
 		if (manager == null) {
-			manager = new ScriptBuilderManager();
+			synchronized (ScriptBuilderManager.class) {
+				if (manager == null) {
+					manager = new ScriptBuilderManager();
+				}
+			}
 		}
 		return manager;
 	}
 
 	@Override
-	protected void registerConfigurationElements(
-			IConfigurationElement[] elements, String categoryAttr) {
+	protected void registerConfigurationElements(IConfigurationElement[] elements, String categoryAttr) {
 		super.registerConfigurationElements(elements, categoryAttr);
 		for (IConfigurationElement element : elements) {
 			if ("disable".equals(element.getName())) { //$NON-NLS-1$
@@ -96,8 +97,7 @@ public class ScriptBuilderManager
 	}
 
 	@Override
-	protected IScriptBuilder[] filter(IScriptBuilder[] objects,
-			String natureId) {
+	protected IScriptBuilder[] filter(IScriptBuilder[] objects, String natureId) {
 		if (objects != null) {
 			final List<String> disable = disabled.get(natureId);
 			if (disable != null) {
@@ -120,17 +120,14 @@ public class ScriptBuilderManager
 	protected final Map<Object, Integer> priorities = new IdentityHashMap<>();
 
 	@Override
-	protected Object createInstanceByDescriptor(Object descriptor)
-			throws CoreException {
+	protected Object createInstanceByDescriptor(Object descriptor) throws CoreException {
 		final Object instance = super.createInstanceByDescriptor(descriptor);
-		priorities.put(instance,
-				priorityOf((IConfigurationElement) descriptor));
+		priorities.put(instance, priorityOf((IConfigurationElement) descriptor));
 		return instance;
 	}
 
 	@Override
-	protected IScriptBuilder[] merge(IScriptBuilder[] all,
-			IScriptBuilder[] nature) {
+	protected IScriptBuilder[] merge(IScriptBuilder[] all, IScriptBuilder[] nature) {
 		final IScriptBuilder[] result = super.merge(all, nature);
 		Arrays.sort(result, new Comparator<IScriptBuilder>() {
 			int priority(IScriptBuilder builder) {

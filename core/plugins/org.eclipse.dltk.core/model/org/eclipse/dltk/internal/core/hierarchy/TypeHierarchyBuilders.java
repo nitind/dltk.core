@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -21,34 +21,32 @@ import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.core.ITypeHierarchyBuilder;
 import org.eclipse.dltk.utils.NatureExtensionManager;
 
-public class TypeHierarchyBuilders extends
-		NatureExtensionManager<ITypeHierarchyBuilder> {
+public class TypeHierarchyBuilders extends NatureExtensionManager<ITypeHierarchyBuilder> {
 
 	private static TypeHierarchyBuilders INSTANCE = null;
 
-	private static synchronized TypeHierarchyBuilders get() {
+	private static TypeHierarchyBuilders get() {
 		if (INSTANCE == null) {
-			INSTANCE = new TypeHierarchyBuilders();
+			synchronized (TypeHierarchyBuilders.class) {
+				if (INSTANCE == null) {
+					INSTANCE = new TypeHierarchyBuilders();
+				}
+			}
 		}
 		return INSTANCE;
 	}
 
 	public TypeHierarchyBuilders() {
-		super(DLTKCore.PLUGIN_ID + ".typeHierarchy",
-				ITypeHierarchyBuilder.class);
+		super(DLTKCore.PLUGIN_ID + ".typeHierarchy", ITypeHierarchyBuilder.class);
 	}
 
-	public static ITypeHierarchy getTypeHierarchy(IType type,
-			ITypeHierarchy.Mode mode, IProgressMonitor monitor) {
-		final IDLTKLanguageToolkit toolkit = DLTKLanguageManager
-				.getLanguageToolkit(type);
+	public static ITypeHierarchy getTypeHierarchy(IType type, ITypeHierarchy.Mode mode, IProgressMonitor monitor) {
+		final IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(type);
 		if (toolkit != null) {
-			final ITypeHierarchyBuilder[] builders = get().getInstances(
-					toolkit.getNatureId());
+			final ITypeHierarchyBuilder[] builders = get().getInstances(toolkit.getNatureId());
 			if (builders != null) {
 				for (ITypeHierarchyBuilder builder : builders) {
-					final ITypeHierarchy hierarchy = builder.build(type, mode,
-							monitor);
+					final ITypeHierarchy hierarchy = builder.build(type, mode, monitor);
 					if (hierarchy != null) {
 						return hierarchy;
 					}

@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -38,9 +38,13 @@ public class ProblemCategoryManager {
 
 	private static ProblemCategoryManager instance = null;
 
-	public static synchronized ProblemCategoryManager getInstance() {
+	public static ProblemCategoryManager getInstance() {
 		if (instance == null) {
-			instance = new ProblemCategoryManager();
+			synchronized (ProblemCategoryManager.class) {
+				if (instance == null) {
+					instance = new ProblemCategoryManager();
+				}
+			}
 		}
 		return instance;
 	}
@@ -63,8 +67,7 @@ public class ProblemCategoryManager {
 		public boolean equals(Object obj) {
 			if (obj instanceof Key) {
 				final Key other = (Key) obj;
-				return natureId.equals(other.natureId)
-						&& scopeId.equals(other.scopeId);
+				return natureId.equals(other.natureId) && scopeId.equals(other.scopeId);
 			}
 			return false;
 		}
@@ -78,8 +81,7 @@ public class ProblemCategoryManager {
 	}
 
 	@SuppressWarnings("serial")
-	static class ProblemCategory extends HashSet<IProblemIdentifier>
-			implements IProblemCategory {
+	static class ProblemCategory extends HashSet<IProblemIdentifier> implements IProblemCategory {
 
 		private final String name;
 		private final Collection<IProblemIdentifier> contents;
@@ -102,22 +104,20 @@ public class ProblemCategoryManager {
 	}
 
 	/**
-	 * returns an array (empty is nothing can be found) of all the category ids
-	 * that can be found for this problem.
+	 * returns an array (empty is nothing can be found) of all the category ids that
+	 * can be found for this problem.
 	 *
 	 * @param natureId
 	 * @param scopeId
 	 * @param problem
 	 * @return
 	 */
-	public String[] getID(String natureId, String scopeId,
-			IProblemIdentifier problem) {
+	public String[] getID(String natureId, String scopeId, IProblemIdentifier problem) {
 		Assert.isNotNull(natureId);
 		ScopeDescriptor scope = getScope(natureId, scopeId);
 		if (scope == null)
 			return new String[0];
-		Iterator<Entry<String, ProblemCategory>> iterator = scope.entrySet()
-				.iterator();
+		Iterator<Entry<String, ProblemCategory>> iterator = scope.entrySet().iterator();
 		List<String> ids = new ArrayList<>();
 		while (iterator.hasNext()) {
 			Entry<String, ProblemCategory> entry = iterator.next();
@@ -128,8 +128,7 @@ public class ProblemCategoryManager {
 		return ids.toArray(new String[ids.size()]);
 	}
 
-	public IProblemCategory getCategory(String natureId, String scopeId,
-			String id) {
+	public IProblemCategory getCategory(String natureId, String scopeId, String id) {
 		Assert.isNotNull(natureId);
 		ScopeDescriptor scope = getScope(natureId, scopeId);
 		if (scope == null)
@@ -153,15 +152,12 @@ public class ProblemCategoryManager {
 		}
 		if (scope == null) {
 			scope = new ScopeDescriptor();
-			final IConfigurationElement[] elements = Platform
-					.getExtensionRegistry().getConfigurationElementsFor(
-							InternalDLTKLanguageManager.PROBLEM_FACTORY_EXTPOINT);
+			final IConfigurationElement[] elements = Platform.getExtensionRegistry()
+					.getConfigurationElementsFor(InternalDLTKLanguageManager.PROBLEM_FACTORY_EXTPOINT);
 			for (IConfigurationElement element : elements) {
 				if (CATEGORY_ELEMENT.equals(element.getName())
-						&& scopeKey.natureId
-								.equals(element.getAttribute(NATURE_ATTR))
-						&& scopeKey.scopeId
-								.equals(element.getAttribute(SCOPE_ATTR))) {
+						&& scopeKey.natureId.equals(element.getAttribute(NATURE_ATTR))
+						&& scopeKey.scopeId.equals(element.getAttribute(SCOPE_ATTR))) {
 					final String categoryId = element.getAttribute(ID_ATTR);
 					if (categoryId != null) {
 						ProblemCategory category = scope.get(categoryId);
@@ -169,12 +165,9 @@ public class ProblemCategoryManager {
 							category = new ProblemCategory(categoryId);
 							scope.put(categoryId, category);
 						}
-						for (IConfigurationElement problem : element
-								.getChildren(PROBLEM_ELEMENT)) {
-							final IProblemIdentifier identifier = DefaultProblemIdentifier
-									.decode(problem.getValue());
-							if (identifier != null
-									&& !(identifier instanceof ProblemIdentifierInt)
+						for (IConfigurationElement problem : element.getChildren(PROBLEM_ELEMENT)) {
+							final IProblemIdentifier identifier = DefaultProblemIdentifier.decode(problem.getValue());
+							if (identifier != null && !(identifier instanceof ProblemIdentifierInt)
 									&& !(identifier instanceof ProblemIdentifierString)) {
 								category.add(identifier);
 							}

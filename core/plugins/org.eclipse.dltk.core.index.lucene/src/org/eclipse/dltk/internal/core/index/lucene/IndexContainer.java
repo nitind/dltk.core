@@ -292,7 +292,7 @@ class IndexContainer {
 		return false;
 	}
 
-	synchronized void commit(IProgressMonitor monitor) {
+	void commit(IProgressMonitor monitor) {
 		int ticks = 1;
 		for (Map<?, ?> dataWriters : fIndexWriters.values()) {
 			ticks += dataWriters.size() * 2;

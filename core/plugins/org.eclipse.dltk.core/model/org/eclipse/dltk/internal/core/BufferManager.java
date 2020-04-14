@@ -3,10 +3,10 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
- 
+
  *******************************************************************************/
 package org.eclipse.dltk.internal.core;
 
@@ -39,8 +39,7 @@ public class BufferManager {
 	 */
 	protected void addBuffer(IBuffer buffer) {
 		if (VERBOSE) {
-			String owner = ((Openable) buffer.getOwner())
-					.toStringWithAncestors();
+			String owner = ((Openable) buffer.getOwner()).toStringWithAncestors();
 			System.out.println("Adding buffer for " + owner); //$NON-NLS-1$
 		}
 		synchronized (this.openBuffers) {
@@ -49,29 +48,26 @@ public class BufferManager {
 		// close buffers that were removed from the cache if space was needed
 		this.openBuffers.closeBuffers();
 		if (VERBOSE) {
-			System.out
-					.println("-> Buffer cache filling ratio = " + NumberFormat.getInstance().format(this.openBuffers.fillingRatio()) + "%"); //$NON-NLS-1$//$NON-NLS-2$
+			System.out.println("-> Buffer cache filling ratio = " //$NON-NLS-1$
+					+ NumberFormat.getInstance().format(this.openBuffers.fillingRatio()) + "%"); //$NON-NLS-1$
 		}
 	}
 
 	public static IBuffer createBuffer(IOpenable owner) {
 		IModelElement element = owner;
 		IResource resource = element.getResource();
-		return new Buffer(resource instanceof IFile ? (IFile) resource : null,
-				owner, element.isReadOnly());
+		return new Buffer(resource instanceof IFile ? (IFile) resource : null, owner, element.isReadOnly());
 	}
 
 	public static IBuffer createNullBuffer(IOpenable owner) {
 		IModelElement element = owner;
 		IResource resource = element.getResource();
-		return new NullBuffer(resource instanceof IFile ? (IFile) resource
-				: null, owner, element.isReadOnly());
+		return new NullBuffer(resource instanceof IFile ? (IFile) resource : null, owner, element.isReadOnly());
 	}
 
 	/**
-	 * Returns the open buffer associated with the given owner, or
-	 * <code>null</code> if the owner does not have an open buffer associated
-	 * with it.
+	 * Returns the open buffer associated with the given owner, or <code>null</code>
+	 * if the owner does not have an open buffer associated with it.
 	 */
 	public IBuffer getBuffer(IOpenable owner) {
 		synchronized (this.openBuffers) {
@@ -82,9 +78,13 @@ public class BufferManager {
 	/**
 	 * Returns the default buffer manager.
 	 */
-	public synchronized static BufferManager getDefaultBufferManager() {
+	public static BufferManager getDefaultBufferManager() {
 		if (DEFAULT_BUFFER_MANAGER == null) {
-			DEFAULT_BUFFER_MANAGER = new BufferManager();
+			synchronized (BufferManager.class) {
+				if (DEFAULT_BUFFER_MANAGER == null) {
+					DEFAULT_BUFFER_MANAGER = new BufferManager();
+				}
+			}
 		}
 		return DEFAULT_BUFFER_MANAGER;
 	}
@@ -93,7 +93,7 @@ public class BufferManager {
 	 * Returns an enumeration of all open buffers.
 	 * <p>
 	 * The <code>Enumeration</code> answered is thread safe.
-	 * 
+	 *
 	 * @see OverflowingLRUCache
 	 * @return Enumeration of IBuffer
 	 */
@@ -113,8 +113,7 @@ public class BufferManager {
 	 */
 	protected void removeBuffer(IBuffer buffer) {
 		if (VERBOSE) {
-			String owner = ((Openable) buffer.getOwner())
-					.toStringWithAncestors();
+			String owner = ((Openable) buffer.getOwner()).toStringWithAncestors();
 			System.out.println("Removing buffer for " + owner); //$NON-NLS-1$
 		}
 		synchronized (this.openBuffers) {
@@ -123,8 +122,8 @@ public class BufferManager {
 		// close buffers that were removed from the cache (should be only one)
 		this.openBuffers.closeBuffers();
 		if (VERBOSE) {
-			System.out
-					.println("-> Buffer cache filling ratio = " + NumberFormat.getInstance().format(this.openBuffers.fillingRatio()) + "%"); //$NON-NLS-1$//$NON-NLS-2$
+			System.out.println("-> Buffer cache filling ratio = " //$NON-NLS-1$
+					+ NumberFormat.getInstance().format(this.openBuffers.fillingRatio()) + "%"); //$NON-NLS-1$
 		}
 	}
 }

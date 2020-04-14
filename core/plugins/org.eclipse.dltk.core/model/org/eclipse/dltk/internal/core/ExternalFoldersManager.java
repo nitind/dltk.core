@@ -98,9 +98,13 @@ public class ExternalFoldersManager {
 		}
 	}
 
-	public static synchronized ExternalFoldersManager getExternalFoldersManager() {
+	public static ExternalFoldersManager getExternalFoldersManager() {
 		if (MANAGER == null) {
-			MANAGER = new ExternalFoldersManager();
+			synchronized (ExternalFoldersManager.class) {
+				if (MANAGER == null) {
+					MANAGER = new ExternalFoldersManager();
+				}
+			}
 		}
 		return MANAGER;
 	}

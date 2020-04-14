@@ -15,28 +15,30 @@ public class ASTCacheManager {
 
 	private static Map<String, IASTCache[]> providers = null;
 
-	public synchronized static IASTCache[] getProviders(String lang) {
+	public static IASTCache[] getProviders(String lang) {
 		if (providers == null) {
-			providers = new HashMap<>();
+			synchronized (ASTCacheManager.class) {
+				providers = new HashMap<>();
 
-			ElementInfo[] infos = manager.getElementInfos();
-			Map<String, List<IASTCache>> langToElementList = new HashMap<>();
-			// Fill element names and sort elements by language
-			for (int i = 0; i < infos.length; i++) {
-				String langauge = infos[i].getConfig().getAttribute("language");
-				List<IASTCache> elements = langToElementList.get(langauge);
-				if (elements == null) {
-					elements = new ArrayList<>();
-					langToElementList.put(langauge, elements);
+				ElementInfo[] infos = manager.getElementInfos();
+				Map<String, List<IASTCache>> langToElementList = new HashMap<>();
+				// Fill element names and sort elements by language
+				for (int i = 0; i < infos.length; i++) {
+					String langauge = infos[i].getConfig().getAttribute("language");
+					List<IASTCache> elements = langToElementList.get(langauge);
+					if (elements == null) {
+						elements = new ArrayList<>();
+						langToElementList.put(langauge, elements);
+					}
+					elements.add((IASTCache) manager.getInitObject(infos[i]));
 				}
-				elements.add((IASTCache) manager.getInitObject(infos[i]));
+				for (Map.Entry<String, List<IASTCache>> entry : langToElementList.entrySet()) {
+					List<IASTCache> list = entry.getValue();
+					IASTCache[] result = list.toArray(new IASTCache[list.size()]);
+					providers.put(entry.getKey(), result);
+				}
 			}
-			for (Map.Entry<String, List<IASTCache>> entry : langToElementList
-					.entrySet()) {
-				List<IASTCache> list = entry.getValue();
-				IASTCache[] result = list.toArray(new IASTCache[list.size()]);
-				providers.put(entry.getKey(), result);
-			}
+
 		}
 		return providers.get(lang);
 	}

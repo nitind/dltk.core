@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -40,80 +40,79 @@ public class ModelProviderManager {
 
 	public synchronized static IModelProvider[] getProviders(String lang) {
 		if (providers == null) {
-			providers = new HashMap<>();
+			synchronized (ModelProviderManager.class) {
+				if (providers == null) {
 
-			final SimpleClassDLTKExtensionManager manager = new SimpleClassDLTKExtensionManager(
-					EXT_POINT) {
-				@Override
-				protected boolean isValidElement(
-						IConfigurationElement confElement) {
-					return "model".equals(confElement.getName());
-				}
-			};
-			ElementInfo[] infos = manager.getElementInfos();
-			Map<String, List<ElementInfo>> langToElementList = new HashMap<>();
-			// Fill element names and sort elements by language
-			for (int i = 0; i < infos.length; i++) {
-				String langauge = infos[i].getConfig().getAttribute(LANGUAGE);
-				if (langToElementList.containsKey(langauge)) {
-					List<ElementInfo> elements = langToElementList
-							.get(langauge);
-					elements.add(infos[i]);
-				} else {
-					List<ElementInfo> elements = new ArrayList<>();
-					elements.add(infos[i]);
-					langToElementList.put(langauge, elements);
-				}
-			}
-			for (Map.Entry<String, List<ElementInfo>> entry : langToElementList
-					.entrySet()) {
-				String language = entry.getKey();
-				List<ElementInfo> elements = entry.getValue();
+					providers = new HashMap<>();
 
-				Map<String, ElementInfo> names = new HashMap<>(); // Contains
-																						// map
-																						// for
-																						// all
-																						// ids
-				for (int i = 0; i < elements.size(); i++) {
-					ElementInfo info = elements.get(i);
-					String name = info.getConfig().getAttribute(ID);
-					names.put(name, info);
-				}
-				List<IModelProvider> result = new ArrayList<>(); // Final
-																				// IModelProvider
-																				// elements
-				Set<String> added = new HashSet<>(); // Contain names for
-															// added elements
-				// Process elements and keep dependencies
-				List<ElementInfo> toProcess = new ArrayList<>();
-				toProcess.addAll(elements);
-				while (!toProcess.isEmpty()) {
-					ElementInfo info = toProcess.remove(0);
-					String requires = info.getConfig().getAttribute(REQUIRES);
-					if (requires == null) {
-						result.add(
-								(IModelProvider) manager.getInitObject(info));
-					} else {
-						String req = requires.trim();
-						if (added.contains(req)) { // Dependency
-							// present
-							result.add((IModelProvider) info.object);
+					final SimpleClassDLTKExtensionManager manager = new SimpleClassDLTKExtensionManager(EXT_POINT) {
+						@Override
+						protected boolean isValidElement(IConfigurationElement confElement) {
+							return "model".equals(confElement.getName());
+						}
+					};
+					ElementInfo[] infos = manager.getElementInfos();
+					Map<String, List<ElementInfo>> langToElementList = new HashMap<>();
+					// Fill element names and sort elements by language
+					for (int i = 0; i < infos.length; i++) {
+						String langauge = infos[i].getConfig().getAttribute(LANGUAGE);
+						if (langToElementList.containsKey(langauge)) {
+							List<ElementInfo> elements = langToElementList.get(langauge);
+							elements.add(infos[i]);
 						} else {
-							if (names.containsKey(req)) { // Dependency exist
-								// Add element to end of process
-								toProcess.add(info);
-								added.add(info.getConfig().getAttribute(ID));
-							} else {
-								// Dependency doesn't exists so add to results
-								result.add((IModelProvider) info.object);
-								added.add(info.getConfig().getAttribute(ID));
-							}
+							List<ElementInfo> elements = new ArrayList<>();
+							elements.add(infos[i]);
+							langToElementList.put(langauge, elements);
 						}
 					}
+					for (Map.Entry<String, List<ElementInfo>> entry : langToElementList.entrySet()) {
+						String language = entry.getKey();
+						List<ElementInfo> elements = entry.getValue();
+
+						Map<String, ElementInfo> names = new HashMap<>(); // Contains
+																			// map
+																			// for
+																			// all
+																			// ids
+						for (int i = 0; i < elements.size(); i++) {
+							ElementInfo info = elements.get(i);
+							String name = info.getConfig().getAttribute(ID);
+							names.put(name, info);
+						}
+						List<IModelProvider> result = new ArrayList<>(); // Final
+																			// IModelProvider
+																			// elements
+						Set<String> added = new HashSet<>(); // Contain names for
+																// added elements
+						// Process elements and keep dependencies
+						List<ElementInfo> toProcess = new ArrayList<>();
+						toProcess.addAll(elements);
+						while (!toProcess.isEmpty()) {
+							ElementInfo info = toProcess.remove(0);
+							String requires = info.getConfig().getAttribute(REQUIRES);
+							if (requires == null) {
+								result.add((IModelProvider) manager.getInitObject(info));
+							} else {
+								String req = requires.trim();
+								if (added.contains(req)) { // Dependency
+									// present
+									result.add((IModelProvider) info.object);
+								} else {
+									if (names.containsKey(req)) { // Dependency exist
+										// Add element to end of process
+										toProcess.add(info);
+										added.add(info.getConfig().getAttribute(ID));
+									} else {
+										// Dependency doesn't exists so add to results
+										result.add((IModelProvider) info.object);
+										added.add(info.getConfig().getAttribute(ID));
+									}
+								}
+							}
+						}
+						providers.put(language, result.toArray(new IModelProvider[result.size()]));
+					}
 				}
-				providers.put(language,
-						result.toArray(new IModelProvider[result.size()]));
 			}
 		}
 		return providers.get(lang);
@@ -127,8 +126,7 @@ public class ModelProviderManager {
 		}
 	};
 
-	public static IProjectFragmentFactory[] getProjectFragmentFactories(
-			String natureId) {
+	public static IProjectFragmentFactory[] getProjectFragmentFactories(String natureId) {
 		return projectFragmentFactories.getInstances(natureId);
 	}
 
