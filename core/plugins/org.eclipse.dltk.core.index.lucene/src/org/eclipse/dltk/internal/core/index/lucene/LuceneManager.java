@@ -264,7 +264,7 @@ public enum LuceneManager {
 		}
 	}
 
-	private synchronized List<IndexContainer> getDirtyContainers() {
+	private List<IndexContainer> getDirtyContainers() {
 		List<IndexContainer> uncommittedContainers = new ArrayList<>();
 		for (IndexContainer indexContainer : fIndexContainers.values()) {
 			if (indexContainer.hasChanges()) {
@@ -274,18 +274,20 @@ public enum LuceneManager {
 		return uncommittedContainers;
 	}
 
-	private synchronized IndexContainer getIndexContainer(String container) {
+	private IndexContainer getIndexContainer(String container) {
 		String containerId = fContainerMappings.getProperty(container);
 		if (containerId == null) {
-			do {
-				// Just to be sure that ID does not already exist
-				containerId = UUID.randomUUID().toString();
-			} while (fContainerMappings.containsValue(containerId));
-			fContainerMappings.put(container, containerId);
-			fIndexContainers.put(containerId,
-					new IndexContainer(fIndexRoot, containerId));
-			// Persist mapping
-			saveMappings();
+			synchronized (fContainerMappings) {
+				do {
+					// Just to be sure that ID does not already exist
+					containerId = UUID.randomUUID().toString();
+				} while (fContainerMappings.containsValue(containerId));
+				fContainerMappings.put(container, containerId);
+				fIndexContainers.put(containerId,
+						new IndexContainer(fIndexRoot, containerId));
+				// Persist mapping
+				saveMappings();
+			}
 		}
 		return fIndexContainers.get(containerId);
 	}
