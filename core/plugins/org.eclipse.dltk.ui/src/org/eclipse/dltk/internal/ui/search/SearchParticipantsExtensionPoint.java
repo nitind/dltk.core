@@ -3,7 +3,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
@@ -28,20 +28,18 @@ public class SearchParticipantsExtensionPoint {
 	private static SearchParticipantsExtensionPoint fgInstance;
 
 	public boolean hasAnyParticipants() {
-		return Platform.getExtensionRegistry().getConfigurationElementsFor(
-				ScriptSearchPage.PARTICIPANT_EXTENSION_POINT).length > 0;
+		return Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(ScriptSearchPage.PARTICIPANT_EXTENSION_POINT).length > 0;
 	}
 
 	private synchronized Set<SearchParticipantDescriptor> getAllParticipants() {
 		if (fActiveParticipants != null)
 			return fActiveParticipants;
-		IConfigurationElement[] allParticipants = Platform
-				.getExtensionRegistry().getConfigurationElementsFor(
-						ScriptSearchPage.PARTICIPANT_EXTENSION_POINT);
+		IConfigurationElement[] allParticipants = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(ScriptSearchPage.PARTICIPANT_EXTENSION_POINT);
 		fActiveParticipants = new HashSet<>(allParticipants.length);
 		for (int i = 0; i < allParticipants.length; i++) {
-			SearchParticipantDescriptor descriptor = new SearchParticipantDescriptor(
-					allParticipants[i]);
+			SearchParticipantDescriptor descriptor = new SearchParticipantDescriptor(allParticipants[i]);
 			IStatus status = descriptor.checkSyntax();
 			if (status.isOK()) {
 				fActiveParticipants.add(descriptor);
@@ -52,23 +50,20 @@ public class SearchParticipantsExtensionPoint {
 		return fActiveParticipants;
 	}
 
-	private void collectParticipants(IDLTKLanguageToolkit language,
-			Set<SearchParticipantRecord> participants, IProject[] projects) {
-		Iterator<SearchParticipantDescriptor> activeParticipants = getAllParticipants()
-				.iterator();
+	private void collectParticipants(IDLTKLanguageToolkit language, Set<SearchParticipantRecord> participants,
+			IProject[] projects) {
+		Iterator<SearchParticipantDescriptor> activeParticipants = getAllParticipants().iterator();
 		Set<String> seenParticipants = new HashSet<>();
 		while (activeParticipants.hasNext()) {
 			SearchParticipantDescriptor participant = activeParticipants.next();
-			if (participant.isEnabled() && language.getNatureId()
-					.equals(participant.getLanguage())) {
+			if (participant.isEnabled() && language.getNatureId().equals(participant.getLanguage())) {
 				String id = participant.getID();
 				for (int i = 0; i < projects.length; i++) {
 					if (seenParticipants.contains(id))
 						continue;
 					try {
 						if (projects[i].hasNature(participant.getNature())) {
-							participants.add(new SearchParticipantRecord(
-									participant, participant.create()));
+							participants.add(new SearchParticipantRecord(participant, participant.create()));
 							seenParticipants.add(id);
 						}
 					} catch (CoreException e) {
@@ -80,23 +75,25 @@ public class SearchParticipantsExtensionPoint {
 		}
 	}
 
-	public SearchParticipantRecord[] getSearchParticipants(
-			IDLTKLanguageToolkit language, IProject[] concernedProjects)
+	public SearchParticipantRecord[] getSearchParticipants(IDLTKLanguageToolkit language, IProject[] concernedProjects)
 			throws CoreException {
 		Set<SearchParticipantRecord> participantSet = new HashSet<>();
 		collectParticipants(language, participantSet, concernedProjects);
-		return participantSet
-				.toArray(new SearchParticipantRecord[participantSet.size()]);
+		return participantSet.toArray(new SearchParticipantRecord[participantSet.size()]);
 	}
 
-	public static synchronized SearchParticipantsExtensionPoint getInstance() {
-		if (fgInstance == null)
-			fgInstance = new SearchParticipantsExtensionPoint();
+	public static SearchParticipantsExtensionPoint getInstance() {
+		if (fgInstance == null) {
+			synchronized (SearchParticipantsExtensionPoint.class) {
+				if (fgInstance == null) {
+					fgInstance = new SearchParticipantsExtensionPoint();
+				}
+			}
+		}
 		return fgInstance;
 	}
 
-	public static void debugSetInstance(
-			SearchParticipantsExtensionPoint instance) {
+	public static void debugSetInstance(SearchParticipantsExtensionPoint instance) {
 		fgInstance = instance;
 	}
 }

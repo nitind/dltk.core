@@ -59,9 +59,14 @@ public final class CompletionProposalComputerRegistry {
 	 *
 	 * @return the singleton instance
 	 */
-	public static synchronized CompletionProposalComputerRegistry getDefault() {
+	public static CompletionProposalComputerRegistry getDefault() {
 		if (fgSingleton == null) {
-			fgSingleton = new CompletionProposalComputerRegistry();
+			synchronized (CompletionProposalComputerRegistry.class) {
+				if (fgSingleton == null) {
+					fgSingleton = new CompletionProposalComputerRegistry();
+				}
+			}
+
 		}
 
 		return fgSingleton;

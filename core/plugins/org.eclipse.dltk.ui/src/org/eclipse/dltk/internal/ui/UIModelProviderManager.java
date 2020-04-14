@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -51,19 +51,20 @@ public class UIModelProviderManager {
 	private static Map<String, List<ILabelProvider>> labelProviders = null;
 	private static Map<String, List<IModelCompareProvider>> compareProviders = null;
 
-	public synchronized static IModelContentProvider[] getContentProviders(
-			String lang) {
+	public static IModelContentProvider[] getContentProviders(String lang) {
 		if (contentProviders == null) {
-			contentProviders = initializeProviders(contentProviderManager);
+			synchronized (UIModelProviderManager.class) {
+				if (contentProviders == null) {
+					contentProviders = initializeProviders(contentProviderManager);
+				}
+			}
 		}
 		if (lang == null) {
 			List<IModelContentProvider> providers = new ArrayList<>();
-			for (List<IModelContentProvider> elements : contentProviders
-					.values()) {
+			for (List<IModelContentProvider> elements : contentProviders.values()) {
 				providers.addAll(elements);
 			}
-			return providers
-					.toArray(new IModelContentProvider[providers.size()]);
+			return providers.toArray(new IModelContentProvider[providers.size()]);
 		}
 		List<IModelContentProvider> result = contentProviders.get(lang);
 		if (result != null) {
@@ -72,9 +73,13 @@ public class UIModelProviderManager {
 		return NONE_MODEL_CONTENT_PROVIDERS;
 	}
 
-	public synchronized static ILabelProvider[] getLabelProviders(String lang) {
+	public static ILabelProvider[] getLabelProviders(String lang) {
 		if (labelProviders == null) {
-			labelProviders = initializeProviders(labelProviderManager);
+			synchronized (UIModelProviderManager.class) {
+				if (labelProviders == null) {
+					labelProviders = initializeProviders(labelProviderManager);
+				}
+			}
 		}
 		if (lang == null) {
 			List<ILabelProvider> providers = new ArrayList<>();
@@ -90,19 +95,20 @@ public class UIModelProviderManager {
 		return NONE_LABEL_PROVIDERS;
 	}
 
-	public synchronized static IModelCompareProvider[] getCompareProviders(
-			String lang) {
+	public static IModelCompareProvider[] getCompareProviders(String lang) {
 		if (compareProviders == null) {
-			compareProviders = initializeProviders(compareProviderManager);
+			synchronized (UIModelProviderManager.class) {
+				if (compareProviders == null) {
+					compareProviders = initializeProviders(compareProviderManager);
+				}
+			}
 		}
 		if (lang == null) {
 			List<IModelCompareProvider> providers = new ArrayList<>();
-			for (List<IModelCompareProvider> elements : compareProviders
-					.values()) {
+			for (List<IModelCompareProvider> elements : compareProviders.values()) {
 				providers.addAll(elements);
 			}
-			return providers
-					.toArray(new IModelCompareProvider[providers.size()]);
+			return providers.toArray(new IModelCompareProvider[providers.size()]);
 		}
 		List<IModelCompareProvider> result = compareProviders.get(lang);
 		if (result != null) {
@@ -111,8 +117,7 @@ public class UIModelProviderManager {
 		return NONE_MODEL_COMPARE_PROVIDERS;
 	}
 
-	private synchronized static <T> Map<String, List<T>> initializeProviders(
-			SimpleClassDLTKExtensionManager manager) {
+	private static <T> Map<String, List<T>> initializeProviders(SimpleClassDLTKExtensionManager manager) {
 		Map<String, List<T>> providers = new HashMap<>();
 		ElementInfo[] infos = manager.getElementInfos();
 		Map<String, List<ElementInfo>> langToElementList = new HashMap<>();
@@ -126,8 +131,7 @@ public class UIModelProviderManager {
 			}
 			elements.add(infos[i]);
 		}
-		for (Map.Entry<String, List<ElementInfo>> entry : langToElementList
-				.entrySet()) {
+		for (Map.Entry<String, List<ElementInfo>> entry : langToElementList.entrySet()) {
 			String language = entry.getKey();
 			List<ElementInfo> elements = entry.getValue();
 

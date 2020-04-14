@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
@@ -28,16 +28,20 @@ public class ScriptCorrectionProcessorManager extends NatureExtensionManager {
 
 	private static ScriptCorrectionProcessorManager instance = null;
 
-	private static synchronized ScriptCorrectionProcessorManager getInstance() {
+	private static ScriptCorrectionProcessorManager getInstance() {
 		if (instance == null) {
-			instance = new ScriptCorrectionProcessorManager();
+			synchronized (ScriptCorrectionProcessorManager.class) {
+				if (instance == null) {
+					instance = new ScriptCorrectionProcessorManager();
+				}
+			}
+
 		}
 		return instance;
 	}
 
 	public static IScriptCorrectionProcessor[] getProcessors(String natureId) {
-		return (IScriptCorrectionProcessor[]) getInstance().getInstances(
-				natureId);
+		return (IScriptCorrectionProcessor[]) getInstance().getInstances(natureId);
 	}
 
 	/**
@@ -58,8 +62,7 @@ public class ScriptCorrectionProcessorManager extends NatureExtensionManager {
 				}
 			}
 		} else if (annotation instanceof SimpleMarkerAnnotation) {
-			final IMarker marker = ((SimpleMarkerAnnotation) annotation)
-					.getMarker();
+			final IMarker marker = ((SimpleMarkerAnnotation) annotation).getMarker();
 			for (int i = 0; i < processors.length; ++i) {
 				if (processors[i].canFix(marker)) {
 					return true;

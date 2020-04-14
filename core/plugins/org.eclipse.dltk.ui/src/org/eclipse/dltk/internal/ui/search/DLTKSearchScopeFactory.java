@@ -55,9 +55,14 @@ public class DLTKSearchScopeFactory {
 	private DLTKSearchScopeFactory() {
 	}
 
-	public static synchronized DLTKSearchScopeFactory getInstance() {
-		if (fgInstance == null)
-			fgInstance = new DLTKSearchScopeFactory();
+	public static DLTKSearchScopeFactory getInstance() {
+		if (fgInstance == null) {
+			synchronized (DLTKSearchScopeFactory.class) {
+				if (fgInstance == null) {
+					fgInstance = new DLTKSearchScopeFactory();
+				}
+			}
+		}
 		return fgInstance;
 	}
 

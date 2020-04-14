@@ -228,13 +228,10 @@ public abstract class JobManager implements Runnable {
 					throw new OperationCanceledException();
 
 				case IJob.WaitUntilReady:
-					int totalWork = this.awaitingJobsCount();
-					SubMonitor subProgress = subMonitor.setWorkRemaining(10).split(8).setWorkRemaining(totalWork);
+					SubMonitor subProgress = subMonitor.setWorkRemaining(10).split(8).setWorkRemaining(1000);
 
-					if (totalWork > 0) {
-						synchronized (delaySignal) {
-							delaySignal.notify();
-						}
+					synchronized (delaySignal) {
+						delaySignal.notify();
 					}
 					// use local variable to avoid potential NPE (see bug 20435 NPE
 					// when searchingscriptmethod

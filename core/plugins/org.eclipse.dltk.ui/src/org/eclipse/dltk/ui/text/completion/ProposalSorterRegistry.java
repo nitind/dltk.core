@@ -35,10 +35,16 @@ public final class ProposalSorterRegistry {
 
 	private static ProposalSorterRegistry fInstance;
 
-	public static synchronized ProposalSorterRegistry getDefault() {
-		if (fInstance == null)
-			fInstance = new ProposalSorterRegistry(DLTKUIPlugin.getDefault().getPreferenceStore(),
-					PreferenceConstants.CODEASSIST_SORTER);
+	public static ProposalSorterRegistry getDefault() {
+		if (fInstance == null) {
+			synchronized (ProposalSorterRegistry.class) {
+				if (fInstance == null) {
+					fInstance = new ProposalSorterRegistry(DLTKUIPlugin.getDefault().getPreferenceStore(),
+							PreferenceConstants.CODEASSIST_SORTER);
+				}
+			}
+		}
+
 		return fInstance;
 	}
 
