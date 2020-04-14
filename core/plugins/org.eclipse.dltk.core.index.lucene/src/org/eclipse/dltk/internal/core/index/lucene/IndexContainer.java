@@ -132,12 +132,13 @@ class IndexContainer {
 		Directory indexDir = FSDirectory.open(path);
 		purgeLocks(path);
 		IndexWriterConfig config = new IndexWriterConfig(new SimpleAnalyzer());
-		config.setUseCompoundFile(true);
+		config.setUseCompoundFile(false);
 		ConcurrentMergeScheduler mergeScheduler = new ConcurrentMergeScheduler();
 		mergeScheduler.setDefaultMaxMergesAndThreads(true);
 		config.setMergeScheduler(mergeScheduler);
 		config.setOpenMode(OpenMode.CREATE_OR_APPEND);
 		config.setCommitOnClose(false);
+		config.setCheckPendingFlushUpdate(false);
 		return new IndexWriter(indexDir, config);
 	}
 
