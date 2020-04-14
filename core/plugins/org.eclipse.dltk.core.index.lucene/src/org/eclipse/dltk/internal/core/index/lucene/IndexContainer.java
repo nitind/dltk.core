@@ -132,7 +132,7 @@ class IndexContainer {
 		Directory indexDir = FSDirectory.open(path);
 		purgeLocks(path);
 		IndexWriterConfig config = new IndexWriterConfig(new SimpleAnalyzer());
-		config.setUseCompoundFile(false);
+		config.setUseCompoundFile(true);
 		ConcurrentMergeScheduler mergeScheduler = new ConcurrentMergeScheduler();
 		mergeScheduler.setDefaultMaxMergesAndThreads(true);
 		config.setMergeScheduler(mergeScheduler);
