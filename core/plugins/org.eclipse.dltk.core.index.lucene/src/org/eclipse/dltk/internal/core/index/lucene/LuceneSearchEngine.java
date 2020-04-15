@@ -30,9 +30,13 @@ import static org.eclipse.dltk.internal.core.index.lucene.IndexFields.NDV_OFFSET
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.RecursiveTask;
 
 import org.apache.lucene.index.BinaryDocValues;
 import org.apache.lucene.index.LeafReader;
@@ -121,13 +125,15 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 		private Map<String, BinaryDocValues> fDocBinaryValues;
 		private String fContainer;
 		private int fElementType;
-		private List<SearchMatch> fResult;
+		private List<SearchMatch> fResult = new LinkedList<>();
 
-		public ResultsCollector(String container, int elementType,
-				List<SearchMatch> result) {
+		public ResultsCollector(String container, int elementType) {
 			this.fContainer = container;
 			this.fElementType = elementType;
-			this.fResult = result;
+		}
+
+		public List<SearchMatch> getfResult() {
+			return fResult;
 		}
 
 		@Override
@@ -235,24 +241,38 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 				|| searchFor == SearchFor.ALL_OCCURRENCES;
 		boolean searchForRefs = searchFor == SearchFor.REFERENCES
 				|| searchFor == SearchFor.ALL_OCCURRENCES;
+
+		List<SearchTask> tasks = new LinkedList<>();
+		List<String> containers = SearchScope.getContainers(scope);
+		List<String> scripts = SearchScope.getScripts(scope);
+		final SearchMatchHandler searchMatchHandler = new SearchMatchHandler(
+				scope, requestor);
 		if (searchForRefs) {
-			doSearch(elementType, qualifier, elementName, parent, trueFlags,
-					falseFlags, limit, true, matchRule, scope, requestor,
-					monitor);
+			for (String container : containers) {
+				tasks.add(new SearchTask(elementType, qualifier, elementName,
+						parent, trueFlags, falseFlags, true, matchRule, scripts,
+						container));
+			}
+			ForkJoinTask.invokeAll(tasks).stream().forEach(t -> t.join()
+					.stream().forEach(m -> searchMatchHandler.handle(m, true)));
+
 		}
 		if (searchForDecls) {
-			doSearch(elementType, qualifier, elementName, parent, trueFlags,
-					falseFlags, limit, false, matchRule, scope, requestor,
-					monitor);
+			for (String container : containers) {
+				tasks.add(new SearchTask(elementType, qualifier, elementName,
+						parent, trueFlags, falseFlags, false, matchRule,
+						scripts, container));
+			}
+			ForkJoinTask.invokeAll(tasks).stream().forEach(t -> t.join()
+					.stream().forEach(m -> searchMatchHandler.handle(m, true)));
 		}
 	}
 
 	private Query createQuery(final String elementName, final String qualifier,
 			final String parent, final int trueFlags, final int falseFlags,
 			final boolean searchForRefs, MatchRule matchRule,
-			IDLTKSearchScope scope) {
+			List<String> scripts) {
 		BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
-		List<String> scripts = SearchScope.getScripts(scope);
 		if (!scripts.isEmpty()) {
 			BooleanQuery.Builder scriptQueryBuilder = new BooleanQuery.Builder();
 			for (String script : scripts) {
@@ -297,35 +317,58 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 		return query.clauses().isEmpty() ? null : query;
 	}
 
-	private void doSearch(final int elementType, String qualifier,
-			String elementName, String parent, final int trueFlags,
-			final int falseFlags, int limit, final boolean searchForRefs,
-			MatchRule matchRule, IDLTKSearchScope scope,
-			ISearchRequestor requestor, IProgressMonitor monitor) {
-		Query query = createQuery(elementName, qualifier, parent, trueFlags,
-				falseFlags, searchForRefs, matchRule, scope);
-		IndexSearcher indexSearcher = null;
-		final SearchMatchHandler searchMatchHandler = new SearchMatchHandler(
-				scope, requestor);
-		List<SearchMatch> results = new ArrayList<>();
-		for (String container : SearchScope.getContainers(scope)) {
+	private class SearchTask extends RecursiveTask<List<SearchMatch>> {
+		int elementType;
+		String qualifier;
+		String elementName;
+		String parent;
+		int trueFlags;
+		int falseFlags;
+		boolean searchForRefs;
+		MatchRule matchRule;
+		List<String> scripts;
+		String container;
+
+		private SearchTask(int elementType, String qualifier,
+				String elementName, String parent, int trueFlags,
+				final int falseFlags, boolean searchForRefs,
+				MatchRule matchRule, List<String> scripts, String container) {
+			this.elementType = elementType;
+			this.qualifier = qualifier;
+			this.elementName = elementName;
+			this.parent = parent;
+			this.trueFlags = trueFlags;
+			this.falseFlags = falseFlags;
+			this.searchForRefs = searchForRefs;
+			this.matchRule = matchRule;
+			this.scripts = scripts;
+			this.container = container;
+		}
+
+		@Override
+		protected List<SearchMatch> compute() {
 			SearcherManager searcherManager = LuceneManager.INSTANCE
 					.findIndexSearcher(container,
 							searchForRefs ? IndexType.REFERENCES
 									: IndexType.DECLARATIONS,
 							elementType);
 			if (searcherManager == null) {
-				continue;
+				return Collections.emptyList();
 			}
+			IndexSearcher indexSearcher = null;
 			try {
 				indexSearcher = searcherManager.acquire();
+				Query query = createQuery(elementName, qualifier, parent,
+						trueFlags, falseFlags, searchForRefs, matchRule,
+						scripts);
 				ResultsCollector collector = new ResultsCollector(container,
-						elementType, results);
+						elementType);
 				if (query != null) {
 					indexSearcher.search(query, collector);
 				} else {
 					indexSearcher.search(new MatchAllDocsQuery(), collector);
 				}
+				return collector.getfResult();
 			} catch (IOException e) {
 				Logger.logException(e);
 			} finally {
@@ -337,10 +380,7 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 					}
 				}
 			}
-		}
-		// Pass results to entity handler
-		for (SearchMatch result : results) {
-			searchMatchHandler.handle(result, searchForRefs);
+			return Collections.emptyList();
 		}
 	}
 

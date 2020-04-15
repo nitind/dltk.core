@@ -16,8 +16,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.index.ConcurrentMergeScheduler;
@@ -28,13 +29,12 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
-import org.apache.lucene.store.AlreadyClosedException;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.SingleInstanceLockFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.index.lucene.LucenePlugin;
 
@@ -129,7 +129,8 @@ class IndexContainer {
 
 	private IndexWriter createWriter(Path path) throws IOException {
 
-		Directory indexDir = FSDirectory.open(path);
+		Directory indexDir = FSDirectory.open(path,
+				new SingleInstanceLockFactory());
 		purgeLocks(path);
 		IndexWriterConfig config = new IndexWriterConfig(new SimpleAnalyzer());
 		config.setUseCompoundFile(false);
@@ -138,7 +139,6 @@ class IndexContainer {
 		config.setMergeScheduler(mergeScheduler);
 		config.setOpenMode(OpenMode.CREATE_OR_APPEND);
 		config.setCommitOnClose(false);
-		config.setCheckPendingFlushUpdate(false);
 		return new IndexWriter(indexDir, config);
 	}
 
@@ -171,14 +171,21 @@ class IndexContainer {
 		return fTimestampsWriter;
 	}
 
-	public synchronized SearcherManager getTimestampsSearcher() {
+	public SearcherManager getTimestampsSearcher() {
 		try {
 			if (fTimestampsSearcher == null) {
-				fTimestampsSearcher = new SearcherManager(getTimestampsWriter(),
-						true, false, new SearcherFactory());
+				synchronized (this) {
+					if (fTimestampsSearcher == null) {
+						fTimestampsSearcher = new SearcherManager(
+								getTimestampsWriter(), true, false,
+								new SearcherFactory());
+					} else {
+						fTimestampsSearcher.maybeRefresh();
+					}
+				}
+
 			}
-			// Try to achieve the up-to-date index state
-			fTimestampsSearcher.maybeRefresh();
+
 		} catch (IOException e) {
 			Logger.logException(e);
 		}
@@ -193,32 +200,41 @@ class IndexContainer {
 	public IndexWriter getIndexWriter(IndexType dataType, int elementType) {
 		IndexWriter writer = fIndexWriters.get(dataType).get(elementType);
 		if (writer == null) {
-			Path writerPath = getPath(dataType, elementType);
-			writer = getWriter(writerPath);
-			fIndexWriters.get(dataType).put(elementType, writer);
-			fIndexSearchers.get(dataType).put(elementType, null);
+			synchronized (this) {
+				writer = fIndexWriters.get(dataType).get(elementType);
+				if (writer == null) {
+					Path writerPath = getPath(dataType, elementType);
+					writer = getWriter(writerPath);
+					fIndexWriters.get(dataType).put(elementType, writer);
+					fIndexSearchers.get(dataType).put(elementType, null);
+				}
+			}
 		}
 		return writer;
 	}
 
-	public synchronized SearcherManager getIndexSearcher(IndexType dataType,
+	public SearcherManager getIndexSearcher(IndexType dataType,
 			int elementType) {
 
 		SearcherManager searcher = fIndexSearchers.get(dataType)
 				.get(elementType);
 		try {
-			if (searcher != null) {
-				try {
-					searcher.maybeRefresh();
-				} catch (AlreadyClosedException closed) {
-					searcher = null;
-				}
-			}
 			if (searcher == null) {
-				searcher = new SearcherManager(
-						FSDirectory.open(getPath(dataType, elementType)),
-						new SearcherFactory());
-				fIndexSearchers.get(dataType).put(elementType, searcher);
+				synchronized (this) {
+					searcher = fIndexSearchers.get(dataType).get(elementType);
+					if (searcher == null) {
+						searcher = new SearcherManager(
+								getIndexWriter(dataType, elementType),
+								new SearcherFactory());
+						fIndexSearchers.get(dataType).put(elementType,
+								searcher);
+					} else {
+						searcher.maybeRefresh();
+					}
+
+				}
+			} else {
+				searcher.maybeRefresh();
 			}
 
 		} catch (IndexNotFoundException e) {
@@ -290,33 +306,27 @@ class IndexContainer {
 		return false;
 	}
 
-	void commit(IProgressMonitor monitor) {
-		int ticks = 1;
-		for (Map<?, ?> dataWriters : fIndexWriters.values()) {
-			ticks += dataWriters.size();
-		}
-		SubMonitor subMonitor = SubMonitor.convert(monitor, ticks);
-		try {
-			for (Entry<IndexType, Map<Integer, IndexWriter>> entry : fIndexWriters
-					.entrySet()) {
-				Map<Integer, IndexWriter> dataWriters = entry.getValue();
-				for (Entry<Integer, IndexWriter> writerEntry : dataWriters
-						.entrySet()) {
-					IndexWriter writer = writerEntry.getValue();
-					if (writer != null && !subMonitor.isCanceled()) {
-						writer.commit();
-						subMonitor.worked(1);
+	void commit() {
+		List<IndexWriter> writers = new LinkedList<>();
+		synchronized (this) {
+			for (Map<Integer, IndexWriter> dataWriters : fIndexWriters
+					.values()) {
+				for (IndexWriter writer : dataWriters.values()) {
+					if (writer != null) {
+						writers.add(writer);
 					}
 				}
 			}
-			if (fTimestampsWriter != null && !subMonitor.isCanceled()) {
-				fTimestampsWriter.commit();
-				subMonitor.worked(1);
+		}
+		try {
+			for (IndexWriter writer : writers) {
+				writer.commit();
 			}
-			subMonitor.done();
+			if (fTimestampsWriter != null) {
+				fTimestampsWriter.commit();
+			}
 		} catch (IOException e) {
 			Logger.logException(e);
 		}
 	}
-
 }

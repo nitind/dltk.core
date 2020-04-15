@@ -19,12 +19,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinTask;
 
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.SearcherManager;
@@ -95,16 +97,24 @@ public enum LuceneManager {
 			SubMonitor subMonitor = SubMonitor.convert(monitor,
 					containersNumber);
 			try {
-				for (IndexContainer indexContainer : dirtyContainers) {
-					if (!monitor.isCanceled()) {
-						// Commit index data without merging deletions (better
-						// performance)
-						indexContainer.commit(subMonitor.newChild(1));
-					}
+				if (subMonitor.isCanceled()) {
+					return Status.CANCEL_STATUS;
 				}
-				monitor.done();
+				List<ForkJoinTask> tasks = new LinkedList<>();
+				if (dirtyContainers.size() == 1) {
+					dirtyContainers.get(0).commit();
+				} else {
+					for (IndexContainer indexContainer : dirtyContainers) {
+						tasks.add(ForkJoinTask.adapt(() -> {
+							indexContainer.commit();
+						}));
+					}
+					ForkJoinTask.invokeAll(tasks);
+				}
 			} catch (Exception e) {
 				Logger.logException(e);
+			} finally {
+				subMonitor.done();
 			}
 			return Status.OK_STATUS;
 		}
@@ -292,14 +302,15 @@ public enum LuceneManager {
 		return fIndexContainers.get(containerId);
 	}
 
-	private synchronized void deleteIndexContainer(String container,
-			boolean wait) {
-		String containerId = (String) fContainerMappings.remove(container);
-		if (containerId != null) {
-			IndexContainer containerEntry = fIndexContainers
-					.remove(containerId);
-			saveMappings();
-			containerEntry.delete(wait);
+	private void deleteIndexContainer(String container, boolean wait) {
+		synchronized (fContainerMappings) {
+			String containerId = (String) fContainerMappings.remove(container);
+			if (containerId != null) {
+				IndexContainer containerEntry = fIndexContainers
+						.remove(containerId);
+				saveMappings();
+				containerEntry.delete(wait);
+			}
 		}
 	}
 
@@ -455,5 +466,4 @@ public enum LuceneManager {
 		}
 		indexRoot.toFile().mkdir();
 	}
-
 }
