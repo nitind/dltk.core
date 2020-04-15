@@ -109,7 +109,8 @@ public enum LuceneManager {
 							indexContainer.commit();
 						}));
 					}
-					ForkJoinTask.invokeAll(tasks);
+					ForkJoinTask.invokeAll(tasks).stream()
+							.forEach(t -> t.join());
 				}
 			} catch (Exception e) {
 				Logger.logException(e);

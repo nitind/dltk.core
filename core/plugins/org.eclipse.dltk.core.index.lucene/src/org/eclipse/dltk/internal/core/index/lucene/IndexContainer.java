@@ -230,12 +230,12 @@ class IndexContainer {
 						fIndexSearchers.get(dataType).put(elementType,
 								searcher);
 					} else {
-						searcher.maybeRefresh();
+						searcher.maybeRefreshBlocking();
 					}
 
 				}
 			} else {
-				searcher.maybeRefresh();
+				searcher.maybeRefreshBlocking();
 			}
 
 		} catch (IndexNotFoundException e) {
