@@ -230,9 +230,12 @@ public abstract class JobManager implements Runnable {
 				case IJob.WaitUntilReady:
 					SubMonitor subProgress = subMonitor.setWorkRemaining(10).split(8).setWorkRemaining(1000);
 
-					synchronized (delaySignal) {
-						delaySignal.notify();
+					if (ENABLE_DELAYS) {
+						synchronized (delaySignal) {
+							delaySignal.notify();
+						}
 					}
+
 					// use local variable to avoid potential NPE (see bug 20435 NPE
 					// when searchingscriptmethod
 					// and bug 42760 NullPointerException in JobManager when
@@ -404,8 +407,10 @@ public abstract class JobManager implements Runnable {
 						notifyIdle(System.currentTimeMillis() - idlingStart);
 						// just woke up, delay before processing any new jobs,
 						// allow some time for the active thread to finish
-						synchronized (delaySignal) {
-							delaySignal.wait(50);
+						if (ENABLE_DELAYS) {
+							synchronized (delaySignal) {
+								delaySignal.wait(50);
+							}
 						}
 						continue;
 					}

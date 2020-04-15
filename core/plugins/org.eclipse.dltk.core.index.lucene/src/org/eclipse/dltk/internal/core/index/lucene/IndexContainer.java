@@ -21,11 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
-import org.apache.lucene.index.ConcurrentMergeScheduler;
 import org.apache.lucene.index.IndexNotFoundException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.SerialMergeScheduler;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
@@ -133,10 +133,10 @@ class IndexContainer {
 				new SingleInstanceLockFactory());
 		purgeLocks(path);
 		IndexWriterConfig config = new IndexWriterConfig(new SimpleAnalyzer());
-		config.setUseCompoundFile(false);
-		ConcurrentMergeScheduler mergeScheduler = new ConcurrentMergeScheduler();
-		mergeScheduler.setDefaultMaxMergesAndThreads(true);
-		config.setMergeScheduler(mergeScheduler);
+		config.setUseCompoundFile(true);
+		// we already are on separate thread
+		SerialMergeScheduler sheduler = new SerialMergeScheduler();
+		config.setMergeScheduler(sheduler);
 		config.setOpenMode(OpenMode.CREATE_OR_APPEND);
 		config.setCommitOnClose(false);
 		return new IndexWriter(indexDir, config);
@@ -183,7 +183,8 @@ class IndexContainer {
 						fTimestampsSearcher.maybeRefresh();
 					}
 				}
-
+			} else {
+				fTimestampsSearcher.maybeRefresh();
 			}
 
 		} catch (IOException e) {
