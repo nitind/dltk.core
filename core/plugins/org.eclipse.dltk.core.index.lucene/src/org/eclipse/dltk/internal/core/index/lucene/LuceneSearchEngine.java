@@ -258,13 +258,15 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 
 		}
 		if (searchForDecls) {
+			tasks.clear();
 			for (String container : containers) {
 				tasks.add(new SearchTask(elementType, qualifier, elementName,
 						parent, trueFlags, falseFlags, false, matchRule,
 						scripts, container));
 			}
-			tasks.stream().map(ForkJoinTask::fork).forEach(t -> t.join()
-					.stream().forEach(m -> searchMatchHandler.handle(m, true)));
+			tasks.stream().map(ForkJoinTask::fork)
+					.forEach(t -> t.join().stream()
+							.forEach(m -> searchMatchHandler.handle(m, false)));
 		}
 	}
 
