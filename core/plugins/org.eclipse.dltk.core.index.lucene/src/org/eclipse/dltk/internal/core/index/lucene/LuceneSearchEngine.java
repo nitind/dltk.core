@@ -253,7 +253,7 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 						parent, trueFlags, falseFlags, true, matchRule, scripts,
 						container));
 			}
-			ForkJoinTask.invokeAll(tasks).stream().forEach(t -> t.join()
+			tasks.stream().map(ForkJoinTask::fork).forEach(t -> t.join()
 					.stream().forEach(m -> searchMatchHandler.handle(m, true)));
 
 		}
@@ -263,7 +263,7 @@ public class LuceneSearchEngine implements ISearchEngineExtension {
 						parent, trueFlags, falseFlags, false, matchRule,
 						scripts, container));
 			}
-			ForkJoinTask.invokeAll(tasks).stream().forEach(t -> t.join()
+			tasks.stream().map(ForkJoinTask::fork).forEach(t -> t.join()
 					.stream().forEach(m -> searchMatchHandler.handle(m, true)));
 		}
 	}

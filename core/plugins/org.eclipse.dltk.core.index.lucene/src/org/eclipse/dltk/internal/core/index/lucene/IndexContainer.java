@@ -173,17 +173,18 @@ class IndexContainer {
 
 	public SearcherManager getTimestampsSearcher() {
 		try {
+			boolean refresh = true;
 			if (fTimestampsSearcher == null) {
 				synchronized (this) {
 					if (fTimestampsSearcher == null) {
 						fTimestampsSearcher = new SearcherManager(
 								getTimestampsWriter(), true, false,
 								new SearcherFactory());
-					} else {
-						fTimestampsSearcher.maybeRefresh();
+						refresh = false;
 					}
 				}
-			} else {
+			}
+			if (refresh) {
 				fTimestampsSearcher.maybeRefresh();
 			}
 
@@ -201,7 +202,7 @@ class IndexContainer {
 	public IndexWriter getIndexWriter(IndexType dataType, int elementType) {
 		IndexWriter writer = fIndexWriters.get(dataType).get(elementType);
 		if (writer == null) {
-			synchronized (this) {
+			synchronized (fIndexWriters) {
 				writer = fIndexWriters.get(dataType).get(elementType);
 				if (writer == null) {
 					Path writerPath = getPath(dataType, elementType);
@@ -220,8 +221,9 @@ class IndexContainer {
 		SearcherManager searcher = fIndexSearchers.get(dataType)
 				.get(elementType);
 		try {
+			boolean refresh = true;
 			if (searcher == null) {
-				synchronized (this) {
+				synchronized (fIndexSearchers) {
 					searcher = fIndexSearchers.get(dataType).get(elementType);
 					if (searcher == null) {
 						searcher = new SearcherManager(
@@ -229,15 +231,14 @@ class IndexContainer {
 								new SearcherFactory());
 						fIndexSearchers.get(dataType).put(elementType,
 								searcher);
-					} else {
-						searcher.maybeRefreshBlocking();
+						refresh = false;
 					}
 
 				}
-			} else {
+			}
+			if (refresh) {
 				searcher.maybeRefreshBlocking();
 			}
-
 		} catch (IndexNotFoundException e) {
 			return null;
 		} catch (IOException e) {
@@ -309,7 +310,7 @@ class IndexContainer {
 
 	void commit() {
 		List<IndexWriter> writers = new LinkedList<>();
-		synchronized (this) {
+		synchronized (fIndexWriters) {
 			for (Map<Integer, IndexWriter> dataWriters : fIndexWriters
 					.values()) {
 				for (IndexWriter writer : dataWriters.values()) {

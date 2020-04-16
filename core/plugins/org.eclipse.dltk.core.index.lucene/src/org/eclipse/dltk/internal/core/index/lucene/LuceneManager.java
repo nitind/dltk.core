@@ -19,7 +19,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -100,17 +99,10 @@ public enum LuceneManager {
 				if (subMonitor.isCanceled()) {
 					return Status.CANCEL_STATUS;
 				}
-				List<ForkJoinTask> tasks = new LinkedList<>();
-				if (dirtyContainers.size() == 1) {
-					dirtyContainers.get(0).commit();
-				} else {
-					for (IndexContainer indexContainer : dirtyContainers) {
-						tasks.add(ForkJoinTask.adapt(() -> {
-							indexContainer.commit();
-						}));
-					}
-					ForkJoinTask.invokeAll(tasks).stream()
-							.forEach(t -> t.join());
+				for (IndexContainer indexContainer : dirtyContainers) {
+					ForkJoinTask.adapt(() -> {
+						indexContainer.commit();
+					}).fork();
 				}
 			} catch (Exception e) {
 				Logger.logException(e);
@@ -168,12 +160,11 @@ public enum LuceneManager {
 
 		@Override
 		public void aboutToBeIdle() {
-			// run directly without special job
-			fCommitter.run(new NullProgressMonitor());
 		}
 
 		@Override
 		public void aboutToBeRun(long idlingTime) {
+			fCommitter.run(new NullProgressMonitor());
 		}
 
 	}
@@ -277,11 +268,14 @@ public enum LuceneManager {
 
 	private List<IndexContainer> getDirtyContainers() {
 		List<IndexContainer> uncommittedContainers = new ArrayList<>();
-		for (IndexContainer indexContainer : fIndexContainers.values()) {
-			if (indexContainer.hasChanges()) {
-				uncommittedContainers.add(indexContainer);
+		synchronized (fIndexContainers) {
+			for (IndexContainer indexContainer : fIndexContainers.values()) {
+				if (indexContainer.hasChanges()) {
+					uncommittedContainers.add(indexContainer);
+				}
 			}
 		}
+
 		return uncommittedContainers;
 	}
 
@@ -315,7 +309,7 @@ public enum LuceneManager {
 		}
 	}
 
-	private synchronized void startup() {
+	private void startup() {
 		loadProperties();
 		boolean purgeIndexRoot = false;
 		boolean resetProperties = false;

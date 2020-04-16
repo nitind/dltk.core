@@ -412,6 +412,7 @@ public abstract class JobManager implements Runnable {
 								delaySignal.wait(50);
 							}
 						}
+
 						continue;
 					}
 					if (VERBOSE) {
