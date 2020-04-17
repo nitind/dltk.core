@@ -12,7 +12,6 @@
 package org.eclipse.dltk.internal.core.index.lucene;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -111,31 +110,12 @@ class IndexContainer {
 				new HashMap<Integer, SearcherManager>());
 	}
 
-	private void purgeLocks(Path path) {
-		/*
-		 * Checks if any write locks exist (might be not removed if JVM crashed
-		 * or was terminated abnormally) and simply deletes them.
-		 */
-		Path writeLockPath = path.resolve(IndexWriter.WRITE_LOCK_NAME);
-		if (writeLockPath.toFile().exists()) {
-			try {
-				Files.delete(writeLockPath);
-			} catch (IOException e) {
-				Logger.logException(e);
-			}
-		}
-	}
-
 	private IndexWriter createWriter(Path path) throws IOException {
 
 		Directory indexDir = FSDirectory.open(path,
 				new SingleInstanceLockFactory());
-		purgeLocks(path);
 		IndexWriterConfig config = new IndexWriterConfig(new SimpleAnalyzer());
 		config.setUseCompoundFile(true);
-		// we already are on separate thread
-		// SerialMergeScheduler sheduler = new SerialMergeScheduler();
-		// config.setMergeScheduler(sheduler);
 		config.setOpenMode(OpenMode.CREATE_OR_APPEND);
 		config.setCommitOnClose(false);
 		return new IndexWriter(indexDir, config);
@@ -207,7 +187,6 @@ class IndexContainer {
 					Path writerPath = getPath(dataType, elementType);
 					writer = getWriter(writerPath);
 					fIndexWriters.get(dataType).put(elementType, writer);
-					fIndexSearchers.get(dataType).put(elementType, null);
 				}
 			}
 		}
@@ -220,7 +199,6 @@ class IndexContainer {
 		SearcherManager searcher = fIndexSearchers.get(dataType)
 				.get(elementType);
 		try {
-			boolean refresh = true;
 			if (searcher == null) {
 				synchronized (fIndexSearchers) {
 					searcher = fIndexSearchers.get(dataType).get(elementType);
@@ -230,13 +208,9 @@ class IndexContainer {
 								new SearcherFactory());
 						fIndexSearchers.get(dataType).put(elementType,
 								searcher);
-						refresh = false;
 					}
 
 				}
-			}
-			if (refresh) {
-				searcher.maybeRefreshBlocking();
 			}
 		} catch (IndexNotFoundException e) {
 			return null;
@@ -330,4 +304,32 @@ class IndexContainer {
 			Logger.logException(e);
 		}
 	}
+
+	public IndexContainer refresh(boolean block) {
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e1) {
+		}
+		synchronized (fIndexSearchers) {
+			for (Map<Integer, SearcherManager> searcher : fIndexSearchers
+					.values()) {
+				for (SearcherManager man : searcher.values()) {
+					try {
+						if (man != null) {
+							if (block) {
+								man.maybeRefreshBlocking();
+							} else {
+								man.maybeRefresh();
+							}
+						}
+					} catch (IOException e) {
+						Logger.logException(e);
+					}
+				}
+			}
+		}
+		return this;
+
+	}
+
 }

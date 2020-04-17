@@ -18,25 +18,19 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ForkJoinTask;
 
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.SearcherManager;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IShutdownListener;
@@ -74,82 +68,10 @@ public enum LuceneManager {
 	 */
 	INSTANCE;
 
-	private final class Committer extends Job {
-
-		private final static int DELAY = 50;
-		private boolean fClosed = false;
-
-		public Committer() {
-			super(""); //$NON-NLS-1$
-			setUser(false);
-			setSystem(true);
-		}
-
-		@Override
-		public IStatus run(IProgressMonitor monitor) {
-			// Get containers with uncommitted changes only
-			List<IndexContainer> dirtyContainers = getDirtyContainers();
-			if (dirtyContainers.isEmpty()) {
-				return Status.CANCEL_STATUS;
-			}
-			int containersNumber = dirtyContainers.size();
-			SubMonitor subMonitor = SubMonitor.convert(monitor,
-					containersNumber);
-			try {
-				if (subMonitor.isCanceled()) {
-					return Status.CANCEL_STATUS;
-				}
-				for (IndexContainer indexContainer : dirtyContainers) {
-					ForkJoinTask.adapt(() -> {
-						indexContainer.commit();
-					}).fork();
-				}
-			} catch (Exception e) {
-				Logger.logException(e);
-			} finally {
-				subMonitor.done();
-			}
-			return Status.OK_STATUS;
-		}
-
-		@Override
-		public boolean belongsTo(Object family) {
-			return family == LucenePlugin.LUCENE_JOB_FAMILY;
-		}
-
-		synchronized void commit() {
-			if (fClosed) {
-				return;
-			}
-			int currentState = getState();
-			if (currentState == NONE) {
-				schedule(DELAY);
-			} else if (currentState == SLEEPING) {
-				wakeUp(DELAY);
-			} else if (currentState == WAITING) {
-				sleep();
-				wakeUp(DELAY);
-			} else {
-				cancel();
-				schedule(DELAY);
-			}
-		}
-
-		synchronized void close() {
-			if (!fClosed) {
-				cancel();
-				fClosed = true;
-			}
-		}
-
-	}
-
 	private final class ShutdownListener implements IShutdownListener {
 
 		@Override
 		public void shutdown() {
-			// Close background committer if it is not already closed
-			fCommitter.close();
 			// Shutdown manager
 			LuceneManager.INSTANCE.shutdown();
 		}
@@ -160,11 +82,11 @@ public enum LuceneManager {
 
 		@Override
 		public void aboutToBeIdle() {
+			commit();
 		}
 
 		@Override
 		public void aboutToBeRun(long idlingTime) {
-			fCommitter.run(new NullProgressMonitor());
 		}
 
 	}
@@ -175,15 +97,25 @@ public enum LuceneManager {
 
 	private final String fIndexRoot;
 	private final Properties fIndexProperties;
-	private final Properties fContainerMappings;
+	private final Map<String, String> fContainerMappings;
 	private final Map<String, IndexContainer> fIndexContainers;
-	private final Committer fCommitter;
+
+	private void commit() {
+		try {
+			for (IndexContainer indexContainer : getDirtyContainers()) {
+				indexContainer.commit();
+				indexContainer.refresh(true);
+			}
+
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+	}
 
 	private LuceneManager() {
 		fIndexProperties = new Properties();
-		fContainerMappings = new Properties();
-		fIndexContainers = new ConcurrentHashMap<>();
-		fCommitter = new Committer();
+		fContainerMappings = new HashMap<>();
+		fIndexContainers = new HashMap<>();
 		fIndexRoot = Platform
 				.getStateLocation(LucenePlugin.getDefault().getBundle())
 				.append(INDEX_DIR).toOSString();
@@ -261,7 +193,7 @@ public enum LuceneManager {
 	 * @param sourceModule
 	 */
 	public final void delete(String container, String sourceModule) {
-		if (fContainerMappings.getProperty(container) != null) {
+		if (fContainerMappings.get(container) != null) {
 			getIndexContainer(container).delete(sourceModule);
 		}
 	}
@@ -280,18 +212,21 @@ public enum LuceneManager {
 	}
 
 	private IndexContainer getIndexContainer(String container) {
-		String containerId = fContainerMappings.getProperty(container);
+		String containerId = fContainerMappings.get(container);
 		if (containerId == null) {
 			synchronized (fContainerMappings) {
-				do {
-					// Just to be sure that ID does not already exist
-					containerId = UUID.randomUUID().toString();
-				} while (fContainerMappings.containsValue(containerId));
-				fContainerMappings.put(container, containerId);
-				fIndexContainers.put(containerId,
-						new IndexContainer(fIndexRoot, containerId));
-				// Persist mapping
-				saveMappings();
+				containerId = fContainerMappings.get(container);
+				if (containerId == null) {
+					do {
+						// Just to be sure that ID does not already exist
+						containerId = UUID.randomUUID().toString();
+					} while (fContainerMappings.containsValue(containerId));
+					fContainerMappings.put(container, containerId);
+					fIndexContainers.put(containerId,
+							new IndexContainer(fIndexRoot, containerId));
+					// Persist mapping
+					saveMappings();
+				}
 			}
 		}
 		return fIndexContainers.get(containerId);
@@ -299,7 +234,7 @@ public enum LuceneManager {
 
 	private void deleteIndexContainer(String container, boolean wait) {
 		synchronized (fContainerMappings) {
-			String containerId = (String) fContainerMappings.remove(container);
+			String containerId = fContainerMappings.remove(container);
 			if (containerId != null) {
 				IndexContainer containerEntry = fIndexContainers
 						.remove(containerId);
@@ -346,10 +281,12 @@ public enum LuceneManager {
 	}
 
 	private void registerIndexContainers() {
-		for (String container : fContainerMappings.stringPropertyNames()) {
-			String containerId = fContainerMappings.getProperty(container);
-			fIndexContainers.put(containerId,
-					new IndexContainer(fIndexRoot, containerId));
+		synchronized (fContainerMappings) {
+
+			for (String containerId : fContainerMappings.values()) {
+				fIndexContainers.put(containerId,
+						new IndexContainer(fIndexRoot, containerId));
+			}
 		}
 	}
 
@@ -370,11 +307,19 @@ public enum LuceneManager {
 		if (!file.exists()) {
 			return;
 		}
-		try (FileInputStream fis = new FileInputStream(file)) {
-			fContainerMappings.load(fis);
-		} catch (IOException e) {
-			Logger.logException(e);
+		synchronized (fContainerMappings) {
+			try (FileInputStream fis = new FileInputStream(file)) {
+				Properties p = new Properties();
+				p.load(fis);
+				for (Entry<Object, Object> entry : p.entrySet()) {
+					fContainerMappings.put((String) entry.getKey(),
+							(String) entry.getValue());
+				}
+			} catch (IOException e) {
+				Logger.logException(e);
+			}
 		}
+
 	}
 
 	private void saveProperties() {
@@ -388,11 +333,20 @@ public enum LuceneManager {
 
 	private void saveMappings() {
 		File file = Paths.get(fIndexRoot, MAPPINGS_FILE).toFile();
-		try (FileOutputStream fos = new FileOutputStream(file)) {
-			fContainerMappings.store(fos, ""); //$NON-NLS-1$
-		} catch (IOException e) {
-			Logger.logException(e);
+		synchronized (fContainerMappings) {
+			try (FileOutputStream fos = new FileOutputStream(file)) {
+				Properties p = new Properties();
+				for (Entry<String, String> entry : fContainerMappings
+						.entrySet()) {
+					p.setProperty(entry.getKey(), entry.getValue());
+				}
+
+				p.store(fos, ""); //$NON-NLS-1$
+			} catch (IOException e) {
+				Logger.logException(e);
+			}
 		}
+
 	}
 
 	private void resetProperties() {
@@ -418,12 +372,14 @@ public enum LuceneManager {
 		 * up the related mappings that might left.
 		 */
 		Set<String> toRemove = new HashSet<>();
-		for (String mappedContainer : fContainerMappings
-				.stringPropertyNames()) {
-			if (!containers.contains(mappedContainer)) {
-				toRemove.add(mappedContainer);
+		synchronized (fContainerMappings) {
+			for (String mappedContainer : fContainerMappings.values()) {
+				if (!containers.contains(mappedContainer)) {
+					toRemove.add(mappedContainer);
+				}
 			}
 		}
+
 		if (!toRemove.isEmpty()) {
 			for (String container : toRemove) {
 				deleteIndexContainer(container, true);
@@ -460,5 +416,9 @@ public enum LuceneManager {
 			Logger.logException(e);
 		}
 		indexRoot.toFile().mkdir();
+	}
+
+	public void refreshContainer(String fContainer, boolean block) {
+		getIndexContainer(fContainer).refresh(block);
 	}
 }

@@ -179,6 +179,7 @@ public class LuceneIndexer extends AbstractIndexer {
 	public void removeDocument(IPath containerPath, String sourceModulePath) {
 		LuceneManager.INSTANCE.delete(containerPath.toString(),
 				sourceModulePath);
+
 	}
 
 	private void resetDocument(ISourceModule sourceModule,
