@@ -14,6 +14,7 @@ package org.eclipse.dltk.internal.core.index.lucene;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.FilterDirectory;
 import org.apache.lucene.store.SingleInstanceLockFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -110,15 +112,42 @@ class IndexContainer {
 				new HashMap<Integer, SearcherManager>());
 	}
 
+	/**
+	 * Disable FSync call on each commit. Similar to RAFDirectory
+	 */
+	private static class NoFsyncDirectory extends FilterDirectory {
+
+		protected NoFsyncDirectory(FSDirectory in) {
+			super(in);
+		}
+
+		@Override
+		public void sync(Collection<String> names) throws IOException {
+			((FSDirectory) in).deletePendingFiles();
+		}
+
+		@Override
+		public void syncMetaData() throws IOException {
+			((FSDirectory) in).deletePendingFiles();
+		}
+
+		public void shutdown() throws IOException {
+			in.syncMetaData();
+		}
+
+	}
+
 	private IndexWriter createWriter(Path path) throws IOException {
 
-		Directory indexDir = FSDirectory.open(path,
-				new SingleInstanceLockFactory());
+		Directory indexDir = new NoFsyncDirectory(
+				FSDirectory.open(path, new SingleInstanceLockFactory()));
 		IndexWriterConfig config = new IndexWriterConfig(new SimpleAnalyzer());
-		config.setUseCompoundFile(true);
+
+		config.setUseCompoundFile(false);
 		config.setOpenMode(OpenMode.CREATE_OR_APPEND);
 		config.setCommitOnClose(false);
-		return new IndexWriter(indexDir, config);
+		IndexWriter writer = new IndexWriter(indexDir, config);
+		return writer;
 	}
 
 	private IndexWriter getWriter(Path path) {
@@ -247,8 +276,11 @@ class IndexContainer {
 			// Close time stamps searcher & writer
 			if (fTimestampsSearcher != null)
 				fTimestampsSearcher.close();
-			if (fTimestampsWriter != null)
+			if (fTimestampsWriter != null) {
+				((NoFsyncDirectory) fTimestampsWriter.getDirectory())
+						.shutdown();
 				fTimestampsWriter.close();
+			}
 			// Close all data searchers
 			for (Map<Integer, SearcherManager> dataSearchers : fIndexSearchers
 					.values()) {
@@ -261,8 +293,10 @@ class IndexContainer {
 			for (Map<Integer, IndexWriter> dataWriters : fIndexWriters
 					.values()) {
 				for (IndexWriter writer : dataWriters.values()) {
-					if (writer != null && writer.isOpen())
+					if (writer != null && writer.isOpen()) {
+						((NoFsyncDirectory) writer.getDirectory()).shutdown();
 						writer.close();
+					}
 				}
 			}
 		} catch (IOException e) {
