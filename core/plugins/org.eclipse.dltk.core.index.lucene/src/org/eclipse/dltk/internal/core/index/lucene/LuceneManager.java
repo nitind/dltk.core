@@ -104,7 +104,7 @@ public enum LuceneManager {
 		try {
 			for (IndexContainer indexContainer : getDirtyContainers()) {
 				indexContainer.commit();
-				indexContainer.refresh(true);
+				indexContainer.refresh();
 			}
 
 		} catch (Exception e) {
@@ -416,9 +416,5 @@ public enum LuceneManager {
 			Logger.logException(e);
 		}
 		indexRoot.toFile().mkdir();
-	}
-
-	public void refreshContainer(String fContainer, boolean block) {
-		getIndexContainer(fContainer).refresh(block);
 	}
 }

@@ -305,29 +305,26 @@ class IndexContainer {
 		}
 	}
 
-	public IndexContainer refresh(boolean block) {
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e1) {
-		}
+	public IndexContainer refresh() {
+		List<SearcherManager> managers = new LinkedList<>();
 		synchronized (fIndexSearchers) {
 			for (Map<Integer, SearcherManager> searcher : fIndexSearchers
 					.values()) {
 				for (SearcherManager man : searcher.values()) {
-					try {
-						if (man != null) {
-							if (block) {
-								man.maybeRefreshBlocking();
-							} else {
-								man.maybeRefresh();
-							}
-						}
-					} catch (IOException e) {
-						Logger.logException(e);
+					if (man != null) {
+						managers.add(man);
 					}
 				}
 			}
 		}
+		for (SearcherManager man : managers) {
+			try {
+				man.maybeRefreshBlocking();
+			} catch (IOException e) {
+				Logger.logException(e);
+			}
+		}
+
 		return this;
 
 	}
