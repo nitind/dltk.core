@@ -123,18 +123,11 @@ class IndexContainer {
 
 		@Override
 		public void sync(Collection<String> names) throws IOException {
-			((FSDirectory) in).deletePendingFiles();
 		}
 
 		@Override
 		public void syncMetaData() throws IOException {
-			((FSDirectory) in).deletePendingFiles();
 		}
-
-		public void shutdown() throws IOException {
-			in.syncMetaData();
-		}
-
 	}
 
 	private IndexWriter createWriter(Path path) throws IOException {
@@ -277,8 +270,6 @@ class IndexContainer {
 			if (fTimestampsSearcher != null)
 				fTimestampsSearcher.close();
 			if (fTimestampsWriter != null) {
-				((NoFsyncDirectory) fTimestampsWriter.getDirectory())
-						.shutdown();
 				fTimestampsWriter.close();
 			}
 			// Close all data searchers
@@ -294,7 +285,6 @@ class IndexContainer {
 					.values()) {
 				for (IndexWriter writer : dataWriters.values()) {
 					if (writer != null && writer.isOpen()) {
-						((NoFsyncDirectory) writer.getDirectory()).shutdown();
 						writer.close();
 					}
 				}
