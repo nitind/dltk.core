@@ -230,10 +230,8 @@ public abstract class JobManager implements Runnable {
 				case IJob.WaitUntilReady:
 					SubMonitor subProgress = subMonitor.setWorkRemaining(10).split(8).setWorkRemaining(1000);
 
-					if (ENABLE_DELAYS) {
-						synchronized (delaySignal) {
-							delaySignal.notify();
-						}
+					synchronized (delaySignal) {
+						delaySignal.notify();
 					}
 
 					// use local variable to avoid potential NPE (see bug 20435 NPE
@@ -407,12 +405,9 @@ public abstract class JobManager implements Runnable {
 						notifyIdle(System.currentTimeMillis() - idlingStart);
 						// just woke up, delay before processing any new jobs,
 						// allow some time for the active thread to finish
-						if (ENABLE_DELAYS) {
-							synchronized (delaySignal) {
-								delaySignal.wait(50);
-							}
+						synchronized (delaySignal) {
+							delaySignal.wait(50);
 						}
-
 						continue;
 					}
 					if (VERBOSE) {
