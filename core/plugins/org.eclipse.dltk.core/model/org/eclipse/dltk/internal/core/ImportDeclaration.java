@@ -98,7 +98,9 @@ public class ImportDeclaration extends SourceRefElement implements IImportDeclar
 		buff.append(JEM_COUNT);
 		escapeMementoName(buff, version);
 		buff.append(JEM_COUNT);
-		escapeMementoName(buff, alias);
+		if (alias != null) {
+			escapeMementoName(buff, alias);
+		}
 		buff.append(JEM_COUNT);
 		buff.append(type);
 		buff.append(JEM_COUNT);

@@ -75,6 +75,9 @@ public class ImportContainer extends SourceRefElement implements IImportContaine
 				String importName = memento.nextToken();
 				String version = memento.nextToken();
 				String alias = memento.nextToken();
+				if (alias.length() == 0) {
+					alias = null;
+				}
 				int type = Integer.parseInt(memento.nextToken());
 				int flags = Integer.parseInt(memento.nextToken());
 				if (version.length() == 0) {
