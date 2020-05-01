@@ -826,19 +826,21 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider imple
 				throws BadLocationException {
 			super.addAnnotation(annotation, position, fireModelChanged);
 
-			synchronized (getLockObject()) {
-				Object cached = fReverseMap.get(position);
-				if (cached == null)
-					fReverseMap.put(position, annotation);
-				else if (cached instanceof List<?>) {
-					@SuppressWarnings("unchecked")
-					List<Annotation> list = (List<Annotation>) cached;
-					list.add(annotation);
-				} else if (cached instanceof Annotation) {
-					List<Annotation> list = new ArrayList<>(2);
-					list.add((Annotation) cached);
-					list.add(annotation);
-					fReverseMap.put(position, list);
+			if (annotation instanceof ProblemAnnotation || annotation instanceof MarkerAnnotation) {
+				synchronized (getLockObject()) {
+					Object cached = fReverseMap.get(position);
+					if (cached == null)
+						fReverseMap.put(position, annotation);
+					else if (cached instanceof List<?>) {
+						@SuppressWarnings("unchecked")
+						List<Annotation> list = (List<Annotation>) cached;
+						list.add(annotation);
+					} else if (cached instanceof Annotation) {
+						List<Annotation> list = new ArrayList<>(2);
+						list.add((Annotation) cached);
+						list.add(annotation);
+						fReverseMap.put(position, list);
+					}
 				}
 			}
 		}
@@ -856,18 +858,20 @@ public class SourceModuleDocumentProvider extends TextFileDocumentProvider imple
 
 		@Override
 		protected void removeAnnotation(Annotation annotation, boolean fireModelChanged) {
-			Position position = getPosition(annotation);
-			synchronized (getLockObject()) {
-				Object cached = fReverseMap.get(position);
-				if (cached instanceof List<?>) {
-					List<?> list = (List<?>) cached;
-					list.remove(annotation);
-					if (list.size() == 1) {
-						fReverseMap.put(position, list.get(0));
-						list.clear();
+			if (annotation instanceof ProblemAnnotation || annotation instanceof MarkerAnnotation) {
+				Position position = getPosition(annotation);
+				synchronized (getLockObject()) {
+					Object cached = fReverseMap.get(position);
+					if (cached instanceof List<?>) {
+						List<?> list = (List<?>) cached;
+						list.remove(annotation);
+						if (list.size() == 1) {
+							fReverseMap.put(position, list.get(0));
+							list.clear();
+						}
+					} else if (cached instanceof Annotation) {
+						fReverseMap.remove(position);
 					}
-				} else if (cached instanceof Annotation) {
-					fReverseMap.remove(position);
 				}
 			}
 			super.removeAnnotation(annotation, fireModelChanged);
