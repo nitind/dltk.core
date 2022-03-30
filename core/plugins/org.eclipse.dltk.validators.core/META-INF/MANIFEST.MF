@@ -14,6 +14,6 @@ Export-Package: org.eclipse.dltk.validators.configs,
  org.eclipse.dltk.validators.internal.core
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.eclipse.dltk.validators.core

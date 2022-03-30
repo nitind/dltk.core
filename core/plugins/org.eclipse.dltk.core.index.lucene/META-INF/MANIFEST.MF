@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.dltk.core,
  org.apache.lucene.core;bundle-version="[8.4.0,8.5.0)",
  org.apache.lucene.analyzers-common;bundle-version="[8.4.0,8.5.0)"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.dltk.core.index.lucene
 Automatic-Module-Name: org.eclipse.dltk.core.index.lucene

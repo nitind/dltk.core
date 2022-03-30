@@ -24,6 +24,6 @@ Export-Package: org.eclipse.dltk.dbgp,
  org.eclipse.dltk.debug.core.model,
  org.eclipse.dltk.internal.debug.core.model,
  org.eclipse.dltk.internal.debug.core.model.operations
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.eclipse.dltk.debug

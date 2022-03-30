@@ -38,6 +38,6 @@ Export-Package: org.eclipse.dltk.debug.ui,
  org.eclipse.dltk.internal.debug.ui.handlers,
  org.eclipse.dltk.internal.debug.ui.interpreters,
  org.eclipse.dltk.internal.debug.ui.launcher
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.eclipse.dltk.debug.ui
