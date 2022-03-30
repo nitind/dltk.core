@@ -20,20 +20,12 @@
             <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
             <unit id="org.eclipse.sdk.ide" version="0.0.0"/>
             <unit id="org.eclipse.rse.feature.group" version="0.0.0"/>
-            <unit id="org.eclipse.mylyn.commons.sdk.feature.group" version="0.0.0"/>
-            <unit id="org.eclipse.mylyn.context.sdk.feature.group" version="0.0.0"/>
-            <unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
-            <unit id="org.apache.lucene.analyzers-common" version="6.1.0.v20161115-1612"/>
-            <unit id="org.apache.lucene.core" version="6.1.0.v20170814-1820"/>
-            <unit id="org.apache.lucene.queryparser" version="6.1.0.v20161115-1612"/>
-            <!-- DLTK depends on Lucene 8.0, but Mylyn 3.24 depends on Lucene 6.1 -->
- 
-            <repository location="http://download.eclipse.org/releases/2019-12"/>
+            <repository location="http://download.eclipse.org/releases/2022-03"/>
         </location>
-        <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+        <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
 			<unit id="org.eclipse.license.feature.group" version="0.0.0"/>
 			<repository location="http://download.eclipse.org/cbi/updates/license"/>
 		</location>
     </locations>
-    <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+    <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
 </target>
