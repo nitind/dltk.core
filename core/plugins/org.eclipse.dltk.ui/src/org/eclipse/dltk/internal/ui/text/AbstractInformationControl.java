@@ -654,7 +654,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 		 * constrainShellSize in PopupDialog.open will still ensure that the
 		 * shell is entirely visible.
 		 */
-		if (!getPersistBounds() || getDialogSettings() == null)
+		if (!(getPersistLocation() && getPersistSize()) || getDialogSettings() == null)
 			getShell().setLocation(location);
 	}
 
