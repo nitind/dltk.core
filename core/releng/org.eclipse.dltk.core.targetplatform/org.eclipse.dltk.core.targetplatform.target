@@ -2,8 +2,6 @@
 <target name="org.eclipse.dltk.core.targetplatform" sequenceNumber="25">
     <locations>
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
-            <unit id="org.apache.lucene.core" version="8.4.1.v20200122-1459"/>
-            <unit id="org.apache.lucene.analyzers-common" version="8.4.1.v20200122-1459"/>
             <unit id="org.hamcrest.core" version="0.0.0"/>
             <unit id="org.hamcrest.integration" version="0.0.0"/>
             <unit id="org.hamcrest.library" version="0.0.0"/>
@@ -14,7 +12,12 @@
             <unit id="org.objenesis" version="2.6.0.v20180420-1519"/>
             <unit id="net.bytebuddy.byte-buddy" version="1.9.0.v20181107-1410"/>
             <unit id="net.bytebuddy.byte-buddy-agent" version="1.9.0.v20181106-1534"/>
-            <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20220302172233/repository"/>
+            <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20220302172233/repository"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+            <unit id="org.apache.lucene.core" version="9.4.2.v20221211-0752"/>
+            <unit id="org.apache.lucene.analysis-common" version="9.4.2.v20221211-0752"/>
+            <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20230302014618/repository"/>
         </location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
             <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
