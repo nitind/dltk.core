@@ -44,8 +44,8 @@ SPDX-License-Identifier: EPL-2.0
 
    <requires>
       <import feature="org.eclipse.dltk.core" version="6.0.0" match="compatible"/>
-      <import feature="org.eclipse.mylyn.context_feature" version="3.0.0" match="greaterOrEqual"/>
-      <import feature="org.eclipse.mylyn_feature" version="3.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylyn.context.feature" version="3.0.0" match="greaterOrEqual"/>
+      <import feature="org.eclipse.mylyn.ide.feature" version="3.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
