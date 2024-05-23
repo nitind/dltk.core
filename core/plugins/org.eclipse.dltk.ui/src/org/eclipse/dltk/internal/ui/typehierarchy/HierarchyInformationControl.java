@@ -27,6 +27,9 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ProblemsLabelDecorator;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
+import org.eclipse.jface.bindings.TriggerSequence;
+import org.eclipse.jface.bindings.keys.KeySequence;
+import org.eclipse.jface.bindings.keys.SWTKeySupport;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -40,8 +43,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.keys.KeySequence;
-import org.eclipse.ui.keys.SWTKeySupport;
 
 /**
  * Show hierarchy in light-weight control.
@@ -77,12 +78,12 @@ public abstract class HierarchyInformationControl extends AbstractInformationCon
 					int accelerator = SWTKeySupport.convertEventToUnmodifiedAccelerator(e);
 					KeySequence keySequence = KeySequence
 							.getInstance(SWTKeySupport.convertAcceleratorToKeyStroke(accelerator));
-					KeySequence[] sequences = getInvokingCommandKeySequences();
+					TriggerSequence[] sequences = getInvokingCommandKeySequences();
 					if (sequences == null)
 						return;
 
-					for (int i = 0; i < sequences.length; i++) {
-						if (sequences[i].equals(keySequence)) {
+					for (TriggerSequence sequence : sequences) {
+						if (sequence.equals(keySequence)) {
 							e.doit = false;
 							toggleHierarchy();
 							return;
@@ -318,7 +319,7 @@ public abstract class HierarchyInformationControl extends AbstractInformationCon
 
 	@Override
 	protected String getStatusFieldText() {
-		KeySequence[] sequences = getInvokingCommandKeySequences();
+		TriggerSequence[] sequences = getInvokingCommandKeySequences();
 		String keyName = ""; //$NON-NLS-1$
 		if (sequences != null && sequences.length > 0)
 			keyName = sequences[0].format();

@@ -3,14 +3,14 @@
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
- * 
+ *
  * SPDX-License-Identifier: EPL-2.0
  *
  *******************************************************************************/
 package org.eclipse.dltk.internal.ui.text;
 
-import java.util.List;
-
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.expressions.Expression;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IParent;
@@ -21,6 +21,8 @@ import org.eclipse.dltk.ui.actions.CustomFiltersActionGroup;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.bindings.TriggerSequence;
+import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.PopupDialog;
@@ -57,18 +59,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IKeyBindingService;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.LegacyHandlerSubmissionExpression;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ActionHandler;
-import org.eclipse.ui.commands.HandlerSubmission;
-import org.eclipse.ui.commands.ICommand;
-import org.eclipse.ui.commands.ICommandManager;
-import org.eclipse.ui.commands.IKeySequenceBinding;
-import org.eclipse.ui.commands.Priority;
-import org.eclipse.ui.contexts.IContextService;
-import org.eclipse.ui.keys.KeySequence;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerActivation;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.keys.IBindingService;
 
 /**
  * Abstract class for Show hierarchy in light-weight controls.
@@ -76,8 +72,7 @@ import org.eclipse.ui.keys.KeySequence;
  *
  */
 public abstract class AbstractInformationControl extends PopupDialog
-		implements IInformationControl, IInformationControlExtension,
-		IInformationControlExtension2, DisposeListener {
+		implements IInformationControl, IInformationControlExtension, IInformationControlExtension2, DisposeListener {
 
 	/**
 	 * The NamePatternFilter selects the elements which match the given string
@@ -89,15 +84,13 @@ public abstract class AbstractInformationControl extends PopupDialog
 		}
 
 		@Override
-		public boolean select(Viewer viewer, Object parentElement,
-				Object element) {
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			StringMatcher matcher = getMatcher();
 			if (matcher == null || !(viewer instanceof TreeViewer))
 				return true;
 			TreeViewer treeViewer = (TreeViewer) viewer;
 
-			String matchName = ((ILabelProvider) treeViewer.getLabelProvider())
-					.getText(element);
+			String matchName = ((ILabelProvider) treeViewer.getLabelProvider()).getText(element);
 			if (matchName != null && matcher.match(matchName))
 				return true;
 
@@ -106,8 +99,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 
 		private boolean hasUnfilteredChild(TreeViewer viewer, Object element) {
 			if (element instanceof IParent) {
-				Object[] children = ((ITreeContentProvider) viewer
-						.getContentProvider()).getChildren(element);
+				Object[] children = ((ITreeContentProvider) viewer.getContentProvider()).getChildren(element);
 				for (int i = 0; i < children.length; i++)
 					if (select(viewer, element, children[i]))
 						return true;
@@ -122,8 +114,8 @@ public abstract class AbstractInformationControl extends PopupDialog
 	private TreeViewer fTreeViewer;
 	/** The current string matcher */
 	protected StringMatcher fStringMatcher;
-	private ICommand fInvokingCommand;
-	private KeySequence[] fInvokingCommandKeySequences;
+	private Command fInvokingCommand;
+	private TriggerSequence[] fInvokingCommandKeySequences;
 
 	/**
 	 * Fields that support the dialog menu
@@ -134,10 +126,9 @@ public abstract class AbstractInformationControl extends PopupDialog
 
 	private CustomFiltersActionGroup fCustomFiltersActionGroup;
 
-	private IKeyBindingService fKeyBindingService;
 	private String[] fKeyBindingScopes;
 	private IAction fShowViewMenuAction;
-	private HandlerSubmission fShowViewMenuHandlerSubmission;
+	private IHandlerActivation fShowViewMenuHandlerSubmission;
 
 	/**
 	 * Field for tree style since it must be remembered by the instance.
@@ -147,29 +138,23 @@ public abstract class AbstractInformationControl extends PopupDialog
 	private int fTreeStyle;
 
 	/**
-	 * Creates a tree information control with the given shell as parent. The
-	 * given styles are applied to the shell and the tree widget.
+	 * Creates a tree information control with the given shell as parent. The given
+	 * styles are applied to the shell and the tree widget.
 	 *
-	 * @param parent
-	 *                              the parent shell
-	 * @param shellStyle
-	 *                              the additional styles for the shell
-	 * @param treeStyle
-	 *                              the additional styles for the tree widget
-	 * @param invokingCommandId
-	 *                              the id of the command that invoked this
-	 *                              control or <code>null</code>
-	 * @param showStatusField
-	 *                              <code>true</code> iff the control has a
-	 *                              status field at the bottom
+	 * @param parent            the parent shell
+	 * @param shellStyle        the additional styles for the shell
+	 * @param treeStyle         the additional styles for the tree widget
+	 * @param invokingCommandId the id of the command that invoked this control or
+	 *                          <code>null</code>
+	 * @param showStatusField   <code>true</code> iff the control has a status field
+	 *                          at the bottom
 	 */
-	public AbstractInformationControl(Shell parent, int shellStyle,
-			int treeStyle, String invokingCommandId, boolean showStatusField) {
+	public AbstractInformationControl(Shell parent, int shellStyle, int treeStyle, String invokingCommandId,
+			boolean showStatusField) {
 		super(parent, shellStyle, true, true, true, true, true, null, null);
 		if (invokingCommandId != null) {
-			ICommandManager commandManager = PlatformUI.getWorkbench()
-					.getCommandSupport().getCommandManager();
-			fInvokingCommand = commandManager.getCommand(invokingCommandId);
+			ICommandService commandService = PlatformUI.getWorkbench().getService(ICommandService.class);
+			fInvokingCommand = commandService.getCommand(invokingCommandId);
 			if (fInvokingCommand != null && !fInvokingCommand.isDefined())
 				fInvokingCommand = null;
 			else
@@ -206,8 +191,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 	/**
 	 * Create the main content for this information control.
 	 *
-	 * @param parent
-	 *                   The parent composite
+	 * @param parent The parent composite
 	 * @return The control representing the main content.
 	 *
 	 */
@@ -215,8 +199,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 	protected Control createDialogArea(Composite parent) {
 		fTreeViewer = createTreeViewer(parent, fTreeStyle);
 
-		fCustomFiltersActionGroup = new CustomFiltersActionGroup(getId(),
-				fTreeViewer);
+		fCustomFiltersActionGroup = new CustomFiltersActionGroup(getId(), fTreeViewer);
 
 		final Tree tree = fTreeViewer.getTree();
 		tree.addKeyListener(new KeyAdapter() {
@@ -253,8 +236,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 								fLastItem = (TreeItem) item;
 								tree.setSelection(new TreeItem[] { fLastItem });
 							}
-						} else if (e.y > tree.getBounds().height
-								- tree.getItemHeight() / 4) {
+						} else if (e.y > tree.getBounds().height - tree.getItemHeight() / 4) {
 							// Scroll down
 							Point p = tree.toDisplay(e.x, e.y);
 							Item item = fTreeViewer.scrollDown(p.x, p.y);
@@ -294,18 +276,14 @@ public abstract class AbstractInformationControl extends PopupDialog
 	}
 
 	/**
-	 * Creates a tree information control with the given shell as parent. The
-	 * given styles are applied to the shell and the tree widget.
+	 * Creates a tree information control with the given shell as parent. The given
+	 * styles are applied to the shell and the tree widget.
 	 *
-	 * @param parent
-	 *                       the parent shell
-	 * @param shellStyle
-	 *                       the additional styles for the shell
-	 * @param treeStyle
-	 *                       the additional styles for the tree widget
+	 * @param parent     the parent shell
+	 * @param shellStyle the additional styles for the shell
+	 * @param treeStyle  the additional styles for the tree widget
 	 */
-	public AbstractInformationControl(Shell parent, int shellStyle,
-			int treeStyle) {
+	public AbstractInformationControl(Shell parent, int shellStyle, int treeStyle) {
 		this(parent, shellStyle, treeStyle, null, false);
 	}
 
@@ -372,8 +350,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 	}
 
 	protected void createHorizontalSeparator(Composite parent) {
-		Label separator = new Label(parent,
-				SWT.SEPARATOR | SWT.HORIZONTAL | SWT.LINE_DOT);
+		Label separator = new Label(parent, SWT.SEPARATOR | SWT.HORIZONTAL | SWT.LINE_DOT);
 		separator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 	}
 
@@ -408,8 +385,8 @@ public abstract class AbstractInformationControl extends PopupDialog
 	}
 
 	/**
-	 * The string matcher has been modified. The default implementation
-	 * refreshes the view and selects the first matched element
+	 * The string matcher has been modified. The default implementation refreshes
+	 * the view and selects the first matched element
 	 */
 	protected void stringMatcherUpdated() {
 		// refresh viewer to re-filter
@@ -423,14 +400,12 @@ public abstract class AbstractInformationControl extends PopupDialog
 	/**
 	 * Sets the patterns to filter out for the receiver.
 	 * <p>
-	 * The following characters have special meaning: ? => any character * =>
-	 * any string
+	 * The following characters have special meaning: ? => any character * => any
+	 * string
 	 * </p>
 	 *
-	 * @param pattern
-	 *                    the pattern
-	 * @param update
-	 *                    <code>true</code> if the viewer should be updated
+	 * @param pattern the pattern
+	 * @param update  <code>true</code> if the viewer should be updated
 	 */
 	protected void setMatcherString(String pattern, boolean update) {
 		if (pattern.length() == 0) {
@@ -486,8 +461,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 	}
 
 	private IModelElement findElement(TreeItem[] items) {
-		ILabelProvider labelProvider = (ILabelProvider) fTreeViewer
-				.getLabelProvider();
+		ILabelProvider labelProvider = (ILabelProvider) fTreeViewer.getLabelProvider();
 		for (int i = 0; i < items.length; i++) {
 			IModelElement element = (IModelElement) items[i].getData();
 			if (fStringMatcher == null)
@@ -517,8 +491,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 	/**
 	 * Fills the view menu. Clients can extend or override.
 	 *
-	 * @param viewMenu
-	 *                     the menu manager that manages the menu
+	 * @param viewMenu the menu manager that manages the menu
 	 *
 	 */
 	protected void fillViewMenu(IMenuManager viewMenu) {
@@ -565,18 +538,16 @@ public abstract class AbstractInformationControl extends PopupDialog
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @param event
-	 *                  can be null
-	 *                  <p>
-	 *                  Subclasses may extend.
-	 *                  </p>
+	 * @param event can be null
+	 *              <p>
+	 *              Subclasses may extend.
+	 *              </p>
 	 */
 	@Override
 	public void widgetDisposed(DisposeEvent event) {
 		removeHandlerAndKeyBindingSupport();
 		fTreeViewer = null;
 		fFilterText = null;
-		fKeyBindingService = null;
 	}
 
 	/**
@@ -585,21 +556,12 @@ public abstract class AbstractInformationControl extends PopupDialog
 	 *
 	 */
 	protected void addHandlerAndKeyBindingSupport() {
-		// Remember current scope and then set window context.
-		if (fKeyBindingScopes == null && fKeyBindingService != null) {
-			fKeyBindingScopes = fKeyBindingService.getScopes();
-			fKeyBindingService.setScopes(
-					new String[] { IContextService.CONTEXT_ID_WINDOW });
-		}
 
-		// Register action with command support
 		if (fShowViewMenuHandlerSubmission == null) {
-			fShowViewMenuHandlerSubmission = new HandlerSubmission(null,
-					getShell(), null,
-					fShowViewMenuAction.getActionDefinitionId(),
-					new ActionHandler(fShowViewMenuAction), Priority.MEDIUM);
-			PlatformUI.getWorkbench().getCommandSupport()
-					.addHandlerSubmission(fShowViewMenuHandlerSubmission);
+			IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
+			Expression expression = new LegacyHandlerSubmissionExpression(null, getShell(), null);
+			fShowViewMenuHandlerSubmission = handlerService.activateHandler(fShowViewMenuAction.getActionDefinitionId(),
+					new ActionHandler(fShowViewMenuAction), expression);
 		}
 	}
 
@@ -609,15 +571,10 @@ public abstract class AbstractInformationControl extends PopupDialog
 	 *
 	 */
 	protected void removeHandlerAndKeyBindingSupport() {
-		// Remove handler submission
-		if (fShowViewMenuHandlerSubmission != null)
-			PlatformUI.getWorkbench().getCommandSupport()
-					.removeHandlerSubmission(fShowViewMenuHandlerSubmission);
-
-		// Restore editor's key binding scope
-		if (fKeyBindingService != null && fKeyBindingScopes != null) {
-			fKeyBindingService.setScopes(fKeyBindingScopes);
-			fKeyBindingScopes = null;
+		if (fShowViewMenuHandlerSubmission != null) {
+			IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
+			handlerService.deactivateHandler(fShowViewMenuHandlerSubmission);
+			fShowViewMenuHandlerSubmission = null;
 		}
 	}
 
@@ -643,16 +600,14 @@ public abstract class AbstractInformationControl extends PopupDialog
 	public void setLocation(Point location) {
 		/*
 		 * If the location is persisted, it gets managed by PopupDialog - fine.
-		 * Otherwise, the location is computed in Window#getInitialLocation,
-		 * which will center it in the parent shell / main monitor, which is
-		 * wrong for two reasons: - we want to center over the editor / subject
-		 * control, not the parent shell - the center is computed via the
-		 * initalSize, which may be also wrong since the size may have been
-		 * updated since via min/max sizing of
-		 * AbstractInformationControlManager. In that case, override the
-		 * location with the one computed by the manager. Note that the call to
-		 * constrainShellSize in PopupDialog.open will still ensure that the
-		 * shell is entirely visible.
+		 * Otherwise, the location is computed in Window#getInitialLocation, which will
+		 * center it in the parent shell / main monitor, which is wrong for two reasons:
+		 * - we want to center over the editor / subject control, not the parent shell -
+		 * the center is computed via the initalSize, which may be also wrong since the
+		 * size may have been updated since via min/max sizing of
+		 * AbstractInformationControlManager. In that case, override the location with
+		 * the one computed by the manager. Note that the call to constrainShellSize in
+		 * PopupDialog.open will still ensure that the shell is entirely visible.
 		 */
 		if (!(getPersistLocation() && getPersistSize()) || getDialogSettings() == null)
 			getShell().setLocation(location);
@@ -685,8 +640,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 
 	@Override
 	public boolean isFocusControl() {
-		return fTreeViewer.getControl().isFocusControl()
-				|| fFilterText.isFocusControl();
+		return fTreeViewer.getControl().isFocusControl() || fFilterText.isFocusControl();
 	}
 
 	@Override
@@ -705,22 +659,16 @@ public abstract class AbstractInformationControl extends PopupDialog
 		getShell().removeFocusListener(listener);
 	}
 
-	final protected ICommand getInvokingCommand() {
+	final protected Command getInvokingCommand() {
 		return fInvokingCommand;
 	}
 
-	final protected KeySequence[] getInvokingCommandKeySequences() {
+	final protected TriggerSequence[] getInvokingCommandKeySequences() {
 		if (fInvokingCommandKeySequences == null) {
 			if (getInvokingCommand() != null) {
-				List list = getInvokingCommand().getKeySequenceBindings();
-				if (!list.isEmpty()) {
-					fInvokingCommandKeySequences = new KeySequence[list.size()];
-					for (int i = 0; i < fInvokingCommandKeySequences.length; i++) {
-						fInvokingCommandKeySequences[i] = ((IKeySequenceBinding) list
-								.get(i)).getKeySequence();
-					}
-					return fInvokingCommandKeySequences;
-				}
+				IBindingService bindingService = PlatformUI.getWorkbench().getAdapter(IBindingService.class);
+				fInvokingCommandKeySequences = bindingService.getActiveBindingsFor(getInvokingCommand().getId());
+				return fInvokingCommandKeySequences;
 			}
 		}
 		return fInvokingCommandKeySequences;
@@ -730,11 +678,9 @@ public abstract class AbstractInformationControl extends PopupDialog
 	protected IDialogSettings getDialogSettings() {
 		String sectionName = getId();
 
-		IDialogSettings settings = DLTKUIPlugin.getDefault().getDialogSettings()
-				.getSection(sectionName);
+		IDialogSettings settings = DLTKUIPlugin.getDefault().getDialogSettings().getSection(sectionName);
 		if (settings == null)
-			settings = DLTKUIPlugin.getDefault().getDialogSettings()
-					.addNewSection(sectionName);
+			settings = DLTKUIPlugin.getDefault().getDialogSettings().addNewSection(sectionName);
 
 		return settings;
 	}
@@ -744,8 +690,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 	 */
 	@Override
 	protected Control createTitleMenuArea(Composite parent) {
-		fViewMenuButtonComposite = (Composite) super.createTitleMenuArea(
-				parent);
+		fViewMenuButtonComposite = (Composite) super.createTitleMenuArea(parent);
 
 		// If there is a header, then the filter text must be created
 		// underneath the title and menu area.
@@ -753,12 +698,6 @@ public abstract class AbstractInformationControl extends PopupDialog
 		if (hasHeader()) {
 			fFilterText = createFilterText(parent);
 		}
-
-		// Create a key binding for showing the dialog menu
-		// Key binding service
-		IWorkbenchPart part = DLTKUIPlugin.getActivePage().getActivePart();
-		IWorkbenchPartSite site = part.getSite();
-		fKeyBindingService = site.getKeyBindingService();
 
 		// Create show view menu action
 		fShowViewMenuAction = new Action("showViewMenu") { //$NON-NLS-1$
@@ -771,8 +710,7 @@ public abstract class AbstractInformationControl extends PopupDialog
 			}
 		};
 		fShowViewMenuAction.setEnabled(true);
-		fShowViewMenuAction
-				.setActionDefinitionId("org.eclipse.ui.window.showViewMenu"); //$NON-NLS-1$
+		fShowViewMenuAction.setActionDefinitionId("org.eclipse.ui.window.showViewMenu"); //$NON-NLS-1$
 
 		addHandlerAndKeyBindingSupport();
 
@@ -780,8 +718,8 @@ public abstract class AbstractInformationControl extends PopupDialog
 	}
 
 	/*
-	 * Overridden to insert the filter text into the title control if there is
-	 * no header specified.
+	 * Overridden to insert the filter text into the title control if there is no
+	 * header specified.
 	 */
 	@Override
 	protected Control createTitleControl(Composite parent) {
@@ -795,12 +733,10 @@ public abstract class AbstractInformationControl extends PopupDialog
 	@Override
 	protected void setTabOrder(Composite composite) {
 		if (hasHeader()) {
-			composite.setTabList(
-					new Control[] { fFilterText, fTreeViewer.getTree() });
+			composite.setTabList(new Control[] { fFilterText, fTreeViewer.getTree() });
 		} else {
 			fViewMenuButtonComposite.setTabList(new Control[] { fFilterText });
-			composite.setTabList(new Control[] { fViewMenuButtonComposite,
-					fTreeViewer.getTree() });
+			composite.setTabList(new Control[] { fViewMenuButtonComposite, fTreeViewer.getTree() });
 		}
 	}
 }
